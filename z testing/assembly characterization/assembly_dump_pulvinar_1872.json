@@ -1,0 +1,307 @@
+{
+  "region": "pulvinar",
+  "step": 1872,
+  "time": 18.710000000000125,
+  "assemblies": [
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:0",
+      "population": "RELAY_CELLS",
+      "activity": 0.015373670240919752,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:1",
+      "population": "RELAY_CELLS",
+      "activity": 0.01563681813981167,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:2",
+      "population": "RELAY_CELLS",
+      "activity": 0.014939662489746782,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:3",
+      "population": "RELAY_CELLS",
+      "activity": 0.015223982858364281,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:4",
+      "population": "RELAY_CELLS",
+      "activity": 0.015854721892594188,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:5",
+      "population": "RELAY_CELLS",
+      "activity": 0.015758132865491117,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:6",
+      "population": "RELAY_CELLS",
+      "activity": 0.015489799032144003,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:7",
+      "population": "RELAY_CELLS",
+      "activity": 0.01590235980561977,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:8",
+      "population": "RELAY_CELLS",
+      "activity": 0.015318896905130781,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:9",
+      "population": "RELAY_CELLS",
+      "activity": 0.015811388454508583,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:10",
+      "population": "RELAY_CELLS",
+      "activity": 0.015213000332192252,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:11",
+      "population": "RELAY_CELLS",
+      "activity": 0.015224241193097504,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:12",
+      "population": "RELAY_CELLS",
+      "activity": 0.015695393050030503,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:13",
+      "population": "RELAY_CELLS",
+      "activity": 0.015553180596671483,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:14",
+      "population": "RELAY_CELLS",
+      "activity": 0.015507363676122671,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:15",
+      "population": "RELAY_CELLS",
+      "activity": 0.014103920810340093,
+      "output": 0.010202245361583259
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:16",
+      "population": "RELAY_CELLS",
+      "activity": 0.014122394549438679,
+      "output": 0.010248095315426812
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:17",
+      "population": "RELAY_CELLS",
+      "activity": 0.013956341503883429,
+      "output": 0.009835944240972505
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:18",
+      "population": "RELAY_CELLS",
+      "activity": 0.013992257319655928,
+      "output": 0.009925093514190934
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:19",
+      "population": "RELAY_CELLS",
+      "activity": 0.01430920126574185,
+      "output": 0.010711692856760942
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:20",
+      "population": "RELAY_CELLS",
+      "activity": 0.014019232754357975,
+      "output": 0.009992049538624913
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:21",
+      "population": "RELAY_CELLS",
+      "activity": 0.014371213483142008,
+      "output": 0.010865573119488277
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:22",
+      "population": "RELAY_CELLS",
+      "activity": 0.014206939735996071,
+      "output": 0.010457919328126735
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:23",
+      "population": "RELAY_CELLS",
+      "activity": 0.014056320624409997,
+      "output": 0.010084103404758198
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:24",
+      "population": "RELAY_CELLS",
+      "activity": 0.014101991336821964,
+      "output": 0.010197456564403377
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:25",
+      "population": "RELAY_CELLS",
+      "activity": 0.01401205368581796,
+      "output": 0.009974230433620654
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:26",
+      "population": "RELAY_CELLS",
+      "activity": 0.014308920222679064,
+      "output": 0.010710995444966655
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:27",
+      "population": "RELAY_CELLS",
+      "activity": 0.013940499708656942,
+      "output": 0.009796621352796563
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:28",
+      "population": "RELAY_CELLS",
+      "activity": 0.014167134136649842,
+      "output": 0.01035913165852638
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:29",
+      "population": "RELAY_CELLS",
+      "activity": 0.01427126812235168,
+      "output": 0.010617559888290828
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:30",
+      "population": "RELAY_CELLS",
+      "activity": 0.01461401364572216,
+      "output": 0.011467996730024728
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:31",
+      "population": "RELAY_CELLS",
+      "activity": 0.013896427295687155,
+      "output": 0.00968722113354606
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:32",
+      "population": "RELAY_CELLS",
+      "activity": 0.014067202292983727,
+      "output": 0.01011111171092152
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:33",
+      "population": "RELAY_CELLS",
+      "activity": 0.013971970680967498,
+      "output": 0.009874738877586801
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:34",
+      "population": "RELAY_CELLS",
+      "activity": 0.013822848529275837,
+      "output": 0.009504569234841899
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:35",
+      "population": "RELAY_CELLS",
+      "activity": 0.014243028995036268,
+      "output": 0.011602229380559985
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:36",
+      "population": "RELAY_CELLS",
+      "activity": 0.013867842537654617,
+      "output": 0.010577889973536737
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:37",
+      "population": "RELAY_CELLS",
+      "activity": 0.014057603903300594,
+      "output": 0.011096017367255424
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:38",
+      "population": "RELAY_CELLS",
+      "activity": 0.01382235273531336,
+      "output": 0.010453672283837114
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:39",
+      "population": "RELAY_CELLS",
+      "activity": 0.013801772682655975,
+      "output": 0.0103974734512845
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:40",
+      "population": "RELAY_CELLS",
+      "activity": 0.013974067483949809,
+      "output": 0.010867937862023854
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:41",
+      "population": "RELAY_CELLS",
+      "activity": 0.013881307109325575,
+      "output": 0.010614656428348577
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:42",
+      "population": "RELAY_CELLS",
+      "activity": 0.01417667838714952,
+      "output": 0.011421100258583847
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:43",
+      "population": "RELAY_CELLS",
+      "activity": 0.014341015705137595,
+      "output": 0.011869703745993734
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:44",
+      "population": "RELAY_CELLS",
+      "activity": 0.014010469593981306,
+      "output": 0.010967328414934733
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:45",
+      "population": "RELAY_CELLS",
+      "activity": 0.013943892703818312,
+      "output": 0.010785547926285948
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:46",
+      "population": "RELAY_CELLS",
+      "activity": 0.014267320783617173,
+      "output": 0.011668540630048994
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:47",
+      "population": "RELAY_CELLS",
+      "activity": 0.014259528693808062,
+      "output": 0.011647270075235229
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:48",
+      "population": "RELAY_CELLS",
+      "activity": 0.014000473989419199,
+      "output": 0.010940037188462657
+    },
+    {
+      "assembly_id": "pulvinar:RELAY_CELLS:49",
+      "population": "RELAY_CELLS",
+      "activity": 0.014156354397415354,
+      "output": 0.011365616315887124
+    }
+  ]
+}

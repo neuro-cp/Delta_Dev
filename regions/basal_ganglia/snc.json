@@ -1,0 +1,69 @@
+{
+  "version": "1.2.0",
+  "type": "RegionSubstructure",
+  "region_id": "SNc",
+  "parent_region": "BASAL_GANGLIA",
+
+  "function": "dopaminergic_modulation_and_value_signaling",
+
+  "spatial_properties": {
+    "compact_nucleus": true,
+    "diffuse_projection": true
+  },
+
+  "populations": {
+
+    "DOPAMINERGIC_NEURONS": {
+      "count": 18000,
+      "neuron_type": "neuromodulatory",
+      "sign": 0.0,
+      "baseline_firing_rate_hz": 3.0,
+      "plasticity_profile": "low",
+
+      "semantic_role": "dopamine_source",
+
+      "firing_modes": {
+        "tonic": {
+          "rate_hz": 3.0,
+          "role": "baseline_value_bias"
+        },
+        "phasic": {
+          "rate_hz": 15.0,
+          "role": "reward_prediction_error",
+          "status": "inactive_checkpoint_6"
+        }
+      }
+    }
+  },
+
+  "outputs": [
+    {
+      "target_region": "STRIATUM",
+      "target_population": "D1_MSN",
+      "signal": "dopamine_facilitation",
+      "effect": "potentiation",
+      "strength": 1.0
+    },
+    {
+      "target_region": "STRIATUM",
+      "target_population": "D2_MSN",
+      "signal": "dopamine_suppression",
+      "effect": "depression",
+      "strength": 1.0
+    }
+  ],
+
+  "pathophysiology_modes": {
+    "dopamine_depletion": "parkinsonian_state",
+    "dopamine_excess": "impulsivity_and_dyskinesia"
+  },
+
+  "drug_sensitivity": {
+    "dopamine_depletion": "very_high",
+    "dopamine_replacement": "very_high",
+    "parkinsons_agents": "very_high",
+    "psychostimulants": "high"
+  },
+
+  "notes": "SNc provides neuromodulatory dopamine signals to the striatum, biasing direct (D1) and indirect (D2) pathway dynamics. Tonic firing establishes baseline action readiness, while phasic firing is reserved for future reward-prediction error signaling. All learning-related effects are structurally defined but remain inactive at checkpoint 6 to preserve runtime stability."
+}

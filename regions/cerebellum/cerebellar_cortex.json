@@ -1,0 +1,83 @@
+{
+  "version": "1.1.1",
+  "type": "RegionSubstructure",
+  "region_id": "cerebellar_cortex",
+  "parent_region": "cerebellum_base",
+
+  "function": "prediction_and_error_learning",
+
+  "spatial_properties": {
+    "layered": true,
+    "layers": ["molecular", "purkinje", "granule"],
+    "neuron_density_per_mm3": 200000
+  },
+
+  "populations": {
+    "GRANULE_CELLS": {
+      "count": 200000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 5.0,
+      "plasticity_profile": "medium"
+    },
+
+    "PURKINJE_CELLS": {
+      "count": 15000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 40.0,
+      "plasticity_profile": "very_high"
+    },
+
+    "INTERNEURONS": {
+      "count": 30000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 10.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "local_connectivity": [
+    {
+      "source": "GRANULE_CELLS",
+      "target": "PURKINJE_CELLS",
+      "pattern": "parallel_fibers",
+      "probability": 0.3
+    },
+    {
+      "source": "INTERNEURONS",
+      "target": "PURKINJE_CELLS",
+      "pattern": "feedforward_inhibition",
+      "probability": 0.4
+    }
+  ],
+
+  "inputs": [
+    {
+      "source_region": "pfc",
+      "signal": "motor_intent_context",
+      "strength": 0.6
+    },
+    {
+      "source_region": "brainstem_base",
+      "signal": "prediction_error",
+      "strength": 1.0
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "deep_nuclei",
+      "strength": 1.0
+    }
+  ],
+
+  "drug_sensitivity": {
+    "ethanol": "very_high",
+    "sedatives": "high",
+    "calcium_channel_blockers": "high"
+  },
+
+  "notes": "Normalized IDs to runtime-loaded region keys. 'CORTEX' and 'BRAINSTEM' are routed to current integration hubs (pfc, brainstem_base) to avoid unresolved references; when a cortex/brainstem router exists, these can be promoted back to hierarchical targets."
+}

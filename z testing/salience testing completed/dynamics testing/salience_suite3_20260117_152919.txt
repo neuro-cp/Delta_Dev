@@ -1,0 +1,198 @@
+[2026-01-17 15:29:19] === SALIENCE + BG — SUITE 3 ===
+
+[2026-01-17 15:29:19] Run ID: 20260117_152919
+
+[2026-01-17 15:29:19] [DEBUG] Neuron bases loaded: 5
+[2026-01-17 15:29:19] [DEBUG] Loading regions from: C:\Users\Admin\Desktop\neural framework\regions
+[2026-01-17 15:29:19] [DEBUG] BrainMap loaded from brain_map.json
+[2026-01-17 15:29:19] [DEBUG] RegionAliasRegistry loaded from region_aliases.json
+[2026-01-17 15:29:19] [DEBUG] Loaded region: amyg_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: bla | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: cea | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: mea | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: bg_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: gpe | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: gpi | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: snc | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: stn | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: striatum | populations=3
+[2026-01-17 15:29:19] [DEBUG] Loaded region: autonomic_system | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: brainstem_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: locus_coeruleus | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: medulla | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: pons | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: raphe | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: vta | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: cerebellar_cortex | populations=3
+[2026-01-17 15:29:19] [DEBUG] Loaded region: cerebellum_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: deep_nuclei | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: a1 | populations=4
+[2026-01-17 15:29:19] [DEBUG] Loaded region: cortex_base | populations=5
+[2026-01-17 15:29:19] [DEBUG] Loaded region: insula | populations=3
+[2026-01-17 15:29:19] [DEBUG] Loaded region: m1 | populations=3
+[2026-01-17 15:29:19] [DEBUG] Loaded region: s1 | populations=5
+[2026-01-17 15:29:19] [DEBUG] Loaded region: v1 | populations=5
+[2026-01-17 15:29:19] [DEBUG] Loaded region: ca1 | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: ca3 | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: dentate_gyrus | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: hip_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: subiculum | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: association_cortex | populations=4
+[2026-01-17 15:29:19] [DEBUG] Loaded region: corpus_callosum | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: Intralaminar | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: pfc | populations=5
+[2026-01-17 15:29:19] [DEBUG] Loaded region: inferior_colliculus | populations=3
+[2026-01-17 15:29:19] [DEBUG] Loaded region: superior_colliculus | populations=3
+[2026-01-17 15:29:19] [DEBUG] Loaded region: auditory_input | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: gustatory_input | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: sensory_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: somato_input | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: visual_input | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: endocrine_system | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: hypothalamus | populations=4
+[2026-01-17 15:29:19] [DEBUG] Loaded region: anterior_pituitary | populations=5
+[2026-01-17 15:29:19] [DEBUG] Loaded region: posterior_pituitary | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: lgn | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: md | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: mgb | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: pulvinar | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: thalamus_base | populations=0
+[2026-01-17 15:29:19] [DEBUG] Loaded region: trn | populations=1
+[2026-01-17 15:29:19] [DEBUG] Loaded region: vpl | populations=2
+[2026-01-17 15:29:19] [DEBUG] Loaded region: vpm | populations=1
+[2026-01-17 15:29:19] [DEBUG] Total regions loaded: 54
+[2026-01-17 15:29:19] [DEBUG] Profiles loaded: 12
+[2026-01-17 15:29:19] [DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[2026-01-17 15:29:19] [DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[2026-01-17 15:29:19] [DEBUG] Compile complete.
+[2026-01-17 15:29:19]   Regions: 54
+[2026-01-17 15:29:19]   Assembly downscale: 1.0
+[2026-01-17 15:29:19] [OK] Runtime + Salience engine ready
+
+[2026-01-17 15:29:19] 
+=== S3-0: Baseline ===
+[2026-01-17 15:29:19] [CMD] Listening on 127.0.0.1:5557
+[2026-01-17 15:29:20] [step 000050] relief=0.474 winner=D2 D1=0.2443 D2=0.2446 Δ=-0.0003
+[2026-01-17 15:29:21] [step 000100] relief=0.454 winner=D2 D1=0.3691 D2=0.3696 Δ=-0.0005
+[2026-01-17 15:29:23] [step 000150] relief=0.437 winner=D2 D1=0.4331 D2=0.4334 Δ=-0.0003
+[2026-01-17 15:29:24] [step 000200] relief=0.426 winner=D2 D1=0.4658 D2=0.4659 Δ=-0.0001
+[2026-01-17 15:29:26] [step 000250] relief=0.420 winner=D1 D1=0.4827 D2=0.4824 Δ=0.0003
+[2026-01-17 15:29:29] [step 000300] relief=0.418 winner=D1 D1=0.4911 D2=0.4911 Δ=0.0001
+[2026-01-17 15:29:31] [step 000350] relief=0.422 winner=D2 D1=0.4954 D2=0.4955 Δ=-0.0000
+[2026-01-17 15:29:33] [step 000400] relief=0.430 winner=D2 D1=0.4976 D2=0.4977 Δ=-0.0001
+[2026-01-17 15:29:34] [step 000450] relief=0.441 winner=D2 D1=0.4987 D2=0.4989 Δ=-0.0002
+[2026-01-17 15:29:36] [step 000500] relief=0.455 winner=D2 D1=0.4993 D2=0.4995 Δ=-0.0002
+[2026-01-17 15:29:36] 
+=== S3-A: Sensitivity D1 mag=0.05 ===
+[2026-01-17 15:29:38] [step 000550] relief=0.470 winner=D2 D1=0.4995 D2=0.4998 Δ=-0.0003
+[2026-01-17 15:29:40] [step 000600] relief=0.487 winner=D2 D1=0.4998 D2=0.4999 Δ=-0.0001
+[2026-01-17 15:29:42] [step 000650] relief=0.502 winner=D2 D1=0.4997 D2=0.5001 Δ=-0.0003
+[2026-01-17 15:29:44] [step 000700] relief=0.517 winner=D1 D1=0.5001 D2=0.4999 Δ=0.0002
+[2026-01-17 15:29:46] [step 000750] relief=0.529 winner=D1 D1=0.5002 D2=0.4998 Δ=0.0004
+[2026-01-17 15:29:48] [step 000800] relief=0.539 winner=D1 D1=0.5003 D2=0.4997 Δ=0.0006
+[2026-01-17 15:29:48] 
+=== Cooldown ===
+[2026-01-17 15:29:50] [step 000850] relief=0.545 winner=D1 D1=0.5008 D2=0.4992 Δ=0.0015
+[2026-01-17 15:29:52] [step 000900] relief=0.548 winner=D1 D1=0.5011 D2=0.4989 Δ=0.0022
+[2026-01-17 15:29:53] 
+=== S3-A: Sensitivity D1 mag=0.15 ===
+[2026-01-17 15:29:55] [step 000970] relief=0.547 winner=D1 D1=0.5000 D2=0.5000 Δ=0.0000
+[2026-01-17 15:29:56] [step 001020] relief=0.543 winner=D2 D1=0.4994 D2=0.5006 Δ=-0.0013
+[2026-01-17 15:29:58] [step 001070] relief=0.536 winner=D2 D1=0.4991 D2=0.5009 Δ=-0.0018
+[2026-01-17 15:30:00] [step 001120] relief=0.528 winner=D2 D1=0.4990 D2=0.5010 Δ=-0.0019
+[2026-01-17 15:30:02] [step 001170] relief=0.518 winner=D2 D1=0.4988 D2=0.5012 Δ=-0.0024
+[2026-01-17 15:30:04] [step 001220] relief=0.508 winner=D2 D1=0.4988 D2=0.5012 Δ=-0.0024
+[2026-01-17 15:30:04] 
+=== Cooldown ===
+[2026-01-17 15:30:05] [step 001270] relief=0.498 winner=D2 D1=0.4990 D2=0.5010 Δ=-0.0020
+[2026-01-17 15:30:07] [step 001320] relief=0.488 winner=D2 D1=0.4988 D2=0.5012 Δ=-0.0023
+[2026-01-17 15:30:08] 
+=== S3-A: Sensitivity D1 mag=0.35 ===
+[2026-01-17 15:30:10] [step 001390] relief=0.477 winner=D2 D1=0.4951 D2=0.5049 Δ=-0.0098
+[2026-01-17 15:30:12] [step 001440] relief=0.472 winner=D2 D1=0.4933 D2=0.5067 Δ=-0.0133
+[2026-01-17 15:30:13] [step 001490] relief=0.468 winner=D2 D1=0.4929 D2=0.5071 Δ=-0.0143
+[2026-01-17 15:30:15] [step 001540] relief=0.466 winner=D2 D1=0.4934 D2=0.5066 Δ=-0.0132
+[2026-01-17 15:30:17] [step 001590] relief=0.467 winner=D2 D1=0.4943 D2=0.5057 Δ=-0.0115
+[2026-01-17 15:30:19] [step 001640] relief=0.469 winner=D2 D1=0.4950 D2=0.5050 Δ=-0.0100
+[2026-01-17 15:30:19] 
+=== Cooldown ===
+[2026-01-17 15:30:21] [step 001690] relief=0.472 winner=D2 D1=0.4965 D2=0.5035 Δ=-0.0071
+[2026-01-17 15:30:22] [step 001740] relief=0.477 winner=D2 D1=0.4974 D2=0.5026 Δ=-0.0052
+[2026-01-17 15:30:23] 
+=== S3-B1: Ramp UP ===
+[2026-01-17 15:30:25] [step 001810] relief=0.486 winner=D2 D1=0.4966 D2=0.5034 Δ=-0.0067
+[2026-01-17 15:30:28] [step 001860] relief=0.492 winner=D2 D1=0.4945 D2=0.5055 Δ=-0.0110
+[2026-01-17 15:30:29] [step 001910] relief=0.498 winner=D2 D1=0.4920 D2=0.5080 Δ=-0.0161
+[2026-01-17 15:30:31] [step 001960] relief=0.504 winner=D2 D1=0.4897 D2=0.5103 Δ=-0.0205
+[2026-01-17 15:30:33] [step 002010] relief=0.509 winner=D2 D1=0.4871 D2=0.5129 Δ=-0.0259
+[2026-01-17 15:30:35] [step 002060] relief=0.513 winner=D2 D1=0.4850 D2=0.5150 Δ=-0.0299
+[2026-01-17 15:30:37] [step 002110] relief=0.516 winner=D2 D1=0.4841 D2=0.5159 Δ=-0.0319
+[2026-01-17 15:30:39] [step 002160] relief=0.517 winner=D2 D1=0.4835 D2=0.5165 Δ=-0.0330
+[2026-01-17 15:30:41] [step 002210] relief=0.518 winner=D2 D1=0.4850 D2=0.5150 Δ=-0.0300
+[2026-01-17 15:30:42] [step 002260] relief=0.517 winner=D2 D1=0.4875 D2=0.5125 Δ=-0.0250
+[2026-01-17 15:30:42] 
+=== S3-B2: Ramp DOWN ===
+[2026-01-17 15:30:44] [step 002310] relief=0.514 winner=D2 D1=0.4922 D2=0.5078 Δ=-0.0157
+[2026-01-17 15:30:46] [step 002360] relief=0.512 winner=D2 D1=0.4975 D2=0.5025 Δ=-0.0050
+[2026-01-17 15:30:48] [step 002410] relief=0.508 winner=D1 D1=0.5030 D2=0.4970 Δ=0.0059
+[2026-01-17 15:30:50] [step 002460] relief=0.504 winner=D1 D1=0.5082 D2=0.4918 Δ=0.0164
+[2026-01-17 15:30:52] [step 002510] relief=0.500 winner=D1 D1=0.5135 D2=0.4865 Δ=0.0270
+[2026-01-17 15:30:53] [step 002560] relief=0.496 winner=D1 D1=0.5184 D2=0.4816 Δ=0.0368
+[2026-01-17 15:30:55] [step 002610] relief=0.493 winner=D1 D1=0.5228 D2=0.4772 Δ=0.0457
+[2026-01-17 15:30:57] [step 002660] relief=0.490 winner=D1 D1=0.5264 D2=0.4736 Δ=0.0528
+[2026-01-17 15:30:59] [step 002710] relief=0.487 winner=D1 D1=0.5279 D2=0.4721 Δ=0.0558
+[2026-01-17 15:31:01] [step 002760] relief=0.486 winner=D1 D1=0.5282 D2=0.4718 Δ=0.0564
+[2026-01-17 15:31:01] 
+=== S3-C: Salience saturation burst ===
+[2026-01-17 15:31:03] [step 002810] relief=0.485 winner=D1 D1=0.5275 D2=0.4725 Δ=0.0550
+[2026-01-17 15:31:05] [step 002860] relief=0.485 winner=D1 D1=0.5261 D2=0.4739 Δ=0.0522
+[2026-01-17 15:31:07] [step 002910] relief=0.486 winner=D1 D1=0.5239 D2=0.4761 Δ=0.0478
+[2026-01-17 15:31:09] [step 002960] relief=0.488 winner=D1 D1=0.5214 D2=0.4786 Δ=0.0429
+[2026-01-17 15:31:11] [step 003010] relief=0.490 winner=D1 D1=0.5190 D2=0.4810 Δ=0.0380
+[2026-01-17 15:31:13] [step 003060] relief=0.492 winner=D1 D1=0.5161 D2=0.4839 Δ=0.0322
+[2026-01-17 15:31:15] [step 003110] relief=0.494 winner=D1 D1=0.5128 D2=0.4872 Δ=0.0256
+[2026-01-17 15:31:17] [step 003160] relief=0.497 winner=D1 D1=0.5093 D2=0.4907 Δ=0.0186
+[2026-01-17 15:31:19] [step 003210] relief=0.499 winner=D1 D1=0.5053 D2=0.4947 Δ=0.0107
+[2026-01-17 15:31:21] [step 003260] relief=0.501 winner=D1 D1=0.5011 D2=0.4989 Δ=0.0023
+[2026-01-17 15:31:23] [step 003310] relief=0.503 winner=D2 D1=0.4970 D2=0.5030 Δ=-0.0059
+[2026-01-17 15:31:25] [step 003360] relief=0.504 winner=D2 D1=0.4931 D2=0.5069 Δ=-0.0138
+[2026-01-17 15:31:27] [step 003410] relief=0.505 winner=D2 D1=0.4895 D2=0.5105 Δ=-0.0209
+[2026-01-17 15:31:29] [step 003460] relief=0.506 winner=D2 D1=0.4862 D2=0.5138 Δ=-0.0275
+[2026-01-17 15:31:29] 
+=== Cooldown ===
+[2026-01-17 15:31:31] [step 003510] relief=0.505 winner=D2 D1=0.4830 D2=0.5170 Δ=-0.0341
+[2026-01-17 15:31:33] [step 003560] relief=0.505 winner=D2 D1=0.4797 D2=0.5203 Δ=-0.0406
+[2026-01-17 15:31:35] [step 003610] relief=0.504 winner=D2 D1=0.4766 D2=0.5234 Δ=-0.0468
+[2026-01-17 15:31:37] [step 003660] relief=0.502 winner=D2 D1=0.4736 D2=0.5264 Δ=-0.0527
+[2026-01-17 15:31:38] [step 003710] relief=0.501 winner=D2 D1=0.4714 D2=0.5286 Δ=-0.0572
+[2026-01-17 15:31:40] [step 003760] relief=0.499 winner=D2 D1=0.4698 D2=0.5302 Δ=-0.0603
+[2026-01-17 15:31:40] 
+=== S3-D: Delayed causality chain ===
+[2026-01-17 15:31:42] [step 003810] relief=0.498 winner=D2 D1=0.4694 D2=0.5306 Δ=-0.0611
+[2026-01-17 15:31:44] [step 003860] relief=0.496 winner=D2 D1=0.4692 D2=0.5308 Δ=-0.0617
+[2026-01-17 15:31:46] [step 003910] relief=0.495 winner=D2 D1=0.4680 D2=0.5320 Δ=-0.0640
+[2026-01-17 15:31:48] [step 003960] relief=0.494 winner=D2 D1=0.4686 D2=0.5314 Δ=-0.0629
+[2026-01-17 15:31:50] [step 004010] relief=0.493 winner=D2 D1=0.4703 D2=0.5297 Δ=-0.0594
+[2026-01-17 15:31:52] [step 004060] relief=0.493 winner=D2 D1=0.4729 D2=0.5271 Δ=-0.0542
+[2026-01-17 15:31:52] 
+=== S3-E: Near-latch grazing ===
+[2026-01-17 15:31:54] [step 004110] relief=0.493 winner=D2 D1=0.4751 D2=0.5249 Δ=-0.0499
+[2026-01-17 15:31:56] [step 004160] relief=0.493 winner=D2 D1=0.4767 D2=0.5233 Δ=-0.0466
+[2026-01-17 15:31:58] [step 004210] relief=0.493 winner=D2 D1=0.4782 D2=0.5218 Δ=-0.0437
+[2026-01-17 15:32:00] [step 004260] relief=0.494 winner=D2 D1=0.4800 D2=0.5200 Δ=-0.0401
+[2026-01-17 15:32:02] [step 004310] relief=0.495 winner=D2 D1=0.4821 D2=0.5179 Δ=-0.0358
+[2026-01-17 15:32:04] [step 004360] relief=0.496 winner=D2 D1=0.4843 D2=0.5157 Δ=-0.0313
+[2026-01-17 15:32:06] [step 004410] relief=0.497 winner=D2 D1=0.4866 D2=0.5134 Δ=-0.0268
+[2026-01-17 15:32:07] [step 004460] relief=0.498 winner=D2 D1=0.4891 D2=0.5109 Δ=-0.0217
+[2026-01-17 15:32:09] [step 004510] relief=0.499 winner=D2 D1=0.4918 D2=0.5082 Δ=-0.0163
+[2026-01-17 15:32:11] [step 004560] relief=0.499 winner=D2 D1=0.4950 D2=0.5050 Δ=-0.0100
+[2026-01-17 15:32:13] [step 004610] relief=0.500 winner=D2 D1=0.4980 D2=0.5020 Δ=-0.0040
+[2026-01-17 15:32:15] [step 004660] relief=0.500 winner=D1 D1=0.5010 D2=0.4990 Δ=0.0020
+[2026-01-17 15:32:17] [step 004710] relief=0.501 winner=D1 D1=0.5032 D2=0.4968 Δ=0.0065
+[2026-01-17 15:32:19] [step 004760] relief=0.501 winner=D1 D1=0.5050 D2=0.4950 Δ=0.0099
+[2026-01-17 15:32:21] [step 004810] relief=0.501 winner=D1 D1=0.5068 D2=0.4932 Δ=0.0136
+[2026-01-17 15:32:23] [step 004860] relief=0.500 winner=D1 D1=0.5085 D2=0.4915 Δ=0.0170
+[2026-01-17 15:32:25] [step 004910] relief=0.500 winner=D1 D1=0.5099 D2=0.4901 Δ=0.0198
+[2026-01-17 15:32:27] [step 004960] relief=0.499 winner=D1 D1=0.5112 D2=0.4888 Δ=0.0223
+[2026-01-17 15:32:27] 
+=== SUITE 3 COMPLETE ===

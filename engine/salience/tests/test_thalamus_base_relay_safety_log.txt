@@ -1,0 +1,38 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5557
+[INFO] Warmup complete
+
+[PHASE A] Baseline (no thalamus stimulation)
+[A 000] PFC=0.015800 ASSOC=0.015800 Δ=0.000011
+[A 050] PFC=0.016000 ASSOC=0.016000 Δ=0.000001
+[A 100] PFC=0.016100 ASSOC=0.016100 Δ=0.000002
+[A 150] PFC=0.016200 ASSOC=0.016200 Δ=0.000013
+[A 200] PFC=0.016300 ASSOC=0.016300 Δ=0.000007
+[A 250] PFC=0.016400 ASSOC=0.016400 Δ=0.000012
+
+[PHASE B] Thalamus base relay active (poke thalamus_base 1.0)
+[B 000] PFC=0.016400 ASSOC=0.016400 Δ=0.000006
+[B 050] PFC=0.016400 ASSOC=0.016400 Δ=0.000005
+[B 100] PFC=0.016300 ASSOC=0.016400 Δ=0.000010
+[B 150] PFC=0.016300 ASSOC=0.016300 Δ=0.000024
+[B 200] PFC=0.016200 ASSOC=0.016200 Δ=0.000027
+[B 250] PFC=0.016100 ASSOC=0.016100 Δ=0.000023
+
+=== THALAMUS BASE RELAY SAFETY SUMMARY ===
+
+Phase A (baseline):
+PFC mean:   0.016180
+ASSOC mean:0.016188
+Δ mean:    0.000008
+
+Phase B (thalamus active):
+PFC mean:   0.016268
+ASSOC mean:0.016274
+Δ mean:    0.000016
+
+No decisions expected or checked.
+=========================================
+
+C:\Users\Admin\Desktop\neural framework>

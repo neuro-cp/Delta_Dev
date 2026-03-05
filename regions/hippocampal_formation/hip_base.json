@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "type": "RegionBase",
+  "region_id": "HIPPOCAMPAL_FORMATION",
+  "category": "memory_system",
+  "reference_models": ["human", "rodent"],
+
+  "spatial_properties": {
+    "coordinate_frame": "local_region_space",
+    "approx_dimensions_mm": [40, 15, 10]
+  },
+
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "baseline_firing_bias": 0.1,
+    "plasticity_enabled": true
+  },
+
+  "default_channels": {
+    "NaV_FAST": 0.8,
+    "KV_DELAYED_RECTIFIER": 0.6,
+    "KCa": 0.3,
+    "LEAK": 0.5
+  },
+
+  "default_receptors": {
+    "AMPA": 0.5,
+    "NMDA": 0.4,
+    "GABA_A": 0.3,
+    "GABA_B": 0.1
+  },
+
+  "intrinsic_signals": {
+    "calcium_proxy": 0.0,
+    "growth_factor": 0.0,
+    "energy_state": 1.0
+  },
+
+  "allowed_inputs": [
+    "CORTEX",
+    "THALAMUS"
+  ],
+
+  "allowed_outputs": [
+    "CORTEX",
+    "AMYGDALA"
+  ],
+
+  "notes": "Hippocampal formation supports intrinsic replay, plasticity-driven learning, and long-term structural adaptation."
+}

@@ -1,0 +1,171 @@
+DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] mean delta = 0.001039
+[BASELINE] max  delta = 0.002170
+[WARN][SALIENCE] GPi relief dipped: 0.4298 at step 401
+[WARN][SALIENCE] GPi relief dipped: 0.4300 at step 402
+[WARN][SALIENCE] GPi relief dipped: 0.4302 at step 403
+[WARN][SALIENCE] GPi relief dipped: 0.4304 at step 404
+[WARN][SALIENCE] GPi relief dipped: 0.4306 at step 405
+[WARN][SALIENCE] GPi relief dipped: 0.4308 at step 406
+[WARN][SALIENCE] GPi relief dipped: 0.4310 at step 407
+[WARN][SALIENCE] GPi relief dipped: 0.4312 at step 408
+[WARN][SALIENCE] GPi relief dipped: 0.4314 at step 409
+[WARN][SALIENCE] GPi relief dipped: 0.4316 at step 410
+[WARN][SALIENCE] GPi relief dipped: 0.4318 at step 411
+[WARN][SALIENCE] GPi relief dipped: 0.4320 at step 412
+[WARN][SALIENCE] GPi relief dipped: 0.4322 at step 413
+[WARN][SALIENCE] GPi relief dipped: 0.4324 at step 414
+[WARN][SALIENCE] GPi relief dipped: 0.4327 at step 415
+[WARN][SALIENCE] GPi relief dipped: 0.4329 at step 416
+[WARN][SALIENCE] GPi relief dipped: 0.4331 at step 417
+[WARN][SALIENCE] GPi relief dipped: 0.4333 at step 418
+[WARN][SALIENCE] GPi relief dipped: 0.4335 at step 419
+[WARN][SALIENCE] GPi relief dipped: 0.4338 at step 420
+[WARN][SALIENCE] GPi relief dipped: 0.4340 at step 421
+[WARN][SALIENCE] GPi relief dipped: 0.4342 at step 422
+[WARN][SALIENCE] GPi relief dipped: 0.4344 at step 423
+[WARN][SALIENCE] GPi relief dipped: 0.4347 at step 424
+[WARN][SALIENCE] GPi relief dipped: 0.4349 at step 425
+[WARN][SALIENCE] GPi relief dipped: 0.4351 at step 426
+[WARN][SALIENCE] GPi relief dipped: 0.4353 at step 427
+[WARN][SALIENCE] GPi relief dipped: 0.4356 at step 428
+[WARN][SALIENCE] GPi relief dipped: 0.4358 at step 429
+[WARN][SALIENCE] GPi relief dipped: 0.4360 at step 430
+[WARN][SALIENCE] GPi relief dipped: 0.4363 at step 431
+[WARN][SALIENCE] GPi relief dipped: 0.4365 at step 432
+[WARN][SALIENCE] GPi relief dipped: 0.4367 at step 433
+[WARN][SALIENCE] GPi relief dipped: 0.4370 at step 434
+[WARN][SALIENCE] GPi relief dipped: 0.4372 at step 435
+[WARN][SALIENCE] GPi relief dipped: 0.4374 at step 436
+[WARN][SALIENCE] GPi relief dipped: 0.4377 at step 437
+[WARN][SALIENCE] GPi relief dipped: 0.4379 at step 438
+[WARN][SALIENCE] GPi relief dipped: 0.4382 at step 439
+[WARN][SALIENCE] GPi relief dipped: 0.4384 at step 440
+[WARN][SALIENCE] GPi relief dipped: 0.4387 at step 441
+[WARN][SALIENCE] GPi relief dipped: 0.4389 at step 442
+[WARN][SALIENCE] GPi relief dipped: 0.4392 at step 443
+[WARN][SALIENCE] GPi relief dipped: 0.4394 at step 444
+[WARN][SALIENCE] GPi relief dipped: 0.4397 at step 445
+[WARN][SALIENCE] GPi relief dipped: 0.4399 at step 446
+[WARN][SALIENCE] GPi relief dipped: 0.4402 at step 447
+[WARN][SALIENCE] GPi relief dipped: 0.4404 at step 448
+[WARN][SALIENCE] GPi relief dipped: 0.4407 at step 449
+[WARN][SALIENCE] GPi relief dipped: 0.4409 at step 450
+[WARN][SALIENCE] GPi relief dipped: 0.4412 at step 451
+[WARN][SALIENCE] GPi relief dipped: 0.4414 at step 452
+[WARN][SALIENCE] GPi relief dipped: 0.4417 at step 453
+[WARN][SALIENCE] GPi relief dipped: 0.4420 at step 454
+[WARN][SALIENCE] GPi relief dipped: 0.4422 at step 455
+[WARN][SALIENCE] GPi relief dipped: 0.4425 at step 456
+[WARN][SALIENCE] GPi relief dipped: 0.4427 at step 457
+[WARN][SALIENCE] GPi relief dipped: 0.4430 at step 458
+[WARN][SALIENCE] GPi relief dipped: 0.4433 at step 459
+[WARN][SALIENCE] GPi relief dipped: 0.4435 at step 460
+[WARN][SALIENCE] GPi relief dipped: 0.4438 at step 461
+[WARN][SALIENCE] GPi relief dipped: 0.4441 at step 462
+[WARN][SALIENCE] GPi relief dipped: 0.4443 at step 463
+[WARN][SALIENCE] GPi relief dipped: 0.4446 at step 464
+[WARN][SALIENCE] GPi relief dipped: 0.4449 at step 465
+[WARN][SALIENCE] GPi relief dipped: 0.4452 at step 466
+[WARN][SALIENCE] GPi relief dipped: 0.4454 at step 467
+[WARN][SALIENCE] GPi relief dipped: 0.4457 at step 468
+[WARN][SALIENCE] GPi relief dipped: 0.4460 at step 469
+[WARN][SALIENCE] GPi relief dipped: 0.4462 at step 470
+[WARN][SALIENCE] GPi relief dipped: 0.4465 at step 471
+[WARN][SALIENCE] GPi relief dipped: 0.4468 at step 472
+[WARN][SALIENCE] GPi relief dipped: 0.4471 at step 473
+[WARN][SALIENCE] GPi relief dipped: 0.4473 at step 474
+[WARN][SALIENCE] GPi relief dipped: 0.4476 at step 475
+[WARN][SALIENCE] GPi relief dipped: 0.4479 at step 476
+[WARN][SALIENCE] GPi relief dipped: 0.4482 at step 477
+[WARN][SALIENCE] GPi relief dipped: 0.4484 at step 478
+[WARN][SALIENCE] GPi relief dipped: 0.4487 at step 479
+[WARN][SALIENCE] GPi relief dipped: 0.4490 at step 480
+[WARN][SALIENCE] GPi relief dipped: 0.4493 at step 481
+[WARN][SALIENCE] GPi relief dipped: 0.4496 at step 482
+[WARN][SALIENCE] GPi relief dipped: 0.4499 at step 483
+[WARN][SALIENCE] GPi relief dipped: 0.4502 at step 484
+[WARN][SALIENCE] GPi relief dipped: 0.4504 at step 485
+[WARN][SALIENCE] GPi relief dipped: 0.4507 at step 486
+[WARN][SALIENCE] GPi relief dipped: 0.4510 at step 487
+[WARN][SALIENCE] GPi relief dipped: 0.4513 at step 488
+[WARN][SALIENCE] GPi relief dipped: 0.4516 at step 489
+[WARN][SALIENCE] GPi relief dipped: 0.4519 at step 490
+[WARN][SALIENCE] GPi relief dipped: 0.4522 at step 491
+[WARN][SALIENCE] GPi relief dipped: 0.4525 at step 492
+[WARN][SALIENCE] GPi relief dipped: 0.4528 at step 493
+[WARN][SALIENCE] GPi relief dipped: 0.4531 at step 494
+[WARN][SALIENCE] GPi relief dipped: 0.4534 at step 495
+[WARN][SALIENCE] GPi relief dipped: 0.4537 at step 496
+[WARN][SALIENCE] GPi relief dipped: 0.4540 at step 497
+[WARN][SALIENCE] GPi relief dipped: 0.4542 at step 498
+[WARN][SALIENCE] GPi relief dipped: 0.4545 at step 499
+[WARN][SALIENCE] GPi relief dipped: 0.4548 at step 500
+[WARN][SALIENCE] GPi relief dipped: 0.4551 at step 501
+[WARN][SALIENCE] GPi relief dipped: 0.4554 at step 502
+[WARN][SALIENCE] GPi relief dipped: 0.4557 at step 503
+[WARN][SALIENCE] GPi relief dipped: 0.4560 at step 504
+[WARN][SALIENCE] GPi relief dipped: 0.4564 at step 505
+[WARN][SALIENCE] GPi relief dipped: 0.4567 at step 506
+[WARN][SALIENCE] GPi relief dipped: 0.4570 at step 507
+[WARN][SALIENCE] GPi relief dipped: 0.4573 at step 508
+[WARN][SALIENCE] GPi relief dipped: 0.4576 at step 509
+[WARN][SALIENCE] GPi relief dipped: 0.4579 at step 510
+[WARN][SALIENCE] GPi relief dipped: 0.4582 at step 511
+[WARN][SALIENCE] GPi relief dipped: 0.4585 at step 512
+[WARN][SALIENCE] GPi relief dipped: 0.4588 at step 513
+[WARN][SALIENCE] GPi relief dipped: 0.4591 at step 514
+[WARN][SALIENCE] GPi relief dipped: 0.4594 at step 515
+[WARN][SALIENCE] GPi relief dipped: 0.4597 at step 516
+[WARN][SALIENCE] GPi relief dipped: 0.4600 at step 517
+[WARN][SALIENCE] GPi relief dipped: 0.4603 at step 518
+[WARN][SALIENCE] GPi relief dipped: 0.4606 at step 519
+[WARN][SALIENCE] GPi relief dipped: 0.4609 at step 520
+[WARN][SALIENCE] GPi relief dipped: 0.4612 at step 521
+[WARN][SALIENCE] GPi relief dipped: 0.4616 at step 522
+[WARN][SALIENCE] GPi relief dipped: 0.4619 at step 523
+[WARN][SALIENCE] GPi relief dipped: 0.4622 at step 524
+[WARN][SALIENCE] GPi relief dipped: 0.4625 at step 525
+[WARN][SALIENCE] GPi relief dipped: 0.4628 at step 526
+[WARN][SALIENCE] GPi relief dipped: 0.4631 at step 527
+[WARN][SALIENCE] GPi relief dipped: 0.4634 at step 528
+[WARN][SALIENCE] GPi relief dipped: 0.4637 at step 529
+[WARN][SALIENCE] GPi relief dipped: 0.4641 at step 530
+[WARN][SALIENCE] GPi relief dipped: 0.4644 at step 531
+[WARN][SALIENCE] GPi relief dipped: 0.4647 at step 532
+[WARN][SALIENCE] GPi relief dipped: 0.4650 at step 533
+[WARN][SALIENCE] GPi relief dipped: 0.4653 at step 534
+[WARN][SALIENCE] GPi relief dipped: 0.4656 at step 535
+[WARN][SALIENCE] GPi relief dipped: 0.4659 at step 536
+[WARN][SALIENCE] GPi relief dipped: 0.4662 at step 537
+[WARN][SALIENCE] GPi relief dipped: 0.4666 at step 538
+[WARN][SALIENCE] GPi relief dipped: 0.4669 at step 539
+[WARN][SALIENCE] GPi relief dipped: 0.4672 at step 540
+[WARN][SALIENCE] GPi relief dipped: 0.4675 at step 541
+[WARN][SALIENCE] GPi relief dipped: 0.4678 at step 542
+[WARN][SALIENCE] GPi relief dipped: 0.4682 at step 543
+[WARN][SALIENCE] GPi relief dipped: 0.4685 at step 544
+[WARN][SALIENCE] GPi relief dipped: 0.4688 at step 545
+[WARN][SALIENCE] GPi relief dipped: 0.4691 at step 546
+[WARN][SALIENCE] GPi relief dipped: 0.4694 at step 547
+[WARN][SALIENCE] GPi relief dipped: 0.4698 at step 548
+[SALIENCE] peak delta = 0.005521
+[SALIENCE] gate violations = 148
+[SALIENCE] decision events = 0
+[POST] mean delta = 0.001220
+[POST] peak delta = 0.003021
+[POST] gate violations = 0
+[POST] decision events = 0
+=== TEST COMPLETE (observational run) ===
+
+C:\Users\Admin\Desktop\neural framework>

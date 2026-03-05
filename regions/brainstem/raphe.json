@@ -1,0 +1,29 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "RAPHE",
+  "parent_region": "BRAINSTEM",
+
+  "function": "serotonergic_modulation",
+
+  "populations": {
+    "SEROTONERGIC_NEURONS": {
+      "count": 25000,
+      "neuron_type": "neuromodulatory",
+      "baseline_firing_rate_hz": 2.5,
+      "plasticity_profile": "low",
+
+      "neuromodulator_release": {
+        "type": "serotonin",
+        "signal_target": "serotonin_tone",
+        "release_gain": 0.04
+      }
+    }
+  },
+
+  "drug_sensitivity": {
+    "ssris": "very_high",
+    "psychedelics": "high",
+    "sedatives": "moderate"
+  }
+}

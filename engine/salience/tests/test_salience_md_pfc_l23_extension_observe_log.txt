@@ -1,0 +1,30 @@
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[INIT] MD assemblies: 50
+[INIT] PFC L2/3 assemblies: 200
+[INIT] Salience sparsity gate attached to MD + PFC L2/3
+[INIT] Gate stats: {'initialized': True, 'eligible': 62, 'total': 250, 'ratio': 0.248}
+[INFO] Command server on port 5559
+[CMD] Listening on 127.0.0.1:5559
+[STEP 0000] Δ=0.000000 relief=0.4972 decision=False
+[STEP 0050] Δ=0.000036 relief=0.4736 decision=False
+[STEP 0100] Δ=0.000797 relief=0.4532 decision=False
+[STEP 0150] Δ=0.000933 relief=0.4371 decision=False
+[STEP 0200] Δ=0.000436 relief=0.4257 decision=False
+[STEP 0250] Δ=0.000651 relief=0.4195 decision=False
+[STEP 0300] Δ=0.000966 relief=0.4183 decision=False
+[STEP 0350] Δ=0.000815 relief=0.4219 decision=False
+[STEP 0400] Δ=0.000542 relief=0.4298 decision=False
+[STEP 0450] Δ=0.000486 relief=0.4412 decision=False
+[STEP 0500] Δ=0.000262 relief=0.4551 decision=False
+[STEP 0550] Δ=0.000077 relief=0.4707 decision=False
+[STEP 0600] Δ=0.000469 relief=0.4869 decision=False
+[STEP 0650] Δ=0.001302 relief=0.5027 decision=False
+[STEP 0700] Δ=0.002239 relief=0.5171 decision=False
+[STEP 0750] Δ=0.002651 relief=0.5294 decision=False
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

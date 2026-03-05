@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "type": "RegionBase",
+  "region_id": "BASAL_GANGLIA",
+  "category": "action_selection",
+  "reference_models": ["human", "rodent"],
+
+  "spatial_properties": {
+    "coordinate_frame": "deep_nuclei_space",
+    "approx_dimensions_mm": [30, 20, 20]
+  },
+
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+
+  "default_channels": {
+    "NaV_FAST": 0.75,
+    "KV_DELAYED_RECTIFIER": 0.65,
+    "HCN": 0.25,
+    "LEAK": 0.6
+  },
+
+  "default_receptors": {
+    "AMPA": 0.4,
+    "NMDA": 0.35,
+    "GABA_A": 0.6,
+    "GABA_B": 0.3,
+    "D1": 0.0,
+    "D2": 0.0
+  },
+
+  "intrinsic_signals": {
+    "dopamine_tone": 0.0,
+    "action_bias": 0.0,
+    "inhibition_bias": 0.0
+  },
+
+  "allowed_inputs": [
+    "CORTEX",
+    "HIPPOCAMPAL_FORMATION",
+    "AMYGDALA",
+    "BRAINSTEM"
+  ],
+
+  "allowed_outputs": [
+    "THALAMUS",
+    "BRAINSTEM"
+  ],
+
+  "notes": "Basal ganglia implement action selection via competing inhibitory pathways modulated by dopamine."
+}

@@ -1,0 +1,61 @@
+{
+  "version": "1.0.0",
+  "type": "StateBase",
+
+  "description": "Defines how global brain states modulate expression, excitability, plasticity, and signal dynamics at compile time.",
+
+  "state_model": {
+    "scope": "global",
+    "applies_to": [
+      "receptor_expression",
+      "channel_expression",
+      "firing_threshold",
+      "plasticity_gain",
+      "oscillatory_bias"
+    ]
+  },
+
+  "modulation_rules": {
+    "combine_with_expression": "multiplicative",
+    "combine_with_compounds": "multiplicative",
+    "clamp_range": {
+      "min": 0.0,
+      "max": 1.5
+    }
+  },
+
+  "defaults": {
+    "neuromodulators": {
+      "acetylcholine": 1.0,
+      "dopamine": 1.0,
+      "serotonin": 1.0,
+      "norepinephrine": 1.0,
+      "histamine": 1.0
+    },
+
+    "excitability": {
+      "firing_threshold_modifier": 1.0,
+      "leak_conductance_modifier": 1.0
+    },
+
+    "plasticity": {
+      "ltd_ltp_balance": 1.0,
+      "learning_rate": 1.0
+    },
+
+    "oscillations": {
+      "delta": 0.0,
+      "theta": 0.0,
+      "alpha": 0.0,
+      "beta": 0.0,
+      "gamma": 0.0
+    }
+  },
+
+  "missing_reference_policy": {
+    "unknown_state": "error",
+    "unspecified_modifier": "use_default"
+  },
+
+  "notes": "State profiles represent global physiological and behavioral conditions (e.g., awake, sleep, anesthesia) and modulate but do not redefine anatomy or base expression."
+}

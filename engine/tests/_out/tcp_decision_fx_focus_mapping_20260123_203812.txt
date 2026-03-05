@@ -1,0 +1,34 @@
+[2026-01-23 20:38:12] === BEGIN: Decision FX Focus Mapping Audit ===
+[target] 127.0.0.1:5557
+[CLEAN] reset_latch + value_clear
+OK reset_latch
+OK value reset
+[probe] decision:
+DECISION: none
+[probe] control:
+CONTROL:
+{
+  "step": 110,
+  "time": 1.0900000000000007,
+  "phase": "pre-decision",
+  "decision_made": false,
+  "decision_winner": null,
+  "committed": false,
+  "suppress_alternatives": false,
+  "working_state_active": false,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[ACTION] force_commit (best-effort)
+$ force_commit
+OK force_commit armed
+
+[PHASE] post_commit sampling x30 @ dt=0.20s
+[0000] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0001] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0002] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0003] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0004] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0005] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0006] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]
+[0007] commit=False winner=None conf=0.000 fx_cmd=<none> lock=False th_gain=1.000 region_keys=[]

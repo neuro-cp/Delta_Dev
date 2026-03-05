@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "type": "CompoundBase",
+
+  "description": "Defines pharmacodynamic rules for how compounds interact with receptors, channels, and neuromodulatory systems.",
+
+  "binding_model": {
+    "target_types": [
+      "receptor",
+      "channel",
+      "transporter",
+      "enzyme"
+    ],
+
+    "interaction_modes": [
+      "agonist",
+      "partial_agonist",
+      "antagonist",
+      "inverse_agonist",
+      "positive_allosteric",
+      "negative_allosteric"
+    ]
+  },
+
+  "effect_application": {
+    "combine_with_expression": "multiplicative",
+    "combine_with_state": "multiplicative",
+    "clamp_range": {
+      "min": 0.0,
+      "max": 1.5
+    }
+  },
+
+  "dose_model": {
+    "dose_unit": "relative",
+    "default_dose": 1.0,
+    "allow_user_scaling": true
+  },
+
+  "timecourse": {
+    "model": "static",
+    "supports_dynamic": false,
+    "notes": "Dynamic pharmacokinetics (onset, half-life, metabolites) will be handled by the runtime engine."
+  },
+
+  "missing_reference_policy": {
+    "unknown_target": "error",
+    "unspecified_effect": "ignore"
+  },
+
+  "notes": "This file defines how compounds are interpreted, not what any specific compound does."
+}

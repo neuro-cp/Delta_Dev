@@ -1,0 +1,96 @@
+{
+  "version": "1.1.0",
+  "type": "RegionSubstructure",
+  "region_id": "BLA",
+  "parent_region": "AMYGDALA",
+
+  "function": "emotional_association_learning",
+
+  "spatial_properties": {
+    "neuron_density_per_mm3": 70000
+  },
+
+  "populations": {
+
+    "PYRAMIDAL_CELLS": {
+      "count": 35000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+
+      "channels": {
+        "NaV_FAST": 0.8,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "KCa": 0.3,
+        "LEAK": 0.55
+      },
+
+      "receptors": {
+        "AMPA": 0.55,
+        "NMDA": 0.5,
+        "GABA_A": 0.35,
+        "D1": 0.25,
+        "5HT2A": 0.2
+      },
+
+      "baseline_firing_rate_hz": 0.8,
+      "plasticity_profile": "high"
+    },
+
+    "INTERNEURONS": {
+      "count": 12000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+
+      "channels": {
+        "NaV_FAST": 0.9,
+        "KV_DELAYED_RECTIFIER": 0.8,
+        "LEAK": 0.4
+      },
+
+      "receptors": {
+        "AMPA": 0.4,
+        "GABA_A": 0.7
+      },
+
+      "baseline_firing_rate_hz": 7.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "SUBICULUM",
+      "source_population": "PYRAMIDAL_CELLS",
+      "strength": 0.4
+    },
+    {
+      "source_region": "ASSOCIATION_CORTEX",
+      "source_population": "L2_3_PYRAMIDAL",
+      "strength": 0.5
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "PFC",
+      "target_population": "L2_3_PYRAMIDAL",
+      "strength": 0.4
+    },
+    {
+      "target_region": "CEA",
+      "strength": 0.7
+    }
+  ],
+
+  "intrinsic_signals": {
+    "threat_bias": 0.0,
+    "valence_bias": 0.0
+  },
+
+  "drug_sensitivity": {
+    "anxiolytics": "high",
+    "benzodiazepines": "high",
+    "psychedelics": "moderate",
+    "stimulants": "moderate"
+  }
+}

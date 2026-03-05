@@ -1,0 +1,146 @@
+{
+  "adapter": {
+    "muted_assemblies": [
+      "hypothalamus:PARAVENTRICULAR_NUCLEUS:0",
+      "hypothalamus:PARAVENTRICULAR_NUCLEUS:4"
+    ],
+    "attenuation": 0.25
+  },
+  "steps": {
+    "0": [
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:0",
+        "activity": 0.014997731845812028,
+        "structural_gain": 0.25
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:1",
+        "activity": 0.01501973832017901,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:2",
+        "activity": 0.015020217408604085,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:3",
+        "activity": 0.01499355228177716,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:4",
+        "activity": 0.015002398428916937,
+        "structural_gain": 0.25
+      }
+    ],
+    "5": [
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:0",
+        "activity": 0.014991505328779887,
+        "structural_gain": 0.25
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:1",
+        "activity": 0.015014597420633128,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:2",
+        "activity": 0.01500792390593865,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:3",
+        "activity": 0.015007238873213322,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:4",
+        "activity": 0.015033194303265652,
+        "structural_gain": 0.25
+      }
+    ],
+    "10": [
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:0",
+        "activity": 0.015026344301497492,
+        "structural_gain": 0.25
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:1",
+        "activity": 0.015029322214452566,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:2",
+        "activity": 0.015034599870455334,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:3",
+        "activity": 0.015003356420429726,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:4",
+        "activity": 0.01508135032875639,
+        "structural_gain": 0.25
+      }
+    ],
+    "20": [
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:0",
+        "activity": 0.015027800563400896,
+        "structural_gain": 0.25
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:1",
+        "activity": 0.015040890503295015,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:2",
+        "activity": 0.01513157321513432,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:3",
+        "activity": 0.015059250964937798,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:4",
+        "activity": 0.015118837300616628,
+        "structural_gain": 0.25
+      }
+    ],
+    "39": [
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:0",
+        "activity": 0.015156991674201137,
+        "structural_gain": 0.25
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:1",
+        "activity": 0.015183199090163968,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:2",
+        "activity": 0.015167539363775653,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:3",
+        "activity": 0.015130433784657319,
+        "structural_gain": 1.0
+      },
+      {
+        "assembly_id": "hypothalamus:PARAVENTRICULAR_NUCLEUS:4",
+        "activity": 0.015197458963971297,
+        "structural_gain": 0.25
+      }
+    ]
+  }
+}

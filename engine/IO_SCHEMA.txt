@@ -1,0 +1,305 @@
+Neural Framework — Canonical Architecture I/O Reference (With Concrete Formats)
+
+Status: Canonical
+Scope: Runtime → Episodic → Replay → Cognition (Phases 4–6)
+Purpose: Provide concrete I/O shapes so tests do not require re-discovery.
+
+======================================================================
+0. Design Principle (Non‑Negotiable)
+======================================================================
+
+- Runtime acts
+- Episodic observes
+- Replay reconstructs
+- Cognition interprets
+- No layer invents meaning for the next
+
+If a test fails, the failure is structural, not accidental.
+
+======================================================================
+1. BrainRuntime (Execution Layer)
+======================================================================
+
+Role:
+- Executes neural dynamics
+- Owns time, steps, state
+- Makes decisions
+
+-----------------------------
+1.1 Decision State (Authoritative)
+-----------------------------
+
+API:
+runtime.get_decision_state() -> dict | None
+
+Concrete format:
+
+{
+  "winner": "D1_MSN",
+  "delta": 0.058437,
+  "relief": 0.545769,
+  "step": 994,
+  "time": 9.93
+}
+
+Notes:
+- This is the only authoritative decision signal.
+- Downstream systems must never recompute this.
+
+-----------------------------
+1.2 Runtime Snapshot (Internal / Test‑Only)
+-----------------------------
+
+Not canonical, but commonly observed patterns:
+
+{
+  "step": 994,
+  "time": 9.93,
+  "populations": {
+    "striatum:D1_MSN": 0.213,
+    "striatum:D2_MSN": 0.154,
+    "gpi:GPI": 0.482
+  }
+}
+
+These snapshots are NOT cognition‑ready.
+
+======================================================================
+2. Episodic System (Phase 5)
+======================================================================
+
+-----------------------------
+2.1 Episode
+-----------------------------
+
+Concrete structure:
+
+{
+  "episode_id": 3,
+  "start_step": 210,
+  "end_step": 994,
+  "decision": {
+    "winner": "D1_MSN",
+    "step": 994
+  }
+}
+
+Notes:
+- Episodes contain boundaries and annotations only.
+- No neural activity is stored here.
+
+-----------------------------
+2.2 EpisodeTracker Output
+-----------------------------
+
+tracker.episodes -> list of Episode objects
+
+Example list shape:
+
+[
+  { Episode 1 },
+  { Episode 2 },
+  { Episode 3 }
+]
+
+-----------------------------
+2.3 EpisodeTrace Event
+-----------------------------
+
+Append‑only forensic record:
+
+{
+  "event": "decision_commit",
+  "step": 994,
+  "time": 9.93,
+  "winner": "D1_MSN"
+}
+
+Trace events are never fed directly to cognition.
+
+======================================================================
+3. EpisodeReplay (Critical Boundary)
+======================================================================
+
+-----------------------------
+3.1 Replay Frame (Actual Output)
+-----------------------------
+
+EpisodeReplay.run() yields:
+
+(
+  Episode,
+  [ SignalSnapshot, SignalSnapshot, ... ]
+)
+
+Concrete example:
+
+(
+  {
+    "episode_id": 3,
+    "start_step": 210,
+    "end_step": 994
+  },
+  [
+    { SignalSnapshot @ step 210 },
+    { SignalSnapshot @ step 211 },
+    ...
+    { SignalSnapshot @ step 994 }
+  ]
+)
+
+This tuple shape is canonical.
+
+======================================================================
+4. SignalSnapshot (Replay Payload)
+======================================================================
+
+Status:
+- No canonical schema
+- Shape varies by version
+
+-----------------------------
+4.1 Common Observed Dict‑Like Snapshot
+-----------------------------
+
+{
+  "step": 350,
+  "time": 3.50,
+  "signals": {
+    "association_cortex:L2_3": 0.034,
+    "association_cortex:L5": 0.029,
+    "pfc:L5": 0.041
+  }
+}
+
+-----------------------------
+4.2 Flattened Numeric Snapshot
+-----------------------------
+
+{
+  "association_cortex:0": 0.031,
+  "association_cortex:1": 0.028,
+  "association_cortex:2": 0.035
+}
+
+-----------------------------
+4.3 Object‑Style Snapshot (Observed)
+-----------------------------
+
+snapshot.step = 412
+snapshot.time = 4.12
+snapshot.values = [0.031, 0.029, 0.033]
+
+Key invariant:
+- Snapshots are raw numeric state.
+- They are not semantic or assembly‑aware.
+
+======================================================================
+5. Cognition Stack (Phase 6)
+======================================================================
+
+-----------------------------
+5.1 Hypothesis (Internal State)
+-----------------------------
+
+{
+  "hypothesis_id": "H0",
+  "active": true,
+  "activation": 0.13,
+  "support": 1.92,
+  "created_step": 0
+}
+
+-----------------------------
+5.2 HypothesisGrounding Input
+-----------------------------
+
+Grounding expects *assembly‑like* objects:
+
+{
+  "assembly_id": "association_cortex:2",
+  "output()": 0.035
+}
+
+Multiple such objects are passed per step.
+
+-----------------------------
+5.3 HypothesisStabilization Event
+-----------------------------
+
+{
+  "event": "hypothesis_stabilized",
+  "hypothesis_id": "H0",
+  "step": 487
+}
+
+Emitted only after sustained activation.
+
+-----------------------------
+5.4 HypothesisBias Output
+-----------------------------
+
+{
+  "H0": 0.041,
+  "H1": 0.017
+}
+
+Bias is:
+- Gain‑only
+- Bounded
+- Reversible
+- Not wired into runtime yet
+
+======================================================================
+6. What the Offline Test Proved
+======================================================================
+
+- EpisodeReplay output != cognition input
+- SignalSnapshot != ObservedAssembly
+- Replay reconstructs episodes, not perception
+- Cognition requires temporal + structural integration
+- No existing layer performs this integration
+
+Stabilization failure without translation is expected.
+
+======================================================================
+7. Explicit Non‑Goals (Current Phase)
+======================================================================
+
+- No learning
+- No semantic memory
+- No live cognition → runtime wiring
+- No forced hypothesis activation
+- No standardized SignalSnapshot schema
+
+======================================================================
+8. Next Structural Need (Not Implemented)
+======================================================================
+
+Translation / Unification Layer responsibilities:
+
+Input:
+{
+  "SignalSnapshot": "...raw replay payload..."
+}
+
+Output:
+[
+  { "assembly_id": "association_cortex:0", "value": 0.031 },
+  { "assembly_id": "association_cortex:1", "value": 0.028 }
+]
+
+This layer belongs strictly between Replay and Cognition.
+
+======================================================================
+9. Why This Document Exists
+======================================================================
+
+To avoid:
+- Re‑uploading core files
+- Rediscovering tuple shapes
+- Guessing snapshot schemas
+- Debugging invariant‑preserving failures
+
+If this document contradicts behavior, behavior wins.
+Update this file.

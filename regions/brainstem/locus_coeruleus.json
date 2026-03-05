@@ -1,0 +1,40 @@
+{
+  "version": "1.0.1",
+  "type": "RegionSubstructure",
+  "region_id": "locus_coeruleus",
+  "parent_region": "brainstem_base",
+
+  "function": "arousal_attention",
+
+  "populations": {
+    "NORADRENERGIC_NEURONS": {
+      "count": 15000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 4.0,
+      "plasticity_profile": "low",
+
+      "neuromodulator_release": {
+        "type": "norepinephrine",
+        "signal_target": "arousal_gain",
+        "release_gain": 0.06,
+        "mode": "global"
+      }
+    }
+  },
+
+  "outputs": [
+    { "target_region": "pfc",       "signal": "arousal_gain", "strength": 0.30 },
+    { "target_region": "thalamus_base", "signal": "arousal_gain", "strength": 0.40 },
+    { "target_region": "hip_base",  "signal": "arousal_gain", "strength": 0.30 },
+    { "target_region": "bg_base",   "signal": "arousal_gain", "strength": 0.20 }
+  ],
+
+  "drug_sensitivity": {
+    "stimulants": "high",
+    "alpha2_agonists": "very_high",
+    "beta_blockers": "moderate"
+  },
+
+  "notes": "Normalized IDs to match loader/runtime keys: region_id=locus_coeruleus, parent_region=brainstem_base. Routed high-level targets to base hubs to avoid unresolved warnings (CORTEX->pfc hub, THALAMUS->thalamus_base, HIPPOCAMPUS->hip_base, BASAL_GANGLIA->bg_base)."
+}

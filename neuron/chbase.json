@@ -1,0 +1,158 @@
+{
+  "version": "1.0.0",
+  "type": "IonChannelRegistry",
+  "description": "Canonical registry of neuronal ion channel types",
+
+  "global_constraints": {
+    "conductance_min": 0.0,
+    "conductance_max": 1.0,
+    "default_conductance": 0.0
+  },
+
+  "channels": {
+
+    "LEAK": {
+      "class": "background",
+      "ions": ["K"],
+      "voltage_gated": false,
+      "reversal_potential_mV": -70,
+      "role": "resting_potential_stability",
+      "plasticity": {
+        "modifiable": true
+      }
+    },
+
+    "NaV_FAST": {
+      "class": "voltage_gated",
+      "ions": ["Na"],
+      "role": "action_potential_upstroke",
+
+      "activation": {
+        "threshold_mV": -55,
+        "slope": 6.0,
+        "time_constant_ms": 0.5
+      },
+
+      "inactivation": {
+        "threshold_mV": -40,
+        "time_constant_ms": 1.0
+      },
+
+      "reversal_potential_mV": 60,
+      "plasticity": {
+        "modifiable": false
+      }
+    },
+
+    "KV_DELAYED_RECTIFIER": {
+      "class": "voltage_gated",
+      "ions": ["K"],
+      "role": "repolarization",
+
+      "activation": {
+        "threshold_mV": -40,
+        "slope": 7.0,
+        "time_constant_ms": 2.0
+      },
+
+      "reversal_potential_mV": -90,
+      "plasticity": {
+        "modifiable": true
+      }
+    },
+
+    "KV_A_TYPE": {
+      "class": "voltage_gated",
+      "ions": ["K"],
+      "role": "spike_frequency_adaptation",
+
+      "activation": {
+        "threshold_mV": -60,
+        "slope": 5.0,
+        "time_constant_ms": 1.0
+      },
+
+      "inactivation": {
+        "time_constant_ms": 20.0
+      },
+
+      "reversal_potential_mV": -90
+    },
+
+    "CaV_L": {
+      "class": "voltage_gated",
+      "ions": ["Ca"],
+      "role": "sustained_calcium_entry",
+
+      "activation": {
+        "threshold_mV": -30,
+        "time_constant_ms": 5.0
+      },
+
+      "reversal_potential_mV": 120,
+
+      "secondary_effects": {
+        "triggers_signals": ["calcium_proxy"]
+      }
+    },
+
+    "CaV_T": {
+      "class": "voltage_gated",
+      "ions": ["Ca"],
+      "role": "burst_initiation",
+
+      "activation": {
+        "threshold_mV": -65,
+        "time_constant_ms": 2.0
+      },
+
+      "inactivation": {
+        "time_constant_ms": 30.0
+      },
+
+      "reversal_potential_mV": 120
+    },
+
+    "KCa": {
+      "class": "calcium_activated",
+      "ions": ["K"],
+      "role": "afterhyperpolarization",
+
+      "activation": {
+        "calcium_threshold": 0.3
+      },
+
+      "reversal_potential_mV": -90
+    },
+
+    "HCN": {
+      "class": "voltage_gated",
+      "ions": ["Na", "K"],
+      "role": "pacemaker_current",
+
+      "activation": {
+        "threshold_mV": -65,
+        "time_constant_ms": 50.0
+      },
+
+      "reversal_potential_mV": -30
+    },
+
+    "Cl_BACKGROUND": {
+      "class": "background",
+      "ions": ["Cl"],
+      "role": "chloride_homeostasis",
+
+      "reversal_potential_mV": -75,
+      "plasticity": {
+        "modifiable": true,
+        "developmental_shift_allowed": true
+      }
+    }
+  },
+
+  "extensibility": {
+    "allow_custom_channels": true,
+    "naming_convention": "FAMILY_SUBTYPE"
+  }
+}

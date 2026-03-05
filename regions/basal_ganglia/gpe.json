@@ -1,0 +1,103 @@
+{
+  "version": "1.5.0",
+  "type": "RegionSubstructure",
+  "region_id": "GPe",
+  "parent_region": "BASAL_GANGLIA",
+
+  "function": "indirect_pathway_gain_regulation_and_stn_stabilization",
+
+  "spatial_properties": {
+    "diffuse_inhibition": true,
+    "broad_projection": true,
+    "non_selective": true
+  },
+
+  "populations": {
+
+    "GPE_OUTPUT": {
+      "count": 20000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+
+      "baseline": 0.6,
+      "tau": 10.0,
+      "gain": 1.0,
+      "threshold": 0.0,
+      "max_rate": 20.0,
+
+      "inhibition_gain": 0.1,
+      "homeostatic_gain": 0.03,
+      "normalization": 0.15,
+
+      "plasticity_profile": "low",
+
+      "semantic_role": "indirect_pathway_buffer",
+
+      "clamp_min": 0.0,
+      "clamp_max": 1.0,
+
+      "subpopulations": {
+
+        "STABILITY_UNITS": {
+          "fraction": 0.70,
+          "role": "stn_gain_damping",
+          "description": "Provide tonic inhibitory control over STN to prevent runaway excitation"
+        },
+
+        "VARIABILITY_MODULATORS": {
+          "fraction": 0.30,
+          "role": "indirect_pathway_variability",
+          "noise_bias": 0.4,
+
+          "future_modulation": {
+            "dopamine_sensitivity": 0.5,
+            "status": "inactive_checkpoint_6"
+          },
+
+          "description": "Modulate indirect pathway gain envelope without selecting actions"
+        }
+      }
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "STRIATUM",
+      "source_population": "D2_MSN",
+      "signal": "indirect_pathway_inhibition",
+      "strength": 0.85
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "STN",
+      "signal": "tonic_disinhibition_control",
+      "strength": 0.8
+    },
+    {
+      "target_region": "GPi",
+      "signal": "indirect_pathway_bias",
+      "strength": 0.3
+    }
+  ],
+
+  "pathophysiology_modes": {
+    "bradykinesia": "excess_indirect_gain",
+    "impulsivity": "insufficient_stn_damping",
+    "parkinsonian_oscillation": "gpe_stn_loop_instability"
+  },
+
+  "drug_sensitivity": {
+    "dopaminergic_agents": "high",
+    "antipsychotics": "moderate"
+  },
+
+  "notes": [
+    "GPe is a diffuse inhibitory regulator, not a selector.",
+    "All action selection occurs upstream in striatum via competition kernel.",
+    "GPe stabilizes STN activity and modulates GPi tone indirectly.",
+    "No internal competition is modeled at checkpoint 6.",
+    "Dopamine and learning hooks are preserved but inactive."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "version": "1.1.2",
+  "type": "RegionSubstructure",
+  "region_id": "lgn",
+  "parent_region": "thalamus_base",
+
+  "is_relay": true,
+  "function": "visual_relay",
+
+  "populations": {
+    "RELAY_CELLS": {
+      "count": 60000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.6,
+      "plasticity_profile": "low",
+      "receives_inhibition_from": ["trn"]
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "visual_input",
+      "signal": "retinal_drive",
+      "strength": 1.0
+    },
+    {
+      "source_region": "pfc",
+      "signal": "feedback",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "v1",
+      "strength": 1.0
+    },
+    {
+      "target_region": "pulvinar",
+      "strength": 0.4
+    }
+  ],
+
+  "notes": "LGN is a gated thalamic relay nucleus. Relay cells transmit retinal input to primary visual cortex (V1). Activity is modulated by top-down cortical feedback from PFC and inhibited by TRN-mediated thalamic gating. Relay gating behavior is enforced at runtime, not structurally here."
+}

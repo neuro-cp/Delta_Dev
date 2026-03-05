@@ -1,0 +1,111 @@
+[2026-01-23 11:31:47] === BEGIN FORCED COMMIT POST-DECISION TEST (TCP) ===
+[2026-01-23 11:31:47] [PHASE 0] Baseline snapshot
+[2026-01-23 11:31:47] [BASELINE]
+[2026-01-23 11:31:47] CONTROL:
+{
+  "step": 31,
+  "time": 0.3000000000000001,
+  "phase": "pre-decision",
+  "decision_made": false,
+  "decision_winner": null,
+  "committed": false,
+  "suppress_alternatives": false,
+  "working_state_active": false,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[2026-01-23 11:31:47] ERROR: unknown command
+[2026-01-23 11:31:47] [PHASE 1] FORCING DECISION COMMIT (test harness)
+[2026-01-23 11:31:47] [POST-COMMIT SNAPSHOT]
+[2026-01-23 11:31:47] CONTROL:
+{
+  "step": 39,
+  "time": 0.38000000000000017,
+  "phase": "commit",
+  "decision_made": true,
+  "decision_winner": "D2",
+  "committed": true,
+  "suppress_alternatives": true,
+  "working_state_active": true,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[2026-01-23 11:31:47] ERROR: unknown command
+[2026-01-23 11:31:47] [PHASE 2] Post-decision persistence (no stimulus)
+[2026-01-23 11:31:47] [POST 0000] control="phase": "post-commit",
+[2026-01-23 11:31:50] [POST 0010] control="phase": "post-commit",
+[2026-01-23 11:31:54] [POST 0020] control="phase": "post-commit",
+[2026-01-23 11:31:57] [POST 0030] control="phase": "post-commit",
+[2026-01-23 11:32:00] [POST 0040] control="phase": "post-commit",
+[2026-01-23 11:32:04] [POST 0050] control="phase": "post-commit",
+[2026-01-23 11:32:07] [POST 0060] control="phase": "post-commit",
+[2026-01-23 11:39:52] === BEGIN FORCED COMMIT POST-DECISION TEST (TCP) ===
+[2026-01-23 11:39:52] [PHASE 0] Baseline snapshot
+[2026-01-23 11:39:52] [BASELINE]
+[2026-01-23 11:39:52] CONTROL:
+{
+  "step": 74,
+  "time": 0.7300000000000004,
+  "phase": "pre-decision",
+  "decision_made": false,
+  "decision_winner": null,
+  "committed": false,
+  "suppress_alternatives": false,
+  "working_state_active": false,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[2026-01-23 11:39:52] WORKING:
+{
+  "engaged": false,
+  "active_channel": null,
+  "strength": 0.0,
+  "steps_held": 0,
+  "enabled": true
+}
+[2026-01-23 11:39:52] [PHASE 1] FORCING DECISION COMMIT (test harness)
+[2026-01-23 11:39:52] [POST-COMMIT SNAPSHOT]
+[2026-01-23 11:39:52] CONTROL:
+{
+  "step": 82,
+  "time": 0.8100000000000005,
+  "phase": "pre-decision",
+  "decision_made": false,
+  "decision_winner": null,
+  "committed": false,
+  "suppress_alternatives": false,
+  "working_state_active": false,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[2026-01-23 11:39:52] WORKING:
+{
+  "engaged": true,
+  "active_channel": "D2",
+  "strength": 1.0,
+  "steps_held": 1,
+  "enabled": true
+}
+[2026-01-23 11:39:52] [PHASE 2] Post-decision persistence (no stimulus)
+[2026-01-23 11:39:52] [POST 0000] control="phase": "post-commit",
+[2026-01-23 11:39:55] [POST 0010] control="phase": "post-commit",
+[2026-01-23 11:39:59] [POST 0020] control="phase": "post-commit",
+[2026-01-23 11:40:02] [POST 0030] control="phase": "post-commit",
+[2026-01-23 11:40:05] [POST 0040] control="phase": "post-commit",
+[2026-01-23 11:40:09] [POST 0050] control="phase": "post-commit",
+[2026-01-23 11:40:12] [POST 0060] control="phase": "post-commit",
+[2026-01-23 11:40:15] [POST 0070] control="phase": "post-commit",
+[2026-01-23 11:40:19] [POST 0080] control="phase": "post-commit",
+[2026-01-23 11:40:22] [POST 0090] control="phase": "post-commit",
+[2026-01-23 11:40:26] [POST 0100] control="phase": "post-commit",
+[2026-01-23 11:40:29] [POST 0110] control="phase": "post-commit",
+[2026-01-23 11:40:32] === TEST COMPLETE ===
+[2026-01-23 11:40:32] Expectations:
+[2026-01-23 11:40:32] • Control enters post-commit immediately
+[2026-01-23 11:40:32] • Working state engages
+[2026-01-23 11:40:32] • No re-decision
+[2026-01-23 11:40:32] • Dominance persists then decays
+[2026-01-23 11:40:32] • Clean recovery, no hysteresis
+[2026-01-23 11:40:32] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_forced_commit_post.csv
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_forced_commit_log.txt

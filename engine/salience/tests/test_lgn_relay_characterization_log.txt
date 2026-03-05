@@ -1,0 +1,40 @@
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[INFO] Warmup complete
+
+[PHASE A] Baseline (no LGN stimulation)
+[A 000] V1=0.015979 ASSOC=0.015968 PFC=0.015975 Δ=0.001536
+[A 050] V1=0.016114 ASSOC=0.016105 PFC=0.016114 Δ=0.001503
+[A 100] V1=0.016226 ASSOC=0.016219 PFC=0.016226 Δ=0.001170
+[A 150] V1=0.016312 ASSOC=0.016302 PFC=0.016308 Δ=0.001170
+[A 200] V1=0.016369 ASSOC=0.016359 PFC=0.016365 Δ=0.001255
+[A 250] V1=0.016395 ASSOC=0.016387 PFC=0.016393 Δ=0.001467
+
+[PHASE B] LGN relay active (poke lgn 1.0)
+[B 000] V1=0.016393 ASSOC=0.016389 PFC=0.016390 Δ=0.002164
+[B 050] V1=0.016363 ASSOC=0.016363 PFC=0.016359 Δ=0.002450
+[B 100] V1=0.016310 ASSOC=0.016310 PFC=0.016304 Δ=0.001900
+[B 150] V1=0.016229 ASSOC=0.016229 PFC=0.016226 Δ=0.000878
+[B 200] V1=0.016130 ASSOC=0.016127 PFC=0.016125 Δ=0.000611
+[B 250] V1=0.016009 ASSOC=0.016012 PFC=0.016003 Δ=0.002017
+
+=== LGN RELAY CHARACTERIZATION SUMMARY ===
+
+Phase A (baseline):
+V1 mean:    0.016233
+ASSOC mean:0.016223
+PFC mean:  0.016230
+Δ mean:    0.001350
+
+Phase B (LGN active):
+V1 mean:    0.016239
+ASSOC mean:0.016238
+PFC mean:  0.016235
+Δ mean:    0.001670
+
+No decisions expected or checked.
+========================================
+
+C:\Users\Admin\Desktop\neural framewor

@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "type": "LoaderSpec",
+
+  "description": "Defines how neural framework files are loaded, validated, merged, and compiled into a runnable brain model.",
+
+  "input_roots": {
+    "neuron": "./neuron",
+    "regions": "./regions",
+    "profiles": "./profiles"
+  },
+
+  "load_order": [
+    "neuron",
+    "regions",
+    "profiles"
+  ],
+
+  "validation": {
+    "strict": true,
+    "fail_on_unknown_reference": true,
+    "fail_on_missing_field": true
+  },
+
+  "resolution_rules": {
+    "receptors": "neuron/recbase.json",
+    "channels": "neuron/chbase.json",
+    "signals": "neuron/sigbase.json"
+  },
+
+  "profile_application_order": [
+    "expression_base",
+    "expression_profile",
+    "state_base",
+    "state_profile",
+    "compound_profile"
+  ],
+
+  "compilation": {
+    "unit_of_compilation": "brain_instance",
+    "immutable_after_compile": true,
+    "allow_multiple_instances": true
+  },
+
+  "output_model": {
+    "contains": [
+      "regions",
+      "populations",
+      "neurons",
+      "connectivity",
+      "expression_state",
+      "global_state",
+      "compound_effects"
+    ],
+    "spatial_metadata": true
+  },
+
+  "notes": "The loader assembles a static brain instance. Time evolution, plasticity updates, and pharmacokinetics are handled by the runtime engine."
+}

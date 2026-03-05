@@ -1,0 +1,31 @@
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] settled
+[STEP 50] delta=0.001642 relief=0.4219 urgency=0.0035
+[STEP 100] delta=0.002231 relief=0.4298 urgency=0.0040
+[STEP 150] delta=0.002786 relief=0.4411 urgency=0.0045
+[STEP 200] delta=0.002673 relief=0.4551 urgency=0.0050
+[STEP 250] delta=0.002677 relief=0.4707 urgency=0.0055
+[STEP 300] delta=0.002672 relief=0.4869 urgency=0.0060
+[STEP 350] delta=0.002067 relief=0.5026 urgency=0.0065
+[STEP 400] delta=0.001618 relief=0.5170 urgency=0.0070
+[STEP 450] delta=0.000818 relief=0.5293 urgency=0.0075
+[STEP 500] delta=0.000529 relief=0.5389 urgency=0.0080
+[STEP 550] delta=0.000048 relief=0.5453 urgency=0.0085
+[STEP 600] delta=0.000262 relief=0.5484 urgency=0.0090
+[STEP 650] delta=0.000037 relief=0.5482 urgency=0.0095
+[STEP 700] delta=0.000773 relief=0.5449 urgency=0.0100
+[STEP 750] delta=0.001679 relief=0.5391 urgency=0.0105
+
+[URGENCY]
+mean delta = 0.001512
+max  delta = 0.002814
+GPi relief peak = 0.548670
+decision events = 0
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

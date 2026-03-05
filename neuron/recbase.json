@@ -1,0 +1,135 @@
+{
+  "version": "1.0.0",
+  "type": "ReceptorRegistry",
+  "description": "Unified registry of ionotropic and metabotropic receptor subtypes",
+
+  "families": {
+
+    "GLUTAMATE": {
+      "ionotropic": {
+        "AMPA": { "class": "ionotropic", "ions": ["Na", "K"], "calcium": false },
+        "NMDA": { "class": "ionotropic", "ions": ["Ca", "Na", "K"], "voltage_dependent": true },
+        "KAINATE": { "class": "ionotropic", "ions": ["Na", "K"] }
+      },
+      "metabotropic": {
+        "mGluR1": { "g_protein": "Gq" },
+        "mGluR2": { "g_protein": "Gi" },
+        "mGluR3": { "g_protein": "Gi" },
+        "mGluR4": { "g_protein": "Gi" },
+        "mGluR5": { "g_protein": "Gq" },
+        "mGluR6": { "g_protein": "Gi" },
+        "mGluR7": { "g_protein": "Gi" },
+        "mGluR8": { "g_protein": "Gi" }
+      }
+    },
+
+    "GABA": {
+      "ionotropic": {
+        "GABA_A": { "class": "ionotropic", "ions": ["Cl"] },
+        "GABA_C": { "class": "ionotropic", "ions": ["Cl"] }
+      },
+      "metabotropic": {
+        "GABA_B": { "g_protein": "Gi" }
+      }
+    },
+
+    "DOPAMINE": {
+      "metabotropic": {
+        "D1": { "g_protein": "Gs" },
+        "D2": { "g_protein": "Gi" },
+        "D3": { "g_protein": "Gi" },
+        "D4": { "g_protein": "Gi" },
+        "D5": { "g_protein": "Gs" }
+      }
+    },
+
+    "SEROTONIN": {
+      "ionotropic": {
+        "5HT3": { "class": "ionotropic", "ions": ["Na", "K"] }
+      },
+      "metabotropic": {
+        "5HT1A": { "g_protein": "Gi" },
+        "5HT1B": { "g_protein": "Gi" },
+        "5HT1D": { "g_protein": "Gi" },
+        "5HT2A": { "g_protein": "Gq" },
+        "5HT2B": { "g_protein": "Gq" },
+        "5HT2C": { "g_protein": "Gq" },
+        "5HT4": { "g_protein": "Gs" },
+        "5HT5": { "g_protein": "Gi" },
+        "5HT6": { "g_protein": "Gs" },
+        "5HT7": { "g_protein": "Gs" }
+      }
+    },
+
+    "ACETYLCHOLINE": {
+      "ionotropic": {
+        "nAChR": { "class": "ionotropic", "ions": ["Na", "K", "Ca"] }
+      },
+      "metabotropic": {
+        "M1": { "g_protein": "Gq" },
+        "M2": { "g_protein": "Gi" },
+        "M3": { "g_protein": "Gq" },
+        "M4": { "g_protein": "Gi" },
+        "M5": { "g_protein": "Gq" }
+      }
+    },
+
+    "NOREPINEPHRINE": {
+      "metabotropic": {
+        "Alpha1": { "g_protein": "Gq" },
+        "Alpha2": { "g_protein": "Gi" },
+        "Beta1": { "g_protein": "Gs" },
+        "Beta2": { "g_protein": "Gs" },
+        "Beta3": { "g_protein": "Gs" }
+      }
+    },
+
+    "HISTAMINE": {
+      "metabotropic": {
+        "H1": { "g_protein": "Gq" },
+        "H2": { "g_protein": "Gs" },
+        "H3": { "g_protein": "Gi" },
+        "H4": { "g_protein": "Gi" }
+      }
+    },
+
+    "OPIOID": {
+      "metabotropic": {
+        "Mu": { "g_protein": "Gi" },
+        "Delta": { "g_protein": "Gi" },
+        "Kappa": { "g_protein": "Gi" }
+      }
+    },
+
+    "CANNABINOID": {
+      "metabotropic": {
+        "CB1": { "g_protein": "Gi" },
+        "CB2": { "g_protein": "Gi" }
+      }
+    },
+
+    "PURINERGIC": {
+      "ionotropic": {
+        "P2X": { "class": "ionotropic", "ions": ["Na", "Ca", "K"] }
+      },
+      "metabotropic": {
+        "P1": { "g_protein": "Gs" },
+        "P2Y": { "g_protein": "Gq" }
+      }
+    },
+
+    "PROSTAGLANDIN_COX": {
+      "metabotropic": {
+        "EP1": { "g_protein": "Gq" },
+        "EP2": { "g_protein": "Gs" },
+        "EP3": { "g_protein": "Gi" },
+        "EP4": { "g_protein": "Gs" }
+      }
+    }
+  },
+
+  "extensibility": {
+    "allow_custom_receptors": true,
+    "naming_convention": "FAMILY_SUBTYPE"
+  }
+}

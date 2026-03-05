@@ -1,0 +1,88 @@
+[2026-01-23 19:58:01] === BEGIN: Value/Gate ABAB Plateau Test ===
+[2026-01-23 19:58:01] [CLEAN] reset_latch + value_clear
+[2026-01-23 19:58:01] OK reset_latch
+[2026-01-23 19:58:01] OK value reset
+[2026-01-23 19:58:01] [PHASE] settle for 20.0s
+[2026-01-23 19:58:01] [settle 0000] value=0.0 relief=0.5056 gpi_mean=0.7373
+[2026-01-23 19:58:02] [settle 0005] value=0.0 relief=0.5055 gpi_mean=0.7375
+[2026-01-23 19:58:04] [settle 0010] value=0.0 relief=0.5049 gpi_mean=0.7385
+[2026-01-23 19:58:05] [settle 0015] value=0.0 relief=0.5039 gpi_mean=0.7402
+[2026-01-23 19:58:07] [settle 0020] value=0.0 relief=0.5025 gpi_mean=0.7423
+[2026-01-23 19:58:08] [settle 0025] value=0.0 relief=0.5009 gpi_mean=0.7449
+[2026-01-23 19:58:10] [settle 0030] value=0.0 relief=0.4993 gpi_mean=0.7475
+[2026-01-23 19:58:11] [settle 0035] value=0.0 relief=0.4976 gpi_mean=0.7503
+[2026-01-23 19:58:12] [settle 0040] value=0.0 relief=0.4961 gpi_mean=0.7526
+[2026-01-23 19:58:14] [settle 0045] value=0.0 relief=0.4949 gpi_mean=0.7546
+[2026-01-23 19:58:15] [settle 0050] value=0.0 relief=0.4938 gpi_mean=0.7562
+[2026-01-23 19:58:17] [settle 0055] value=0.0 relief=0.4931 gpi_mean=0.7574
+[2026-01-23 19:58:18] [settle 0060] value=0.0 relief=0.4927 gpi_mean=0.7579
+[2026-01-23 19:58:20] [settle 0065] value=0.0 relief=0.4928 gpi_mean=0.7579
+[2026-01-23 19:58:21] [A] value_clear (ensure OFF)
+[2026-01-23 19:58:21] OK value reset
+[2026-01-23 19:58:21] [PHASE] A for 10.0s
+[2026-01-23 19:58:21] [A 0000] value=0.0 relief=0.4932 gpi_mean=0.7572
+[2026-01-23 19:58:23] [A 0005] value=0.0 relief=0.4938 gpi_mean=0.7562
+[2026-01-23 19:58:24] [A 0010] value=0.0 relief=0.4947 gpi_mean=0.7547
+[2026-01-23 19:58:26] [A 0015] value=0.0 relief=0.4958 gpi_mean=0.753
+[2026-01-23 19:58:27] [A 0020] value=0.0 relief=0.4968 gpi_mean=0.7514
+[2026-01-23 19:58:28] [A 0025] value=0.0 relief=0.4978 gpi_mean=0.7497
+[2026-01-23 19:58:30] [A 0030] value=0.0 relief=0.4987 gpi_mean=0.7482
+[2026-01-23 19:58:31] [B] ramp to 0.78 via 10 calls
+[2026-01-23 19:58:31] OK value = 0.1000
+[2026-01-23 19:58:31] OK value = 0.0992
+[2026-01-23 19:58:32] OK value = 0.0983
+[2026-01-23 19:58:32] OK value = 0.1974
+[2026-01-23 19:58:32] OK value = 0.1957
+[2026-01-23 19:58:32] OK value = 0.2938
+[2026-01-23 19:58:32] OK value = 0.2913
+[2026-01-23 19:58:32] OK value = 0.2889
+[2026-01-23 19:58:32] OK value = 0.3865
+[2026-01-23 19:58:33] OK value = 0.3833
+[2026-01-23 19:58:33] [PHASE] B for 10.0s
+[2026-01-23 19:58:33] [B 0000] value=0.3801 relief=0.5002 gpi_mean=0.746
+[2026-01-23 19:58:34] [B 0005] value=0.348 relief=0.5006 gpi_mean=0.7453
+[2026-01-23 19:58:36] [B 0010] value=0.3196 relief=0.5007 gpi_mean=0.7451
+[2026-01-23 19:58:37] [B 0015] value=0.2925 relief=0.5007 gpi_mean=0.7451
+[2026-01-23 19:58:39] [B 0020] value=0.2673 relief=0.5005 gpi_mean=0.7455
+[2026-01-23 19:58:40] [B 0025] value=0.2451 relief=0.5001 gpi_mean=0.7461
+[2026-01-23 19:58:41] [B 0030] value=0.2229 relief=0.4995 gpi_mean=0.7471
+[2026-01-23 19:58:43] [A2] value_clear
+[2026-01-23 19:58:43] OK value reset
+[2026-01-23 19:58:43] [PHASE] A2 for 10.0s
+[2026-01-23 19:58:43] [A2 0000] value=0.0 relief=0.4989 gpi_mean=0.7481
+[2026-01-23 19:58:44] [A2 0005] value=0.0 relief=0.4983 gpi_mean=0.7491
+[2026-01-23 19:58:46] [A2 0010] value=0.0 relief=0.4976 gpi_mean=0.7502
+[2026-01-23 19:58:47] [A2 0015] value=0.0 relief=0.497 gpi_mean=0.7512
+[2026-01-23 19:58:49] [A2 0020] value=0.0 relief=0.4965 gpi_mean=0.7519
+[2026-01-23 19:58:50] [A2 0025] value=0.0 relief=0.4961 gpi_mean=0.7526
+[2026-01-23 19:58:52] [A2 0030] value=0.0 relief=0.4959 gpi_mean=0.7529
+[2026-01-23 19:58:53] [B2] ramp to 0.78 via 10 calls
+[2026-01-23 19:58:53] OK value = 0.1000
+[2026-01-23 19:58:53] OK value = 0.0990
+[2026-01-23 19:58:53] OK value = 0.1982
+[2026-01-23 19:58:53] OK value = 0.1962
+[2026-01-23 19:58:54] OK value = 0.2946
+[2026-01-23 19:58:54] OK value = 0.2916
+[2026-01-23 19:58:54] OK value = 0.3887
+[2026-01-23 19:58:54] OK value = 0.3855
+[2026-01-23 19:58:54] OK value = 0.3823
+[2026-01-23 19:58:54] OK value = 0.4791
+[2026-01-23 19:58:54] [PHASE] B2 for 10.0s
+[2026-01-23 19:58:55] [B2 0000] value=0.4744 relief=0.4958 gpi_mean=0.7531
+[2026-01-23 19:58:56] [B2 0005] value=0.435 relief=0.4959 gpi_mean=0.7528
+[2026-01-23 19:58:57] [B2 0010] value=0.3975 relief=0.4962 gpi_mean=0.7524
+[2026-01-23 19:58:59] [B2 0015] value=0.3632 relief=0.4965 gpi_mean=0.7518
+[2026-01-23 19:59:00] [B2 0020] value=0.3325 relief=0.497 gpi_mean=0.7512
+[2026-01-23 19:59:02] [B2 0025] value=0.3054 relief=0.4973 gpi_mean=0.7505
+[2026-01-23 19:59:03] [B2 0030] value=0.2782 relief=0.4978 gpi_mean=0.7498
+[2026-01-23 19:59:05] [SUMMARY A] mean_relief=0.4961971428571429 slope_relief=0.0006729368466359728
+[2026-01-23 19:59:05] [SUMMARY B] mean_relief=0.50028 slope_relief=-0.00012759078885568492
+[2026-01-23 19:59:05] [SUMMARY A2] mean_relief=0.4969771428571429 slope_relief=-0.000336968438667235
+[2026-01-23 19:59:05] [SUMMARY B2] mean_relief=0.49676857142857145 slope_relief=0.00025154187073135164
+[2026-01-23 19:59:05] === END ===
+[2026-01-23 19:59:05] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_gate_abab_20260123_195801.txt
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_gate_abab_20260123_195801.csv
+[2026-01-23 19:59:05] Interpretation:
+[2026-01-23 19:59:05]   - If B and B2 consistently shift mean_relief or slope relative to A and A2 → real indirect coupling.
+[2026-01-23 19:59:05]   - If A/A2 and B/B2 look the same within noise → value is effectively non-gate (as designed).

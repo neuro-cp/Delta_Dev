@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "type": "StateProfile",
+  "state_name": "anesthetized",
+
+  "description": "General anesthesia with global suppression of consciousness, sensory uncoupling, and near-complete plasticity shutdown.",
+
+  "neuromodulators": {
+    "acetylcholine": 0.2,
+    "dopamine": 0.3,
+    "serotonin": 0.3,
+    "norepinephrine": 0.2,
+    "histamine": 0.1
+  },
+
+  "excitability": {
+    "firing_threshold_modifier": 1.35,
+    "leak_conductance_modifier": 1.25
+  },
+
+  "plasticity": {
+    "ltd_ltp_balance": 0.5,
+    "learning_rate": 0.1
+  },
+
+  "oscillations": {
+    "delta": 0.60,
+    "theta": 0.20,
+    "alpha": 0.10,
+    "beta": 0.07,
+    "gamma": 0.03
+  },
+
+  "notes": "Anesthetized state suppresses cortical integration and consciousness beyond natural sleep. Strongly interacts with GABAergic agents, potassium channel openers, and NMDA antagonists."
+}

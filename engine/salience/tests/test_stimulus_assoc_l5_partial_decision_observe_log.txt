@@ -1,0 +1,35 @@
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[INIT] Stimulating 40/200 association_cortex:L5_PYRAMIDAL_A assemblies
+[CMD] Listening on 127.0.0.1:5562
+[STEP 0000] Δ=0.000001 relief=0.4972 stim=OFF decision=None
+[STEP 0050] Δ=0.000216 relief=0.4736 stim=OFF decision=None
+[STEP 0100] Δ=0.000542 relief=0.4533 stim=ON decision=None
+[STEP 0150] Δ=0.000920 relief=0.4372 stim=ON decision=None
+[STEP 0200] Δ=0.000969 relief=0.4258 stim=ON decision=None
+[STEP 0250] Δ=0.000575 relief=0.4195 stim=ON decision=None
+[STEP 0300] Δ=0.000013 relief=0.4183 stim=ON decision=None
+[STEP 0350] Δ=0.000454 relief=0.4219 stim=ON decision=None
+[STEP 0400] Δ=0.000668 relief=0.4298 stim=ON decision=None
+[STEP 0450] Δ=0.000708 relief=0.4411 stim=ON decision=None
+[STEP 0500] Δ=0.000464 relief=0.4551 stim=ON decision=None
+[STEP 0550] Δ=0.000490 relief=0.4707 stim=ON decision=None
+[STEP 0600] Δ=0.000748 relief=0.4869 stim=OFF decision=None
+[STEP 0650] Δ=0.001312 relief=0.5026 stim=OFF decision=None
+[STEP 0700] Δ=0.001904 relief=0.5170 stim=OFF decision=None
+[STEP 0750] Δ=0.002118 relief=0.5293 stim=OFF decision=None
+[STEP 0800] Δ=0.002359 relief=0.5388 stim=OFF decision=None
+[STEP 0850] Δ=0.002567 relief=0.5452 stim=OFF decision=None
+[STEP 0900] Δ=0.001854 relief=0.5483 stim=OFF decision=None
+[STEP 0950] Δ=0.001011 relief=0.5481 stim=OFF decision=None
+[STEP 1000] Δ=0.000270 relief=0.5449 stim=OFF decision=None
+[STEP 1050] Δ=0.000359 relief=0.5390 stim=OFF decision=None
+[STEP 1100] Δ=0.001157 relief=0.5311 stim=OFF decision=None
+[STEP 1150] Δ=0.001428 relief=0.5218 stim=OFF decision=None
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

@@ -1,0 +1,11 @@
+DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[OK] PVN differentiation grounding passed
+  mean_normal = 0.0136
+  mean_muted  = 0.0034
+  muted_ids  = ['hypothalamus:PARAVENTRICULAR_NUCLEUS:0', 'hypothalamus:PARAVENTRICULAR_NUCLEUS:4']
+
+C:\Users\Admin\Desktop\neural framework>

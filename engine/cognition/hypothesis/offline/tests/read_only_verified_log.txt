@@ -1,0 +1,12 @@
+
+C:\Users\Admin\Desktop\neural framework>python -m pytest engine/cognition/hypothesis/offline/tests/test_semantic_activation_observation_is_read_only.py
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 1 item
+
+engine\cognition\hypothesis\offline\tests\test_semantic_activation_observation_is_read_only.py . [100%]
+
+============================ 1 passed in 0.08s ============================
+
+C:\Users\Admin\Desktop\neural framework>

@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "type": "RegionBase",
+  "region_id": "AMYGDALA",
+  "parent_region": "LIMBIC_SYSTEM",
+
+  "function": "emotional_salience_processing",
+
+  "subregions": [
+    "BLA",
+    "CEA",
+    "MEA"
+  ],
+
+  "default_outputs": [
+    "CORTEX",
+    "HIPPOCAMPAL_FORMATION",
+    "BRAINSTEM"
+  ],
+
+  "notes": "Amygdala base container. Subregion dynamics defined in separate files."
+}

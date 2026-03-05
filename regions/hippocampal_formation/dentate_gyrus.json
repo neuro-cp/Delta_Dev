@@ -1,0 +1,90 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "DENTATE_GYRUS",
+  "parent_region": "HIPPOCAMPAL_FORMATION",
+
+  "function": "pattern_separation",
+
+  "spatial_properties": {
+    "layered": true,
+    "layers": ["molecular", "granule", "hilus"],
+    "neuron_density_per_mm3": 100000
+  },
+
+  "populations": {
+
+    "GRANULE_CELLS": {
+      "count": 100000,
+      "neuron_type": "excitatory",
+
+      "channels": {
+        "NaV_FAST": 0.7,
+        "KV_DELAYED_RECTIFIER": 0.6,
+        "KCa": 0.4,
+        "LEAK": 0.6
+      },
+
+      "receptors": {
+        "AMPA": 0.6,
+        "NMDA": 0.5,
+        "GABA_A": 0.4,
+        "CB1": 0.2
+      },
+
+      "baseline_firing_rate_hz": 0.1,
+      "plasticity_profile": "high"
+    },
+
+    "INTERNEURONS": {
+      "count": 15000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+
+      "channels": {
+        "NaV_FAST": 0.9,
+        "KV_DELAYED_RECTIFIER": 0.8,
+        "LEAK": 0.4
+      },
+
+      "receptors": {
+        "AMPA": 0.4,
+        "NMDA": 0.2,
+        "GABA_A": 0.6
+      },
+
+      "baseline_firing_rate_hz": 5.0,
+      "plasticity_profile": "medium"
+    }
+  },
+
+  "local_connectivity": [
+    {
+      "source": "GRANULE_CELLS",
+      "target": "INTERNEURONS",
+      "pattern": "divergent",
+      "probability": 0.2
+    },
+    {
+      "source": "INTERNEURONS",
+      "target": "GRANULE_CELLS",
+      "pattern": "feedback_inhibition",
+      "probability": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "CA3",
+      "target_population": "PYRAMIDAL_CELLS",
+      "pathway": "mossy_fibers",
+      "strength": 0.8
+    }
+  ],
+
+  "drug_sensitivity": {
+    "benzodiazepines": "high",
+    "cannabinoids": "moderate",
+    "opioids": "moderate"
+  }
+}

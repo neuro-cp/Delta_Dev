@@ -1,0 +1,50 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5557
+[INFO] Warmup complete
+
+[PHASE A] Baseline MD relay (no TRN suppression)
+[A 000] PFC mean=0.015800 Δ(D1–D2)=0.000003
+[A 025] PFC mean=0.015900 Δ(D1–D2)=0.000004
+[A 050] PFC mean=0.016000 Δ(D1–D2)=0.000021
+[A 075] PFC mean=0.016100 Δ(D1–D2)=0.000026
+[A 100] PFC mean=0.016100 Δ(D1–D2)=0.000027
+[A 125] PFC mean=0.016200 Δ(D1–D2)=0.000034
+[A 150] PFC mean=0.016200 Δ(D1–D2)=0.000023
+[A 175] PFC mean=0.016300 Δ(D1–D2)=0.000030
+[A 200] PFC mean=0.016300 Δ(D1–D2)=0.000022
+[A 225] PFC mean=0.016300 Δ(D1–D2)=0.000016
+[A 250] PFC mean=0.016400 Δ(D1–D2)=0.000002
+[A 275] PFC mean=0.016400 Δ(D1–D2)=0.000003
+
+[PHASE B] TRN suppression ON
+[B 000] PFC mean=0.016400 Δ(D1–D2)=0.000000
+[B 025] PFC mean=0.016400 Δ(D1–D2)=0.000006
+[B 050] PFC mean=0.016400 Δ(D1–D2)=0.000011
+[B 075] PFC mean=0.016400 Δ(D1–D2)=0.000009
+[B 100] PFC mean=0.016400 Δ(D1–D2)=0.000004
+[B 125] PFC mean=0.016300 Δ(D1–D2)=0.000000
+[B 150] PFC mean=0.016300 Δ(D1–D2)=0.000007
+[B 175] PFC mean=0.016300 Δ(D1–D2)=0.000005
+[B 200] PFC mean=0.016200 Δ(D1–D2)=0.000008
+[B 225] PFC mean=0.016200 Δ(D1–D2)=0.000003
+[B 250] PFC mean=0.016100 Δ(D1–D2)=0.000011
+[B 275] PFC mean=0.016100 Δ(D1–D2)=0.000003
+
+=== PHASE A (no TRN) SUMMARY ===
+Mean PFC activity: 0.016192
+Max  PFC activity: 0.016400
+Mean Δ(D1–D2): 0.000017
+Max  Δ(D1–D2): 0.000037
+
+=== PHASE B (TRN suppressed) SUMMARY ===
+Mean PFC activity: 0.016271
+Max  PFC activity: 0.016400
+Mean Δ(D1–D2): 0.000006
+Max  Δ(D1–D2): 0.000017
+
+No decisions expected or checked.
+================================
+
+C:\Users\Admin\Desktop\neural framework>

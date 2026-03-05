@@ -1,0 +1,1 @@
+"""Execution proposal layer (design-only)."""

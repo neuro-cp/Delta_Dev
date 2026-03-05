@@ -1,0 +1,108 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "CA3",
+  "parent_region": "HIPPOCAMPAL_FORMATION",
+
+  "function": "autoassociative_memory",
+
+  "spatial_properties": {
+    "layered": true,
+    "layers": ["stratum_lucidum", "stratum_pyramidale", "stratum_radiatum"],
+    "neuron_density_per_mm3": 80000
+  },
+
+  "populations": {
+
+    "PYRAMIDAL_CELLS": {
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+
+      "channels": {
+        "NaV_FAST": 0.85,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "KCa": 0.4,
+        "HCN": 0.2,
+        "LEAK": 0.5
+      },
+
+      "receptors": {
+        "AMPA": 0.6,
+        "NMDA": 0.6,
+        "GABA_A": 0.35,
+        "GABA_B": 0.15,
+        "CB1": 0.25
+      },
+
+      "baseline_firing_rate_hz": 0.3,
+      "plasticity_profile": "very_high"
+    },
+
+    "INTERNEURONS": {
+      "count": 12000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+
+      "channels": {
+        "NaV_FAST": 0.9,
+        "KV_DELAYED_RECTIFIER": 0.85,
+        "LEAK": 0.4
+      },
+
+      "receptors": {
+        "AMPA": 0.5,
+        "NMDA": 0.3,
+        "GABA_A": 0.7
+      },
+
+      "baseline_firing_rate_hz": 6.0,
+      "plasticity_profile": "medium"
+    }
+  },
+
+  "local_connectivity": [
+    {
+      "source": "PYRAMIDAL_CELLS",
+      "target": "PYRAMIDAL_CELLS",
+      "pattern": "recurrent_excitation",
+      "probability": 0.15
+    },
+    {
+      "source": "PYRAMIDAL_CELLS",
+      "target": "INTERNEURONS",
+      "pattern": "feedforward",
+      "probability": 0.3
+    },
+    {
+      "source": "INTERNEURONS",
+      "target": "PYRAMIDAL_CELLS",
+      "pattern": "feedback_inhibition",
+      "probability": 0.5
+    }
+  ],
+
+  "inputs": [
+    {
+      "source_region": "DENTATE_GYRUS",
+      "source_population": "GRANULE_CELLS",
+      "pathway": "mossy_fibers",
+      "strength": 0.9
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "CA1",
+      "target_population": "PYRAMIDAL_CELLS",
+      "pathway": "schaffer_collaterals",
+      "strength": 0.8
+    }
+  ],
+
+  "drug_sensitivity": {
+    "benzodiazepines": "high",
+    "cannabinoids": "high",
+    "nmda_antagonists": "very_high"
+  }
+}

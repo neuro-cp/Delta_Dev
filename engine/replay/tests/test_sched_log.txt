@@ -1,0 +1,31 @@
+C:\Users\Admin\Desktop\neural framework>python -m pytest engine/replay/tests/test_replay_scheduler_basic.py -s
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 1 item
+
+engine\replay\tests\test_replay_scheduler_basic.py
+=== REPLAY SCHEDULER CERTIFICATION ===
+Request reason: manual_request
+Requested step: 100
+
+Selected episodes:
+  ✓ ep_005
+  ✓ ep_004
+  ✓ ep_002
+
+Excluded episodes:
+  ✗ ep_001 (eligible)
+  ✗ ep_003 (episode_too_short)
+  ✗ ep_006 (episode_too_short)
+
+Eligibility reasons:
+  ep_001: eligible
+  ep_002: eligible
+  ep_003: episode_too_short
+  ep_004: eligible
+  ep_005: eligible
+  ep_006: episode_too_short
+.
+
+============================ 1 passed in 0.12s ============================

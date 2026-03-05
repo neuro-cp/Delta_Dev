@@ -1,0 +1,23 @@
+LIVE RUNTIME | OBSERVATIONAL
+Port 5557 | Ctrl+C to quit
+Default view: POPULATIONS
+----------------------------------------------------------------------------------------------------
+[PHASE 1] Baseline (no stimulation)
+[CMD] Listening on 127.0.0.1:5557
+[PHASE 2] Sustained association cortex stimulation
+Injecting small, repeated assembly-level input
+[STEP 0000] dominance={'D1': 0.4667, 'D2': 0.466} relief=0.4258
+[STEP 0100] dominance={'D1': 0.4922, 'D2': 0.4902} relief=0.4183
+[STEP 0200] dominance={'D1': 0.4987, 'D2': 0.4967} relief=0.4298
+[STEP 0300] dominance={'D1': 0.4996, 'D2': 0.4992} relief=0.4551
+[STEP 0400] dominance={'D1': 0.4996, 'D2': 0.5001} relief=0.4868
+[STEP 0500] dominance={'D1': 0.4998, 'D2': 0.5002} relief=0.517
+[PHASE 3] Withdrawal (no stimulation)
+[WITHDRAW 0000] dominance={'D1': 0.4994, 'D2': 0.5005} relief=0.5389
+[WITHDRAW 0100] dominance={'D1': 0.499, 'D2': 0.501} relief=0.5484
+[WITHDRAW 0200] dominance={'D1': 0.4989, 'D2': 0.5011} relief=0.5449
+
+=== TEST COMPLETE ===
+No asserts. Inspect dominance, gate relief, and hypothesis behavior.
+
+C:\Users\Admin\Desktop\neural framework>

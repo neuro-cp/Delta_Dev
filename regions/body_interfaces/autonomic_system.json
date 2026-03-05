@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "type": "RegionBase",
+  "region_id": "AUTONOMIC_SYSTEM",
+  "category": "system_interface",
+
+  "function": "visceral_and_homeostatic_control",
+
+  "populations": {
+    "SYMPATHETIC_OUTFLOW": {
+      "count": 1,
+      "neuron_type": "autonomic",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.1,
+      "plasticity_profile": "very_low"
+    },
+    "PARASYMPATHETIC_OUTFLOW": {
+      "count": 1,
+      "neuron_type": "autonomic",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 0.1,
+      "plasticity_profile": "very_low"
+    }
+  },
+
+  "allowed_inputs": [
+    "HYPOTHALAMUS",
+    "BRAINSTEM",
+    "AMYGDALA",
+    "PFC"
+  ],
+
+  "allowed_outputs": [],
+
+  "notes": "Abstract autonomic interface representing sympathetic and parasympathetic control of visceral organs. Does not model peripheral ganglia, organ targets, or neurotransmitter kinetics. Intended as a termination and future expansion layer."
+}

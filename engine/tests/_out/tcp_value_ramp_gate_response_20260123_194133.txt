@@ -1,0 +1,2 @@
+[2026-01-23 19:41:33] === BEGIN: TCP Value Ramp -> Gate Response -> Decay ===
+[2026-01-23 19:41:33] [CLEAN] reset_latch + value_clear

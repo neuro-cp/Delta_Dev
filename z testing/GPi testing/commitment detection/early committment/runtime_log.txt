@@ -1,0 +1,31 @@
+[2026-01-14 14:33:58] === BEGIN TEST 2 — TIME INTEGRATION ONLY ===
+[2026-01-14 14:33:58] [BASELINE] Stabilization
+[2026-01-14 14:34:04] [DECISION] baseline
+[2026-01-14 14:34:04] [TEST 2] Time integration
+[2026-01-14 14:34:04] [POKE] striatum 1.0
+[2026-01-14 14:34:04] [POKE] striatum 1.0
+[2026-01-14 14:34:04] [POKE] striatum 1.0
+[2026-01-14 14:34:04] [POKE] striatum 1.0
+[2026-01-14 14:34:05] [POKE] striatum 1.0
+[2026-01-14 14:34:05] [DECISION] integrate_5
+[2026-01-14 14:34:05] [POKE] striatum 1.0
+[2026-01-14 14:34:05] [POKE] striatum 1.0
+[2026-01-14 14:34:06] [POKE] striatum 1.0
+[2026-01-14 14:34:06] [POKE] striatum 1.0
+[2026-01-14 14:34:06] [POKE] striatum 1.0
+[2026-01-14 14:34:06] [DECISION] integrate_10
+[2026-01-14 14:34:06] [POKE] striatum 1.0
+[2026-01-14 14:34:07] [POKE] striatum 1.0
+[2026-01-14 14:34:07] [POKE] striatum 1.0
+[2026-01-14 14:34:07] [POKE] striatum 1.0
+[2026-01-14 14:34:07] [POKE] striatum 1.0
+[2026-01-14 14:34:08] [DECISION] integrate_15
+[2026-01-14 14:34:08] [POKE] striatum 1.0
+[2026-01-14 14:34:08] [POKE] striatum 1.0
+[2026-01-14 14:34:08] [POKE] striatum 1.0
+[2026-01-14 14:34:09] [POKE] striatum 1.0
+[2026-01-14 14:34:09] [POKE] striatum 1.0
+[2026-01-14 14:34:09] [DECISION] integrate_20
+[2026-01-14 14:34:09] [DECAY]
+[2026-01-14 14:34:13] [DECISION] decay
+[2026-01-14 14:34:13] === TEST COMPLETE ===

@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "type": "ExpressionProfile",
+  "profile_name": "experimental",
+
+  "description": "Exploratory expression profile for stress-testing dynamics and observing emergent behavior.",
+
+  "defaults": {
+    "receptors": {
+      "AMPA": 0.70,
+      "NMDA": 0.60,
+      "GABA_A": 0.60,
+      "GABA_B": 0.40,
+
+      "M1": 0.35,
+      "M2": 0.25,
+
+      "D1": 0.30,
+      "D2": 0.30,
+
+      "5HT1A": 0.35,
+      "5HT2A": 0.30,
+
+      "H1": 0.20,
+
+      "CB1": 0.30,
+
+      "MU_OPIOID": 0.20
+    },
+
+    "channels": {
+      "NaV_FAST": 0.80,
+      "KV_DELAYED_RECTIFIER": 0.70,
+      "HCN": 0.45,
+      "LEAK": 0.50,
+      "CaV_PQ": 0.50
+    }
+  },
+
+  "overrides": {
+
+    "CORTEX": {
+      "L5_PYRAMIDAL": {
+        "receptors": {
+          "NMDA": 0.70,
+          "M1": 0.45,
+          "5HT2A": 0.45
+        }
+      }
+    },
+
+    "HIPPOCAMPAL_FORMATION": {
+      "CA1": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "NMDA": 0.70,
+            "M1": 0.50
+          }
+        }
+      }
+    },
+
+    "AMYGDALA": {
+      "BLA": {
+        "receptors": {
+          "CB1": 0.40,
+          "5HT2A": 0.35
+        }
+      }
+    }
+  },
+
+  "notes": "This profile intentionally exaggerates neuromodulatory expression to amplify network effects and validate sensitivity."
+}

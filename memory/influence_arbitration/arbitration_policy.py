@@ -1,0 +1,3 @@
+class ArbitrationPolicy:
+    MAX_TOTAL_MAGNITUDE = 8.0
+    PRIORITY_ORDER = ["VALUE_BIAS", "PFC_CONTEXT_GAIN"]

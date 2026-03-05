@@ -1,0 +1,174 @@
+{
+  "version": "1.0.0",
+  "type": "RegulationRegistry",
+  "description": "Canonical regulatory rules mapping signals to neuronal changes",
+
+  "global_constraints": {
+    "update_interval_ms": 1000,
+    "max_delta_per_update": 0.05
+  },
+
+  "rules": [
+
+    {
+      "id": "CALCIUM_ENABLES_PLASTICITY",
+      "priority": 1,
+      "conditions": {
+        "signal": "calcium_proxy",
+        "operator": ">",
+        "value": 0.5
+      },
+      "effects": [
+        {
+          "target": "plasticity_state",
+          "action": "enable"
+        }
+      ]
+    },
+
+    {
+      "id": "LOW_ENERGY_SUPPRESSES_PLASTICITY",
+      "priority": 1,
+      "conditions": {
+        "signal": "energy_state",
+        "operator": "<",
+        "value": 0.3
+      },
+      "effects": [
+        {
+          "target": "plasticity_state",
+          "action": "disable"
+        }
+      ]
+    },
+
+    {
+      "id": "GROWTH_FACTOR_UPREGULATES_EXCITATORY_RECEPTORS",
+      "priority": 2,
+      "conditions": {
+        "signal": "growth_factor",
+        "operator": ">",
+        "value": 0.6
+      },
+      "effects": [
+        {
+          "target": "receptor_expression",
+          "receptor_class": "GLUTAMATE",
+          "action": "increase",
+          "rate": 0.02
+        }
+      ]
+    },
+
+    {
+      "id": "GROWTH_FACTOR_DOWNREGULATES_EXCESS_EXCITATION",
+      "priority": 2,
+      "conditions": {
+        "signal": "growth_factor",
+        "operator": "<",
+        "value": 0.2
+      },
+      "effects": [
+        {
+          "target": "receptor_expression",
+          "receptor_class": "GLUTAMATE",
+          "action": "decrease",
+          "rate": 0.015
+        }
+      ]
+    },
+
+    {
+      "id": "INHIBITORY_TONE_INCREASES_GABA",
+      "priority": 2,
+      "conditions": {
+        "signal": "inhibitory_tone",
+        "operator": ">",
+        "value": 0.5
+      },
+      "effects": [
+        {
+          "target": "receptor_expression",
+          "receptor_family": "GABA",
+          "action": "increase",
+          "rate": 0.02
+        }
+      ]
+    },
+
+    {
+      "id": "AROUSAL_INCREASES_EXCITABILITY",
+      "priority": 3,
+      "conditions": {
+        "signal": "arousal_gain",
+        "operator": ">",
+        "value": 0.4
+      },
+      "effects": [
+        {
+          "target": "firing_threshold",
+          "action": "decrease",
+          "rate": 1.0
+        }
+      ]
+    },
+
+    {
+      "id": "OPIOID_SUPPRESSES_FIRING",
+      "priority": 3,
+      "conditions": {
+        "signal": "synaptic_suppression",
+        "operator": ">",
+        "value": 0.5
+      },
+      "effects": [
+        {
+          "target": "firing_rate",
+          "action": "decrease",
+          "rate": 0.2
+        }
+      ]
+    },
+
+    {
+      "id": "STRESS_IMPAIRS_GROWTH",
+      "priority": 4,
+      "conditions": {
+        "signal": "stress_index",
+        "operator": ">",
+        "value": 0.6
+      },
+      "effects": [
+        {
+          "target": "growth_factor",
+          "action": "suppress",
+          "rate": 0.03
+        }
+      ]
+    },
+
+    {
+      "id": "HOMEOSTATIC_CHANNEL_SCALING",
+      "priority": 5,
+      "conditions": {
+        "signal": "excitatory_drive",
+        "operator": ">",
+        "value": 0.7
+      },
+      "effects": [
+        {
+          "target": "channel_conductance",
+          "channel_class": "KV",
+          "action": "increase",
+          "rate": 0.02
+        }
+      ]
+    }
+
+  ],
+
+  "extensibility": {
+    "allow_custom_rules": true,
+    "rule_scope_levels": ["cellular", "regional"]
+  }
+}

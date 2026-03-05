@@ -1,0 +1,84 @@
+[2026-01-14 16:18:57] === BEGIN COMPETING INPUTS DECISION TEST ===
+[2026-01-14 16:18:57] 
+=== EXPERIMENT: CONTROL ===
+[2026-01-14 16:18:57] [BASELINE]
+[2026-01-14 16:19:03] [INTEGRATION]
+[2026-01-14 16:19:03] [POKE] striatum 1.0
+[2026-01-14 16:19:03] [POKE] striatum 1.0
+[2026-01-14 16:19:04] [POKE] striatum 1.0
+[2026-01-14 16:19:04] [POKE] striatum 1.0
+[2026-01-14 16:19:04] [POKE] striatum 1.0
+[2026-01-14 16:19:04] [POKE] striatum 1.0
+[2026-01-14 16:19:05] [POKE] striatum 1.0
+[2026-01-14 16:19:05] [POKE] striatum 1.0
+[2026-01-14 16:19:05] [POKE] striatum 1.0
+[2026-01-14 16:19:05] [POKE] striatum 1.0
+[2026-01-14 16:19:06] [POKE] striatum 1.0
+[2026-01-14 16:19:06] [POKE] striatum 1.0
+[2026-01-14 16:19:06] [POKE] striatum 1.0
+[2026-01-14 16:19:07] [POKE] striatum 1.0
+[2026-01-14 16:19:07] [POKE] striatum 1.0
+[2026-01-14 16:19:07] [POKE] striatum 1.0
+[2026-01-14 16:19:07] [POKE] striatum 1.0
+[2026-01-14 16:19:08] [POKE] striatum 1.0
+[2026-01-14 16:19:08] [POKE] striatum 1.0
+[2026-01-14 16:19:08] [POKE] striatum 1.0
+[2026-01-14 16:19:09] [DECAY]
+[2026-01-14 16:19:13] [NORMALIZATION]
+[2026-01-14 16:19:23] 
+=== EXPERIMENT: BIAS_D1 ===
+[2026-01-14 16:19:23] [BASELINE]
+[2026-01-14 16:19:29] [INTEGRATION]
+[2026-01-14 16:19:29] [POKE] striatum 1.0
+[2026-01-14 16:19:29] [BIAS] channel=D1 mag=0.3
+[2026-01-14 16:19:29] [POKE] striatum 0.3
+[2026-01-14 16:19:29] [POKE] striatum 1.0
+[2026-01-14 16:19:29] [POKE] striatum 1.0
+[2026-01-14 16:19:29] [POKE] striatum 1.0
+[2026-01-14 16:19:30] [POKE] striatum 1.0
+[2026-01-14 16:19:30] [POKE] striatum 1.0
+[2026-01-14 16:19:30] [POKE] striatum 1.0
+[2026-01-14 16:19:31] [POKE] striatum 1.0
+[2026-01-14 16:19:31] [POKE] striatum 1.0
+[2026-01-14 16:19:31] [POKE] striatum 1.0
+[2026-01-14 16:19:31] [POKE] striatum 1.0
+[2026-01-14 16:19:32] [POKE] striatum 1.0
+[2026-01-14 16:19:32] [POKE] striatum 1.0
+[2026-01-14 16:19:32] [POKE] striatum 1.0
+[2026-01-14 16:19:32] [POKE] striatum 1.0
+[2026-01-14 16:19:33] [POKE] striatum 1.0
+[2026-01-14 16:19:33] [POKE] striatum 1.0
+[2026-01-14 16:19:33] [POKE] striatum 1.0
+[2026-01-14 16:19:34] [POKE] striatum 1.0
+[2026-01-14 16:19:34] [POKE] striatum 1.0
+[2026-01-14 16:19:34] [DECAY]
+[2026-01-14 16:19:38] [NORMALIZATION]
+[2026-01-14 16:19:48] 
+=== EXPERIMENT: BIAS_D2 ===
+[2026-01-14 16:19:48] [BASELINE]
+[2026-01-14 16:19:54] [INTEGRATION]
+[2026-01-14 16:19:54] [POKE] striatum 1.0
+[2026-01-14 16:19:54] [BIAS] channel=D2 mag=0.3
+[2026-01-14 16:19:54] [POKE] striatum 0.3
+[2026-01-14 16:19:55] [POKE] striatum 1.0
+[2026-01-14 16:19:55] [POKE] striatum 1.0
+[2026-01-14 16:19:55] [POKE] striatum 1.0
+[2026-01-14 16:19:55] [POKE] striatum 1.0
+[2026-01-14 16:19:56] [POKE] striatum 1.0
+[2026-01-14 16:19:56] [POKE] striatum 1.0
+[2026-01-14 16:19:56] [POKE] striatum 1.0
+[2026-01-14 16:19:57] [POKE] striatum 1.0
+[2026-01-14 16:19:57] [POKE] striatum 1.0
+[2026-01-14 16:19:57] [POKE] striatum 1.0
+[2026-01-14 16:19:57] [POKE] striatum 1.0
+[2026-01-14 16:19:58] [POKE] striatum 1.0
+[2026-01-14 16:19:58] [POKE] striatum 1.0
+[2026-01-14 16:19:58] [POKE] striatum 1.0
+[2026-01-14 16:19:59] [POKE] striatum 1.0
+[2026-01-14 16:19:59] [POKE] striatum 1.0
+[2026-01-14 16:19:59] [POKE] striatum 1.0
+[2026-01-14 16:19:59] [POKE] striatum 1.0
+[2026-01-14 16:20:00] [POKE] striatum 1.0
+[2026-01-14 16:20:00] [DECAY]
+[2026-01-14 16:20:04] [NORMALIZATION]
+[2026-01-14 16:20:14] === ALL EXPERIMENTS COMPLETE ===

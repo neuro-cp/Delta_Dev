@@ -1,0 +1,92 @@
+C:\Users\Admin\Desktop\neural framework>python -m engine.routing.tests.test_hypothesis_asymmetric_drive_observational
+[DEBUG] Neuron bases loaded: 5
+[DEBUG] Loading regions from: C:\Users\Admin\Desktop\neural framework\regions
+[DEBUG] BrainMap loaded from brain_map.json
+[DEBUG] RegionAliasRegistry loaded from region_aliases.json
+[DEBUG] Loaded region: amyg_base | populations=0
+[DEBUG] Loaded region: bla | populations=2
+[DEBUG] Loaded region: cea | populations=1
+[DEBUG] Loaded region: mea | populations=1
+[DEBUG] Loaded region: bg_base | populations=0
+[DEBUG] Loaded region: gpe | populations=1
+[DEBUG] Loaded region: gpi | populations=1
+[DEBUG] Loaded region: snc | populations=1
+[DEBUG] Loaded region: stn | populations=1
+[DEBUG] Loaded region: striatum | populations=3
+[DEBUG] Loaded region: autonomic_system | populations=2
+[DEBUG] Loaded region: brainstem_base | populations=0
+[DEBUG] Loaded region: locus_coeruleus | populations=1
+[DEBUG] Loaded region: medulla | populations=1
+[DEBUG] Loaded region: pons | populations=1
+[DEBUG] Loaded region: raphe | populations=1
+[DEBUG] Loaded region: vta | populations=2
+[DEBUG] Loaded region: cerebellar_cortex | populations=3
+[DEBUG] Loaded region: cerebellum_base | populations=0
+[DEBUG] Loaded region: deep_nuclei | populations=1
+[DEBUG] Loaded region: a1 | populations=4
+[DEBUG] Loaded region: cortex_base | populations=5
+[DEBUG] Loaded region: insula | populations=3
+[DEBUG] Loaded region: m1 | populations=3
+[DEBUG] Loaded region: s1 | populations=5
+[DEBUG] Loaded region: v1 | populations=5
+[DEBUG] Loaded region: ca1 | populations=2
+[DEBUG] Loaded region: ca3 | populations=2
+[DEBUG] Loaded region: dentate_gyrus | populations=2
+[DEBUG] Loaded region: hip_base | populations=0
+[DEBUG] Loaded region: subiculum | populations=1
+[DEBUG] Loaded region: association_cortex | populations=4
+[DEBUG] Loaded region: corpus_callosum | populations=1
+[DEBUG] Loaded region: Intralaminar | populations=1
+[DEBUG] Loaded region: pfc | populations=5
+[DEBUG] Loaded region: inferior_colliculus | populations=3
+[DEBUG] Loaded region: superior_colliculus | populations=3
+[DEBUG] Loaded region: auditory_input | populations=0
+[DEBUG] Loaded region: gustatory_input | populations=0
+[DEBUG] Loaded region: sensory_base | populations=0
+[DEBUG] Loaded region: somato_input | populations=0
+[DEBUG] Loaded region: visual_input | populations=0
+[DEBUG] Loaded region: endocrine_system | populations=0
+[DEBUG] Loaded region: hypothalamus | populations=4
+[DEBUG] Loaded region: anterior_pituitary | populations=5
+[DEBUG] Loaded region: posterior_pituitary | populations=2
+[DEBUG] Loaded region: lgn | populations=1
+[DEBUG] Loaded region: md | populations=1
+[DEBUG] Loaded region: mgb | populations=1
+[DEBUG] Loaded region: pulvinar | populations=1
+[DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+
+[PHASE 1] Baseline
+[BASE 0000] dominance={'D1': 0.006666638246900079, 'D2': 0.006666695086433255} relief=0.4972
+[BASE 0100] dominance={'D1': 0.3709963996485639, 'D2': 0.37124326371478406} relief=0.4533
+
+[PHASE 2] Assigning hypotheses
+  association_cortex:L2_3_PYRAMIDAL:0 → H1
+  association_cortex:L2_3_PYRAMIDAL:1 → H2
+
+[PHASE 3] Sustained asymmetric stimulation (+5%)
+[STEP 0000] dominance={'D1': 0.46560524940287357, 'D2': 0.46705651633053147} Δ=0.001451 relief=0.4258
+[STEP 0100] dominance={'D1': 0.4902166173994952, 'D2': 0.49219170091157705} Δ=0.001975 relief=0.4183
+[STEP 0200] dominance={'D1': 0.49723353676367754, 'D2': 0.49817074925577254} Δ=0.000937 relief=0.4298
+[STEP 0300] dominance={'D1': 0.4993158195264225, 'D2': 0.49948357968028795} Δ=0.000168 relief=0.4552
+[STEP 0400] dominance={'D1': 0.5000158499422193, 'D2': 0.49967050080307324} Δ=0.000345 relief=0.4869
+[STEP 0500] dominance={'D1': 0.5002445555564291, 'D2': 0.49967350558801776} Δ=0.000571 relief=0.5171
+
+[PHASE 4] Withdrawal
+[WITHDRAW 0000] dominance={'D1': 0.5003321962080652, 'D2': 0.49964639779160636} relief=0.5389
+[WITHDRAW 0100] dominance={'D1': 0.5015057676257346, 'D2': 0.49848864019401123} relief=0.5483
+
+=== TEST COMPLETE ===
+Expect: small but persistent Δ aligned with asymmetric hypothesis.
+No asserts by design.
+
+C:\Users\Admin\Desktop\neural framework>

@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "MEA",
+  "parent_region": "AMYGDALA",
+
+  "function": "instinctive_salience",
+
+  "populations": {
+    "PRINCIPAL_NEURONS": {
+      "count": 15000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 1.0,
+      "plasticity_profile": "low"
+    }
+  }
+}

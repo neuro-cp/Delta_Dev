@@ -1,0 +1,33 @@
+POKE RESPONSE FINGERPRINT
+================================================================================
+
+[BASELINE]
+Region: stn
+Mass: 0.102655
+Fraction active: 0.3200
+Top assemblies:
+  stn:EXCITATORY_NEURONS:2                                     0.013132
+  stn:EXCITATORY_NEURONS:7                                     0.013016
+  stn:EXCITATORY_NEURONS:4                                     0.012966
+  stn:EXCITATORY_NEURONS:3                                     0.012961
+  stn:EXCITATORY_NEURONS:5                                     0.012854
+  stn:EXCITATORY_NEURONS:6                                     0.012776
+  stn:EXCITATORY_NEURONS:1                                     0.012702
+  stn:EXCITATORY_NEURONS:0                                     0.012249
+
+[POST-POKE]
+Region: stn
+Poke magnitude: 125.0
+Mass: 0.899468
+Fraction active: 0.6800
+Top assemblies:
+  stn:EXCITATORY_NEURONS:5                                     0.074218
+  stn:EXCITATORY_NEURONS:6                                     0.073965
+  stn:EXCITATORY_NEURONS:3                                     0.073918
+  stn:EXCITATORY_NEURONS:7                                     0.073908
+  stn:EXCITATORY_NEURONS:4                                     0.073853
+  stn:EXCITATORY_NEURONS:1                                     0.073852
+  stn:EXCITATORY_NEURONS:0                                     0.073300
+  stn:EXCITATORY_NEURONS:2                                     0.072840
+  stn:EXCITATORY_NEURONS:11                                    0.034970
+  stn:EXCITATORY_NEURONS:16                                    0.034604

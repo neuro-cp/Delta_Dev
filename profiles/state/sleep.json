@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "type": "StateProfile",
+  "state_name": "sleep",
+
+  "description": "Non-waking sleep state with reduced sensory throughput, lowered neuromodulatory tone, and memory consolidation bias.",
+
+  "neuromodulators": {
+    "acetylcholine": 0.4,
+    "dopamine": 0.6,
+    "serotonin": 0.5,
+    "norepinephrine": 0.4,
+    "histamine": 0.2
+  },
+
+  "excitability": {
+    "firing_threshold_modifier": 1.15,
+    "leak_conductance_modifier": 1.1
+  },
+
+  "plasticity": {
+    "ltd_ltp_balance": 0.85,
+    "learning_rate": 0.6
+  },
+
+  "oscillations": {
+    "delta": 0.55,
+    "theta": 0.25,
+    "alpha": 0.10,
+    "beta": 0.07,
+    "gamma": 0.03
+  },
+
+  "notes": "Sleep state favors low-frequency oscillations and synaptic consolidation. Reduced acetylcholine and monoamines suppress external attention and promote internal reorganization."
+}

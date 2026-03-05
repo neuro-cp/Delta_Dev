@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "POSTERIOR_PITUITARY",
+  "parent_region": "DIENCEPHALON",
+
+  "function": "neurohormone_release",
+
+  "populations": {
+    "OXYTOCIN_NEURONS": {
+      "count": 2,
+      "neuron_type": "neurosecretory",
+      "baseline_activity": 0.4,
+      "plasticity_profile": "very_low"
+    },
+
+    "VASOPRESSIN_NEURONS": {
+      "count": 2,
+      "neuron_type": "neurosecretory",
+      "baseline_activity": 0.5,
+      "plasticity_profile": "very_low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "HYPOTHALAMUS",
+      "strength": 1.0
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "ENDOCRINE_SYSTEM",
+      "strength": 1.0
+    }
+  ],
+
+  "notes": "Posterior pituitary directly releases hypothalamic neurohormones (oxytocin and vasopressin) into circulation. Modeled as direct hypothalamic extensions rather than an independent endocrine processor."
+}

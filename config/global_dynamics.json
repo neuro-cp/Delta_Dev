@@ -1,0 +1,25 @@
+{
+  "version": "1.1.0",
+  "population_defaults": {
+    "baseline": 0.015,
+    "tau": 25.0,
+    "threshold": 0.01,
+    "gain": 2.5,
+    "max_rate": 20.0,
+    "inhibition_gain": 0.25,
+    "normalization": 0.4,
+    "homeostatic_gain": 0.02,
+    "noise_amplitude": 0.02,
+    "noise_distribution": "gaussian",
+    "clamp_min": 0.0,
+    "clamp_max": 6.0
+  },
+  "baseline_activity_scale": 0.005,
+  "propagation": {
+    "global_strength": 1.2
+  },
+  "runtime": {
+    "assembly_downscale_factor": 0.05,
+    "max_assemblies_per_population": 3
+  }
+}

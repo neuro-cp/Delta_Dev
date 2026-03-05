@@ -1,0 +1,5081 @@
+=== REGIONS DUMP ===
+Generated: 2026-02-09 14:58:16
+Root: C:\Users\Admin\Desktop\neural framework
+Regions: C:\Users\Admin\Desktop\neural framework\regions
+File count: 75
+Per-file cap (bytes): 1000000
+
+=== FILE INDEX ===
+- __init__.py  (0 bytes)
+- __pycache__\__init__.cpython-312.pyc  (153 bytes)
+- __pycache__\__init__.cpython-313.pyc  (156 bytes)
+- amygdala\amyg_base.json  (390 bytes)
+- amygdala\bla.json  (1756 bytes)
+- amygdala\cea.json  (577 bytes)
+- amygdala\mea.json  (355 bytes)
+- assembly_differentiation\__init__.py  (0 bytes)
+- assembly_differentiation\__pycache__\__init__.cpython-312.pyc  (178 bytes)
+- assembly_differentiation\__pycache__\__init__.cpython-313.pyc  (181 bytes)
+- assembly_differentiation\__pycache__\adapter.cpython-312.pyc  (5010 bytes)
+- assembly_differentiation\__pycache__\adapter.cpython-313.pyc  (5022 bytes)
+- assembly_differentiation\adapter.py  (4452 bytes)
+- assembly_differentiation\pvn.py  (1951 bytes)
+- assembly_differentiation\seed.py  (810 bytes)
+- assembly_differentiation\tests\__init__.py  (0 bytes)
+- assembly_differentiation\tests\test_adapter_allows_partial_differentiation.py  (2222 bytes)
+- assembly_differentiation\tests\test_adapter_respects_assembly_control.py  (2163 bytes)
+- assembly_differentiation\tests\test_pvn_individual_diff.py  (2662 bytes)
+- assembly_differentiation\tests\test_pvn_structural_differentiation.py  (3774 bytes)
+- assembly_differentiation\tests\tpid_log.txt  (3911 bytes)
+- assembly_differentiation\tests\tpsd_log.txt  (514 bytes)
+- assembly_dump.py  (1788 bytes)
+- basal_ganglia\bg_base.json  (1011 bytes)
+- basal_ganglia\gpe.json  (2445 bytes)
+- basal_ganglia\gpi.json  (2144 bytes)
+- basal_ganglia\snc.json  (1879 bytes)
+- basal_ganglia\stn.json  (2524 bytes)
+- basal_ganglia\striatum.json  (3318 bytes)
+- body_interfaces\autonomic_system.json  (970 bytes)
+- brain_map.json  (5021 bytes)
+- brainstem\brainstem_base.json  (1040 bytes)
+- brainstem\locus_coeruleus.json  (1300 bytes)
+- brainstem\medulla.json  (301 bytes)
+- brainstem\pons.json  (303 bytes)
+- brainstem\raphe.json  (607 bytes)
+- brainstem\vta.json  (2218 bytes)
+- cerebellum\cerebellar_cortex.json  (1935 bytes)
+- cerebellum\cerebellum_base.json  (554 bytes)
+- cerebellum\deep_nuclei.json  (627 bytes)
+- cortex\a1.json  (1731 bytes)
+- cortex\cortex_base.json  (2317 bytes)
+- cortex\insula.json  (822 bytes)
+- cortex\m1.json  (831 bytes)
+- cortex\s1.json  (2068 bytes)
+- cortex\v1.json  (3676 bytes)
+- diencephalon\endocrine\endocrine_system.json  (547 bytes)
+- diencephalon\hypothalamus\hypothalamus.json  (2060 bytes)
+- diencephalon\pituitary\anterior_pituitary.json  (1408 bytes)
+- diencephalon\pituitary\posterior_pituitary.json  (965 bytes)
+- diencephalon\thalamus\lgn.json  (1079 bytes)
+- diencephalon\thalamus\md.json  (2745 bytes)
+- diencephalon\thalamus\mgb.json  (1166 bytes)
+- diencephalon\thalamus\pulvinar.json  (3335 bytes)
+- diencephalon\thalamus\thalamus_base.json  (1745 bytes)
+- diencephalon\thalamus\trn.json  (3639 bytes)
+- diencephalon\thalamus\vpl.json  (1660 bytes)
+- diencephalon\thalamus\vpm.json  (1183 bytes)
+- hippocampal_formation\ca1.json  (2409 bytes)
+- hippocampal_formation\ca3.json  (2158 bytes)
+- hippocampal_formation\dentate_gyrus.json  (1723 bytes)
+- hippocampal_formation\hip_base.json  (982 bytes)
+- hippocampal_formation\subiculum.json  (1306 bytes)
+- inter_regional\association_cortex.json  (4970 bytes)
+- inter_regional\corpus_callosum.json  (748 bytes)
+- inter_regional\Intralaminar.json  (1114 bytes)
+- inter_regional\pfc.json  (3753 bytes)
+- midbrain\inferior_colliculus.json  (1105 bytes)
+- midbrain\superior_colliculus.json  (1040 bytes)
+- region_aliases.json  (1381 bytes)
+- sensory_interfaces\auditory_input.json  (493 bytes)
+- sensory_interfaces\gustatory_input.json  (427 bytes)
+- sensory_interfaces\sensory_base.json  (505 bytes)
+- sensory_interfaces\somato_input.json  (521 bytes)
+- sensory_interfaces\visual_input.json  (1093 bytes)
+
+=== FILE CONTENTS ===
+
+##########################################################################################
+FILE: __init__.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\__init__.py
+SIZE: 0 bytes
+MTIME:2026-01-28 14:22:02
+##########################################################################################
+
+
+
+##########################################################################################
+FILE: __pycache__\__init__.cpython-312.pyc
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\__pycache__\__init__.cpython-312.pyc
+SIZE: 153 bytes
+MTIME:2026-02-07 23:12:42
+##########################################################################################
+
+[BINARY DETECTED] Skipping raw content.
+
+##########################################################################################
+FILE: __pycache__\__init__.cpython-313.pyc
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\__pycache__\__init__.cpython-313.pyc
+SIZE: 156 bytes
+MTIME:2026-02-08 16:53:23
+##########################################################################################
+
+[BINARY DETECTED] Skipping raw content.
+
+##########################################################################################
+FILE: amygdala\amyg_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\amygdala\amyg_base.json
+SIZE: 390 bytes
+MTIME:2026-01-05 00:00:14
+##########################################################################################
+
+{
+  "default_outputs": [
+    "CORTEX",
+    "HIPPOCAMPAL_FORMATION",
+    "BRAINSTEM"
+  ],
+  "function": "emotional_salience_processing",
+  "notes": "Amygdala base container. Subregion dynamics defined in separate files.",
+  "parent_region": "LIMBIC_SYSTEM",
+  "region_id": "AMYGDALA",
+  "subregions": [
+    "BLA",
+    "CEA",
+    "MEA"
+  ],
+  "type": "RegionBase",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: amygdala\bla.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\amygdala\bla.json
+SIZE: 1756 bytes
+MTIME:2026-01-06 17:48:00
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "anxiolytics": "high",
+    "benzodiazepines": "high",
+    "psychedelics": "moderate",
+    "stimulants": "moderate"
+  },
+  "function": "emotional_association_learning",
+  "inputs": [
+    {
+      "source_population": "PYRAMIDAL_CELLS",
+      "source_region": "SUBICULUM",
+      "strength": 0.4
+    },
+    {
+      "source_population": "L2_3_PYRAMIDAL",
+      "source_region": "ASSOCIATION_CORTEX",
+      "strength": 0.5
+    }
+  ],
+  "intrinsic_signals": {
+    "threat_bias": 0.0,
+    "valence_bias": 0.0
+  },
+  "outputs": [
+    {
+      "strength": 0.4,
+      "target_population": "L2_3_PYRAMIDAL",
+      "target_region": "PFC"
+    },
+    {
+      "strength": 0.7,
+      "target_region": "CEA"
+    }
+  ],
+  "parent_region": "AMYGDALA",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 7.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.8,
+        "LEAK": 0.4,
+        "NaV_FAST": 0.9
+      },
+      "count": 12000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "receptors": {
+        "AMPA": 0.4,
+        "GABA_A": 0.7
+      },
+      "sign": -1.0
+    },
+    "PYRAMIDAL_CELLS": {
+      "baseline_firing_rate_hz": 0.8,
+      "channels": {
+        "KCa": 0.3,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "LEAK": 0.55,
+        "NaV_FAST": 0.8
+      },
+      "count": 35000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "receptors": {
+        "5HT2A": 0.2,
+        "AMPA": 0.55,
+        "D1": 0.25,
+        "GABA_A": 0.35,
+        "NMDA": 0.5
+      },
+      "sign": 1.0
+    }
+  },
+  "region_id": "BLA",
+  "spatial_properties": {
+    "neuron_density_per_mm3": 70000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: amygdala\cea.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\amygdala\cea.json
+SIZE: 577 bytes
+MTIME:2026-01-06 18:15:00
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "anxiolytics": "high",
+    "sedatives": "high"
+  },
+  "function": "autonomic_emotional_output",
+  "outputs": [
+    {
+      "strength": 0.8,
+      "target_population": "AUTONOMIC_NEURONS",
+      "target_region": "MEDULLA"
+    }
+  ],
+  "parent_region": "AMYGDALA",
+  "populations": {
+    "OUTPUT_NEURONS": {
+      "baseline_firing_rate_hz": 2.0,
+      "count": 20000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    }
+  },
+  "region_id": "CEA",
+  "type": "RegionSubstructure",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: amygdala\mea.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\amygdala\mea.json
+SIZE: 355 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "function": "instinctive_salience",
+  "parent_region": "AMYGDALA",
+  "populations": {
+    "PRINCIPAL_NEURONS": {
+      "baseline_firing_rate_hz": 1.0,
+      "count": 15000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "MEA",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: assembly_differentiation\__init__.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\__init__.py
+SIZE: 0 bytes
+MTIME:2026-01-28 14:21:56
+##########################################################################################
+
+
+
+##########################################################################################
+FILE: assembly_differentiation\__pycache__\__init__.cpython-312.pyc
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\__pycache__\__init__.cpython-312.pyc
+SIZE: 178 bytes
+MTIME:2026-02-07 23:12:42
+##########################################################################################
+
+[BINARY DETECTED] Skipping raw content.
+
+##########################################################################################
+FILE: assembly_differentiation\__pycache__\__init__.cpython-313.pyc
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\__pycache__\__init__.cpython-313.pyc
+SIZE: 181 bytes
+MTIME:2026-02-08 16:53:23
+##########################################################################################
+
+[BINARY DETECTED] Skipping raw content.
+
+##########################################################################################
+FILE: assembly_differentiation\__pycache__\adapter.cpython-312.pyc
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\__pycache__\adapter.cpython-312.pyc
+SIZE: 5010 bytes
+MTIME:2026-02-07 23:12:42
+##########################################################################################
+
+[BINARY DETECTED] Skipping raw content.
+
+##########################################################################################
+FILE: assembly_differentiation\__pycache__\adapter.cpython-313.pyc
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\__pycache__\adapter.cpython-313.pyc
+SIZE: 5022 bytes
+MTIME:2026-02-08 16:53:23
+##########################################################################################
+
+[BINARY DETECTED] Skipping raw content.
+
+##########################################################################################
+FILE: assembly_differentiation\adapter.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\adapter.py
+SIZE: 4452 bytes
+MTIME:2026-01-28 16:05:14
+##########################################################################################
+
+from __future__ import annotations
+
+import importlib
+import json
+from pathlib import Path
+from typing import Dict, List
+
+from engine.population_model import PopulationModel
+
+
+# ============================================================
+# Assembly Differentiation Adapter
+# ============================================================
+
+class AssemblyDifferentiationAdapter:
+    """
+    Compile-time assembly differentiation.
+
+    This adapter:
+    - Runs AFTER assemblies are created
+    - Runs BEFORE runtime stepping
+    - Applies deterministic, region-scoped structural traits
+    - Never touches dynamic state (activity, output)
+    - Is a pure function of assembly identity
+
+    Structural authority is defined by config/assembly_control.json.
+    """
+
+    # Path: neural framework/regions/assembly_differentiation/
+    BASE_PATH = Path(__file__).resolve().parent
+
+    # Path: neural framework/config/assembly_control.json
+    CONTROL_PATH = (
+        Path(__file__).resolve().parents[2] / "config" / "assembly_control.json"
+    )
+
+    # --------------------------------------------------------
+    # Public entry point
+    # --------------------------------------------------------
+
+    @classmethod
+    def apply(cls, *, runtime) -> None:
+        """
+        Apply differentiation to all structurally-declared regions.
+        """
+        region_map = cls._collect_region_assemblies(runtime)
+        control = cls._load_assembly_control()
+
+        for region_name, assemblies in region_map.items():
+            # Only regions declared in control file may differentiate
+            expected_n = control.get(region_name)
+            if expected_n is None:
+                continue
+
+            module = cls._load_region_module(region_name)
+            if module is None:
+                continue
+
+            if not hasattr(module, "differentiate"):
+                raise RuntimeError(
+                    f"[assembly_differentiation] "
+                    f"{region_name}.py exists but defines no `differentiate()`"
+                )
+
+            # Bound assemblies to declared structural count
+            if len(assemblies) <= expected_n:
+                bounded = assemblies
+            else:
+                bounded = assemblies[:expected_n]
+
+            module.differentiate(
+                region_name=region_name,
+                assemblies=bounded,
+                seed=cls._region_seed(region_name),
+            )
+
+    # --------------------------------------------------------
+    # Helpers
+    # --------------------------------------------------------
+
+    @classmethod
+    def _collect_region_assemblies(
+        cls,
+        runtime,
+    ) -> Dict[str, List[PopulationModel]]:
+        """
+        Gather assemblies grouped by region.
+        """
+        regions: Dict[str, List[PopulationModel]] = {}
+
+        for region_name, region_state in runtime.region_states.items():
+            pops = region_state.get("populations", {}) or {}
+            for plist in pops.values():
+                for assembly in plist:
+                    regions.setdefault(region_name, []).append(assembly)
+
+        return regions
+
+    @classmethod
+    def _load_region_module(cls, region_name: str):
+        """
+        Load regions/assembly_differentiation/<region>.py if it exists.
+        """
+        module_path = cls.BASE_PATH / f"{region_name}.py"
+        if not module_path.exists():
+            return None
+
+        return importlib.import_module(
+            f"regions.assembly_differentiation.{region_name}"
+        )
+
+    @classmethod
+    def _load_assembly_control(cls) -> Dict[str, int]:
+        """
+        Load canonical assembly counts per region.
+        """
+        if not cls.CONTROL_PATH.exists():
+            raise RuntimeError(
+                "[assembly_differentiation] config/assembly_control.json not found"
+            )
+
+        with open(cls.CONTROL_PATH, "r") as f:
+            data = json.load(f)
+
+        if not isinstance(data, dict):
+            raise RuntimeError(
+                "[assembly_differentiation] assembly_control.json must map region -> int"
+            )
+
+        return data
+
+    @staticmethod
+    def _region_seed(region_name: str) -> int:
+        """
+        Stable region-level seed.
+        """
+        return hash(("assembly_differentiation", region_name))
+
+##########################################################################################
+FILE: assembly_differentiation\pvn.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\pvn.py
+SIZE: 1951 bytes
+MTIME:2026-01-28 16:49:30
+##########################################################################################
+
+from __future__ import annotations
+
+import random
+from typing import Dict, List
+
+from regions.assembly_differentiation.seed import get_seed_int
+
+
+class PVNDifferentiationAdapter:
+    """
+    Deterministic, reversible assembly-level differentiation
+    for the Paraventricular Nucleus (PVN).
+
+    - Deterministically mutes 2 of 5 assemblies
+    - Structural only (gain multiplier)
+    - No learning, no persistence, no mutation across runs
+    """
+
+    TARGET_REGION = "hypothalamus"
+    TARGET_POPULATION = "PARAVENTRICULAR_NUCLEUS"
+    EXPECTED_ASSEMBLIES = 5
+
+    def __init__(self, attenuation: float = 1.0):
+        self.attenuation = float(attenuation)
+        self._rng = random.Random(get_seed_int())
+        self._muted_ids: List[str] = []
+
+    def apply(self, runtime) -> None:
+        region = runtime.region_states.get(self.TARGET_REGION)
+        if not region:
+            raise RuntimeError("Hypothalamus region not found")
+
+        assemblies = region["populations"].get(self.TARGET_POPULATION)
+        if not assemblies:
+            raise RuntimeError("PVN population not found")
+
+        if len(assemblies) != self.EXPECTED_ASSEMBLIES:
+            raise RuntimeError(
+                f"PVN expected {self.EXPECTED_ASSEMBLIES} assemblies, "
+                f"found {len(assemblies)}"
+            )
+
+        muted = self._rng.sample(assemblies, 2)
+        self._muted_ids = [a.assembly_id for a in muted]
+
+        for a in assemblies:
+            # structural gain multiplier (default = 1.0)
+            base = getattr(a, "_structural_gain", 1.0)
+            if a.assembly_id in self._muted_ids:
+                a._structural_gain = base * self.attenuation
+            else:
+                a._structural_gain = base
+
+    def dump_state(self) -> Dict:
+        return {
+            "muted_assemblies": list(self._muted_ids),
+            "attenuation": self.attenuation,
+        }
+
+##########################################################################################
+FILE: assembly_differentiation\seed.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\seed.py
+SIZE: 810 bytes
+MTIME:2026-01-28 16:54:52
+##########################################################################################
+
+from __future__ import annotations
+
+import hashlib
+
+# ============================================================
+# changing this will destroy all assembly characteristics
+# ============================================================
+
+SEED_PHRASE = "OHANA MEANS FAMILY!"
+
+def get_seed_int(bits: int = 32) -> int:
+    
+    if bits not in (32, 64):
+        raise ValueError("bits must be 32 or 64")
+
+    digest = hashlib.sha256(SEED_PHRASE.encode("utf-8")).digest()
+
+    if bits == 32:
+        return int.from_bytes(digest[:4], byteorder="big", signed=False)
+
+    return int.from_bytes(digest[:8], byteorder="big", signed=False)
+
+
+def get_seed_hex() -> str:
+    """
+    fingerprint for logs and dumps.
+    """
+    return hashlib.sha256(SEED_PHRASE.encode("utf-8")).hexdigest()[:12]
+
+##########################################################################################
+FILE: assembly_differentiation\tests\__init__.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\__init__.py
+SIZE: 0 bytes
+MTIME:2026-01-28 14:21:56
+##########################################################################################
+
+
+
+##########################################################################################
+FILE: assembly_differentiation\tests\test_adapter_allows_partial_differentiation.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\test_adapter_allows_partial_differentiation.py
+SIZE: 2222 bytes
+MTIME:2026-01-28 16:10:40
+##########################################################################################
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from loader.loader import NeuralFrameworkLoader
+from engine.runtime import BrainRuntime
+
+from regions.assembly_differentiation.adapter import (
+    AssemblyDifferentiationAdapter,
+)
+
+BASE_DIR = Path(__file__).resolve().parents[3]
+
+
+def test_adapter_allows_partial_assembly_touch(monkeypatch):
+    """
+    Audit test:
+    Differentiation modules may legally touch a subset
+    of declared assemblies without raising errors.
+    """
+
+    # --------------------------------------------------
+    # Build runtime
+    # --------------------------------------------------
+    loader = NeuralFrameworkLoader(BASE_DIR)
+    loader.load_neuron_bases()
+    loader.load_regions()
+    loader.load_profiles()
+
+    brain = loader.compile()
+    runtime = BrainRuntime(brain)
+
+    # --------------------------------------------------
+    # Fake differentiation touching only indices {1, 4}
+    # --------------------------------------------------
+    def fake_differentiate(*, region_name, assemblies, seed):
+        targets = {1, 4}
+        for idx, a in enumerate(assemblies):
+            if idx in targets:
+                a._structural_gain = 0.5
+
+    module = AssemblyDifferentiationAdapter._load_region_module("hypothalamus")
+    assert module is not None
+
+    monkeypatch.setattr(module, "differentiate", fake_differentiate)
+
+    # --------------------------------------------------
+    # Apply adapter (this must NOT throw)
+    # --------------------------------------------------
+    AssemblyDifferentiationAdapter.apply(runtime=runtime)
+
+    # --------------------------------------------------
+    # Verify only those assemblies were touched
+    # --------------------------------------------------
+    region = runtime.region_states["hypothalamus"]
+    assemblies = region["populations"]["PARAVENTRICULAR_NUCLEUS"]
+
+    gains = [
+        getattr(a, "_structural_gain", 1.0)
+        for a in assemblies
+    ]
+
+    assert gains[1] == 0.5
+    assert gains[4] == 0.5
+
+    for i, g in enumerate(gains):
+        if i not in (1, 4):
+            assert g == 1.0, f"Assembly {i} was modified unexpectedly"
+
+##########################################################################################
+FILE: assembly_differentiation\tests\test_adapter_respects_assembly_control.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\test_adapter_respects_assembly_control.py
+SIZE: 2163 bytes
+MTIME:2026-01-28 16:10:04
+##########################################################################################
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import List
+
+from loader.loader import NeuralFrameworkLoader
+from engine.runtime import BrainRuntime
+
+from regions.assembly_differentiation.adapter import (
+    AssemblyDifferentiationAdapter,
+)
+
+BASE_DIR = Path(__file__).resolve().parents[3]
+
+
+def test_adapter_uses_assembly_control_cardinality(monkeypatch):
+    """
+    Audit test:
+    Adapter must pass exactly the number of assemblies
+    declared in config/assembly_control.json.
+    """
+
+    # --------------------------------------------------
+    # Build runtime (no stepping)
+    # --------------------------------------------------
+    loader = NeuralFrameworkLoader(BASE_DIR)
+    loader.load_neuron_bases()
+    loader.load_regions()
+    loader.load_profiles()
+
+    brain = loader.compile()
+    runtime = BrainRuntime(brain)
+
+    # --------------------------------------------------
+    # Capture what differentiate() receives
+    # --------------------------------------------------
+    received: List[int] = []
+
+    def fake_differentiate(*, region_name, assemblies, seed):
+        if region_name == "hypothalamus":
+            received.append(len(assemblies))
+
+    # Patch the hypothalamus differentiation module
+    module = AssemblyDifferentiationAdapter._load_region_module("hypothalamus")
+    assert module is not None
+
+    monkeypatch.setattr(module, "differentiate", fake_differentiate)
+
+    # --------------------------------------------------
+    # Apply adapter
+    # --------------------------------------------------
+    AssemblyDifferentiationAdapter.apply(runtime=runtime)
+
+    # --------------------------------------------------
+    # Assert against control file
+    # --------------------------------------------------
+    assert len(received) == 1, "Differentiate should be called once for hypothalamus"
+
+    expected = AssemblyDifferentiationAdapter._load_assembly_control()["hypothalamus"]
+    assert received[0] == expected, (
+        f"Adapter passed {received[0]} assemblies, "
+        f"expected {expected} from assembly_control.json"
+    )
+
+##########################################################################################
+FILE: assembly_differentiation\tests\test_pvn_individual_diff.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\test_pvn_individual_diff.py
+SIZE: 2662 bytes
+MTIME:2026-01-28 15:57:32
+##########################################################################################
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from loader.loader import NeuralFrameworkLoader
+from engine.runtime import BrainRuntime
+
+from regions.assembly_differentiation.pvn import PVNDifferentiationAdapter
+
+
+BASE_DIR = Path(__file__).resolve().parents[3]
+
+
+def test_pvn_structural_differentiation_trace():
+    """
+    Minimal grounding trace:
+    Single PVN poke, log per-assembly firing rates for 10 steps.
+    """
+
+    # --------------------------------------------------
+    # Build runtime
+    # --------------------------------------------------
+    loader = NeuralFrameworkLoader(BASE_DIR)
+
+    loader.load_neuron_bases()
+    loader.load_regions()
+    loader.load_profiles()
+
+    brain = loader.compile()
+    runtime = BrainRuntime(brain)
+
+    # Explicitly neutralize higher systems
+    runtime.enable_vta_value = False
+    runtime.enable_urgency = False
+    runtime.enable_salience = False
+
+    # --------------------------------------------------
+    # Apply PVN differentiation
+    # --------------------------------------------------
+    adapter = PVNDifferentiationAdapter(attenuation=0.25)
+    adapter.apply(runtime)
+
+    muted_ids = set(adapter.dump_state()["muted_assemblies"])
+
+    # --------------------------------------------------
+    # Locate PVN assemblies
+    # --------------------------------------------------
+    region = runtime.region_states["hypothalamus"]
+    assemblies = region["populations"]["PARAVENTRICULAR_NUCLEUS"]
+
+    assert len(assemblies) == 5, "Expected exactly 5 PVN assemblies"
+
+    # --------------------------------------------------
+    # Stimulation + logging
+    # --------------------------------------------------
+    STEPS = 10
+    CURRENT = 0.05
+
+    print("\n[PVN SINGLE-POKE TRACE]")
+    print("step | asm | structural_gain | firing_rate")
+
+    for step in range(STEPS):
+        # identical injection into all assemblies
+        for idx, _a in enumerate(assemblies):
+            runtime.inject_stimulus(
+                "hypothalamus",
+                "PARAVENTRICULAR_NUCLEUS",
+                idx,
+                CURRENT,
+            )
+
+        runtime.step()
+
+        for a in assemblies:
+            sg = getattr(a, "_structural_gain", 1.0)
+            label = "MUTED" if a.assembly_id in muted_ids else "NORM "
+            print(
+                f"{step:>4} | "
+                f"{label} | "
+                f"{a.assembly_id:<40} | "
+                f"{sg:>5.2f} | "
+                f"{a.output():.6f}"
+            )
+
+
+if __name__ == "__main__":
+    test_pvn_structural_differentiation_trace()
+
+##########################################################################################
+FILE: assembly_differentiation\tests\test_pvn_structural_differentiation.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\test_pvn_structural_differentiation.py
+SIZE: 3774 bytes
+MTIME:2026-01-28 15:52:26
+##########################################################################################
+
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Dict, List
+from unittest import loader
+
+import numpy as np
+
+from loader.loader import NeuralFrameworkLoader
+from engine.runtime import BrainRuntime
+
+from regions.assembly_differentiation.pvn import PVNDifferentiationAdapter
+
+
+BASE_DIR = Path(__file__).resolve().parents[3]
+
+
+def test_pvn_structural_differentiation_effect():
+    """
+    Grounding test:
+    Identical stimulation -> differentiated assemblies diverge in activity.
+    """
+
+    # --------------------------------------------------
+    # Build runtime
+    # --------------------------------------------------
+    loader = NeuralFrameworkLoader(BASE_DIR)
+
+    loader.load_neuron_bases()
+    loader.load_regions()
+    loader.load_profiles() 
+
+    brain = loader.compile()
+    runtime = BrainRuntime(brain)
+
+    # Sanity: no salience/value/urgency
+    runtime.enable_vta_value = False
+    runtime.enable_urgency = False
+    runtime.enable_salience = False
+
+
+    # --------------------------------------------------
+    # Apply PVN differentiation
+    # --------------------------------------------------
+    adapter = PVNDifferentiationAdapter(attenuation=0.25)
+    adapter.apply(runtime)
+
+    muted_ids = set(adapter.dump_state()["muted_assemblies"])
+    assert len(muted_ids) == 2, "Expected exactly 2 muted PVN assemblies"
+
+    # --------------------------------------------------
+    # Locate PVN assemblies
+    # --------------------------------------------------
+    region = runtime.region_states["hypothalamus"]
+    assemblies = region["populations"]["PARAVENTRICULAR_NUCLEUS"]
+
+    assert len(assemblies) == 5
+
+    muted = [a for a in assemblies if a.assembly_id in muted_ids]
+    normal = [a for a in assemblies if a.assembly_id not in muted_ids]
+
+    # --------------------------------------------------
+    # Stimulation protocol
+    # --------------------------------------------------
+    STEPS = 40
+    CURRENT = 0.05
+
+    traces: Dict[str, List[float]] = {
+        a.assembly_id: [] for a in assemblies
+    }
+
+    for _ in range(STEPS):
+        # identical injection into ALL assemblies
+        for idx, _a in enumerate(assemblies):
+            runtime.inject_stimulus(
+                "hypothalamus",
+                "PARAVENTRICULAR_NUCLEUS",
+                idx,
+                float(CURRENT),
+            )
+
+
+
+        runtime.step()
+
+        for a in assemblies:
+            traces[a.assembly_id].append(a.output())
+
+    # --------------------------------------------------
+    # Analysis
+    # --------------------------------------------------
+    muted_means = [
+        np.mean(traces[a.assembly_id]) for a in muted
+    ]
+    normal_means = [
+        np.mean(traces[a.assembly_id]) for a in normal
+    ]
+
+    mean_muted = float(np.mean(muted_means))
+    mean_normal = float(np.mean(normal_means))
+
+    # --------------------------------------------------
+    # Assertions
+    # --------------------------------------------------
+    assert mean_muted < mean_normal, (
+        f"Muted assemblies not suppressed: "
+        f"muted={mean_muted:.4f}, normal={mean_normal:.4f}"
+    )
+
+    # muted assemblies should be similar to each other
+    assert np.std(muted_means) < np.std(normal_means) * 1.5
+
+    # non-muted assemblies should cluster tightly
+    assert np.std(normal_means) < mean_normal * 0.25
+
+    print(
+        "[OK] PVN differentiation grounding passed\n"
+        f"  mean_normal = {mean_normal:.4f}\n"
+        f"  mean_muted  = {mean_muted:.4f}\n"
+        f"  muted_ids  = {sorted(muted_ids)}"
+    )
+if __name__ == "__main__":
+    test_pvn_structural_differentiation_effect()
+
+##########################################################################################
+FILE: assembly_differentiation\tests\tpid_log.txt
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\tpid_log.txt
+SIZE: 3911 bytes
+MTIME:2026-01-28 15:58:40
+##########################################################################################
+
+[PVN SINGLE-POKE TRACE]
+step | asm | structural_gain | firing_rate
+   0 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003119
+   0 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012517
+   0 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012503
+   0 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012476
+   0 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003113
+   1 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003142
+   1 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012616
+   1 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012544
+   1 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012548
+   1 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003127
+   2 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003159
+   2 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012657
+   2 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012621
+   2 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012602
+   2 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003139
+   3 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003175
+   3 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012693
+   3 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012661
+   3 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012640
+   3 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003157
+   4 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003192
+   4 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012747
+   4 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012712
+   4 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012706
+   4 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003170
+   5 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003208
+   5 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012787
+   5 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012774
+   5 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012749
+   5 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003186
+   6 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003216
+   6 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012860
+   6 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012835
+   6 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012825
+   6 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003207
+   7 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003231
+   7 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012916
+   7 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012883
+   7 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012921
+   7 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003218
+   8 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003251
+   8 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012977
+   8 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012952
+   8 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012960
+   8 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003231
+   9 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003263
+   9 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.013041
+   9 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012993
+   9 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012985
+   9 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003250
+
+C:\Users\Admin\Desktop\neural framework>
+
+##########################################################################################
+FILE: assembly_differentiation\tests\tpsd_log.txt
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_differentiation\tests\tpsd_log.txt
+SIZE: 514 bytes
+MTIME:2026-01-28 15:55:42
+##########################################################################################
+
+DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[OK] PVN differentiation grounding passed
+  mean_normal = 0.0136
+  mean_muted  = 0.0034
+  muted_ids  = ['hypothalamus:PARAVENTRICULAR_NUCLEUS:0', 'hypothalamus:PARAVENTRICULAR_NUCLEUS:4']
+
+C:\Users\Admin\Desktop\neural framework>
+
+##########################################################################################
+FILE: assembly_dump.py
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\assembly_dump.py
+SIZE: 1788 bytes
+MTIME:2026-01-28 13:29:38
+##########################################################################################
+
+from pathlib import Path
+
+from loader.loader import NeuralFrameworkLoader
+from engine.runtime import BrainRuntime
+
+
+ROOT = Path(__file__).resolve().parent
+OUT_FILE = ROOT / "assembly_dump.txt"
+
+
+def main():
+    # --------------------------------------------------
+    # Load + compile brain (definitions only)
+    # --------------------------------------------------
+    loader = NeuralFrameworkLoader(ROOT)
+    loader.load_neuron_bases()
+    loader.load_regions()
+    loader.load_profiles()
+
+    brain = loader.compile(
+        expression_profile="human_default",
+        state_profile="awake",
+        compound_profile="experimental",
+    )
+
+    # --------------------------------------------------
+    # Instantiate runtime (assemblies created here)
+    # --------------------------------------------------
+    runtime = BrainRuntime(brain, dt=0.01)
+
+    # --------------------------------------------------
+    # Dump assemblies (structure only)
+    # --------------------------------------------------
+    lines = []
+    lines.append("ASSEMBLY DUMP\n")
+    lines.append("=" * 80 + "\n")
+
+    for rid, region in runtime.region_states.items():
+        pops = region.get("populations", {}) or {}
+        for pop_name, plist in pops.items():
+            for p in plist:
+                lines.append(
+                    f"{p.assembly_id}\n"
+                    f"  region       : {rid}\n"
+                    f"  population   : {pop_name}\n"
+                    f"  size         : {p.size}\n"
+                    f"  baseline     : {p.baseline:.6f}\n"
+                    "\n"
+                )
+
+    OUT_FILE.write_text("".join(lines))
+    print(f"[OK] Assembly dump written to {OUT_FILE}")
+
+
+if __name__ == "__main__":
+    main()
+
+##########################################################################################
+FILE: basal_ganglia\bg_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\basal_ganglia\bg_base.json
+SIZE: 1011 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "CORTEX",
+    "HIPPOCAMPAL_FORMATION",
+    "AMYGDALA",
+    "BRAINSTEM"
+  ],
+  "allowed_outputs": [
+    "THALAMUS",
+    "BRAINSTEM"
+  ],
+  "category": "action_selection",
+  "default_channels": {
+    "HCN": 0.25,
+    "KV_DELAYED_RECTIFIER": 0.65,
+    "LEAK": 0.6,
+    "NaV_FAST": 0.75
+  },
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+  "default_receptors": {
+    "AMPA": 0.4,
+    "D1": 0.0,
+    "D2": 0.0,
+    "GABA_A": 0.6,
+    "GABA_B": 0.3,
+    "NMDA": 0.35
+  },
+  "intrinsic_signals": {
+    "action_bias": 0.0,
+    "dopamine_tone": 0.0,
+    "inhibition_bias": 0.0
+  },
+  "notes": "Basal ganglia implement action selection via competing inhibitory pathways modulated by dopamine.",
+  "reference_models": [
+    "human",
+    "rodent"
+  ],
+  "region_id": "BASAL_GANGLIA",
+  "spatial_properties": {
+    "approx_dimensions_mm": [
+      30,
+      20,
+      20
+    ],
+    "coordinate_frame": "deep_nuclei_space"
+  },
+  "type": "RegionBase",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: basal_ganglia\gpe.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\basal_ganglia\gpe.json
+SIZE: 2445 bytes
+MTIME:2026-01-07 22:35:04
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "antipsychotics": "moderate",
+    "dopaminergic_agents": "high"
+  },
+  "function": "indirect_pathway_gain_regulation_and_stn_stabilization",
+  "inputs": [
+    {
+      "signal": "indirect_pathway_inhibition",
+      "source_population": "D2_MSN",
+      "source_region": "STRIATUM",
+      "strength": 0.85
+    }
+  ],
+  "notes": [
+    "GPe is a diffuse inhibitory regulator, not a selector.",
+    "All action selection occurs upstream in striatum via competition kernel.",
+    "GPe stabilizes STN activity and modulates GPi tone indirectly.",
+    "No internal competition is modeled at checkpoint 6.",
+    "Dopamine and learning hooks are preserved but inactive."
+  ],
+  "outputs": [
+    {
+      "signal": "tonic_disinhibition_control",
+      "strength": 0.8,
+      "target_region": "STN"
+    },
+    {
+      "signal": "indirect_pathway_bias",
+      "strength": 0.3,
+      "target_region": "GPi"
+    }
+  ],
+  "parent_region": "BASAL_GANGLIA",
+  "pathophysiology_modes": {
+    "bradykinesia": "excess_indirect_gain",
+    "impulsivity": "insufficient_stn_damping",
+    "parkinsonian_oscillation": "gpe_stn_loop_instability"
+  },
+  "populations": {
+    "GPE_OUTPUT": {
+      "baseline": 0.6,
+      "clamp_max": 1.0,
+      "clamp_min": 0.0,
+      "count": 20000,
+      "gain": 1.0,
+      "homeostatic_gain": 0.03,
+      "inhibition_gain": 0.1,
+      "max_rate": 20.0,
+      "neuron_type": "inhibitory",
+      "normalization": 0.15,
+      "plasticity_profile": "low",
+      "semantic_role": "indirect_pathway_buffer",
+      "sign": -1.0,
+      "subpopulations": {
+        "STABILITY_UNITS": {
+          "description": "Provide tonic inhibitory control over STN to prevent runaway excitation",
+          "fraction": 0.7,
+          "role": "stn_gain_damping"
+        },
+        "VARIABILITY_MODULATORS": {
+          "description": "Modulate indirect pathway gain envelope without selecting actions",
+          "fraction": 0.3,
+          "future_modulation": {
+            "dopamine_sensitivity": 0.5,
+            "status": "inactive_checkpoint_6"
+          },
+          "noise_bias": 0.4,
+          "role": "indirect_pathway_variability"
+        }
+      },
+      "tau": 10.0,
+      "threshold": 0.0
+    }
+  },
+  "region_id": "GPe",
+  "spatial_properties": {
+    "broad_projection": true,
+    "diffuse_inhibition": true,
+    "non_selective": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.5.0"
+}
+
+##########################################################################################
+FILE: basal_ganglia\gpi.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\basal_ganglia\gpi.json
+SIZE: 2144 bytes
+MTIME:2026-01-07 22:28:06
+##########################################################################################
+
+{
+  "execution_status": "tonic_output_checkpoint_6",
+  "function": "final_inhibitory_action_gate",
+  "future_constraints": {
+    "dopamine_modulation": "intentionally_absent",
+    "internal_competition": false,
+    "learning": "not_supported",
+    "reason": "GPi is an execution bottleneck, not a selector"
+  },
+  "inputs": [
+    {
+      "execution_rule": "scaled_by_striatal_dominance",
+      "note": "Runtime multiplies strength by competition dominance",
+      "signal": "direct_pathway_inhibition",
+      "source_region": "STRIATUM",
+      "strength": 0.9
+    },
+    {
+      "signal": "global_excitation",
+      "source_region": "STN",
+      "strength": 0.6
+    }
+  ],
+  "notes": [
+    "GPi is the final inhibitory gate of the basal ganglia.",
+    "It should be active by default and release inhibition only under strong striatal dominance.",
+    "All selectivity emerges upstream.",
+    "This file intentionally excludes learning and dopamine hooks."
+  ],
+  "outputs": [
+    {
+      "signal": "thalamic_disinhibition",
+      "strength": 1.0,
+      "target_region": "MD"
+    }
+  ],
+  "parent_region": "BASAL_GANGLIA",
+  "pathophysiology_modes": {
+    "akinesia": "persistent_high_output",
+    "impulsivity": "insufficient_output",
+    "sedation": "overstabilized_output"
+  },
+  "populations": {
+    "GPi_OUTPUT": {
+      "baseline": 0.75,
+      "clamp_max": 1.0,
+      "clamp_min": 0.0,
+      "count": 25000,
+      "execution_notes": [
+        "Always active tonic inhibition",
+        "No internal competition at checkpoint 6",
+        "Selectivity arises upstream in STRIATUM"
+      ],
+      "gain": 1.2,
+      "homeostatic_gain": 0.02,
+      "inhibition_gain": 0.15,
+      "max_rate": 25.0,
+      "neuron_type": "inhibitory",
+      "normalization": 0.1,
+      "plasticity_profile": "very_low",
+      "semantic_role": "global_action_suppression",
+      "sign": -1.0,
+      "tau": 8.0,
+      "threshold": 0.0
+    }
+  },
+  "region_id": "GPi",
+  "spatial_properties": {
+    "high_baseline_activity": true,
+    "output_bottleneck": true,
+    "tonic_inhibition": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.5.1"
+}
+
+##########################################################################################
+FILE: basal_ganglia\snc.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\basal_ganglia\snc.json
+SIZE: 1879 bytes
+MTIME:2026-01-07 17:23:30
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "dopamine_depletion": "very_high",
+    "dopamine_replacement": "very_high",
+    "parkinsons_agents": "very_high",
+    "psychostimulants": "high"
+  },
+  "function": "dopaminergic_modulation_and_value_signaling",
+  "notes": "SNc provides neuromodulatory dopamine signals to the striatum, biasing direct (D1) and indirect (D2) pathway dynamics. Tonic firing establishes baseline action readiness, while phasic firing is reserved for future reward-prediction error signaling. All learning-related effects are structurally defined but remain inactive at checkpoint 6 to preserve runtime stability.",
+  "outputs": [
+    {
+      "effect": "potentiation",
+      "signal": "dopamine_facilitation",
+      "strength": 1.0,
+      "target_population": "D1_MSN",
+      "target_region": "STRIATUM"
+    },
+    {
+      "effect": "depression",
+      "signal": "dopamine_suppression",
+      "strength": 1.0,
+      "target_population": "D2_MSN",
+      "target_region": "STRIATUM"
+    }
+  ],
+  "parent_region": "BASAL_GANGLIA",
+  "pathophysiology_modes": {
+    "dopamine_depletion": "parkinsonian_state",
+    "dopamine_excess": "impulsivity_and_dyskinesia"
+  },
+  "populations": {
+    "DOPAMINERGIC_NEURONS": {
+      "baseline_firing_rate_hz": 3.0,
+      "count": 18000,
+      "firing_modes": {
+        "phasic": {
+          "rate_hz": 15.0,
+          "role": "reward_prediction_error",
+          "status": "inactive_checkpoint_6"
+        },
+        "tonic": {
+          "rate_hz": 3.0,
+          "role": "baseline_value_bias"
+        }
+      },
+      "neuron_type": "neuromodulatory",
+      "plasticity_profile": "low",
+      "semantic_role": "dopamine_source",
+      "sign": 0.0
+    }
+  },
+  "region_id": "SNc",
+  "spatial_properties": {
+    "compact_nucleus": true,
+    "diffuse_projection": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.2.0"
+}
+
+##########################################################################################
+FILE: basal_ganglia\stn.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\basal_ganglia\stn.json
+SIZE: 2524 bytes
+MTIME:2026-01-07 22:32:26
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "deep_brain_stimulation": "override",
+    "dopamine_agonists": "moderate",
+    "dopamine_depletion": "very_high"
+  },
+  "function": "global_action_braking_and_decision_boundary_control",
+  "inputs": [
+    {
+      "signal": "indirect_pathway_feedback",
+      "source_region": "GPe",
+      "strength": 0.8
+    },
+    {
+      "signal": "conflict_and_uncertainty",
+      "source_region": "PFC",
+      "strength": 0.5
+    }
+  ],
+  "notes": "STN provides a fast, excitatory hyperdirect pathway for global action braking and decision boundary sharpening. Global interrupt units rapidly increase GPi-mediated inhibition under high conflict, while precision timing units refine action selection without full suppression. All conflict and state-dependent mechanisms are structurally encoded but remain inert at checkpoint 6, ensuring runtime stability while preserving biological fidelity.",
+  "outputs": [
+    {
+      "signal": "global_brake",
+      "strength": 0.9,
+      "target_population": "GPi_OUTPUT",
+      "target_region": "GPi"
+    }
+  ],
+  "parent_region": "BASAL_GANGLIA",
+  "pathophysiology_modes": {
+    "hyperactivity": "parkinsonian_freezing",
+    "hypoactivity": "impulsivity"
+  },
+  "populations": {
+    "EXCITATORY_NEURONS": {
+      "baseline_firing_rate_hz": 10.0,
+      "count": 15000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "semantic_role": "action_brake",
+      "sign": 1.0,
+      "subpopulations": {
+        "GLOBAL_INTERRUPT_UNITS": {
+          "activation_context": "high_conflict",
+          "effect_target": "GPi",
+          "effect_type": "inhibitory_via_gpi",
+          "fraction": 0.65,
+          "projection_pattern": "broad",
+          "role": "emergency_action_suppression"
+        },
+        "PRECISION_TIMING_UNITS": {
+          "activation_context": "moderate_conflict",
+          "effect_target": "GPi",
+          "effect_type": "timing_modulation",
+          "fraction": 0.35,
+          "projection_pattern": "focused",
+          "role": "decision_boundary_sharpening"
+        }
+      }
+    }
+  },
+  "region_id": "STN",
+  "spatial_properties": {
+    "diffuse_projection": true,
+    "fast_conduction": true,
+    "hyperdirect_pathway": true
+  },
+  "state_modulation": {
+    "high_conflict": {
+      "global_interrupt_bias": 1.0,
+      "precision_bias": 0.4
+    },
+    "low_conflict": {
+      "global_interrupt_bias": 0.3,
+      "precision_bias": 0.7
+    }
+  },
+  "type": "RegionSubstructure",
+  "version": "1.4.0"
+}
+
+##########################################################################################
+FILE: basal_ganglia\striatum.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\basal_ganglia\striatum.json
+SIZE: 3318 bytes
+MTIME:2026-01-14 19:35:18
+##########################################################################################
+
+{
+  "competition_policy": {
+    "applies_to": [
+      "D1_MSN",
+      "D2_MSN"
+    ],
+    "kernel": "CompetitionKernel",
+    "persistence_bias": true,
+    "winner_take": "most"
+  },
+  "function": "competitive_action_channel_selection",
+  "inputs": [
+    {
+      "signal": "action_policy_candidates",
+      "source_region": "PFC",
+      "strength": 0.6
+    },
+    {
+      "signal": "contextual_bias",
+      "source_region": "SUBICULUM",
+      "strength": 0.3
+    },
+    {
+      "signal": "emotional_valence",
+      "source_region": "BLA",
+      "strength": 0.4
+    },
+    {
+      "signal": "dopamine_tone",
+      "source_region": "VTA",
+      "status": "present_but_inert",
+      "strength": 1.0
+    }
+  ],
+  "notes": "Striatum defines explicit competitive inhibitory action channels using the global CompetitionKernel. D1 and D2 populations participate in channel-level competition via the `subpopulation` field. No hard winner-take-all is enforced. Interneurons provide stabilization only. Dopamine and learning hooks are structurally present but functionally inert at Checkpoint 6.",
+  "outputs": [
+    {
+      "pathway": "direct",
+      "source_population": "D1_MSN",
+      "strength": 0.8,
+      "target_region": "GPi"
+    },
+    {
+      "pathway": "indirect",
+      "source_population": "D2_MSN",
+      "strength": 0.8,
+      "target_region": "GPe"
+    }
+  ],
+  "parent_region": "BASAL_GANGLIA",
+  "populations": {
+    "D1_MSN": {
+      "competition": {
+        "channel_group": "action_channels",
+        "enabled": true
+      },
+      "count": 40000,
+      "dynamics": {
+        "baseline": 0.02,
+        "gain": 1.2,
+        "inhibition_gain": 0.15,
+        "normalization": 0.2,
+        "tau": 15.0,
+        "threshold": 0.01
+      },
+      "future_learning": {
+        "dopamine_modulated": true,
+        "eligibility_trace": true,
+        "reward_rule": "positive_reinforcement",
+        "status": "inactive_checkpoint_6"
+      },
+      "neuron_type": "inhibitory",
+      "semantic_role": "action_facilitation_channel",
+      "sign": -1.0,
+      "subpopulation": "D1"
+    },
+    "D2_MSN": {
+      "competition": {
+        "channel_group": "action_channels",
+        "enabled": true
+      },
+      "count": 40000,
+      "dynamics": {
+        "baseline": 0.02,
+        "gain": 1.2,
+        "inhibition_gain": 0.15,
+        "normalization": 0.2,
+        "tau": 15.0,
+        "threshold": 0.01
+      },
+      "future_learning": {
+        "dopamine_modulated": true,
+        "eligibility_trace": true,
+        "reward_rule": "negative_reinforcement",
+        "status": "inactive_checkpoint_6"
+      },
+      "neuron_type": "inhibitory",
+      "semantic_role": "action_suppression_channel",
+      "sign": -1.0,
+      "subpopulation": "D2"
+    },
+    "INTERNEURONS": {
+      "competition": {
+        "enabled": false
+      },
+      "count": 15000,
+      "dynamics": {
+        "baseline": 0.08,
+        "gain": 0.6,
+        "inhibition_gain": 0.4,
+        "tau": 5.0,
+        "threshold": 0.02
+      },
+      "neuron_type": "inhibitory",
+      "semantic_role": "local_gain_stabilization",
+      "sign": -1.0
+    }
+  },
+  "region_id": "STRIATUM",
+  "spatial_properties": {
+    "competition_domain": "intra_region",
+    "neuron_density_per_mm3": 90000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.4.1"
+}
+
+##########################################################################################
+FILE: body_interfaces\autonomic_system.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\body_interfaces\autonomic_system.json
+SIZE: 970 bytes
+MTIME:2026-01-05 23:44:28
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "HYPOTHALAMUS",
+    "BRAINSTEM",
+    "AMYGDALA",
+    "PFC"
+  ],
+  "allowed_outputs": [],
+  "category": "system_interface",
+  "function": "visceral_and_homeostatic_control",
+  "notes": "Abstract autonomic interface representing sympathetic and parasympathetic control of visceral organs. Does not model peripheral ganglia, organ targets, or neurotransmitter kinetics. Intended as a termination and future expansion layer.",
+  "populations": {
+    "PARASYMPATHETIC_OUTFLOW": {
+      "baseline_firing_rate_hz": 0.1,
+      "count": 1,
+      "neuron_type": "autonomic",
+      "plasticity_profile": "very_low",
+      "sign": -1.0
+    },
+    "SYMPATHETIC_OUTFLOW": {
+      "baseline_firing_rate_hz": 0.1,
+      "count": 1,
+      "neuron_type": "autonomic",
+      "plasticity_profile": "very_low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "AUTONOMIC_SYSTEM",
+  "type": "RegionBase",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: brain_map.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brain_map.json
+SIZE: 5021 bytes
+MTIME:2026-01-12 14:07:10
+##########################################################################################
+
+{
+  "coordinate_system": {
+    "origin": "brain_center",
+    "type": "3D_cartesian",
+    "units": "mm"
+  },
+  "description": "Hierarchical anatomical map of brain regions and substructures",
+  "load_policy": {
+    "allow_partial_load": true,
+    "default_regions": [
+      "CORTEX",
+      "THALAMUS",
+      "BRAINSTEM"
+    ],
+    "lazy_load_subregions": true
+  },
+  "regions": {
+    "AMYGDALA": {
+      "category": "emotion_salience",
+      "description": "Emotional valence and threat processing",
+      "folder": "amygdala",
+      "subregions": {
+        "BLA": {
+          "file": "bla.json",
+          "function": "associative_learning"
+        },
+        "CEA": {
+          "file": "cea.json",
+          "function": "autonomic_output"
+        },
+        "MEA": {
+          "file": "mea.json",
+          "function": "olfactory_emotion"
+        }
+      }
+    },
+    "BASAL_GANGLIA": {
+      "category": "action_selection",
+      "description": "Motor and cognitive gating circuits",
+      "folder": "basal_ganglia",
+      "subregions": {
+        "GPE": {
+          "file": "gpe.json",
+          "function": "indirect_pathway"
+        },
+        "GPI": {
+          "file": "gpi.json",
+          "function": "output_nucleus"
+        },
+        "SNC": {
+          "file": "snc.json",
+          "function": "dopaminergic_modulation"
+        },
+        "STN": {
+          "file": "stn.json",
+          "function": "hyperdirect_pathway"
+        },
+        "STRIATUM": {
+          "file": "striatum.json",
+          "function": "input_integration"
+        }
+      }
+    },
+    "BRAINSTEM": {
+      "category": "neuromodulatory_core",
+      "description": "Vital functions and neuromodulatory nuclei",
+      "folder": "brainstem",
+      "subregions": {
+        "LOCUS_COERULEUS": {
+          "file": "locus_coeruleus.json",
+          "function": "norepinephrine_arousal"
+        },
+        "MEDULLA": {
+          "file": "medulla.json",
+          "function": "autonomic_control"
+        },
+        "PONS": {
+          "file": "pons.json",
+          "function": "relay_and_sleep"
+        },
+        "RAPHE": {
+          "file": "raphe.json",
+          "function": "serotonin_modulation"
+        },
+        "VTA": {
+          "file": "vta.json",
+          "function": "dopamine_reward"
+        }
+      }
+    },
+    "CEREBELLUM": {
+      "category": "error_correction",
+      "description": "Motor coordination and predictive timing",
+      "folder": "cerebellum",
+      "subregions": {
+        "CEREBELLAR_CORTEX": {
+          "file": "cerebellar_cortex.json",
+          "function": "prediction"
+        },
+        "DEEP_NUCLEI": {
+          "file": "deep_nuclei.json",
+          "function": "output"
+        }
+      }
+    },
+    "CORTEX": {
+      "category": "laminar_cortex",
+      "description": "Neocortical sheet with laminar organization",
+      "folder": "cortex",
+      "layers": [
+        "L1",
+        "L2/3",
+        "L4",
+        "L5",
+        "L6"
+      ],
+      "subregions": {
+        "A1": {
+          "file": "a1.json",
+          "function": "auditory_processing"
+        },
+        "INSULA": {
+          "file": "insula.json",
+          "function": "interoception"
+        },
+        "M1": {
+          "file": "m1.json",
+          "function": "motor_control"
+        },
+        "PFC": {
+          "file": "pfc.json",
+          "function": "executive_control"
+        },
+        "S1": {
+          "file": "s1.json",
+          "function": "somatosensory_processing"
+        },
+        "V1": {
+          "file": "v1.json",
+          "function": "visual_processing"
+        }
+      }
+    },
+    "HIPPOCAMPAL_FORMATION": {
+      "category": "memory_system",
+      "description": "Declarative memory and spatial navigation system",
+      "folder": "hippocampal_formation",
+      "subregions": {
+        "CA1": {
+          "file": "ca1.json",
+          "function": "memory_output"
+        },
+        "CA3": {
+          "file": "ca3.json",
+          "function": "autoassociative_memory"
+        },
+        "DENTATE_GYRUS": {
+          "file": "dentate_gyrus.json",
+          "function": "pattern_separation"
+        },
+        "SUBICULUM": {
+          "file": "subiculum.json",
+          "function": "cortical_interface"
+        }
+      }
+    },
+    "SENSORY_INTERFACES": {
+      "category": "external_input",
+      "description": "Interfaces for external sensory input streams",
+      "folder": "sensory_interfaces",
+      "subregions": {
+        "AUDITORY_INPUT": {
+          "file": "auditory_input.json",
+          "function": "cochlea_mgb_proxy"
+        },
+        "GUSTATORY_INPUT": {
+          "file": "gustatory_input.json",
+          "function": "taste_afferents"
+        },
+        "SOMATO_INPUT": {
+          "file": "somato_input.json",
+          "function": "peripheral_afferents"
+        },
+        "VISUAL_INPUT": {
+          "file": "visual_input.json",
+          "function": "retina_lgn_proxy"
+        }
+      }
+    },
+    "THALAMUS": {
+      "category": "relay_nuclei",
+      "description": "Thalamic relay and association nuclei",
+      "folder": "diencephalon/thalamus",
+      "subregions": {
+        "LGN": {
+          "file": "lgn.json",
+          "function": "visual_relay"
+        },
+        "MD": {
+          "file": "md.json",
+          "function": "prefrontal_relay"
+        },
+        "MGB": {
+          "file": "mgb.json",
+          "function": "auditory_relay"
+        },
+        "PULVINAR": {
+          "file": "pulvinar.json",
+          "function": "visual_attention"
+        },
+        "TRN": {
+          "file": "trn.json",
+          "function": "thalamic_inhibition"
+        },
+        "VPL": {
+          "file": "vpl.json",
+          "function": "somatosensory_relay"
+        },
+        "VPM": {
+          "file": "vpm.json",
+          "function": "facial_sensory_relay"
+        }
+      }
+    }
+  },
+  "species_reference": {
+    "notes": "Human anatomical layout with microcircuit motifs informed by rodent and primate literature",
+    "primary": "human",
+    "secondary": [
+      "mouse",
+      "rat",
+      "primate"
+    ]
+  },
+  "type": "BrainMap",
+  "version": "1.0.1"
+}
+
+##########################################################################################
+FILE: brainstem\brainstem_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brainstem\brainstem_base.json
+SIZE: 1040 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "CORTEX",
+    "BASAL_GANGLIA",
+    "HYPOTHALAMUS"
+  ],
+  "allowed_outputs": [
+    "CORTEX",
+    "THALAMUS",
+    "BASAL_GANGLIA",
+    "HIPPOCAMPAL_FORMATION"
+  ],
+  "category": "neuromodulatory_core",
+  "default_channels": {
+    "HCN": 0.5,
+    "KV_DELAYED_RECTIFIER": 0.6,
+    "LEAK": 0.6,
+    "NaV_FAST": 0.75
+  },
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+  "default_receptors": {
+    "AMPA": 0.4,
+    "GABA_A": 0.4,
+    "GABA_B": 0.25,
+    "NMDA": 0.3
+  },
+  "intrinsic_signals": {
+    "arousal_gain": 0.0,
+    "dopamine_tone": 0.0,
+    "energy_state": 1.0,
+    "serotonin_tone": 0.0
+  },
+  "notes": "Brainstem nuclei control global brain state, neuromodulation, arousal, mood, and drug sensitivity.",
+  "reference_models": [
+    "human",
+    "rodent",
+    "primate"
+  ],
+  "region_id": "BRAINSTEM",
+  "spatial_properties": {
+    "approx_dimensions_mm": [
+      25,
+      20,
+      30
+    ],
+    "coordinate_frame": "brainstem_space"
+  },
+  "type": "RegionBase",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: brainstem\locus_coeruleus.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brainstem\locus_coeruleus.json
+SIZE: 1300 bytes
+MTIME:2026-01-12 14:49:14
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "alpha2_agonists": "very_high",
+    "beta_blockers": "moderate",
+    "stimulants": "high"
+  },
+  "function": "arousal_attention",
+  "notes": "Normalized IDs to match loader/runtime keys: region_id=locus_coeruleus, parent_region=brainstem_base. Routed high-level targets to base hubs to avoid unresolved warnings (CORTEX->pfc hub, THALAMUS->thalamus_base, HIPPOCAMPUS->hip_base, BASAL_GANGLIA->bg_base).",
+  "outputs": [
+    {
+      "signal": "arousal_gain",
+      "strength": 0.3,
+      "target_region": "pfc"
+    },
+    {
+      "signal": "arousal_gain",
+      "strength": 0.4,
+      "target_region": "thalamus_base"
+    },
+    {
+      "signal": "arousal_gain",
+      "strength": 0.3,
+      "target_region": "hip_base"
+    },
+    {
+      "signal": "arousal_gain",
+      "strength": 0.2,
+      "target_region": "bg_base"
+    }
+  ],
+  "parent_region": "brainstem_base",
+  "populations": {
+    "NORADRENERGIC_NEURONS": {
+      "baseline_firing_rate_hz": 4.0,
+      "count": 15000,
+      "neuromodulator_release": {
+        "mode": "global",
+        "release_gain": 0.06,
+        "signal_target": "arousal_gain",
+        "type": "norepinephrine"
+      },
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "locus_coeruleus",
+  "type": "RegionSubstructure",
+  "version": "1.0.1"
+}
+
+##########################################################################################
+FILE: brainstem\medulla.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brainstem\medulla.json
+SIZE: 301 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "function": "autonomic_control",
+  "parent_region": "BRAINSTEM",
+  "populations": {
+    "AUTONOMIC_NEURONS": {
+      "baseline_firing_rate_hz": 1.0,
+      "count": 25000,
+      "neuron_type": "autonomic"
+    }
+  },
+  "region_id": "MEDULLA",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: brainstem\pons.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brainstem\pons.json
+SIZE: 303 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "function": "sleep_respiration_coordination",
+  "parent_region": "BRAINSTEM",
+  "populations": {
+    "MIXED_NEURONS": {
+      "baseline_firing_rate_hz": 1.5,
+      "count": 30000,
+      "neuron_type": "mixed"
+    }
+  },
+  "region_id": "PONS",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: brainstem\raphe.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brainstem\raphe.json
+SIZE: 607 bytes
+MTIME:2026-01-05 00:16:22
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "psychedelics": "high",
+    "sedatives": "moderate",
+    "ssris": "very_high"
+  },
+  "function": "serotonergic_modulation",
+  "parent_region": "BRAINSTEM",
+  "populations": {
+    "SEROTONERGIC_NEURONS": {
+      "baseline_firing_rate_hz": 2.5,
+      "count": 25000,
+      "neuromodulator_release": {
+        "release_gain": 0.04,
+        "signal_target": "serotonin_tone",
+        "type": "serotonin"
+      },
+      "neuron_type": "neuromodulatory",
+      "plasticity_profile": "low"
+    }
+  },
+  "region_id": "RAPHE",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: brainstem\vta.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\brainstem\vta.json
+SIZE: 2218 bytes
+MTIME:2026-01-12 14:48:24
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "antipsychotics": "very_high",
+    "gabaergic_agents": "high",
+    "opioids": "high",
+    "psychostimulants": "very_high"
+  },
+  "function": "dopaminergic_reward_modulation",
+  "local_connectivity": [
+    {
+      "pattern": "tonic_inhibition",
+      "probability": 0.6,
+      "source": "GABA_INTERNEURONS",
+      "target": "DOPAMINERGIC_NEURONS"
+    }
+  ],
+  "notes": "Normalized IDs to match loader/runtime keys: region_id=vta, parent_region=brainstem_base, outputs route 'CORTEX' -> pfc to avoid unresolved target warnings while cortex routing remains hub-based.",
+  "outputs": [
+    {
+      "signal": "dopamine_tone",
+      "strength": 1.0,
+      "target_region": "striatum"
+    },
+    {
+      "signal": "dopamine_tone",
+      "strength": 0.6,
+      "target_population": "L2_3_PYRAMIDAL",
+      "target_region": "pfc"
+    },
+    {
+      "signal": "dopamine_tone",
+      "strength": 0.4,
+      "target_population": "PYRAMIDAL_CELLS",
+      "target_region": "ca1"
+    }
+  ],
+  "parent_region": "brainstem_base",
+  "populations": {
+    "DOPAMINERGIC_NEURONS": {
+      "baseline_firing_rate_hz": 3.0,
+      "channels": {
+        "HCN": 0.6,
+        "KV_DELAYED_RECTIFIER": 0.6,
+        "LEAK": 0.65,
+        "NaV_FAST": 0.7
+      },
+      "count": 20000,
+      "neuromodulator_release": {
+        "release_gain": 0.05,
+        "signal_target": "dopamine_tone",
+        "type": "dopamine"
+      },
+      "neuron_type": "neuromodulatory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "AMPA": 0.45,
+        "D2": 0.4,
+        "GABA_A": 0.5,
+        "GABA_B": 0.3,
+        "M5": 0.2,
+        "NMDA": 0.35
+      },
+      "sign": 1.0
+    },
+    "GABA_INTERNEURONS": {
+      "baseline_firing_rate_hz": 8.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.75,
+        "LEAK": 0.45,
+        "NaV_FAST": 0.85
+      },
+      "count": 8000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "receptors": {
+        "AMPA": 0.4,
+        "GABA_A": 0.7
+      },
+      "sign": -1.0
+    }
+  },
+  "region_id": "vta",
+  "spatial_properties": {
+    "neuron_density_per_mm3": 60000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.1.1"
+}
+
+##########################################################################################
+FILE: cerebellum\cerebellar_cortex.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cerebellum\cerebellar_cortex.json
+SIZE: 1935 bytes
+MTIME:2026-01-12 14:47:22
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "calcium_channel_blockers": "high",
+    "ethanol": "very_high",
+    "sedatives": "high"
+  },
+  "function": "prediction_and_error_learning",
+  "inputs": [
+    {
+      "signal": "motor_intent_context",
+      "source_region": "pfc",
+      "strength": 0.6
+    },
+    {
+      "signal": "prediction_error",
+      "source_region": "brainstem_base",
+      "strength": 1.0
+    }
+  ],
+  "local_connectivity": [
+    {
+      "pattern": "parallel_fibers",
+      "probability": 0.3,
+      "source": "GRANULE_CELLS",
+      "target": "PURKINJE_CELLS"
+    },
+    {
+      "pattern": "feedforward_inhibition",
+      "probability": 0.4,
+      "source": "INTERNEURONS",
+      "target": "PURKINJE_CELLS"
+    }
+  ],
+  "notes": "Normalized IDs to runtime-loaded region keys. 'CORTEX' and 'BRAINSTEM' are routed to current integration hubs (pfc, brainstem_base) to avoid unresolved references; when a cortex/brainstem router exists, these can be promoted back to hierarchical targets.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "deep_nuclei"
+    }
+  ],
+  "parent_region": "cerebellum_base",
+  "populations": {
+    "GRANULE_CELLS": {
+      "baseline_firing_rate_hz": 5.0,
+      "count": 200000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    },
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 10.0,
+      "count": 30000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "PURKINJE_CELLS": {
+      "baseline_firing_rate_hz": 40.0,
+      "count": 15000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "very_high",
+      "sign": -1.0
+    }
+  },
+  "region_id": "cerebellar_cortex",
+  "spatial_properties": {
+    "layered": true,
+    "layers": [
+      "molecular",
+      "purkinje",
+      "granule"
+    ],
+    "neuron_density_per_mm3": 200000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.1.1"
+}
+
+##########################################################################################
+FILE: cerebellum\cerebellum_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cerebellum\cerebellum_base.json
+SIZE: 554 bytes
+MTIME:2026-01-06 18:04:06
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "CORTEX",
+    "BRAINSTEM"
+  ],
+  "allowed_outputs": [
+    "THALAMUS",
+    "BRAINSTEM"
+  ],
+  "category": "error_correction",
+  "intrinsic_signals": {
+    "energy_state": 1.0,
+    "prediction_error": 0.0,
+    "timing_precision": 1.0
+  },
+  "notes": "Cerebellum implements predictive timing and error correction. Motor execution pathways are intentionally deferred.",
+  "region_id": "CEREBELLUM",
+  "spatial_properties": {
+    "coordinate_frame": "posterior_fossa_space"
+  },
+  "type": "RegionBase",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: cerebellum\deep_nuclei.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cerebellum\deep_nuclei.json
+SIZE: 627 bytes
+MTIME:2026-01-06 18:04:46
+##########################################################################################
+
+{
+  "function": "corrected_output_dispatch",
+  "inputs": [
+    {
+      "source_region": "CEREBELLAR_CORTEX",
+      "strength": 1.0
+    }
+  ],
+  "outputs": [
+    {
+      "strength": 0.8,
+      "target_region": "THALAMUS"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "BRAINSTEM"
+    }
+  ],
+  "parent_region": "CEREBELLUM",
+  "populations": {
+    "OUTPUT_NEURONS": {
+      "baseline_firing_rate_hz": 20.0,
+      "count": 20000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "DEEP_NUCLEI",
+  "type": "RegionSubstructure",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: cortex\a1.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cortex\a1.json
+SIZE: 1731 bytes
+MTIME:2026-01-12 14:46:24
+##########################################################################################
+
+{
+  "function": "auditory_processing",
+  "inputs": [
+    {
+      "source_region": "mgb",
+      "strength": 1.0,
+      "target_population": "L4_EXCITATORY"
+    }
+  ],
+  "notes": "Primary auditory cortex. Receives thalamic input from MGB in layer 4 and provides corticothalamic feedback via layer 6 pyramidal neurons. This build routes generic 'CORTEX' outputs to pfc as the current cortex integration hub; later this can be upgraded to a cortex router/association target.",
+  "outputs": [
+    {
+      "strength": 0.6,
+      "target_region": "pfc"
+    },
+    {
+      "strength": 0.3,
+      "target_region": "pulvinar"
+    },
+    {
+      "source_population": "L6_PYRAMIDAL",
+      "strength": 0.4,
+      "target_region": "mgb"
+    }
+  ],
+  "parent_region": "cortex_base",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 6.5,
+      "count": 38000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.6,
+      "count": 85000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0
+    },
+    "L4_EXCITATORY": {
+      "baseline_firing_rate_hz": 1.0,
+      "count": 75000,
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    },
+    "L6_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.3,
+      "count": 40000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "a1",
+  "spatial_properties": {
+    "laminar": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.1.1"
+}
+
+##########################################################################################
+FILE: cortex\cortex_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cortex\cortex_base.json
+SIZE: 2317 bytes
+MTIME:2026-01-06 18:18:20
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "THALAMUS",
+    "CORTEX"
+  ],
+  "allowed_outputs": [
+    "CORTEX",
+    "BASAL_GANGLIA",
+    "BRAINSTEM"
+  ],
+  "category": "laminar_cortex",
+  "default_channels": {
+    "HCN": 0.2,
+    "KCa": 0.3,
+    "KV_DELAYED_RECTIFIER": 0.7,
+    "LEAK": 0.5,
+    "NaV_FAST": 0.8
+  },
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+  "default_receptors": {
+    "AMPA": 0.5,
+    "GABA_A": 0.35,
+    "GABA_B": 0.15,
+    "NMDA": 0.4
+  },
+  "intrinsic_signals": {
+    "calcium_proxy": 0.0,
+    "energy_state": 1.0,
+    "excitatory_drive": 0.0,
+    "growth_factor": 0.0
+  },
+  "laminar_structure": {
+    "layer_roles": {
+      "L1": "integration",
+      "L2_3": "local_processing",
+      "L4": "thalamic_input",
+      "L5": "subcortical_output",
+      "L6": "feedback_modulation"
+    },
+    "layers": [
+      "L1",
+      "L2_3",
+      "L4",
+      "L5",
+      "L6"
+    ]
+  },
+  "notes": "Canonical cortical laminar template. All cortical subregions inherit populations and aliases unless overridden.",
+  "population_aliases": {
+    "L3_PYRAMIDAL": "L2_3_PYRAMIDAL",
+    "PFC_L2_3": "L2_3_PYRAMIDAL",
+    "S1_L4": "L4_EXCITATORY"
+  },
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 6.0,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.5,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0
+    },
+    "L4_EXCITATORY": {
+      "baseline_firing_rate_hz": 0.6,
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    },
+    "L5_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.7,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0
+    },
+    "L6_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.4,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    }
+  },
+  "reference_models": [
+    "human",
+    "mouse",
+    "primate"
+  ],
+  "region_id": "CORTEX_BASE",
+  "spatial_properties": {
+    "coordinate_frame": "cortical_sheet",
+    "thickness_mm": 2.5
+  },
+  "type": "RegionBase",
+  "version": "1.1.1"
+}
+
+##########################################################################################
+FILE: cortex\insula.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cortex\insula.json
+SIZE: 822 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "function": "interoception",
+  "parent_region": "CORTEX",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 6.0,
+      "count": 30000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.5,
+      "count": 60000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0
+    },
+    "L5_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.9,
+      "count": 45000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    }
+  },
+  "region_id": "INSULA",
+  "spatial_properties": {
+    "laminar": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: cortex\m1.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cortex\m1.json
+SIZE: 831 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "function": "motor_command_generation",
+  "parent_region": "CORTEX",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 6.0,
+      "count": 35000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.5,
+      "count": 70000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    },
+    "L5_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 1.0,
+      "count": 60000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    }
+  },
+  "region_id": "M1",
+  "spatial_properties": {
+    "laminar": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: cortex\s1.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cortex\s1.json
+SIZE: 2068 bytes
+MTIME:2026-01-12 14:39:20
+##########################################################################################
+
+{
+  "function": "somatosensory_processing",
+  "inputs": [
+    {
+      "source_region": "vpl",
+      "strength": 1.0,
+      "target_population": "L4_EXCITATORY"
+    }
+  ],
+  "notes": "Primary somatosensory cortex. VPL provides feedforward sensory drive to layer 4. Pulvinar supplies modulatory, cross-modal attentional bias to supragranular layers (L2/3) without directly driving sensory activation. Corticothalamic feedback originates from layer 6 and targets TRN for thalamic gating.",
+  "outputs": [
+    {
+      "strength": 0.6,
+      "target_region": "association_cortex"
+    },
+    {
+      "source_population": "L6_PYRAMIDAL",
+      "strength": 0.4,
+      "target_region": "trn"
+    }
+  ],
+  "parent_region": "cortex_base",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 7.0,
+      "count": 40000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.7,
+      "count": 90000,
+      "layer": "L2_3",
+      "modulatory_inputs": [
+        {
+          "role": "cross_modal_attention_bias",
+          "source_region": "pulvinar",
+          "strength": 0.4
+        }
+      ],
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0
+    },
+    "L4_EXCITATORY": {
+      "baseline_firing_rate_hz": 1.2,
+      "count": 85000,
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    },
+    "L5_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.8,
+      "count": 60000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    },
+    "L6_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.5,
+      "count": 50000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "sign": 1.0
+    }
+  },
+  "region_id": "S1",
+  "spatial_properties": {
+    "laminar": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.2.1"
+}
+
+##########################################################################################
+FILE: cortex\v1.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\cortex\v1.json
+SIZE: 3676 bytes
+MTIME:2026-01-12 14:45:32
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "cholinergic_agents": "high",
+    "gabaergic_agents": "high",
+    "psychedelics": "moderate"
+  },
+  "function": "visual_feature_extraction",
+  "inputs": [
+    {
+      "source_region": "lgn",
+      "strength": 0.9,
+      "target_population": "L4_EXCITATORY"
+    }
+  ],
+  "local_connectivity": [
+    {
+      "probability": 0.4,
+      "source": "L4_EXCITATORY",
+      "target": "L2_3_PYRAMIDAL"
+    },
+    {
+      "probability": 0.2,
+      "source": "L2_3_PYRAMIDAL",
+      "target": "L2_3_PYRAMIDAL"
+    },
+    {
+      "probability": 0.3,
+      "source": "L2_3_PYRAMIDAL",
+      "target": "INTERNEURONS"
+    },
+    {
+      "probability": 0.5,
+      "source": "INTERNEURONS",
+      "target": "all"
+    }
+  ],
+  "notes": "V1 extracts visual features via LGN-driven layer 4 input. Pulvinar provides contextual/attentional modulation to supragranular layers (L2/3) without directly driving sensory activation. Outputs are routed to pfc as the current cortex integration hub in this build; later this can be upgraded to a cortex router/association target.",
+  "outputs": [
+    {
+      "strength": 0.7,
+      "target_region": "pfc"
+    },
+    {
+      "strength": 0.45,
+      "target_region": "pulvinar"
+    },
+    {
+      "source_population": "L6_PYRAMIDAL",
+      "strength": 0.35,
+      "target_region": "lgn"
+    },
+    {
+      "strength": 0.15,
+      "target_region": "v1"
+    }
+  ],
+  "parent_region": "cortex_base",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 8.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.85,
+        "LEAK": 0.4,
+        "NaV_FAST": 0.9
+      },
+      "count": 40000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "receptors": {
+        "AMPA": 0.4,
+        "GABA_A": 0.7,
+        "NMDA": 0.2
+      },
+      "sign": -1.0
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.8,
+      "channels": {
+        "HCN": 0.25,
+        "KCa": 0.3,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "LEAK": 0.5,
+        "NaV_FAST": 0.8
+      },
+      "count": 100000,
+      "layer": "L2_3",
+      "modulatory_inputs": [
+        {
+          "role": "contextual_attention_bias",
+          "source_region": "pulvinar",
+          "strength": 0.4
+        }
+      ],
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "receptors": {
+        "AMPA": 0.55,
+        "GABA_A": 0.35,
+        "M1": 0.15,
+        "NMDA": 0.5
+      },
+      "sign": 1.0
+    },
+    "L4_EXCITATORY": {
+      "baseline_firing_rate_hz": 1.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "LEAK": 0.55,
+        "NaV_FAST": 0.85
+      },
+      "count": 80000,
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "AMPA": 0.6,
+        "GABA_A": 0.4,
+        "NMDA": 0.4
+      },
+      "sign": 1.0
+    },
+    "L5_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 1.2,
+      "channels": {
+        "HCN": 0.3,
+        "KCa": 0.4,
+        "KV_DELAYED_RECTIFIER": 0.75,
+        "LEAK": 0.45,
+        "NaV_FAST": 0.85
+      },
+      "count": 60000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "AMPA": 0.5,
+        "D1": 0.2,
+        "GABA_A": 0.4,
+        "NMDA": 0.45
+      },
+      "sign": 1.0
+    },
+    "L6_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.3,
+      "count": 50000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "v1",
+  "spatial_properties": {
+    "laminar": true,
+    "surface_area_mm2": 2500
+  },
+  "type": "RegionSubstructure",
+  "version": "1.2.1"
+}
+
+##########################################################################################
+FILE: diencephalon\endocrine\endocrine_system.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\endocrine\endocrine_system.json
+SIZE: 547 bytes
+MTIME:2026-01-05 20:36:04
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "ANTERIOR_PITUITARY",
+    "POSTERIOR_PITUITARY"
+  ],
+  "allowed_outputs": [],
+  "category": "system_interface",
+  "function": "hormonal_signal_distribution",
+  "notes": "Abstract sink for endocrine signaling. Represents systemic hormone distribution without modeling circulation, receptors, or peripheral organs. Intended as an interface layer for future physiology or body-state simulation.",
+  "populations": {},
+  "region_id": "ENDOCRINE_SYSTEM",
+  "type": "RegionBase",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: diencephalon\hypothalamus\hypothalamus.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\hypothalamus\hypothalamus.json
+SIZE: 2060 bytes
+MTIME:2026-01-12 14:40:08
+##########################################################################################
+
+{
+  "function": "homeostatic_regulation",
+  "functional_roles": [
+    "autonomic_control",
+    "endocrine_interface",
+    "circadian_rhythms",
+    "motivational_drive",
+    "stress_integration"
+  ],
+  "inputs": [
+    {
+      "source_region": "brainstem_base",
+      "strength": 0.6
+    },
+    {
+      "source_region": "amyg_base",
+      "strength": 0.4
+    },
+    {
+      "source_region": "hip_base",
+      "strength": 0.3
+    },
+    {
+      "source_region": "pfc",
+      "strength": 0.2
+    }
+  ],
+  "notes": "Hypothalamus integrates limbic, cortical, and brainstem state signals to regulate autonomic tone, endocrine output, circadian rhythms, and motivated behavior. Outputs to posterior pituitary represent neurosecretory control; anterior pituitary signaling is mediated indirectly via hypothalamic releasing factors.",
+  "outputs": [
+    {
+      "strength": 0.8,
+      "target_region": "brainstem_base"
+    },
+    {
+      "strength": 0.4,
+      "target_region": "trn"
+    },
+    {
+      "strength": 0.9,
+      "target_region": "posterior_pituitary"
+    }
+  ],
+  "parent_region": "thalamus_base",
+  "populations": {
+    "LATERAL_HYPOTHALAMUS": {
+      "baseline_firing_rate_hz": 1.0,
+      "count": 400,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    },
+    "PARAVENTRICULAR_NUCLEUS": {
+      "baseline_firing_rate_hz": 0.5,
+      "count": 300,
+      "neuron_type": "neuroendocrine",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    },
+    "SUPRACHIASMATIC_NUCLEUS": {
+      "baseline_firing_rate_hz": 0.3,
+      "count": 200,
+      "neuron_type": "pacemaker",
+      "plasticity_profile": "very_low",
+      "sign": 1.0
+    },
+    "VENTROMEDIAL_NUCLEUS": {
+      "baseline_firing_rate_hz": 0.8,
+      "count": 250,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "very_low",
+      "sign": -1.0
+    }
+  },
+  "region_id": "hypothalamus",
+  "type": "RegionSubstructure",
+  "version": "1.0.1"
+}
+
+##########################################################################################
+FILE: diencephalon\pituitary\anterior_pituitary.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\pituitary\anterior_pituitary.json
+SIZE: 1408 bytes
+MTIME:2026-01-05 20:32:48
+##########################################################################################
+
+{
+  "function": "endocrine_hormone_regulation",
+  "inputs": [
+    {
+      "source_region": "HYPOTHALAMUS",
+      "strength": 1.0
+    }
+  ],
+  "notes": "Anterior pituitary integrates hypothalamic releasing hormones and regulates systemic endocrine axes. Modeled as slow, stateful endocrine populations rather than spiking neurons.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "ENDOCRINE_SYSTEM"
+    }
+  ],
+  "parent_region": "DIENCEPHALON",
+  "populations": {
+    "CORTICOTROPES": {
+      "baseline_activity": 0.6,
+      "count": 3,
+      "neuron_type": "endocrine",
+      "plasticity_profile": "very_low"
+    },
+    "GONADOTROPES": {
+      "baseline_activity": 0.4,
+      "count": 3,
+      "neuron_type": "endocrine",
+      "plasticity_profile": "very_low"
+    },
+    "LACTOTROPES": {
+      "baseline_activity": 0.5,
+      "count": 2,
+      "neuron_type": "endocrine",
+      "plasticity_profile": "very_low"
+    },
+    "SOMATOTROPES": {
+      "baseline_activity": 0.7,
+      "count": 3,
+      "neuron_type": "endocrine",
+      "plasticity_profile": "very_low"
+    },
+    "THYROTROPES": {
+      "baseline_activity": 0.5,
+      "count": 2,
+      "neuron_type": "endocrine",
+      "plasticity_profile": "very_low"
+    }
+  },
+  "region_id": "ANTERIOR_PITUITARY",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: diencephalon\pituitary\posterior_pituitary.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\pituitary\posterior_pituitary.json
+SIZE: 965 bytes
+MTIME:2026-01-05 20:33:44
+##########################################################################################
+
+{
+  "function": "neurohormone_release",
+  "inputs": [
+    {
+      "source_region": "HYPOTHALAMUS",
+      "strength": 1.0
+    }
+  ],
+  "notes": "Posterior pituitary directly releases hypothalamic neurohormones (oxytocin and vasopressin) into circulation. Modeled as direct hypothalamic extensions rather than an independent endocrine processor.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "ENDOCRINE_SYSTEM"
+    }
+  ],
+  "parent_region": "DIENCEPHALON",
+  "populations": {
+    "OXYTOCIN_NEURONS": {
+      "baseline_activity": 0.4,
+      "count": 2,
+      "neuron_type": "neurosecretory",
+      "plasticity_profile": "very_low"
+    },
+    "VASOPRESSIN_NEURONS": {
+      "baseline_activity": 0.5,
+      "count": 2,
+      "neuron_type": "neurosecretory",
+      "plasticity_profile": "very_low"
+    }
+  },
+  "region_id": "POSTERIOR_PITUITARY",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\lgn.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\lgn.json
+SIZE: 1079 bytes
+MTIME:2026-01-12 14:40:54
+##########################################################################################
+
+{
+  "function": "visual_relay",
+  "inputs": [
+    {
+      "signal": "retinal_drive",
+      "source_region": "visual_input",
+      "strength": 1.0
+    },
+    {
+      "signal": "feedback",
+      "source_region": "pfc",
+      "strength": 0.4
+    }
+  ],
+  "is_relay": true,
+  "notes": "LGN is a gated thalamic relay nucleus. Relay cells transmit retinal input to primary visual cortex (V1). Activity is modulated by top-down cortical feedback from PFC and inhibited by TRN-mediated thalamic gating. Relay gating behavior is enforced at runtime, not structurally here.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "v1"
+    },
+    {
+      "strength": 0.4,
+      "target_region": "pulvinar"
+    }
+  ],
+  "parent_region": "thalamus_base",
+  "populations": {
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 0.6,
+      "count": 60000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "receives_inhibition_from": [
+        "trn"
+      ],
+      "sign": 1.0
+    }
+  },
+  "region_id": "lgn",
+  "type": "RegionSubstructure",
+  "version": "1.1.2"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\md.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\md.json
+SIZE: 2745 bytes
+MTIME:2026-01-26 12:09:34
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "anesthetics": "very_high",
+    "dopaminergic_agents": "high",
+    "noradrenergic_agents": "high",
+    "sedatives": "very_high"
+  },
+  "execution_status": "relay_only_checkpoint_6",
+  "function": "executive_state_gating",
+  "functional_modes": {
+    "sleep": {
+      "description": "Suppressed relay",
+      "execution_status": "inactive"
+    },
+    "wake": {
+      "description": "Context relay only",
+      "execution_status": "inactive"
+    }
+  },
+  "inputs": [
+    {
+      "signal": "corticothalamic_context",
+      "source_population": "L6_PYRAMIDAL",
+      "source_region": "PFC",
+      "strength": 0.6
+    }
+  ],
+  "is_relay": true,
+  "notes": [
+    "MD is an executive relay nucleus with rich internal gating semantics.",
+    "At checkpoint 6 it functions strictly as a relay.",
+    "All executive gating, mode switching, and neuromodulatory effects are preserved declaratively.",
+    "Runtime enforcement of these features will be enabled in a later checkpoint."
+  ],
+  "outputs": [
+    {
+      "strength": 0.7,
+      "target_population": "L2_3_PYRAMIDAL",
+      "target_region": "PFC"
+    },
+    {
+      "strength": 0.5,
+      "target_population": "L5_POLICY_A",
+      "target_region": "PFC"
+    },
+    {
+      "strength": 0.5,
+      "target_population": "L5_POLICY_B",
+      "target_region": "PFC"
+    }
+  ],
+  "parent_region": "THALAMUS",
+  "populations": {
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 0.6,
+      "count": 70000,
+      "execution_notes": [
+        "Acts as a passive relay at checkpoint 6",
+        "No internal gating or mode switching is active",
+        "All subpopulation semantics are declarative only"
+      ],
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "receives_inhibition_from": [
+        "TRN"
+      ],
+      "sign": 1.0,
+      "subpopulations": {
+        "ATTENTIONAL_AMPLIFIERS": {
+          "default_state": "suppressed",
+          "execution_status": "declared_only",
+          "fraction": 0.2,
+          "role": "signal_gain_control"
+        },
+        "FLEXIBILITY_GATES": {
+          "execution_status": "declared_only",
+          "fraction": 0.3,
+          "role": "context_switching"
+        },
+        "NOISE_FILTERS": {
+          "always_on": true,
+          "execution_status": "declared_only",
+          "fraction": 0.1,
+          "role": "background_suppression"
+        },
+        "PERSISTENCE_GATES": {
+          "execution_status": "declared_only",
+          "fraction": 0.4,
+          "role": "working_memory_stabilization"
+        }
+      }
+    }
+  },
+  "region_id": "MD",
+  "spatial_properties": {
+    "diffuse_projection": true,
+    "thalamic": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.3.4"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\mgb.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\mgb.json
+SIZE: 1166 bytes
+MTIME:2026-01-07 17:07:20
+##########################################################################################
+
+{
+  "function": "auditory_relay",
+  "functional_modes": {
+    "sleep": "burst",
+    "wake": "tonic"
+  },
+  "inputs": [
+    {
+      "signal": "cochlear_afferents",
+      "source_region": "AUDITORY_INPUT",
+      "strength": 1.0
+    },
+    {
+      "signal": "corticothalamic_feedback",
+      "source_population": "L6_PYRAMIDAL",
+      "source_region": "A1",
+      "strength": 0.4
+    }
+  ],
+  "is_relay": true,
+  "notes": "MGB relays auditory sensory input to primary auditory cortex (A1) under strong corticothalamic feedback and TRN-mediated inhibitory gating. Functional modes are declarative only and not yet enforced in dynamics.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_population": "L4_EXCITATORY",
+      "target_region": "A1"
+    }
+  ],
+  "parent_region": "THALAMUS",
+  "populations": {
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 0.8,
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "receives_inhibition_from": [
+        "TRN"
+      ],
+      "sign": 1.0
+    }
+  },
+  "region_id": "MGB",
+  "type": "RegionSubstructure",
+  "version": "1.2.0"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\pulvinar.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\pulvinar.json
+SIZE: 3335 bytes
+MTIME:2026-01-12 14:42:52
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "cholinergic_agents": "high",
+    "psychedelics": "moderate",
+    "sedatives": "high"
+  },
+  "function": "associative_thalamic_attention_and_cross_modal_gating",
+  "functional_roles": {
+    "attention_alignment": "high",
+    "cortical_synchronization": "declarative_only",
+    "cross_modal_binding": "moderate"
+  },
+  "inputs": [
+    {
+      "signal": "top_down_attention",
+      "source_population": "L6_PYRAMIDAL",
+      "source_region": "pfc",
+      "strength": 0.5
+    },
+    {
+      "signal": "visual_relay_context",
+      "source_region": "lgn",
+      "strength": 0.4
+    },
+    {
+      "signal": "salience_and_orientation",
+      "source_region": "superior_colliculus",
+      "strength": 0.3
+    }
+  ],
+  "notes": "Pulvinar is modeled as an associative thalamic relay nucleus that modulates attentional alignment and cross-modal coordination rather than primary sensory throughput. It is gated by TRN and basal ganglia output (GPi), receives strong corticothalamic input, and preferentially targets cortical L2/3 populations and association cortex. Subpopulation fields encode semantic intent only and are reserved for later attentional, oscillatory, and state-dependent enforcement.",
+  "outputs": [
+    {
+      "strength": 0.8,
+      "target_population": "L2_3_PYRAMIDAL",
+      "target_region": "v1"
+    },
+    {
+      "strength": 0.4,
+      "target_population": "L2_3_PYRAMIDAL",
+      "target_region": "s1"
+    },
+    {
+      "strength": 0.5,
+      "target_region": "association_cortex"
+    }
+  ],
+  "parent_region": "thalamus_base",
+  "populations": {
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 3.0,
+      "count": 80000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "receives_inhibition_from": [
+        "trn",
+        "gpi"
+      ],
+      "sign": 1.0,
+      "subpopulations": {
+        "CROSS_MODAL_ALIGNMENT_UNITS": {
+          "fraction": 0.3,
+          "gain_modulation": -0.4,
+          "notes": "Supports synchronization of features across sensory modalities.",
+          "role": "cross_modal_feature_synchronization",
+          "semantic_target_bias": "association_cortex"
+        },
+        "SALIENCE_RELAY_UNITS": {
+          "context_sensitivity": 0.7,
+          "fraction": 0.2,
+          "gain_modulation": -0.5,
+          "notes": "Relays salience-weighted signals influenced by subcortical inputs.",
+          "role": "salience_weighting"
+        },
+        "VISUAL_COORDINATION_UNITS": {
+          "fraction": 0.5,
+          "gain_modulation": -0.2,
+          "notes": "Biases relay output toward visual cortical coordination under top-down attention.",
+          "role": "visual_context_alignment",
+          "semantic_target_bias": "visual_cortex"
+        }
+      }
+    }
+  },
+  "region_id": "pulvinar",
+  "spatial_properties": {
+    "association_nucleus": true,
+    "diffuse_projection": true,
+    "is_relay": true,
+    "non_primary_relay": true,
+    "relay_type": "associative"
+  },
+  "state_modulation": {
+    "diffuse_attention": {
+      "cross_modal_gain": 0.8,
+      "visual_gain": 0.6
+    },
+    "focused_attention": {
+      "cross_modal_gain": 0.6,
+      "visual_gain": 1.0
+    },
+    "sensory_overload": {
+      "cross_modal_gain": 0.4,
+      "visual_gain": 0.3
+    }
+  },
+  "type": "RegionSubstructure",
+  "version": "1.3.1"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\thalamus_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\thalamus_base.json
+SIZE: 1745 bytes
+MTIME:2026-01-07 15:52:56
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "SENSORY_INTERFACES",
+    "CORTEX",
+    "BRAINSTEM",
+    "BASAL_GANGLIA",
+    "CEREBELLUM"
+  ],
+  "allowed_outputs": [
+    "CORTEX"
+  ],
+  "category": "relay_nuclei",
+  "core_populations": {
+    "LOCAL_INTERNEURONS": {
+      "baseline_firing_rate_hz": 7.0,
+      "neuron_type": "inhibitory",
+      "role": "local_shaping",
+      "targets": [
+        "RELAY_CELLS"
+      ]
+    },
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 5.0,
+      "neuron_type": "excitatory",
+      "receives_inhibition_from": [
+        "THALAMIC_RETICULAR_NUCLEUS"
+      ],
+      "role": "signal_relay",
+      "targets": [
+        "CORTEX"
+      ]
+    }
+  },
+  "default_channels": {
+    "CaV_T": 0.5,
+    "HCN": 0.4,
+    "KV_DELAYED_RECTIFIER": 0.7,
+    "LEAK": 0.5,
+    "NaV_FAST": 0.8
+  },
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+  "default_receptors": {
+    "AMPA": 0.5,
+    "GABA_A": 0.4,
+    "GABA_B": 0.2,
+    "NMDA": 0.3
+  },
+  "functional_modes": {
+    "burst": {
+      "CaV_T_bias": 0.6,
+      "description": "Rhythmic gating during sleep or disengagement"
+    },
+    "tonic": {
+      "CaV_T_bias": 0.2,
+      "description": "Faithful relay during wakefulness"
+    }
+  },
+  "intrinsic_signals": {
+    "calcium_proxy": 0.0,
+    "energy_state": 1.0,
+    "relay_gain": 1.0
+  },
+  "notes": "Base contract for thalamic relay nuclei. Defines shared electrophysiology, inhibition expectations, and relay semantics. Sensory specificity is implemented in child nuclei.",
+  "reference_models": [
+    "human",
+    "rodent",
+    "primate"
+  ],
+  "region_id": "THALAMUS",
+  "spatial_properties": {
+    "approx_dimensions_mm": [
+      30,
+      25,
+      20
+    ],
+    "coordinate_frame": "deep_nuclei_space"
+  },
+  "type": "RegionBase",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\trn.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\trn.json
+SIZE: 3639 bytes
+MTIME:2026-01-12 14:41:58
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "anesthetics": "override",
+    "gabaergic_agents": "very_high",
+    "sedatives": "very_high",
+    "stimulants": "moderate"
+  },
+  "function": "thalamic_relay_inhibitory_gate",
+  "functional_roles": {
+    "global_suppression": "active",
+    "rhythmic_coordination": "future_only",
+    "selective_gating": "active"
+  },
+  "inputs": [
+    {
+      "signal": "top_down_gating_bias",
+      "source_region": "pfc",
+      "strength": 0.5
+    },
+    {
+      "signal": "executive_state_bias",
+      "source_region": "md",
+      "strength": 0.4
+    },
+    {
+      "signal": "salience_bias",
+      "source_region": "pulvinar",
+      "strength": 0.4
+    }
+  ],
+  "notes": [
+    "TRN is a pure inhibitory shell governing thalamic relay nuclei.",
+    "It never projects to cortex and never acts as a relay.",
+    "All rhythmic and state-dependent fields are declarative only at this checkpoint.",
+    "No internal competition or oscillatory dynamics are implemented.",
+    "TRN enforces thalamocortical gating strictly via inhibitory output to relay nuclei."
+  ],
+  "outputs": [
+    {
+      "strength": 0.6,
+      "target_region": "lgn"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "mgb"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "vpl"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "vpm"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "md"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "pulvinar"
+    }
+  ],
+  "parent_region": "thalamus_base",
+  "populations": {
+    "TRN_GABA": {
+      "baseline": 0.4,
+      "clamp_max": 1.0,
+      "clamp_min": 0.0,
+      "count": 50000,
+      "gain": 1.0,
+      "homeostatic_gain": 0.03,
+      "max_rate": 15.0,
+      "neuron_type": "inhibitory",
+      "normalization": 0.2,
+      "plasticity_profile": "low",
+      "semantic_role": "thalamic_inhibitory_shell",
+      "sign": -1.0,
+      "subpopulations": {
+        "FOCUSED_GATES": {
+          "description": "Implements focused inhibition of specific thalamic relay nuclei under top-down control.",
+          "fraction": 0.55,
+          "role": "selective_relay_suppression",
+          "scope": "local",
+          "target_specificity": "high"
+        },
+        "GLOBAL_GATES": {
+          "description": "Provides diffuse inhibitory suppression across thalamus during overload or disengagement.",
+          "fraction": 0.3,
+          "role": "global_thalamic_dampening",
+          "scope": "global",
+          "target_specificity": "broad"
+        },
+        "RHYTHMIC_PLACEHOLDERS": {
+          "declarative_only": true,
+          "description": "Encodes intent for rhythmic gating (e.g. spindles) but generates no oscillations at this checkpoint.",
+          "fraction": 0.15,
+          "oscillatory_capable": true,
+          "preferred_frequency_hz": 8.0,
+          "role": "state_timing_placeholder"
+        }
+      },
+      "tau": 12.0,
+      "threshold": 0.0
+    }
+  },
+  "region_id": "trn",
+  "spatial_properties": {
+    "no_cortical_projection": true,
+    "non_relay": true,
+    "pure_inhibitory": true,
+    "reticular_geometry": "encircling",
+    "shell_structure": true
+  },
+  "state_modulation": {
+    "diffuse_attention": {
+      "focused_gain": 0.6,
+      "global_gain": 0.6
+    },
+    "focused_attention": {
+      "focused_gain": 1.0,
+      "global_gain": 0.3
+    },
+    "sensory_overload": {
+      "focused_gain": 0.2,
+      "global_gain": 1.0
+    },
+    "sleep_like": {
+      "focused_gain": 0.1,
+      "global_gain": 0.9
+    }
+  },
+  "type": "RegionSubstructure",
+  "version": "1.6.1"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\vpl.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\vpl.json
+SIZE: 1660 bytes
+MTIME:2026-01-07 17:09:04
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "anesthetics": "very_high",
+    "gabaergic_agents": "high",
+    "t_type_ca_blockers": "high"
+  },
+  "function": "body_somatosensory_relay",
+  "functional_modes": {
+    "sleep": "burst",
+    "wake": "tonic"
+  },
+  "inputs": [
+    {
+      "signal": "body_afferents",
+      "source_region": "SOMATO_INPUT",
+      "strength": 1.0
+    },
+    {
+      "signal": "corticothalamic_feedback",
+      "source_population": "L6_PYRAMIDAL",
+      "source_region": "S1",
+      "strength": 0.4
+    }
+  ],
+  "is_relay": true,
+  "notes": "VPL relays somatosensory input from the body to primary somatosensory cortex (S1) layer 4. Relay activity is gated by TRN inhibition and modulated by corticothalamic feedback from S1 layer 6. Local inhibitory interneurons provide intra-nuclear gain control. Functional modes are declarative only and not yet enforced in dynamics.",
+  "outputs": [
+    {
+      "strength": 0.9,
+      "target_population": "L4_EXCITATORY",
+      "target_region": "S1"
+    }
+  ],
+  "parent_region": "THALAMUS",
+  "populations": {
+    "LOCAL_INTERNEURONS": {
+      "baseline_firing_rate_hz": 9.0,
+      "count": 15000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "very_low",
+      "role": "local_gain_control",
+      "sign": -1.0
+    },
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 5.0,
+      "count": 60000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "receives_inhibition_from": [
+        "TRN"
+      ],
+      "sign": 1.0
+    }
+  },
+  "region_id": "VPL",
+  "spatial_properties": {
+    "neuron_density_per_mm3": 90000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.3.0"
+}
+
+##########################################################################################
+FILE: diencephalon\thalamus\vpm.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\diencephalon\thalamus\vpm.json
+SIZE: 1183 bytes
+MTIME:2026-01-07 17:08:08
+##########################################################################################
+
+{
+  "function": "facial_somatosensory_relay",
+  "functional_modes": {
+    "sleep": "burst",
+    "wake": "tonic"
+  },
+  "inputs": [
+    {
+      "signal": "trigeminal_afferents",
+      "source_region": "SOMATO_INPUT",
+      "strength": 1.0
+    },
+    {
+      "signal": "corticothalamic_feedback",
+      "source_population": "L6_PYRAMIDAL",
+      "source_region": "S1",
+      "strength": 0.4
+    }
+  ],
+  "is_relay": true,
+  "notes": "VPM relays trigeminal and facial somatosensory input to primary somatosensory cortex (S1) layer 4. Activity is gated by TRN inhibition and modulated by corticothalamic feedback from S1 layer 6. Functional modes are declarative only and not yet enforced in dynamics.",
+  "outputs": [
+    {
+      "strength": 0.9,
+      "target_population": "L4_EXCITATORY",
+      "target_region": "S1"
+    }
+  ],
+  "parent_region": "THALAMUS",
+  "populations": {
+    "RELAY_CELLS": {
+      "baseline_firing_rate_hz": 5.0,
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "receives_inhibition_from": [
+        "TRN"
+      ],
+      "sign": 1.0
+    }
+  },
+  "region_id": "VPM",
+  "type": "RegionSubstructure",
+  "version": "1.2.0"
+}
+
+##########################################################################################
+FILE: hippocampal_formation\ca1.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\hippocampal_formation\ca1.json
+SIZE: 2409 bytes
+MTIME:2026-01-12 14:44:28
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "cholinergic_agents": "high",
+    "gabaergic_agents": "moderate",
+    "nmda_antagonists": "high"
+  },
+  "function": "memory_output_integration",
+  "inputs": [
+    {
+      "pathway": "schaffer_collaterals",
+      "source_population": "PYRAMIDAL_CELLS",
+      "source_region": "ca3",
+      "strength": 0.8
+    },
+    {
+      "pathway": "temporoammonic",
+      "source_population": "L2_3_PYRAMIDAL",
+      "source_region": "pfc",
+      "strength": 0.4
+    }
+  ],
+  "notes": "CA1 integrates Schaffer collateral input from CA3 and temporoammonic-like cortical input (mapped to pfc in this simplified cortex) before projecting to subiculum.",
+  "outputs": [
+    {
+      "strength": 0.9,
+      "target_population": "PYRAMIDAL_CELLS",
+      "target_region": "subiculum"
+    }
+  ],
+  "parent_region": "hip_base",
+  "populations": {
+    "INTERNEURONS": {
+      "_notes": "Interneurons active but bounded to avoid inhibitory collapse",
+      "activity_clamp_max": 3.5,
+      "baseline_firing_rate_hz": 7.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.85,
+        "LEAK": 0.4,
+        "NaV_FAST": 0.9
+      },
+      "count": 10000,
+      "excitability_gain": 1.1,
+      "firing_threshold": 0.03,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "AMPA": 0.45,
+        "GABA_A": 0.7,
+        "NMDA": 0.3
+      },
+      "sign": -1.0,
+      "tonic_drive": 0.01
+    },
+    "PYRAMIDAL_CELLS": {
+      "_notes": "Pyramidal cells kept alive at rest, reduced excitability to prevent hypersensitivity",
+      "activity_clamp_max": 4.5,
+      "baseline_firing_rate_hz": 0.5,
+      "channels": {
+        "HCN": 0.3,
+        "KCa": 0.35,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "LEAK": 0.55,
+        "NaV_FAST": 0.8
+      },
+      "count": 45000,
+      "excitability_gain": 0.75,
+      "firing_threshold": 0.06,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "receptors": {
+        "AMPA": 0.55,
+        "GABA_A": 0.4,
+        "GABA_B": 0.2,
+        "M1": 0.15,
+        "NMDA": 0.5
+      },
+      "sign": 1.0,
+      "tonic_drive": 0.02
+    }
+  },
+  "region_id": "ca1",
+  "spatial_properties": {
+    "layered": true,
+    "layers": [
+      "stratum_oriens",
+      "stratum_pyramidale",
+      "stratum_radiatum"
+    ],
+    "neuron_density_per_mm3": 70000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.1.1"
+}
+
+##########################################################################################
+FILE: hippocampal_formation\ca3.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\hippocampal_formation\ca3.json
+SIZE: 2158 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "benzodiazepines": "high",
+    "cannabinoids": "high",
+    "nmda_antagonists": "very_high"
+  },
+  "function": "autoassociative_memory",
+  "inputs": [
+    {
+      "pathway": "mossy_fibers",
+      "source_population": "GRANULE_CELLS",
+      "source_region": "DENTATE_GYRUS",
+      "strength": 0.9
+    }
+  ],
+  "local_connectivity": [
+    {
+      "pattern": "recurrent_excitation",
+      "probability": 0.15,
+      "source": "PYRAMIDAL_CELLS",
+      "target": "PYRAMIDAL_CELLS"
+    },
+    {
+      "pattern": "feedforward",
+      "probability": 0.3,
+      "source": "PYRAMIDAL_CELLS",
+      "target": "INTERNEURONS"
+    },
+    {
+      "pattern": "feedback_inhibition",
+      "probability": 0.5,
+      "source": "INTERNEURONS",
+      "target": "PYRAMIDAL_CELLS"
+    }
+  ],
+  "outputs": [
+    {
+      "pathway": "schaffer_collaterals",
+      "strength": 0.8,
+      "target_population": "PYRAMIDAL_CELLS",
+      "target_region": "CA1"
+    }
+  ],
+  "parent_region": "HIPPOCAMPAL_FORMATION",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 6.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.85,
+        "LEAK": 0.4,
+        "NaV_FAST": 0.9
+      },
+      "count": 12000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "AMPA": 0.5,
+        "GABA_A": 0.7,
+        "NMDA": 0.3
+      },
+      "sign": -1.0
+    },
+    "PYRAMIDAL_CELLS": {
+      "baseline_firing_rate_hz": 0.3,
+      "channels": {
+        "HCN": 0.2,
+        "KCa": 0.4,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "LEAK": 0.5,
+        "NaV_FAST": 0.85
+      },
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "very_high",
+      "receptors": {
+        "AMPA": 0.6,
+        "CB1": 0.25,
+        "GABA_A": 0.35,
+        "GABA_B": 0.15,
+        "NMDA": 0.6
+      },
+      "sign": 1.0
+    }
+  },
+  "region_id": "CA3",
+  "spatial_properties": {
+    "layered": true,
+    "layers": [
+      "stratum_lucidum",
+      "stratum_pyramidale",
+      "stratum_radiatum"
+    ],
+    "neuron_density_per_mm3": 80000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: hippocampal_formation\dentate_gyrus.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\hippocampal_formation\dentate_gyrus.json
+SIZE: 1723 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "benzodiazepines": "high",
+    "cannabinoids": "moderate",
+    "opioids": "moderate"
+  },
+  "function": "pattern_separation",
+  "local_connectivity": [
+    {
+      "pattern": "divergent",
+      "probability": 0.2,
+      "source": "GRANULE_CELLS",
+      "target": "INTERNEURONS"
+    },
+    {
+      "pattern": "feedback_inhibition",
+      "probability": 0.4,
+      "source": "INTERNEURONS",
+      "target": "GRANULE_CELLS"
+    }
+  ],
+  "outputs": [
+    {
+      "pathway": "mossy_fibers",
+      "strength": 0.8,
+      "target_population": "PYRAMIDAL_CELLS",
+      "target_region": "CA3"
+    }
+  ],
+  "parent_region": "HIPPOCAMPAL_FORMATION",
+  "populations": {
+    "GRANULE_CELLS": {
+      "baseline_firing_rate_hz": 0.1,
+      "channels": {
+        "KCa": 0.4,
+        "KV_DELAYED_RECTIFIER": 0.6,
+        "LEAK": 0.6,
+        "NaV_FAST": 0.7
+      },
+      "count": 100000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "receptors": {
+        "AMPA": 0.6,
+        "CB1": 0.2,
+        "GABA_A": 0.4,
+        "NMDA": 0.5
+      }
+    },
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 5.0,
+      "channels": {
+        "KV_DELAYED_RECTIFIER": 0.8,
+        "LEAK": 0.4,
+        "NaV_FAST": 0.9
+      },
+      "count": 15000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "AMPA": 0.4,
+        "GABA_A": 0.6,
+        "NMDA": 0.2
+      },
+      "sign": -1.0
+    }
+  },
+  "region_id": "DENTATE_GYRUS",
+  "spatial_properties": {
+    "layered": true,
+    "layers": [
+      "molecular",
+      "granule",
+      "hilus"
+    ],
+    "neuron_density_per_mm3": 100000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: hippocampal_formation\hip_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\hippocampal_formation\hip_base.json
+SIZE: 982 bytes
+MTIME:2026-01-03 04:41:48
+##########################################################################################
+
+{
+  "allowed_inputs": [
+    "CORTEX",
+    "THALAMUS"
+  ],
+  "allowed_outputs": [
+    "CORTEX",
+    "AMYGDALA"
+  ],
+  "category": "memory_system",
+  "default_channels": {
+    "KCa": 0.3,
+    "KV_DELAYED_RECTIFIER": 0.6,
+    "LEAK": 0.5,
+    "NaV_FAST": 0.8
+  },
+  "default_neuron_template": {
+    "baseline_firing_bias": 0.1,
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+  "default_receptors": {
+    "AMPA": 0.5,
+    "GABA_A": 0.3,
+    "GABA_B": 0.1,
+    "NMDA": 0.4
+  },
+  "intrinsic_signals": {
+    "calcium_proxy": 0.0,
+    "energy_state": 1.0,
+    "growth_factor": 0.0
+  },
+  "notes": "Hippocampal formation supports intrinsic replay, plasticity-driven learning, and long-term structural adaptation.",
+  "reference_models": [
+    "human",
+    "rodent"
+  ],
+  "region_id": "HIPPOCAMPAL_FORMATION",
+  "spatial_properties": {
+    "approx_dimensions_mm": [
+      40,
+      15,
+      10
+    ],
+    "coordinate_frame": "local_region_space"
+  },
+  "type": "RegionBase",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: hippocampal_formation\subiculum.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\hippocampal_formation\subiculum.json
+SIZE: 1306 bytes
+MTIME:2026-01-26 12:13:14
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "dopaminergic_agents": "moderate",
+    "serotonergic_agents": "moderate"
+  },
+  "function": "memory_distribution",
+  "inputs": [
+    {
+      "source_population": "PYRAMIDAL_CELLS",
+      "source_region": "ca1",
+      "strength": 0.9
+    }
+  ],
+  "outputs": [
+    {
+      "strength": 0.6,
+      "target_population": "L5_POLICY_A",
+      "target_region": "pfc"
+    },
+    {
+      "strength": 0.6,
+      "target_population": "L5_POLICY_B",
+      "target_region": "pfc"
+    },
+    {
+      "strength": 0.4,
+      "target_population": "PYRAMIDAL_CELLS",
+      "target_region": "bla"
+    }
+  ],
+  "parent_region": "hip_base",
+  "populations": {
+    "PYRAMIDAL_CELLS": {
+      "baseline_firing_rate_hz": 1.0,
+      "channels": {
+        "HCN": 0.35,
+        "KV_DELAYED_RECTIFIER": 0.65,
+        "LEAK": 0.6,
+        "NaV_FAST": 0.75
+      },
+      "count": 30000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "receptors": {
+        "5HT1A": 0.2,
+        "AMPA": 0.5,
+        "D1": 0.2,
+        "GABA_A": 0.35,
+        "NMDA": 0.4
+      },
+      "sign": 1.0
+    }
+  },
+  "region_id": "subiculum",
+  "spatial_properties": {
+    "layered": false,
+    "neuron_density_per_mm3": 60000
+  },
+  "type": "RegionSubstructure",
+  "version": "1.0.2"
+}
+
+##########################################################################################
+FILE: inter_regional\association_cortex.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\inter_regional\association_cortex.json
+SIZE: 4970 bytes
+MTIME:2026-01-26 12:11:32
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "cholinergic_agents": "high",
+    "dopaminergic_agents": "moderate",
+    "psychedelics": "very_high",
+    "sedatives": "moderate"
+  },
+  "function": "multimodal_integration_and_workspace",
+  "inputs": [
+    {
+      "signal": "visual_features",
+      "source_region": "V1",
+      "strength": 0.6
+    },
+    {
+      "signal": "auditory_features",
+      "source_region": "A1",
+      "strength": 0.6
+    },
+    {
+      "signal": "salience_and_context",
+      "source_region": "PULVINAR",
+      "strength": 0.4
+    }
+  ],
+  "notes": "Association cortex functions as a multimodal integration and workspace region. L5 pyramidal populations are explicitly split into parallel candidate representations (A/B) to support downstream basal ganglia competition and gating without introducing new dynamics or learning. All other structure is preserved to maintain biological interpretability and experimental continuity.",
+  "outputs": [
+    {
+      "signal": "abstracted_state",
+      "strength": 0.7,
+      "target_population": "L2_3_PYRAMIDAL",
+      "target_region": "PFC"
+    },
+    {
+      "signal": "candidate_A",
+      "strength": 0.4,
+      "target_population": "L5_POLICY_A",
+      "target_region": "PFC"
+    },
+    {
+      "signal": "candidate_A",
+      "strength": 0.4,
+      "target_population": "L5_POLICY_B",
+      "target_region": "PFC"
+    },
+    {
+      "signal": "candidate_B",
+      "strength": 0.4,
+      "target_population": "L5_POLICY_A",
+      "target_region": "PFC"
+    },
+    {
+      "signal": "candidate_B",
+      "strength": 0.4,
+      "target_population": "L5_POLICY_B",
+      "target_region": "PFC"
+    }
+  ],
+  "parent_region": "CORTEX",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 6.0,
+      "count": 50000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "medium",
+      "sign": -1.0,
+      "subpopulations": {
+        "GLOBAL_NORMALIZATION_UNITS": {
+          "fraction": 0.3,
+          "role": "activity_scaling_and_stability"
+        },
+        "LOCAL_COMPETITION_UNITS": {
+          "fraction": 0.5,
+          "role": "local_pattern_suppression"
+        },
+        "TEMPORAL_GATING_UNITS": {
+          "fraction": 0.2,
+          "preferred_frequency_hz": 6.0,
+          "role": "timing_control_and_sequence_separation"
+        }
+      }
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.5,
+      "count": 120000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "very_high",
+      "sign": 1.0,
+      "subpopulations": {
+        "ABSTRACTION_UNITS": {
+          "fraction": 0.35,
+          "role": "concept_formation",
+          "temporal_invariance": "high"
+        },
+        "FEATURE_BINDING_UNITS": {
+          "fraction": 0.45,
+          "integration_window_ms": 120,
+          "role": "cross_modal_feature_linking"
+        },
+        "TRANSIENT_REPRESENTATION_UNITS": {
+          "decay_time_ms": 800,
+          "fraction": 0.2,
+          "role": "ephemeral_workspace_entries"
+        }
+      }
+    },
+    "L5_PYRAMIDAL_A": {
+      "baseline_firing_rate_hz": 0.7,
+      "count": 40000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0,
+      "subpopulations": {
+        "COMPETITIVE_SELECTION_UNITS": {
+          "fraction": 0.4,
+          "role": "pattern_competition_and_resolution"
+        },
+        "STABLE_PATTERN_UNITS": {
+          "fraction": 0.6,
+          "role": "long_lived_representation_export"
+        }
+      },
+      "tags": [
+        "candidate_A",
+        "competing_representation"
+      ]
+    },
+    "L5_PYRAMIDAL_B": {
+      "baseline_firing_rate_hz": 0.7,
+      "count": 40000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "sign": 1.0,
+      "subpopulations": {
+        "COMPETITIVE_SELECTION_UNITS": {
+          "fraction": 0.4,
+          "role": "pattern_competition_and_resolution"
+        },
+        "STABLE_PATTERN_UNITS": {
+          "fraction": 0.6,
+          "role": "long_lived_representation_export"
+        }
+      },
+      "tags": [
+        "candidate_B",
+        "competing_representation"
+      ]
+    }
+  },
+  "region_id": "ASSOCIATION_CORTEX",
+  "spatial_properties": {
+    "columnar_bias": true,
+    "laminar": true
+  },
+  "state_modulation": {
+    "exploratory": {
+      "competition_gain": 0.5,
+      "normalization_gain": 0.5,
+      "workspace_decay": 0.8
+    },
+    "focused_thought": {
+      "competition_gain": 1.0,
+      "normalization_gain": 0.7,
+      "workspace_decay": 0.4
+    },
+    "overload": {
+      "competition_gain": 1.2,
+      "normalization_gain": 1.0,
+      "workspace_decay": 1.0
+    }
+  },
+  "type": "RegionSubstructure",
+  "version": "1.3.2"
+}
+
+##########################################################################################
+FILE: inter_regional\corpus_callosum.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\inter_regional\corpus_callosum.json
+SIZE: 748 bytes
+MTIME:2026-01-06 15:43:26
+##########################################################################################
+
+{
+  "function": "interhemispheric_integration",
+  "inputs": [
+    {
+      "source_region": "ASSOCIATION_CORTEX",
+      "strength": 0.6
+    },
+    {
+      "source_region": "PFC",
+      "strength": 0.4
+    }
+  ],
+  "outputs": [
+    {
+      "strength": 0.6,
+      "target_region": "ASSOCIATION_CORTEX"
+    },
+    {
+      "strength": 0.4,
+      "target_region": "PFC"
+    }
+  ],
+  "parent_region": "CEREBRAL_CORTEX",
+  "populations": {
+    "CALLOSAL_FIBERS": {
+      "baseline_firing_rate_hz": 0.2,
+      "count": 120000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "CORPUS_CALLOSUM",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: inter_regional\Intralaminar.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\inter_regional\Intralaminar.json
+SIZE: 1114 bytes
+MTIME:2026-01-06 17:50:38
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "anesthetics": "very_high",
+    "dopaminergic_agents": "moderate",
+    "psychostimulants": "moderate"
+  },
+  "function": "salience_and_global_broadcast",
+  "functional_modes": {
+    "sleep": "burst_firing",
+    "wake": "tonic_firing"
+  },
+  "inputs": [
+    {
+      "signal": "norepinephrine_tone",
+      "source_region": "LOCUS_COERULEUS",
+      "strength": 0.4
+    },
+    {
+      "signal": "serotonin_tone",
+      "source_region": "RAPHE",
+      "strength": 0.2
+    },
+    {
+      "source_region": "GPi",
+      "strength": 0.4
+    }
+  ],
+  "outputs": [
+    {
+      "strength": 0.5,
+      "target_region": "ASSOCIATION_CORTEX"
+    },
+    {
+      "strength": 0.6,
+      "target_region": "PFC"
+    }
+  ],
+  "parent_region": "THALAMUS",
+  "populations": {
+    "RELAY_NEURONS": {
+      "baseline_firing_rate_hz": 3.0,
+      "count": 40000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "INTRALAMINAR",
+  "type": "RegionSubstructure",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: inter_regional\pfc.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\inter_regional\pfc.json
+SIZE: 3753 bytes
+MTIME:2026-01-26 12:05:12
+##########################################################################################
+
+{
+  "function": "executive_control_and_policy_management",
+  "inherit_from": "CORTEX_BASE",
+  "inputs": [
+    {
+      "signal": "executive_context",
+      "source_region": "MD",
+      "strength": 0.7,
+      "target_population": "L2_3_PYRAMIDAL"
+    },
+    {
+      "signal": "episodic_context",
+      "source_region": "HIPPOCAMPAL_FORMATION",
+      "strength": 0.4,
+      "target_population": "L2_3_PYRAMIDAL"
+    }
+  ],
+  "notes": "PFC expresses executive control via a two-stage L5 policy workspace. L5_PYRAMIDAL_A represents competing candidate policies receiving cortical input. L5_PYRAMIDAL_B represents resolved policies exported to basal ganglia. No learning or competition occurs inside PFC; arbitration is delegated to striatum and downstream BG circuitry.",
+  "outputs": [
+    {
+      "signal": "corticothalamic_bias",
+      "source_population": "L6_PYRAMIDAL",
+      "strength": 0.6,
+      "target_region": "MD"
+    },
+    {
+      "signal": "policy_output",
+      "source_population": "L5_PYRAMIDAL_B",
+      "strength": 0.4,
+      "target_region": "STRIATUM"
+    }
+  ],
+  "parent_region": "CEREBRAL_CORTEX",
+  "populations": {
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 7.5,
+      "count": 45000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "medium",
+      "subpopulations": {
+        "ADAPTIVE_INHIBITORS": {
+          "fraction": 0.3,
+          "role": "contextual_inhibition"
+        },
+        "FAST_SPIKING": {
+          "fraction": 0.5,
+          "role": "temporal_sharpening"
+        },
+        "GLOBAL_DAMPENERS": {
+          "fraction": 0.2,
+          "role": "runaway_activity_prevention"
+        }
+      }
+    },
+    "L2_3_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.4,
+      "count": 95000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "very_high",
+      "subpopulations": {
+        "ASSOCIATIVE_INTEGRATORS": {
+          "fraction": 0.35,
+          "role": "cross_modal_abstraction"
+        },
+        "CONTEXT_MAINTAINERS": {
+          "fraction": 0.45,
+          "role": "working_memory_representation"
+        },
+        "DISTRACTOR_SUPPRESSORS": {
+          "fraction": 0.2,
+          "role": "signal_stabilization"
+        }
+      }
+    },
+    "L5_POLICY_A": {
+      "baseline_firing_rate_hz": 0.8,
+      "count": 17500,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high"
+    },
+    "L5_POLICY_B": {
+      "baseline_firing_rate_hz": 0.8,
+      "count": 17500,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high"
+    },
+    "L5_PYRAMIDAL_B": {
+      "baseline_firing_rate_hz": 0.8,
+      "count": 35000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "high",
+      "subpopulations": {
+        "ACTION_PLANNERS": {
+          "fraction": 0.7,
+          "role": "resolved_policy_expression"
+        },
+        "INHIBITORY_CONTROL_DRIVERS": {
+          "fraction": 0.3,
+          "role": "policy_abort_and_suppression"
+        }
+      }
+    },
+    "L6_PYRAMIDAL": {
+      "baseline_firing_rate_hz": 0.3,
+      "count": 30000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "plasticity_profile": "medium",
+      "subpopulations": {
+        "STATE_MONITORS": {
+          "fraction": 0.4,
+          "role": "internal_state_reporting"
+        },
+        "THALAMIC_GATES": {
+          "fraction": 0.6,
+          "role": "corticothalamic_modulation"
+        }
+      }
+    }
+  },
+  "region_id": "PFC",
+  "spatial_properties": {
+    "column_identity_preserved": true,
+    "functional_columns": true,
+    "laminar": true
+  },
+  "type": "RegionSubstructure",
+  "version": "1.3.4"
+}
+
+##########################################################################################
+FILE: midbrain\inferior_colliculus.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\midbrain\inferior_colliculus.json
+SIZE: 1105 bytes
+MTIME:2026-01-07 16:11:46
+##########################################################################################
+
+{
+  "function": "auditory_salience_and_integration",
+  "inputs": [
+    {
+      "source_region": "AUDITORY_INPUT",
+      "strength": 0.6
+    },
+    {
+      "source_region": "A1",
+      "strength": 0.3
+    }
+  ],
+  "outputs": [
+    {
+      "strength": 0.9,
+      "target_region": "MGB"
+    },
+    {
+      "strength": 0.4,
+      "target_region": "TRN"
+    }
+  ],
+  "parent_region": "MIDBRAIN",
+  "populations": {
+    "CENTRAL_NUCLEUS": {
+      "baseline_firing_rate_hz": 1.2,
+      "count": 60000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    },
+    "EXTERNAL_CORTEX": {
+      "baseline_firing_rate_hz": 0.6,
+      "count": 30000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    },
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 4.5,
+      "count": 25000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    }
+  },
+  "region_id": "INFERIOR_COLLICULUS",
+  "type": "RegionSubstructure",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: midbrain\superior_colliculus.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\midbrain\superior_colliculus.json
+SIZE: 1040 bytes
+MTIME:2026-01-05 19:20:04
+##########################################################################################
+
+{
+  "function": "visual_salience_and_orienting",
+  "inputs": [
+    {
+      "source_region": "LGN",
+      "strength": 0.6
+    },
+    {
+      "source_region": "V1",
+      "strength": 0.4
+    }
+  ],
+  "outputs": [
+    {
+      "strength": 0.5,
+      "target_region": "PULVINAR"
+    },
+    {
+      "strength": 0.3,
+      "target_region": "LGN"
+    }
+  ],
+  "parent_region": "BRAINSTEM",
+  "populations": {
+    "DEEP_MOTOR": {
+      "baseline_firing_rate_hz": 0.5,
+      "count": 40000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    },
+    "INTERNEURONS": {
+      "baseline_firing_rate_hz": 4.0,
+      "count": 30000,
+      "neuron_type": "inhibitory",
+      "plasticity_profile": "low",
+      "sign": -1.0
+    },
+    "SUPERFICIAL_VISUAL": {
+      "baseline_firing_rate_hz": 1.5,
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "plasticity_profile": "low",
+      "sign": 1.0
+    }
+  },
+  "region_id": "SUPERIOR_COLLICULUS",
+  "type": "RegionSubstructure",
+  "version": "1.0.0"
+}
+
+##########################################################################################
+FILE: region_aliases.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\region_aliases.json
+SIZE: 1381 bytes
+MTIME:2026-01-12 14:34:12
+##########################################################################################
+
+{
+  "aliases": {
+    "a1": [
+      "A1",
+      "auditory_cortex"
+    ],
+    "anterior_pituitary": [
+      "ANTERIOR_PITUITARY",
+      "adenohypophysis"
+    ],
+    "association_cortex": [
+      "ASSOCIATION_CORTEX",
+      "assoc_cortex",
+      "association",
+      "associationctx"
+    ],
+    "ca1": [
+      "CA1"
+    ],
+    "ca3": [
+      "CA3"
+    ],
+    "cerebellar_cortex": [
+      "CEREBELLAR_CORTEX"
+    ],
+    "deep_nuclei": [
+      "DEEP_NUCLEI"
+    ],
+    "dentate_gyrus": [
+      "DENTATE_GYRUS",
+      "dg"
+    ],
+    "gpe": [
+      "GPe",
+      "gpe"
+    ],
+    "gpi": [
+      "GPi",
+      "gpi"
+    ],
+    "hypothalamus": [
+      "HYPOTHALAMUS"
+    ],
+    "inferior_colliculus": [
+      "INFERIOR_COLLICULUS",
+      "ic"
+    ],
+    "insula": [
+      "INSULA"
+    ],
+    "intralaminar": [
+      "INTRALAMINAR",
+      "Intralaminar",
+      "iln"
+    ],
+    "lgn": [
+      "LGN"
+    ],
+    "locus_coeruleus": [
+      "LOCUS_COERULEUS",
+      "locus",
+      "lc"
+    ],
+    "m1": [
+      "M1",
+      "motor_cortex"
+    ],
+    "md": [
+      "MD"
+    ],
+    "mgb": [
+      "MGB"
+    ],
+    "pfc": [
+      "PFC",
+      "prefrontal",
+      "prefrontal_cortex"
+    ],
+    "posterior_pituitary": [
+      "POSTERIOR_PITUITARY",
+      "neurohypophysis"
+    ],
+    "pulvinar": [
+      "PULVINAR"
+    ],
+    "raphe": [
+      "RAPHE"
+    ],
+    "s1": [
+      "S1",
+      "somatosensory_cortex"
+    ],
+    "snc": [
+      "SNc",
+      "snc"
+    ],
+    "stn": [
+      "STN"
+    ],
+    "striatum": [
+      "STRIATUM"
+    ],
+    "subiculum": [
+      "SUBICULUM"
+    ],
+    "superior_colliculus": [
+      "SUPERIOR_COLLICULUS",
+      "sc"
+    ],
+    "trn": [
+      "TRN",
+      "thalamic_reticular_nucleus"
+    ],
+    "v1": [
+      "V1",
+      "visual_cortex"
+    ],
+    "vpl": [
+      "VPL"
+    ],
+    "vpm": [
+      "VPM"
+    ],
+    "vta": [
+      "VTA"
+    ]
+  },
+  "type": "RegionAliasRegistry",
+  "version": "1.3.0"
+}
+
+##########################################################################################
+FILE: sensory_interfaces\auditory_input.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\sensory_interfaces\auditory_input.json
+SIZE: 493 bytes
+MTIME:2026-01-06 17:57:12
+##########################################################################################
+
+{
+  "encoding": {
+    "mode": "tonotopic",
+    "temporal_filter": "envelope"
+  },
+  "function": "auditory_signal_transduction",
+  "notes": "Primary auditory afferent stream routed explicitly to MGB.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "MGB"
+    }
+  ],
+  "parent_region": "SENSORY_INTERFACES",
+  "region_id": "AUDITORY_INPUT",
+  "signal_dimensions": {
+    "frequency_bins": 64,
+    "time_bins": 32
+  },
+  "type": "SensoryInterface",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: sensory_interfaces\gustatory_input.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\sensory_interfaces\gustatory_input.json
+SIZE: 427 bytes
+MTIME:2026-01-06 17:59:14
+##########################################################################################
+
+{
+  "encoding": {
+    "adaptation": "fast",
+    "mode": "chemical_affinity"
+  },
+  "function": "taste_transduction",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "VPM"
+    }
+  ],
+  "parent_region": "SENSORY_INTERFACES",
+  "region_id": "GUSTATORY_INPUT",
+  "signal_dimensions": {
+    "modalities": [
+      "sweet",
+      "sour",
+      "salty",
+      "bitter",
+      "umami"
+    ]
+  },
+  "type": "SensoryInterface",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: sensory_interfaces\sensory_base.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\sensory_interfaces\sensory_base.json
+SIZE: 505 bytes
+MTIME:2026-01-06 17:55:56
+##########################################################################################
+
+{
+  "allowed_outputs": [
+    "THALAMUS"
+  ],
+  "category": "external_input",
+  "default_channels": {
+    "input_gain": 1.0,
+    "noise_floor": 0.01
+  },
+  "notes": "Sensory interfaces project through thalamic relay nuclei by default.",
+  "region_id": "SENSORY_INTERFACES",
+  "signal_format": {
+    "type": "rate_based_events",
+    "units": "normalized_intensity"
+  },
+  "temporal_properties": {
+    "max_latency_ms": 50,
+    "min_latency_ms": 5
+  },
+  "type": "InterfaceBase",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: sensory_interfaces\somato_input.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\sensory_interfaces\somato_input.json
+SIZE: 521 bytes
+MTIME:2026-01-06 17:55:16
+##########################################################################################
+
+{
+  "encoding": {
+    "adaptation": "slow",
+    "mode": "topographic"
+  },
+  "function": "somatosensory_transduction",
+  "notes": "Somatosensory afferents routed explicitly to VPL.",
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "VPL"
+    }
+  ],
+  "parent_region": "SENSORY_INTERFACES",
+  "region_id": "SOMATO_INPUT",
+  "signal_dimensions": {
+    "body_map_resolution": 64,
+    "modalities": [
+      "touch",
+      "pressure",
+      "temperature",
+      "pain"
+    ]
+  },
+  "type": "SensoryInterface",
+  "version": "1.1.0"
+}
+
+##########################################################################################
+FILE: sensory_interfaces\visual_input.json
+ABS:  C:\Users\Admin\Desktop\neural framework\regions\sensory_interfaces\visual_input.json
+SIZE: 1093 bytes
+MTIME:2026-01-29 13:36:00
+##########################################################################################
+
+{
+  "drug_sensitivity": {
+    "hallucinogens": "moderate",
+    "sedatives": "low"
+  },
+  "encoding": {
+    "mode": "contrast_sensitive",
+    "spatial_filter": "center_surround",
+    "temporal_filter": "bandpass"
+  },
+  "function": "visual_signal_transduction",
+  "output_signal": {
+    "normalization": "adaptive",
+    "type": "firing_rate_map"
+  },
+  "outputs": [
+    {
+      "strength": 1.0,
+      "target_region": "LGN"
+    }
+  ],
+  "parent_region": "SENSORY_INTERFACES",
+  "populations": {
+    "VISUAL_SIGNAL": {
+      "baseline": 0.0,
+      "clamp_max": 1.0,
+      "clamp_min": 0.0,
+      "count": 5000,
+      "gain": 1.0,
+      "homeostatic_gain": 0.0,
+      "max_rate": 1.0,
+      "neuron_type": "excitatory",
+      "normalization": 0.0,
+      "plasticity_profile": "none",
+      "semantic_role": "sensory_input_carrier",
+      "sign": 1.0,
+      "tau": 8.0,
+      "threshold": 0.0
+    }
+  },
+  "region_id": "VISUAL_INPUT",
+  "signal_dimensions": {
+    "channels": [
+      "luminance"
+    ],
+    "height": 128,
+    "width": 128
+  },
+  "type": "SensoryInterface",
+  "version": "1.1.0"
+}
+

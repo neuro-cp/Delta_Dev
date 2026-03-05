@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "type": "StateProfile",
+  "state_name": "stressed",
+
+  "description": "Acute stress state with elevated arousal, threat bias, increased noise, and impaired executive control.",
+
+  "neuromodulators": {
+    "acetylcholine": 1.1,
+    "dopamine": 1.25,
+    "serotonin": 0.7,
+    "norepinephrine": 1.5,
+    "histamine": 1.2
+  },
+
+  "excitability": {
+    "firing_threshold_modifier": 0.95,
+    "leak_conductance_modifier": 0.9
+  },
+
+  "plasticity": {
+    "ltd_ltp_balance": 1.25,
+    "learning_rate": 0.8
+  },
+
+  "oscillations": {
+    "delta": 0.05,
+    "theta": 0.20,
+    "alpha": 0.10,
+    "beta": 0.35,
+    "gamma": 0.30
+  },
+
+  "regional_bias": {
+    "AMYGDALA": {
+      "excitability_gain": 1.2
+    },
+    "BASAL_GANGLIA": {
+      "dopamine_sensitivity": 1.2
+    },
+    "CORTEX": {
+      "prefrontal_control": 0.8
+    }
+  },
+
+  "notes": "Stress elevates norepinephrine and dopamine, amplifies threat processing, increases neural noise, and degrades prefrontal executive stability. Chronic stress effects should be modeled separately via long-term plasticity."
+}

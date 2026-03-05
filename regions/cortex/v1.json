@@ -1,0 +1,160 @@
+{
+  "version": "1.2.1",
+  "type": "RegionSubstructure",
+  "region_id": "v1",
+  "parent_region": "cortex_base",
+
+  "function": "visual_feature_extraction",
+
+  "spatial_properties": {
+    "laminar": true,
+    "surface_area_mm2": 2500
+  },
+
+  "populations": {
+    "L4_EXCITATORY": {
+      "count": 80000,
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "channels": {
+        "NaV_FAST": 0.85,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "LEAK": 0.55
+      },
+      "receptors": {
+        "AMPA": 0.6,
+        "NMDA": 0.4,
+        "GABA_A": 0.4
+      },
+      "baseline_firing_rate_hz": 1.0,
+      "plasticity_profile": "medium"
+    },
+
+    "L2_3_PYRAMIDAL": {
+      "count": 100000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+
+      "channels": {
+        "NaV_FAST": 0.8,
+        "KV_DELAYED_RECTIFIER": 0.7,
+        "KCa": 0.3,
+        "HCN": 0.25,
+        "LEAK": 0.5
+      },
+
+      "receptors": {
+        "AMPA": 0.55,
+        "NMDA": 0.5,
+        "GABA_A": 0.35,
+        "M1": 0.15
+      },
+
+      "baseline_firing_rate_hz": 0.8,
+      "plasticity_profile": "high",
+
+      "modulatory_inputs": [
+        {
+          "source_region": "pulvinar",
+          "role": "contextual_attention_bias",
+          "strength": 0.4
+        }
+      ]
+    },
+
+    "L5_PYRAMIDAL": {
+      "count": 60000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "channels": {
+        "NaV_FAST": 0.85,
+        "KV_DELAYED_RECTIFIER": 0.75,
+        "KCa": 0.4,
+        "HCN": 0.3,
+        "LEAK": 0.45
+      },
+      "receptors": {
+        "AMPA": 0.5,
+        "NMDA": 0.45,
+        "GABA_A": 0.4,
+        "D1": 0.2
+      },
+      "baseline_firing_rate_hz": 1.2,
+      "plasticity_profile": "medium"
+    },
+
+    "L6_PYRAMIDAL": {
+      "count": 50000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.3,
+      "plasticity_profile": "low"
+    },
+
+    "INTERNEURONS": {
+      "count": 40000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "channels": {
+        "NaV_FAST": 0.9,
+        "KV_DELAYED_RECTIFIER": 0.85,
+        "LEAK": 0.4
+      },
+      "receptors": {
+        "AMPA": 0.4,
+        "NMDA": 0.2,
+        "GABA_A": 0.7
+      },
+      "baseline_firing_rate_hz": 8.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "local_connectivity": [
+    { "source": "L4_EXCITATORY", "target": "L2_3_PYRAMIDAL", "probability": 0.4 },
+    { "source": "L2_3_PYRAMIDAL", "target": "L2_3_PYRAMIDAL", "probability": 0.2 },
+    { "source": "L2_3_PYRAMIDAL", "target": "INTERNEURONS", "probability": 0.3 },
+    { "source": "INTERNEURONS", "target": "all", "probability": 0.5 }
+  ],
+
+  "inputs": [
+    {
+      "source_region": "lgn",
+      "target_population": "L4_EXCITATORY",
+      "strength": 0.9
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "pfc",
+      "strength": 0.7
+    },
+    {
+      "target_region": "pulvinar",
+      "strength": 0.45
+    },
+    {
+      "target_region": "lgn",
+      "source_population": "L6_PYRAMIDAL",
+      "strength": 0.35
+    },
+    {
+      "target_region": "v1",
+      "strength": 0.15
+    }
+  ],
+
+  "drug_sensitivity": {
+    "gabaergic_agents": "high",
+    "cholinergic_agents": "high",
+    "psychedelics": "moderate"
+  },
+
+  "notes": "V1 extracts visual features via LGN-driven layer 4 input. Pulvinar provides contextual/attentional modulation to supragranular layers (L2/3) without directly driving sensory activation. Outputs are routed to pfc as the current cortex integration hub in this build; later this can be upgraded to a cortex router/association target."
+}

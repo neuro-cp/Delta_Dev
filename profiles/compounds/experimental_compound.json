@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0",
+  "type": "CompoundProfile",
+  "compound_name": "experimental",
+
+  "description": "User-defined experimental compound with configurable pharmacodynamics.",
+
+  "dose": 1.0,
+
+  "targets": {
+
+    "receptors": {
+      "M1": {
+        "mode": "antagonist",
+        "strength": 0.0
+      },
+
+      "NMDA": {
+        "mode": "antagonist",
+        "strength": 0.0
+      },
+
+      "GABA_A": {
+        "mode": "positive_allosteric",
+        "strength": 0.0
+      }
+    },
+
+    "channels": {
+      "NaV_FAST": {
+        "mode": "blocker",
+        "strength": 0.0
+      }
+    }
+  },
+
+  "global_effects": {
+    "excitability_modifier": 1.0,
+    "plasticity_modifier": 1.0
+  },
+
+  "notes": "Set target strengths to non-zero values to model specific compounds. This file is intended to be edited directly or via UI."
+}

@@ -1,0 +1,33 @@
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] settling
+[BASELINE] settled
+[SALIENCE] inducing sustained asymmetry
+[STEP 50] delta=0.000917 relief=0.4218 urgency=0.0700
+[STEP 100] delta=0.001125 relief=0.4296 urgency=0.0800
+[STEP 150] delta=0.001283 relief=0.4410 urgency=0.0900
+[STEP 200] delta=0.001703 relief=0.4549 urgency=0.1000
+[STEP 250] delta=0.001542 relief=0.4705 urgency=0.1100
+[STEP 300] delta=0.001725 relief=0.4866 urgency=0.1200
+[STEP 350] delta=0.001704 relief=0.5023 urgency=0.1300
+[STEP 400] delta=0.001722 relief=0.5168 urgency=0.1400
+[STEP 450] delta=0.001693 relief=0.5291 urgency=0.1500
+[STEP 500] delta=0.002039 relief=0.5387 urgency=0.1600
+[STEP 550] delta=0.001949 relief=0.5452 urgency=0.1700
+[STEP 600] delta=0.001889 relief=0.5483 urgency=0.1800
+[STEP 650] delta=0.001495 relief=0.5481 urgency=0.1900
+[STEP 700] delta=0.001105 relief=0.5449 urgency=0.2000
+[STEP 750] delta=0.000984 relief=0.5391 urgency=0.2100
+[STEP 800] delta=0.000327 relief=0.5312 urgency=0.2200
+
+[URGENCY]
+mean urgency = 0.110100
+max  urgency = 0.220000
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

@@ -1,0 +1,38 @@
+[DEBUG] Loaded region: lgn | populations=1
+[DEBUG] Loaded region: md | populations=1
+[DEBUG] Loaded region: mgb | populations=1
+[DEBUG] Loaded region: pulvinar | populations=1
+[DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] mean delta = 0.001256
+[BASELINE] max  delta = 0.003234
+
+[VALUE] magnitude = 0.60
+[INFO] GPi relief peak reached at 0.548578, decline confirmed after 621 steps
+[VALUE] peak delta = 0.006846
+[VALUE] mean delta = 0.002991
+[VALUE] GPi relief peak = 0.548578
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[DECAY] value disabled
+[DECAY] mean delta = 0.003176
+[DECAY] max  delta = 0.007811
+[DECAY] GPi relief end = 0.466588
+[DECAY] latch armed = False
+[DECAY] committed = False
+[DECAY] decision events = 0
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

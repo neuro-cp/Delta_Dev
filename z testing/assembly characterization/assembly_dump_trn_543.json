@@ -1,0 +1,307 @@
+{
+  "region": "trn",
+  "step": 543,
+  "time": 5.419999999999929,
+  "assemblies": [
+    {
+      "assembly_id": "trn:TRN_GABA:0",
+      "population": "TRN_GABA",
+      "activity": 0.215069262022258,
+      "output": 0.14243563062710302
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:1",
+      "population": "TRN_GABA",
+      "activity": 0.21519051758165605,
+      "output": 0.14253694598719197
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:2",
+      "population": "TRN_GABA",
+      "activity": 0.2154268537400493,
+      "output": 0.14273440366561524
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:3",
+      "population": "TRN_GABA",
+      "activity": 0.2153604622455256,
+      "output": 0.14267893571146875
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:4",
+      "population": "TRN_GABA",
+      "activity": 0.2156611029020207,
+      "output": 0.14293010001058296
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:5",
+      "population": "TRN_GABA",
+      "activity": 0.21596762278445708,
+      "output": 0.14318614618458103
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:6",
+      "population": "TRN_GABA",
+      "activity": 0.21504386063992947,
+      "output": 0.14241440584711546
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:7",
+      "population": "TRN_GABA",
+      "activity": 0.21539369966749358,
+      "output": 0.1427067046829412
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:8",
+      "population": "TRN_GABA",
+      "activity": 0.21499786125938403,
+      "output": 0.14237596935234836
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:9",
+      "population": "TRN_GABA",
+      "activity": 0.21581905602477294,
+      "output": 0.14306204722526977
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:10",
+      "population": "TRN_GABA",
+      "activity": 0.21522270322884263,
+      "output": 0.14256383798710567
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:11",
+      "population": "TRN_GABA",
+      "activity": 0.2152548741933792,
+      "output": 0.14259071738756068
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:12",
+      "population": "TRN_GABA",
+      "activity": 0.21583429590546319,
+      "output": 0.14307477754046158
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:13",
+      "population": "TRN_GABA",
+      "activity": 0.21486015241701265,
+      "output": 0.14226089754922966
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:14",
+      "population": "TRN_GABA",
+      "activity": 0.2152239323833183,
+      "output": 0.14256486497314313
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:15",
+      "population": "TRN_GABA",
+      "activity": 0.3157527420149443,
+      "output": 0.29699720560672443
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:16",
+      "population": "TRN_GABA",
+      "activity": 0.31536901102835146,
+      "output": 0.29665768300754136
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:17",
+      "population": "TRN_GABA",
+      "activity": 0.3153407726210489,
+      "output": 0.296632695917962
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:18",
+      "population": "TRN_GABA",
+      "activity": 0.31579601658752576,
+      "output": 0.29703549158217224
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:19",
+      "population": "TRN_GABA",
+      "activity": 0.31533917856143256,
+      "output": 0.29663128538749
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:20",
+      "population": "TRN_GABA",
+      "activity": 0.3152918609075042,
+      "output": 0.2965894151799907
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:21",
+      "population": "TRN_GABA",
+      "activity": 0.31553874433068896,
+      "output": 0.2968078679392829
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:22",
+      "population": "TRN_GABA",
+      "activity": 0.3156955282638071,
+      "output": 0.2969465863735412
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:23",
+      "population": "TRN_GABA",
+      "activity": 0.31536697904466815,
+      "output": 0.2966558849915468
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:24",
+      "population": "TRN_GABA",
+      "activity": 0.315181126076865,
+      "output": 0.2964914257865566
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:25",
+      "population": "TRN_GABA",
+      "activity": 0.31535654206101915,
+      "output": 0.2966466497266618
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:26",
+      "population": "TRN_GABA",
+      "activity": 0.31541330906991966,
+      "output": 0.29669688012004286
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:27",
+      "population": "TRN_GABA",
+      "activity": 0.3151064744404582,
+      "output": 0.29642536415381093
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:28",
+      "population": "TRN_GABA",
+      "activity": 0.31544455211455974,
+      "output": 0.2967245251284499
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:29",
+      "population": "TRN_GABA",
+      "activity": 0.31566112089122395,
+      "output": 0.2969161443067125
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:30",
+      "population": "TRN_GABA",
+      "activity": 0.3156317397299407,
+      "output": 0.2968901488894115
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:31",
+      "population": "TRN_GABA",
+      "activity": 0.31515643181997266,
+      "output": 0.2964695732502264
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:32",
+      "population": "TRN_GABA",
+      "activity": 0.3157377819751738,
+      "output": 0.2969839699822955
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:33",
+      "population": "TRN_GABA",
+      "activity": 0.3158601859593481,
+      "output": 0.29709226250308646
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:34",
+      "population": "TRN_GABA",
+      "activity": 0.31508502661006155,
+      "output": 0.296406383936083
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:35",
+      "population": "TRN_GABA",
+      "activity": 0.3584723640249571,
+      "output": 0.3679403136188464
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:36",
+      "population": "TRN_GABA",
+      "activity": 0.35845420155897056,
+      "output": 0.3679229185164552
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:37",
+      "population": "TRN_GABA",
+      "activity": 0.35844495747475374,
+      "output": 0.3679140649492123
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:38",
+      "population": "TRN_GABA",
+      "activity": 0.3583575235860756,
+      "output": 0.36783032320029824
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:39",
+      "population": "TRN_GABA",
+      "activity": 0.35840014385218516,
+      "output": 0.36787114404821414
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:40",
+      "population": "TRN_GABA",
+      "activity": 0.3580981544598404,
+      "output": 0.36758189057991886
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:41",
+      "population": "TRN_GABA",
+      "activity": 0.3579150246519937,
+      "output": 0.3674064680997485
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:42",
+      "population": "TRN_GABA",
+      "activity": 0.35845093076840795,
+      "output": 0.367919785904157
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:43",
+      "population": "TRN_GABA",
+      "activity": 0.3584569491809648,
+      "output": 0.36792555005908006
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:44",
+      "population": "TRN_GABA",
+      "activity": 0.35855082732849175,
+      "output": 0.3680154604952886
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:45",
+      "population": "TRN_GABA",
+      "activity": 0.35829772278644495,
+      "output": 0.3677730460823793
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:46",
+      "population": "TRN_GABA",
+      "activity": 0.3584749093561947,
+      "output": 0.3679427514005015
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:47",
+      "population": "TRN_GABA",
+      "activity": 0.358623834018625,
+      "output": 0.3680853794178795
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:48",
+      "population": "TRN_GABA",
+      "activity": 0.3584777340091823,
+      "output": 0.3679454566988267
+    },
+    {
+      "assembly_id": "trn:TRN_GABA:49",
+      "population": "TRN_GABA",
+      "activity": 0.35867341966235083,
+      "output": 0.3681328667846359
+    }
+  ]
+}

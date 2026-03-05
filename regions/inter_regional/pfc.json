@@ -1,0 +1,153 @@
+{
+  "version": "1.3.4",
+  "type": "RegionSubstructure",
+  "region_id": "PFC",
+  "parent_region": "CEREBRAL_CORTEX",
+
+  "inherit_from": "CORTEX_BASE",
+
+  "function": "executive_control_and_policy_management",
+
+  "spatial_properties": {
+    "laminar": true,
+    "functional_columns": true,
+    "column_identity_preserved": true
+  },
+
+  "populations": {
+
+    "L2_3_PYRAMIDAL": {
+      "count": 95000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "baseline_firing_rate_hz": 0.4,
+      "plasticity_profile": "very_high",
+
+      "subpopulations": {
+        "CONTEXT_MAINTAINERS": {
+          "fraction": 0.45,
+          "role": "working_memory_representation"
+        },
+        "ASSOCIATIVE_INTEGRATORS": {
+          "fraction": 0.35,
+          "role": "cross_modal_abstraction"
+        },
+        "DISTRACTOR_SUPPRESSORS": {
+          "fraction": 0.20,
+          "role": "signal_stabilization"
+        }
+      }
+    },
+
+    "L5_POLICY_A": {
+      "count": 17500,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "baseline_firing_rate_hz": 0.8,
+      "plasticity_profile": "high"
+    },
+
+    "L5_POLICY_B": {
+      "count": 17500,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "baseline_firing_rate_hz": 0.8,
+      "plasticity_profile": "high"
+    },
+
+
+
+    "L5_PYRAMIDAL_B": {
+      "count": 35000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "baseline_firing_rate_hz": 0.8,
+      "plasticity_profile": "high",
+
+      "subpopulations": {
+        "ACTION_PLANNERS": {
+          "fraction": 0.70,
+          "role": "resolved_policy_expression"
+        },
+        "INHIBITORY_CONTROL_DRIVERS": {
+          "fraction": 0.30,
+          "role": "policy_abort_and_suppression"
+        }
+      }
+    },
+
+    "L6_PYRAMIDAL": {
+      "count": 30000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "baseline_firing_rate_hz": 0.3,
+      "plasticity_profile": "medium",
+
+      "subpopulations": {
+        "THALAMIC_GATES": {
+          "fraction": 0.60,
+          "role": "corticothalamic_modulation"
+        },
+        "STATE_MONITORS": {
+          "fraction": 0.40,
+          "role": "internal_state_reporting"
+        }
+      }
+    },
+
+    "INTERNEURONS": {
+      "count": 45000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "baseline_firing_rate_hz": 7.5,
+      "plasticity_profile": "medium",
+
+      "subpopulations": {
+        "FAST_SPIKING": {
+          "fraction": 0.50,
+          "role": "temporal_sharpening"
+        },
+        "ADAPTIVE_INHIBITORS": {
+          "fraction": 0.30,
+          "role": "contextual_inhibition"
+        },
+        "GLOBAL_DAMPENERS": {
+          "fraction": 0.20,
+          "role": "runaway_activity_prevention"
+        }
+      }
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "MD",
+      "target_population": "L2_3_PYRAMIDAL",
+      "signal": "executive_context",
+      "strength": 0.7
+    },
+    {
+      "source_region": "HIPPOCAMPAL_FORMATION",
+      "target_population": "L2_3_PYRAMIDAL",
+      "signal": "episodic_context",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "MD",
+      "source_population": "L6_PYRAMIDAL",
+      "signal": "corticothalamic_bias",
+      "strength": 0.6
+    },
+    {
+      "target_region": "STRIATUM",
+      "source_population": "L5_PYRAMIDAL_B",
+      "signal": "policy_output",
+      "strength": 0.4
+    }
+  ],
+
+  "notes": "PFC expresses executive control via a two-stage L5 policy workspace. L5_PYRAMIDAL_A represents competing candidate policies receiving cortical input. L5_PYRAMIDAL_B represents resolved policies exported to basal ganglia. No learning or competition occurs inside PFC; arbitration is delegated to striatum and downstream BG circuitry."
+}

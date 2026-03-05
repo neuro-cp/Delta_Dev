@@ -1,0 +1,12 @@
+:\Users\Admin\Desktop\neural framework>python -m pytest engine/replay/modes/tests -s
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 1 item
+
+engine\replay\modes\tests\test_rem_determinism.py
+=== REM DETERMINISM ===
+REM step order: [7, 3, 2, 8, 5, 6, 9, 4, 0, 1]
+.
+
+============================ 1 passed in 0.08s ============================

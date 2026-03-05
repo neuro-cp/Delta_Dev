@@ -1,0 +1,80 @@
+{
+  "version": "1.1.0",
+  "type": "RegionBase",
+  "region_id": "THALAMUS",
+  "category": "relay_nuclei",
+  "reference_models": ["human", "rodent", "primate"],
+
+  "spatial_properties": {
+    "coordinate_frame": "deep_nuclei_space",
+    "approx_dimensions_mm": [30, 25, 20]
+  },
+
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+
+  "default_channels": {
+    "NaV_FAST": 0.8,
+    "KV_DELAYED_RECTIFIER": 0.7,
+    "CaV_T": 0.5,
+    "HCN": 0.4,
+    "LEAK": 0.5
+  },
+
+  "default_receptors": {
+    "AMPA": 0.5,
+    "NMDA": 0.3,
+    "GABA_A": 0.4,
+    "GABA_B": 0.2
+  },
+
+  "intrinsic_signals": {
+    "calcium_proxy": 0.0,
+    "energy_state": 1.0,
+    "relay_gain": 1.0
+  },
+
+  "functional_modes": {
+    "tonic": {
+      "description": "Faithful relay during wakefulness",
+      "CaV_T_bias": 0.2
+    },
+    "burst": {
+      "description": "Rhythmic gating during sleep or disengagement",
+      "CaV_T_bias": 0.6
+    }
+  },
+
+  "core_populations": {
+    "RELAY_CELLS": {
+      "neuron_type": "excitatory",
+      "baseline_firing_rate_hz": 5.0,
+      "role": "signal_relay",
+      "targets": ["CORTEX"],
+      "receives_inhibition_from": ["THALAMIC_RETICULAR_NUCLEUS"]
+    },
+
+    "LOCAL_INTERNEURONS": {
+      "neuron_type": "inhibitory",
+      "baseline_firing_rate_hz": 7.0,
+      "role": "local_shaping",
+      "targets": ["RELAY_CELLS"]
+    }
+  },
+
+  "allowed_inputs": [
+    "SENSORY_INTERFACES",
+    "CORTEX",
+    "BRAINSTEM",
+    "BASAL_GANGLIA",
+    "CEREBELLUM"
+  ],
+
+  "allowed_outputs": [
+    "CORTEX"
+  ],
+
+  "notes": "Base contract for thalamic relay nuclei. Defines shared electrophysiology, inhibition expectations, and relay semantics. Sensory specificity is implemented in child nuclei."
+}

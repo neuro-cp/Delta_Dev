@@ -1,0 +1,94 @@
+{
+  "version": "1.4.0",
+  "type": "RegionSubstructure",
+  "region_id": "STN",
+  "parent_region": "BASAL_GANGLIA",
+
+  "function": "global_action_braking_and_decision_boundary_control",
+
+  "spatial_properties": {
+    "diffuse_projection": true,
+    "fast_conduction": true,
+    "hyperdirect_pathway": true
+  },
+
+  "populations": {
+
+    "EXCITATORY_NEURONS": {
+      "count": 15000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 10.0,
+      "plasticity_profile": "low",
+
+      "semantic_role": "action_brake",
+
+      "subpopulations": {
+
+        "GLOBAL_INTERRUPT_UNITS": {
+          "fraction": 0.65,
+          "role": "emergency_action_suppression",
+          "activation_context": "high_conflict",
+          "projection_pattern": "broad",
+          "effect_target": "GPi",
+          "effect_type": "inhibitory_via_gpi"
+        },
+
+        "PRECISION_TIMING_UNITS": {
+          "fraction": 0.35,
+          "role": "decision_boundary_sharpening",
+          "activation_context": "moderate_conflict",
+          "projection_pattern": "focused",
+          "effect_target": "GPi",
+          "effect_type": "timing_modulation"
+        }
+      }
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "GPe",
+      "signal": "indirect_pathway_feedback",
+      "strength": 0.8
+    },
+    {
+      "source_region": "PFC",
+      "signal": "conflict_and_uncertainty",
+      "strength": 0.5
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "GPi",
+      "target_population": "GPi_OUTPUT",
+      "signal": "global_brake",
+      "strength": 0.9
+    }
+  ],
+
+  "state_modulation": {
+    "high_conflict": {
+      "global_interrupt_bias": 1.0,
+      "precision_bias": 0.4
+    },
+    "low_conflict": {
+      "global_interrupt_bias": 0.3,
+      "precision_bias": 0.7
+    }
+  },
+
+  "pathophysiology_modes": {
+    "hyperactivity": "parkinsonian_freezing",
+    "hypoactivity": "impulsivity"
+  },
+
+  "drug_sensitivity": {
+    "dopamine_depletion": "very_high",
+    "dopamine_agonists": "moderate",
+    "deep_brain_stimulation": "override"
+  },
+
+  "notes": "STN provides a fast, excitatory hyperdirect pathway for global action braking and decision boundary sharpening. Global interrupt units rapidly increase GPi-mediated inhibition under high conflict, while precision timing units refine action selection without full suppression. All conflict and state-dependent mechanisms are structurally encoded but remain inert at checkpoint 6, ensuring runtime stability while preserving biological fidelity."
+}

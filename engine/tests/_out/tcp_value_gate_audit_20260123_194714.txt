@@ -1,0 +1,47 @@
+[2026-01-23 19:47:14] === BEGIN: TCP Value -> Gate Audit (Baseline vs Value vs Clear) ===
+[2026-01-23 19:47:14] Target: 127.0.0.1:5557
+[2026-01-23 19:47:14] [CLEAN] reset_latch + value_clear
+[2026-01-23 19:47:14] OK reset_latch
+[2026-01-23 19:47:14] OK value reset
+[2026-01-23 19:47:14] HELP first lines:
+Commands:
+  poke <region> <mag>
+  poke_pop <region> <population> <mag>
+  poke_asm <region> <population> <idx> <mag>
+  stats <region>
+  top <region> <N>
+  context | ctx
+  ctxfull
+[2026-01-23 19:47:14] [PHASE] baseline for 6.0s @ dt=0.20s
+[2026-01-23 19:47:14] [baseline 0000] value=0.0 gate_relief=0.4605 gpi_mean=0.8112 Δ=0.0006369999999999987 winner=D2 control=pre-decision
+[2026-01-23 19:47:15] [baseline 0005] value=0.0 gate_relief=0.4347 gpi_mean=0.8528 Δ=0.0011590000000000211 winner=D2 control=pre-decision
+[2026-01-23 19:47:17] [baseline 0010] value=0.0 gate_relief=0.4207 gpi_mean=0.8751 Δ=0.001760999999999957 winner=D2 control=pre-decision
+[2026-01-23 19:47:18] [baseline 0015] value=0.0 gate_relief=0.4188 gpi_mean=0.878 Δ=0.0019759999999999778 winner=D2 control=pre-decision
+[2026-01-23 19:47:20] [ACTION] value_set 0.78
+[2026-01-23 19:47:20] OK value = 0.1000
+[2026-01-23 19:47:20] [PHASE] value_hold for 10.0s @ dt=0.20s
+[2026-01-23 19:47:20] [value_hold 0000] value=0.0998 gate_relief=0.4281 gpi_mean=0.8625 Δ=0.001811000000000007 winner=D2 control=pre-decision
+[2026-01-23 19:47:21] [value_hold 0005] value=0.0888 gate_relief=0.4441 gpi_mean=0.8359 Δ=0.0021210000000000395 winner=D2 control=pre-decision
+[2026-01-23 19:47:23] [value_hold 0010] value=0.0793 gate_relief=0.4641 gpi_mean=0.8037 Δ=0.0024899999999999367 winner=D2 control=pre-decision
+[2026-01-23 19:47:25] [value_hold 0015] value=0.0718 gate_relief=0.483 gpi_mean=0.7726 Δ=0.0025710000000000455 winner=D2 control=pre-decision
+[2026-01-23 19:47:26] [value_hold 0020] value=0.0651 gate_relief=0.5017 gpi_mean=0.7426 Δ=0.002960000000000018 winner=D2 control=pre-decision
+[2026-01-23 19:47:28] [value_hold 0025] value=0.0586 gate_relief=0.5197 gpi_mean=0.7144 Δ=0.0021379999999999733 winner=D2 control=pre-decision
+[2026-01-23 19:47:29] [value_hold 0030] value=0.0531 gate_relief=0.5333 gpi_mean=0.6922 Δ=0.0015690000000000426 winner=D2 control=pre-decision
+[2026-01-23 19:47:30] [ACTION] value_clear
+[2026-01-23 19:47:30] OK value reset
+[2026-01-23 19:47:30] [PHASE] clear_hold for 10.0s @ dt=0.20s
+[2026-01-23 19:47:30] [clear_hold 0000] value=0.0 gate_relief=0.54 gpi_mean=0.6821 Δ=0.0014230000000000076 winner=D2 control=pre-decision
+[2026-01-23 19:47:32] [clear_hold 0005] value=0.0 gate_relief=0.5467 gpi_mean=0.6717 Δ=0.0010270000000000001 winner=D2 control=pre-decision
+[2026-01-23 19:47:33] [clear_hold 0010] value=0.0 gate_relief=0.5486 gpi_mean=0.6688 Δ=0.0006829999999999892 winner=D2 control=pre-decision
+[2026-01-23 19:47:35] [clear_hold 0015] value=0.0 gate_relief=0.5461 gpi_mean=0.6729 Δ=0.00016500000000002624 winner=D1 control=pre-decision
+[2026-01-23 19:47:36] [clear_hold 0020] value=0.0 gate_relief=0.5396 gpi_mean=0.6835 Δ=0.001774999999999971 winner=D1 control=pre-decision
+[2026-01-23 19:47:38] [clear_hold 0025] value=0.0 gate_relief=0.5301 gpi_mean=0.6988 Δ=0.0037579999999999836 winner=D1 control=pre-decision
+[2026-01-23 19:47:39] [clear_hold 0030] value=0.0 gate_relief=0.518 gpi_mean=0.7181 Δ=0.004865000000000008 winner=D1 control=pre-decision
+[2026-01-23 19:47:40] === END ===
+[2026-01-23 19:47:40] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_gate_audit_20260123_194714.txt
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_gate_audit_20260123_194714.csv
+[2026-01-23 19:47:40] Interpretation:
+[2026-01-23 19:47:40]   - If value changes but gate_relief/gpi_mean curves are statistically the same as baseline drift → value is wired but not influencing gate (expected).
+[2026-01-23 19:47:40]   - If value changes AND gpi_mean shifts consistently relative to baseline → you have an indirect coupling path worth auditing.
+[2026-01-23 19:47:40]   - If stats gpi doesn't include mean, we’ll still have raw outputs in the log to adjust the parser.

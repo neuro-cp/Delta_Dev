@@ -1,0 +1,41 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5563
+[INFO] Warmup complete
+
+[PHASE A] Baseline
+
+[PHASE B] Injecting lawful decision coincidence
+[COMMIT] step=405 winner=D2 Δ=0.0418 relief=0.9006
+
+[PHASE C] Working-state authority window
+
+[PHASE D] Working-state release
+
+=== WORKING STATE AUTHORITY & RELEASE SUMMARY ===
+
+Baseline:
+PFC mean:  0.016082
+Gate mean: 0.421449
+Δ mean:    0.000019
+
+Authority (post-commit):
+PFC mean:  0.016350
+Gate mean: 0.472955
+Δ mean:    0.000018
+
+Release:
+PFC mean:  0.015843
+Gate mean: 0.540828
+Δ mean:    0.000010
+
+Expected:
+- Working state engages post-commit
+- Authority persists transiently
+- Gate remains elevated but bounded
+- Δ stays at noise floor
+- Working state releases without re-decision
+=================================================
+
+C:\Users\Admin\Desktop\neural framework>

@@ -1,0 +1,54 @@
+[PVN SINGLE-POKE TRACE]
+step | asm | structural_gain | firing_rate
+   0 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003119
+   0 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012517
+   0 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012503
+   0 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012476
+   0 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003113
+   1 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003142
+   1 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012616
+   1 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012544
+   1 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012548
+   1 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003127
+   2 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003159
+   2 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012657
+   2 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012621
+   2 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012602
+   2 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003139
+   3 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003175
+   3 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012693
+   3 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012661
+   3 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012640
+   3 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003157
+   4 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003192
+   4 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012747
+   4 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012712
+   4 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012706
+   4 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003170
+   5 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003208
+   5 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012787
+   5 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012774
+   5 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012749
+   5 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003186
+   6 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003216
+   6 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012860
+   6 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012835
+   6 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012825
+   6 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003207
+   7 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003231
+   7 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012916
+   7 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012883
+   7 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012921
+   7 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003218
+   8 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003251
+   8 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.012977
+   8 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012952
+   8 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012960
+   8 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003231
+   9 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:0   |  0.25 | 0.003263
+   9 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:1   |  1.00 | 0.013041
+   9 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:2   |  1.00 | 0.012993
+   9 | NORM  | hypothalamus:PARAVENTRICULAR_NUCLEUS:3   |  1.00 | 0.012985
+   9 | MUTED | hypothalamus:PARAVENTRICULAR_NUCLEUS:4   |  0.25 | 0.003250
+
+C:\Users\Admin\Desktop\neural framework>

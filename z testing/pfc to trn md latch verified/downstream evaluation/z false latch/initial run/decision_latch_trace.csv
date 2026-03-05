@@ -1,0 +1,2 @@
+run_id,trial,step,time,winner,delta_dominance,relief,probe_step
+1,1,235,27.01,D2,0.05764799999999998,0.4877,235

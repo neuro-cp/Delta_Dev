@@ -1,0 +1,279 @@
+[2026-01-17 15:10:44] === SALIENCE + BG SUITE 2 (FULL) ===
+
+[2026-01-17 15:10:44] Run ID: 20260117_151044
+[2026-01-17 15:10:44] DT: 0.01
+[2026-01-17 15:10:44] CSV schema locked for modpanda.
+
+[2026-01-17 15:10:44] [DEBUG] Neuron bases loaded: 5
+[2026-01-17 15:10:44] [DEBUG] Loading regions from: C:\Users\Admin\Desktop\neural framework\regions
+[2026-01-17 15:10:44] [DEBUG] BrainMap loaded from brain_map.json
+[2026-01-17 15:10:44] [DEBUG] RegionAliasRegistry loaded from region_aliases.json
+[2026-01-17 15:10:44] [DEBUG] Loaded region: amyg_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: bla | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: cea | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: mea | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: bg_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: gpe | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: gpi | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: snc | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: stn | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: striatum | populations=3
+[2026-01-17 15:10:44] [DEBUG] Loaded region: autonomic_system | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: brainstem_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: locus_coeruleus | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: medulla | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: pons | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: raphe | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: vta | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: cerebellar_cortex | populations=3
+[2026-01-17 15:10:44] [DEBUG] Loaded region: cerebellum_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: deep_nuclei | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: a1 | populations=4
+[2026-01-17 15:10:44] [DEBUG] Loaded region: cortex_base | populations=5
+[2026-01-17 15:10:44] [DEBUG] Loaded region: insula | populations=3
+[2026-01-17 15:10:44] [DEBUG] Loaded region: m1 | populations=3
+[2026-01-17 15:10:44] [DEBUG] Loaded region: s1 | populations=5
+[2026-01-17 15:10:44] [DEBUG] Loaded region: v1 | populations=5
+[2026-01-17 15:10:44] [DEBUG] Loaded region: ca1 | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: ca3 | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: dentate_gyrus | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: hip_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: subiculum | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: association_cortex | populations=4
+[2026-01-17 15:10:44] [DEBUG] Loaded region: corpus_callosum | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: Intralaminar | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: pfc | populations=5
+[2026-01-17 15:10:44] [DEBUG] Loaded region: inferior_colliculus | populations=3
+[2026-01-17 15:10:44] [DEBUG] Loaded region: superior_colliculus | populations=3
+[2026-01-17 15:10:44] [DEBUG] Loaded region: auditory_input | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: gustatory_input | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: sensory_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: somato_input | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: visual_input | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: endocrine_system | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: hypothalamus | populations=4
+[2026-01-17 15:10:44] [DEBUG] Loaded region: anterior_pituitary | populations=5
+[2026-01-17 15:10:44] [DEBUG] Loaded region: posterior_pituitary | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: lgn | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: md | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: mgb | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: pulvinar | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: thalamus_base | populations=0
+[2026-01-17 15:10:44] [DEBUG] Loaded region: trn | populations=1
+[2026-01-17 15:10:44] [DEBUG] Loaded region: vpl | populations=2
+[2026-01-17 15:10:44] [DEBUG] Loaded region: vpm | populations=1
+[2026-01-17 15:10:44] [DEBUG] Total regions loaded: 54
+[2026-01-17 15:10:44] [DEBUG] Profiles loaded: 12
+[2026-01-17 15:10:44] [DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[2026-01-17 15:10:44] [DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[2026-01-17 15:10:44] [DEBUG] Compile complete.
+[2026-01-17 15:10:44]   Regions: 54
+[2026-01-17 15:10:44]   Assembly downscale: 1.0
+[2026-01-17 15:10:44] [OK] Runtime ready
+[2026-01-17 15:10:44] [OK] Command server running
+[2026-01-17 15:10:44] [OK] Salience engine online (observation-driven)
+
+[2026-01-17 15:10:44] 
+=== S2-0: Baseline stabilization ===
+[2026-01-17 15:10:44] [CMD] Listening on 127.0.0.1:5557
+[2026-01-17 15:10:46] [step 000050] t=0.500 relief=0.474 winner=D2 D1=0.2444 D2=0.2445 Δ=-0.0001 sal_keys=3 max_sal=0.9225
+[2026-01-17 15:10:47] [step 000100] t=1.000 relief=0.454 winner=D2 D1=0.3694 D2=0.3694 Δ=-0.0000 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:48] [step 000150] t=1.500 relief=0.437 winner=D1 D1=0.4333 D2=0.4332 Δ=0.0001 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:50] [step 000200] t=2.000 relief=0.426 winner=D2 D1=0.4658 D2=0.4660 Δ=-0.0002 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:52] [step 000250] t=2.500 relief=0.420 winner=D2 D1=0.4820 D2=0.4831 Δ=-0.0011 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:54] [step 000300] t=3.000 relief=0.418 winner=D2 D1=0.4900 D2=0.4922 Δ=-0.0022 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:56] [step 000350] t=3.500 relief=0.422 winner=D2 D1=0.4940 D2=0.4969 Δ=-0.0029 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:58] [step 000400] t=4.000 relief=0.430 winner=D2 D1=0.4964 D2=0.4989 Δ=-0.0025 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:10:58] 
+=== S2-A: Symmetry oscillation (D1<->D2 equal) ===
+[2026-01-17 15:11:00] [step 000450] t=4.500 relief=0.441 winner=D2 D1=0.4966 D2=0.5010 Δ=-0.0044 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:02] [step 000500] t=5.000 relief=0.455 winner=D2 D1=0.4971 D2=0.5017 Δ=-0.0047 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:03] [step 000550] t=5.500 relief=0.470 winner=D2 D1=0.4974 D2=0.5020 Δ=-0.0047 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:05] [step 000600] t=6.000 relief=0.487 winner=D2 D1=0.4979 D2=0.5018 Δ=-0.0039 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:07] [step 000650] t=6.500 relief=0.502 winner=D2 D1=0.4987 D2=0.5012 Δ=-0.0025 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:09] [step 000700] t=7.000 relief=0.517 winner=D2 D1=0.4994 D2=0.5005 Δ=-0.0011 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:11] [step 000750] t=7.500 relief=0.529 winner=D1 D1=0.5003 D2=0.4997 Δ=0.0006 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:13] [step 000800] t=8.000 relief=0.539 winner=D1 D1=0.5011 D2=0.4989 Δ=0.0022 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:14] [step 000850] t=8.500 relief=0.545 winner=D1 D1=0.5017 D2=0.4982 Δ=0.0035 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:16] [step 000900] t=9.000 relief=0.548 winner=D1 D1=0.5032 D2=0.4968 Δ=0.0063 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:16] 
+=== S2-B: Temporal coincidence windows (timing > magnitude) ===
+[2026-01-17 15:11:18] [step 000950] t=9.500 relief=0.548 winner=D1 D1=0.5045 D2=0.4955 Δ=0.0091 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:20] [step 001000] t=10.000 relief=0.545 winner=D1 D1=0.5004 D2=0.4996 Δ=0.0008 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:22] [step 001050] t=10.500 relief=0.539 winner=D2 D1=0.4957 D2=0.5043 Δ=-0.0085 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:24] [step 001100] t=11.000 relief=0.531 winner=D2 D1=0.4919 D2=0.5081 Δ=-0.0162 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:26] [step 001150] t=11.500 relief=0.522 winner=D2 D1=0.4890 D2=0.5110 Δ=-0.0220 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:27] [step 001200] t=12.000 relief=0.512 winner=D2 D1=0.4870 D2=0.5130 Δ=-0.0260 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:29] [step 001250] t=12.500 relief=0.502 winner=D2 D1=0.4865 D2=0.5135 Δ=-0.0269 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:31] [step 001300] t=13.000 relief=0.492 winner=D2 D1=0.4877 D2=0.5123 Δ=-0.0246 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:33] [step 001350] t=13.500 relief=0.483 winner=D2 D1=0.4909 D2=0.5091 Δ=-0.0181 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:35] [step 001400] t=14.000 relief=0.476 winner=D2 D1=0.4946 D2=0.5054 Δ=-0.0109 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:37] [step 001450] t=14.500 relief=0.471 winner=D2 D1=0.4980 D2=0.5020 Δ=-0.0040 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:39] [step 001500] t=15.000 relief=0.467 winner=D1 D1=0.5012 D2=0.4988 Δ=0.0025 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:41] [step 001550] t=15.500 relief=0.466 winner=D1 D1=0.5044 D2=0.4956 Δ=0.0089 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:42] [step 001600] t=16.000 relief=0.467 winner=D1 D1=0.5072 D2=0.4928 Δ=0.0144 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:44] [step 001650] t=16.500 relief=0.469 winner=D1 D1=0.5096 D2=0.4904 Δ=0.0191 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:46] [step 001700] t=17.000 relief=0.473 winner=D1 D1=0.5109 D2=0.4891 Δ=0.0218 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:46] 
+=== S2-C1: Fast stacking (within decay window) ===
+[2026-01-17 15:11:48] [step 001750] t=17.500 relief=0.478 winner=D1 D1=0.5081 D2=0.4919 Δ=0.0163 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:50] [step 001800] t=18.000 relief=0.484 winner=D1 D1=0.5014 D2=0.4986 Δ=0.0028 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:52] [step 001850] t=18.500 relief=0.491 winner=D2 D1=0.4925 D2=0.5075 Δ=-0.0149 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:53] [step 001900] t=19.000 relief=0.497 winner=D2 D1=0.4828 D2=0.5172 Δ=-0.0343 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:55] [step 001950] t=19.500 relief=0.503 winner=D2 D1=0.4762 D2=0.5238 Δ=-0.0476 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:55] 
+=== S2-C1b: Cooldown ===
+[2026-01-17 15:11:57] [step 002000] t=20.000 relief=0.508 winner=D2 D1=0.4736 D2=0.5264 Δ=-0.0529 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:11:59] [step 002050] t=20.500 relief=0.512 winner=D2 D1=0.4734 D2=0.5266 Δ=-0.0533 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:01] [step 002100] t=21.000 relief=0.515 winner=D2 D1=0.4744 D2=0.5256 Δ=-0.0512 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:03] [step 002150] t=21.500 relief=0.517 winner=D2 D1=0.4763 D2=0.5237 Δ=-0.0474 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:05] [step 002200] t=22.000 relief=0.518 winner=D2 D1=0.4790 D2=0.5210 Δ=-0.0420 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:05] 
+=== S2-C2: Slow stacking (leaks through decay) ===
+[2026-01-17 15:12:07] [step 002250] t=22.500 relief=0.517 winner=D2 D1=0.4806 D2=0.5194 Δ=-0.0388 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:09] [step 002300] t=23.000 relief=0.515 winner=D2 D1=0.4811 D2=0.5189 Δ=-0.0378 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:11] [step 002350] t=23.500 relief=0.512 winner=D2 D1=0.4813 D2=0.5187 Δ=-0.0374 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:13] [step 002400] t=24.000 relief=0.509 winner=D2 D1=0.4817 D2=0.5183 Δ=-0.0365 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:15] [step 002450] t=24.500 relief=0.505 winner=D2 D1=0.4830 D2=0.5170 Δ=-0.0341 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:17] [step 002500] t=25.000 relief=0.501 winner=D2 D1=0.4842 D2=0.5158 Δ=-0.0316 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:19] [step 002550] t=25.500 relief=0.497 winner=D2 D1=0.4859 D2=0.5141 Δ=-0.0282 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:21] [step 002600] t=26.000 relief=0.493 winner=D2 D1=0.4882 D2=0.5118 Δ=-0.0235 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:23] [step 002650] t=26.500 relief=0.490 winner=D2 D1=0.4905 D2=0.5095 Δ=-0.0190 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:24] [step 002700] t=27.000 relief=0.488 winner=D2 D1=0.4931 D2=0.5069 Δ=-0.0137 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:26] [step 002750] t=27.500 relief=0.486 winner=D1 D1=0.5016 D2=0.4984 Δ=0.0032 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:26] 
+=== S2-C2b: Cooldown ===
+[2026-01-17 15:12:28] [step 002800] t=28.000 relief=0.485 winner=D1 D1=0.5144 D2=0.4856 Δ=0.0289 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:30] [step 002850] t=28.500 relief=0.485 winner=D1 D1=0.5281 D2=0.4719 Δ=0.0562 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:32] [step 002900] t=29.000 relief=0.486 winner=D1 D1=0.5412 D2=0.4588 Δ=0.0823 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:34] [step 002950] t=29.500 relief=0.487 winner=D1 D1=0.5531 D2=0.4469 Δ=0.1062 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:36] [step 003000] t=30.000 relief=0.489 winner=D1 D1=0.5629 D2=0.4371 Δ=0.1258 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:36] 
+=== S2-D: Loud but meaningless control (should NOT commit) ===
+[2026-01-17 15:12:38] [step 003050] t=30.500 relief=0.491 winner=D1 D1=0.5692 D2=0.4308 Δ=0.1384 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:40] [step 003100] t=31.000 relief=0.494 winner=D1 D1=0.5729 D2=0.4271 Δ=0.1458 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:42] [step 003150] t=31.500 relief=0.496 winner=D1 D1=0.5741 D2=0.4259 Δ=0.1483 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:44] [step 003200] t=32.000 relief=0.499 winner=D1 D1=0.5733 D2=0.4267 Δ=0.1466 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:46] [step 003250] t=32.500 relief=0.501 winner=D1 D1=0.5703 D2=0.4297 Δ=0.1406 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:48] [step 003300] t=33.000 relief=0.503 winner=D1 D1=0.5654 D2=0.4346 Δ=0.1309 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:50] [step 003350] t=33.500 relief=0.504 winner=D1 D1=0.5601 D2=0.4399 Δ=0.1201 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:52] [step 003400] t=34.000 relief=0.505 winner=D1 D1=0.5539 D2=0.4461 Δ=0.1079 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:53] [step 003450] t=34.500 relief=0.505 winner=D1 D1=0.5475 D2=0.4525 Δ=0.0950 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:55] [step 003500] t=35.000 relief=0.505 winner=D1 D1=0.5411 D2=0.4589 Δ=0.0822 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:55] 
+=== S2-E: Conflict (D2 shove vs D1-biased stream) ===
+[2026-01-17 15:12:57] [step 003550] t=35.500 relief=0.505 winner=D1 D1=0.5392 D2=0.4608 Δ=0.0785 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:12:59] [step 003600] t=36.000 relief=0.504 winner=D1 D1=0.5338 D2=0.4662 Δ=0.0676 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:01] [step 003650] t=36.500 relief=0.503 winner=D1 D1=0.5253 D2=0.4747 Δ=0.0506 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:03] [step 003700] t=37.000 relief=0.501 winner=D1 D1=0.5157 D2=0.4843 Δ=0.0314 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:05] [step 003750] t=37.500 relief=0.500 winner=D1 D1=0.5059 D2=0.4941 Δ=0.0118 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:07] [step 003800] t=38.000 relief=0.498 winner=D2 D1=0.4964 D2=0.5036 Δ=-0.0072 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:09] [step 003850] t=38.500 relief=0.497 winner=D2 D1=0.4871 D2=0.5129 Δ=-0.0257 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:11] [step 003900] t=39.000 relief=0.495 winner=D2 D1=0.4800 D2=0.5200 Δ=-0.0399 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:13] [step 003950] t=39.500 relief=0.494 winner=D2 D1=0.4751 D2=0.5249 Δ=-0.0497 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:15] [step 004000] t=40.000 relief=0.493 winner=D2 D1=0.4720 D2=0.5280 Δ=-0.0561 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:15] 
+=== S2-F: Magnitude sweep (D1 destabilize mag=0.15) ===
+[2026-01-17 15:13:17] [step 004050] t=40.500 relief=0.493 winner=D2 D1=0.4685 D2=0.5315 Δ=-0.0630 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:19] [step 004100] t=41.000 relief=0.493 winner=D2 D1=0.4663 D2=0.5337 Δ=-0.0673 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:20] [step 004150] t=41.500 relief=0.493 winner=D2 D1=0.4653 D2=0.5347 Δ=-0.0693 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:22] [step 004200] t=42.000 relief=0.493 winner=D2 D1=0.4648 D2=0.5352 Δ=-0.0703 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:23] 
+=== S2-Fb: Cooldown ===
+[2026-01-17 15:13:25] [step 004270] t=42.700 relief=0.494 winner=D2 D1=0.4652 D2=0.5348 Δ=-0.0697 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:27] [step 004320] t=43.200 relief=0.495 winner=D2 D1=0.4661 D2=0.5339 Δ=-0.0677 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:29] [step 004370] t=43.700 relief=0.496 winner=D2 D1=0.4675 D2=0.5325 Δ=-0.0650 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:30] 
+=== S2-F: Magnitude sweep (D1 destabilize mag=0.35) ===
+[2026-01-17 15:13:32] [step 004450] t=44.500 relief=0.498 winner=D2 D1=0.4679 D2=0.5321 Δ=-0.0642 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:42] [step 004500] t=45.000 relief=0.499 winner=D2 D1=0.4694 D2=0.5306 Δ=-0.0613 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:45] [step 004550] t=45.500 relief=0.499 winner=D2 D1=0.4726 D2=0.5274 Δ=-0.0548 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:48] [step 004600] t=46.000 relief=0.500 winner=D2 D1=0.4766 D2=0.5234 Δ=-0.0469 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:49] 
+=== S2-Fb: Cooldown ===
+[2026-01-17 15:13:51] [step 004670] t=46.700 relief=0.501 winner=D2 D1=0.4836 D2=0.5164 Δ=-0.0327 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:53] [step 004720] t=47.200 relief=0.501 winner=D2 D1=0.4894 D2=0.5106 Δ=-0.0213 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:55] [step 004770] t=47.700 relief=0.501 winner=D2 D1=0.4957 D2=0.5043 Δ=-0.0086 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:13:57] 
+=== S2-F: Magnitude sweep (D1 destabilize mag=0.60) ===
+[2026-01-17 15:13:59] [step 004850] t=48.500 relief=0.500 winner=D1 D1=0.5009 D2=0.4991 Δ=0.0019 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:00] [step 004900] t=49.000 relief=0.500 winner=D1 D1=0.5050 D2=0.4950 Δ=0.0100 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:02] [step 004950] t=49.500 relief=0.499 winner=D1 D1=0.5109 D2=0.4891 Δ=0.0218 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:04] [step 005000] t=50.000 relief=0.499 winner=D1 D1=0.5177 D2=0.4823 Δ=0.0354 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:05] 
+=== S2-Fb: Cooldown ===
+[2026-01-17 15:14:07] [step 005070] t=50.700 relief=0.498 winner=D1 D1=0.5272 D2=0.4728 Δ=0.0543 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:09] [step 005120] t=51.200 relief=0.497 winner=D1 D1=0.5337 D2=0.4663 Δ=0.0674 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:11] [step 005170] t=51.700 relief=0.497 winner=D1 D1=0.5395 D2=0.4605 Δ=0.0790 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:12] 
+=== S2-G: Magnitude sweep (D2 destabilize mag=0.15) ===
+[2026-01-17 15:14:14] [step 005250] t=52.500 relief=0.496 winner=D1 D1=0.5479 D2=0.4521 Δ=0.0958 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:16] [step 005300] t=53.000 relief=0.496 winner=D1 D1=0.5509 D2=0.4491 Δ=0.1019 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:18] [step 005350] t=53.500 relief=0.496 winner=D1 D1=0.5520 D2=0.4480 Δ=0.1040 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:20] [step 005400] t=54.000 relief=0.496 winner=D1 D1=0.5516 D2=0.4484 Δ=0.1031 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:21] 
+=== S2-Gb: Cooldown ===
+[2026-01-17 15:14:23] [step 005470] t=54.700 relief=0.496 winner=D1 D1=0.5492 D2=0.4508 Δ=0.0984 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:25] [step 005520] t=55.200 relief=0.496 winner=D1 D1=0.5461 D2=0.4539 Δ=0.0922 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:27] [step 005570] t=55.700 relief=0.497 winner=D1 D1=0.5423 D2=0.4577 Δ=0.0846 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:28] 
+=== S2-G: Magnitude sweep (D2 destabilize mag=0.35) ===
+[2026-01-17 15:14:31] [step 005650] t=56.500 relief=0.497 winner=D1 D1=0.5387 D2=0.4613 Δ=0.0775 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:33] [step 005700] t=57.000 relief=0.498 winner=D1 D1=0.5359 D2=0.4641 Δ=0.0719 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:35] [step 005750] t=57.500 relief=0.498 winner=D1 D1=0.5316 D2=0.4684 Δ=0.0631 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:37] [step 005800] t=58.000 relief=0.498 winner=D1 D1=0.5266 D2=0.4734 Δ=0.0531 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:38] 
+=== S2-Gb: Cooldown ===
+[2026-01-17 15:14:40] [step 005870] t=58.700 relief=0.499 winner=D1 D1=0.5185 D2=0.4815 Δ=0.0370 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:42] [step 005920] t=59.200 relief=0.499 winner=D1 D1=0.5131 D2=0.4869 Δ=0.0262 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:44] [step 005970] t=59.700 relief=0.499 winner=D1 D1=0.5080 D2=0.4920 Δ=0.0160 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:45] 
+=== S2-G: Magnitude sweep (D2 destabilize mag=0.60) ===
+[2026-01-17 15:14:47] [step 006050] t=60.500 relief=0.499 winner=D1 D1=0.5043 D2=0.4957 Δ=0.0086 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:49] [step 006100] t=61.000 relief=0.499 winner=D1 D1=0.5017 D2=0.4983 Δ=0.0033 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:51] [step 006150] t=61.500 relief=0.499 winner=D2 D1=0.4977 D2=0.5023 Δ=-0.0045 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:53] [step 006200] t=62.000 relief=0.498 winner=D2 D1=0.4934 D2=0.5066 Δ=-0.0132 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:54] 
+=== S2-Gb: Cooldown ===
+[2026-01-17 15:14:56] [step 006270] t=62.700 relief=0.498 winner=D2 D1=0.4877 D2=0.5123 Δ=-0.0246 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:57] [step 006320] t=63.200 relief=0.498 winner=D2 D1=0.4838 D2=0.5162 Δ=-0.0325 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:14:59] [step 006370] t=63.700 relief=0.498 winner=D2 D1=0.4804 D2=0.5196 Δ=-0.0391 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:01] 
+=== S2-H: Decision attempt (repeated coincidence packets) ===
+[2026-01-17 15:15:03] [step 006450] t=64.500 relief=0.497 winner=D2 D1=0.4713 D2=0.5287 Δ=-0.0574 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:05] [step 006500] t=65.000 relief=0.497 winner=D2 D1=0.4612 D2=0.5388 Δ=-0.0777 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:06] [step 006550] t=65.500 relief=0.497 winner=D2 D1=0.4492 D2=0.5508 Δ=-0.1015 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:08] [step 006600] t=66.000 relief=0.497 winner=D2 D1=0.4372 D2=0.5628 Δ=-0.1257 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:10] [step 006650] t=66.500 relief=0.497 winner=D2 D1=0.4260 D2=0.5740 Δ=-0.1480 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:12] [step 006700] t=67.000 relief=0.497 winner=D2 D1=0.4148 D2=0.5852 Δ=-0.1703 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:14] [step 006750] t=67.500 relief=0.497 winner=D2 D1=0.4047 D2=0.5953 Δ=-0.1907 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:16] [step 006800] t=68.000 relief=0.497 winner=D2 D1=0.3967 D2=0.6033 Δ=-0.2066 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:18] [step 006850] t=68.500 relief=0.497 winner=D2 D1=0.3905 D2=0.6095 Δ=-0.2190 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:20] [step 006900] t=69.000 relief=0.497 winner=D2 D1=0.3856 D2=0.6144 Δ=-0.2287 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:22] [step 006950] t=69.500 relief=0.498 winner=D2 D1=0.3835 D2=0.6165 Δ=-0.2331 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:24] [step 007000] t=70.000 relief=0.498 winner=D2 D1=0.3841 D2=0.6159 Δ=-0.2319 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:26] [step 007050] t=70.500 relief=0.498 winner=D2 D1=0.3881 D2=0.6119 Δ=-0.2238 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:28] [step 007100] t=71.000 relief=0.498 winner=D2 D1=0.3956 D2=0.6044 Δ=-0.2088 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:30] [step 007150] t=71.500 relief=0.498 winner=D2 D1=0.4052 D2=0.5948 Δ=-0.1896 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:32] [step 007200] t=72.000 relief=0.498 winner=D2 D1=0.4167 D2=0.5833 Δ=-0.1665 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:34] [step 007250] t=72.500 relief=0.498 winner=D2 D1=0.4306 D2=0.5694 Δ=-0.1387 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:36] [step 007300] t=73.000 relief=0.498 winner=D2 D1=0.4456 D2=0.5544 Δ=-0.1088 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:38] [step 007350] t=73.500 relief=0.498 winner=D2 D1=0.4665 D2=0.5335 Δ=-0.0670 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:40] [step 007400] t=74.000 relief=0.498 winner=D2 D1=0.4906 D2=0.5094 Δ=-0.0189 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:40] 
+=== S2-Hb: Cooldown ===
+[2026-01-17 15:15:42] [step 007450] t=74.500 relief=0.498 winner=D1 D1=0.5147 D2=0.4853 Δ=0.0293 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:44] [step 007500] t=75.000 relief=0.498 winner=D1 D1=0.5370 D2=0.4630 Δ=0.0739 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:46] [step 007550] t=75.500 relief=0.498 winner=D1 D1=0.5567 D2=0.4433 Δ=0.1133 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:48] [step 007600] t=76.000 relief=0.498 winner=D1 D1=0.5736 D2=0.4264 Δ=0.1472 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:50] [step 007650] t=76.500 relief=0.498 winner=D1 D1=0.5874 D2=0.4126 Δ=0.1748 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:52] [step 007700] t=77.000 relief=0.498 winner=D1 D1=0.5981 D2=0.4019 Δ=0.1963 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:54] [step 007750] t=77.500 relief=0.497 winner=D1 D1=0.6064 D2=0.3936 Δ=0.2128 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:56] [step 007800] t=78.000 relief=0.497 winner=D1 D1=0.6122 D2=0.3878 Δ=0.2243 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:15:56] 
+=== SUITE 2 COMPLETE ===
+[2026-01-17 15:15:56] Files updated (append-safe):
+[2026-01-17 15:15:56]  - dominance_trace.csv
+[2026-01-17 15:15:56]  - decision_latch_trace.csv
+[2026-01-17 15:15:56]  - decision_debug_trace.csv
+[2026-01-17 15:15:56] Use modpanda to visualize trajectories (all runs).

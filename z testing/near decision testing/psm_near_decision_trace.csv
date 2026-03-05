@@ -1,0 +1,2 @@
+step,time,winner,D1,D2,delta,relief,near_decision,psm_applied,dom_threshold,relief_threshold,near_dom,near_rel,min_delta,sustain_required
+25,4.39,D1,0.528953,0.468325,0.060628000000000015,0.4382,0,0,0.04,0.47,0.03,0.45999999999999996,0.01,5

@@ -1,0 +1,37 @@
+\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[INIT] Salience sparsity gate attached
+[INIT] Gate stats: {'initialized': True, 'eligible': 212, 'total': 850, 'ratio': 0.24941176470588236}
+[INIT] Stimulating 200 association_cortex:L5_PYRAMIDAL_A assemblies
+[INFO] Command server on port 5561
+[CMD] Listening on 127.0.0.1:5561
+[STEP 0000] Δ=0.000004 relief=0.4972 stim=OFF decision=None
+[STEP 0050] Δ=0.000300 relief=0.4736 stim=OFF decision=None
+[STEP 0100] Δ=0.000583 relief=0.4532 stim=ON decision=None
+[STEP 0150] Δ=0.000074 relief=0.4371 stim=ON decision=None
+[STEP 0200] Δ=0.000851 relief=0.4258 stim=ON decision=None
+[STEP 0250] Δ=0.001152 relief=0.4195 stim=ON decision=None
+[STEP 0300] Δ=0.001086 relief=0.4183 stim=ON decision=None
+[STEP 0350] Δ=0.001174 relief=0.4220 stim=ON decision=None
+[STEP 0400] Δ=0.001299 relief=0.4298 stim=ON decision=None
+[STEP 0450] Δ=0.001282 relief=0.4412 stim=ON decision=None
+[STEP 0500] Δ=0.001163 relief=0.4551 stim=ON decision=None
+[STEP 0550] Δ=0.000656 relief=0.4707 stim=ON decision=None
+[STEP 0600] Δ=0.000110 relief=0.4869 stim=ON decision=None
+[STEP 0650] Δ=0.000289 relief=0.5026 stim=OFF decision=None
+[STEP 0700] Δ=0.000849 relief=0.5171 stim=OFF decision=None
+[STEP 0750] Δ=0.000921 relief=0.5293 stim=OFF decision=None
+[STEP 0800] Δ=0.000734 relief=0.5388 stim=OFF decision=None
+[STEP 0850] Δ=0.000406 relief=0.5453 stim=OFF decision=None
+[STEP 0900] Δ=0.000138 relief=0.5484 stim=OFF decision=None
+[STEP 0950] Δ=0.000066 relief=0.5482 stim=OFF decision=None
+[STEP 1000] Δ=0.000596 relief=0.5450 stim=OFF decision=None
+[STEP 1050] Δ=0.000358 relief=0.5391 stim=OFF decision=None
+[STEP 1100] Δ=0.000449 relief=0.5312 stim=OFF decision=None
+[STEP 1150] Δ=0.002001 relief=0.5217 stim=OFF decision=None
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

@@ -1,0 +1,16 @@
+C:\Users\Admin\Desktop\neural framework>python -m pytest memory/semantic_activation/tests
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 6 items
+
+memory\semantic_activation\tests\test_activation_accumulates_from_replay.py . [ 16%]
+                                                                     [ 16%]
+memory\semantic_activation\tests\test_activation_decays_without_replay.py . [ 33%]
+                                                                     [ 33%]
+memory\semantic_activation\tests\test_activation_has_no_runtime_edges.py . [ 50%]
+                                                                     [ 50%]
+memory\semantic_activation\tests\test_activation_normalization.py .. [ 83%]
+.                                                                    [100%]
+
+============================ 6 passed in 0.09s ============================

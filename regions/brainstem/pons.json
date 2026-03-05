@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "PONS",
+  "parent_region": "BRAINSTEM",
+  "function": "sleep_respiration_coordination",
+
+  "populations": {
+    "MIXED_NEURONS": {
+      "count": 30000,
+      "neuron_type": "mixed",
+      "baseline_firing_rate_hz": 1.5
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "type": "RegionBase",
+  "region_id": "BRAINSTEM",
+  "category": "neuromodulatory_core",
+  "reference_models": ["human", "rodent", "primate"],
+
+  "spatial_properties": {
+    "coordinate_frame": "brainstem_space",
+    "approx_dimensions_mm": [25, 20, 30]
+  },
+
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+
+  "default_channels": {
+    "NaV_FAST": 0.75,
+    "KV_DELAYED_RECTIFIER": 0.6,
+    "HCN": 0.5,
+    "LEAK": 0.6
+  },
+
+  "default_receptors": {
+    "AMPA": 0.4,
+    "NMDA": 0.3,
+    "GABA_A": 0.4,
+    "GABA_B": 0.25
+  },
+
+  "intrinsic_signals": {
+    "dopamine_tone": 0.0,
+    "serotonin_tone": 0.0,
+    "arousal_gain": 0.0,
+    "energy_state": 1.0
+  },
+
+  "allowed_inputs": [
+    "CORTEX",
+    "BASAL_GANGLIA",
+    "HYPOTHALAMUS"
+  ],
+
+  "allowed_outputs": [
+    "CORTEX",
+    "THALAMUS",
+    "BASAL_GANGLIA",
+    "HIPPOCAMPAL_FORMATION"
+  ],
+
+  "notes": "Brainstem nuclei control global brain state, neuromodulation, arousal, mood, and drug sensitivity."
+}

@@ -1,0 +1,90 @@
+{
+  "version": "1.5.1",
+  "type": "RegionSubstructure",
+  "region_id": "GPi",
+  "parent_region": "BASAL_GANGLIA",
+
+  "execution_status": "tonic_output_checkpoint_6",
+
+  "function": "final_inhibitory_action_gate",
+
+  "spatial_properties": {
+    "tonic_inhibition": true,
+    "high_baseline_activity": true,
+    "output_bottleneck": true
+  },
+
+  "populations": {
+    "GPi_OUTPUT": {
+      "count": 25000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+
+      "baseline": 0.75,
+      "tau": 8.0,
+      "gain": 1.2,
+      "threshold": 0.0,
+      "max_rate": 25.0,
+
+      "inhibition_gain": 0.15,
+      "homeostatic_gain": 0.02,
+      "normalization": 0.1,
+
+      "plasticity_profile": "very_low",
+
+      "semantic_role": "global_action_suppression",
+
+      "clamp_min": 0.0,
+      "clamp_max": 1.0,
+
+      "execution_notes": [
+        "Always active tonic inhibition",
+        "No internal competition at checkpoint 6",
+        "Selectivity arises upstream in STRIATUM"
+      ]
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "STRIATUM",
+      "signal": "direct_pathway_inhibition",
+      "strength": 0.9,
+      "execution_rule": "scaled_by_striatal_dominance",
+      "note": "Runtime multiplies strength by competition dominance"
+    },
+    {
+      "source_region": "STN",
+      "signal": "global_excitation",
+      "strength": 0.6
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "MD",
+      "signal": "thalamic_disinhibition",
+      "strength": 1.0
+    }
+  ],
+
+  "pathophysiology_modes": {
+    "akinesia": "persistent_high_output",
+    "impulsivity": "insufficient_output",
+    "sedation": "overstabilized_output"
+  },
+
+  "future_constraints": {
+    "internal_competition": false,
+    "dopamine_modulation": "intentionally_absent",
+    "learning": "not_supported",
+    "reason": "GPi is an execution bottleneck, not a selector"
+  },
+
+  "notes": [
+    "GPi is the final inhibitory gate of the basal ganglia.",
+    "It should be active by default and release inhibition only under strong striatal dominance.",
+    "All selectivity emerges upstream.",
+    "This file intentionally excludes learning and dopamine hooks."
+  ]
+}

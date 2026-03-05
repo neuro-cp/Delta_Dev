@@ -1,0 +1,213 @@
+[BASELINE] mean delta = 0.001021
+[BASELINE] max  delta = 0.003184
+
+[VALUE] magnitude = 0.40
+[INFO] GPi relief peak reached at 0.548681, decline confirmed after 623 steps
+[VALUE] peak delta = 0.007925
+[VALUE] mean delta = 0.005837
+[VALUE] GPi relief peak = 0.548681
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.42
+[INFO] GPi relief peak reached at 0.548680, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002732
+[VALUE] mean delta = 0.002670
+[VALUE] GPi relief peak = 0.548680
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.44
+[INFO] GPi relief peak reached at 0.548668, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002597
+[VALUE] mean delta = 0.002566
+[VALUE] GPi relief peak = 0.548668
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.46
+[INFO] GPi relief peak reached at 0.548657, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002663
+[VALUE] mean delta = 0.002660
+[VALUE] GPi relief peak = 0.548657
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.48
+[INFO] GPi relief peak reached at 0.548627, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002537
+[VALUE] mean delta = 0.002408
+[VALUE] GPi relief peak = 0.548627
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.50
+[INFO] GPi relief peak reached at 0.548603, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002117
+[VALUE] mean delta = 0.002077
+[VALUE] GPi relief peak = 0.548603
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.52
+[INFO] GPi relief peak reached at 0.548581, decline confirmed after 1 steps
+[VALUE] peak delta = 0.001992
+[VALUE] mean delta = 0.001876
+[VALUE] GPi relief peak = 0.548581
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.54
+[INFO] GPi relief peak reached at 0.548551, decline confirmed after 1 steps
+[VALUE] peak delta = 0.001888
+[VALUE] mean delta = 0.001848
+[VALUE] GPi relief peak = 0.548551
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.56
+[INFO] GPi relief peak reached at 0.548510, decline confirmed after 1 steps
+[VALUE] peak delta = 0.001919
+[VALUE] mean delta = 0.001840
+[VALUE] GPi relief peak = 0.548510
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.58
+[INFO] GPi relief peak reached at 0.548462, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002036
+[VALUE] mean delta = 0.001997
+[VALUE] GPi relief peak = 0.548462
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.60
+[INFO] GPi relief peak reached at 0.548410, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002130
+[VALUE] mean delta = 0.002036
+[VALUE] GPi relief peak = 0.548410
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.62
+[INFO] GPi relief peak reached at 0.548351, decline confirmed after 1 steps
+[VALUE] peak delta = 0.001837
+[VALUE] mean delta = 0.001788
+[VALUE] GPi relief peak = 0.548351
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.64
+[INFO] GPi relief peak reached at 0.548295, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002208
+[VALUE] mean delta = 0.002014
+[VALUE] GPi relief peak = 0.548295
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.66
+[INFO] GPi relief peak reached at 0.548237, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002147
+[VALUE] mean delta = 0.002009
+[VALUE] GPi relief peak = 0.548237
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.68
+[INFO] GPi relief peak reached at 0.548164, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002071
+[VALUE] mean delta = 0.001983
+[VALUE] GPi relief peak = 0.548164
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.70
+[INFO] GPi relief peak reached at 0.548089, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002374
+[VALUE] mean delta = 0.002321
+[VALUE] GPi relief peak = 0.548089
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.72
+[INFO] GPi relief peak reached at 0.548018, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002270
+[VALUE] mean delta = 0.002245
+[VALUE] GPi relief peak = 0.548018
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.74
+[INFO] GPi relief peak reached at 0.547939, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002560
+[VALUE] mean delta = 0.002482
+[VALUE] GPi relief peak = 0.547939
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.76
+[INFO] GPi relief peak reached at 0.547855, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002769
+[VALUE] mean delta = 0.002739
+[VALUE] GPi relief peak = 0.547855
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.78
+[INFO] GPi relief peak reached at 0.547760, decline confirmed after 1 steps
+[VALUE] peak delta = 0.003019
+[VALUE] mean delta = 0.002938
+[VALUE] GPi relief peak = 0.547760
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.80
+[INFO] GPi relief peak reached at 0.547668, decline confirmed after 1 steps
+[VALUE] peak delta = 0.002894
+[VALUE] mean delta = 0.002787
+[VALUE] GPi relief peak = 0.547668
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.82
+[INFO] GPi relief peak reached at 0.547573, decline confirmed after 1 steps
+[VALUE] peak delta = 0.003112
+[VALUE] mean delta = 0.003027
+[VALUE] GPi relief peak = 0.547573
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[VALUE] magnitude = 0.84
+[INFO] GPi relief peak reached at 0.547469, decline confirmed after 1 steps
+[VALUE] peak delta = 0.003285
+[VALUE] mean delta = 0.003245
+[VALUE] GPi relief peak = 0.547469
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neura

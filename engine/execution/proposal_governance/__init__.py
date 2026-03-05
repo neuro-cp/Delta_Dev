@@ -1,0 +1,1 @@
+"""Execution proposal to governance integration (design-only)."""

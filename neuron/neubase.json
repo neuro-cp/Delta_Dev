@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "type": "NeuronBaseDefinition",
+  "description": "Empty canonical neuron chassis with no biological specialization",
+
+  "membrane": {
+    "resting_potential_mV": -70,
+    "spike_threshold_mV": -55,
+    "reset_potential_mV": -65,
+    "membrane_capacitance": 1.0,
+    "leak_conductance": 0.1
+  },
+
+  "firing": {
+    "baseline_rate_hz": 0.0,
+    "max_rate_hz": 200,
+    "refractory_period_ms": 2.0,
+    "noise": 0.0
+  },
+
+  "compartments": {
+    "soma": {
+      "receptor_slots": [],
+      "channel_slots": [],
+      "signal_slots": []
+    },
+
+    "axon": {
+      "electrical": {
+        "resistance": 0.15,
+        "leak": 0.02,
+        "is_myelinated": false,
+        "conduction_speed": 1.0
+      },
+      "signal_transport": []
+    },
+
+    "axon_terminal": {
+      "release_slots": [],
+      "autoreceptor_slots": [],
+      "signal_slots": []
+    }
+  },
+
+  "signals": {
+    "global_signal_slots": []
+  },
+
+  "regulation": {
+    "enabled": true,
+    "rule_slots": [],
+    "update_interval_ms": 1000
+  },
+
+  "constraints": {
+    "allow_runtime_mutation": false,
+    "allow_extension": true
+  }
+}

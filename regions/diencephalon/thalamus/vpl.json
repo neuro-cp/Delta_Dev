@@ -1,0 +1,68 @@
+{
+  "version": "1.3.0",
+  "type": "RegionSubstructure",
+  "region_id": "VPL",
+  "parent_region": "THALAMUS",
+
+  "is_relay": true,
+  "function": "body_somatosensory_relay",
+
+  "spatial_properties": {
+    "neuron_density_per_mm3": 90000
+  },
+
+  "populations": {
+    "RELAY_CELLS": {
+      "count": 60000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 5.0,
+      "plasticity_profile": "low",
+      "receives_inhibition_from": ["TRN"]
+    },
+
+    "LOCAL_INTERNEURONS": {
+      "count": 15000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 9.0,
+      "plasticity_profile": "very_low",
+      "role": "local_gain_control"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "SOMATO_INPUT",
+      "signal": "body_afferents",
+      "strength": 1.0
+    },
+    {
+      "source_region": "S1",
+      "source_population": "L6_PYRAMIDAL",
+      "signal": "corticothalamic_feedback",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "S1",
+      "target_population": "L4_EXCITATORY",
+      "strength": 0.9
+    }
+  ],
+
+  "functional_modes": {
+    "wake": "tonic",
+    "sleep": "burst"
+  },
+
+  "drug_sensitivity": {
+    "anesthetics": "very_high",
+    "gabaergic_agents": "high",
+    "t_type_ca_blockers": "high"
+  },
+
+  "notes": "VPL relays somatosensory input from the body to primary somatosensory cortex (S1) layer 4. Relay activity is gated by TRN inhibition and modulated by corticothalamic feedback from S1 layer 6. Local inhibitory interneurons provide intra-nuclear gain control. Functional modes are declarative only and not yet enforced in dynamics."
+}

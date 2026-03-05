@@ -1,0 +1,37 @@
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+
+[PHASE 1] Baseline (no urgency drive)
+[BASE 0000] dominance={'D1': 0.0066649832279146665, 'D2': 0.006668350105418667} relief=0.4972
+[BASE 0100] dominance={'D1': 0.37119236669483247, 'D2': 0.3710472966685154} relief=0.4533
+
+[PHASE 2] Assigning hypotheses (fixed asymmetry source)
+  association_cortex:L2_3_PYRAMIDAL:0 → H1
+  association_cortex:L2_3_PYRAMIDAL:1 → H2
+
+[PHASE 3] Fixed asymmetric drive (urgency OFF)
+[NO-URG 0000] Δ=0.001549 relief=0.4258 decision=None
+[NO-URG 0100] Δ=0.002791 relief=0.4183 decision=None
+[NO-URG 0200] Δ=0.001766 relief=0.4298 decision=None
+
+[PHASE 4] Urgency enabled (tempo modulation only)
+[URG 0000] Δ=0.000465 relief=0.4551 decision=None
+[URG 0050] Δ=0.000056 relief=0.4707 decision=None
+[URG 0100] Δ=0.000537 relief=0.4868 decision=None
+[URG 0150] Δ=0.001005 relief=0.5026 decision=None
+[URG 0200] Δ=0.000922 relief=0.5170 decision=None
+[URG 0250] Δ=0.000724 relief=0.5294 decision=None
+
+=== TEST COMPLETE ===
+Expect:
+• Δ remains approximately constant
+• Relief rises faster under urgency
+• Latch timing may advance
+• Winner identity unchanged
+• No urgency-only asymmetry creation
+No asserts by design.
+
+C:\Users\Admin\Desktop\neural framework>

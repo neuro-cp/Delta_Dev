@@ -1,0 +1,57 @@
+{
+  "version": "1.1.0",
+  "type": "RegionSubstructure",
+  "region_id": "INTRALAMINAR",
+  "parent_region": "THALAMUS",
+
+  "function": "salience_and_global_broadcast",
+
+  "populations": {
+    "RELAY_NEURONS": {
+      "count": 40000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 3.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "LOCUS_COERULEUS",
+      "signal": "norepinephrine_tone",
+      "strength": 0.4
+    },
+    {
+      "source_region": "RAPHE",
+      "signal": "serotonin_tone",
+      "strength": 0.2
+    },
+    {
+      "source_region": "GPi",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "ASSOCIATION_CORTEX",
+      "strength": 0.5
+    },
+    {
+      "target_region": "PFC",
+      "strength": 0.6
+    }
+  ],
+
+  "functional_modes": {
+    "wake": "tonic_firing",
+    "sleep": "burst_firing"
+  },
+
+  "drug_sensitivity": {
+    "anesthetics": "very_high",
+    "psychostimulants": "moderate",
+    "dopaminergic_agents": "moderate"
+  }
+}

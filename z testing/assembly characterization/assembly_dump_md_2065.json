@@ -1,0 +1,307 @@
+{
+  "region": "md",
+  "step": 2065,
+  "time": 20.640000000000427,
+  "assemblies": [
+    {
+      "assembly_id": "md:RELAY_CELLS:0",
+      "population": "RELAY_CELLS",
+      "activity": 0.015977070690790112,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:1",
+      "population": "RELAY_CELLS",
+      "activity": 0.015691689162738852,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:2",
+      "population": "RELAY_CELLS",
+      "activity": 0.016027214602097717,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:3",
+      "population": "RELAY_CELLS",
+      "activity": 0.015441792632578983,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:4",
+      "population": "RELAY_CELLS",
+      "activity": 0.015830428771717638,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:5",
+      "population": "RELAY_CELLS",
+      "activity": 0.01584605627106471,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:6",
+      "population": "RELAY_CELLS",
+      "activity": 0.016254462580952325,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:7",
+      "population": "RELAY_CELLS",
+      "activity": 0.015332296396018472,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:8",
+      "population": "RELAY_CELLS",
+      "activity": 0.015485245513228846,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:9",
+      "population": "RELAY_CELLS",
+      "activity": 0.01580875262161329,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:10",
+      "population": "RELAY_CELLS",
+      "activity": 0.01570170201575945,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:11",
+      "population": "RELAY_CELLS",
+      "activity": 0.01555824748227306,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:12",
+      "population": "RELAY_CELLS",
+      "activity": 0.015871645549970545,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:13",
+      "population": "RELAY_CELLS",
+      "activity": 0.01614270563790591,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:14",
+      "population": "RELAY_CELLS",
+      "activity": 0.016237248143259504,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:15",
+      "population": "RELAY_CELLS",
+      "activity": 0.014436203606981547,
+      "output": 0.01102683476473218
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:16",
+      "population": "RELAY_CELLS",
+      "activity": 0.014916742724442725,
+      "output": 0.012218950037478058
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:17",
+      "population": "RELAY_CELLS",
+      "activity": 0.01445445181582961,
+      "output": 0.011072113009973196
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:18",
+      "population": "RELAY_CELLS",
+      "activity": 0.014287494260498638,
+      "output": 0.010657826198987624
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:19",
+      "population": "RELAY_CELLS",
+      "activity": 0.014533181098558523,
+      "output": 0.011267451978348051
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:20",
+      "population": "RELAY_CELLS",
+      "activity": 0.014680855920671367,
+      "output": 0.01163382201575043
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:21",
+      "population": "RELAY_CELLS",
+      "activity": 0.014502653252580806,
+      "output": 0.01119170933951018
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:22",
+      "population": "RELAY_CELLS",
+      "activity": 0.014600891955044501,
+      "output": 0.011435442821572902
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:23",
+      "population": "RELAY_CELLS",
+      "activity": 0.01439702839479127,
+      "output": 0.010929629313549488
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:24",
+      "population": "RELAY_CELLS",
+      "activity": 0.014427900987263648,
+      "output": 0.011006233727971179
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:25",
+      "population": "RELAY_CELLS",
+      "activity": 0.014843480826084672,
+      "output": 0.012037232294506626
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:26",
+      "population": "RELAY_CELLS",
+      "activity": 0.014968045671560003,
+      "output": 0.01234619481575115
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:27",
+      "population": "RELAY_CELLS",
+      "activity": 0.014853889856828322,
+      "output": 0.01206305134764871
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:28",
+      "population": "RELAY_CELLS",
+      "activity": 0.014433369956115803,
+      "output": 0.01101980372866566
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:29",
+      "population": "RELAY_CELLS",
+      "activity": 0.015134505513333384,
+      "output": 0.012759023180664453
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:30",
+      "population": "RELAY_CELLS",
+      "activity": 0.014457122167645187,
+      "output": 0.011078738747299711
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:31",
+      "population": "RELAY_CELLS",
+      "activity": 0.014400373475484248,
+      "output": 0.010937929580308623
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:32",
+      "population": "RELAY_CELLS",
+      "activity": 0.014585962954483889,
+      "output": 0.011398404702716108
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:33",
+      "population": "RELAY_CELLS",
+      "activity": 0.014831908727836565,
+      "output": 0.012008528062718649
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:34",
+      "population": "RELAY_CELLS",
+      "activity": 0.014657025023551441,
+      "output": 0.011574702278504123
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:35",
+      "population": "RELAY_CELLS",
+      "activity": 0.014215386396196072,
+      "output": 0.011526769596056056
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:36",
+      "population": "RELAY_CELLS",
+      "activity": 0.014267195646077148,
+      "output": 0.011668199035322431
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:37",
+      "population": "RELAY_CELLS",
+      "activity": 0.013945482841601806,
+      "output": 0.010789889725592555
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:38",
+      "population": "RELAY_CELLS",
+      "activity": 0.014063807837228472,
+      "output": 0.01111295536487617
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:39",
+      "population": "RELAY_CELLS",
+      "activity": 0.014187748340994077,
+      "output": 0.011451320556045221
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:40",
+      "population": "RELAY_CELLS",
+      "activity": 0.014083254443850893,
+      "output": 0.011166048002529207
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:41",
+      "population": "RELAY_CELLS",
+      "activity": 0.014271199208879619,
+      "output": 0.011679127760874392
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:42",
+      "population": "RELAY_CELLS",
+      "activity": 0.01389665408811242,
+      "output": 0.010656562517081861
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:43",
+      "population": "RELAY_CELLS",
+      "activity": 0.014056989794990152,
+      "output": 0.011094340722495613
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:44",
+      "population": "RELAY_CELLS",
+      "activity": 0.013900877412736962,
+      "output": 0.01066809453528167
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:45",
+      "population": "RELAY_CELLS",
+      "activity": 0.014268692457524847,
+      "output": 0.011672284960442472
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:46",
+      "population": "RELAY_CELLS",
+      "activity": 0.014166268738702869,
+      "output": 0.011392682311719892
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:47",
+      "population": "RELAY_CELLS",
+      "activity": 0.014006623359433684,
+      "output": 0.010956826978959123
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:48",
+      "population": "RELAY_CELLS",
+      "activity": 0.01410507642186865,
+      "output": 0.011225624841629027
+    },
+    {
+      "assembly_id": "md:RELAY_CELLS:49",
+      "population": "RELAY_CELLS",
+      "activity": 0.014119027092753629,
+      "output": 0.011263711446242693
+    }
+  ]
+}

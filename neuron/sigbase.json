@@ -1,0 +1,166 @@
+{
+  "version": "1.0.0",
+  "type": "SignalRegistry",
+  "description": "Canonical registry of slow neural signals and state variables",
+
+  "global_constraints": {
+    "default_update_interval_ms": 100,
+    "min_value": 0.0,
+    "max_value": 1.0
+  },
+
+  "signals": {
+
+    "calcium_proxy": {
+      "class": "activity_dependent",
+      "description": "Proxy for intracellular calcium accumulation",
+
+      "scope": "compartmental",
+      "default": 0.0,
+
+      "accumulation": {
+        "sources": [
+          { "type": "channel", "id": "CaV_L", "weight": 0.5 },
+          { "type": "receptor", "id": "NMDA", "weight": 0.5 }
+        ]
+      },
+
+      "decay": {
+        "rate": 0.05
+      },
+
+      "effects": [
+        { "target": "regulation", "role": "plasticity_gate" }
+      ]
+    },
+
+    "growth_factor": {
+      "class": "homeostatic",
+      "description": "Generic growth / trophic signal",
+
+      "scope": "cellular",
+      "default": 0.0,
+
+      "accumulation": {
+        "sources": [
+          { "type": "event", "id": "spike", "weight": 0.03 }
+        ]
+      },
+
+      "decay": {
+        "rate": 0.01
+      },
+
+      "transport": {
+        "retrograde": {
+          "enabled": true,
+          "efficiency": 0.2
+        }
+      },
+
+      "effects": [
+        { "target": "receptor_expression", "role": "up_down_regulation" }
+      ]
+    },
+
+    "dopamine_tone": {
+      "class": "neuromodulatory",
+      "description": "Local dopamine exposure signal",
+
+      "scope": "regional",
+      "default": 0.0,
+
+      "accumulation": {
+        "sources": [
+          { "type": "receptor", "id": "D1", "weight": 0.5 },
+          { "type": "receptor", "id": "D2", "weight": 0.5 }
+        ]
+      },
+
+      "decay": {
+        "rate": 0.02
+      },
+
+      "effects": [
+        { "target": "plasticity", "role": "bias" },
+        { "target": "firing_threshold", "role": "modulation" }
+      ]
+    },
+
+    "serotonin_tone": {
+      "class": "neuromodulatory",
+      "description": "Local serotonin exposure signal",
+
+      "scope": "regional",
+      "default": 0.0,
+
+      "accumulation": {
+        "sources": [
+          { "type": "receptor", "id": "5HT1A", "weight": 0.4 },
+          { "type": "receptor", "id": "5HT2A", "weight": 0.6 }
+        ]
+      },
+
+      "decay": {
+        "rate": 0.015
+      },
+
+      "effects": [
+        { "target": "impulse_control", "role": "suppression" }
+      ]
+    },
+
+    "energy_state": {
+      "class": "metabolic",
+      "description": "Energy availability proxy",
+
+      "scope": "cellular",
+      "default": 1.0,
+
+      "accumulation": {
+        "sources": [
+          { "type": "event", "id": "rest", "weight": 0.02 }
+        ]
+      },
+
+      "consumption": {
+        "sources": [
+          { "type": "event", "id": "spike", "cost": 0.01 }
+        ]
+      },
+
+      "effects": [
+        { "target": "firing_rate", "role": "limit" },
+        { "target": "plasticity", "role": "disable_if_low" }
+      ]
+    },
+
+    "stress_index": {
+      "class": "global_state",
+      "description": "Chronic stress / damage proxy",
+
+      "scope": "global",
+      "default": 0.0,
+
+      "accumulation": {
+        "sources": [
+          { "type": "signal", "id": "energy_state", "condition": "low", "weight": 0.05 }
+        ]
+      },
+
+      "decay": {
+        "rate": 0.005
+      },
+
+      "effects": [
+        { "target": "plasticity", "role": "impairment" },
+        { "target": "growth_factor", "role": "suppression" }
+      ]
+    }
+  },
+
+  "extensibility": {
+    "allow_custom_signals": true,
+    "naming_convention": "snake_case"
+  }
+}

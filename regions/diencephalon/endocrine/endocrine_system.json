@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "type": "RegionBase",
+  "region_id": "ENDOCRINE_SYSTEM",
+  "category": "system_interface",
+
+  "function": "hormonal_signal_distribution",
+
+  "populations": {},
+
+  "allowed_inputs": [
+    "ANTERIOR_PITUITARY",
+    "POSTERIOR_PITUITARY"
+  ],
+
+  "allowed_outputs": [],
+
+  "notes": "Abstract sink for endocrine signaling. Represents systemic hormone distribution without modeling circulation, receptors, or peripheral organs. Intended as an interface layer for future physiology or body-state simulation."
+}

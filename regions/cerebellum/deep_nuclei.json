@@ -1,0 +1,36 @@
+{
+  "version": "1.1.0",
+  "type": "RegionSubstructure",
+  "region_id": "DEEP_NUCLEI",
+  "parent_region": "CEREBELLUM",
+
+  "function": "corrected_output_dispatch",
+
+  "populations": {
+    "OUTPUT_NEURONS": {
+      "count": 20000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 20.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "CEREBELLAR_CORTEX",
+      "strength": 1.0
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "THALAMUS",
+      "strength": 0.8
+    },
+    {
+      "target_region": "BRAINSTEM",
+      "strength": 0.6
+    }
+  ]
+}

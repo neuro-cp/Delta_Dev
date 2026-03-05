@@ -1,0 +1,32 @@
+config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5562
+[INFO] Warmup complete
+
+[PHASE A] Baseline
+
+[PHASE B] Injecting lawful decision coincidence
+[COMMIT] step=405 winner=D2 Δ=0.0423 relief=0.9006
+
+[PHASE C] FX scope & targeting
+
+=== DECISION FX SCOPE & TARGETING SUMMARY ===
+
+Baseline → Post-commit:
+PFC mean:   0.016101 → 0.016355
+ASSOC mean: 0.016087 → 0.016360
+V1 mean:    0.016095 → 0.016356
+Δ mean:     0.000025 → 0.000032
+Gate mean:  0.421523 → 0.472939
+
+Expected:
+- Gate ↑ (FX advisory)
+- Δ unchanged (no re-selection)
+- Cortex stable (no leakage)
+- No second decision
+============================================
+
+C:\Users\Admin\Desktop\neural framework>

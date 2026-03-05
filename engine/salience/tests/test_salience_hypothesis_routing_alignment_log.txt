@@ -1,0 +1,68 @@
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5557
+[INFO] Warmup complete
+
+[BASELINE (no hypothesis)]
+[BASELINE (no hypothesis) 000] ΔACT=0.000002 ΔOUT=0.000006
+[BASELINE (no hypothesis) 025] ΔACT=0.000012 ΔOUT=0.000030
+[BASELINE (no hypothesis) 050] ΔACT=0.000009 ΔOUT=0.000022
+[BASELINE (no hypothesis) 075] ΔACT=0.000010 ΔOUT=0.000026
+[BASELINE (no hypothesis) 100] ΔACT=0.000019 ΔOUT=0.000047
+[BASELINE (no hypothesis) 125] ΔACT=0.000011 ΔOUT=0.000027
+[BASELINE (no hypothesis) 150] ΔACT=0.000004 ΔOUT=0.000011
+[BASELINE (no hypothesis) 175] ΔACT=0.000007 ΔOUT=0.000017
+[BASELINE (no hypothesis) 200] ΔACT=0.000009 ΔOUT=0.000022
+[BASELINE (no hypothesis) 225] ΔACT=0.000010 ΔOUT=0.000024
+[BASELINE (no hypothesis) 250] ΔACT=0.000019 ΔOUT=0.000046
+[BASELINE (no hypothesis) 275] ΔACT=0.000018 ΔOUT=0.000044
+
+[ALIGNED (hypothesis = D1)]
+[ALIGNED (hypothesis = D1) 000] ΔACT=0.000027 ΔOUT=0.000068
+[ALIGNED (hypothesis = D1) 025] ΔACT=0.000021 ΔOUT=0.000053
+[ALIGNED (hypothesis = D1) 050] ΔACT=0.000037 ΔOUT=0.000091
+[ALIGNED (hypothesis = D1) 075] ΔACT=0.000019 ΔOUT=0.000048
+[ALIGNED (hypothesis = D1) 100] ΔACT=0.000024 ΔOUT=0.000059
+[ALIGNED (hypothesis = D1) 125] ΔACT=0.000028 ΔOUT=0.000069
+[ALIGNED (hypothesis = D1) 150] ΔACT=0.000024 ΔOUT=0.000060
+[ALIGNED (hypothesis = D1) 175] ΔACT=0.000031 ΔOUT=0.000078
+[ALIGNED (hypothesis = D1) 200] ΔACT=0.000035 ΔOUT=0.000086
+[ALIGNED (hypothesis = D1) 225] ΔACT=0.000030 ΔOUT=0.000075
+[ALIGNED (hypothesis = D1) 250] ΔACT=0.000021 ΔOUT=0.000053
+[ALIGNED (hypothesis = D1) 275] ΔACT=0.000016 ΔOUT=0.000041
+
+[MISALIGNED (hypothesis = D2)]
+[MISALIGNED (hypothesis = D2) 000] ΔACT=0.000010 ΔOUT=0.000024
+[MISALIGNED (hypothesis = D2) 025] ΔACT=0.000015 ΔOUT=0.000038
+[MISALIGNED (hypothesis = D2) 050] ΔACT=0.000014 ΔOUT=0.000035
+[MISALIGNED (hypothesis = D2) 075] ΔACT=0.000006 ΔOUT=0.000014
+[MISALIGNED (hypothesis = D2) 100] ΔACT=0.000002 ΔOUT=0.000005
+[MISALIGNED (hypothesis = D2) 125] ΔACT=0.000006 ΔOUT=0.000016
+[MISALIGNED (hypothesis = D2) 150] ΔACT=0.000008 ΔOUT=0.000019
+[MISALIGNED (hypothesis = D2) 175] ΔACT=0.000008 ΔOUT=0.000020
+[MISALIGNED (hypothesis = D2) 200] ΔACT=0.000014 ΔOUT=0.000035
+[MISALIGNED (hypothesis = D2) 225] ΔACT=0.000005 ΔOUT=0.000011
+[MISALIGNED (hypothesis = D2) 250] ΔACT=0.000008 ΔOUT=0.000019
+[MISALIGNED (hypothesis = D2) 275] ΔACT=0.000004 ΔOUT=0.000010
+
+=== BASELINE SUMMARY ===
+Mean ΔACT: 0.000012
+Max  ΔACT: 0.000030
+Mean ΔOUT: 0.000030
+Max  ΔOUT: 0.000075
+
+=== ALIGNED SUMMARY ===
+Mean ΔACT: 0.000026
+Max  ΔACT: 0.000039
+Mean ΔOUT: 0.000065
+Max  ΔOUT: 0.000097
+
+=== MISALIGNED SUMMARY ===
+Mean ΔACT: 0.000008
+Max  ΔACT: 0.000023
+Mean ΔOUT: 0.000020
+Max  ΔOUT: 0.000058
+
+No decisions expected or checked.
+===================================
+
+C:\Users\Admin\Desktop\neural framework>

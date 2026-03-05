@@ -1,0 +1,42 @@
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5560
+[INFO] Warmup complete
+
+[PHASE A] Baseline (no decision)
+[A 000] relief=0.4183 Δ=0.000045
+[A 050] relief=0.4219 Δ=0.000058
+[A 100] relief=0.4298 Δ=0.000049
+[A 150] relief=0.4412 Δ=0.000025
+
+[PHASE B] Injecting lawful decision coincidence
+[COMMIT] step=505 winner=D2 Δ=0.0422 relief=0.9263
+
+[PHASE C] Post-commit FX observation
+[C 000] relief=0.4566 Δ=0.000002
+[C 050] relief=0.4723 Δ=0.000001
+[C 100] relief=0.4886 Δ=0.000001
+[C 150] relief=0.5042 Δ=0.000002
+
+=== DECISION FX CONSEQUENCE SUMMARY ===
+
+Baseline:
+Gate mean: 0.4320
+Δ mean:    0.000040
+
+Post-commit:
+Gate mean: 0.4881
+Δ mean:    0.000005
+
+Assertions (conceptual, manual review):
+- FX increased gate relief ✔
+- Δ did NOT increase materially ✔
+- No second decision fired ✔
+- No runaway accumulation ✔
+
+=======================================
+
+C:\Users\Admin\Desktop\neural framework>

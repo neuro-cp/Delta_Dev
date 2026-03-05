@@ -1,0 +1,61 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "ANTERIOR_PITUITARY",
+  "parent_region": "DIENCEPHALON",
+
+  "function": "endocrine_hormone_regulation",
+
+  "populations": {
+    "CORTICOTROPES": {
+      "count": 3,
+      "neuron_type": "endocrine",
+      "baseline_activity": 0.6,
+      "plasticity_profile": "very_low"
+    },
+
+    "THYROTROPES": {
+      "count": 2,
+      "neuron_type": "endocrine",
+      "baseline_activity": 0.5,
+      "plasticity_profile": "very_low"
+    },
+
+    "GONADOTROPES": {
+      "count": 3,
+      "neuron_type": "endocrine",
+      "baseline_activity": 0.4,
+      "plasticity_profile": "very_low"
+    },
+
+    "SOMATOTROPES": {
+      "count": 3,
+      "neuron_type": "endocrine",
+      "baseline_activity": 0.7,
+      "plasticity_profile": "very_low"
+    },
+
+    "LACTOTROPES": {
+      "count": 2,
+      "neuron_type": "endocrine",
+      "baseline_activity": 0.5,
+      "plasticity_profile": "very_low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "HYPOTHALAMUS",
+      "strength": 1.0
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "ENDOCRINE_SYSTEM",
+      "strength": 1.0
+    }
+  ],
+
+  "notes": "Anterior pituitary integrates hypothalamic releasing hormones and regulates systemic endocrine axes. Modeled as slow, stateful endocrine populations rather than spiking neurons."
+}

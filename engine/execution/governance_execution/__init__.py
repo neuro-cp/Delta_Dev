@@ -1,0 +1,1 @@
+"""Governance-mediated execution enablement (minimal live wiring)."""

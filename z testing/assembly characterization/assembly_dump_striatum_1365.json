@@ -1,0 +1,907 @@
+{
+  "region": "striatum",
+  "step": 1365,
+  "time": 13.639999999999754,
+  "assemblies": [
+    {
+      "assembly_id": "striatum:D1_MSN:0",
+      "population": "D1_MSN",
+      "activity": 0.004311279388963483,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:1",
+      "population": "D1_MSN",
+      "activity": 0.004320962723164315,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:2",
+      "population": "D1_MSN",
+      "activity": 0.00420140781036588,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:3",
+      "population": "D1_MSN",
+      "activity": 0.004076965529421145,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:4",
+      "population": "D1_MSN",
+      "activity": 0.004543167721492909,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:5",
+      "population": "D1_MSN",
+      "activity": 0.0044595497108701155,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:6",
+      "population": "D1_MSN",
+      "activity": 0.0044624694244691,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:7",
+      "population": "D1_MSN",
+      "activity": 0.0040126492374221775,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:8",
+      "population": "D1_MSN",
+      "activity": 0.004168017240785113,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:9",
+      "population": "D1_MSN",
+      "activity": 0.004334251002697122,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:10",
+      "population": "D1_MSN",
+      "activity": 0.004113941911999184,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:11",
+      "population": "D1_MSN",
+      "activity": 0.004342970208236241,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:12",
+      "population": "D1_MSN",
+      "activity": 0.004137192014133369,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:13",
+      "population": "D1_MSN",
+      "activity": 0.004214075838201062,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:14",
+      "population": "D1_MSN",
+      "activity": 0.004393609748004211,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:15",
+      "population": "D1_MSN",
+      "activity": 0.0024900902504279457,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:16",
+      "population": "D1_MSN",
+      "activity": 0.0026312662845369835,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:17",
+      "population": "D1_MSN",
+      "activity": 0.0023319550019369373,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:18",
+      "population": "D1_MSN",
+      "activity": 0.0024408826021024483,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:19",
+      "population": "D1_MSN",
+      "activity": 0.0023356929847241086,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:20",
+      "population": "D1_MSN",
+      "activity": 0.002407517155237455,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:21",
+      "population": "D1_MSN",
+      "activity": 0.0024144543521637577,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:22",
+      "population": "D1_MSN",
+      "activity": 0.002302841504939007,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:23",
+      "population": "D1_MSN",
+      "activity": 0.002510913365421685,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:24",
+      "population": "D1_MSN",
+      "activity": 0.0025337098966857134,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:25",
+      "population": "D1_MSN",
+      "activity": 0.002138745493087533,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:26",
+      "population": "D1_MSN",
+      "activity": 0.0023415112546017157,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:27",
+      "population": "D1_MSN",
+      "activity": 0.002477616314150524,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:28",
+      "population": "D1_MSN",
+      "activity": 0.002439738912948245,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:29",
+      "population": "D1_MSN",
+      "activity": 0.0026923550730312486,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:30",
+      "population": "D1_MSN",
+      "activity": 0.0022148883110691036,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:31",
+      "population": "D1_MSN",
+      "activity": 0.002349602626893033,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:32",
+      "population": "D1_MSN",
+      "activity": 0.0023642617837618465,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:33",
+      "population": "D1_MSN",
+      "activity": 0.002357372029731006,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:34",
+      "population": "D1_MSN",
+      "activity": 0.0023565868945804994,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:35",
+      "population": "D1_MSN",
+      "activity": 0.001633607116518775,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:36",
+      "population": "D1_MSN",
+      "activity": 0.0014854714579142858,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:37",
+      "population": "D1_MSN",
+      "activity": 0.0016228404801923574,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:38",
+      "population": "D1_MSN",
+      "activity": 0.0017228440106024517,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:39",
+      "population": "D1_MSN",
+      "activity": 0.001723094693726638,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:40",
+      "population": "D1_MSN",
+      "activity": 0.0016164417662372622,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:41",
+      "population": "D1_MSN",
+      "activity": 0.0015739814224945618,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:42",
+      "population": "D1_MSN",
+      "activity": 0.0016346256456927556,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:43",
+      "population": "D1_MSN",
+      "activity": 0.00159772559561648,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:44",
+      "population": "D1_MSN",
+      "activity": 0.001775965672101439,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:45",
+      "population": "D1_MSN",
+      "activity": 0.0017064682129970415,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:46",
+      "population": "D1_MSN",
+      "activity": 0.001539724273422843,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:47",
+      "population": "D1_MSN",
+      "activity": 0.001540226077704415,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:48",
+      "population": "D1_MSN",
+      "activity": 0.0015928255520721104,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D1_MSN:49",
+      "population": "D1_MSN",
+      "activity": 0.0014982623995732885,
+      "output": 0.0
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:0",
+      "population": "D2_MSN",
+      "activity": 0.014384163765199779,
+      "output": 0.010897707648407461
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:1",
+      "population": "D2_MSN",
+      "activity": 0.014118031639698722,
+      "output": 0.010237267075058913
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:2",
+      "population": "D2_MSN",
+      "activity": 0.014504900338102452,
+      "output": 0.011197284646116414
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:3",
+      "population": "D2_MSN",
+      "activity": 0.014122012302699377,
+      "output": 0.010247146624469117
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:4",
+      "population": "D2_MSN",
+      "activity": 0.014397205923295592,
+      "output": 0.010930069821846532
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:5",
+      "population": "D2_MSN",
+      "activity": 0.01447024044440395,
+      "output": 0.011111287907939919
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:6",
+      "population": "D2_MSN",
+      "activity": 0.01427208936492395,
+      "output": 0.010619597872368278
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:7",
+      "population": "D2_MSN",
+      "activity": 0.014253319934919812,
+      "output": 0.010573019584970427
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:8",
+      "population": "D2_MSN",
+      "activity": 0.014114914550400764,
+      "output": 0.010229530794778313
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:9",
+      "population": "D2_MSN",
+      "activity": 0.014196435791579549,
+      "output": 0.010431851435313381
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:10",
+      "population": "D2_MSN",
+      "activity": 0.014206869244168457,
+      "output": 0.010457744387579829
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:11",
+      "population": "D2_MSN",
+      "activity": 0.014456254644436228,
+      "output": 0.01107658623063413
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:12",
+      "population": "D2_MSN",
+      "activity": 0.014265827732501313,
+      "output": 0.010604059059331008
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:13",
+      "population": "D2_MSN",
+      "activity": 0.014469069551237551,
+      "output": 0.011108382693376986
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:14",
+      "population": "D2_MSN",
+      "activity": 0.014517121654830283,
+      "output": 0.011227607121684455
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:15",
+      "population": "D2_MSN",
+      "activity": 0.014236982887848675,
+      "output": 0.010532476942025578
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:16",
+      "population": "D2_MSN",
+      "activity": 0.014390614982329016,
+      "output": 0.01091371542513859
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:17",
+      "population": "D2_MSN",
+      "activity": 0.013996836484025261,
+      "output": 0.009936459609907156
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:18",
+      "population": "D2_MSN",
+      "activity": 0.013886405356020445,
+      "output": 0.009662343303729266
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:19",
+      "population": "D2_MSN",
+      "activity": 0.014171016922560273,
+      "output": 0.010368767912180835
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:20",
+      "population": "D2_MSN",
+      "activity": 0.014145143664634959,
+      "output": 0.010304555395002397
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:21",
+      "population": "D2_MSN",
+      "activity": 0.014127243656819445,
+      "output": 0.010260130198343537
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:22",
+      "population": "D2_MSN",
+      "activity": 0.01465259771803615,
+      "output": 0.011563718886701853
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:23",
+      "population": "D2_MSN",
+      "activity": 0.01428069051871923,
+      "output": 0.010640942295299386
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:24",
+      "population": "D2_MSN",
+      "activity": 0.01448237859959327,
+      "output": 0.011141404881532887
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:25",
+      "population": "D2_MSN",
+      "activity": 0.014358511019009371,
+      "output": 0.010834053198630204
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:26",
+      "population": "D2_MSN",
+      "activity": 0.014075652679431309,
+      "output": 0.010132085412504375
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:27",
+      "population": "D2_MSN",
+      "activity": 0.014213258365585686,
+      "output": 0.01047360031902335
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:28",
+      "population": "D2_MSN",
+      "activity": 0.014457206841888375,
+      "output": 0.011078948842716993
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:29",
+      "population": "D2_MSN",
+      "activity": 0.014466347644155822,
+      "output": 0.01110162909999873
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:30",
+      "population": "D2_MSN",
+      "activity": 0.014286290751064506,
+      "output": 0.010654839622957452
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:31",
+      "population": "D2_MSN",
+      "activity": 0.01428396335221748,
+      "output": 0.01064906404432587
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:32",
+      "population": "D2_MSN",
+      "activity": 0.014241773915574539,
+      "output": 0.010544366594885427
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:33",
+      "population": "D2_MSN",
+      "activity": 0.014085302633952088,
+      "output": 0.010156036247238721
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:34",
+      "population": "D2_MSN",
+      "activity": 0.014304869685471039,
+      "output": 0.01070094397007621
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:35",
+      "population": "D2_MSN",
+      "activity": 0.013968895773784306,
+      "output": 0.009867106402092894
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:36",
+      "population": "D2_MSN",
+      "activity": 0.014292660402448266,
+      "output": 0.010670646236944937
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:37",
+      "population": "D2_MSN",
+      "activity": 0.014087741147428773,
+      "output": 0.010162088519539718
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:38",
+      "population": "D2_MSN",
+      "activity": 0.014022792779235065,
+      "output": 0.010000885808367846
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:39",
+      "population": "D2_MSN",
+      "activity": 0.013953651357960803,
+      "output": 0.009829266730477413
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:40",
+      "population": "D2_MSN",
+      "activity": 0.014256685836588184,
+      "output": 0.010581372470259096
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:41",
+      "population": "D2_MSN",
+      "activity": 0.014606983628064887,
+      "output": 0.011450555837501963
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:42",
+      "population": "D2_MSN",
+      "activity": 0.014081564954314929,
+      "output": 0.01014675948468357
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:43",
+      "population": "D2_MSN",
+      "activity": 0.014340970331339123,
+      "output": 0.010790527176309819
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:44",
+      "population": "D2_MSN",
+      "activity": 0.014371594201283583,
+      "output": 0.010866517829359133
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:45",
+      "population": "D2_MSN",
+      "activity": 0.014373041746295914,
+      "output": 0.01087010974925464
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:46",
+      "population": "D2_MSN",
+      "activity": 0.014235346638373263,
+      "output": 0.010528416333508915
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:47",
+      "population": "D2_MSN",
+      "activity": 0.013943651412002813,
+      "output": 0.009804444626741605
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:48",
+      "population": "D2_MSN",
+      "activity": 0.014343453935488987,
+      "output": 0.010796690107835473
+    },
+    {
+      "assembly_id": "striatum:D2_MSN:49",
+      "population": "D2_MSN",
+      "activity": 0.014089431239310486,
+      "output": 0.010166283238815159
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:0",
+      "population": "INTERNEURONS",
+      "activity": 0.014130462436089623,
+      "output": 0.010268118783520123
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:1",
+      "population": "INTERNEURONS",
+      "activity": 0.014277490774774972,
+      "output": 0.01063300190231007
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:2",
+      "population": "INTERNEURONS",
+      "activity": 0.014923093555033457,
+      "output": 0.012234702046281794
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:3",
+      "population": "INTERNEURONS",
+      "activity": 0.014452238637666781,
+      "output": 0.011066621611589573
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:4",
+      "population": "INTERNEURONS",
+      "activity": 0.014125863699034734,
+      "output": 0.010256705319051597
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:5",
+      "population": "INTERNEURONS",
+      "activity": 0.014089065323679591,
+      "output": 0.010165375055917966
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:6",
+      "population": "INTERNEURONS",
+      "activity": 0.014350782419612561,
+      "output": 0.01081487528021476
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:7",
+      "population": "INTERNEURONS",
+      "activity": 0.014386656141746283,
+      "output": 0.010903892135660731
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:8",
+      "population": "INTERNEURONS",
+      "activity": 0.01420820688563623,
+      "output": 0.010461064029301692
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:9",
+      "population": "INTERNEURONS",
+      "activity": 0.01415905467491192,
+      "output": 0.010339080047407984
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:10",
+      "population": "INTERNEURONS",
+      "activity": 0.014258279598173338,
+      "output": 0.010585327571372989
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:11",
+      "population": "INTERNEURONS",
+      "activity": 0.0145327983629166,
+      "output": 0.011266502384328794
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:12",
+      "population": "INTERNEURONS",
+      "activity": 0.014148795139407018,
+      "output": 0.010313617742682597
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:13",
+      "population": "INTERNEURONS",
+      "activity": 0.014347853824546406,
+      "output": 0.010807608168488237
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:14",
+      "population": "INTERNEURONS",
+      "activity": 0.014399174429114207,
+      "output": 0.01093495434678004
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:15",
+      "population": "INTERNEURONS",
+      "activity": 0.014508377287265655,
+      "output": 0.011205911382092513
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:16",
+      "population": "INTERNEURONS",
+      "activity": 0.014335468150067135,
+      "output": 0.010776873762933504
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:17",
+      "population": "INTERNEURONS",
+      "activity": 0.014078500481256905,
+      "output": 0.0101391535717664
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:18",
+      "population": "INTERNEURONS",
+      "activity": 0.014145130839526508,
+      "output": 0.010304523565188838
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:19",
+      "population": "INTERNEURONS",
+      "activity": 0.014418437492149178,
+      "output": 0.010982752080626433
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:20",
+      "population": "INTERNEURONS",
+      "activity": 0.01412652936644966,
+      "output": 0.010258357421179417
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:21",
+      "population": "INTERNEURONS",
+      "activity": 0.014113516419043091,
+      "output": 0.010226060776936755
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:22",
+      "population": "INTERNEURONS",
+      "activity": 0.014370443975498517,
+      "output": 0.010863663670686988
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:23",
+      "population": "INTERNEURONS",
+      "activity": 0.014521980794589152,
+      "output": 0.011239663117699725
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:24",
+      "population": "INTERNEURONS",
+      "activity": 0.014058526495511545,
+      "output": 0.01008957839669149
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:25",
+      "population": "INTERNEURONS",
+      "activity": 0.014213070937601756,
+      "output": 0.010473135178710747
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:26",
+      "population": "INTERNEURONS",
+      "activity": 0.014317936628990306,
+      "output": 0.010733369689662917
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:27",
+      "population": "INTERNEURONS",
+      "activity": 0.014188706385170965,
+      "output": 0.010412669041441424
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:28",
+      "population": "INTERNEURONS",
+      "activity": 0.014302002540622341,
+      "output": 0.010693829083268698
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:29",
+      "population": "INTERNEURONS",
+      "activity": 0.01434332236776495,
+      "output": 0.01079636362983544
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:30",
+      "population": "INTERNEURONS",
+      "activity": 0.014122062753896424,
+      "output": 0.010247271838358048
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:31",
+      "population": "INTERNEURONS",
+      "activity": 0.014133287421051695,
+      "output": 0.010275130006361804
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:32",
+      "population": "INTERNEURONS",
+      "activity": 0.014104655720520186,
+      "output": 0.010204069347263874
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:33",
+      "population": "INTERNEURONS",
+      "activity": 0.014243537036289604,
+      "output": 0.010548742031598671
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:34",
+      "population": "INTERNEURONS",
+      "activity": 0.014061263956396876,
+      "output": 0.010096372785894332
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:35",
+      "population": "INTERNEURONS",
+      "activity": 0.014375787264865264,
+      "output": 0.010876922432966056
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:36",
+      "population": "INTERNEURONS",
+      "activity": 0.014117025297456898,
+      "output": 0.010234769443980517
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:37",
+      "population": "INTERNEURONS",
+      "activity": 0.014345049804820898,
+      "output": 0.010800650166228646
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:38",
+      "population": "INTERNEURONS",
+      "activity": 0.014196744433556415,
+      "output": 0.010432617402675494
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:39",
+      "population": "INTERNEURONS",
+      "activity": 0.014387328874502683,
+      "output": 0.010905561426733703
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:40",
+      "population": "INTERNEURONS",
+      "activity": 0.013839998940734784,
+      "output": 0.00954714436467928
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:41",
+      "population": "INTERNEURONS",
+      "activity": 0.014246392672513743,
+      "output": 0.010555828689088935
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:42",
+      "population": "INTERNEURONS",
+      "activity": 0.014103048359225486,
+      "output": 0.01020008000940746
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:43",
+      "population": "INTERNEURONS",
+      "activity": 0.01427815731636208,
+      "output": 0.010634655974501472
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:44",
+      "population": "INTERNEURONS",
+      "activity": 0.014030436292989515,
+      "output": 0.010019857543303328
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:45",
+      "population": "INTERNEURONS",
+      "activity": 0.014151507900305931,
+      "output": 0.010320350342999675
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:46",
+      "population": "INTERNEURONS",
+      "activity": 0.01437141603481818,
+      "output": 0.010866075729058195
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:47",
+      "population": "INTERNEURONS",
+      "activity": 0.014451606823375951,
+      "output": 0.011065053934861452
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:48",
+      "population": "INTERNEURONS",
+      "activity": 0.014187482143489279,
+      "output": 0.010409630778407607
+    },
+    {
+      "assembly_id": "striatum:INTERNEURONS:49",
+      "population": "INTERNEURONS",
+      "activity": 0.014300677798325888,
+      "output": 0.010690541698884592
+    }
+  ]
+}

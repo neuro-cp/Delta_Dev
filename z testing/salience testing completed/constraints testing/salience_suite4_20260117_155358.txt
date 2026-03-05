@@ -1,0 +1,310 @@
+[2026-01-17 15:53:58] === SALIENCE + BG SUITE 4 (CONTROL SURFACE) ===
+
+[2026-01-17 15:53:58] Base Run ID: 20260117_155358
+[2026-01-17 15:53:58] DT: 0.01
+[2026-01-17 15:53:58] CSV schema locked for modpanda. Run segments use suffixes in run_id.
+
+[2026-01-17 15:53:58] [DEBUG] Neuron bases loaded: 5
+[2026-01-17 15:53:58] [DEBUG] Loading regions from: C:\Users\Admin\Desktop\neural framework\regions
+[2026-01-17 15:53:58] [DEBUG] BrainMap loaded from brain_map.json
+[2026-01-17 15:53:58] [DEBUG] RegionAliasRegistry loaded from region_aliases.json
+[2026-01-17 15:53:58] [DEBUG] Loaded region: amyg_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: bla | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: cea | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: mea | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: bg_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: gpe | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: gpi | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: snc | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: stn | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: striatum | populations=3
+[2026-01-17 15:53:58] [DEBUG] Loaded region: autonomic_system | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: brainstem_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: locus_coeruleus | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: medulla | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: pons | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: raphe | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: vta | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: cerebellar_cortex | populations=3
+[2026-01-17 15:53:58] [DEBUG] Loaded region: cerebellum_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: deep_nuclei | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: a1 | populations=4
+[2026-01-17 15:53:58] [DEBUG] Loaded region: cortex_base | populations=5
+[2026-01-17 15:53:58] [DEBUG] Loaded region: insula | populations=3
+[2026-01-17 15:53:58] [DEBUG] Loaded region: m1 | populations=3
+[2026-01-17 15:53:58] [DEBUG] Loaded region: s1 | populations=5
+[2026-01-17 15:53:58] [DEBUG] Loaded region: v1 | populations=5
+[2026-01-17 15:53:58] [DEBUG] Loaded region: ca1 | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: ca3 | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: dentate_gyrus | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: hip_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: subiculum | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: association_cortex | populations=4
+[2026-01-17 15:53:58] [DEBUG] Loaded region: corpus_callosum | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: Intralaminar | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: pfc | populations=5
+[2026-01-17 15:53:58] [DEBUG] Loaded region: inferior_colliculus | populations=3
+[2026-01-17 15:53:58] [DEBUG] Loaded region: superior_colliculus | populations=3
+[2026-01-17 15:53:58] [DEBUG] Loaded region: auditory_input | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: gustatory_input | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: sensory_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: somato_input | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: visual_input | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: endocrine_system | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: hypothalamus | populations=4
+[2026-01-17 15:53:58] [DEBUG] Loaded region: anterior_pituitary | populations=5
+[2026-01-17 15:53:58] [DEBUG] Loaded region: posterior_pituitary | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: lgn | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: md | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: mgb | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: pulvinar | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: thalamus_base | populations=0
+[2026-01-17 15:53:58] [DEBUG] Loaded region: trn | populations=1
+[2026-01-17 15:53:58] [DEBUG] Loaded region: vpl | populations=2
+[2026-01-17 15:53:58] [DEBUG] Loaded region: vpm | populations=1
+[2026-01-17 15:53:58] [DEBUG] Total regions loaded: 54
+[2026-01-17 15:53:58] [DEBUG] Profiles loaded: 12
+[2026-01-17 15:53:58] [DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[2026-01-17 15:53:58] [DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[2026-01-17 15:53:58] [DEBUG] Compile complete.
+[2026-01-17 15:53:58]   Regions: 54
+[2026-01-17 15:53:58]   Assembly downscale: 1.0
+[2026-01-17 15:53:58] [OK] Runtime ready
+[2026-01-17 15:53:58] [OK] Command server running
+[2026-01-17 15:53:58] [OK] Salience engine online (observation-driven)
+
+[2026-01-17 15:53:58] 
+=== S4-0: Baseline stabilization ===
+[2026-01-17 15:53:58] [CMD] Listening on 127.0.0.1:5557
+[2026-01-17 15:54:00] [step 000100] t=1.000 relief=0.454 winner=D1 D1=0.3702 D2=0.3685 Δ=0.0017 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:03] [step 000200] t=2.000 relief=0.426 winner=D1 D1=0.4670 D2=0.4647 Δ=0.0023 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:06] [step 000300] t=3.000 relief=0.418 winner=D1 D1=0.4921 D2=0.4901 Δ=0.0020 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:08] [step 000400] t=4.000 relief=0.430 winner=D1 D1=0.4981 D2=0.4973 Δ=0.0008 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:12] [step 000500] t=5.000 relief=0.455 winner=D1 D1=0.4996 D2=0.4992 Δ=0.0004 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:12] 
+=== S4-0: cooldown ===
+[2026-01-17 15:54:16] [step 000600] t=6.000 relief=0.487 winner=D1 D1=0.5000 D2=0.4997 Δ=0.0002 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:20] [step 000700] t=7.000 relief=0.517 winner=D2 D1=0.4995 D2=0.5004 Δ=-0.0009 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:23] [step 000800] t=8.000 relief=0.539 winner=D2 D1=0.4986 D2=0.5014 Δ=-0.0028 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:25] 
+[S4A] regime=strict gpi_gain=0.700 gpi_floor=0.220
+[2026-01-17 15:54:25] 
+=== S4A-strict: settle ===
+[2026-01-17 15:54:29] [step 000950] t=9.500 relief=0.473 winner=D2 D1=0.4982 D2=0.5018 Δ=-0.0037 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:33] [step 001050] t=10.500 relief=0.462 winner=D2 D1=0.4981 D2=0.5019 Δ=-0.0038 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:37] [step 001150] t=11.500 relief=0.442 winner=D2 D1=0.4984 D2=0.5016 Δ=-0.0032 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:39] 
+=== S4A-strict: same packet replay ===
+[2026-01-17 15:54:43] [step 001300] t=13.000 relief=0.407 winner=D2 D1=0.4948 D2=0.5052 Δ=-0.0104 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:46] [step 001400] t=14.000 relief=0.389 winner=D2 D1=0.4941 D2=0.5059 Δ=-0.0119 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:50] [step 001500] t=15.000 relief=0.379 winner=D2 D1=0.4951 D2=0.5049 Δ=-0.0099 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:54] [step 001600] t=16.000 relief=0.378 winner=D2 D1=0.4976 D2=0.5024 Δ=-0.0047 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:54:58] [step 001700] t=17.000 relief=0.385 winner=D1 D1=0.5008 D2=0.4992 Δ=0.0017 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:01] [step 001800] t=18.000 relief=0.398 winner=D1 D1=0.5036 D2=0.4964 Δ=0.0071 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:05] [step 001900] t=19.000 relief=0.413 winner=D1 D1=0.5055 D2=0.4945 Δ=0.0110 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:05] 
+=== S4A-strict: cooldown ===
+[2026-01-17 15:55:09] [step 002000] t=20.000 relief=0.426 winner=D1 D1=0.5052 D2=0.4948 Δ=0.0105 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:12] [step 002100] t=21.000 relief=0.435 winner=D1 D1=0.5052 D2=0.4948 Δ=0.0104 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:16] [step 002200] t=22.000 relief=0.437 winner=D1 D1=0.5052 D2=0.4948 Δ=0.0104 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:18] 
+[S4A] regime=baseline gpi_gain=0.600 gpi_floor=0.250
+[2026-01-17 15:55:18] 
+=== S4A-baseline: settle ===
+[2026-01-17 15:55:21] [step 002350] t=23.500 relief=0.512 winner=D1 D1=0.5042 D2=0.4958 Δ=0.0084 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:25] [step 002450] t=24.500 relief=0.505 winner=D1 D1=0.5034 D2=0.4966 Δ=0.0069 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:29] [step 002550] t=25.500 relief=0.497 winner=D1 D1=0.5025 D2=0.4975 Δ=0.0050 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:31] 
+=== S4A-baseline: same packet replay ===
+[2026-01-17 15:55:35] [step 002700] t=27.000 relief=0.488 winner=D2 D1=0.4982 D2=0.5018 Δ=-0.0036 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:39] [step 002800] t=28.000 relief=0.485 winner=D2 D1=0.4964 D2=0.5036 Δ=-0.0072 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:42] [step 002900] t=29.000 relief=0.486 winner=D2 D1=0.4960 D2=0.5040 Δ=-0.0080 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:46] [step 003000] t=30.000 relief=0.489 winner=D2 D1=0.4964 D2=0.5036 Δ=-0.0072 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:50] [step 003100] t=31.000 relief=0.494 winner=D2 D1=0.4976 D2=0.5024 Δ=-0.0048 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:54] [step 003200] t=32.000 relief=0.499 winner=D2 D1=0.4975 D2=0.5025 Δ=-0.0050 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:58] [step 003300] t=33.000 relief=0.503 winner=D2 D1=0.4974 D2=0.5026 Δ=-0.0053 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:55:58] 
+=== S4A-baseline: cooldown ===
+[2026-01-17 15:56:02] [step 003400] t=34.000 relief=0.505 winner=D2 D1=0.4971 D2=0.5029 Δ=-0.0057 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:06] [step 003500] t=35.000 relief=0.505 winner=D2 D1=0.4971 D2=0.5029 Δ=-0.0058 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:10] [step 003600] t=36.000 relief=0.504 winner=D2 D1=0.4982 D2=0.5018 Δ=-0.0036 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:12] 
+[S4A] regime=permissive gpi_gain=0.500 gpi_floor=0.300
+[2026-01-17 15:56:12] 
+=== S4A-permissive: settle ===
+[2026-01-17 15:56:16] [step 003750] t=37.500 relief=0.583 winner=D1 D1=0.5005 D2=0.4995 Δ=0.0009 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:20] [step 003850] t=38.500 relief=0.580 winner=D1 D1=0.5020 D2=0.4980 Δ=0.0040 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:24] [step 003950] t=39.500 relief=0.578 winner=D1 D1=0.5030 D2=0.4970 Δ=0.0060 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:26] 
+=== S4A-permissive: same packet replay ===
+[2026-01-17 15:56:30] [step 004100] t=41.000 relief=0.577 winner=D1 D1=0.5007 D2=0.4993 Δ=0.0014 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:34] [step 004200] t=42.000 relief=0.578 winner=D2 D1=0.4997 D2=0.5003 Δ=-0.0006 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:38] [step 004300] t=43.000 relief=0.579 winner=D2 D1=0.4996 D2=0.5004 Δ=-0.0009 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:42] [step 004400] t=44.000 relief=0.581 winner=D1 D1=0.5007 D2=0.4993 Δ=0.0014 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:46] [step 004500] t=45.000 relief=0.582 winner=D1 D1=0.5011 D2=0.4989 Δ=0.0021 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:50] [step 004600] t=46.000 relief=0.583 winner=D1 D1=0.5006 D2=0.4994 Δ=0.0011 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:54] [step 004700] t=47.000 relief=0.584 winner=D1 D1=0.5006 D2=0.4994 Δ=0.0011 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:56:54] 
+=== S4A-permissive: cooldown ===
+[2026-01-17 15:56:58] [step 004800] t=48.000 relief=0.584 winner=D1 D1=0.5011 D2=0.4989 Δ=0.0022 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:02] [step 004900] t=49.000 relief=0.583 winner=D1 D1=0.5018 D2=0.4982 Δ=0.0036 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:06] [step 005000] t=50.000 relief=0.582 winner=D1 D1=0.5023 D2=0.4977 Δ=0.0046 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:08] 
+[S4B] context.decay_tau=2.500
+[2026-01-17 15:57:08] 
+=== S4B: settle ===
+[2026-01-17 15:57:12] [step 005150] t=51.500 relief=0.497 winner=D1 D1=0.5023 D2=0.4977 Δ=0.0045 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:16] [step 005250] t=52.500 relief=0.496 winner=D1 D1=0.5020 D2=0.4980 Δ=0.0041 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:20] [step 005350] t=53.500 relief=0.496 winner=D1 D1=0.5024 D2=0.4976 Δ=0.0048 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:22] 
+=== S4B: prime PFC (context buildup) ===
+[2026-01-17 15:57:26] [step 005500] t=55.000 relief=0.496 winner=D1 D1=0.5028 D2=0.4972 Δ=0.0056 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:30] [step 005600] t=56.000 relief=0.497 winner=D1 D1=0.5031 D2=0.4969 Δ=0.0061 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:34] [step 005700] t=57.000 relief=0.498 winner=D1 D1=0.5020 D2=0.4980 Δ=0.0041 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:34] 
+=== S4B: packet after priming ===
+[2026-01-17 15:57:38] [step 005820] t=58.200 relief=0.498 winner=D2 D1=0.4985 D2=0.5015 Δ=-0.0030 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:42] [step 005920] t=59.200 relief=0.499 winner=D2 D1=0.4972 D2=0.5028 Δ=-0.0056 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:46] [step 006020] t=60.200 relief=0.499 winner=D2 D1=0.4972 D2=0.5028 Δ=-0.0056 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:50] [step 006120] t=61.200 relief=0.499 winner=D2 D1=0.4973 D2=0.5027 Δ=-0.0053 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:54] [step 006220] t=62.200 relief=0.498 winner=D2 D1=0.4973 D2=0.5027 Δ=-0.0054 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:57:58] [step 006320] t=63.200 relief=0.498 winner=D2 D1=0.4971 D2=0.5029 Δ=-0.0059 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:02] [step 006420] t=64.200 relief=0.497 winner=D2 D1=0.4964 D2=0.5036 Δ=-0.0072 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:02] 
+=== S4B: cooldown ===
+[2026-01-17 15:58:06] [step 006520] t=65.200 relief=0.497 winner=D2 D1=0.4960 D2=0.5040 Δ=-0.0079 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:10] [step 006620] t=66.200 relief=0.497 winner=D2 D1=0.4953 D2=0.5047 Δ=-0.0094 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:14] [step 006720] t=67.200 relief=0.497 winner=D2 D1=0.4953 D2=0.5047 Δ=-0.0095 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:16] 
+[S4B] context.decay_tau=5.000
+[2026-01-17 15:58:16] 
+=== S4B: settle ===
+[2026-01-17 15:58:20] [step 006870] t=68.700 relief=0.497 winner=D2 D1=0.4970 D2=0.5030 Δ=-0.0060 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:25] [step 006970] t=69.700 relief=0.498 winner=D2 D1=0.4990 D2=0.5010 Δ=-0.0020 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:29] [step 007070] t=70.700 relief=0.498 winner=D1 D1=0.5008 D2=0.4992 Δ=0.0015 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:31] 
+=== S4B: prime PFC (context buildup) ===
+[2026-01-17 15:58:35] [step 007220] t=72.200 relief=0.498 winner=D1 D1=0.5034 D2=0.4966 Δ=0.0069 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:39] [step 007320] t=73.200 relief=0.498 winner=D1 D1=0.5044 D2=0.4956 Δ=0.0088 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:43] [step 007420] t=74.200 relief=0.498 winner=D1 D1=0.5048 D2=0.4952 Δ=0.0097 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:44] 
+=== S4B: packet after priming ===
+[2026-01-17 15:58:48] [step 007540] t=75.400 relief=0.498 winner=D1 D1=0.5034 D2=0.4966 Δ=0.0068 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:52] [step 007640] t=76.400 relief=0.498 winner=D1 D1=0.5024 D2=0.4976 Δ=0.0048 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:58:56] [step 007740] t=77.400 relief=0.497 winner=D1 D1=0.5014 D2=0.4986 Δ=0.0028 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:00] [step 007840] t=78.400 relief=0.497 winner=D1 D1=0.5004 D2=0.4996 Δ=0.0008 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:04] [step 007940] t=79.400 relief=0.497 winner=D1 D1=0.5008 D2=0.4992 Δ=0.0016 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:08] [step 008040] t=80.400 relief=0.497 winner=D1 D1=0.5009 D2=0.4991 Δ=0.0018 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:12] [step 008140] t=81.400 relief=0.498 winner=D2 D1=0.4998 D2=0.5002 Δ=-0.0004 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:12] 
+=== S4B: cooldown ===
+[2026-01-17 15:59:16] [step 008240] t=82.400 relief=0.498 winner=D2 D1=0.4993 D2=0.5007 Δ=-0.0015 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:20] [step 008340] t=83.400 relief=0.498 winner=D2 D1=0.4990 D2=0.5010 Δ=-0.0020 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:24] [step 008440] t=84.400 relief=0.498 winner=D2 D1=0.4988 D2=0.5012 Δ=-0.0023 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:26] 
+[S4B] context.decay_tau=10.000
+[2026-01-17 15:59:26] 
+=== S4B: settle ===
+[2026-01-17 15:59:31] [step 008590] t=85.900 relief=0.498 winner=D2 D1=0.4982 D2=0.5018 Δ=-0.0036 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:36] [step 008690] t=86.900 relief=0.498 winner=D2 D1=0.4986 D2=0.5014 Δ=-0.0028 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:40] [step 008790] t=87.900 relief=0.498 winner=D2 D1=0.4986 D2=0.5014 Δ=-0.0027 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:42] 
+=== S4B: prime PFC (context buildup) ===
+[2026-01-17 15:59:46] [step 008940] t=89.400 relief=0.498 winner=D2 D1=0.4993 D2=0.5007 Δ=-0.0015 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:51] [step 009040] t=90.400 relief=0.498 winner=D2 D1=0.4994 D2=0.5006 Δ=-0.0012 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:55] [step 009140] t=91.400 relief=0.498 winner=D1 D1=0.5002 D2=0.4998 Δ=0.0005 sal_keys=3 max_sal=1.0000
+[2026-01-17 15:59:56] 
+=== S4B: packet after priming ===
+[2026-01-17 16:00:00] [step 009260] t=92.600 relief=0.498 winner=D2 D1=0.4988 D2=0.5012 Δ=-0.0025 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:04] [step 009360] t=93.600 relief=0.498 winner=D2 D1=0.4979 D2=0.5021 Δ=-0.0041 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:08] [step 009460] t=94.600 relief=0.498 winner=D2 D1=0.4978 D2=0.5022 Δ=-0.0044 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:12] [step 009560] t=95.600 relief=0.498 winner=D2 D1=0.4982 D2=0.5018 Δ=-0.0037 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:16] [step 009660] t=96.600 relief=0.498 winner=D2 D1=0.4993 D2=0.5007 Δ=-0.0015 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:20] [step 009760] t=97.600 relief=0.498 winner=D1 D1=0.5000 D2=0.5000 Δ=0.0001 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:24] [step 009860] t=98.600 relief=0.498 winner=D1 D1=0.5003 D2=0.4997 Δ=0.0007 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:24] 
+=== S4B: cooldown ===
+[2026-01-17 16:00:29] [step 009960] t=99.600 relief=0.498 winner=D1 D1=0.5014 D2=0.4986 Δ=0.0027 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:32] [step 010060] t=100.600 relief=0.498 winner=D1 D1=0.5023 D2=0.4977 Δ=0.0047 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:37] [step 010160] t=101.600 relief=0.498 winner=D1 D1=0.5031 D2=0.4969 Δ=0.0062 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:39] 
+=== S4C: settle ===
+[2026-01-17 16:00:43] [step 010310] t=103.100 relief=0.498 winner=D1 D1=0.5037 D2=0.4963 Δ=0.0074 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:47] [step 010410] t=104.100 relief=0.498 winner=D1 D1=0.5042 D2=0.4958 Δ=0.0085 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:51] [step 010510] t=105.100 relief=0.498 winner=D1 D1=0.5031 D2=0.4969 Δ=0.0062 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:00:53] 
+=== S4C: repeated identical packets ===
+[2026-01-17 16:00:57] [step 010660] t=106.600 relief=0.498 winner=D2 D1=0.4976 D2=0.5024 Δ=-0.0048 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:01] [step 010760] t=107.600 relief=0.498 winner=D2 D1=0.4905 D2=0.5095 Δ=-0.0189 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:05] [step 010860] t=108.600 relief=0.498 winner=D2 D1=0.4839 D2=0.5161 Δ=-0.0322 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:09] [step 010960] t=109.600 relief=0.498 winner=D2 D1=0.4794 D2=0.5206 Δ=-0.0413 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:13] [step 011060] t=110.600 relief=0.498 winner=D2 D1=0.4775 D2=0.5225 Δ=-0.0451 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:18] [step 011160] t=111.600 relief=0.498 winner=D2 D1=0.4772 D2=0.5228 Δ=-0.0457 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:22] [step 011260] t=112.600 relief=0.498 winner=D2 D1=0.4803 D2=0.5197 Δ=-0.0394 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:22] 
+=== S4C: cooldown ===
+[2026-01-17 16:01:27] [step 011360] t=113.600 relief=0.498 winner=D2 D1=0.4878 D2=0.5122 Δ=-0.0243 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:31] [step 011460] t=114.600 relief=0.498 winner=D2 D1=0.4970 D2=0.5030 Δ=-0.0059 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:35] [step 011560] t=115.600 relief=0.498 winner=D1 D1=0.5055 D2=0.4945 Δ=0.0110 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:37] 
+=== S4C: novel packet ===
+[2026-01-17 16:01:41] [step 011710] t=117.100 relief=0.498 winner=D1 D1=0.5173 D2=0.4827 Δ=0.0347 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:46] [step 011810] t=118.100 relief=0.498 winner=D1 D1=0.5235 D2=0.4765 Δ=0.0469 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:50] [step 011910] t=119.100 relief=0.498 winner=D1 D1=0.5271 D2=0.4729 Δ=0.0541 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:54] [step 012010] t=120.100 relief=0.498 winner=D1 D1=0.5284 D2=0.4716 Δ=0.0569 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:01:58] [step 012110] t=121.100 relief=0.498 winner=D1 D1=0.5275 D2=0.4725 Δ=0.0551 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:02] [step 012210] t=122.100 relief=0.498 winner=D1 D1=0.5252 D2=0.4748 Δ=0.0504 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:07] [step 012310] t=123.100 relief=0.498 winner=D1 D1=0.5208 D2=0.4792 Δ=0.0415 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:07] 
+=== S4C: cooldown ===
+[2026-01-17 16:02:11] [step 012410] t=124.100 relief=0.498 winner=D1 D1=0.5152 D2=0.4848 Δ=0.0305 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:15] [step 012510] t=125.100 relief=0.498 winner=D1 D1=0.5087 D2=0.4913 Δ=0.0175 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:19] [step 012610] t=126.100 relief=0.498 winner=D1 D1=0.5009 D2=0.4991 Δ=0.0017 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:22] 
+=== S4D-baseline: settle ===
+[2026-01-17 16:02:26] [step 012760] t=127.600 relief=0.498 winner=D2 D1=0.4881 D2=0.5119 Δ=-0.0239 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:30] [step 012860] t=128.600 relief=0.498 winner=D2 D1=0.4813 D2=0.5187 Δ=-0.0375 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:34] [step 012960] t=129.600 relief=0.498 winner=D2 D1=0.4765 D2=0.5235 Δ=-0.0470 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:36] 
+=== S4D-baseline: conflict stream ===
+[2026-01-17 16:02:40] [step 013110] t=131.100 relief=0.498 winner=D2 D1=0.4775 D2=0.5225 Δ=-0.0450 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:44] [step 013210] t=132.100 relief=0.498 winner=D2 D1=0.4716 D2=0.5284 Δ=-0.0569 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:48] [step 013310] t=133.100 relief=0.498 winner=D2 D1=0.4651 D2=0.5349 Δ=-0.0698 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:53] [step 013410] t=134.100 relief=0.498 winner=D2 D1=0.4600 D2=0.5400 Δ=-0.0801 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:02:57] [step 013510] t=135.100 relief=0.498 winner=D2 D1=0.4581 D2=0.5419 Δ=-0.0838 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:01] [step 013610] t=136.100 relief=0.498 winner=D2 D1=0.4643 D2=0.5357 Δ=-0.0713 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:05] [step 013710] t=137.100 relief=0.498 winner=D2 D1=0.4776 D2=0.5224 Δ=-0.0448 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:05] 
+=== S4D-baseline: cooldown ===
+[2026-01-17 16:03:10] [step 013810] t=138.100 relief=0.498 winner=D2 D1=0.4925 D2=0.5075 Δ=-0.0151 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:14] [step 013910] t=139.100 relief=0.498 winner=D1 D1=0.5070 D2=0.4930 Δ=0.0140 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:18] [step 014010] t=140.100 relief=0.498 winner=D1 D1=0.5193 D2=0.4807 Δ=0.0387 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:20] 
+[S4D] constrained gate: gpi_gain=0.680 gpi_floor=0.200
+[2026-01-17 16:03:20] 
+=== S4D-constrained: settle ===
+[2026-01-17 16:03:25] [step 014160] t=141.600 relief=0.431 winner=D1 D1=0.5321 D2=0.4679 Δ=0.0643 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:29] [step 014260] t=142.600 relief=0.431 winner=D1 D1=0.5373 D2=0.4627 Δ=0.0745 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:33] [step 014360] t=143.600 relief=0.431 winner=D1 D1=0.5392 D2=0.4608 Δ=0.0783 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:35] 
+=== S4D-constrained: conflict stream ===
+[2026-01-17 16:03:40] [step 014510] t=145.100 relief=0.431 winner=D1 D1=0.5408 D2=0.4592 Δ=0.0816 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:44] [step 014610] t=146.100 relief=0.431 winner=D1 D1=0.5305 D2=0.4695 Δ=0.0611 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:48] [step 014710] t=147.100 relief=0.431 winner=D1 D1=0.5152 D2=0.4848 Δ=0.0303 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:52] [step 014810] t=148.100 relief=0.431 winner=D2 D1=0.4973 D2=0.5027 Δ=-0.0053 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:03:56] [step 014910] t=149.100 relief=0.431 winner=D2 D1=0.4790 D2=0.5210 Δ=-0.0420 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:04:01] [step 015010] t=150.100 relief=0.431 winner=D2 D1=0.4669 D2=0.5331 Δ=-0.0662 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:04:05] [step 015110] t=151.100 relief=0.431 winner=D2 D1=0.4628 D2=0.5372 Δ=-0.0745 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:04:05] 
+=== S4D-constrained: cooldown ===
+[2026-01-17 16:04:09] [step 015210] t=152.100 relief=0.431 winner=D2 D1=0.4629 D2=0.5371 Δ=-0.0742 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:04:13] [step 015310] t=153.100 relief=0.431 winner=D2 D1=0.4664 D2=0.5336 Δ=-0.0673 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:04:17] [step 015410] t=154.100 relief=0.431 winner=D2 D1=0.4734 D2=0.5266 Δ=-0.0532 sal_keys=3 max_sal=1.0000
+[2026-01-17 16:04:20] 
+=== SUITE 4 COMPLETE ===
+[2026-01-17 16:04:20] Files updated (append-safe):
+[2026-01-17 16:04:20]  - dominance_trace.csv
+[2026-01-17 16:04:20]  - decision_latch_trace.csv
+[2026-01-17 16:04:20]  - decision_debug_trace.csv
+[2026-01-17 16:04:20] Log file: salience_suite4_20260117_155358.txt
+[2026-01-17 16:04:20] Use modpanda to visualize trajectories (filter by run_id suffixes).

@@ -1,0 +1,102 @@
+{
+  "experiment": {
+    "suite": "Decision latch validation",
+    "test_id": "3/4",
+    "name": "Gate-triggered forced decision",
+    "description": "Continuously drive striatum at low magnitude. When gate relief first exceeds threshold, inject a one-time asymmetry into D1_MSN. Verify that decision occurs only after gate opening.",
+    "parameters": {
+      "forced_steps": 100,
+      "baseline_poke": 1.0,
+      "asymmetry_poke": 1.0,
+      "gate_threshold": 0.47
+    }
+  },
+  "run_id": 1,
+  "trial": 1,
+  "test_step": 77,
+  "test_time": 10.46,
+  "decision": {
+    "time": 10.409999999999823,
+    "step": 1042,
+    "winner": "D2",
+    "delta_dominance": 0.04585972393969995,
+    "relief": 0.5401632157656202
+  },
+  "control": {
+    "step": 1048,
+    "time": 10.469999999999821,
+    "phase": "post-commit",
+    "decision_made": true,
+    "decision_winner": "D2",
+    "committed": true,
+    "suppress_alternatives": true,
+    "working_state_active": true,
+    "fatigue_flag": false,
+    "saturation_flag": false
+  },
+  "striatum": {
+    "winner": "D2",
+    "dominance": {
+      "D2": 0.519712,
+      "D1": 0.480287
+    },
+    "time": 10.46
+  },
+  "gate": {
+    "time": 10.46,
+    "relief": 0.5398,
+    "decision": true
+  }
+}
+
+{
+  "experiment": {
+    "suite": "Decision latch validation",
+    "test_id": "3/4",
+    "name": "Gate-triggered forced decision",
+    "description": "Continuously drive striatum at low magnitude. When gate relief first exceeds threshold, inject a one-time asymmetry into D1_MSN. Verify that decision occurs only after gate opening.",
+    "parameters": {
+      "forced_steps": 100,
+      "baseline_poke": 1.0,
+      "asymmetry_poke": 1.0,
+      "gate_threshold": 0.01
+    }
+  },
+  "run_id": 1,
+  "trial": 1,
+  "test_step": 75,
+  "test_time": 10.04,
+  "decision": {
+    "time": 10.02999999999983,
+    "step": 1004,
+    "winner": "D1",
+    "delta_dominance": 0.0529975773859091,
+    "relief": 0.5445942444221694
+  },
+  "control": {
+    "step": 1006,
+    "time": 10.04999999999983,
+    "phase": "post-commit",
+    "decision_made": true,
+    "decision_winner": "D1",
+    "committed": true,
+    "suppress_alternatives": true,
+    "working_state_active": true,
+    "fatigue_flag": false,
+    "saturation_flag": false
+  },
+  "striatum": {
+    "winner": "D1",
+    "dominance": {
+      "D2": 0.472805,
+      "D1": 0.527194
+    },
+    "time": 10.04
+  },
+  "gate": {
+    "time": 10.04,
+    "relief": 0.5446,
+    "decision": true
+  }
+}
+

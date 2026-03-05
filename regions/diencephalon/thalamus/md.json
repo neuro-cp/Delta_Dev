@@ -1,0 +1,111 @@
+{
+  "version": "1.3.4",
+  "type": "RegionSubstructure",
+  "region_id": "MD",
+  "parent_region": "THALAMUS",
+
+  "execution_status": "relay_only_checkpoint_6",
+
+  "is_relay": true,
+  "function": "executive_state_gating",
+
+  "spatial_properties": {
+    "thalamic": true,
+    "diffuse_projection": true
+  },
+
+  "populations": {
+    "RELAY_CELLS": {
+      "count": 70000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.6,
+      "plasticity_profile": "medium",
+
+      "receives_inhibition_from": ["TRN"],
+
+      "execution_notes": [
+        "Acts as a passive relay at checkpoint 6",
+        "No internal gating or mode switching is active",
+        "All subpopulation semantics are declarative only"
+      ],
+
+      "subpopulations": {
+        "PERSISTENCE_GATES": {
+          "fraction": 0.40,
+          "role": "working_memory_stabilization",
+          "execution_status": "declared_only"
+        },
+        "FLEXIBILITY_GATES": {
+          "fraction": 0.30,
+          "role": "context_switching",
+          "execution_status": "declared_only"
+        },
+        "ATTENTIONAL_AMPLIFIERS": {
+          "fraction": 0.20,
+          "role": "signal_gain_control",
+          "default_state": "suppressed",
+          "execution_status": "declared_only"
+        },
+        "NOISE_FILTERS": {
+          "fraction": 0.10,
+          "role": "background_suppression",
+          "always_on": true,
+          "execution_status": "declared_only"
+        }
+      }
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "PFC",
+      "source_population": "L6_PYRAMIDAL",
+      "signal": "corticothalamic_context",
+      "strength": 0.6
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "PFC",
+      "target_population": "L2_3_PYRAMIDAL",
+      "strength": 0.7
+    },
+    {
+      "target_region": "PFC",
+      "target_population": "L5_POLICY_A",
+      "strength": 0.5
+    },
+    {
+      "target_region": "PFC",
+      "target_population": "L5_POLICY_B",
+      "strength": 0.5
+    }
+  ],
+
+  "functional_modes": {
+    "wake": {
+      "description": "Context relay only",
+      "execution_status": "inactive"
+    },
+    "sleep": {
+      "description": "Suppressed relay",
+      "execution_status": "inactive"
+    }
+  },
+
+  "drug_sensitivity": {
+    "anesthetics": "very_high",
+    "dopaminergic_agents": "high",
+    "noradrenergic_agents": "high",
+    "sedatives": "very_high"
+  },
+
+  "notes": [
+    "MD is an executive relay nucleus with rich internal gating semantics.",
+    "At checkpoint 6 it functions strictly as a relay.",
+    "All executive gating, mode switching, and neuromodulatory effects are preserved declaratively.",
+    "Runtime enforcement of these features will be enabled in a later checkpoint."
+  ]
+}

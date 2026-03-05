@@ -1,0 +1,157 @@
+{
+  "region": "gpi",
+  "step": 775,
+  "time": 7.739999999999879,
+  "assemblies": [
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:0",
+      "population": "GPi_OUTPUT",
+      "activity": 0.3892984280252931,
+      "output": 0.3527113065487009
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:1",
+      "population": "GPi_OUTPUT",
+      "activity": 0.38867243812315827,
+      "output": 0.3520817846087475
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:2",
+      "population": "GPi_OUTPUT",
+      "activity": 0.38879118555427566,
+      "output": 0.35220120788200837
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:3",
+      "population": "GPi_OUTPUT",
+      "activity": 0.38817634093336073,
+      "output": 0.35158283438921123
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:4",
+      "population": "GPi_OUTPUT",
+      "activity": 0.38915225734622527,
+      "output": 0.35256431791623966
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:5",
+      "population": "GPi_OUTPUT",
+      "activity": 0.3894275110454131,
+      "output": 0.3528411084627316
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:6",
+      "population": "GPi_OUTPUT",
+      "activity": 0.3888911823107185,
+      "output": 0.35230177164505544
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:7",
+      "population": "GPi_OUTPUT",
+      "activity": 0.3882345314353639,
+      "output": 0.35164136200891083
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:8",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5148615643308986,
+      "output": 0.5875815610287527
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:9",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5153936235925397,
+      "output": 0.5881590080693043
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:10",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5153210928743801,
+      "output": 0.5880802934950791
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:11",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5153519146356804,
+      "output": 0.588113743204421
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:12",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5156012161330599,
+      "output": 0.5883842936250073
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:13",
+      "population": "GPi_OUTPUT",
+      "activity": 0.515604952135264,
+      "output": 0.5883883479634525
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:14",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5160630907401156,
+      "output": 0.5888855016792737
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:15",
+      "population": "GPi_OUTPUT",
+      "activity": 0.5145315039721727,
+      "output": 0.5872233152122394
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:16",
+      "population": "GPi_OUTPUT",
+      "activity": 0.515211570095342,
+      "output": 0.5879614309166056
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:17",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6303485050792317,
+      "output": 0.7827213061801536
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:18",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6307368882231699,
+      "output": 0.7831749588092207
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:19",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6301239396361892,
+      "output": 0.7824589864078635
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:20",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6302010118877168,
+      "output": 0.7825490174282821
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:21",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6302319347970899,
+      "output": 0.7825851392846757
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:22",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6301005388489923,
+      "output": 0.7824316508023623
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:23",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6300217365756838,
+      "output": 0.7823395971227811
+    },
+    {
+      "assembly_id": "gpi:GPi_OUTPUT:24",
+      "population": "GPi_OUTPUT",
+      "activity": 0.6300882914140927,
+      "output": 0.7824173439259001
+    }
+  ]
+}

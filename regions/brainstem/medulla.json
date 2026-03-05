@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "MEDULLA",
+  "parent_region": "BRAINSTEM",
+  "function": "autonomic_control",
+
+  "populations": {
+    "AUTONOMIC_NEURONS": {
+      "count": 25000,
+      "neuron_type": "autonomic",
+      "baseline_firing_rate_hz": 1.0
+    }
+  }
+}

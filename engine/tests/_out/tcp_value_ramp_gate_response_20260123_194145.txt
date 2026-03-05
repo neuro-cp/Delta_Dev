@@ -1,0 +1,94 @@
+[2026-01-23 19:41:45] === BEGIN: TCP Value Ramp -> Gate Response -> Decay ===
+[2026-01-23 19:41:45] [CLEAN] reset_latch + value_clear
+[2026-01-23 19:41:45]   OK reset_latch
+[2026-01-23 19:41:45]   OK value reset
+[2026-01-23 19:41:46] [baseline] value=0.0 gate_relief=0.4675 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:46] [RAMP] Calling value_set 0.78 x10 (sleep 0.12s each)
+[2026-01-23 19:41:46]   (call 01) OK value = 0.1000
+[2026-01-23 19:41:46] [ramp_01] value=0.0988 gate_relief=0.4621 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:46]   (call 02) OK value = 0.1982
+[2026-01-23 19:41:46] [ramp_02] value=0.1956 gate_relief=0.4574 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:46]   (call 03) OK value = 0.2946
+[2026-01-23 19:41:46] [ramp_03] value=0.2907 gate_relief=0.4532 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:46]   (call 04) OK value = 0.3892
+[2026-01-23 19:41:47] [ramp_04] value=0.3841 gate_relief=0.4493 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:47]   (call 05) OK value = 0.4815
+[2026-01-23 19:41:47] [ramp_05] value=0.4743 gate_relief=0.4449 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:47]   (call 06) OK value = 0.5720
+[2026-01-23 19:41:47] [ramp_06] value=0.5644 gate_relief=0.4414 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:47]   (call 07) OK value = 0.6616
+[2026-01-23 19:41:47] [ramp_07] value=0.655 gate_relief=0.4388 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:47]   (call 08) OK value = 0.7495
+[2026-01-23 19:41:47] [ramp_08] value=0.7408 gate_relief=0.4354 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:47]   (call 09) OK value = 0.7800
+[2026-01-23 19:41:48] [ramp_09] value=0.7709 gate_relief=0.4326 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:48]   (call 10) OK value = 0.7800
+[2026-01-23 19:41:48] [ramp_10] value=0.7697 gate_relief=0.4294 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:48] [HOLD] observing for 6.0s (no further value_set)
+[2026-01-23 19:41:48] [hold_01] value=0.7557 gate_relief=0.4274 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:48] [hold_02] value=0.7444 gate_relief=0.4259 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:48] [hold_03] value=0.7345 gate_relief=0.4244 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:49] [hold_04] value=0.7224 gate_relief=0.4229 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:49] [hold_05] value=0.7104 gate_relief=0.4217 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:49] [hold_06] value=0.701 gate_relief=0.4207 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:49] [hold_07] value=0.6883 gate_relief=0.4197 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:50] [hold_08] value=0.6769 gate_relief=0.419 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:50] [hold_09] value=0.6668 gate_relief=0.4185 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:50] [hold_10] value=0.6547 gate_relief=0.4182 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:50] [hold_11] value=0.6449 gate_relief=0.4181 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:50] [hold_12] value=0.6343 gate_relief=0.4182 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:51] [hold_13] value=0.6227 gate_relief=0.4186 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:51] [hold_14] value=0.6124 gate_relief=0.419 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:51] [hold_15] value=0.6023 gate_relief=0.4197 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:51] [hold_16] value=0.5913 gate_relief=0.4207 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:51] [hold_17] value=0.5835 gate_relief=0.4215 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:52] [hold_18] value=0.5739 gate_relief=0.4227 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:52] [hold_19] value=0.5662 gate_relief=0.4238 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:52] [hold_20] value=0.5559 gate_relief=0.4254 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:52] [hold_21] value=0.5468 gate_relief=0.427 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:52] [hold_22] value=0.5359 gate_relief=0.4292 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:53] [hold_23] value=0.5279 gate_relief=0.431 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:53] [hold_24] value=0.5201 gate_relief=0.4329 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:53] [hold_25] value=0.5115 gate_relief=0.4351 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:53] [hold_26] value=0.5022 gate_relief=0.438 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:53] [hold_27] value=0.493 gate_relief=0.4404 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:54] [hold_28] value=0.4857 gate_relief=0.443 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:54] [hold_29] value=0.4777 gate_relief=0.4454 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:54] [hold_30] value=0.4705 gate_relief=0.4479 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:54] [CLEAN] value_clear (then observe decay)
+[2026-01-23 19:41:54]   OK value reset
+[2026-01-23 19:41:54] [after_clear_0] value=0.0 gate_relief=0.4508 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:54] [DECAY] observing for 6.0s
+[2026-01-23 19:41:54] [decay_01] value=0.0 gate_relief=0.454 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:55] [decay_02] value=0.0 gate_relief=0.4567 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:55] [decay_03] value=0.0 gate_relief=0.46 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:55] [decay_04] value=0.0 gate_relief=0.4631 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:55] [decay_05] value=0.0 gate_relief=0.467 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:56] [decay_06] value=0.0 gate_relief=0.4705 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:56] [decay_07] value=0.0 gate_relief=0.4734 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:56] [decay_08] value=0.0 gate_relief=0.4766 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:56] [decay_09] value=0.0 gate_relief=0.4798 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:56] [decay_10] value=0.0 gate_relief=0.4831 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:57] [decay_11] value=0.0 gate_relief=0.4866 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:57] [decay_12] value=0.0 gate_relief=0.4892 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:57] [decay_13] value=0.0 gate_relief=0.4924 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:57] [decay_14] value=0.0 gate_relief=0.4953 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:57] [decay_15] value=0.0 gate_relief=0.4984 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:58] [decay_16] value=0.0 gate_relief=0.5015 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:58] [decay_17] value=0.0 gate_relief=0.5042 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:58] [decay_18] value=0.0 gate_relief=0.5069 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:58] [decay_19] value=0.0 gate_relief=0.5095 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:59] [decay_20] value=0.0 gate_relief=0.5124 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:59] [decay_21] value=0.0 gate_relief=0.5143 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:59] [decay_22] value=0.0 gate_relief=0.5165 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:59] [decay_23] value=0.0 gate_relief=0.5187 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:41:59] [decay_24] value=0.0 gate_relief=0.5202 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:42:00] [decay_25] value=0.0 gate_relief=0.5217 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:42:00] [decay_26] value=0.0 gate_relief=0.523 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:42:00] [decay_27] value=0.0 gate_relief=0.5242 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:42:00] [decay_28] value=0.0 gate_relief=0.5254 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:42:00] [decay_29] value=0.0 gate_relief=0.5266 decision=None control_phase~ "phase": "pre-decision",   "decision_made": false,   "decision_winner": null,
+[2026-01-23 19:42:00] === END ===
+[2026-01-23 19:42:00] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_ramp_gate_response_20260123_194145.txt
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_ramp_gate_response_20260123_194145.csv

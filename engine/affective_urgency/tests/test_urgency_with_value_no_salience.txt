@@ -1,0 +1,31 @@
+k\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] settling
+[BASELINE] settled
+[VALUE] setting value = 0.6
+[STEP 50] delta=0.000398 relief=0.4218 urgency=0.0000
+[STEP 100] delta=0.000489 relief=0.4296 urgency=0.0000
+[STEP 150] delta=0.000249 relief=0.4409 urgency=0.0000
+[STEP 200] delta=0.000289 relief=0.4548 urgency=0.0000
+[STEP 250] delta=0.000107 relief=0.4704 urgency=0.0000
+[STEP 300] delta=0.000139 relief=0.4866 urgency=0.0000
+[STEP 350] delta=0.000168 relief=0.5023 urgency=0.0000
+[STEP 400] delta=0.000444 relief=0.5168 urgency=0.0000
+[STEP 450] delta=0.001375 relief=0.5291 urgency=0.0000
+[STEP 500] delta=0.002114 relief=0.5388 urgency=0.0000
+[STEP 550] delta=0.002062 relief=0.5452 urgency=0.0000
+[STEP 600] delta=0.001717 relief=0.5483 urgency=0.0000
+[STEP 650] delta=0.001711 relief=0.5482 urgency=0.0000
+[STEP 700] delta=0.001456 relief=0.5450 urgency=0.0000
+[STEP 750] delta=0.001150 relief=0.5392 urgency=0.0000
+[STEP 800] delta=0.001618 relief=0.5313 urgency=0.0000
+
+[URGENCY]
+mean urgency = 0.000000
+max  urgency = 0.000000
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

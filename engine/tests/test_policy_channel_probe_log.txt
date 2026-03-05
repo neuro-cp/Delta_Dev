@@ -1,0 +1,29 @@
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5557
+[INFO] Warmup complete
+[STEP 000] A=0.015800 B=0.015800 ΔACT=0.000004 ΔOUT=0.000010
+[STEP 025] A=0.015900 B=0.015900 ΔACT=0.000009 ΔOUT=0.000021
+[STEP 050] A=0.016000 B=0.016000 ΔACT=0.000011 ΔOUT=0.000028
+[STEP 075] A=0.016000 B=0.016000 ΔACT=0.000013 ΔOUT=0.000033
+[STEP 100] A=0.016100 B=0.016100 ΔACT=0.000012 ΔOUT=0.000030
+[STEP 125] A=0.016200 B=0.016200 ΔACT=0.000012 ΔOUT=0.000029
+[STEP 150] A=0.016200 B=0.016200 ΔACT=0.000006 ΔOUT=0.000014
+[STEP 175] A=0.016300 B=0.016300 ΔACT=0.000005 ΔOUT=0.000011
+[STEP 200] A=0.016300 B=0.016300 ΔACT=0.000000 ΔOUT=0.000000
+[STEP 225] A=0.016300 B=0.016300 ΔACT=0.000002 ΔOUT=0.000006
+[STEP 250] A=0.016400 B=0.016400 ΔACT=0.000001 ΔOUT=0.000003
+[STEP 275] A=0.016400 B=0.016400 ΔACT=0.000004 ΔOUT=0.000010
+
+=== POLICY POPULATION DELTA SUMMARY ===
+Mean ΔACT: 0.000007
+Max  ΔACT: 0.000016
+Mean ΔOUT: 0.000017
+Max  ΔOUT: 0.000039
+No decisions expected or checked.
+======================================
+
+C:\Users\Admin\Desktop\neural framework>python -m engine.tests.test_policy_channel_probe

@@ -1,0 +1,27 @@
+{
+  "version": "1.1.0",
+  "type": "SensoryInterface",
+  "region_id": "AUDITORY_INPUT",
+  "parent_region": "SENSORY_INTERFACES",
+
+  "function": "auditory_signal_transduction",
+
+  "signal_dimensions": {
+    "frequency_bins": 64,
+    "time_bins": 32
+  },
+
+  "encoding": {
+    "mode": "tonotopic",
+    "temporal_filter": "envelope"
+  },
+
+  "outputs": [
+    {
+      "target_region": "MGB",
+      "strength": 1.0
+    }
+  ],
+
+  "notes": "Primary auditory afferent stream routed explicitly to MGB."
+}

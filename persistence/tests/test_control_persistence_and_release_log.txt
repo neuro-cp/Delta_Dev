@@ -1,0 +1,50 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5561
+[INFO] Warmup complete
+
+[PHASE A] Baseline (no decision)
+[A 000] relief=0.4258 ΔOUT=0.000004
+[A 050] relief=0.4195 ΔOUT=0.000010
+[A 100] relief=0.4183 ΔOUT=0.000019
+[A 150] relief=0.4219 ΔOUT=0.000007
+
+[PHASE B] Injecting lawful decision coincidence
+[COMMIT] step=405 winner=D1 Δ=0.0403 relief=0.9005
+
+[PHASE C] Control persistence observation
+[C 000] relief=0.4307 ΔOUT=0.000000
+[C 050] relief=0.4423 ΔOUT=0.000003
+[C 100] relief=0.4566 ΔOUT=0.000027
+[C 150] relief=0.4723 ΔOUT=0.000013
+
+[PHASE D] Control release observation
+[D 000] relief=0.4885 ΔOUT=0.000004
+[D 050] relief=0.5042 ΔOUT=0.000010
+[D 100] relief=0.5184 ΔOUT=0.000004
+[D 150] relief=0.5304 ΔOUT=0.000005
+
+=== CONTROL PERSISTENCE & RELEASE SUMMARY ===
+
+Baseline:
+Gate mean: 0.4215
+ΔOUT mean: 0.000015
+
+Post-commit:
+Gate mean: 0.4574
+ΔOUT mean: 0.000016
+
+Release:
+Gate mean: 0.5168
+ΔOUT mean: 0.000014
+
+Manual checks:
+- Control engaged post-commit
+- Suppression present then released
+- Working state disengaged
+- No second decision
+- No ΔOUT rebound
+============================================
+
+C:\Users\Admin\Desktop\neural framework>

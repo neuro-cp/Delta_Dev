@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "type": "RegionSubstructure",
+  "region_id": "CORPUS_CALLOSUM",
+  "parent_region": "CEREBRAL_CORTEX",
+  "function": "interhemispheric_integration",
+
+  "populations": {
+    "CALLOSAL_FIBERS": {
+      "count": 120000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.2,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "ASSOCIATION_CORTEX",
+      "strength": 0.6
+    },
+    {
+      "source_region": "PFC",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "ASSOCIATION_CORTEX",
+      "strength": 0.6
+    },
+    {
+      "target_region": "PFC",
+      "strength": 0.4
+    }
+  ]
+}

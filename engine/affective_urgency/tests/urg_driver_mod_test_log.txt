@@ -1,0 +1,37 @@
+C:\Users\Admin\Desktop\neural framework>python -m engine.affective_urgency.tests.test_urgency_driver_ramp_no_decision
+=== URGENCY DRIVER RAMP TEST (NO DECISION) ===
+
+[CASE 1] Clean ramp with time
+time_in_window= 0.0  urgency=0.000
+time_in_window= 0.5  urgency=0.125
+time_in_window= 1.0  urgency=0.250
+time_in_window= 1.5  urgency=0.375
+time_in_window= 2.0  urgency=0.500
+time_in_window= 3.0  urgency=0.500
+
+[CASE 2] Below relief floor
+urgency = 0.0
+
+[CASE 3] Below dominance threshold
+urgency = 0.0
+
+[CASE 4] Dominance unstable
+urgency = 0.0
+
+[CASE 5] Suppress alternatives active
+urgency = 0.0
+
+[CASE 6] Decision already made
+urgency = 0.0
+
+[CASE 7] Committed
+urgency = 0.0
+
+=== TEST COMPLETE ===
+Expected:
+• urgency ramps smoothly with time
+• urgency shuts off immediately when ineligible
+• urgency never exceeds max_drive
+• no decisions are possible here
+
+C:\Users\Admin\Desktop\neural framework>

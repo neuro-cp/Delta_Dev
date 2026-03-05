@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "type": "ExpressionBase",
+
+  "description": "Defines global rules for receptor, channel, and protein expression at compile time.",
+
+  "expression_model": {
+    "value_semantics": "normalized_density",
+    "range": {
+      "min": 0.0,
+      "max": 1.0
+    },
+    "default_value": 0.0
+  },
+
+  "application_scope": {
+    "levels": [
+      "region",
+      "population",
+      "neuron"
+    ],
+    "default_scope": "population"
+  },
+
+  "stacking_rules": {
+    "order": [
+      "base",
+      "expression_profile",
+      "state_profile",
+      "compound_effect"
+    ],
+    "combine_method": "multiplicative",
+    "clamp_after_each_stage": true
+  },
+
+  "missing_reference_policy": {
+    "unknown_region": "error",
+    "unknown_population": "error",
+    "unknown_receptor": "error",
+    "unspecified_expression": "use_default"
+  },
+
+  "downstream_effects": {
+    "affects_firing_threshold": true,
+    "affects_synaptic_gain": true,
+    "affects_plasticity": true
+  },
+
+  "plasticity_hooks": {
+    "enabled": true,
+    "timescale": "long_term",
+    "allow_dynamic_modification": false
+  },
+
+  "notes": "This file defines how expression values are interpreted and combined. It does not define specific receptors, regions, or species-level expression patterns."
+}

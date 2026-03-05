@@ -1,0 +1,33 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] settling
+[BASELINE] settled
+[VALUE] setting value = 0.6
+[STEP 50] delta=0.000754 relief=0.4218 urgency=0.003500
+[STEP 100] delta=0.000537 relief=0.4296 urgency=0.004000
+[STEP 150] delta=0.000286 relief=0.4409 urgency=0.004500
+[STEP 200] delta=0.000870 relief=0.4549 urgency=0.005000
+[STEP 250] delta=0.001639 relief=0.4705 urgency=0.005500
+[STEP 300] delta=0.002598 relief=0.4866 urgency=0.006000
+[STEP 350] delta=0.003556 relief=0.5023 urgency=0.006500
+[STEP 400] delta=0.004189 relief=0.5168 urgency=0.007000
+[STEP 450] delta=0.004075 relief=0.5291 urgency=0.007500
+[STEP 500] delta=0.003814 relief=0.5387 urgency=0.008000
+[STEP 550] delta=0.003915 relief=0.5452 urgency=0.008500
+[STEP 600] delta=0.003873 relief=0.5483 urgency=0.009000
+[STEP 650] delta=0.003757 relief=0.5482 urgency=0.009500
+[STEP 700] delta=0.003602 relief=0.5449 urgency=0.010000
+[STEP 750] delta=0.003513 relief=0.5391 urgency=0.010500
+[STEP 800] delta=0.002563 relief=0.5312 urgency=0.011000
+
+[URGENCY SUMMARY]
+mean urgency = 0.005505
+max  urgency = 0.011000
+
+[DECISION]
+decision fired = False
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framew

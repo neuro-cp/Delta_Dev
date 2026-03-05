@@ -1,0 +1,47 @@
+{
+  "version": "1.3.0",
+  "type": "RegionAliasRegistry",
+  "aliases": {
+    "pfc": ["PFC", "prefrontal", "prefrontal_cortex"],
+    "association_cortex": ["ASSOCIATION_CORTEX", "assoc_cortex", "association", "associationctx"],
+    "v1": ["V1", "visual_cortex"],
+    "s1": ["S1", "somatosensory_cortex"],
+    "a1": ["A1", "auditory_cortex"],
+    "m1": ["M1", "motor_cortex"],
+    "insula": ["INSULA"],
+
+    "lgn": ["LGN"],
+    "mgb": ["MGB"],
+    "md": ["MD"],
+    "pulvinar": ["PULVINAR"],
+    "trn": ["TRN", "thalamic_reticular_nucleus"],
+    "vpl": ["VPL"],
+    "vpm": ["VPM"],
+    "intralaminar": ["INTRALAMINAR", "Intralaminar", "iln"],
+
+    "striatum": ["STRIATUM"],
+    "gpe": ["GPe", "gpe"],
+    "gpi": ["GPi", "gpi"],
+    "stn": ["STN"],
+    "snc": ["SNc", "snc"],
+
+    "vta": ["VTA"],
+    "raphe": ["RAPHE"],
+    "locus_coeruleus": ["LOCUS_COERULEUS", "locus", "lc"],
+
+    "ca1": ["CA1"],
+    "ca3": ["CA3"],
+    "dentate_gyrus": ["DENTATE_GYRUS", "dg"],
+    "subiculum": ["SUBICULUM"],
+
+    "superior_colliculus": ["SUPERIOR_COLLICULUS", "sc"],
+    "inferior_colliculus": ["INFERIOR_COLLICULUS", "ic"],
+
+    "hypothalamus": ["HYPOTHALAMUS"],
+    "anterior_pituitary": ["ANTERIOR_PITUITARY", "adenohypophysis"],
+    "posterior_pituitary": ["POSTERIOR_PITUITARY", "neurohypophysis"],
+
+    "cerebellar_cortex": ["CEREBELLAR_CORTEX"],
+    "deep_nuclei": ["DEEP_NUCLEI"]
+  }
+}

@@ -1,0 +1,36 @@
+  Regions: 54
+  Assembly downscale: 1.0
+[INIT] Competing stimuli: L5_PYRAMIDAL_A vs L5_PYRAMIDAL_B
+[CMD] Listening on 127.0.0.1:5563
+[STEP 0000] Δ=0.000003 relief=0.4972 A=OFF B=OFF decision=None
+[STEP 0050] Δ=0.000533 relief=0.4737 A=OFF B=OFF decision=None
+[STEP 0100] Δ=0.001257 relief=0.4533 A=ON B=OFF decision=None
+[STEP 0150] Δ=0.001723 relief=0.4372 A=ON B=OFF decision=None
+[STEP 0200] Δ=0.002200 relief=0.4258 A=ON B=OFF decision=None
+[STEP 0250] Δ=0.002147 relief=0.4195 A=ON B=OFF decision=None
+[STEP 0300] Δ=0.002057 relief=0.4184 A=ON B=ON decision=None
+[STEP 0350] Δ=0.001890 relief=0.4219 A=ON B=ON decision=None
+[STEP 0400] Δ=0.001508 relief=0.4298 A=ON B=ON decision=None
+[STEP 0450] Δ=0.000279 relief=0.4412 A=ON B=ON decision=None
+[STEP 0500] Δ=0.001184 relief=0.4551 A=ON B=ON decision=None
+[STEP 0550] Δ=0.002428 relief=0.4707 A=ON B=ON decision=None
+[STEP 0600] Δ=0.003621 relief=0.4869 A=OFF B=ON decision=None
+[STEP 0650] Δ=0.003811 relief=0.5026 A=OFF B=ON decision=None
+[STEP 0700] Δ=0.004017 relief=0.5170 A=OFF B=ON decision=None
+[STEP 0750] Δ=0.003979 relief=0.5292 A=OFF B=ON decision=None
+[STEP 0800] Δ=0.003836 relief=0.5388 A=OFF B=OFF decision=None
+[STEP 0850] Δ=0.004231 relief=0.5452 A=OFF B=OFF decision=None
+[STEP 0900] Δ=0.003992 relief=0.5483 A=OFF B=OFF decision=None
+[STEP 0950] Δ=0.003550 relief=0.5481 A=OFF B=OFF decision=None
+[STEP 1000] Δ=0.004214 relief=0.5449 A=OFF B=OFF decision=None
+[STEP 1050] Δ=0.003726 relief=0.5391 A=OFF B=OFF decision=None
+[STEP 1100] Δ=0.003129 relief=0.5311 A=OFF B=OFF decision=None
+[STEP 1150] Δ=0.002706 relief=0.5218 A=OFF B=OFF decision=None
+[STEP 1200] Δ=0.002007 relief=0.5116 A=OFF B=OFF decision=None
+[STEP 1250] Δ=0.000772 relief=0.5014 A=OFF B=OFF decision=None
+[STEP 1300] Δ=0.000359 relief=0.4918 A=OFF B=OFF decision=None
+[STEP 1350] Δ=0.001951 relief=0.4831 A=OFF B=OFF decision=None
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

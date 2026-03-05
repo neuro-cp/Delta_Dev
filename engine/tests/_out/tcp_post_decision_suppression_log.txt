@@ -1,0 +1,76 @@
+[2026-01-23 12:01:27] === BEGIN POST-DECISION SUPPRESSION TEST (TCP) ===
+[2026-01-23 12:01:27] [PHASE 0] Baseline snapshot
+[2026-01-23 12:01:27] CONTROL:
+{
+  "step": 57,
+  "time": 0.5600000000000003,
+  "phase": "pre-decision",
+  "decision_made": false,
+  "decision_winner": null,
+  "committed": false,
+  "suppress_alternatives": false,
+  "working_state_active": false,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[2026-01-23 12:01:27] WORKING:
+{
+  "engaged": false,
+  "active_channel": null,
+  "strength": 0.0,
+  "steps_held": 0,
+  "enabled": true
+}
+[2026-01-23 12:01:27] [PHASE 1] Forcing lawful decision commit
+[2026-01-23 12:01:27] [POST-COMMIT SNAPSHOT]
+[2026-01-23 12:01:27] CONTROL:
+{
+  "step": 63,
+  "time": 0.6200000000000003,
+  "phase": "commit",
+  "decision_made": true,
+  "decision_winner": "D2",
+  "committed": true,
+  "suppress_alternatives": true,
+  "working_state_active": true,
+  "fatigue_flag": false,
+  "saturation_flag": false
+}
+[2026-01-23 12:01:27] WORKING:
+{
+  "engaged": true,
+  "active_channel": "D2",
+  "strength": 1.0,
+  "steps_held": 2,
+  "enabled": true
+}
+[2026-01-23 12:01:27] DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511
+[2026-01-23 12:01:27] [PHASE 2] Applying competing inputs (should be suppressed)
+[2026-01-23 12:01:27] [PHASE 3] Observing suppression dynamics
+[2026-01-23 12:01:28] [POST 0000] control=CONTROL:
+[2026-01-23 12:01:31] [POST 0010] control=CONTROL:
+[2026-01-23 12:01:34] [POST 0020] control=CONTROL:
+[2026-01-23 12:01:38] [POST 0030] control=CONTROL:
+[2026-01-23 12:01:41] [POST 0040] control=CONTROL:
+[2026-01-23 12:01:44] [POST 0050] control=CONTROL:
+[2026-01-23 12:01:48] [POST 0060] control=CONTROL:
+[2026-01-23 12:01:51] [POST 0070] control=CONTROL:
+[2026-01-23 12:01:54] [POST 0080] control=CONTROL:
+[2026-01-23 12:01:58] [POST 0090] control=CONTROL:
+[2026-01-23 12:02:01] [POST 0100] control=CONTROL:
+[2026-01-23 12:02:05] [POST 0110] control=CONTROL:
+[2026-01-23 12:02:08] === TEST COMPLETE ===
+[2026-01-23 12:02:08] Expected:
+[2026-01-23 12:02:08] • No new decision fired
+[2026-01-23 12:02:08] • No phase regression
+[2026-01-23 12:02:08] • Suppress_alternatives remains true
+[2026-01-23 12:02:08] • Working state persists then decays
+[2026-01-23 12:02:08] • Clean executive dominance
+[2026-01-23 12:02:08] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_post_decision_suppression.csv
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_post_decision_suppression_log.txt

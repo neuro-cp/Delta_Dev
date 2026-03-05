@@ -1,0 +1,55 @@
+{
+  "version": "1.1.0",
+  "type": "RegionSubstructure",
+  "region_id": "INFERIOR_COLLICULUS",
+  "parent_region": "MIDBRAIN",
+  "function": "auditory_salience_and_integration",
+
+  "populations": {
+    "CENTRAL_NUCLEUS": {
+      "count": 60000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 1.2,
+      "plasticity_profile": "low"
+    },
+
+    "EXTERNAL_CORTEX": {
+      "count": 30000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.6,
+      "plasticity_profile": "low"
+    },
+
+    "INTERNEURONS": {
+      "count": 25000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 4.5,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "AUDITORY_INPUT",
+      "strength": 0.6
+    },
+    {
+      "source_region": "A1",
+      "strength": 0.3
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "MGB",
+      "strength": 0.9
+    },
+    {
+      "target_region": "TRN",
+      "strength": 0.4
+    }
+  ]
+}

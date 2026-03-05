@@ -1,0 +1,64 @@
+[DEBUG] Loaded region: corpus_callosum | populations=1
+[DEBUG] Loaded region: Intralaminar | populations=1
+[DEBUG] Loaded region: pfc | populations=5
+[DEBUG] Loaded region: inferior_colliculus | populations=3
+[DEBUG] Loaded region: superior_colliculus | populations=3
+[DEBUG] Loaded region: auditory_input | populations=0
+[DEBUG] Loaded region: gustatory_input | populations=0
+[DEBUG] Loaded region: sensory_base | populations=0
+[DEBUG] Loaded region: somato_input | populations=0
+[DEBUG] Loaded region: visual_input | populations=0
+[DEBUG] Loaded region: endocrine_system | populations=0
+[DEBUG] Loaded region: hypothalamus | populations=4
+[DEBUG] Loaded region: anterior_pituitary | populations=5
+[DEBUG] Loaded region: posterior_pituitary | populations=2
+[DEBUG] Loaded region: lgn | populations=1
+[DEBUG] Loaded region: md | populations=1
+[DEBUG] Loaded region: mgb | populations=1
+[DEBUG] Loaded region: pulvinar | populations=1
+[DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+
+[PHASE 1] Baseline (no hypotheses, no value)
+[BASE 0000] dominance={'D1': 0.00666575076811696, 'D2': 0.006667582565216375} relief=0.4972
+[BASE 0100] dominance={'D1': 0.3707746199855354, 'D2': 0.3714650433778126} relief=0.4533
+
+[PHASE 2] Assigning hypotheses
+  association_cortex:L2_3_PYRAMIDAL:0 → H1
+  association_cortex:L2_3_PYRAMIDAL:1 → H2
+
+[PHASE 3] Asymmetric drive (value = 0.0)
+[ASYM 0000] dominance={'D1': 0.4659091016422469, 'D2': 0.4667526640911583} Δ=0.000844 relief=0.4258
+[ASYM 0100] dominance={'D1': 0.49081098578274485, 'D2': 0.4915973325283276} Δ=0.000786 relief=0.4184
+[ASYM 0200] dominance={'D1': 0.4971891400382847, 'D2': 0.49821514598116506} Δ=0.001026 relief=0.4298
+[ASYM 0300] dominance={'D1': 0.4985486112309815, 'D2': 0.5002507879757286} Δ=0.001702 relief=0.4551
+
+[PHASE 4] Value-authorized amplification
+[VALUE 0000] dominance={'D1': 0.49850655722433845, 'D2': 0.5011797935209545} Δ=0.002673 relief=0.4869
+[VALUE 0100] dominance={'D1': 0.4987026180363951, 'D2': 0.5012154431080519} Δ=0.002513 relief=0.5170
+[VALUE 0200] dominance={'D1': 0.49821718174827273, 'D2': 0.5017614122513986} Δ=0.003544 relief=0.5388
+[VALUE 0300] dominance={'D1': 0.49919891203393657, 'D2': 0.5007954957858094} Δ=0.001597 relief=0.5482
+
+[PHASE 5] Value withdrawal
+[WITHDRAW 0000] dominance={'D1': 0.5004190358227062, 'D2': 0.49957950325607975} relief=0.5448
+[WITHDRAW 0100] dominance={'D1': 0.5015853877268224, 'D2': 0.4984142306168831} relief=0.5310
+
+=== TEST COMPLETE ===
+Expect:
+• Δ exists before value
+• Δ increases faster / higher under value
+• Δ does NOT appear without asymmetry
+• No latch firing
+• Clean decay after value removal
+
+
+C:\Users\Admin\Desktop\neural framework>

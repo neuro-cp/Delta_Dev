@@ -1,0 +1,1 @@
+"""Governance to enablement bridging (design-only)."""

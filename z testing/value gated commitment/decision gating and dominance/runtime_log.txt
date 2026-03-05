@@ -1,0 +1,31 @@
+[2026-01-14 16:38:24] === BEGIN VALUE-GATED DECISION TEST ===
+[2026-01-14 16:38:24] [BASELINE]
+[2026-01-14 16:38:30] [POKE] striatum 1.0
+[2026-01-14 16:38:31] [POKE] striatum 1.0
+[2026-01-14 16:38:31] [POKE] striatum 1.0
+[2026-01-14 16:38:31] [POKE] striatum 1.0
+[2026-01-14 16:38:31] [POKE] striatum 1.0
+[2026-01-14 16:38:32] [POKE] striatum 1.0
+[2026-01-14 16:38:32] [POKE] striatum 1.0
+[2026-01-14 16:38:32] [POKE] striatum 1.0
+[2026-01-14 16:38:33] [POKE] striatum 1.0
+[2026-01-14 16:38:33] [POKE] striatum 1.0
+[2026-01-14 16:38:33] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 16:38:33] [POKE] vta 0.25
+[2026-01-14 16:38:33] [POKE] striatum 1.0
+[2026-01-14 16:38:34] [POKE] striatum 1.0
+[2026-01-14 16:38:34] [POKE] striatum 1.0
+[2026-01-14 16:38:34] [POKE] striatum 1.0
+[2026-01-14 16:38:35] [POKE] striatum 1.0
+[2026-01-14 16:38:35] [POKE] striatum 1.0
+[2026-01-14 16:38:35] [POKE] striatum 1.0
+[2026-01-14 16:38:35] [POKE] striatum 1.0
+[2026-01-14 16:38:36] [POKE] striatum 1.0
+[2026-01-14 16:38:36] [POKE] striatum 1.0
+[2026-01-14 16:38:36] [POKE] striatum 1.0
+[2026-01-14 16:38:37] [POKE] striatum 1.0
+[2026-01-14 16:38:37] [POKE] striatum 1.0
+[2026-01-14 16:38:37] [POKE] striatum 1.0
+[2026-01-14 16:38:38] [POKE] striatum 1.0
+[2026-01-14 16:38:38] [DECAY]
+[2026-01-14 16:38:42] === TEST COMPLETE ===

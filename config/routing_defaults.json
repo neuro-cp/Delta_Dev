@@ -1,0 +1,41 @@
+{
+  "version": "1.0.1",
+  "type": "RoutingDefaults",
+
+  "description": "Default disambiguation rules for abstract region targets",
+
+  "rules": {
+
+    "CORTEX": {
+      "default_target": "ASSOCIATION_CORTEX",
+      "notes": "Association cortex used as primary integrative cortical target"
+    },
+
+    "THALAMUS": {
+      "sensory": {
+        "VISUAL_INPUT": "LGN",
+        "AUDITORY_INPUT": "MGB",
+        "SOMATO_INPUT": "VPL",
+        "GUSTATORY_INPUT": "VPM"
+      },
+      "motor": {
+        "BASAL_GANGLIA": "MD",
+        "CEREBELLAR_CORTEX": "MD"
+      },
+      "fallback": "TRN"
+    },
+
+    "HIPPOCAMPAL_FORMATION": {
+      "default_target": "SUBICULUM"
+    },
+
+    "BASAL_GANGLIA": {
+      "default_target": "STRIATUM"
+    },
+
+    "BRAINSTEM": {
+      "default_target": "INFERIOR_COLLICULUS",
+      "fallback": "PONS"
+    }
+  }
+}

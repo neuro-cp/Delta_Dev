@@ -1,0 +1,31 @@
+[BASELINE] settling
+[BASELINE] settled
+[VALUE] setting value = 0.6
+[SALIENCE] inducing sustained asymmetry
+[STEP 50] delta=0.000792 relief=0.4218 urgency=0.002800
+[STEP 100] delta=0.000441 relief=0.4296 urgency=0.003200
+[STEP 150] delta=0.000370 relief=0.4409 urgency=0.003600
+[STEP 200] delta=0.000211 relief=0.4548 urgency=0.004000
+[STEP 250] delta=0.000588 relief=0.4704 urgency=0.004400
+[STEP 300] delta=0.000380 relief=0.4865 urgency=0.004800
+[STEP 350] delta=0.000124 relief=0.5023 urgency=0.005200
+[STEP 400] delta=0.000248 relief=0.5167 urgency=0.005600
+[STEP 450] delta=0.000488 relief=0.5291 urgency=0.006000
+[STEP 500] delta=0.000393 relief=0.5387 urgency=0.006400
+[STEP 550] delta=0.000060 relief=0.5452 urgency=0.006800
+[STEP 600] delta=0.000164 relief=0.5483 urgency=0.007200
+[STEP 650] delta=0.000043 relief=0.5482 urgency=0.007600
+[STEP 700] delta=0.000437 relief=0.5450 urgency=0.008000
+[STEP 750] delta=0.000039 relief=0.5392 urgency=0.008400
+[STEP 800] delta=0.000146 relief=0.5313 urgency=0.008800
+
+[URGENCY SUMMARY]
+mean urgency = 0.004404
+max  urgency = 0.008800
+
+[DECISION]
+decision fired = False
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

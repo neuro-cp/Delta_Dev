@@ -1,0 +1,83 @@
+{
+  "version": "1.0.0",
+  "type": "ExpressionProfile",
+  "profile_name": "rodent_default",
+
+  "description": "Baseline rodent (mouse/rat) receptor and channel expression profile.",
+
+  "defaults": {
+    "receptors": {
+      "AMPA": 0.70,
+      "NMDA": 0.55,
+      "GABA_A": 0.65,
+      "GABA_B": 0.30,
+
+      "M1": 0.15,
+      "M2": 0.10,
+
+      "D1": 0.20,
+      "D2": 0.20,
+
+      "5HT1A": 0.25,
+      "5HT2A": 0.10,
+
+      "H1": 0.08,
+
+      "CB1": 0.15
+    },
+
+    "channels": {
+      "NaV_FAST": 0.80,
+      "KV_DELAYED_RECTIFIER": 0.65,
+      "HCN": 0.40,
+      "LEAK": 0.55
+    }
+  },
+
+  "overrides": {
+
+    "HIPPOCAMPAL_FORMATION": {
+      "CA1": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "NMDA": 0.65,
+            "M1": 0.20
+          }
+        }
+      },
+
+      "CA3": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "NMDA": 0.70
+          }
+        }
+      }
+    },
+
+    "BASAL_GANGLIA": {
+      "STRIATUM": {
+        "D1_MSN": {
+          "receptors": {
+            "D1": 0.75
+          }
+        },
+        "D2_MSN": {
+          "receptors": {
+            "D2": 0.75
+          }
+        }
+      }
+    },
+
+    "CORTEX": {
+      "L2_3_PYRAMIDAL": {
+        "receptors": {
+          "M1": 0.20
+        }
+      }
+    }
+  },
+
+  "notes": "Rodent profiles emphasize hippocampal plasticity and striatal dopamine sensitivity with reduced cortical neuromodulatory complexity."
+}

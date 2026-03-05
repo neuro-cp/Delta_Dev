@@ -1,0 +1,38 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[CMD] Listening on 127.0.0.1:5557
+[INFO] Warmup complete
+
+[PHASE A] Baseline (no TRN stimulation)
+[A 000] PFC=0.015800 ASSOC=0.015800 Δ=0.000004
+[A 050] PFC=0.016000 ASSOC=0.016000 Δ=0.000006
+[A 100] PFC=0.016100 ASSOC=0.016100 Δ=0.000005
+[A 150] PFC=0.016200 ASSOC=0.016200 Δ=0.000002
+[A 200] PFC=0.016300 ASSOC=0.016300 Δ=0.000006
+[A 250] PFC=0.016400 ASSOC=0.016400 Δ=0.000012
+
+[PHASE B] TRN active (poke trn 1.0)
+[B 000] PFC=0.016400 ASSOC=0.016400 Δ=0.000021
+[B 050] PFC=0.016400 ASSOC=0.016400 Δ=0.000012
+[B 100] PFC=0.016400 ASSOC=0.016400 Δ=0.000009
+[B 150] PFC=0.016300 ASSOC=0.016300 Δ=0.000015
+[B 200] PFC=0.016200 ASSOC=0.016200 Δ=0.000020
+[B 250] PFC=0.016100 ASSOC=0.016100 Δ=0.000013
+
+=== TRN RELAY SAFETY SUMMARY ===
+
+Phase A (baseline):
+PFC mean:   0.016183
+ASSOC mean:0.016183
+Δ mean:    0.000009
+
+Phase B (TRN active):
+PFC mean:   0.016272
+ASSOC mean:0.016279
+Δ mean:    0.000016
+
+No decisions expected or checked.
+===============================================
+
+C:\Users\Admin\Desktop\neural framework>

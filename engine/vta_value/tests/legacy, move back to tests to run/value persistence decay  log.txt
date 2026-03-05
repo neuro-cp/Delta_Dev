@@ -1,0 +1,26 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[BASELINE] mean delta = 0.001129
+[BASELINE] max  delta = 0.002932
+
+[VALUE] magnitude = 0.60
+[INFO] GPi relief peak reached at 0.548596, decline confirmed after 622 steps
+[VALUE] peak delta = 0.006681
+[VALUE] mean delta = 0.003252
+[VALUE] GPi relief peak = 0.548596
+[VALUE] latch armed = False
+[VALUE] committed = False
+[VALUE] decision events = 0
+
+[DECAY] value disabled
+[DECAY] mean delta = 0.002820
+[DECAY] max  delta = 0.005680
+[DECAY] GPi relief end = 0.466549
+[DECAY] latch armed = False
+[DECAY] committed = False
+[DECAY] decision events = 0
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>

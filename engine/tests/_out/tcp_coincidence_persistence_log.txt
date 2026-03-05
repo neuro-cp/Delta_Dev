@@ -1,0 +1,47 @@
+[2026-01-23 11:00:49] === BEGIN TCP COINCIDENCE PERSISTENCE TEST ===
+[2026-01-23 11:00:49] [HELP] Retrieved help output (truncated):
+[2026-01-23 11:00:49] Commands:
+  poke <region> <mag>
+  poke_pop <region> <population> <mag>
+  poke_asm <region> <population> <idx> <mag>
+  stats <region>
+  top <region> <N>
+  context | ctx
+  ctxfull
+  salience
+  salience_full
+  salience_set <assembly> <value>
+  salience_clear
+  striatum | stri
+  gate
+  decision
+  sustain [N]
+  reset_latch
+  control
+  value
+  value_set <x>
+  urgency
+  urgency_trace
+  value_clear
+  routing
+  hypothesis_set <assembly> <hypothesis>
+  hypothesis_reset
+  hypotheses
+  help
+[2026-01-23 11:00:49] [INFO] No stimulus-like command found; will fallback to region-level association pokes.
+[2026-01-23 11:00:49] [PHASE 1] Baseline settle (no pokes)
+[2026-01-23 11:00:55] [PHASE 2] Evidence ramp (best-effort association cortex targeting)
+[2026-01-23 11:00:56] [RAMP 0000] Δ=0.000713 relief=0.4249
+[2026-01-23 11:00:58] [RAMP 0005] Δ=0.000133 relief=0.4412
+[2026-01-23 11:00:59] [RAMP 0010] Δ=0.000438 relief=0.4615
+[2026-01-23 11:01:01] [RAMP 0015] Δ=0.000992 relief=0.4817
+[2026-01-23 11:01:03] [RAMP 0020] Δ=0.001480 relief=0.5026
+[2026-01-23 11:01:05] [RAMP 0025] Δ=0.002002 relief=0.5209
+[2026-01-23 11:01:06] [PHASE 3] Coincidence pulse (striatal poke; temporary value authorization)
+[2026-01-23 11:01:06] [VALUE] Injecting value via vta (0.78)
+[2026-01-23 11:01:08] [POST-PULSE] Δ=0.001484 relief=0.5423 decision=NO
+[2026-01-23 11:01:08] !!! No decision fired — coincidence insufficient (acceptable). Ending test.
+[2026-01-23 11:01:08] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_coincidence_persistence_debug.csv
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_coincidence_persistence_decision.csv
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_coincidence_persistence_log.txt

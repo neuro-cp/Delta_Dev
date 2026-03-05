@@ -1,0 +1,126 @@
+{
+  "version": "1.0.1",
+  "type": "BrainMap",
+  "description": "Hierarchical anatomical map of brain regions and substructures",
+
+  "species_reference": {
+    "primary": "human",
+    "secondary": ["mouse", "rat", "primate"],
+    "notes": "Human anatomical layout with microcircuit motifs informed by rodent and primate literature"
+  },
+
+  "coordinate_system": {
+    "type": "3D_cartesian",
+    "units": "mm",
+    "origin": "brain_center"
+  },
+
+  "load_policy": {
+    "allow_partial_load": true,
+    "default_regions": ["CORTEX", "THALAMUS", "BRAINSTEM"],
+    "lazy_load_subregions": true
+  },
+
+  "regions": {
+    "CORTEX": {
+      "category": "laminar_cortex",
+      "folder": "cortex",
+      "description": "Neocortical sheet with laminar organization",
+      "layers": ["L1", "L2/3", "L4", "L5", "L6"],
+      "subregions": {
+        "M1": { "file": "m1.json", "function": "motor_control" },
+        "S1": { "file": "s1.json", "function": "somatosensory_processing" },
+        "V1": { "file": "v1.json", "function": "visual_processing" },
+        "A1": { "file": "a1.json", "function": "auditory_processing" },
+        "PFC": { "file": "pfc.json", "function": "executive_control" },
+        "INSULA": { "file": "insula.json", "function": "interoception" }
+      }
+    },
+
+    "THALAMUS": {
+      "category": "relay_nuclei",
+      "folder": "diencephalon/thalamus",
+      "description": "Thalamic relay and association nuclei",
+      "subregions": {
+        "VPL": { "file": "vpl.json", "function": "somatosensory_relay" },
+        "VPM": { "file": "vpm.json", "function": "facial_sensory_relay" },
+        "MD": { "file": "md.json", "function": "prefrontal_relay" },
+        "PULVINAR": { "file": "pulvinar.json", "function": "visual_attention" },
+        "LGN": { "file": "lgn.json", "function": "visual_relay" },
+        "MGB": { "file": "mgb.json", "function": "auditory_relay" },
+        "TRN": { "file": "trn.json", "function": "thalamic_inhibition" }
+      }
+    },
+
+    "BASAL_GANGLIA": {
+      "category": "action_selection",
+      "folder": "basal_ganglia",
+      "description": "Motor and cognitive gating circuits",
+      "subregions": {
+        "STRIATUM": { "file": "striatum.json", "function": "input_integration" },
+        "GPE": { "file": "gpe.json", "function": "indirect_pathway" },
+        "GPI": { "file": "gpi.json", "function": "output_nucleus" },
+        "STN": { "file": "stn.json", "function": "hyperdirect_pathway" },
+        "SNC": { "file": "snc.json", "function": "dopaminergic_modulation" }
+      }
+    },
+
+    "HIPPOCAMPAL_FORMATION": {
+      "category": "memory_system",
+      "folder": "hippocampal_formation",
+      "description": "Declarative memory and spatial navigation system",
+      "subregions": {
+        "DENTATE_GYRUS": { "file": "dentate_gyrus.json", "function": "pattern_separation" },
+        "CA3": { "file": "ca3.json", "function": "autoassociative_memory" },
+        "CA1": { "file": "ca1.json", "function": "memory_output" },
+        "SUBICULUM": { "file": "subiculum.json", "function": "cortical_interface" }
+      }
+    },
+
+    "AMYGDALA": {
+      "category": "emotion_salience",
+      "folder": "amygdala",
+      "description": "Emotional valence and threat processing",
+      "subregions": {
+        "BLA": { "file": "bla.json", "function": "associative_learning" },
+        "CEA": { "file": "cea.json", "function": "autonomic_output" },
+        "MEA": { "file": "mea.json", "function": "olfactory_emotion" }
+      }
+    },
+
+    "BRAINSTEM": {
+      "category": "neuromodulatory_core",
+      "folder": "brainstem",
+      "description": "Vital functions and neuromodulatory nuclei",
+      "subregions": {
+        "VTA": { "file": "vta.json", "function": "dopamine_reward" },
+        "RAPHE": { "file": "raphe.json", "function": "serotonin_modulation" },
+        "LOCUS_COERULEUS": { "file": "locus_coeruleus.json", "function": "norepinephrine_arousal" },
+        "PONS": { "file": "pons.json", "function": "relay_and_sleep" },
+        "MEDULLA": { "file": "medulla.json", "function": "autonomic_control" }
+      }
+    },
+
+    "CEREBELLUM": {
+      "category": "error_correction",
+      "folder": "cerebellum",
+      "description": "Motor coordination and predictive timing",
+      "subregions": {
+        "CEREBELLAR_CORTEX": { "file": "cerebellar_cortex.json", "function": "prediction" },
+        "DEEP_NUCLEI": { "file": "deep_nuclei.json", "function": "output" }
+      }
+    },
+
+    "SENSORY_INTERFACES": {
+      "category": "external_input",
+      "folder": "sensory_interfaces",
+      "description": "Interfaces for external sensory input streams",
+      "subregions": {
+        "VISUAL_INPUT": { "file": "visual_input.json", "function": "retina_lgn_proxy" },
+        "AUDITORY_INPUT": { "file": "auditory_input.json", "function": "cochlea_mgb_proxy" },
+        "SOMATO_INPUT": { "file": "somato_input.json", "function": "peripheral_afferents" },
+        "GUSTATORY_INPUT": { "file": "gustatory_input.json", "function": "taste_afferents" }
+      }
+    }
+  }
+}

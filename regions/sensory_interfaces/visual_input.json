@@ -1,0 +1,61 @@
+{
+  "version": "1.1.0",
+  "type": "SensoryInterface",
+  "region_id": "VISUAL_INPUT",
+  "parent_region": "SENSORY_INTERFACES",
+
+  "function": "visual_signal_transduction",
+
+  "populations": {
+    "VISUAL_SIGNAL": {
+      "count": 5000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+
+      "baseline": 0.0,
+      "tau": 8.0,
+      "gain": 1.0,
+      "threshold": 0.0,
+      "max_rate": 1.0,
+
+      "normalization": 0.0,
+      "homeostatic_gain": 0.0,
+
+      "plasticity_profile": "none",
+
+      "semantic_role": "sensory_input_carrier",
+
+      "clamp_min": 0.0,
+      "clamp_max": 1.0
+    }
+  },
+
+  "signal_dimensions": {
+    "width": 128,
+    "height": 128,
+    "channels": ["luminance"]
+  },
+
+  "encoding": {
+    "mode": "contrast_sensitive",
+    "temporal_filter": "bandpass",
+    "spatial_filter": "center_surround"
+  },
+
+  "output_signal": {
+    "type": "firing_rate_map",
+    "normalization": "adaptive"
+  },
+
+  "outputs": [
+    {
+      "target_region": "LGN",
+      "strength": 1.0
+    }
+  ],
+
+  "drug_sensitivity": {
+    "hallucinogens": "moderate",
+    "sedatives": "low"
+  }
+}

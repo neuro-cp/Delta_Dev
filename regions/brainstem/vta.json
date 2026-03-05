@@ -1,0 +1,103 @@
+{
+  "version": "1.1.1",
+  "type": "RegionSubstructure",
+  "region_id": "vta",
+  "parent_region": "brainstem_base",
+
+  "function": "dopaminergic_reward_modulation",
+
+  "spatial_properties": {
+    "neuron_density_per_mm3": 60000
+  },
+
+  "populations": {
+    "DOPAMINERGIC_NEURONS": {
+      "count": 20000,
+      "neuron_type": "neuromodulatory",
+      "sign": 1.0,
+
+      "channels": {
+        "NaV_FAST": 0.7,
+        "KV_DELAYED_RECTIFIER": 0.6,
+        "HCN": 0.6,
+        "LEAK": 0.65
+      },
+
+      "receptors": {
+        "AMPA": 0.45,
+        "NMDA": 0.35,
+        "GABA_A": 0.5,
+        "GABA_B": 0.3,
+        "D2": 0.4,
+        "M5": 0.2
+      },
+
+      "baseline_firing_rate_hz": 3.0,
+      "plasticity_profile": "medium",
+
+      "neuromodulator_release": {
+        "type": "dopamine",
+        "signal_target": "dopamine_tone",
+        "release_gain": 0.05
+      }
+    },
+
+    "GABA_INTERNEURONS": {
+      "count": 8000,
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+
+      "channels": {
+        "NaV_FAST": 0.85,
+        "KV_DELAYED_RECTIFIER": 0.75,
+        "LEAK": 0.45
+      },
+
+      "receptors": {
+        "AMPA": 0.4,
+        "GABA_A": 0.7
+      },
+
+      "baseline_firing_rate_hz": 8.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "local_connectivity": [
+    {
+      "source": "GABA_INTERNEURONS",
+      "target": "DOPAMINERGIC_NEURONS",
+      "pattern": "tonic_inhibition",
+      "probability": 0.6
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "striatum",
+      "signal": "dopamine_tone",
+      "strength": 1.0
+    },
+    {
+      "target_region": "pfc",
+      "target_population": "L2_3_PYRAMIDAL",
+      "signal": "dopamine_tone",
+      "strength": 0.6
+    },
+    {
+      "target_region": "ca1",
+      "target_population": "PYRAMIDAL_CELLS",
+      "signal": "dopamine_tone",
+      "strength": 0.4
+    }
+  ],
+
+  "drug_sensitivity": {
+    "psychostimulants": "very_high",
+    "opioids": "high",
+    "gabaergic_agents": "high",
+    "antipsychotics": "very_high"
+  },
+
+  "notes": "Normalized IDs to match loader/runtime keys: region_id=vta, parent_region=brainstem_base, outputs route 'CORTEX' -> pfc to avoid unresolved target warnings while cortex routing remains hub-based."
+}

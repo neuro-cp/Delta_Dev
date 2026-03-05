@@ -1,0 +1,39 @@
+[2026-01-23 19:38:15] === BEGIN: TCP Value Control Surface Test ===
+[2026-01-23 19:38:15] Target: 127.0.0.1:5557
+[2026-01-23 19:38:15] Quick sanity: requesting help
+[2026-01-23 19:38:15] HELP (first 10 lines):
+[2026-01-23 19:38:15]   Commands:
+[2026-01-23 19:38:15]     poke <region> <mag>
+[2026-01-23 19:38:15]     poke_pop <region> <population> <mag>
+[2026-01-23 19:38:15]     poke_asm <region> <population> <idx> <mag>
+[2026-01-23 19:38:15]     stats <region>
+[2026-01-23 19:38:15]     top <region> <N>
+[2026-01-23 19:38:15]     context | ctx
+[2026-01-23 19:38:15]     ctxfull
+[2026-01-23 19:38:15]     salience
+[2026-01-23 19:38:15]     salience_full
+[2026-01-23 19:38:15] [CLEAN] reset_latch + value_clear
+[2026-01-23 19:38:15]   OK reset_latch
+[2026-01-23 19:38:15]   OK value reset
+[2026-01-23 19:38:15] [baseline_0] value=0.0 gate_relief=0.4548 dec=None phase=pre-decision committed=False (step=98 t=0.9700000000000006)
+[2026-01-23 19:38:16] [A] poke vta 0.78
+[2026-01-23 19:38:16]   OK
+[2026-01-23 19:38:16] [after_poke_vta_1] value=0.0 gate_relief=0.4467 dec=None phase=pre-decision committed=False (step=123 t=1.2200000000000009)
+[2026-01-23 19:38:16] [after_poke_vta_2] value=0.0 gate_relief=0.4416 dec=None phase=pre-decision committed=False (step=137 t=1.360000000000001)
+[2026-01-23 19:38:16] [B] value_set 0.78
+[2026-01-23 19:38:17]   OK value = 0.1000
+[2026-01-23 19:38:17] [after_value_set_1] value=0.0987 gate_relief=0.4356 dec=None phase=pre-decision committed=False (step=158 t=1.5700000000000012)
+[2026-01-23 19:38:17] [after_value_set_2] value=0.0967 gate_relief=0.4326 dec=None phase=pre-decision committed=False (step=171 t=1.7000000000000013)
+[2026-01-23 19:38:17] [CLEAN] value_clear
+[2026-01-23 19:38:17]   OK value reset
+[2026-01-23 19:38:18] [after_value_clear] value=0.0 gate_relief=0.427 dec=None phase=pre-decision committed=False (step=197 t=1.9600000000000015)
+[2026-01-23 19:38:18] === SUMMARY ===
+[2026-01-23 19:38:18] baseline value: 0.0
+[2026-01-23 19:38:18] Δvalue after poke vta: 0.0
+[2026-01-23 19:38:18] Δvalue after value_set: 0.0987
+[2026-01-23 19:38:18] Interpretation guide:
+[2026-01-23 19:38:18]   - If poke vta does NOT change VALUE but value_set DOES: your older tests were using the wrong control surface.
+[2026-01-23 19:38:18]   - If both change VALUE: both interfaces matter (and we need to decide which is canonical).
+[2026-01-23 19:38:18]   - If neither changes VALUE: value subsystem may be disabled/unwired in the running runtime instance.
+[2026-01-23 19:38:18] Output log: C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_control_surface_20260123_193815.txt
+[2026-01-23 19:38:18] === END ===

@@ -1,0 +1,28 @@
+{
+  "version": "1.1.0",
+  "type": "RegionBase",
+  "region_id": "CEREBELLUM",
+  "category": "error_correction",
+
+  "spatial_properties": {
+    "coordinate_frame": "posterior_fossa_space"
+  },
+
+  "intrinsic_signals": {
+    "prediction_error": 0.0,
+    "timing_precision": 1.0,
+    "energy_state": 1.0
+  },
+
+  "allowed_inputs": [
+    "CORTEX",
+    "BRAINSTEM"
+  ],
+
+  "allowed_outputs": [
+    "THALAMUS",
+    "BRAINSTEM"
+  ],
+
+  "notes": "Cerebellum implements predictive timing and error correction. Motor execution pathways are intentionally deferred."
+}

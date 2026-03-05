@@ -1,0 +1,49 @@
+{
+  "version": "1.2.0",
+  "type": "RegionSubstructure",
+  "region_id": "VPM",
+  "parent_region": "THALAMUS",
+
+  "is_relay": true,
+  "function": "facial_somatosensory_relay",
+
+  "populations": {
+    "RELAY_CELLS": {
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 5.0,
+      "plasticity_profile": "low",
+      "receives_inhibition_from": ["TRN"]
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "SOMATO_INPUT",
+      "signal": "trigeminal_afferents",
+      "strength": 1.0
+    },
+    {
+      "source_region": "S1",
+      "source_population": "L6_PYRAMIDAL",
+      "signal": "corticothalamic_feedback",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "S1",
+      "target_population": "L4_EXCITATORY",
+      "strength": 0.9
+    }
+  ],
+
+  "functional_modes": {
+    "wake": "tonic",
+    "sleep": "burst"
+  },
+
+  "notes": "VPM relays trigeminal and facial somatosensory input to primary somatosensory cortex (S1) layer 4. Activity is gated by TRN inhibition and modulated by corticothalamic feedback from S1 layer 6. Functional modes are declarative only and not yet enforced in dynamics."
+}

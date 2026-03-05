@@ -1,0 +1,14 @@
+udit/tests/test_provenance_coherence_audit.py -vv
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Admin\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 3 items
+
+memory/inspection/audit/tests/test_provenance_coherence_audit.py::test_semantic_record_with_missing_episode_detected PASSED [ 33%]
+memory/inspection/audit/tests/test_provenance_coherence_audit.py::test_drift_record_with_missing_semantic_detected PASSED [ 66%]
+memory/inspection/audit/tests/test_provenance_coherence_audit.py::test_consolidated_episode_without_origin_detected PASSED [100%]
+
+============================ 3 passed in 0.07s ============================
+
+C:\Users\Admin\Desktop\neural framework>

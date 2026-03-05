@@ -1,0 +1,3121 @@
+step,wall_time,control,working,striatum,gate
+0,1769186392.6076937,"CONTROL:
+{
+  ""step"": 96,
+  ""time"": 0.9500000000000006,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 15,
+  ""enabled"": true
+}","STRIATUM @ t=0.970
+winner=D2
+D2=0.366060
+D1=0.365588","GATE:
+  t=0.990
+  relief=0.4540
+  winner=None"
+1,1769186392.9455347,"CONTROL:
+{
+  ""step"": 110,
+  ""time"": 1.0900000000000007,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 29,
+  ""enabled"": true
+}","STRIATUM @ t=1.110
+winner=D2
+D2=0.389090
+D1=0.388532","GATE:
+  t=1.130
+  relief=0.4490
+  winner=None"
+2,1769186393.2848446,"CONTROL:
+{
+  ""step"": 125,
+  ""time"": 1.2400000000000009,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 44,
+  ""enabled"": true
+}","STRIATUM @ t=1.260
+winner=D2
+D2=0.409423
+D1=0.408755","GATE:
+  t=1.280
+  relief=0.4440
+  winner=None"
+3,1769186393.6184614,"CONTROL:
+{
+  ""step"": 141,
+  ""time"": 1.400000000000001,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 60,
+  ""enabled"": true
+}","STRIATUM @ t=1.420
+winner=D2
+D2=0.427022
+D1=0.426297","GATE:
+  t=1.440
+  relief=0.4391
+  winner=None"
+4,1769186393.9507146,"CONTROL:
+{
+  ""step"": 155,
+  ""time"": 1.5400000000000011,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 74,
+  ""enabled"": true
+}","STRIATUM @ t=1.560
+winner=D2
+D2=0.439571
+D1=0.438877","GATE:
+  t=1.580
+  relief=0.4352
+  winner=None"
+5,1769186394.258058,"CONTROL:
+{
+  ""step"": 168,
+  ""time"": 1.6700000000000013,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 86,
+  ""enabled"": true
+}","STRIATUM @ t=1.680
+winner=D2
+D2=0.448600
+D1=0.447932","GATE:
+  t=1.700
+  relief=0.4322
+  winner=None"
+6,1769186394.6020036,"CONTROL:
+{
+  ""step"": 180,
+  ""time"": 1.7900000000000014,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 98,
+  ""enabled"": true
+}","STRIATUM @ t=1.800
+winner=D2
+D2=0.456294
+D1=0.455631","GATE:
+  t=1.810
+  relief=0.4296
+  winner=None"
+7,1769186394.9221125,"CONTROL:
+{
+  ""step"": 193,
+  ""time"": 1.9200000000000015,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 112,
+  ""enabled"": true
+}","STRIATUM @ t=1.940
+winner=D2
+D2=0.463902
+D1=0.463112","GATE:
+  t=1.960
+  relief=0.4266
+  winner=None"
+8,1769186395.2408051,"CONTROL:
+{
+  ""step"": 206,
+  ""time"": 2.0500000000000003,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 125,
+  ""enabled"": true
+}","STRIATUM @ t=2.070
+winner=D2
+D2=0.469825
+D1=0.468876","GATE:
+  t=2.080
+  relief=0.4246
+  winner=None"
+9,1769186395.5989811,"CONTROL:
+{
+  ""step"": 219,
+  ""time"": 2.1799999999999975,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 138,
+  ""enabled"": true
+}","STRIATUM @ t=2.200
+winner=D2
+D2=0.474748
+D1=0.473769","GATE:
+  t=2.220
+  relief=0.4225
+  winner=None"
+10,1769186395.932714,"CONTROL:
+{
+  ""step"": 234,
+  ""time"": 2.3299999999999943,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 153,
+  ""enabled"": true
+}","STRIATUM @ t=2.350
+winner=D2
+D2=0.479433
+D1=0.478472","GATE:
+  t=2.370
+  relief=0.4207
+  winner=None"
+11,1769186396.2868106,"CONTROL:
+{
+  ""step"": 249,
+  ""time"": 2.479999999999991,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 168,
+  ""enabled"": true
+}","STRIATUM @ t=2.500
+winner=D2
+D2=0.483207
+D1=0.482375","GATE:
+  t=2.520
+  relief=0.4194
+  winner=None"
+12,1769186396.6202698,"CONTROL:
+{
+  ""step"": 265,
+  ""time"": 2.6399999999999877,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 184,
+  ""enabled"": true
+}","STRIATUM @ t=2.660
+winner=D2
+D2=0.486385
+D1=0.485850","GATE:
+  t=2.680
+  relief=0.4185
+  winner=None"
+13,1769186396.9516706,"CONTROL:
+{
+  ""step"": 280,
+  ""time"": 2.7899999999999845,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 199,
+  ""enabled"": true
+}","STRIATUM @ t=2.810
+winner=D2
+D2=0.488741
+D1=0.488557","GATE:
+  t=2.830
+  relief=0.4182
+  winner=None"
+14,1769186397.2671146,"CONTROL:
+{
+  ""step"": 293,
+  ""time"": 2.9199999999999817,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 211,
+  ""enabled"": true
+}","STRIATUM @ t=2.930
+winner=D1
+D1=0.490385
+D2=0.490290","GATE:
+  t=2.950
+  relief=0.4182
+  winner=None"
+15,1769186397.586089,"CONTROL:
+{
+  ""step"": 307,
+  ""time"": 3.0599999999999787,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 226,
+  ""enabled"": true
+}","STRIATUM @ t=3.070
+winner=D1
+D1=0.492218
+D2=0.491768","GATE:
+  t=3.090
+  relief=0.4186
+  winner=None"
+16,1769186397.8886707,"CONTROL:
+{
+  ""step"": 320,
+  ""time"": 3.189999999999976,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 238,
+  ""enabled"": true
+}","STRIATUM @ t=3.200
+winner=D1
+D1=0.493659
+D2=0.492891","GATE:
+  t=3.210
+  relief=0.4193
+  winner=None"
+17,1769186398.2016692,"CONTROL:
+{
+  ""step"": 335,
+  ""time"": 3.3399999999999728,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 253,
+  ""enabled"": true
+}","STRIATUM @ t=3.350
+winner=D1
+D1=0.495068
+D2=0.493935","GATE:
+  t=3.360
+  relief=0.4204
+  winner=None"
+18,1769186398.5111463,"CONTROL:
+{
+  ""step"": 346,
+  ""time"": 3.4499999999999704,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 265,
+  ""enabled"": true
+}","STRIATUM @ t=3.470
+winner=D1
+D1=0.496000
+D2=0.494639","GATE:
+  t=3.480
+  relief=0.4216
+  winner=None"
+19,1769186398.7929478,"CONTROL:
+{
+  ""step"": 359,
+  ""time"": 3.5799999999999677,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 278,
+  ""enabled"": true
+}","STRIATUM @ t=3.590
+winner=D1
+D1=0.496768
+D2=0.495264","GATE:
+  t=3.600
+  relief=0.4231
+  winner=None"
+20,1769186399.113295,"CONTROL:
+{
+  ""step"": 373,
+  ""time"": 3.7199999999999647,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 292,
+  ""enabled"": true
+}","STRIATUM @ t=3.740
+winner=D1
+D1=0.497640
+D2=0.495845","GATE:
+  t=3.750
+  relief=0.4252
+  winner=None"
+21,1769186399.4164877,"CONTROL:
+{
+  ""step"": 386,
+  ""time"": 3.849999999999962,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 305,
+  ""enabled"": true
+}","STRIATUM @ t=3.870
+winner=D1
+D1=0.498250
+D2=0.496278","GATE:
+  t=3.880
+  relief=0.4274
+  winner=None"
+22,1769186399.7330496,"CONTROL:
+{
+  ""step"": 400,
+  ""time"": 3.989999999999959,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 319,
+  ""enabled"": true
+}","STRIATUM @ t=4.000
+winner=D1
+D1=0.498732
+D2=0.496672","GATE:
+  t=4.020
+  relief=0.4300
+  winner=None"
+23,1769186400.0365775,"CONTROL:
+{
+  ""step"": 411,
+  ""time"": 4.099999999999957,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 329,
+  ""enabled"": true
+}","STRIATUM @ t=4.110
+winner=D1
+D1=0.499033
+D2=0.497002","GATE:
+  t=4.120
+  relief=0.4320
+  winner=None"
+24,1769186400.3471196,"CONTROL:
+{
+  ""step"": 423,
+  ""time"": 4.2199999999999545,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 342,
+  ""enabled"": true
+}","STRIATUM @ t=4.230
+winner=D1
+D1=0.499327
+D2=0.497298","GATE:
+  t=4.250
+  relief=0.4349
+  winner=None"
+25,1769186400.6827683,"CONTROL:
+{
+  ""step"": 435,
+  ""time"": 4.339999999999952,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 354,
+  ""enabled"": true
+}","STRIATUM @ t=4.360
+winner=D1
+D1=0.499578
+D2=0.497587","GATE:
+  t=4.380
+  relief=0.4379
+  winner=None"
+26,1769186401.018866,"CONTROL:
+{
+  ""step"": 449,
+  ""time"": 4.479999999999949,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 368,
+  ""enabled"": true
+}","STRIATUM @ t=4.500
+winner=D1
+D1=0.499788
+D2=0.497863","GATE:
+  t=4.520
+  relief=0.4414
+  winner=None"
+27,1769186401.3343854,"CONTROL:
+{
+  ""step"": 461,
+  ""time"": 4.599999999999946,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 380,
+  ""enabled"": true
+}","STRIATUM @ t=4.610
+winner=D1
+D1=0.499883
+D2=0.498090","GATE:
+  t=4.630
+  relief=0.4443
+  winner=None"
+28,1769186401.6860874,"CONTROL:
+{
+  ""step"": 474,
+  ""time"": 4.729999999999944,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 393,
+  ""enabled"": true
+}","STRIATUM @ t=4.750
+winner=D1
+D1=0.499931
+D2=0.498390","GATE:
+  t=4.760
+  relief=0.4482
+  winner=None"
+29,1769186402.005771,"CONTROL:
+{
+  ""step"": 486,
+  ""time"": 4.849999999999941,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 404,
+  ""enabled"": true
+}","STRIATUM @ t=4.860
+winner=D1
+D1=0.499945
+D2=0.498606","GATE:
+  t=4.880
+  relief=0.4513
+  winner=None"
+30,1769186402.3552206,"CONTROL:
+{
+  ""step"": 497,
+  ""time"": 4.959999999999939,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 416,
+  ""enabled"": true
+}","STRIATUM @ t=4.980
+winner=D1
+D1=0.499945
+D2=0.498822","GATE:
+  t=5.000
+  relief=0.4548
+  winner=None"
+31,1769186402.6871004,"CONTROL:
+{
+  ""step"": 510,
+  ""time"": 5.089999999999936,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 429,
+  ""enabled"": true
+}","STRIATUM @ t=5.110
+winner=D1
+D1=0.499906
+D2=0.499058","GATE:
+  t=5.120
+  relief=0.4585
+  winner=None"
+32,1769186403.0126987,"CONTROL:
+{
+  ""step"": 521,
+  ""time"": 5.199999999999934,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 440,
+  ""enabled"": true
+}","STRIATUM @ t=5.220
+winner=D1
+D1=0.499902
+D2=0.499204","GATE:
+  t=5.230
+  relief=0.4619
+  winner=None"
+33,1769186403.3413634,"CONTROL:
+{
+  ""step"": 533,
+  ""time"": 5.319999999999931,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 452,
+  ""enabled"": true
+}","STRIATUM @ t=5.340
+winner=D1
+D1=0.499907
+D2=0.499333","GATE:
+  t=5.350
+  relief=0.4656
+  winner=None"
+34,1769186403.6694372,"CONTROL:
+{
+  ""step"": 545,
+  ""time"": 5.4399999999999284,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 464,
+  ""enabled"": true
+}","STRIATUM @ t=5.460
+winner=D1
+D1=0.499866
+D2=0.499487","GATE:
+  t=5.470
+  relief=0.4698
+  winner=None"
+35,1769186404.001501,"CONTROL:
+{
+  ""step"": 556,
+  ""time"": 5.549999999999926,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 475,
+  ""enabled"": true
+}","STRIATUM @ t=5.570
+winner=D1
+D1=0.499814
+D2=0.499627","GATE:
+  t=5.590
+  relief=0.4733
+  winner=None"
+36,1769186404.3798935,"CONTROL:
+{
+  ""step"": 570,
+  ""time"": 5.689999999999923,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 489,
+  ""enabled"": true
+}","STRIATUM @ t=5.710
+winner=D2
+D2=0.499826
+D1=0.499711","GATE:
+  t=5.730
+  relief=0.4779
+  winner=None"
+37,1769186404.7329798,"CONTROL:
+{
+  ""step"": 583,
+  ""time"": 5.81999999999992,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 502,
+  ""enabled"": true
+}","STRIATUM @ t=5.840
+winner=D2
+D2=0.499971
+D1=0.499640","GATE:
+  t=5.860
+  relief=0.4821
+  winner=None"
+38,1769186405.094252,"CONTROL:
+{
+  ""step"": 596,
+  ""time"": 5.949999999999918,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 515,
+  ""enabled"": true
+}","STRIATUM @ t=5.970
+winner=D2
+D2=0.500069
+D1=0.499605","GATE:
+  t=5.990
+  relief=0.4863
+  winner=None"
+39,1769186405.4286768,"CONTROL:
+{
+  ""step"": 610,
+  ""time"": 6.089999999999915,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 529,
+  ""enabled"": true
+}","STRIATUM @ t=6.100
+winner=D2
+D2=0.500177
+D1=0.499549","GATE:
+  t=6.120
+  relief=0.4905
+  winner=None"
+40,1769186405.7931068,"CONTROL:
+{
+  ""step"": 622,
+  ""time"": 6.209999999999912,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 541,
+  ""enabled"": true
+}","STRIATUM @ t=6.230
+winner=D2
+D2=0.500324
+D1=0.499446","GATE:
+  t=6.250
+  relief=0.4946
+  winner=None"
+41,1769186406.1333187,"CONTROL:
+{
+  ""step"": 635,
+  ""time"": 6.339999999999909,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 554,
+  ""enabled"": true
+}","STRIATUM @ t=6.360
+winner=D2
+D2=0.500507
+D1=0.499300","GATE:
+  t=6.370
+  relief=0.4984
+  winner=None"
+42,1769186406.442972,"CONTROL:
+{
+  ""step"": 647,
+  ""time"": 6.459999999999907,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 566,
+  ""enabled"": true
+}","STRIATUM @ t=6.470
+winner=D2
+D2=0.500648
+D1=0.499185","GATE:
+  t=6.490
+  relief=0.5021
+  winner=None"
+43,1769186406.792679,"CONTROL:
+{
+  ""step"": 659,
+  ""time"": 6.579999999999904,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 578,
+  ""enabled"": true
+}","STRIATUM @ t=6.600
+winner=D2
+D2=0.500779
+D1=0.499080","GATE:
+  t=6.620
+  relief=0.5060
+  winner=None"
+44,1769186407.1416507,"CONTROL:
+{
+  ""step"": 672,
+  ""time"": 6.709999999999901,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 591,
+  ""enabled"": true
+}","STRIATUM @ t=6.730
+winner=D2
+D2=0.500865
+D1=0.499017","GATE:
+  t=6.740
+  relief=0.5098
+  winner=None"
+45,1769186407.4652078,"CONTROL:
+{
+  ""step"": 684,
+  ""time"": 6.829999999999899,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 603,
+  ""enabled"": true
+}","STRIATUM @ t=6.850
+winner=D2
+D2=0.500956
+D1=0.498944","GATE:
+  t=6.860
+  relief=0.5130
+  winner=None"
+46,1769186407.813014,"CONTROL:
+{
+  ""step"": 697,
+  ""time"": 6.959999999999896,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 616,
+  ""enabled"": true
+}","STRIATUM @ t=6.980
+winner=D2
+D2=0.501028
+D1=0.498888","GATE:
+  t=6.990
+  relief=0.5165
+  winner=None"
+47,1769186408.1651928,"CONTROL:
+{
+  ""step"": 709,
+  ""time"": 7.0799999999998935,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 628,
+  ""enabled"": true
+}","STRIATUM @ t=7.100
+winner=D2
+D2=0.501116
+D1=0.498812","GATE:
+  t=7.120
+  relief=0.5200
+  winner=None"
+48,1769186408.482541,"CONTROL:
+{
+  ""step"": 722,
+  ""time"": 7.209999999999891,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 641,
+  ""enabled"": true
+}","STRIATUM @ t=7.230
+winner=D2
+D2=0.501247
+D1=0.498692","GATE:
+  t=7.240
+  relief=0.5230
+  winner=None"
+49,1769186408.830085,"CONTROL:
+{
+  ""step"": 735,
+  ""time"": 7.339999999999888,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 654,
+  ""enabled"": true
+}","STRIATUM @ t=7.360
+winner=D2
+D2=0.501383
+D1=0.498566","GATE:
+  t=7.370
+  relief=0.5262
+  winner=None"
+50,1769186409.171078,"CONTROL:
+{
+  ""step"": 747,
+  ""time"": 7.459999999999885,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 666,
+  ""enabled"": true
+}","STRIATUM @ t=7.480
+winner=D2
+D2=0.501519
+D1=0.498438","GATE:
+  t=7.500
+  relief=0.5291
+  winner=None"
+51,1769186409.5333924,"CONTROL:
+{
+  ""step"": 760,
+  ""time"": 7.589999999999883,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 679,
+  ""enabled"": true
+}","STRIATUM @ t=7.610
+winner=D2
+D2=0.501639
+D1=0.498325","GATE:
+  t=7.630
+  relief=0.5319
+  winner=None"
+52,1769186409.8652306,"CONTROL:
+{
+  ""step"": 773,
+  ""time"": 7.71999999999988,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 692,
+  ""enabled"": true
+}","STRIATUM @ t=7.730
+winner=D2
+D2=0.501688
+D1=0.498281","GATE:
+  t=7.750
+  relief=0.5343
+  winner=None"
+53,1769186410.189134,"CONTROL:
+{
+  ""step"": 785,
+  ""time"": 7.839999999999877,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 704,
+  ""enabled"": true
+}","STRIATUM @ t=7.860
+winner=D2
+D2=0.501685
+D1=0.498289","GATE:
+  t=7.870
+  relief=0.5365
+  winner=None"
+54,1769186410.5412583,"CONTROL:
+{
+  ""step"": 797,
+  ""time"": 7.959999999999875,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 716,
+  ""enabled"": true
+}","STRIATUM @ t=7.980
+winner=D2
+D2=0.501641
+D1=0.498337","GATE:
+  t=8.000
+  relief=0.5387
+  winner=None"
+55,1769186410.8767526,"CONTROL:
+{
+  ""step"": 810,
+  ""time"": 8.089999999999872,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 729,
+  ""enabled"": true
+}","STRIATUM @ t=8.100
+winner=D2
+D2=0.501600
+D1=0.498381","GATE:
+  t=8.120
+  relief=0.5406
+  winner=None"
+56,1769186411.2093146,"CONTROL:
+{
+  ""step"": 822,
+  ""time"": 8.20999999999987,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 741,
+  ""enabled"": true
+}","STRIATUM @ t=8.220
+winner=D2
+D2=0.501583
+D1=0.498401","GATE:
+  t=8.240
+  relief=0.5422
+  winner=None"
+57,1769186411.5388315,"CONTROL:
+{
+  ""step"": 834,
+  ""time"": 8.329999999999867,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 753,
+  ""enabled"": true
+}","STRIATUM @ t=8.350
+winner=D2
+D2=0.501557
+D1=0.498429","GATE:
+  t=8.360
+  relief=0.5437
+  winner=None"
+58,1769186411.8836331,"CONTROL:
+{
+  ""step"": 847,
+  ""time"": 8.459999999999864,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 766,
+  ""enabled"": true
+}","STRIATUM @ t=8.480
+winner=D2
+D2=0.501530
+D1=0.498459","GATE:
+  t=8.490
+  relief=0.5451
+  winner=None"
+59,1769186412.2194316,"CONTROL:
+{
+  ""step"": 859,
+  ""time"": 8.579999999999862,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 778,
+  ""enabled"": true
+}","STRIATUM @ t=8.600
+winner=D2
+D2=0.501501
+D1=0.498490","GATE:
+  t=8.610
+  relief=0.5462
+  winner=None"
+60,1769186412.529312,"CONTROL:
+{
+  ""step"": 871,
+  ""time"": 8.699999999999859,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 789,
+  ""enabled"": true
+}","STRIATUM @ t=8.710
+winner=D2
+D2=0.501483
+D1=0.498509","GATE:
+  t=8.730
+  relief=0.5471
+  winner=None"
+61,1769186412.8672109,"CONTROL:
+{
+  ""step"": 882,
+  ""time"": 8.809999999999857,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 801,
+  ""enabled"": true
+}","STRIATUM @ t=8.830
+winner=D2
+D2=0.501501
+D1=0.498492","GATE:
+  t=8.840
+  relief=0.5477
+  winner=None"
+62,1769186413.1829872,"CONTROL:
+{
+  ""step"": 894,
+  ""time"": 8.929999999999854,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 812,
+  ""enabled"": true
+}","STRIATUM @ t=8.940
+winner=D2
+D2=0.501545
+D1=0.498449","GATE:
+  t=8.950
+  relief=0.5482
+  winner=None"
+63,1769186413.5060766,"CONTROL:
+{
+  ""step"": 905,
+  ""time"": 9.039999999999852,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 824,
+  ""enabled"": true
+}","STRIATUM @ t=9.060
+winner=D2
+D2=0.501532
+D1=0.498463","GATE:
+  t=9.070
+  relief=0.5485
+  winner=None"
+64,1769186413.8611019,"CONTROL:
+{
+  ""step"": 917,
+  ""time"": 9.15999999999985,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 836,
+  ""enabled"": true
+}","STRIATUM @ t=9.180
+winner=D2
+D2=0.501498
+D1=0.498498","GATE:
+  t=9.200
+  relief=0.5487
+  winner=None"
+65,1769186414.176827,"CONTROL:
+{
+  ""step"": 930,
+  ""time"": 9.289999999999846,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 849,
+  ""enabled"": true
+}","STRIATUM @ t=9.300
+winner=D2
+D2=0.501483
+D1=0.498513","GATE:
+  t=9.310
+  relief=0.5486
+  winner=None"
+66,1769186414.5262313,"CONTROL:
+{
+  ""step"": 942,
+  ""time"": 9.409999999999844,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 861,
+  ""enabled"": true
+}","STRIATUM @ t=9.430
+winner=D2
+D2=0.501492
+D1=0.498504","GATE:
+  t=9.440
+  relief=0.5483
+  winner=None"
+67,1769186414.8759766,"CONTROL:
+{
+  ""step"": 955,
+  ""time"": 9.539999999999841,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 874,
+  ""enabled"": true
+}","STRIATUM @ t=9.560
+winner=D2
+D2=0.501484
+D1=0.498513","GATE:
+  t=9.570
+  relief=0.5479
+  winner=None"
+68,1769186415.2248197,"CONTROL:
+{
+  ""step"": 968,
+  ""time"": 9.669999999999838,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 886,
+  ""enabled"": true
+}","STRIATUM @ t=9.680
+winner=D2
+D2=0.501450
+D1=0.498548","GATE:
+  t=9.700
+  relief=0.5473
+  winner=None"
+69,1769186415.559886,"CONTROL:
+{
+  ""step"": 980,
+  ""time"": 9.789999999999836,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 899,
+  ""enabled"": true
+}","STRIATUM @ t=9.810
+winner=D2
+D2=0.501371
+D1=0.498627","GATE:
+  t=9.830
+  relief=0.5464
+  winner=None"
+70,1769186415.9060616,"CONTROL:
+{
+  ""step"": 993,
+  ""time"": 9.919999999999833,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 912,
+  ""enabled"": true
+}","STRIATUM @ t=9.940
+winner=D2
+D2=0.501339
+D1=0.498659","GATE:
+  t=9.950
+  relief=0.5454
+  winner=None"
+71,1769186416.250326,"CONTROL:
+{
+  ""step"": 1006,
+  ""time"": 10.04999999999983,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 924,
+  ""enabled"": true
+}","STRIATUM @ t=10.060
+winner=D2
+D2=0.501330
+D1=0.498669","GATE:
+  t=10.080
+  relief=0.5443
+  winner=None"
+72,1769186416.6020658,"CONTROL:
+{
+  ""step"": 1019,
+  ""time"": 10.179999999999827,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 938,
+  ""enabled"": true
+}","STRIATUM @ t=10.200
+winner=D2
+D2=0.501323
+D1=0.498676","GATE:
+  t=10.210
+  relief=0.5429
+  winner=None"
+73,1769186416.9563673,"CONTROL:
+{
+  ""step"": 1032,
+  ""time"": 10.309999999999825,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 951,
+  ""enabled"": true
+}","STRIATUM @ t=10.330
+winner=D2
+D2=0.501313
+D1=0.498686","GATE:
+  t=10.340
+  relief=0.5413
+  winner=None"
+74,1769186417.302323,"CONTROL:
+{
+  ""step"": 1045,
+  ""time"": 10.439999999999822,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 964,
+  ""enabled"": true
+}","STRIATUM @ t=10.460
+winner=D2
+D2=0.501317
+D1=0.498683","GATE:
+  t=10.470
+  relief=0.5395
+  winner=None"
+75,1769186417.6516075,"CONTROL:
+{
+  ""step"": 1058,
+  ""time"": 10.569999999999819,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 977,
+  ""enabled"": true
+}","STRIATUM @ t=10.590
+winner=D2
+D2=0.501345
+D1=0.498654","GATE:
+  t=10.610
+  relief=0.5376
+  winner=None"
+76,1769186417.9832125,"CONTROL:
+{
+  ""step"": 1071,
+  ""time"": 10.699999999999816,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 989,
+  ""enabled"": true
+}","STRIATUM @ t=10.710
+winner=D2
+D2=0.501365
+D1=0.498635","GATE:
+  t=10.730
+  relief=0.5358
+  winner=None"
+77,1769186418.3178077,"CONTROL:
+{
+  ""step"": 1083,
+  ""time"": 10.819999999999814,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1001,
+  ""enabled"": true
+}","STRIATUM @ t=10.830
+winner=D2
+D2=0.501352
+D1=0.498647","GATE:
+  t=10.850
+  relief=0.5339
+  winner=None"
+78,1769186418.6678667,"CONTROL:
+{
+  ""step"": 1095,
+  ""time"": 10.939999999999811,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1014,
+  ""enabled"": true
+}","STRIATUM @ t=10.960
+winner=D2
+D2=0.501326
+D1=0.498674","GATE:
+  t=10.980
+  relief=0.5317
+  winner=None"
+79,1769186418.9952638,"CONTROL:
+{
+  ""step"": 1109,
+  ""time"": 11.079999999999808,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1028,
+  ""enabled"": true
+}","STRIATUM @ t=11.090
+winner=D2
+D2=0.501336
+D1=0.498664","GATE:
+  t=11.110
+  relief=0.5293
+  winner=None"
+80,1769186419.30427,"CONTROL:
+{
+  ""step"": 1120,
+  ""time"": 11.189999999999806,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1039,
+  ""enabled"": true
+}","STRIATUM @ t=11.200
+winner=D2
+D2=0.501340
+D1=0.498660","GATE:
+  t=11.210
+  relief=0.5273
+  winner=None"
+81,1769186419.6542625,"CONTROL:
+{
+  ""step"": 1132,
+  ""time"": 11.309999999999803,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1051,
+  ""enabled"": true
+}","STRIATUM @ t=11.330
+winner=D2
+D2=0.501307
+D1=0.498692","GATE:
+  t=11.340
+  relief=0.5249
+  winner=None"
+82,1769186420.0132618,"CONTROL:
+{
+  ""step"": 1145,
+  ""time"": 11.4399999999998,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1064,
+  ""enabled"": true
+}","STRIATUM @ t=11.460
+winner=D2
+D2=0.501286
+D1=0.498713","GATE:
+  t=11.470
+  relief=0.5225
+  winner=None"
+83,1769186420.3676305,"CONTROL:
+{
+  ""step"": 1158,
+  ""time"": 11.569999999999798,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1077,
+  ""enabled"": true
+}","STRIATUM @ t=11.590
+winner=D2
+D2=0.501214
+D1=0.498786","GATE:
+  t=11.600
+  relief=0.5199
+  winner=None"
+84,1769186420.745186,"CONTROL:
+{
+  ""step"": 1171,
+  ""time"": 11.699999999999795,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1090,
+  ""enabled"": true
+}","STRIATUM @ t=11.720
+winner=D2
+D2=0.501103
+D1=0.498897","GATE:
+  t=11.740
+  relief=0.5171
+  winner=None"
+85,1769186421.0694184,"CONTROL:
+{
+  ""step"": 1185,
+  ""time"": 11.839999999999792,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1103,
+  ""enabled"": true
+}","STRIATUM @ t=11.850
+winner=D2
+D2=0.501013
+D1=0.498987","GATE:
+  t=11.860
+  relief=0.5147
+  winner=None"
+86,1769186421.4013863,"CONTROL:
+{
+  ""step"": 1196,
+  ""time"": 11.94999999999979,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1115,
+  ""enabled"": true
+}","STRIATUM @ t=11.970
+winner=D2
+D2=0.500942
+D1=0.499058","GATE:
+  t=11.990
+  relief=0.5120
+  winner=None"
+87,1769186421.7761967,"CONTROL:
+{
+  ""step"": 1209,
+  ""time"": 12.079999999999787,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1128,
+  ""enabled"": true
+}","STRIATUM @ t=12.100
+winner=D2
+D2=0.500881
+D1=0.499119","GATE:
+  t=12.120
+  relief=0.5093
+  winner=None"
+88,1769186422.0764856,"CONTROL:
+{
+  ""step"": 1222,
+  ""time"": 12.209999999999784,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1140,
+  ""enabled"": true
+}","STRIATUM @ t=12.220
+winner=D2
+D2=0.500810
+D1=0.499190","GATE:
+  t=12.230
+  relief=0.5070
+  winner=None"
+89,1769186422.4206254,"CONTROL:
+{
+  ""step"": 1233,
+  ""time"": 12.319999999999782,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1152,
+  ""enabled"": true
+}","STRIATUM @ t=12.340
+winner=D2
+D2=0.500685
+D1=0.499315","GATE:
+  t=12.360
+  relief=0.5044
+  winner=None"
+90,1769186422.7513578,"CONTROL:
+{
+  ""step"": 1246,
+  ""time"": 12.449999999999779,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1165,
+  ""enabled"": true
+}","STRIATUM @ t=12.460
+winner=D2
+D2=0.500631
+D1=0.499369","GATE:
+  t=12.480
+  relief=0.5019
+  winner=None"
+91,1769186423.108617,"CONTROL:
+{
+  ""step"": 1258,
+  ""time"": 12.569999999999776,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1177,
+  ""enabled"": true
+}","STRIATUM @ t=12.590
+winner=D2
+D2=0.500541
+D1=0.499459","GATE:
+  t=12.610
+  relief=0.4993
+  winner=None"
+92,1769186423.4209142,"CONTROL:
+{
+  ""step"": 1270,
+  ""time"": 12.689999999999774,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1189,
+  ""enabled"": true
+}","STRIATUM @ t=12.700
+winner=D2
+D2=0.500424
+D1=0.499576","GATE:
+  t=12.720
+  relief=0.4972
+  winner=None"
+93,1769186423.787005,"CONTROL:
+{
+  ""step"": 1282,
+  ""time"": 12.809999999999771,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1201,
+  ""enabled"": true
+}","STRIATUM @ t=12.830
+winner=D2
+D2=0.500341
+D1=0.499659","GATE:
+  t=12.850
+  relief=0.4947
+  winner=None"
+94,1769186424.1056733,"CONTROL:
+{
+  ""step"": 1295,
+  ""time"": 12.939999999999769,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1214,
+  ""enabled"": true
+}","STRIATUM @ t=12.950
+winner=D2
+D2=0.500253
+D1=0.499747","GATE:
+  t=12.970
+  relief=0.4924
+  winner=None"
+95,1769186424.4553163,"CONTROL:
+{
+  ""step"": 1307,
+  ""time"": 13.059999999999766,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1226,
+  ""enabled"": true
+}","STRIATUM @ t=13.080
+winner=D2
+D2=0.500227
+D1=0.499773","GATE:
+  t=13.100
+  relief=0.4900
+  winner=None"
+96,1769186424.8202221,"CONTROL:
+{
+  ""step"": 1317,
+  ""time"": 13.159999999999764,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1236,
+  ""enabled"": true
+}","STRIATUM @ t=13.180
+winner=D2
+D2=0.500229
+D1=0.499771","GATE:
+  t=13.200
+  relief=0.4882
+  winner=None"
+97,1769186425.153156,"CONTROL:
+{
+  ""step"": 1326,
+  ""time"": 13.249999999999762,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1245,
+  ""enabled"": true
+}","STRIATUM @ t=13.260
+winner=D2
+D2=0.500199
+D1=0.499801","GATE:
+  t=13.280
+  relief=0.4868
+  winner=None"
+98,1769186425.5093257,"CONTROL:
+{
+  ""step"": 1334,
+  ""time"": 13.32999999999976,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1253,
+  ""enabled"": true
+}","STRIATUM @ t=13.340
+winner=D2
+D2=0.500174
+D1=0.499826","GATE:
+  t=13.350
+  relief=0.4856
+  winner=None"
+99,1769186425.8268728,"CONTROL:
+{
+  ""step"": 1342,
+  ""time"": 13.409999999999759,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1260,
+  ""enabled"": true
+}","STRIATUM @ t=13.420
+winner=D2
+D2=0.500128
+D1=0.499872","GATE:
+  t=13.430
+  relief=0.4843
+  winner=None"
+100,1769186426.1538157,"CONTROL:
+{
+  ""step"": 1350,
+  ""time"": 13.489999999999757,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1269,
+  ""enabled"": true
+}","STRIATUM @ t=13.500
+winner=D2
+D2=0.500112
+D1=0.499888","GATE:
+  t=13.520
+  relief=0.4828
+  winner=None"
+101,1769186426.50185,"CONTROL:
+{
+  ""step"": 1358,
+  ""time"": 13.569999999999755,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1277,
+  ""enabled"": true
+}","STRIATUM @ t=13.580
+winner=D2
+D2=0.500125
+D1=0.499875","GATE:
+  t=13.600
+  relief=0.4816
+  winner=None"
+102,1769186426.8832479,"CONTROL:
+{
+  ""step"": 1365,
+  ""time"": 13.639999999999754,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1284,
+  ""enabled"": true
+}","STRIATUM @ t=13.650
+winner=D2
+D2=0.500132
+D1=0.499868","GATE:
+  t=13.670
+  relief=0.4805
+  winner=None"
+103,1769186427.2184844,"CONTROL:
+{
+  ""step"": 1373,
+  ""time"": 13.719999999999752,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1291,
+  ""enabled"": true
+}","STRIATUM @ t=13.730
+winner=D2
+D2=0.500153
+D1=0.499847","GATE:
+  t=13.740
+  relief=0.4795
+  winner=None"
+104,1769186427.5449798,"CONTROL:
+{
+  ""step"": 1382,
+  ""time"": 13.80999999999975,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1301,
+  ""enabled"": true
+}","STRIATUM @ t=13.830
+winner=D2
+D2=0.500169
+D1=0.499831","GATE:
+  t=13.840
+  relief=0.4781
+  winner=None"
+105,1769186427.864398,"CONTROL:
+{
+  ""step"": 1394,
+  ""time"": 13.929999999999747,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1312,
+  ""enabled"": true
+}","STRIATUM @ t=13.940
+winner=D2
+D2=0.500230
+D1=0.499770","GATE:
+  t=13.950
+  relief=0.4767
+  winner=None"
+106,1769186428.181497,"CONTROL:
+{
+  ""step"": 1404,
+  ""time"": 14.029999999999745,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1323,
+  ""enabled"": true
+}","STRIATUM @ t=14.040
+winner=D2
+D2=0.500266
+D1=0.499734","GATE:
+  t=14.060
+  relief=0.4753
+  winner=None"
+107,1769186428.5464299,"CONTROL:
+{
+  ""step"": 1416,
+  ""time"": 14.149999999999743,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1335,
+  ""enabled"": true
+}","STRIATUM @ t=14.170
+winner=D2
+D2=0.500313
+D1=0.499687","GATE:
+  t=14.190
+  relief=0.4738
+  winner=None"
+108,1769186428.863349,"CONTROL:
+{
+  ""step"": 1429,
+  ""time"": 14.27999999999974,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1348,
+  ""enabled"": true
+}","STRIATUM @ t=14.300
+winner=D2
+D2=0.500297
+D1=0.499703","GATE:
+  t=14.310
+  relief=0.4725
+  winner=None"
+109,1769186429.1733735,"CONTROL:
+{
+  ""step"": 1441,
+  ""time"": 14.399999999999737,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1359,
+  ""enabled"": true
+}","STRIATUM @ t=14.410
+winner=D2
+D2=0.500285
+D1=0.499715","GATE:
+  t=14.420
+  relief=0.4714
+  winner=None"
+110,1769186429.493405,"CONTROL:
+{
+  ""step"": 1452,
+  ""time"": 14.509999999999735,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1371,
+  ""enabled"": true
+}","STRIATUM @ t=14.530
+winner=D2
+D2=0.500251
+D1=0.499749","GATE:
+  t=14.540
+  relief=0.4703
+  winner=None"
+111,1769186429.87643,"CONTROL:
+{
+  ""step"": 1465,
+  ""time"": 14.639999999999732,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1384,
+  ""enabled"": true
+}","STRIATUM @ t=14.660
+winner=D2
+D2=0.500203
+D1=0.499797","GATE:
+  t=14.680
+  relief=0.4692
+  winner=None"
+112,1769186430.2164617,"CONTROL:
+{
+  ""step"": 1478,
+  ""time"": 14.76999999999973,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1397,
+  ""enabled"": true
+}","STRIATUM @ t=14.790
+winner=D2
+D2=0.500138
+D1=0.499862","GATE:
+  t=14.810
+  relief=0.4684
+  winner=None"
+113,1769186430.5362508,"CONTROL:
+{
+  ""step"": 1491,
+  ""time"": 14.899999999999727,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1409,
+  ""enabled"": true
+}","STRIATUM @ t=14.910
+winner=D2
+D2=0.500090
+D1=0.499910","GATE:
+  t=14.920
+  relief=0.4677
+  winner=None"
+114,1769186430.896137,"CONTROL:
+{
+  ""step"": 1501,
+  ""time"": 14.999999999999725,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1419,
+  ""enabled"": true
+}","STRIATUM @ t=15.010
+winner=D2
+D2=0.500073
+D1=0.499927","GATE:
+  t=15.030
+  relief=0.4672
+  winner=None"
+115,1769186431.2223105,"CONTROL:
+{
+  ""step"": 1513,
+  ""time"": 15.119999999999722,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1431,
+  ""enabled"": true
+}","STRIATUM @ t=15.130
+winner=D2
+D2=0.500077
+D1=0.499923","GATE:
+  t=15.140
+  relief=0.4667
+  winner=None"
+116,1769186431.5723343,"CONTROL:
+{
+  ""step"": 1524,
+  ""time"": 15.22999999999972,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1443,
+  ""enabled"": true
+}","STRIATUM @ t=15.250
+winner=D2
+D2=0.500111
+D1=0.499889","GATE:
+  t=15.260
+  relief=0.4664
+  winner=None"
+117,1769186431.896561,"CONTROL:
+{
+  ""step"": 1536,
+  ""time"": 15.349999999999717,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1455,
+  ""enabled"": true
+}","STRIATUM @ t=15.360
+winner=D2
+D2=0.500175
+D1=0.499825","GATE:
+  t=15.380
+  relief=0.4662
+  winner=None"
+118,1769186432.245729,"CONTROL:
+{
+  ""step"": 1548,
+  ""time"": 15.469999999999715,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1467,
+  ""enabled"": true
+}","STRIATUM @ t=15.490
+winner=D2
+D2=0.500269
+D1=0.499731","GATE:
+  t=15.510
+  relief=0.4660
+  winner=None"
+119,1769186432.5698204,"CONTROL:
+{
+  ""step"": 1561,
+  ""time"": 15.599999999999712,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1479,
+  ""enabled"": true
+}","STRIATUM @ t=15.610
+winner=D2
+D2=0.500303
+D1=0.499697","GATE:
+  t=15.620
+  relief=0.4660
+  winner=None"

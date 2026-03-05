@@ -1,0 +1,3361 @@
+step,wall_time,control,working,decision,gate
+0,1769187688.0630865,"CONTROL:
+{
+  ""step"": 78,
+  ""time"": 0.7700000000000005,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 17,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=0.800
+  relief=0.4614
+  winner=None"
+1,1769187688.4205558,"CONTROL:
+{
+  ""step"": 94,
+  ""time"": 0.9300000000000006,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 33,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=0.970
+  relief=0.4547
+  winner=None"
+2,1769187688.7327957,"CONTROL:
+{
+  ""step"": 109,
+  ""time"": 1.0800000000000007,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 48,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=1.120
+  relief=0.4493
+  winner=None"
+3,1769187689.0781038,"CONTROL:
+{
+  ""step"": 124,
+  ""time"": 1.2300000000000009,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 64,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=1.270
+  relief=0.4443
+  winner=None"
+4,1769187689.4355323,"CONTROL:
+{
+  ""step"": 140,
+  ""time"": 1.390000000000001,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 79,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=1.440
+  relief=0.4391
+  winner=None"
+5,1769187689.759478,"CONTROL:
+{
+  ""step"": 156,
+  ""time"": 1.5500000000000012,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 95,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=1.590
+  relief=0.4350
+  winner=None"
+6,1769187690.0889778,"CONTROL:
+{
+  ""step"": 173,
+  ""time"": 1.7200000000000013,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 111,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=1.750
+  relief=0.4310
+  winner=None"
+7,1769187690.4377856,"CONTROL:
+{
+  ""step"": 186,
+  ""time"": 1.8500000000000014,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 125,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=1.890
+  relief=0.4280
+  winner=None"
+8,1769187690.73606,"CONTROL:
+{
+  ""step"": 201,
+  ""time"": 2.0000000000000013,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 139,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.020
+  relief=0.4256
+  winner=None"
+9,1769187691.0460649,"CONTROL:
+{
+  ""step"": 215,
+  ""time"": 2.1399999999999983,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 154,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.170
+  relief=0.4232
+  winner=None"
+10,1769187691.3622708,"CONTROL:
+{
+  ""step"": 229,
+  ""time"": 2.2799999999999954,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 167,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.310
+  relief=0.4214
+  winner=None"
+11,1769187691.6951692,"CONTROL:
+{
+  ""step"": 244,
+  ""time"": 2.429999999999992,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 183,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.470
+  relief=0.4198
+  winner=None"
+12,1769187692.0385036,"CONTROL:
+{
+  ""step"": 260,
+  ""time"": 2.5899999999999888,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 199,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.630
+  relief=0.4188
+  winner=None"
+13,1769187692.3905568,"CONTROL:
+{
+  ""step"": 277,
+  ""time"": 2.759999999999985,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 216,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.800
+  relief=0.4182
+  winner=None"
+14,1769187692.7364073,"CONTROL:
+{
+  ""step"": 292,
+  ""time"": 2.909999999999982,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 231,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=2.950
+  relief=0.4182
+  winner=None"
+15,1769187693.062525,"CONTROL:
+{
+  ""step"": 305,
+  ""time"": 3.039999999999979,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 244,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.070
+  relief=0.4186
+  winner=None"
+16,1769187693.3739502,"CONTROL:
+{
+  ""step"": 317,
+  ""time"": 3.1599999999999766,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 256,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.200
+  relief=0.4192
+  winner=None"
+17,1769187693.70196,"CONTROL:
+{
+  ""step"": 332,
+  ""time"": 3.3099999999999734,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 272,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.350
+  relief=0.4203
+  winner=None"
+18,1769187694.034268,"CONTROL:
+{
+  ""step"": 348,
+  ""time"": 3.46999999999997,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 287,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.510
+  relief=0.4220
+  winner=None"
+19,1769187694.357872,"CONTROL:
+{
+  ""step"": 365,
+  ""time"": 3.6399999999999664,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 304,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.670
+  relief=0.4241
+  winner=None"
+20,1769187694.7172132,"CONTROL:
+{
+  ""step"": 379,
+  ""time"": 3.7799999999999634,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 319,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.830
+  relief=0.4266
+  winner=None"
+21,1769187695.0670276,"CONTROL:
+{
+  ""step"": 395,
+  ""time"": 3.93999999999996,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 334,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=3.980
+  relief=0.4293
+  winner=None"
+22,1769187695.4261975,"CONTROL:
+{
+  ""step"": 412,
+  ""time"": 4.109999999999957,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 350,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.150
+  relief=0.4327
+  winner=None"
+23,1769187695.7249587,"CONTROL:
+{
+  ""step"": 426,
+  ""time"": 4.249999999999954,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 364,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.280
+  relief=0.4356
+  winner=None"
+24,1769187696.0605488,"CONTROL:
+{
+  ""step"": 441,
+  ""time"": 4.399999999999951,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 380,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.440
+  relief=0.4395
+  winner=None"
+25,1769187696.3798451,"CONTROL:
+{
+  ""step"": 454,
+  ""time"": 4.529999999999948,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 392,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.560
+  relief=0.4425
+  winner=None"
+26,1769187696.7327926,"CONTROL:
+{
+  ""step"": 467,
+  ""time"": 4.659999999999945,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 406,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.700
+  relief=0.4463
+  winner=None"
+27,1769187697.0899136,"CONTROL:
+{
+  ""step"": 480,
+  ""time"": 4.789999999999942,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 419,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.830
+  relief=0.4499
+  winner=None"
+28,1769187697.4062917,"CONTROL:
+{
+  ""step"": 494,
+  ""time"": 4.929999999999939,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 433,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=4.960
+  relief=0.4537
+  winner=None"
+29,1769187697.7025464,"CONTROL:
+{
+  ""step"": 504,
+  ""time"": 5.029999999999937,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 442,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.050
+  relief=0.4564
+  winner=None"
+30,1769187698.0350814,"CONTROL:
+{
+  ""step"": 515,
+  ""time"": 5.139999999999935,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 454,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.170
+  relief=0.4601
+  winner=None"
+31,1769187698.3580115,"CONTROL:
+{
+  ""step"": 527,
+  ""time"": 5.259999999999932,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 466,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.290
+  relief=0.4641
+  winner=None"
+32,1769187698.7017245,"CONTROL:
+{
+  ""step"": 539,
+  ""time"": 5.37999999999993,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 478,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.420
+  relief=0.4679
+  winner=None"
+33,1769187699.0352428,"CONTROL:
+{
+  ""step"": 552,
+  ""time"": 5.509999999999927,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 491,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.540
+  relief=0.4717
+  winner=None"
+34,1769187699.342689,"CONTROL:
+{
+  ""step"": 564,
+  ""time"": 5.629999999999924,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 503,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.650
+  relief=0.4756
+  winner=None"
+35,1769187699.640655,"CONTROL:
+{
+  ""step"": 575,
+  ""time"": 5.739999999999922,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 513,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.760
+  relief=0.4788
+  winner=None"
+36,1769187699.9903069,"CONTROL:
+{
+  ""step"": 586,
+  ""time"": 5.84999999999992,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 525,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=5.890
+  relief=0.4830
+  winner=None"
+37,1769187700.3047297,"CONTROL:
+{
+  ""step"": 599,
+  ""time"": 5.979999999999917,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 538,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.010
+  relief=0.4869
+  winner=None"
+38,1769187700.6599762,"CONTROL:
+{
+  ""step"": 611,
+  ""time"": 6.099999999999914,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 549,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.130
+  relief=0.4908
+  winner=None"
+39,1769187701.0105753,"CONTROL:
+{
+  ""step"": 623,
+  ""time"": 6.219999999999912,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 562,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.260
+  relief=0.4949
+  winner=None"
+40,1769187701.3632345,"CONTROL:
+{
+  ""step"": 637,
+  ""time"": 6.359999999999909,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 576,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.390
+  relief=0.4990
+  winner=None"
+41,1769187701.7195077,"CONTROL:
+{
+  ""step"": 649,
+  ""time"": 6.479999999999906,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 588,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.520
+  relief=0.5030
+  winner=None"
+42,1769187702.0317662,"CONTROL:
+{
+  ""step"": 662,
+  ""time"": 6.6099999999999035,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 600,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.640
+  relief=0.5066
+  winner=None"
+43,1769187702.3436022,"CONTROL:
+{
+  ""step"": 673,
+  ""time"": 6.719999999999901,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 612,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.750
+  relief=0.5098
+  winner=None"
+44,1769187702.6716106,"CONTROL:
+{
+  ""step"": 685,
+  ""time"": 6.839999999999899,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 623,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.870
+  relief=0.5132
+  winner=None"
+45,1769187702.9700718,"CONTROL:
+{
+  ""step"": 696,
+  ""time"": 6.949999999999896,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 634,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=6.970
+  relief=0.5160
+  winner=None"
+46,1769187703.2809505,"CONTROL:
+{
+  ""step"": 706,
+  ""time"": 7.049999999999894,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 645,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.080
+  relief=0.5189
+  winner=None"
+47,1769187703.5758238,"CONTROL:
+{
+  ""step"": 717,
+  ""time"": 7.159999999999892,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 655,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.180
+  relief=0.5215
+  winner=None"
+48,1769187703.9045734,"CONTROL:
+{
+  ""step"": 728,
+  ""time"": 7.269999999999889,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 666,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.300
+  relief=0.5245
+  winner=None"
+49,1769187704.2434053,"CONTROL:
+{
+  ""step"": 740,
+  ""time"": 7.389999999999887,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 679,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.420
+  relief=0.5273
+  winner=None"
+50,1769187704.5909274,"CONTROL:
+{
+  ""step"": 751,
+  ""time"": 7.4999999999998845,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 690,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.540
+  relief=0.5300
+  winner=None"
+51,1769187704.9564252,"CONTROL:
+{
+  ""step"": 764,
+  ""time"": 7.629999999999882,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 704,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.670
+  relief=0.5327
+  winner=None"
+52,1769187705.2957184,"CONTROL:
+{
+  ""step"": 777,
+  ""time"": 7.759999999999879,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 716,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.800
+  relief=0.5352
+  winner=None"
+53,1769187705.6399746,"CONTROL:
+{
+  ""step"": 790,
+  ""time"": 7.889999999999876,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 729,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=7.920
+  relief=0.5375
+  winner=None"
+54,1769187706.014487,"CONTROL:
+{
+  ""step"": 802,
+  ""time"": 8.009999999999874,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 741,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.060
+  relief=0.5396
+  winner=None"
+55,1769187706.373866,"CONTROL:
+{
+  ""step"": 816,
+  ""time"": 8.14999999999987,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 755,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.190
+  relief=0.5415
+  winner=None"
+56,1769187706.6997375,"CONTROL:
+{
+  ""step"": 829,
+  ""time"": 8.279999999999868,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 768,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.310
+  relief=0.5431
+  winner=None"
+57,1769187707.052961,"CONTROL:
+{
+  ""step"": 842,
+  ""time"": 8.409999999999865,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 781,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.440
+  relief=0.5445
+  winner=None"
+58,1769187707.4205055,"CONTROL:
+{
+  ""step"": 855,
+  ""time"": 8.539999999999862,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 794,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.580
+  relief=0.5458
+  winner=None"
+59,1769187707.7792933,"CONTROL:
+{
+  ""step"": 868,
+  ""time"": 8.66999999999986,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 807,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.710
+  relief=0.5468
+  winner=None"
+60,1769187708.126983,"CONTROL:
+{
+  ""step"": 881,
+  ""time"": 8.799999999999857,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 821,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.840
+  relief=0.5476
+  winner=None"
+61,1769187708.447079,"CONTROL:
+{
+  ""step"": 894,
+  ""time"": 8.929999999999854,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 833,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=8.960
+  relief=0.5481
+  winner=None"
+62,1769187708.7792895,"CONTROL:
+{
+  ""step"": 906,
+  ""time"": 9.049999999999851,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 845,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.080
+  relief=0.5484
+  winner=None"
+63,1769187709.1196792,"CONTROL:
+{
+  ""step"": 919,
+  ""time"": 9.179999999999849,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 857,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.210
+  relief=0.5485
+  winner=None"
+64,1769187709.4285111,"CONTROL:
+{
+  ""step"": 930,
+  ""time"": 9.289999999999846,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 869,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.320
+  relief=0.5485
+  winner=None"
+65,1769187709.7863104,"CONTROL:
+{
+  ""step"": 943,
+  ""time"": 9.419999999999844,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 882,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.450
+  relief=0.5482
+  winner=None"
+66,1769187710.1381867,"CONTROL:
+{
+  ""step"": 955,
+  ""time"": 9.539999999999841,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 894,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.580
+  relief=0.5477
+  winner=None"
+67,1769187710.4921372,"CONTROL:
+{
+  ""step"": 968,
+  ""time"": 9.669999999999838,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 907,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.710
+  relief=0.5471
+  winner=None"
+68,1769187710.8887959,"CONTROL:
+{
+  ""step"": 982,
+  ""time"": 9.809999999999835,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 922,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.860
+  relief=0.5461
+  winner=None"
+69,1769187711.2070088,"CONTROL:
+{
+  ""step"": 996,
+  ""time"": 9.949999999999832,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 935,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=9.980
+  relief=0.5451
+  winner=None"
+70,1769187711.5617647,"CONTROL:
+{
+  ""step"": 1008,
+  ""time"": 10.06999999999983,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 947,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.110
+  relief=0.5438
+  winner=None"
+71,1769187711.9044287,"CONTROL:
+{
+  ""step"": 1021,
+  ""time"": 10.199999999999827,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 960,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.240
+  relief=0.5424
+  winner=None"
+72,1769187712.2486656,"CONTROL:
+{
+  ""step"": 1033,
+  ""time"": 10.319999999999824,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 972,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.360
+  relief=0.5410
+  winner=None"
+73,1769187712.5703306,"CONTROL:
+{
+  ""step"": 1046,
+  ""time"": 10.449999999999822,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 985,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.480
+  relief=0.5394
+  winner=None"
+74,1769187712.9202123,"CONTROL:
+{
+  ""step"": 1058,
+  ""time"": 10.569999999999819,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 997,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.610
+  relief=0.5375
+  winner=None"
+75,1769187713.2625763,"CONTROL:
+{
+  ""step"": 1071,
+  ""time"": 10.699999999999816,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1010,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.730
+  relief=0.5357
+  winner=None"
+76,1769187713.6248882,"CONTROL:
+{
+  ""step"": 1084,
+  ""time"": 10.829999999999814,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1023,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.870
+  relief=0.5334
+  winner=None"
+77,1769187713.937052,"CONTROL:
+{
+  ""step"": 1097,
+  ""time"": 10.95999999999981,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1036,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=10.990
+  relief=0.5314
+  winner=None"
+78,1769187714.2642915,"CONTROL:
+{
+  ""step"": 1109,
+  ""time"": 11.079999999999808,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1048,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.110
+  relief=0.5293
+  winner=None"
+79,1769187714.5811598,"CONTROL:
+{
+  ""step"": 1121,
+  ""time"": 11.199999999999806,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1059,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.220
+  relief=0.5273
+  winner=None"
+80,1769187714.9179683,"CONTROL:
+{
+  ""step"": 1132,
+  ""time"": 11.309999999999803,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1071,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.340
+  relief=0.5250
+  winner=None"
+81,1769187715.2697577,"CONTROL:
+{
+  ""step"": 1145,
+  ""time"": 11.4399999999998,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1084,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.470
+  relief=0.5225
+  winner=None"
+82,1769187715.6177874,"CONTROL:
+{
+  ""step"": 1158,
+  ""time"": 11.569999999999798,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1097,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.600
+  relief=0.5199
+  winner=None"
+83,1769187715.9998486,"CONTROL:
+{
+  ""step"": 1170,
+  ""time"": 11.689999999999795,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1109,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.740
+  relief=0.5171
+  winner=None"
+84,1769187716.3313787,"CONTROL:
+{
+  ""step"": 1184,
+  ""time"": 11.829999999999792,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1123,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.860
+  relief=0.5146
+  winner=None"
+85,1769187716.6792073,"CONTROL:
+{
+  ""step"": 1196,
+  ""time"": 11.94999999999979,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1135,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=11.990
+  relief=0.5120
+  winner=None"
+86,1769187717.0306158,"CONTROL:
+{
+  ""step"": 1210,
+  ""time"": 12.089999999999787,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1148,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.120
+  relief=0.5093
+  winner=None"
+87,1769187717.380285,"CONTROL:
+{
+  ""step"": 1222,
+  ""time"": 12.209999999999784,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1161,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.250
+  relief=0.5067
+  winner=None"
+88,1769187717.7021086,"CONTROL:
+{
+  ""step"": 1236,
+  ""time"": 12.349999999999781,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1174,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.380
+  relief=0.5040
+  winner=None"
+89,1769187718.0510418,"CONTROL:
+{
+  ""step"": 1248,
+  ""time"": 12.469999999999779,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1187,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.510
+  relief=0.5014
+  winner=None"
+90,1769187718.390544,"CONTROL:
+{
+  ""step"": 1261,
+  ""time"": 12.599999999999776,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1200,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.630
+  relief=0.4990
+  winner=None"
+91,1769187718.7330914,"CONTROL:
+{
+  ""step"": 1273,
+  ""time"": 12.719999999999773,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1212,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.750
+  relief=0.4964
+  winner=None"
+92,1769187719.0482798,"CONTROL:
+{
+  ""step"": 1285,
+  ""time"": 12.83999999999977,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1224,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.870
+  relief=0.4943
+  winner=None"
+93,1769187719.3617992,"CONTROL:
+{
+  ""step"": 1298,
+  ""time"": 12.969999999999768,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1236,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=12.990
+  relief=0.4920
+  winner=None"
+94,1769187719.693276,"CONTROL:
+{
+  ""step"": 1309,
+  ""time"": 13.079999999999766,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1248,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.110
+  relief=0.4898
+  winner=None"
+95,1769187720.0305681,"CONTROL:
+{
+  ""step"": 1322,
+  ""time"": 13.209999999999763,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1261,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.240
+  relief=0.4875
+  winner=None"
+96,1769187720.3491068,"CONTROL:
+{
+  ""step"": 1332,
+  ""time"": 13.30999999999976,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1270,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.340
+  relief=0.4858
+  winner=None"
+97,1769187720.7341783,"CONTROL:
+{
+  ""step"": 1343,
+  ""time"": 13.419999999999758,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1282,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.460
+  relief=0.4839
+  winner=None"
+98,1769187721.0532954,"CONTROL:
+{
+  ""step"": 1356,
+  ""time"": 13.549999999999756,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1294,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.570
+  relief=0.4821
+  winner=None"
+99,1769187721.374389,"CONTROL:
+{
+  ""step"": 1367,
+  ""time"": 13.659999999999753,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1305,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.690
+  relief=0.4803
+  winner=None"
+100,1769187721.7030325,"CONTROL:
+{
+  ""step"": 1378,
+  ""time"": 13.76999999999975,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1317,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.810
+  relief=0.4786
+  winner=None"
+101,1769187722.0157425,"CONTROL:
+{
+  ""step"": 1390,
+  ""time"": 13.889999999999748,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1329,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=13.920
+  relief=0.4771
+  winner=None"
+102,1769187722.3459845,"CONTROL:
+{
+  ""step"": 1402,
+  ""time"": 14.009999999999746,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1340,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.030
+  relief=0.4757
+  winner=None"
+103,1769187722.7017267,"CONTROL:
+{
+  ""step"": 1414,
+  ""time"": 14.129999999999743,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1353,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.160
+  relief=0.4742
+  winner=None"
+104,1769187723.0613334,"CONTROL:
+{
+  ""step"": 1427,
+  ""time"": 14.25999999999974,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1366,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.300
+  relief=0.4727
+  winner=None"
+105,1769187723.4205978,"CONTROL:
+{
+  ""step"": 1440,
+  ""time"": 14.389999999999738,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1379,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.430
+  relief=0.4714
+  winner=None"
+106,1769187723.7462733,"CONTROL:
+{
+  ""step"": 1453,
+  ""time"": 14.519999999999735,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1392,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.550
+  relief=0.4703
+  winner=None"
+107,1769187724.0769198,"CONTROL:
+{
+  ""step"": 1465,
+  ""time"": 14.639999999999732,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1404,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.680
+  relief=0.4693
+  winner=None"
+108,1769187724.4204934,"CONTROL:
+{
+  ""step"": 1477,
+  ""time"": 14.75999999999973,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1416,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.800
+  relief=0.4685
+  winner=None"
+109,1769187724.757123,"CONTROL:
+{
+  ""step"": 1491,
+  ""time"": 14.899999999999727,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1429,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=14.920
+  relief=0.4678
+  winner=None"
+110,1769187725.092135,"CONTROL:
+{
+  ""step"": 1502,
+  ""time"": 15.009999999999724,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1441,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.040
+  relief=0.4673
+  winner=None"
+111,1769187725.4587429,"CONTROL:
+{
+  ""step"": 1514,
+  ""time"": 15.129999999999722,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1453,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.170
+  relief=0.4668
+  winner=None"
+112,1769187725.8163908,"CONTROL:
+{
+  ""step"": 1528,
+  ""time"": 15.269999999999719,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1467,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.310
+  relief=0.4664
+  winner=None"
+113,1769187726.1547868,"CONTROL:
+{
+  ""step"": 1541,
+  ""time"": 15.399999999999716,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1480,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.430
+  relief=0.4662
+  winner=None"
+114,1769187726.5285327,"CONTROL:
+{
+  ""step"": 1552,
+  ""time"": 15.509999999999714,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1492,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.560
+  relief=0.4661
+  winner=None"
+115,1769187726.844636,"CONTROL:
+{
+  ""step"": 1567,
+  ""time"": 15.65999999999971,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1505,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.680
+  relief=0.4661
+  winner=None"
+116,1769187727.160073,"CONTROL:
+{
+  ""step"": 1578,
+  ""time"": 15.769999999999708,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1517,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.800
+  relief=0.4663
+  winner=None"
+117,1769187727.497979,"CONTROL:
+{
+  ""step"": 1590,
+  ""time"": 15.889999999999706,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1529,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=15.930
+  relief=0.4666
+  winner=None"
+118,1769187727.812333,"CONTROL:
+{
+  ""step"": 1603,
+  ""time"": 16.019999999999705,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1541,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=16.050
+  relief=0.4670
+  winner=None"
+119,1769187728.1401865,"CONTROL:
+{
+  ""step"": 1615,
+  ""time"": 16.139999999999723,
+  ""phase"": ""post-commit"",
+  ""decision_made"": true,
+  ""decision_winner"": ""D2"",
+  ""committed"": true,
+  ""suppress_alternatives"": true,
+  ""working_state_active"": true,
+  ""fatigue_flag"": false,
+  ""saturation_flag"": false
+}","WORKING:
+{
+  ""engaged"": true,
+  ""active_channel"": ""D2"",
+  ""strength"": 1.0,
+  ""steps_held"": 1554,
+  ""enabled"": true
+}","DECISION:
+  time=0.6200000000000003
+  step=63
+  winner=D2
+  delta_dominance=0.04044850870010804
+  relief=0.938410321690511","GATE:
+  t=16.170
+  relief=0.4675
+  winner=None"

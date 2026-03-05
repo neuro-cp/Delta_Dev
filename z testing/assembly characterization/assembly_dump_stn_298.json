@@ -1,0 +1,157 @@
+{
+  "region": "stn",
+  "step": 298,
+  "time": 2.9699999999999807,
+  "assemblies": [
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:0",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11442735534798029,
+      "output": 0.2246778334195504
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:1",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11441651583444777,
+      "output": 0.22465544338917454
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:2",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11431054261343891,
+      "output": 0.22443653599546853
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:3",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11441362302373284,
+      "output": 0.2246494679863308
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:4",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11441700008659829,
+      "output": 0.22465644366130594
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:5",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11391363512594083,
+      "output": 0.22361649204039397
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:6",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11434174124866203,
+      "output": 0.22450098442118668
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:7",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.11443743814357298,
+      "output": 0.22469866021148116
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:8",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07519315819117027,
+      "output": 0.10968390382537895
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:9",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07532926450552058,
+      "output": 0.1100084199190353
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:10",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07530784375195393,
+      "output": 0.10995734903566215
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:11",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07536735671312594,
+      "output": 0.11009923641298285
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:12",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07517294386504206,
+      "output": 0.10963570420740995
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:13",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07545353514982128,
+      "output": 0.11030468645976058
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:14",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07534500796272514,
+      "output": 0.11004595457725722
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:15",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07538578874786475,
+      "output": 0.11014317967952633
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:16",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.07533931070398545,
+      "output": 0.11003237154891556
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:17",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05527438646864224,
+      "output": 0.014190807517163817
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:18",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.055288719569346306,
+      "output": 0.014229291101548686
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:19",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05553509545433674,
+      "output": 0.014890729270849508
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:20",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05531430970641713,
+      "output": 0.014297998133863779
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:21",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05537846027780643,
+      "output": 0.014470230138004393
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:22",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05531125513940387,
+      "output": 0.014289796990468591
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:23",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05540542097595286,
+      "output": 0.014542611870754726
+    },
+    {
+      "assembly_id": "stn:EXCITATORY_NEURONS:24",
+      "population": "EXCITATORY_NEURONS",
+      "activity": 0.05530100351085523,
+      "output": 0.014262272463031515
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+Value Lifecycle (Conceptual)
+
+Decision
+↓
+Episode closes
+↓
+EpisodeTrace frozen
+↓
+EpisodeReplay (offline)
+↓
+EpisodeConsolidator
+↓
+Outcome Interpreter (design‑only)
+↓
+ValueProposal emitted
+↓
+ValuePolicy gate
+↓
+ValueSignal drifts (tonic)
+
+---
+
+Notes:
+
+* No step above mutates runtime state.
+* Removing any step above must not affect decisions.

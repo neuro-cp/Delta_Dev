@@ -1,0 +1,14 @@
+{
+  "assemblies": [
+    {
+      "assembly_id": "a",
+      "output": 0.01
+    },
+    {
+      "assembly_id": "b",
+      "output": 0.0
+    }
+  ],
+  "region": "stn",
+  "step": 950
+}

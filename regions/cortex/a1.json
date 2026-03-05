@@ -1,0 +1,76 @@
+{
+  "version": "1.1.1",
+  "type": "RegionSubstructure",
+  "region_id": "a1",
+  "parent_region": "cortex_base",
+
+  "function": "auditory_processing",
+
+  "spatial_properties": {
+    "laminar": true
+  },
+
+  "populations": {
+    "L4_EXCITATORY": {
+      "count": 75000,
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 1.0,
+      "plasticity_profile": "medium"
+    },
+
+    "L2_3_PYRAMIDAL": {
+      "count": 85000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.6,
+      "plasticity_profile": "high"
+    },
+
+    "L6_PYRAMIDAL": {
+      "count": 40000,
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.3,
+      "plasticity_profile": "low"
+    },
+
+    "INTERNEURONS": {
+      "count": 38000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 6.5,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "mgb",
+      "target_population": "L4_EXCITATORY",
+      "strength": 1.0
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "pfc",
+      "strength": 0.6
+    },
+    {
+      "target_region": "pulvinar",
+      "strength": 0.3
+    },
+    {
+      "target_region": "mgb",
+      "source_population": "L6_PYRAMIDAL",
+      "strength": 0.4
+    }
+  ],
+
+  "notes": "Primary auditory cortex. Receives thalamic input from MGB in layer 4 and provides corticothalamic feedback via layer 6 pyramidal neurons. This build routes generic 'CORTEX' outputs to pfc as the current cortex integration hub; later this can be upgraded to a cortex router/association target."
+}

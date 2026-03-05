@@ -1,0 +1,29 @@
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[INIT] MD assemblies: 50
+[INIT] Salience sparsity gate attached to MD
+[INIT] Gate stats: {'initialized': True, 'eligible': 12, 'total': 50, 'ratio': 0.24}
+[INFO] Command server on port 5558
+[CMD] Listening on 127.0.0.1:5558
+[STEP 0000] Δ=0.000005 relief=0.4972 decision=False
+[STEP 0050] Δ=0.000278 relief=0.4736 decision=False
+[STEP 0100] Δ=0.000258 relief=0.4533 decision=False
+[STEP 0150] Δ=0.000018 relief=0.4371 decision=False
+[STEP 0200] Δ=0.000234 relief=0.4258 decision=False
+[STEP 0250] Δ=0.000064 relief=0.4195 decision=False
+[STEP 0300] Δ=0.001025 relief=0.4183 decision=False
+[STEP 0350] Δ=0.002006 relief=0.4219 decision=False
+[STEP 0400] Δ=0.002490 relief=0.4298 decision=False
+[STEP 0450] Δ=0.002554 relief=0.4412 decision=False
+[STEP 0500] Δ=0.002198 relief=0.4551 decision=False
+[STEP 0550] Δ=0.001719 relief=0.4707 decision=False
+[STEP 0600] Δ=0.000444 relief=0.4868 decision=False
+[STEP 0650] Δ=0.000664 relief=0.5026 decision=False
+[STEP 0700] Δ=0.000960 relief=0.5170 decision=False
+[STEP 0750] Δ=0.000854 relief=0.5293 decision=False
+
+=== TEST COMPLETE ===
+
+C:\Users\Admin\Desktop\neural framework>
+C:\Users\Admin\Desktop\neural framework>

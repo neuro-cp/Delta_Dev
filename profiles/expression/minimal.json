@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "type": "ExpressionProfile",
+  "profile_name": "minimal",
+
+  "description": "Minimal expression profile for structural validation and fast simulations.",
+
+  "defaults": {
+    "receptors": {
+      "AMPA": 0.6,
+      "NMDA": 0.4,
+      "GABA_A": 0.6
+    },
+    "channels": {
+      "NaV_FAST": 0.7,
+      "KV_DELAYED_RECTIFIER": 0.6,
+      "LEAK": 0.6
+    }
+  },
+
+  "overrides": {
+    "CORTEX": {
+      "L5_PYRAMIDAL": {
+        "receptors": {
+          "AMPA": 0.7,
+          "NMDA": 0.5
+        }
+      }
+    },
+
+    "HIPPOCAMPAL_FORMATION": {
+      "CA1": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "NMDA": 0.5
+          }
+        }
+      }
+    },
+
+    "BASAL_GANGLIA": {
+      "STRIATUM": {
+        "D1_MSN": {
+          "receptors": {
+            "D1": 0.5
+          }
+        },
+        "D2_MSN": {
+          "receptors": {
+            "D2": 0.5
+          }
+        }
+      }
+    }
+  },
+
+  "notes": "This profile enables only core fast synaptic transmission and minimal dopaminergic differentiation. Intended for loader validation and baseline behavior checks."
+}

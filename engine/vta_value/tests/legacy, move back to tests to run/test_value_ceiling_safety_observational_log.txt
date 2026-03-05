@@ -1,0 +1,64 @@
+DEBUG] Loaded region: association_cortex | populations=4
+[DEBUG] Loaded region: corpus_callosum | populations=1
+[DEBUG] Loaded region: Intralaminar | populations=1
+[DEBUG] Loaded region: pfc | populations=5
+[DEBUG] Loaded region: inferior_colliculus | populations=3
+[DEBUG] Loaded region: superior_colliculus | populations=3
+[DEBUG] Loaded region: auditory_input | populations=0
+[DEBUG] Loaded region: gustatory_input | populations=0
+[DEBUG] Loaded region: sensory_base | populations=0
+[DEBUG] Loaded region: somato_input | populations=0
+[DEBUG] Loaded region: visual_input | populations=0
+[DEBUG] Loaded region: endocrine_system | populations=0
+[DEBUG] Loaded region: hypothalamus | populations=4
+[DEBUG] Loaded region: anterior_pituitary | populations=5
+[DEBUG] Loaded region: posterior_pituitary | populations=2
+[DEBUG] Loaded region: lgn | populations=1
+[DEBUG] Loaded region: md | populations=1
+[DEBUG] Loaded region: mgb | populations=1
+[DEBUG] Loaded region: pulvinar | populations=1
+[DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+
+[PHASE 1] Baseline (no value, no hypotheses)
+[BASE 0000] dominance={'D1': 0.006666085857210317, 'D2': 0.006667247476123016} relief=0.4972
+[BASE 0100] dominance={'D1': 0.3713808213743005, 'D2': 0.3708588419890475} relief=0.4533
+
+[PHASE 2] Assigning hypotheses
+  association_cortex:L2_3_PYRAMIDAL:0 → H1
+  association_cortex:L2_3_PYRAMIDAL:1 → H2
+
+[PHASE 3] Weak asymmetric stimulation (Δ source)
+[ASYM 0000] dominance={'D1': 0.46617418807115296, 'D2': 0.466487577662252} Δ=0.000313 relief=0.4258
+[ASYM 0100] dominance={'D1': 0.49112793345624267, 'D2': 0.49128038485482994} Δ=0.000152 relief=0.4183
+[ASYM 0200] dominance={'D1': 0.4975119965234057, 'D2': 0.49789228949604414} Δ=0.000380 relief=0.4298
+
+[PHASE 4] Value ceiling sweep (authorization only)
+[VALUE 0.20] dominance={'D1': 0.4990480924143342, 'D2': 0.5007894288164797} Δ=0.001741 relief=0.5023 decision=None
+[VALUE 0.40] dominance={'D1': 0.4993713263760554, 'D2': 0.5006069783533412} Δ=0.001236 relief=0.5386 decision=None
+[VALUE 0.60] dominance={'D1': 0.49970224391647655, 'D2': 0.5002948591834} Δ=0.000593 relief=0.5481 decision=None
+[VALUE 0.80] dominance={'D1': 0.49981602800527297, 'D2': 0.5001835851809148} Δ=0.000368 relief=0.5313 decision=None
+[VALUE 1.00] dominance={'D1': 0.4998053641154502, 'D2': 0.5001945842345378} Δ=0.000389 relief=0.5016 decision=None
+
+[PHASE 5] Value withdrawal
+[WITHDRAW 0000] dominance={'D1': 0.4998063926484126, 'D2': 0.5001935563902422} relief=0.5014
+[WITHDRAW 0100] dominance={'D1': 0.500309715087176, 'D2': 0.49969027159949964} relief=0.4832
+
+=== TEST COMPLETE ===
+Expect:
+• Δ increases with value but never appears without asymmetry
+• GPi relief saturates
+• No latch firing at any value
+• Clean recovery after value removal
+No asserts by design.
+
+C:\Users\Admin\Desktop\neural frame

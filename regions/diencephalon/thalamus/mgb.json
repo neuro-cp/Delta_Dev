@@ -1,0 +1,49 @@
+{
+  "version": "1.2.0",
+  "type": "RegionSubstructure",
+  "region_id": "MGB",
+  "parent_region": "THALAMUS",
+
+  "is_relay": true,
+  "function": "auditory_relay",
+
+  "populations": {
+    "RELAY_CELLS": {
+      "count": 50000,
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.8,
+      "plasticity_profile": "low",
+      "receives_inhibition_from": ["TRN"]
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "AUDITORY_INPUT",
+      "signal": "cochlear_afferents",
+      "strength": 1.0
+    },
+    {
+      "source_region": "A1",
+      "source_population": "L6_PYRAMIDAL",
+      "signal": "corticothalamic_feedback",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "A1",
+      "target_population": "L4_EXCITATORY",
+      "strength": 1.0
+    }
+  ],
+
+  "functional_modes": {
+    "wake": "tonic",
+    "sleep": "burst"
+  },
+
+  "notes": "MGB relays auditory sensory input to primary auditory cortex (A1) under strong corticothalamic feedback and TRN-mediated inhibitory gating. Functional modes are declarative only and not yet enforced in dynamics."
+}

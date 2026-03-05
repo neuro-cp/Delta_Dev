@@ -1,0 +1,345 @@
+[2026-01-14 20:44:01] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:44:01] [BASELINE]
+[2026-01-14 20:44:07] [POKE] striatum 1.0
+[2026-01-14 20:44:07] [POKE] striatum 1.0
+[2026-01-14 20:44:08] [POKE] striatum 1.0
+[2026-01-14 20:44:08] [POKE] striatum 1.0
+[2026-01-14 20:44:08] [POKE] striatum 1.0
+[2026-01-14 20:44:09] [POKE] striatum 1.0
+[2026-01-14 20:44:09] [POKE] striatum 1.0
+[2026-01-14 20:44:09] [POKE] striatum 1.0
+[2026-01-14 20:44:10] [POKE] striatum 1.0
+[2026-01-14 20:44:10] [POKE] striatum 1.0
+[2026-01-14 20:44:10] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:44:10] [POKE] vta 0.25
+[2026-01-14 20:44:10] [POKE] striatum 1.0
+[2026-01-14 20:44:11] [POKE] striatum 1.0
+[2026-01-14 20:44:11] [POKE] striatum 1.0
+[2026-01-14 20:44:11] [POKE] striatum 1.0
+[2026-01-14 20:44:12] [POKE] striatum 1.0
+[2026-01-14 20:44:12] [POKE] striatum 1.0
+[2026-01-14 20:44:12] [POKE] striatum 1.0
+[2026-01-14 20:44:13] [POKE] striatum 1.0
+[2026-01-14 20:44:13] [POKE] striatum 1.0
+[2026-01-14 20:44:13] [POKE] striatum 1.0
+[2026-01-14 20:44:14] [POKE] striatum 1.0
+[2026-01-14 20:44:14] [POKE] striatum 1.0
+[2026-01-14 20:44:14] [POKE] striatum 1.0
+[2026-01-14 20:44:15] [POKE] striatum 1.0
+[2026-01-14 20:44:15] [POKE] striatum 1.0
+[2026-01-14 20:44:15] [DECAY]
+[2026-01-14 20:44:19] === TEST COMPLETE === max_delta=0.037733 max_relief=0.530200 decision_seen=False ===
+[2026-01-14 20:44:22] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:44:22] [BASELINE]
+[2026-01-14 20:44:28] [POKE] striatum 1.0
+[2026-01-14 20:44:28] [POKE] striatum 1.0
+[2026-01-14 20:44:28] [POKE] striatum 1.0
+[2026-01-14 20:44:29] [POKE] striatum 1.0
+[2026-01-14 20:44:29] [POKE] striatum 1.0
+[2026-01-14 20:44:29] [POKE] striatum 1.0
+[2026-01-14 20:44:30] [POKE] striatum 1.0
+[2026-01-14 20:44:30] [POKE] striatum 1.0
+[2026-01-14 20:44:30] [POKE] striatum 1.0
+[2026-01-14 20:44:31] [POKE] striatum 1.0
+[2026-01-14 20:44:31] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:44:31] [POKE] vta 0.25
+[2026-01-14 20:44:31] [POKE] striatum 1.0
+[2026-01-14 20:44:31] [POKE] striatum 1.0
+[2026-01-14 20:44:32] [POKE] striatum 1.0
+[2026-01-14 20:44:32] [POKE] striatum 1.0
+[2026-01-14 20:44:32] [POKE] striatum 1.0
+[2026-01-14 20:44:33] [POKE] striatum 1.0
+[2026-01-14 20:44:33] [POKE] striatum 1.0
+[2026-01-14 20:44:33] [POKE] striatum 1.0
+[2026-01-14 20:44:34] [POKE] striatum 1.0
+[2026-01-14 20:44:34] [POKE] striatum 1.0
+[2026-01-14 20:44:34] [POKE] striatum 1.0
+[2026-01-14 20:44:35] [POKE] striatum 1.0
+[2026-01-14 20:44:35] [POKE] striatum 1.0
+[2026-01-14 20:44:35] [POKE] striatum 1.0
+[2026-01-14 20:44:35] [POKE] striatum 1.0
+[2026-01-14 20:44:36] [DECAY]
+[2026-01-14 20:44:40] === TEST COMPLETE === max_delta=0.006466 max_relief=0.504200 decision_seen=False ===
+[2026-01-14 20:44:41] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:44:41] [BASELINE]
+[2026-01-14 20:44:47] [POKE] striatum 1.0
+[2026-01-14 20:44:47] [POKE] striatum 1.0
+[2026-01-14 20:44:47] [POKE] striatum 1.0
+[2026-01-14 20:44:48] [POKE] striatum 1.0
+[2026-01-14 20:44:48] [POKE] striatum 1.0
+[2026-01-14 20:44:48] [POKE] striatum 1.0
+[2026-01-14 20:44:49] [POKE] striatum 1.0
+[2026-01-14 20:44:49] [POKE] striatum 1.0
+[2026-01-14 20:44:49] [POKE] striatum 1.0
+[2026-01-14 20:44:50] [POKE] striatum 1.0
+[2026-01-14 20:44:50] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:44:50] [POKE] vta 0.25
+[2026-01-14 20:44:50] [POKE] striatum 1.0
+[2026-01-14 20:44:50] [POKE] striatum 1.0
+[2026-01-14 20:44:51] [POKE] striatum 1.0
+[2026-01-14 20:44:51] [POKE] striatum 1.0
+[2026-01-14 20:44:51] [POKE] striatum 1.0
+[2026-01-14 20:44:52] [POKE] striatum 1.0
+[2026-01-14 20:44:52] [POKE] striatum 1.0
+[2026-01-14 20:44:52] [POKE] striatum 1.0
+[2026-01-14 20:44:53] [POKE] striatum 1.0
+[2026-01-14 20:44:53] [POKE] striatum 1.0
+[2026-01-14 20:44:53] [POKE] striatum 1.0
+[2026-01-14 20:44:54] [POKE] striatum 1.0
+[2026-01-14 20:44:54] [POKE] striatum 1.0
+[2026-01-14 20:44:54] [POKE] striatum 1.0
+[2026-01-14 20:44:55] [POKE] striatum 1.0
+[2026-01-14 20:44:55] [DECAY]
+[2026-01-14 20:44:59] === TEST COMPLETE === max_delta=0.004304 max_relief=0.517700 decision_seen=False ===
+[2026-01-14 20:45:02] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:45:02] [BASELINE]
+[2026-01-14 20:45:08] [POKE] striatum 1.0
+[2026-01-14 20:45:08] [POKE] striatum 1.0
+[2026-01-14 20:45:08] [POKE] striatum 1.0
+[2026-01-14 20:45:09] [POKE] striatum 1.0
+[2026-01-14 20:45:09] [POKE] striatum 1.0
+[2026-01-14 20:45:09] [POKE] striatum 1.0
+[2026-01-14 20:45:10] [POKE] striatum 1.0
+[2026-01-14 20:45:10] [POKE] striatum 1.0
+[2026-01-14 20:45:10] [POKE] striatum 1.0
+[2026-01-14 20:45:11] [POKE] striatum 1.0
+[2026-01-14 20:45:11] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:45:11] [POKE] vta 0.25
+[2026-01-14 20:45:11] [POKE] striatum 1.0
+[2026-01-14 20:45:11] [POKE] striatum 1.0
+[2026-01-14 20:45:12] [POKE] striatum 1.0
+[2026-01-14 20:45:12] [POKE] striatum 1.0
+[2026-01-14 20:45:12] [POKE] striatum 1.0
+[2026-01-14 20:45:13] [POKE] striatum 1.0
+[2026-01-14 20:45:13] [POKE] striatum 1.0
+[2026-01-14 20:45:13] [POKE] striatum 1.0
+[2026-01-14 20:45:14] [POKE] striatum 1.0
+[2026-01-14 20:45:14] [POKE] striatum 1.0
+[2026-01-14 20:45:14] [POKE] striatum 1.0
+[2026-01-14 20:45:15] [POKE] striatum 1.0
+[2026-01-14 20:45:15] [POKE] striatum 1.0
+[2026-01-14 20:45:15] [POKE] striatum 1.0
+[2026-01-14 20:45:16] [POKE] striatum 1.0
+[2026-01-14 20:45:16] [DECAY]
+[2026-01-14 20:45:20] === TEST COMPLETE === max_delta=0.016434 max_relief=0.489300 decision_seen=False ===
+[2026-01-14 20:45:58] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:45:58] [BASELINE]
+[2026-01-14 20:46:04] [POKE] striatum 1.0
+[2026-01-14 20:46:05] [POKE] striatum 1.0
+[2026-01-14 20:46:05] [POKE] striatum 1.0
+[2026-01-14 20:46:05] [POKE] striatum 1.0
+[2026-01-14 20:46:05] [POKE] striatum 1.0
+[2026-01-14 20:46:06] [POKE] striatum 1.0
+[2026-01-14 20:46:06] [DECISION] winner=D1 Δ=0.1286 relief=0.5005 t=48.080
+[2026-01-14 20:46:06] [POKE] striatum 1.0
+[2026-01-14 20:46:06] [POKE] striatum 1.0
+[2026-01-14 20:46:07] [POKE] striatum 1.0
+[2026-01-14 20:46:07] [POKE] striatum 1.0
+[2026-01-14 20:46:07] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:46:07] [POKE] vta 0.25
+[2026-01-14 20:46:07] [POKE] striatum 1.0
+[2026-01-14 20:46:08] [POKE] striatum 1.0
+[2026-01-14 20:46:08] [POKE] striatum 1.0
+[2026-01-14 20:46:08] [POKE] striatum 1.0
+[2026-01-14 20:46:09] [POKE] striatum 1.0
+[2026-01-14 20:46:09] [POKE] striatum 1.0
+[2026-01-14 20:46:09] [POKE] striatum 1.0
+[2026-01-14 20:46:10] [POKE] striatum 1.0
+[2026-01-14 20:46:10] [POKE] striatum 1.0
+[2026-01-14 20:46:10] [POKE] striatum 1.0
+[2026-01-14 20:46:10] [POKE] striatum 1.0
+[2026-01-14 20:46:11] [POKE] striatum 1.0
+[2026-01-14 20:46:11] [POKE] striatum 1.0
+[2026-01-14 20:46:11] [POKE] striatum 1.0
+[2026-01-14 20:46:12] [POKE] striatum 1.0
+[2026-01-14 20:46:12] [DECAY]
+[2026-01-14 20:46:16] === TEST COMPLETE === max_delta=0.130776 max_relief=0.500800 decision_seen=True ===
+[2026-01-14 20:46:19] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:46:19] [BASELINE]
+[2026-01-14 20:46:25] [POKE] striatum 1.0
+[2026-01-14 20:46:25] [DECISION] winner=D1 Δ=0.1286 relief=0.5005 t=48.080
+[2026-01-14 20:46:25] [POKE] striatum 1.0
+[2026-01-14 20:46:26] [POKE] striatum 1.0
+[2026-01-14 20:46:26] [POKE] striatum 1.0
+[2026-01-14 20:46:26] [POKE] striatum 1.0
+[2026-01-14 20:46:27] [POKE] striatum 1.0
+[2026-01-14 20:46:27] [POKE] striatum 1.0
+[2026-01-14 20:46:27] [POKE] striatum 1.0
+[2026-01-14 20:46:28] [POKE] striatum 1.0
+[2026-01-14 20:46:28] [POKE] striatum 1.0
+[2026-01-14 20:46:28] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:46:28] [POKE] vta 0.25
+[2026-01-14 20:46:28] [POKE] striatum 1.0
+[2026-01-14 20:46:29] [POKE] striatum 1.0
+[2026-01-14 20:46:29] [POKE] striatum 1.0
+[2026-01-14 20:46:29] [POKE] striatum 1.0
+[2026-01-14 20:46:29] [POKE] striatum 1.0
+[2026-01-14 20:46:30] [POKE] striatum 1.0
+[2026-01-14 20:46:30] [POKE] striatum 1.0
+[2026-01-14 20:46:30] [POKE] striatum 1.0
+[2026-01-14 20:46:31] [POKE] striatum 1.0
+[2026-01-14 20:46:31] [POKE] striatum 1.0
+[2026-01-14 20:46:31] [POKE] striatum 1.0
+[2026-01-14 20:46:32] [POKE] striatum 1.0
+[2026-01-14 20:46:32] [POKE] striatum 1.0
+[2026-01-14 20:46:32] [POKE] striatum 1.0
+[2026-01-14 20:46:33] [POKE] striatum 1.0
+[2026-01-14 20:46:33] [DECAY]
+[2026-01-14 20:46:37] === TEST COMPLETE === max_delta=0.003648 max_relief=0.498200 decision_seen=True ===
+[2026-01-14 20:46:44] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:46:44] [BASELINE]
+[2026-01-14 20:46:50] [POKE] striatum 1.0
+[2026-01-14 20:46:50] [DECISION] winner=D1 Δ=0.1286 relief=0.5005 t=48.080
+[2026-01-14 20:46:50] [POKE] striatum 1.0
+[2026-01-14 20:46:50] [POKE] striatum 1.0
+[2026-01-14 20:46:51] [POKE] striatum 1.0
+[2026-01-14 20:46:51] [POKE] striatum 1.0
+[2026-01-14 20:46:51] [POKE] striatum 1.0
+[2026-01-14 20:46:52] [POKE] striatum 1.0
+[2026-01-14 20:46:52] [POKE] striatum 1.0
+[2026-01-14 20:46:52] [POKE] striatum 1.0
+[2026-01-14 20:46:52] [POKE] striatum 1.0
+[2026-01-14 20:46:52] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:46:52] [POKE] vta 0.25
+[2026-01-14 20:46:53] [POKE] striatum 1.0
+[2026-01-14 20:46:53] [POKE] striatum 1.0
+[2026-01-14 20:46:53] [POKE] striatum 1.0
+[2026-01-14 20:46:54] [POKE] striatum 1.0
+[2026-01-14 20:46:54] [POKE] striatum 1.0
+[2026-01-14 20:46:54] [POKE] striatum 1.0
+[2026-01-14 20:46:55] [POKE] striatum 1.0
+[2026-01-14 20:46:55] [POKE] striatum 1.0
+[2026-01-14 20:46:55] [POKE] striatum 1.0
+[2026-01-14 20:46:55] [POKE] striatum 1.0
+[2026-01-14 20:46:56] [POKE] striatum 1.0
+[2026-01-14 20:46:56] [POKE] striatum 1.0
+[2026-01-14 20:46:56] [POKE] striatum 1.0
+[2026-01-14 20:46:57] [POKE] striatum 1.0
+[2026-01-14 20:46:57] [POKE] striatum 1.0
+[2026-01-14 20:46:57] [DECAY]
+[2026-01-14 20:47:01] === TEST COMPLETE === max_delta=0.006952 max_relief=0.497300 decision_seen=True ===
+[2026-01-14 20:49:14] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:49:14] [BASELINE]
+[2026-01-14 20:49:20] [POKE] striatum 1.0
+[2026-01-14 20:49:20] [POKE] striatum 1.0
+[2026-01-14 20:49:21] [POKE] striatum 1.0
+[2026-01-14 20:49:21] [POKE] striatum 1.0
+[2026-01-14 20:49:21] [POKE] striatum 1.0
+[2026-01-14 20:49:22] [POKE] striatum 1.0
+[2026-01-14 20:49:22] [POKE] striatum 1.0
+[2026-01-14 20:49:22] [POKE] striatum 1.0
+[2026-01-14 20:49:23] [POKE] striatum 1.0
+[2026-01-14 20:49:23] [POKE] striatum 1.0
+[2026-01-14 20:49:23] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:49:23] [POKE] vta 0.25
+[2026-01-14 20:49:23] [POKE] striatum 1.0
+[2026-01-14 20:49:24] [POKE] striatum 1.0
+[2026-01-14 20:49:24] [POKE] striatum 1.0
+[2026-01-14 20:49:24] [POKE] striatum 1.0
+[2026-01-14 20:49:25] [POKE] striatum 1.0
+[2026-01-14 20:49:25] [POKE] striatum 1.0
+[2026-01-14 20:49:25] [POKE] striatum 1.0
+[2026-01-14 20:49:25] [POKE] striatum 1.0
+[2026-01-14 20:49:26] [POKE] striatum 1.0
+[2026-01-14 20:49:26] [POKE] striatum 1.0
+[2026-01-14 20:49:26] [POKE] striatum 1.0
+[2026-01-14 20:49:27] [POKE] striatum 1.0
+[2026-01-14 20:49:27] [POKE] striatum 1.0
+[2026-01-14 20:49:27] [POKE] striatum 1.0
+[2026-01-14 20:49:28] [POKE] striatum 1.0
+[2026-01-14 20:49:28] [DECAY]
+[2026-01-14 20:49:32] === TEST COMPLETE === max_delta=0.024450 max_relief=0.548600 decision_seen=False ===
+[2026-01-14 20:49:42] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:49:42] [BASELINE]
+[2026-01-14 20:49:48] [POKE] striatum 1.0
+[2026-01-14 20:49:49] [POKE] striatum 1.0
+[2026-01-14 20:49:49] [POKE] striatum 1.0
+[2026-01-14 20:49:49] [POKE] striatum 1.0
+[2026-01-14 20:49:50] [POKE] striatum 1.0
+[2026-01-14 20:49:50] [POKE] striatum 1.0
+[2026-01-14 20:49:50] [POKE] striatum 1.0
+[2026-01-14 20:49:51] [POKE] striatum 1.0
+[2026-01-14 20:49:51] [POKE] striatum 1.0
+[2026-01-14 20:49:51] [POKE] striatum 1.0
+[2026-01-14 20:49:51] [VALUE] Injecting value via vta (0.25)
+[2026-01-14 20:49:51] [POKE] vta 0.25
+[2026-01-14 20:49:52] [POKE] striatum 1.0
+[2026-01-14 20:49:52] [POKE] striatum 1.0
+[2026-01-14 20:49:52] [POKE] striatum 1.0
+[2026-01-14 20:49:53] [POKE] striatum 1.0
+[2026-01-14 20:49:53] [POKE] striatum 1.0
+[2026-01-14 20:49:53] [POKE] striatum 1.0
+[2026-01-14 20:49:54] [POKE] striatum 1.0
+[2026-01-14 20:49:54] [POKE] striatum 1.0
+[2026-01-14 20:49:54] [POKE] striatum 1.0
+[2026-01-14 20:49:55] [POKE] striatum 1.0
+[2026-01-14 20:49:55] [POKE] striatum 1.0
+[2026-01-14 20:49:55] [POKE] striatum 1.0
+[2026-01-14 20:49:56] [POKE] striatum 1.0
+[2026-01-14 20:49:56] [POKE] striatum 1.0
+[2026-01-14 20:49:56] [POKE] striatum 1.0
+[2026-01-14 20:49:57] [DECAY]
+[2026-01-14 20:50:01] === TEST COMPLETE === max_delta=0.036220 max_relief=0.517300 decision_seen=False ===
+[2026-01-14 20:51:23] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:51:23] [BASELINE]
+[2026-01-14 20:51:29] [POKE] striatum 1.0
+[2026-01-14 20:51:29] [POKE] striatum 1.0
+[2026-01-14 20:51:30] [POKE] striatum 1.0
+[2026-01-14 20:51:30] [POKE] striatum 1.0
+[2026-01-14 20:51:30] [POKE] striatum 1.0
+[2026-01-14 20:51:31] [POKE] striatum 1.0
+[2026-01-14 20:51:31] [POKE] striatum 1.0
+[2026-01-14 20:51:31] [POKE] striatum 1.0
+[2026-01-14 20:51:32] [POKE] striatum 1.0
+[2026-01-14 20:51:32] [POKE] striatum 1.0
+[2026-01-14 20:51:32] [VALUE] Injecting value via vta (0.75)
+[2026-01-14 20:51:32] [POKE] vta 0.75
+[2026-01-14 20:51:32] [POKE] striatum 1.0
+[2026-01-14 20:51:33] [POKE] striatum 1.0
+[2026-01-14 20:51:33] [POKE] striatum 1.0
+[2026-01-14 20:51:33] [POKE] striatum 1.0
+[2026-01-14 20:51:34] [POKE] striatum 1.0
+[2026-01-14 20:51:34] [POKE] striatum 1.0
+[2026-01-14 20:51:34] [POKE] striatum 1.0
+[2026-01-14 20:51:35] [POKE] striatum 1.0
+[2026-01-14 20:51:35] [POKE] striatum 1.0
+[2026-01-14 20:51:35] [POKE] striatum 1.0
+[2026-01-14 20:51:36] [POKE] striatum 1.0
+[2026-01-14 20:51:36] [POKE] striatum 1.0
+[2026-01-14 20:51:36] [POKE] striatum 1.0
+[2026-01-14 20:51:37] [POKE] striatum 1.0
+[2026-01-14 20:51:37] [POKE] striatum 1.0
+[2026-01-14 20:51:37] [DECAY]
+[2026-01-14 20:51:41] === TEST COMPLETE === max_delta=0.045189 max_relief=0.462100 decision_seen=False ===
+[2026-01-14 20:53:08] === BEGIN DECISION LATCH VALUE-GATED TEST (DEBUG) ===
+[2026-01-14 20:53:08] [BASELINE]
+[2026-01-14 20:53:14] [POKE] striatum 1.0
+[2026-01-14 20:53:14] [POKE] striatum 1.0
+[2026-01-14 20:53:14] [POKE] striatum 1.0
+[2026-01-14 20:53:15] [POKE] striatum 1.0
+[2026-01-14 20:53:15] [POKE] striatum 1.0
+[2026-01-14 20:53:15] [POKE] striatum 1.0
+[2026-01-14 20:53:16] [POKE] striatum 1.0
+[2026-01-14 20:53:16] [POKE] striatum 1.0
+[2026-01-14 20:53:16] [POKE] striatum 1.0
+[2026-01-14 20:53:17] [POKE] striatum 1.0
+[2026-01-14 20:53:17] [VALUE] Injecting value via vta (0.75)
+[2026-01-14 20:53:17] [POKE] vta 0.75
+[2026-01-14 20:53:17] [POKE] striatum 1.0
+[2026-01-14 20:53:17] [POKE] striatum 1.0
+[2026-01-14 20:53:18] [POKE] striatum 1.0
+[2026-01-14 20:53:18] [POKE] striatum 1.0
+[2026-01-14 20:53:18] [POKE] striatum 1.0
+[2026-01-14 20:53:19] [POKE] striatum 1.0
+[2026-01-14 20:53:19] [POKE] striatum 1.0
+[2026-01-14 20:53:19] [POKE] striatum 1.0
+[2026-01-14 20:53:20] [POKE] striatum 1.0
+[2026-01-14 20:53:20] [DECISION] winner=D2 Δ=0.0447 relief=0.5304 t=7.550
+[2026-01-14 20:53:20] [POKE] striatum 1.0
+[2026-01-14 20:53:20] [POKE] striatum 1.0
+[2026-01-14 20:53:20] [POKE] striatum 1.0
+[2026-01-14 20:53:21] [POKE] striatum 1.0
+[2026-01-14 20:53:21] [POKE] striatum 1.0
+[2026-01-14 20:53:21] [POKE] striatum 1.0
+[2026-01-14 20:53:22] [DECAY]
+[2026-01-14 20:53:26] === TEST COMPLETE === max_delta=0.044697 max_relief=0.541800 decision_seen=True ===

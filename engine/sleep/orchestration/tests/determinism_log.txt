@@ -1,0 +1,13 @@
+C:\Users\Admin\Desktop\neural framework>python -m pytest engine/sleep/orchestration/tests/test_sleep_cycle_determinism.py -s
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 1 item
+
+engine\sleep\orchestration\tests\test_sleep_cycle_determinism.py
+=== SLEEP CYCLE DETERMINISM ===
+Episodes: ['ep_A', 'ep_B']
+Frames: 99
+.
+
+============================ 1 passed in 0.09s ============================

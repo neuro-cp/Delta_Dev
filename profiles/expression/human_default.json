@@ -1,0 +1,123 @@
+{
+  "version": "1.0.0",
+  "type": "ExpressionProfile",
+  "profile_name": "human_default",
+
+  "description": "Baseline adult human receptor and channel expression profile (awake, non-pathological).",
+
+  "defaults": {
+    "receptors": {
+      "AMPA": 0.65,
+      "NMDA": 0.45,
+      "GABA_A": 0.65,
+      "GABA_B": 0.35,
+
+      "M1": 0.25,
+      "M2": 0.15,
+
+      "D1": 0.15,
+      "D2": 0.15,
+
+      "5HT1A": 0.20,
+      "5HT2A": 0.15,
+
+      "H1": 0.10,
+
+      "CB1": 0.10,
+
+      "MU_OPIOID": 0.08
+    },
+
+    "channels": {
+      "NaV_FAST": 0.75,
+      "KV_DELAYED_RECTIFIER": 0.65,
+      "HCN": 0.35,
+      "LEAK": 0.55,
+      "CaV_PQ": 0.40
+    }
+  },
+
+  "overrides": {
+
+    "CORTEX": {
+      "L2_3_PYRAMIDAL": {
+        "receptors": {
+          "M1": 0.40,
+          "5HT2A": 0.30
+        }
+      },
+
+      "L5_PYRAMIDAL": {
+        "receptors": {
+          "M1": 0.35,
+          "D1": 0.20
+        }
+      }
+    },
+
+    "HIPPOCAMPAL_FORMATION": {
+      "CA1": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "M1": 0.45,
+            "NMDA": 0.55,
+            "5HT1A": 0.30
+          }
+        }
+      },
+
+      "CA3": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "NMDA": 0.60,
+            "M1": 0.35
+          }
+        }
+      },
+
+      "SUBICULUM": {
+        "PYRAMIDAL_CELLS": {
+          "receptors": {
+            "M1": 0.30,
+            "D1": 0.25
+          }
+        }
+      }
+    },
+
+    "BASAL_GANGLIA": {
+      "STRIATUM": {
+        "D1_MSN": {
+          "receptors": {
+            "D1": 0.65
+          }
+        },
+        "D2_MSN": {
+          "receptors": {
+            "D2": 0.65
+          }
+        }
+      }
+    },
+
+    "THALAMUS": {
+      "MD": {
+        "receptors": {
+          "M2": 0.25,
+          "H1": 0.15
+        }
+      }
+    },
+
+    "AMYGDALA": {
+      "BLA": {
+        "receptors": {
+          "5HT2A": 0.25,
+          "CB1": 0.20
+        }
+      }
+    }
+  },
+
+  "notes": "This profile enables cholinergic, monoaminergic, and neuromodulatory realism required for accurate pharmacological and cognitive simulations."
+}

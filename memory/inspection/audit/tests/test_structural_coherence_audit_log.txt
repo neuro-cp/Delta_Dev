@@ -1,0 +1,13 @@
+=========================== test session starts ===========================
+platform win32 -- Python 3.13.9, pytest-9.0.2, pluggy-1.6.0 -- C:\Users\Admin\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Admin\Desktop\neural framework
+collected 5 items
+
+memory/inspection/audit/tests/test_structural_coherence_audit.py::test_closed_episode_without_trace_is_detected PASSED [ 20%]
+memory/inspection/audit/tests/test_structural_coherence_audit.py::test_consolidation_count_mismatch_detected PASSED [ 40%]
+memory/inspection/audit/tests/test_structural_coherence_audit.py::test_orphan_semantic_record_detected PASSED [ 60%]
+memory/inspection/audit/tests/test_structural_coherence_audit.py::test_orphan_drift_record_detected PASSED [ 80%]
+memory/inspection/audit/tests/test_structural_coherence_audit.py::test_inspection_episode_count_mismatch_detected PASSED [100%]
+
+============================ 5 passed in 0.08s ============================

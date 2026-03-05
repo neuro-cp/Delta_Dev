@@ -1,0 +1,53 @@
+{
+  "episode_id": 1,
+  "signatures": {
+    "stn": {
+      "baseline_fraction_active": 0.0,
+      "baseline_mass": 0.01,
+      "baseline_step": 950,
+      "baseline_tiers": {
+        "high": 0,
+        "low": 1,
+        "mid": 0,
+        "zero": 1
+      },
+      "decision_summary": null,
+      "delta_fraction_active": 1.0,
+      "delta_mass": 0.33999999999999997,
+      "episode_end_step": 1100,
+      "episode_id": 1,
+      "episode_start_step": 900,
+      "has_decision": false,
+      "identity_stability": "stable",
+      "post_fraction_active": 1.0,
+      "post_mass": 0.35,
+      "post_step": 1050,
+      "post_tiers": {
+        "high": 0,
+        "low": 0,
+        "mid": 2,
+        "zero": 0
+      },
+      "recruitment_level": "full",
+      "region": "stn",
+      "salience_summary": {
+        "count": 0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "scaling_direction": "up",
+      "top_k_overlap": 1.0,
+      "urgency_summary": {
+        "count": 0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "value_summary": {
+        "count": 0,
+        "max": 0.0,
+        "mean": 0.0
+      },
+      "winner": null
+    }
+  }
+}

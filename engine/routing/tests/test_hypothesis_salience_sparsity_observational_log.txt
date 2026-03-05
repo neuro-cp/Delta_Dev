@@ -1,0 +1,31 @@
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+[PHASE 1] Baseline (no hypotheses)
+[BASE 0000] dominance={'D1': 0.006667172325387541, 'D2': 0.0066661610079457945} relief=0.4972
+[BASE 0100] dominance={'D1': 0.37101291226157207, 'D2': 0.371226751101776} relief=0.4533
+
+[PHASE 2] Assigning hypotheses
+  association_cortex:L2_3_PYRAMIDAL:0 → H1
+  association_cortex:L2_3_PYRAMIDAL:1 → H2
+
+[PHASE 3] Sustained weak stimulation with sparsity
+[STEP 0000] active=2 dominance={'D1': 0.46640319932460966, 'D2': 0.46625856640879565} relief=0.4258
+[STEP 0100] active=2 dominance={'D1': 0.49127043426616956, 'D2': 0.49113788404490294} relief=0.4184
+[STEP 0200] active=2 dominance={'D1': 0.4976308720045882, 'D2': 0.49777341401486186} relief=0.4298
+[STEP 0300] active=2 dominance={'D1': 0.4993861666177613, 'D2': 0.4994132325889491} relief=0.4551
+[STEP 0400] active=2 dominance={'D1': 0.499283257224359, 'D2': 0.5004030935209336} relief=0.4868
+
+[PHASE 4] Withdrawal
+[WITHDRAW 0000] dominance={'D1': 0.49936503896873835, 'D2': 0.5005530221757084} relief=0.5170
+[WITHDRAW 0100] dominance={'D1': 0.4996331170764277, 'D2': 0.5003454769232439} relief=0.5389
+
+=== TEST COMPLETE ===
+Inspect active assembly count vs dominance vs relief.
+No asserts by design.
+
+C:\Users\Admin\Desktop\neural framework>

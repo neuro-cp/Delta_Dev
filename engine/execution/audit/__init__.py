@@ -1,0 +1,1 @@
+"""Execution audit and inspection surfaces (read-only)."""

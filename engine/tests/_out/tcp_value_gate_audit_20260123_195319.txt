@@ -1,0 +1,48 @@
+[2026-01-23 19:53:19] === BEGIN: TCP Value -> Gate Audit (Baseline vs Value vs Clear) ===
+[2026-01-23 19:53:19] Target: 127.0.0.1:5557
+[2026-01-23 19:53:19] [CLEAN] reset_latch + value_clear
+[2026-01-23 19:53:19] OK reset_latch
+[2026-01-23 19:53:19] OK value reset
+[2026-01-23 19:53:19] HELP first lines:
+Commands:
+  poke <region> <mag>
+  poke_pop <region> <population> <mag>
+  poke_asm <region> <population> <idx> <mag>
+  stats <region>
+  top <region> <N>
+  context | ctx
+  ctxfull
+[2026-01-23 19:53:19] [PHASE] baseline for 6.0s @ dt=0.20s
+[2026-01-23 19:53:19] [baseline 0000] value=0.0 gate_relief=0.5048 gpi_mean=0.7386 Δ=0.00029400000000001647 winner=D2 control=pre-decision
+[2026-01-23 19:53:21] [baseline 0005] value=0.0 gate_relief=0.5036 gpi_mean=0.7405 Δ=0.000126000000000015 winner=D2 control=pre-decision
+[2026-01-23 19:53:22] [baseline 0010] value=0.0 gate_relief=0.5023 gpi_mean=0.7426 Δ=0.00028000000000000247 winner=D1 control=pre-decision
+[2026-01-23 19:53:24] [baseline 0015] value=0.0 gate_relief=0.5007 gpi_mean=0.7453 Δ=0.0005280000000000284 winner=D2 control=pre-decision
+[2026-01-23 19:53:25] [baseline 0020] value=0.0 gate_relief=0.4989 gpi_mean=0.7482 Δ=0.0016339999999999688 winner=D2 control=pre-decision
+[2026-01-23 19:53:25] [ACTION] value_set 0.78
+[2026-01-23 19:53:25] OK value = 0.1000
+[2026-01-23 19:53:25] [PHASE] value_hold for 10.0s @ dt=0.20s
+[2026-01-23 19:53:25] [value_hold 0000] value=0.0998 gate_relief=0.4985 gpi_mean=0.7488 Δ=0.0017959999999999643 winner=D2 control=pre-decision
+[2026-01-23 19:53:27] [value_hold 0005] value=0.0906 gate_relief=0.4967 gpi_mean=0.7517 Δ=0.0015639999999999543 winner=D2 control=pre-decision
+[2026-01-23 19:53:29] [value_hold 0010] value=0.0825 gate_relief=0.4952 gpi_mean=0.7541 Δ=0.0019400000000000528 winner=D2 control=pre-decision
+[2026-01-23 19:53:30] [value_hold 0015] value=0.0747 gate_relief=0.4939 gpi_mean=0.7561 Δ=0.0017259999999999498 winner=D2 control=pre-decision
+[2026-01-23 19:53:32] [value_hold 0020] value=0.0683 gate_relief=0.4931 gpi_mean=0.7573 Δ=0.0009360000000000479 winner=D2 control=pre-decision
+[2026-01-23 19:53:33] [value_hold 0025] value=0.0616 gate_relief=0.4927 gpi_mean=0.7579 Δ=0.00023599999999995847 winner=D2 control=pre-decision
+[2026-01-23 19:53:35] [value_hold 0030] value=0.0559 gate_relief=0.4928 gpi_mean=0.7578 Δ=4.0000000000040004e-05 winner=D1 control=pre-decision
+[2026-01-23 19:53:35] [ACTION] value_clear
+[2026-01-23 19:53:35] OK value reset
+[2026-01-23 19:53:35] [PHASE] clear_hold for 10.0s @ dt=0.20s
+[2026-01-23 19:53:36] [clear_hold 0000] value=0.0 gate_relief=0.493 gpi_mean=0.7576 Δ=0.00010799999999999699 winner=D2 control=pre-decision
+[2026-01-23 19:53:37] [clear_hold 0005] value=0.0 gate_relief=0.4936 gpi_mean=0.7566 Δ=0.00027800000000000047 winner=D2 control=pre-decision
+[2026-01-23 19:53:39] [clear_hold 0010] value=0.0 gate_relief=0.4944 gpi_mean=0.7553 Δ=0.00033599999999994745 winner=D2 control=pre-decision
+[2026-01-23 19:53:40] [clear_hold 0015] value=0.0 gate_relief=0.4953 gpi_mean=0.7538 Δ=0.0006980000000000319 winner=D2 control=pre-decision
+[2026-01-23 19:53:42] [clear_hold 0020] value=0.0 gate_relief=0.4965 gpi_mean=0.7519 Δ=0.0004919999999999924 winner=D2 control=pre-decision
+[2026-01-23 19:53:43] [clear_hold 0025] value=0.0 gate_relief=0.4975 gpi_mean=0.7502 Δ=0.0001040000000000485 winner=D2 control=pre-decision
+[2026-01-23 19:53:45] [clear_hold 0030] value=0.0 gate_relief=0.4985 gpi_mean=0.7486 Δ=0.00036400000000003097 winner=D1 control=pre-decision
+[2026-01-23 19:53:46] === END ===
+[2026-01-23 19:53:46] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_gate_audit_20260123_195319.txt
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_value_gate_audit_20260123_195319.csv
+[2026-01-23 19:53:46] Interpretation:
+[2026-01-23 19:53:46]   - If value changes but gate_relief/gpi_mean curves are statistically the same as baseline drift → value is wired but not influencing gate (expected).
+[2026-01-23 19:53:46]   - If value changes AND gpi_mean shifts consistently relative to baseline → you have an indirect coupling path worth auditing.
+[2026-01-23 19:53:46]   - If stats gpi doesn't include mean, we’ll still have raw outputs in the log to adjust the parser.

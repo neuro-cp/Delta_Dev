@@ -1,0 +1,38 @@
+[2026-01-23 19:18:08] === BEGIN PHASE 4 AUTHORITY BASELINE (TCP) ===
+[2026-01-23 19:18:08] [CLEAN] reset_latch / clear value / clear salience / reset hypotheses
+[2026-01-23 19:18:08] [PHASE 0] Baseline snapshots (pre-commit)
+[2026-01-23 19:18:09] [BASELINE] phase=pre-decision committed=False gate_relief=0.4518 value=0.0 urgency=0.0
+[2026-01-23 19:18:09] [PHASE 1] Force lawful commit (coincidence window only)
+[2026-01-23 19:18:09] [POST] phase=post-commit committed=True suppress=True working_active=True gate_relief=0.447 decision=D2
+[2026-01-23 19:18:09] [PHASE 2] Observing post-commit -> decay -> release (no asserts)
+[2026-01-23 19:18:12] [OBS 0010] phase=post-commit committed=True suppress=True working=True gate=0.4183 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:16] [OBS 0020] phase=post-commit committed=True suppress=True working=True gate=0.4465 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:20] [OBS 0030] phase=post-commit committed=True suppress=True working=True gate=0.502 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:24] [OBS 0040] phase=post-commit committed=True suppress=True working=True gate=0.5404 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:28] [OBS 0050] phase=post-commit committed=True suppress=True working=True gate=0.5481 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:32] [OBS 0060] phase=post-commit committed=True suppress=True working=True gate=0.5313 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:36] [OBS 0070] phase=post-commit committed=True suppress=True working=True gate=0.5024 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:39] [OBS 0080] phase=post-commit committed=True suppress=True working=True gate=0.4772 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:43] [OBS 0090] phase=post-commit committed=True suppress=True working=True gate=0.4662 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:47] [OBS 0100] phase=post-commit committed=True suppress=True working=True gate=0.4714 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:51] [OBS 0110] phase=post-commit committed=True suppress=True working=True gate=0.4873 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:55] [OBS 0120] phase=post-commit committed=True suppress=True working=True gate=0.5048 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:18:59] [OBS 0130] phase=post-commit committed=True suppress=True working=True gate=0.5145 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:03] [OBS 0140] phase=post-commit committed=True suppress=True working=True gate=0.5175 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:07] [OBS 0150] phase=post-commit committed=True suppress=True working=True gate=0.5114 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:10] [OBS 0160] phase=post-commit committed=True suppress=True working=True gate=0.5005 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:14] [OBS 0170] phase=post-commit committed=True suppress=True working=True gate=0.4907 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:18] [OBS 0180] phase=post-commit committed=True suppress=True working=True gate=0.4855 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:22] [OBS 0190] phase=post-commit committed=True suppress=True working=True gate=0.4869 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:26] [OBS 0200] phase=post-commit committed=True suppress=True working=True gate=0.493 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:29] [OBS 0210] phase=post-commit committed=True suppress=True working=True gate=0.4991 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:33] [OBS 0220] phase=post-commit committed=True suppress=True working=True gate=0.5041 val=0.0 urg=0.0 dec=D2
+[2026-01-23 19:19:33] === TEST COMPLETE ===
+[2026-01-23 19:19:33] This test is observational-only (no asserts).
+[2026-01-23 19:19:33] Use outputs to build the Phase-4 Authority Matrix:
+[2026-01-23 19:19:33]   - Which modulators remain live post-commit?
+[2026-01-23 19:19:33]   - Which should clamp/freeze during commitment?
+[2026-01-23 19:19:33]   - Do control/working flags unwind cleanly?
+[2026-01-23 19:19:33] Outputs:
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_phase4_authority_baseline_20260123_191808.csv
+  C:\Users\Admin\Desktop\neural framework\engine\tests\_out\tcp_phase4_authority_baseline_20260123_191808.txt

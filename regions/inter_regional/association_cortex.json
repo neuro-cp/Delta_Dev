@@ -1,0 +1,191 @@
+{
+  "version": "1.3.2",
+  "type": "RegionSubstructure",
+  "region_id": "ASSOCIATION_CORTEX",
+  "parent_region": "CORTEX",
+
+  "function": "multimodal_integration_and_workspace",
+
+  "spatial_properties": {
+    "laminar": true,
+    "columnar_bias": true
+  },
+
+  "populations": {
+
+    "L2_3_PYRAMIDAL": {
+      "count": 120000,
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.5,
+      "plasticity_profile": "very_high",
+
+      "subpopulations": {
+        "FEATURE_BINDING_UNITS": {
+          "fraction": 0.45,
+          "role": "cross_modal_feature_linking",
+          "integration_window_ms": 120
+        },
+        "ABSTRACTION_UNITS": {
+          "fraction": 0.35,
+          "role": "concept_formation",
+          "temporal_invariance": "high"
+        },
+        "TRANSIENT_REPRESENTATION_UNITS": {
+          "fraction": 0.20,
+          "role": "ephemeral_workspace_entries",
+          "decay_time_ms": 800
+        }
+      }
+    },
+
+    "L5_PYRAMIDAL_A": {
+      "count": 40000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.7,
+      "plasticity_profile": "high",
+      "tags": ["candidate_A", "competing_representation"],
+
+      "subpopulations": {
+        "STABLE_PATTERN_UNITS": {
+          "fraction": 0.60,
+          "role": "long_lived_representation_export"
+        },
+        "COMPETITIVE_SELECTION_UNITS": {
+          "fraction": 0.40,
+          "role": "pattern_competition_and_resolution"
+        }
+      }
+    },
+
+    "L5_PYRAMIDAL_B": {
+      "count": 40000,
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.7,
+      "plasticity_profile": "high",
+      "tags": ["candidate_B", "competing_representation"],
+
+      "subpopulations": {
+        "STABLE_PATTERN_UNITS": {
+          "fraction": 0.60,
+          "role": "long_lived_representation_export"
+        },
+        "COMPETITIVE_SELECTION_UNITS": {
+          "fraction": 0.40,
+          "role": "pattern_competition_and_resolution"
+        }
+      }
+    },
+
+    "INTERNEURONS": {
+      "count": 50000,
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 6.0,
+      "plasticity_profile": "medium",
+
+      "subpopulations": {
+        "LOCAL_COMPETITION_UNITS": {
+          "fraction": 0.50,
+          "role": "local_pattern_suppression"
+        },
+        "GLOBAL_NORMALIZATION_UNITS": {
+          "fraction": 0.30,
+          "role": "activity_scaling_and_stability"
+        },
+        "TEMPORAL_GATING_UNITS": {
+          "fraction": 0.20,
+          "role": "timing_control_and_sequence_separation",
+          "preferred_frequency_hz": 6.0
+        }
+      }
+    }
+  },
+
+  "inputs": [
+    {
+      "source_region": "V1",
+      "signal": "visual_features",
+      "strength": 0.6
+    },
+    {
+      "source_region": "A1",
+      "signal": "auditory_features",
+      "strength": 0.6
+    },
+    {
+      "source_region": "PULVINAR",
+      "signal": "salience_and_context",
+      "strength": 0.4
+    }
+  ],
+
+  "outputs": [
+    {
+      "target_region": "PFC",
+      "target_population": "L2_3_PYRAMIDAL",
+      "signal": "abstracted_state",
+      "strength": 0.7
+    },
+
+    {
+      "target_region": "PFC",
+      "target_population": "L5_POLICY_A",
+      "signal": "candidate_A",
+      "strength": 0.4
+    },
+    {
+      "target_region": "PFC",
+      "target_population": "L5_POLICY_B",
+      "signal": "candidate_A",
+      "strength": 0.4
+    },
+
+    {
+      "target_region": "PFC",
+      "target_population": "L5_POLICY_A",
+      "signal": "candidate_B",
+      "strength": 0.4
+    },
+    {
+      "target_region": "PFC",
+      "target_population": "L5_POLICY_B",
+      "signal": "candidate_B",
+      "strength": 0.4
+    }
+  ],
+
+
+  "state_modulation": {
+    "focused_thought": {
+      "competition_gain": 1.0,
+      "normalization_gain": 0.7,
+      "workspace_decay": 0.4
+    },
+    "exploratory": {
+      "competition_gain": 0.5,
+      "normalization_gain": 0.5,
+      "workspace_decay": 0.8
+    },
+    "overload": {
+      "competition_gain": 1.2,
+      "normalization_gain": 1.0,
+      "workspace_decay": 1.0
+    }
+  },
+
+  "drug_sensitivity": {
+    "psychedelics": "very_high",
+    "dopaminergic_agents": "moderate",
+    "cholinergic_agents": "high",
+    "sedatives": "moderate"
+  },
+
+  "notes": "Association cortex functions as a multimodal integration and workspace region. L5 pyramidal populations are explicitly split into parallel candidate representations (A/B) to support downstream basal ganglia competition and gating without introducing new dynamics or learning. All other structure is preserved to maintain biological interpretability and experimental continuity."
+}

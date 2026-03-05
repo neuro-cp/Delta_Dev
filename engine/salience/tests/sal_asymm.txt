@@ -1,0 +1,71 @@
+C:\Users\Admin\Desktop\neural framework>python -m engine.salience.tests.test_salience_driven_asymmetry
+=== TEST 5C: Salience-driven lawful asymmetry ===
+[DEBUG] Neuron bases loaded: 5
+[DEBUG] Loading regions from: C:\Users\Admin\Desktop\neural framework\regions
+[DEBUG] BrainMap loaded from brain_map.json
+[DEBUG] RegionAliasRegistry loaded from region_aliases.json
+[DEBUG] Loaded region: amyg_base | populations=0
+[DEBUG] Loaded region: bla | populations=2
+[DEBUG] Loaded region: cea | populations=1
+[DEBUG] Loaded region: mea | populations=1
+[DEBUG] Loaded region: bg_base | populations=0
+[DEBUG] Loaded region: gpe | populations=1
+[DEBUG] Loaded region: gpi | populations=1
+[DEBUG] Loaded region: snc | populations=1
+[DEBUG] Loaded region: stn | populations=1
+[DEBUG] Loaded region: striatum | populations=3
+[DEBUG] Loaded region: autonomic_system | populations=2
+[DEBUG] Loaded region: brainstem_base | populations=0
+[DEBUG] Loaded region: locus_coeruleus | populations=1
+[DEBUG] Loaded region: medulla | populations=1
+[DEBUG] Loaded region: pons | populations=1
+[DEBUG] Loaded region: raphe | populations=1
+[DEBUG] Loaded region: vta | populations=2
+[DEBUG] Loaded region: cerebellar_cortex | populations=3
+[DEBUG] Loaded region: cerebellum_base | populations=0
+[DEBUG] Loaded region: deep_nuclei | populations=1
+[DEBUG] Loaded region: a1 | populations=4
+[DEBUG] Loaded region: cortex_base | populations=5
+[DEBUG] Loaded region: insula | populations=3
+[DEBUG] Loaded region: m1 | populations=3
+[DEBUG] Loaded region: s1 | populations=5
+[DEBUG] Loaded region: v1 | populations=5
+[DEBUG] Loaded region: ca1 | populations=2
+[DEBUG] Loaded region: ca3 | populations=2
+[DEBUG] Loaded region: dentate_gyrus | populations=2
+[DEBUG] Loaded region: hip_base | populations=0
+[DEBUG] Loaded region: subiculum | populations=1
+[DEBUG] Loaded region: association_cortex | populations=4
+[DEBUG] Loaded region: corpus_callosum | populations=1
+[DEBUG] Loaded region: Intralaminar | populations=1
+[DEBUG] Loaded region: pfc | populations=5
+[DEBUG] Loaded region: inferior_colliculus | populations=3
+[DEBUG] Loaded region: superior_colliculus | populations=3
+[DEBUG] Loaded region: auditory_input | populations=0
+[DEBUG] Loaded region: gustatory_input | populations=0
+[DEBUG] Loaded region: sensory_base | populations=0
+[DEBUG] Loaded region: somato_input | populations=0
+[DEBUG] Loaded region: visual_input | populations=0
+[DEBUG] Loaded region: endocrine_system | populations=0
+[DEBUG] Loaded region: hypothalamus | populations=4
+[DEBUG] Loaded region: anterior_pituitary | populations=5
+[DEBUG] Loaded region: posterior_pituitary | populations=2
+[DEBUG] Loaded region: lgn | populations=1
+[DEBUG] Loaded region: md | populations=1
+[DEBUG] Loaded region: mgb | populations=1
+[DEBUG] Loaded region: pulvinar | populations=1
+[DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\neural framework\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\neural framework\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+D1 mass = 0.7528
+D2 mass = 0.7407
+Dominance delta = 0.0121
+[PASS] Salience induces lawful asymmetry without decisions

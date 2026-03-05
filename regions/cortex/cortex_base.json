@@ -1,0 +1,111 @@
+{
+  "version": "1.1.1",
+  "type": "RegionBase",
+  "region_id": "CORTEX_BASE",
+  "category": "laminar_cortex",
+  "reference_models": ["human", "mouse", "primate"],
+
+  "spatial_properties": {
+    "coordinate_frame": "cortical_sheet",
+    "thickness_mm": 2.5
+  },
+
+  "laminar_structure": {
+    "layers": ["L1", "L2_3", "L4", "L5", "L6"],
+    "layer_roles": {
+      "L1": "integration",
+      "L2_3": "local_processing",
+      "L4": "thalamic_input",
+      "L5": "subcortical_output",
+      "L6": "feedback_modulation"
+    }
+  },
+
+  "populations": {
+    "L2_3_PYRAMIDAL": {
+      "layer": "L2_3",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.5,
+      "plasticity_profile": "high"
+    },
+
+    "L4_EXCITATORY": {
+      "layer": "L4",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.6,
+      "plasticity_profile": "medium"
+    },
+
+    "L5_PYRAMIDAL": {
+      "layer": "L5",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.7,
+      "plasticity_profile": "high"
+    },
+
+    "L6_PYRAMIDAL": {
+      "layer": "L6",
+      "neuron_type": "excitatory",
+      "sign": 1.0,
+      "baseline_firing_rate_hz": 0.4,
+      "plasticity_profile": "medium"
+    },
+
+    "INTERNEURONS": {
+      "layer": "all",
+      "neuron_type": "inhibitory",
+      "sign": -1.0,
+      "baseline_firing_rate_hz": 6.0,
+      "plasticity_profile": "low"
+    }
+  },
+
+  "population_aliases": {
+    "L3_PYRAMIDAL": "L2_3_PYRAMIDAL",
+    "PFC_L2_3": "L2_3_PYRAMIDAL",
+    "S1_L4": "L4_EXCITATORY"
+  },
+
+  "default_neuron_template": {
+    "neuron_base": "neubase",
+    "plasticity_enabled": true
+  },
+
+  "default_channels": {
+    "NaV_FAST": 0.8,
+    "KV_DELAYED_RECTIFIER": 0.7,
+    "KCa": 0.3,
+    "HCN": 0.2,
+    "LEAK": 0.5
+  },
+
+  "default_receptors": {
+    "AMPA": 0.5,
+    "NMDA": 0.4,
+    "GABA_A": 0.35,
+    "GABA_B": 0.15
+  },
+
+  "intrinsic_signals": {
+    "calcium_proxy": 0.0,
+    "growth_factor": 0.0,
+    "energy_state": 1.0,
+    "excitatory_drive": 0.0
+  },
+
+  "allowed_inputs": [
+    "THALAMUS",
+    "CORTEX"
+  ],
+
+  "allowed_outputs": [
+    "CORTEX",
+    "BASAL_GANGLIA",
+    "BRAINSTEM"
+  ],
+
+  "notes": "Canonical cortical laminar template. All cortical subregions inherit populations and aliases unless overridden."
+}
