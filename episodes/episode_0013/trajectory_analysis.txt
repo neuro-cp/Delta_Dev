@@ -1,0 +1,10 @@
+Trajectory Analysis
+==================
+
+steps: 62
+unique_cells_visited: 20
+exploration_radius: 13
+reversal_rate: 0.0
+distance_start: None
+distance_end: None
+distance_slope: None

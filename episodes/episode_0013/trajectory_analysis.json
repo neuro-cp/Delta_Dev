@@ -1,0 +1,9 @@
+{
+  "steps": 62,
+  "unique_cells_visited": 20,
+  "exploration_radius": 13,
+  "reversal_rate": 0.0,
+  "distance_start": null,
+  "distance_end": null,
+  "distance_slope": null
+}

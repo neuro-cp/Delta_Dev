@@ -1,0 +1,30 @@
+[
+  {
+    "state": {
+      "agent_position": [
+        0,
+        0
+      ],
+      "resources": 25,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 0
+    },
+    "action": "ActionType.ENGAGE",
+    "metrics": {
+      "targets_remaining": 0,
+      "resource_delta": 1,
+      "time": 1
+    }
+  }
+]
