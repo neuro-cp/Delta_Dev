@@ -91,7 +91,7 @@ It is not optimized for benchmark performance or consumer deployment.
 
 Repository
 
-https://github.com/neuro-cp/delta-75
+https://github.com/neuro-cp/Delta_Dev
 
 Status
 
