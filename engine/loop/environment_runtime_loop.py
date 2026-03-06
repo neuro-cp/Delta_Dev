@@ -114,7 +114,6 @@ class EnvironmentRuntimeLoop:
                 }
             )
 
-            # update state
             state = next_state
             step_index += 1
             self.previous_action = action
@@ -130,16 +129,13 @@ class EnvironmentRuntimeLoop:
 
     def select_action(self):
         """
-        Temporary exploration policy.
+        Pure random exploration policy.
 
-        Future replacement:
-        - recall candidate strategies
-        - arbitration
-        - execution gate
+        No neural bias.
+        Used for baseline behavioral diagnostics.
         """
 
         return random.choice(ALL_ACTIONS)
-
     # --------------------------------------------------
     # ACTION REVERSAL DIAGNOSTIC
     # --------------------------------------------------
