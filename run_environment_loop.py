@@ -140,15 +140,25 @@ def main():
 
     wait_for_homeostasis(runtime)
 
-    print("\nStarting environment episodes until success...")
+    # -----------------------------------------------
+    # ASK USER FOR NUMBER OF EPISODES
+    # -----------------------------------------------
 
-    success = False
-    episode_count = 0
+    try:
+        n_episodes = int(input("\nHow many baseline episodes should be run? "))
+    except ValueError:
+        print("Invalid input. Defaulting to 10 episodes.")
+        n_episodes = 10
 
-    while not success:
+    print(f"\nRunning {n_episodes} baseline episodes...")
 
-        episode_count += 1
-        print(f"\nRunning episode {episode_count}")
+    # -----------------------------------------------
+    # RUN BASELINE EPISODES
+    # -----------------------------------------------
+
+    for episode_index in range(1, n_episodes + 1):
+
+        print(f"\nRunning episode {episode_index}/{n_episodes}")
 
         ep_path = next_episode_path()
 
@@ -158,24 +168,19 @@ def main():
             agent_position=(0, 0),
             resources=200,
             targets=[(5, 5)],
-            hazards=[(2, 2)],
+            hazards=[(3, 1)],
         )
 
         episode = loop.run_episode(initial_state)
 
         save_episode(ep_path, episode)
 
-        last_metrics = episode[-1]["metrics"]
-
-        if last_metrics["targets_remaining"] == 0:
-            success = True
-            print("\nSUCCESS: target reached")
-
         print("episode steps:", len(episode))
         print("saved to:", ep_path)
 
-    print("\nMISSION COMPLETE")
+    print("\nBaseline episode batch complete.")
 
+    
 
 if __name__ == "__main__":
     main()

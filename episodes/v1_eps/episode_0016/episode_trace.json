@@ -1,0 +1,1260 @@
+[
+  {
+    "state": {
+      "agent_position": [
+        0,
+        0
+      ],
+      "resources": 200,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 0
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 1,
+      "agent_position": [
+        0,
+        0
+      ],
+      "distance_to_target": 10,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        0
+      ],
+      "resources": 199,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 1
+    },
+    "action": "ActionType.WAIT",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 2,
+      "agent_position": [
+        0,
+        0
+      ],
+      "distance_to_target": 10,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        0
+      ],
+      "resources": 198,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 2
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 3,
+      "agent_position": [
+        1,
+        0
+      ],
+      "distance_to_target": 9,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        0
+      ],
+      "resources": 197,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 3
+    },
+    "action": "ActionType.MOVE_SOUTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 4,
+      "agent_position": [
+        1,
+        0
+      ],
+      "distance_to_target": 9,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        0
+      ],
+      "resources": 196,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 4
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 5,
+      "agent_position": [
+        1,
+        1
+      ],
+      "distance_to_target": 8,
+      "reversal": true
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        1
+      ],
+      "resources": 195,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 5
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 6,
+      "agent_position": [
+        1,
+        2
+      ],
+      "distance_to_target": 7,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        2
+      ],
+      "resources": 194,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 6
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 7,
+      "agent_position": [
+        0,
+        2
+      ],
+      "distance_to_target": 8,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        2
+      ],
+      "resources": 193,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 7
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 8,
+      "agent_position": [
+        0,
+        2
+      ],
+      "distance_to_target": 8,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        2
+      ],
+      "resources": 192,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 8
+    },
+    "action": "ActionType.WAIT",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 9,
+      "agent_position": [
+        0,
+        2
+      ],
+      "distance_to_target": 8,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        2
+      ],
+      "resources": 191,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 9
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 10,
+      "agent_position": [
+        0,
+        3
+      ],
+      "distance_to_target": 7,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        3
+      ],
+      "resources": 190,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 10
+    },
+    "action": "ActionType.SCAN",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 11,
+      "agent_position": [
+        0,
+        3
+      ],
+      "distance_to_target": 7,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        3
+      ],
+      "resources": 189,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 11
+    },
+    "action": "ActionType.WAIT",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 12,
+      "agent_position": [
+        0,
+        3
+      ],
+      "distance_to_target": 7,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        3
+      ],
+      "resources": 188,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 12
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 13,
+      "agent_position": [
+        1,
+        3
+      ],
+      "distance_to_target": 6,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        3
+      ],
+      "resources": 187,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 13
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 14,
+      "agent_position": [
+        1,
+        4
+      ],
+      "distance_to_target": 5,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        4
+      ],
+      "resources": 186,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 14
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 15,
+      "agent_position": [
+        0,
+        4
+      ],
+      "distance_to_target": 6,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        4
+      ],
+      "resources": 185,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 15
+    },
+    "action": "ActionType.SCAN",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 16,
+      "agent_position": [
+        0,
+        4
+      ],
+      "distance_to_target": 6,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        4
+      ],
+      "resources": 184,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 16
+    },
+    "action": "ActionType.ENGAGE",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 17,
+      "agent_position": [
+        0,
+        4
+      ],
+      "distance_to_target": 6,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        4
+      ],
+      "resources": 183,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 17
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 18,
+      "agent_position": [
+        0,
+        4
+      ],
+      "distance_to_target": 6,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        4
+      ],
+      "resources": 182,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 18
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 19,
+      "agent_position": [
+        0,
+        5
+      ],
+      "distance_to_target": 5,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        5
+      ],
+      "resources": 181,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 19
+    },
+    "action": "ActionType.MOVE_SOUTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 20,
+      "agent_position": [
+        0,
+        4
+      ],
+      "distance_to_target": 6,
+      "reversal": true
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        4
+      ],
+      "resources": 180,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 20
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 21,
+      "agent_position": [
+        1,
+        4
+      ],
+      "distance_to_target": 5,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        4
+      ],
+      "resources": 179,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 21
+    },
+    "action": "ActionType.MOVE_SOUTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 22,
+      "agent_position": [
+        1,
+        3
+      ],
+      "distance_to_target": 6,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        3
+      ],
+      "resources": 178,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 22
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 23,
+      "agent_position": [
+        1,
+        4
+      ],
+      "distance_to_target": 5,
+      "reversal": true
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        4
+      ],
+      "resources": 177,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 23
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 24,
+      "agent_position": [
+        1,
+        5
+      ],
+      "distance_to_target": 4,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        5
+      ],
+      "resources": 176,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 24
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 25,
+      "agent_position": [
+        0,
+        5
+      ],
+      "distance_to_target": 5,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        0,
+        5
+      ],
+      "resources": 175,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 25
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 26,
+      "agent_position": [
+        1,
+        5
+      ],
+      "distance_to_target": 4,
+      "reversal": true
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        5
+      ],
+      "resources": 174,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 26
+    },
+    "action": "ActionType.WAIT",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 27,
+      "agent_position": [
+        1,
+        5
+      ],
+      "distance_to_target": 4,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        5
+      ],
+      "resources": 173,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 27
+    },
+    "action": "ActionType.MOVE_SOUTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 28,
+      "agent_position": [
+        1,
+        4
+      ],
+      "distance_to_target": 5,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        4
+      ],
+      "resources": 172,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 28
+    },
+    "action": "ActionType.WAIT",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 29,
+      "agent_position": [
+        1,
+        4
+      ],
+      "distance_to_target": 5,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        4
+      ],
+      "resources": 171,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 29
+    },
+    "action": "ActionType.MOVE_NORTH",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 30,
+      "agent_position": [
+        1,
+        5
+      ],
+      "distance_to_target": 4,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        5
+      ],
+      "resources": 170,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 30
+    },
+    "action": "ActionType.SCAN",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 31,
+      "agent_position": [
+        1,
+        5
+      ],
+      "distance_to_target": 4,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        5
+      ],
+      "resources": 169,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 31
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 32,
+      "agent_position": [
+        2,
+        5
+      ],
+      "distance_to_target": 3,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        2,
+        5
+      ],
+      "resources": 168,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 32
+    },
+    "action": "ActionType.MOVE_WEST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 33,
+      "agent_position": [
+        1,
+        5
+      ],
+      "distance_to_target": 4,
+      "reversal": true
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        1,
+        5
+      ],
+      "resources": 167,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 33
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 34,
+      "agent_position": [
+        2,
+        5
+      ],
+      "distance_to_target": 3,
+      "reversal": true
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        2,
+        5
+      ],
+      "resources": 166,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 34
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 35,
+      "agent_position": [
+        3,
+        5
+      ],
+      "distance_to_target": 2,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        3,
+        5
+      ],
+      "resources": 165,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 35
+    },
+    "action": "ActionType.MOVE_EAST",
+    "metrics": {
+      "targets_remaining": 1,
+      "resource_delta": 1,
+      "time": 36,
+      "agent_position": [
+        4,
+        5
+      ],
+      "distance_to_target": 1,
+      "reversal": false
+    }
+  },
+  {
+    "state": {
+      "agent_position": [
+        4,
+        5
+      ],
+      "resources": 164,
+      "targets": [
+        [
+          5,
+          5
+        ]
+      ],
+      "hazards": [
+        [
+          2,
+          2
+        ]
+      ],
+      "time_step": 36
+    },
+    "action": "ActionType.ENGAGE",
+    "metrics": {
+      "targets_remaining": 0,
+      "resource_delta": 1,
+      "time": 37,
+      "agent_position": [
+        4,
+        5
+      ],
+      "distance_to_target": null,
+      "reversal": false
+    }
+  }
+]

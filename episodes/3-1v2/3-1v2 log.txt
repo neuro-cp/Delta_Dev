@@ -1,0 +1,54 @@
+avg steps: 178.8
+success ratio: .4
+
+BASELINE RESULTS
+----------------
+episodes: 30
+total_steps: 4638
+hazard_landings: 94
+landings_per_episode: 3.1333333333333333
+landing_rate: 0.02026735661923243
+
+ RESULTS
+----------
+episodes: 5
+total_steps: 894
+hazard_landings: 14
+landings_per_episode: 2.8
+landing_rate: 0.015659955257270694
+
+COMPARISON
+----------
+hazard change factor: 0.14893617021276595
+---BOOTSTRAP: waiting for neural stabilization 
+HOMEOSTASIS DETECTED at step 523
+peak_mass = 18.148515
+current_mass = 18.147664
+
+How many baseline episodes should be run? 5
+
+Running 5 baseline episodes...
+
+Running episode 1/5
+episode steps: 193
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0001
+
+Running episode 2/5
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0002
+
+Running episode 3/5
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0003
+
+Running episode 4/5
+episode steps: 101
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0004
+
+Running episode 5/5
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0005
+
+Baseline episode batch complete.
+
+C:\Users\Admin\Desktop\delta>

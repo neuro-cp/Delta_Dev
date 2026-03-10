@@ -1,0 +1,137 @@
+success ratio: .367
+avg steps: 182.6
+
+episodes: 30 total_steps: 5478 hazard_landings: 115 landings_per_episode: 3.8333333333333335 landing_rate: 0.020993063161737862
+
+BOOTSTRAP: waiting for neural stabilization
+HOMEOSTASIS DETECTED at step 525
+peak_mass = 18.149193
+current_mass = 18.146405
+
+How many baseline episodes should be run? 30
+
+Running 30 baseline episodes...
+
+Running episode 1/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0001
+
+Running episode 2/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0002
+
+Running episode 3/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0003
+
+Running episode 4/30
+episode steps: 153
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0004
+
+Running episode 5/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0005
+
+Running episode 6/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0006
+
+Running episode 7/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0007
+
+Running episode 8/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0008
+
+Running episode 9/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0009
+
+Running episode 10/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0010
+
+Running episode 11/30
+episode steps: 193
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0011
+
+Running episode 12/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0012
+
+Running episode 13/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0013
+
+Running episode 14/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0014
+
+Running episode 15/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0015
+
+Running episode 16/30
+episode steps: 58
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0016
+
+Running episode 17/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0017
+
+Running episode 18/30
+episode steps: 136
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0018
+
+Running episode 19/30
+episode steps: 151
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0019
+
+Running episode 20/30
+episode steps: 187
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0020
+
+Running episode 21/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0021
+
+Running episode 22/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0022
+
+Running episode 23/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0023
+
+Running episode 24/30
+episode steps: 192
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0024
+
+Running episode 25/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0025
+
+Running episode 26/30
+episode steps: 130
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0026
+
+Running episode 27/30
+episode steps: 189
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0027
+
+Running episode 28/30
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0028
+
+Running episode 29/30
+episode steps: 125
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0029
+
+Running episode 30/30
+episode steps: 164
+saved to: C:\Users\Admin\Desktop\delta\episodes\episode_0030
+
+Baseline episode batch complete.
+
+C:\Users\Admin\Desktop\delta>

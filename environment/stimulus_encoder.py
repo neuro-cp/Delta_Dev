@@ -1,8 +1,11 @@
+import math
+
+
 class StimulusEncoder:
     """
     Translates WorldState into neural stimulation events.
 
-    This uses the BrainRuntime stimulus interface:
+    Uses:
         runtime.inject_stimulus(region_id, magnitude)
     """
 
@@ -12,13 +15,15 @@ class StimulusEncoder:
 
         # --------------------------------------------------
         # POSITION SIGNAL → PFC
+        # (light stabilization without strong origin attractor)
         # --------------------------------------------------
 
-        pos_mag = 0.1 + abs(x) * 0.02 + abs(y) * 0.02
+        pos_mag = 0.08 + abs(x) * 0.004 + abs(y) * 0.004
         runtime.inject_stimulus("PFC", magnitude=pos_mag)
 
         # --------------------------------------------------
-        # TARGET PROXIMITY → VTA (value signal)
+        # TARGET PROXIMITY → VTA
+        # (slightly stronger pull toward goal)
         # --------------------------------------------------
 
         if state.targets:
@@ -27,12 +32,13 @@ class StimulusEncoder:
 
             dist = abs(tx - x) + abs(ty - y)
 
-            value_mag = 1.0 / (dist + 1)
+            value_mag = 1.45 / (dist + 1)
 
             runtime.inject_stimulus("VTA", magnitude=value_mag)
 
         # --------------------------------------------------
-        # HAZARD PROXIMITY → AMYGDALA (urgency)
+        # HAZARD PROXIMITY → AMYGDALA
+        # (smooth repulsion instead of hard zones)
         # --------------------------------------------------
 
         if state.hazards:
@@ -41,7 +47,8 @@ class StimulusEncoder:
 
             dist = abs(hx - x) + abs(hy - y)
 
-            urgency_mag = 1.0 / (dist + 1)
+            # smooth decay repulsion
+            urgency_mag = 2.2 * math.exp(-0.9 * dist)
 
             runtime.inject_stimulus("AMYGDALA", magnitude=urgency_mag)
 
