@@ -7,9 +7,7 @@ import numpy as np
 # CONFIG
 # --------------------------------------------------
 
-EPISODE_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\3-1v2")
-
-# grid bounds (increase if environment expands)
+EPISODE_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\episodes_barrier_test")
 GRID_MAX = 10
 
 
@@ -23,26 +21,27 @@ episode_files = sorted(EPISODE_DIR.glob("episode_*/episode_trace.json"))
 
 start_pos = None
 target_pos = None
-hazard_pos = None
+hazard_positions = []
 
 for ep in episode_files:
 
     with open(ep) as f:
         data = json.load(f)
 
-    # extract environment metadata from first step
-    if start_pos is None:
+    # read environment metadata once
+    if start_pos is None and len(data) > 0:
+
         first = data[0]["state"]
 
         start_pos = tuple(first["agent_position"])
 
-        if first["targets"]:
+        if first.get("targets"):
             target_pos = tuple(first["targets"][0])
 
-        if first["hazards"]:
-            hazard_pos = tuple(first["hazards"][0])
+        if first.get("hazards"):
+            hazard_positions = [tuple(h) for h in first["hazards"]]
 
-    # accumulate trajectory visits
+    # accumulate trajectory density
     for step in data:
 
         x, y = step["state"]["agent_position"]
@@ -55,10 +54,9 @@ for ep in episode_files:
 # PLOT HEATMAP
 # --------------------------------------------------
 
-plt.figure(figsize=(6, 6))
+plt.figure(figsize=(6,6))
 
 plt.imshow(heat, origin="lower", cmap="hot")
-
 plt.colorbar(label="visit frequency")
 
 plt.title("Agent Trajectory Density")
@@ -71,17 +69,38 @@ plt.ylabel("Y")
 # --------------------------------------------------
 
 if start_pos:
-    plt.scatter([start_pos[0]], [start_pos[1]],
-                marker="o", label=f"start {start_pos}")
+    plt.scatter(
+        start_pos[0],
+        start_pos[1],
+        marker="o",
+        color="blue",
+        s=120,
+        label=f"start {start_pos}"
+    )
 
 if target_pos:
-    plt.scatter([target_pos[0]], [target_pos[1]],
-                marker="*", label=f"target {target_pos}")
+    plt.scatter(
+        target_pos[0],
+        target_pos[1],
+        marker="*",
+        color="lime",
+        s=200,
+        label=f"target {target_pos}"
+    )
 
-if hazard_pos:
-    plt.scatter([hazard_pos[0]], [hazard_pos[1]],
-                marker="x", label=f"hazard {hazard_pos}")
+if hazard_positions:
+
+    hx = [h[0] for h in hazard_positions]
+    hy = [h[1] for h in hazard_positions]
+
+    plt.scatter(
+        hx,
+        hy,
+        marker="x",
+        color="cyan",
+        s=100,
+        label="hazards"
+    )
 
 plt.legend()
-
 plt.show()

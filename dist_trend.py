@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 
-EPISODE_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\3-1v2")
+EPISODE_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\barrier_eps2")
 
 
 def manhattan(a, b):

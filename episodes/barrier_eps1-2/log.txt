@@ -1,0 +1,66 @@
+BOOTSTRAP: waiting for neural stabilization
+HOMEOSTASIS DETECTED at step 533
+peak_mass = 18.140028
+current_mass = 18.138611
+
+How many barrier test episodes? 5
+
+Running 5 barrier test episodes...
+
+Running episode 1/5
+episode steps: 128
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0001
+
+Running episode 2/5
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0002
+
+Running episode 3/5
+episode steps: 152
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0003
+
+Running episode 4/5
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0004
+
+Running episode 5/5
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0005
+
+Barrier experiment complete.
+
+C:\Users\Admin\Desktop\delta>python dist_trend.py
+
+EPISODE DISTANCE ANALYSIS
+-------------------------
+episode_0001 | steps=128 | start=8 | end=12 | avg=7.07
+episode_0002 | steps=200 | start=8 | end=16 | avg=11.89
+episode_0003 | steps=152 | start=8 | end=6 | avg=9.43
+episode_0004 | steps=200 | start=8 | end=22 | avg=11.51
+episode_0005 | steps=200 | start=8 | end=17 | avg=17.27
+
+Average distance across episodes: 11.44
+
+C:\Users\Admin\Desktop\delta>python hard_landing.py
+
+BASELINE RESULTS
+----------------
+episodes: 30
+total_steps: 4638
+hazard_landings: 94
+landings_per_episode: 3.1333333333333333
+landing_rate: 0.02026735661923243
+
+ RESULTS
+----------
+episodes: 5
+total_steps: 880
+hazard_landings: 12
+landings_per_episode: 2.4
+landing_rate: 0.013636363636363636
+
+COMPARISON
+----------
+hazard change factor: 0.1276595744680851
+
+C:\Users\Admin\Desktop\delta>

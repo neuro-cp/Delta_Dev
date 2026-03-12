@@ -1,0 +1,82 @@
+BOOTSTRAP: waiting for neural stabilization
+HOMEOSTASIS DETECTED at step 533
+peak_mass = 18.157118
+current_mass = 18.156972
+
+How many barrier test episodes? 5
+
+Running 5 barrier test episodes...
+
+Running episode 1/5
+episode steps: 104
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0001
+
+Running episode 2/5
+episode steps: 176
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0002
+
+Running episode 3/5
+episode steps: 141
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0003
+
+Running episode 4/5
+episode steps: 164
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0004
+
+Running episode 5/5
+episode steps: 144
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0005
+
+Barrier experiment complete.
+
+C:\Users\Admin\Desktop\delta>python dist_trend.py
+Traceback (most recent call last):
+  File "C:\Users\Admin\Desktop\delta\dist_trend.py", line 82, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Admin\Desktop\delta\dist_trend.py", line 47, in main
+    d for d in EPISODE_DIR.iterdir()
+               ~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3312.0_x64__qbz5n2kfra8p0\Lib\pathlib\_local.py", line 575, in iterdir
+    with os.scandir(root_dir) as scandir_it:
+         ~~~~~~~~~~^^^^^^^^^^
+FileNotFoundError: [WinError 3] The system cannot find the path specified: 'C:\\Users\\Admin\\Desktop\\delta\\episodes\\barrier_eps2'
+
+C:\Users\Admin\Desktop\delta>python dist_trend.py
+
+EPISODE DISTANCE ANALYSIS
+-------------------------
+episode_0001 | steps=104 | start=8 | end=7 | avg=9.03
+episode_0002 | steps=176 | start=8 | end=12 | avg=10.13
+episode_0003 | steps=141 | start=8 | end=1 | avg=5.44
+episode_0004 | steps=164 | start=8 | end=9 | avg=4.27
+episode_0005 | steps=144 | start=8 | end=10 | avg=9.06
+
+Average distance across episodes: 7.59
+
+ratio 1.0
+avg 146
+
+C:\Users\Admin\Desktop\delta>python hard_landing.py
+
+BASELINE RESULTS
+----------------
+episodes: 30
+total_steps: 4638
+hazard_landings: 94
+landings_per_episode: 3.1333333333333333
+landing_rate: 0.02026735661923243
+
+ RESULTS
+----------
+episodes: 5
+total_steps: 729
+hazard_landings: 19
+landings_per_episode: 3.8
+landing_rate: 0.02606310013717421
+
+COMPARISON
+----------
+hazard change factor: 0.20212765957446807
+
+C:\Users\Admin\Desktop\delta>python heat_map.py

@@ -1,0 +1,92 @@
+----------------
+episodes: 30
+total_steps: 4638
+hazard_landings: 94
+landings_per_episode: 3.1333333333333333
+landing_rate: 0.02026735661923243
+
+ RESULTS
+----------
+episodes: 10
+total_steps: 1834
+hazard_landings: 74
+landings_per_episode: 7.4
+landing_rate: 0.04034896401308615
+
+COMPARISON
+----------
+hazard change factor: 0.7872340425531915
+
+
+EPISODE DISTANCE ANALYSIS
+-------------------------
+episode_0001 | steps=200 | start=8 | end=15 | avg=10.57
+episode_0002 | steps=67 | start=8 | end=0 | avg=4.36
+episode_0003 | steps=200 | start=8 | end=15 | avg=11.28
+episode_0004 | steps=167 | start=8 | end=1 | avg=4.75
+episode_0005 | steps=200 | start=8 | end=17 | avg=13.54
+episode_0006 | steps=200 | start=8 | end=4 | avg=6.14
+episode_0007 | steps=200 | start=8 | end=3 | avg=7.42
+episode_0008 | steps=200 | start=8 | end=10 | avg=9.62
+episode_0009 | steps=200 | start=8 | end=4 | avg=6.72
+episode_0010 | steps=200 | start=8 | end=16 | avg=11.61
+
+Average distance across episodes: 8.6
+
+C:\Users\Admin\Desktop\delta>
+
+avg steps: 183.4
+ratio: 0.2
+
+BOOTSTRAP: waiting for neural stabilization
+HOMEOSTASIS DETECTED at step 524
+peak_mass = 18.151713
+current_mass = 18.151059
+
+How many barrier test episodes? 10
+
+Running 10 barrier test episodes...
+
+Running episode 1/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0001
+
+Running episode 2/10
+episode steps: 67
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0002
+
+Running episode 3/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0003
+
+Running episode 4/10
+episode steps: 167
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0004
+
+Running episode 5/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0005
+
+Running episode 6/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0006
+
+Running episode 7/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0007
+
+Running episode 8/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0008
+
+Running episode 9/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0009
+
+Running episode 10/10
+episode steps: 200
+saved to: C:\Users\Admin\Desktop\delta\episodes_barrier_test\episode_0010
+
+Barrier experiment complete.
+
+C:\Users\Admin\Desktop\delta>

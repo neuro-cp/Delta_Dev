@@ -6,7 +6,7 @@ from pathlib import Path
 # --------------------------------------------------
 
 BASELINE_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\Baseline_episodes")
-V1_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\3-1v2")
+V1_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\barrier_eps2")
 
 HAZARD_POS = (2,2)
 

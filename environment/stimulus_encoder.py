@@ -7,6 +7,12 @@ class StimulusEncoder:
 
     Uses:
         runtime.inject_stimulus(region_id, magnitude)
+
+    Design goals
+    ------------
+    • Target produces smooth global attraction
+    • Hazards produce repulsion without creating salience traps
+    • Signals remain balanced so BG competition stays stable
     """
 
     def encode(self, state, runtime):
@@ -15,15 +21,15 @@ class StimulusEncoder:
 
         # --------------------------------------------------
         # POSITION SIGNAL → PFC
-        # (light stabilization without strong origin attractor)
+        # stabilization only (no outward drift)
         # --------------------------------------------------
 
-        pos_mag = 0.08 + abs(x) * 0.004 + abs(y) * 0.004
+        pos_mag = 0.08
         runtime.inject_stimulus("PFC", magnitude=pos_mag)
 
         # --------------------------------------------------
         # TARGET PROXIMITY → VTA
-        # (slightly stronger pull toward goal)
+        # stronger long-range attractor
         # --------------------------------------------------
 
         if state.targets:
@@ -32,25 +38,40 @@ class StimulusEncoder:
 
             dist = abs(tx - x) + abs(ty - y)
 
-            value_mag = 1.45 / (dist + 1)
+            value_mag = 3.5 / (dist + 2)
 
             runtime.inject_stimulus("VTA", magnitude=value_mag)
 
         # --------------------------------------------------
-        # HAZARD PROXIMITY → AMYGDALA
-        # (smooth repulsion instead of hard zones)
+        # HAZARD FIELD → AMYGDALA
+        # repulsion without salience capture
         # --------------------------------------------------
 
         if state.hazards:
 
-            hx, hy = state.hazards[0]
+            total_repulsion = 0.0
 
-            dist = abs(hx - x) + abs(hy - y)
+            for hx, hy in state.hazards:
 
-            # smooth decay repulsion
-            urgency_mag = 2.2 * math.exp(-0.9 * dist)
+                dist = abs(hx - x) + abs(hy - y)
 
-            runtime.inject_stimulus("AMYGDALA", magnitude=urgency_mag)
+                local = 1.3 * math.exp(-1.4 * dist)
+
+                halo = 0.8 / (dist + 1)
+
+                spike = 2.0 if dist == 0 else 0.0
+
+                total_repulsion += local + halo + spike
+
+                # --------------------------------------------------
+                # TRN INHIBITORY INTERRUPT
+                # collapse PFC attractor if hazard touched
+                # --------------------------------------------------
+
+                if dist == 0:
+                    runtime.inject_stimulus("TRN", magnitude=0.245)
+
+            runtime.inject_stimulus("AMYGDALA", magnitude=total_repulsion)
 
         # --------------------------------------------------
         # LOW RESOURCES → SALIENCE

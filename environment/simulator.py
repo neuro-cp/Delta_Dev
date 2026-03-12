@@ -21,6 +21,9 @@ class EnvironmentSimulator:
     GRID_MIN = 0
     GRID_MAX = 20
 
+    # environmental constants
+    HAZARD_PENALTY = 4
+
     # --------------------------------------------------
     # STEP TRANSITION
     # --------------------------------------------------
@@ -55,6 +58,13 @@ class EnvironmentSimulator:
         y = max(self.GRID_MIN, min(y, self.GRID_MAX))
 
         new_state.agent_position = (x, y)
+
+        # --------------------------------------------------
+        # HAZARD PENALTY (NEW)
+        # --------------------------------------------------
+
+        if new_state.hazards and new_state.agent_position in new_state.hazards:
+            new_state.resources = max(new_state.resources - self.HAZARD_PENALTY, 0)
 
         # --------------------------------------------------
         # SCAN (placeholder)

@@ -14,8 +14,29 @@ from engine.loop.environment_runtime_loop import EnvironmentRuntimeLoop
 
 ROOT = Path(__file__).resolve().parent
 
-EPISODE_DIR = ROOT / "episodes"
+# store experiment separately
+EPISODE_DIR = ROOT / "episodes_barrier_test"
 EPISODE_DIR.mkdir(exist_ok=True)
+
+
+# --------------------------------------------------
+# EXPERIMENT CONFIG
+# --------------------------------------------------
+
+AGENT_START = (2, 2)
+
+TARGETS = [
+    (10, 2)
+]
+
+# vertical wall at x = 5
+HAZARDS = [
+    (5, 0),
+    (5, 1),
+    (5, 2),
+    (5, 3),
+    (5, 4),
+]
 
 
 # --------------------------------------------------
@@ -145,15 +166,15 @@ def main():
     # -----------------------------------------------
 
     try:
-        n_episodes = int(input("\nHow many baseline episodes should be run? "))
+        n_episodes = int(input("\nHow many barrier test episodes? "))
     except ValueError:
-        print("Invalid input. Defaulting to 10 episodes.")
-        n_episodes = 10
+        print("Invalid input. Defaulting to 20.")
+        n_episodes = 20
 
-    print(f"\nRunning {n_episodes} baseline episodes...")
+    print(f"\nRunning {n_episodes} barrier test episodes...")
 
     # -----------------------------------------------
-    # RUN BASELINE EPISODES
+    # RUN EPISODES
     # -----------------------------------------------
 
     for episode_index in range(1, n_episodes + 1):
@@ -165,10 +186,10 @@ def main():
         loop = EnvironmentRuntimeLoop(runtime, episode_dir=ep_path)
 
         initial_state = WorldState(
-            agent_position=(0, 0),
+            agent_position=AGENT_START,
             resources=200,
-            targets=[(5, 5)],
-            hazards=[(3, 1)],
+            targets=TARGETS.copy(),
+            hazards=HAZARDS.copy(),
         )
 
         episode = loop.run_episode(initial_state)
@@ -178,9 +199,8 @@ def main():
         print("episode steps:", len(episode))
         print("saved to:", ep_path)
 
-    print("\nBaseline episode batch complete.")
+    print("\nBarrier experiment complete.")
 
-    
 
 if __name__ == "__main__":
     main()
