@@ -91,7 +91,6 @@ class EnvironmentRuntimeLoop:
             )
 
             step_activity["reversal"] = reversal
-
             self.activity_writer.append(step_activity)
 
             # --------------------------------------------------
@@ -99,11 +98,16 @@ class EnvironmentRuntimeLoop:
             # --------------------------------------------------
 
             next_state, metrics = self.simulator.step(state, action)
-
             metrics["reversal"] = reversal
 
             # --------------------------------------------------
-            # 7. Record step outcome
+            # 7. Advance world state FIRST
+            # --------------------------------------------------
+
+            state = next_state
+
+            # --------------------------------------------------
+            # 8. Record post-transition step outcome
             # --------------------------------------------------
 
             episode_history.append(
@@ -114,7 +118,6 @@ class EnvironmentRuntimeLoop:
                 }
             )
 
-            state = next_state
             step_index += 1
             self.previous_action = action
 
@@ -136,6 +139,7 @@ class EnvironmentRuntimeLoop:
         """
 
         return random.choice(ALL_ACTIONS)
+
     # --------------------------------------------------
     # ACTION REVERSAL DIAGNOSTIC
     # --------------------------------------------------

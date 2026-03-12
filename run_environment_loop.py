@@ -187,7 +187,7 @@ def main():
 
         initial_state = WorldState(
             agent_position=AGENT_START,
-            resources=200,
+            resources=400,
             targets=TARGETS.copy(),
             hazards=HAZARDS.copy(),
         )

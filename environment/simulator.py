@@ -57,14 +57,23 @@ class EnvironmentSimulator:
         x = max(self.GRID_MIN, min(x, self.GRID_MAX))
         y = max(self.GRID_MIN, min(y, self.GRID_MAX))
 
-        new_state.agent_position = (x, y)
+        proposed_position = (x, y)
 
         # --------------------------------------------------
-        # HAZARD PENALTY (NEW)
+        # HAZARD COLLISION BLOCK
         # --------------------------------------------------
 
-        if new_state.hazards and new_state.agent_position in new_state.hazards:
-            new_state.resources = max(new_state.resources - self.HAZARD_PENALTY, 0)
+        if new_state.hazards and proposed_position in new_state.hazards:
+
+            # reject the movement and stay in previous position
+            proposed_position = state.agent_position
+
+            # apply penalty
+            new_state.resources = max(
+                new_state.resources - self.HAZARD_PENALTY, 0
+            )
+
+        new_state.agent_position = proposed_position
 
         # --------------------------------------------------
         # SCAN (placeholder)
