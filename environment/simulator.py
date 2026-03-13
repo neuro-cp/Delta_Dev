@@ -19,10 +19,10 @@ class EnvironmentSimulator:
     # --------------------------------------------------
 
     GRID_MIN = 0
-    GRID_MAX = 20
+    GRID_MAX = 10
 
     # environmental constants
-    HAZARD_PENALTY = 4
+    HAZARD_PENALTY = 1
 
     # --------------------------------------------------
     # STEP TRANSITION

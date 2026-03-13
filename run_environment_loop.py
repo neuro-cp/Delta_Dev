@@ -26,18 +26,22 @@ EPISODE_DIR.mkdir(exist_ok=True)
 AGENT_START = (2, 2)
 
 TARGETS = [
-    (10, 2)
+    (12, 3)
 ]
 
-# vertical wall at x = 5
 HAZARDS = [
-    (5, 0),
-    (5, 1),
-    (5, 2),
-    (5, 3),
-    (5, 4),
-]
+    # first wall: forces an upward climb
+    (4,0),(4,1),(4,2),(4,3),(4,4),(4,5),(4,6),
 
+    # cap above first wall
+    (5,6),(6,6),(7,6),
+
+    # second wall: forces a downward correction after crossing
+    (8,2),(8,3),(8,4),(8,5),(8,6),(8,7),(8,8),
+
+    # lower cap near second wall to create a misleading basin
+    (9,2),(10,2),(11,2)
+]
 
 # --------------------------------------------------
 # RUNTIME CONSTRUCTION
@@ -187,7 +191,7 @@ def main():
 
         initial_state = WorldState(
             agent_position=AGENT_START,
-            resources=400,
+            resources=500,
             targets=TARGETS.copy(),
             hazards=HAZARDS.copy(),
         )

@@ -10,27 +10,30 @@ import math
 # --------------------------------------------------
 
 EPISODE_DIR = Path(r"C:\Users\Admin\Desktop\delta\episodes\episodes_barrier_test")
-GRID_MAX = 10
+PADDING = 2
 
 
 # --------------------------------------------------
 # LOAD TRAJECTORIES
 # --------------------------------------------------
 
-heat = np.zeros((GRID_MAX + 1, GRID_MAX + 1))
-
 episode_files = sorted(EPISODE_DIR.glob("episode_*/episode_trace.json"))
 
+trajectory_points = []
 start_pos = None
 target_pos = None
 hazard_positions = []
+
 
 for ep in episode_files:
 
     with open(ep) as f:
         data = json.load(f)
 
-    if start_pos is None and len(data) > 0:
+    if not data:
+        continue
+
+    if start_pos is None:
 
         first = data[0]["state"]
 
@@ -45,9 +48,46 @@ for ep in episode_files:
     for step in data:
 
         x, y = step["state"]["agent_position"]
+        trajectory_points.append((x, y))
 
-        if 0 <= x <= GRID_MAX and 0 <= y <= GRID_MAX:
-            heat[y, x] += 1
+
+# --------------------------------------------------
+# DETERMINE DYNAMIC BOUNDS
+# --------------------------------------------------
+
+xs = [p[0] for p in trajectory_points]
+ys = [p[1] for p in trajectory_points]
+
+if target_pos:
+    xs.append(target_pos[0])
+    ys.append(target_pos[1])
+
+for hx, hy in hazard_positions:
+    xs.append(hx)
+    ys.append(hy)
+
+xmin = min(xs) - PADDING
+xmax = max(xs) + PADDING
+ymin = min(ys) - PADDING
+ymax = max(ys) + PADDING
+
+
+width = xmax - xmin + 1
+height = ymax - ymin + 1
+
+
+# --------------------------------------------------
+# BUILD HEATMAP
+# --------------------------------------------------
+
+heat = np.zeros((height, width))
+
+for x, y in trajectory_points:
+
+    gx = x - xmin
+    gy = y - ymin
+
+    heat[gy, gx] += 1
 
 
 # --------------------------------------------------
@@ -61,8 +101,11 @@ if target_pos:
 
     tx, ty = target_pos
 
-    for y in range(GRID_MAX + 1):
-        for x in range(GRID_MAX + 1):
+    for gy in range(height):
+        for gx in range(width):
+
+            x = gx + xmin
+            y = gy + ymin
 
             dx = tx - x
             dy = ty - y
@@ -74,11 +117,11 @@ if target_pos:
             dir_x = dx / denom
             dir_y = dy / denom
 
-            # directional halo (same as encoder)
+            # target halo attraction
             direction_gain = 1.0 + 1.2 * math.exp(-1.2 * dist)
 
-            gx = dir_x * direction_gain
-            gy = dir_y * direction_gain
+            gx_field = dir_x * direction_gain
+            gy_field = dir_y * direction_gain
 
             # hazard repulsion
             rx = 0
@@ -102,20 +145,33 @@ if target_pos:
                 rx += (dxh / hdist) * repulsion
                 ry += (dyh / hdist) * repulsion
 
-            field_x[y, x] = gx + rx
-            field_y[y, x] = gy + ry
+            field_x[gy, gx] = gx_field + rx
+            field_y[gy, gx] = gy_field + ry
 
 
 # --------------------------------------------------
 # PLOT HEATMAP + VECTOR FIELD
 # --------------------------------------------------
 
-plt.figure(figsize=(7,7))
+plt.figure(figsize=(8, 8))
 
-plt.imshow(heat, origin="lower", cmap="hot", alpha=0.75)
+extent = [xmin, xmax, ymin, ymax]
+
+plt.imshow(
+    heat,
+    origin="lower",
+    cmap="hot",
+    alpha=0.75,
+    extent=extent
+)
+
 plt.colorbar(label="visit frequency")
 
-X, Y = np.meshgrid(range(GRID_MAX + 1), range(GRID_MAX + 1))
+
+X, Y = np.meshgrid(
+    np.arange(xmin, xmax + 1),
+    np.arange(ymin, ymax + 1)
+)
 
 plt.quiver(
     X,
