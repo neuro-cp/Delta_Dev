@@ -1,0 +1,6 @@
+Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
