@@ -1,32 +1,14 @@
 """
 integration/model_runtime/model_registry.py
-
-Model registry for local GGUF models.
-
-Responsibilities
-----------------
-• Declare available models
-• Provide deterministic lookup
-• Contain no runtime logic
-• Contain no GPU interaction
-
-This module is purely descriptive.
 """
 
 from dataclasses import dataclass
 from typing import Dict
+import os
 
-
-# ---------------------------------------------------------------------
-# Model specification
-# ---------------------------------------------------------------------
 
 @dataclass(frozen=True)
 class ModelSpec:
-    """
-    Immutable description of a model available to the runtime.
-    """
-
     name: str
     path: str
     tier: int
@@ -34,84 +16,160 @@ class ModelSpec:
     context_length: int
 
 
-# ---------------------------------------------------------------------
-# Model registry
-# ---------------------------------------------------------------------
+# -----------------------------
+# Profile
+# -----------------------------
+
+def _machine_profile() -> str:
+    return os.getenv("DELTA_MACHINE_PROFILE", "laptop").strip().lower()
+
+
+# -----------------------------
+# Safe path resolver
+# -----------------------------
+
+def _safe_path(primary: str, fallback: str) -> str:
+    if os.path.exists(primary):
+        return primary
+    if os.path.exists(fallback):
+        return fallback
+    raise ValueError(f"No valid model path found:\n- {primary}\n- {fallback}")
+
+
+# -----------------------------
+# Path resolvers
+# -----------------------------
+
+def _phi3_path() -> str:
+    laptop = (
+        r"C:\Users\Admin\Desktop\models\lmstudio-community"
+        r"\Phi-3.1-mini-4k-instruct-GGUF"
+        r"\Phi-3.1-mini-4k-instruct-Q4_K_M.gguf"
+    )
+
+    desktop = (
+        r"G:\Models\microsoft"
+        r"\Phi-3-mini-4k-instruct-gguf"
+        r"\Phi-3-mini-4k-instruct-q4.gguf"
+    )
+
+    return _safe_path(laptop, desktop)
+
+
+def _phi4_path() -> str:
+    laptop = (
+        r"C:\Users\Admin\Desktop\models\lmstudio-community"
+        r"\Phi-4-mini-reasoning-GGUF"
+        r"\Phi-4-mini-reasoning-Q4_K_M.gguf"
+    )
+
+    desktop = (
+        r"G:\Models\lmstudio-community"
+        r"\Phi-4-mini-reasoning-GGUF"
+        r"\Phi-4-mini-reasoning-Q4_K_M.gguf"
+    )
+
+    return _safe_path(laptop, desktop)
+
+
+def _qwen_path() -> str:
+    laptop = (
+        r"C:\Users\Admin\Desktop\models\lmstudio-community"
+        r"\Qwen2.5-7B-Instruct-GGUF"
+        r"\Qwen2.5-7B-Instruct-Q4_K_M.gguf"
+    )
+
+    desktop = (
+        r"G:\Models\lmstudio-community"
+        r"\Qwen2.5-7B-Instruct-GGUF"
+        r"\Qwen2.5-7B-Instruct-Q4_K_M.gguf"
+    )
+
+    return _safe_path(laptop, desktop)
+
+
+def _llama_path() -> str:
+    laptop = (
+        r"C:\Users\Admin\Desktop\models\lmstudio-community"
+        r"\Meta-Llama-3.1-8B-Instruct-GGUF"
+        r"\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+    )
+
+    desktop = (
+        r"G:\Models\lmstudio-community"
+        r"\Meta-Llama-3.1-8B-Instruct-GGUF"
+        r"\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+    )
+
+    return _safe_path(laptop, desktop)
+
+
+# -----------------------------
+# Registry
+# -----------------------------
 
 MODEL_REGISTRY: Dict[str, ModelSpec] = {
-
-    # ---------------------------------------------------------------
-    # Tier 1 – Fast structured reasoning
-    # ---------------------------------------------------------------
-
     "phi3": ModelSpec(
         name="phi3",
-        path=r"G:\Models\microsoft\Phi-3-mini-4k-instruct-gguf\Phi-3-mini-4k-instruct-q4.gguf",
+        path="",
         tier=1,
         description="Fast structured reasoning model",
         context_length=4096,
     ),
-
-    # ---------------------------------------------------------------
-    # Tier 2 – Deeper reasoning attempt
-    # ---------------------------------------------------------------
-
     "phi4": ModelSpec(
         name="phi4",
-        path=r"G:\Models\lmstudio-community\Phi-4-mini-reasoning-GGUF\Phi-4-mini-reasoning-Q4_K_M.gguf",
+        path="",
         tier=2,
-        description="Reasoning-focused model with deeper inference capability",
+        description="Reasoning-focused model",
         context_length=8192,
     ),
-
-    # ---------------------------------------------------------------
-    # Tier 3 – Deep reasoning / analysis
-    # ---------------------------------------------------------------
-
     "qwen": ModelSpec(
         name="qwen",
-        path=r"G:\Models\lmstudio-community\Qwen2.5-VL-7B-Instruct-GGUF\Qwen2.5-VL-7B-Instruct-Q4_K_M.gguf",
+        path="",
         tier=3,
-        description="Qwen2.5-VL multimodal reasoning model",
+        description="Qwen2.5 instruct model",
         context_length=32768,
     ),
-
-    # ---------------------------------------------------------------
-    # Tier 4 – Knowledge + reasoning fallback
-    # ---------------------------------------------------------------
-
     "llama": ModelSpec(
         name="llama",
-        path=r"G:\Models\lmstudio-community\Meta-Llama-3.1-8B-Instruct-GGUF\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        path="",
         tier=4,
-        description="Broad knowledge and reasoning fallback model",
+        description="Fallback general model",
         context_length=8192,
     ),
 }
 
 
-# ---------------------------------------------------------------------
-# Access helpers
-# ---------------------------------------------------------------------
+# -----------------------------
+# Runtime resolution
+# -----------------------------
+
+def _resolve_path(model_name: str) -> str:
+    if model_name == "phi3":
+        return _phi3_path()
+    if model_name == "phi4":
+        return _phi4_path()
+    if model_name == "qwen":
+        return _qwen_path()
+    if model_name == "llama":
+        return _llama_path()
+
+    raise ValueError(f"Unknown model '{model_name}'")
+
 
 def get_model_spec(model_name: str) -> ModelSpec:
-    """
-    Deterministic lookup of model specification.
-    """
+    base = MODEL_REGISTRY.get(model_name)
+    if not base:
+        raise ValueError(f"Unknown model '{model_name}'")
 
-    try:
-        return MODEL_REGISTRY[model_name]
-
-    except KeyError as exc:
-        available = ", ".join(MODEL_REGISTRY.keys())
-        raise ValueError(
-            f"Unknown model '{model_name}'. Available models: {available}"
-        ) from exc
+    return ModelSpec(
+        name=base.name,
+        path=_resolve_path(model_name),
+        tier=base.tier,
+        description=base.description,
+        context_length=base.context_length,
+    )
 
 
 def list_models() -> Dict[str, ModelSpec]:
-    """
-    Return registry snapshot.
-    """
-
-    return dict(MODEL_REGISTRY)
+    return {name: get_model_spec(name) for name in MODEL_REGISTRY}

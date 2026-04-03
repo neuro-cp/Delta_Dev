@@ -37,31 +37,30 @@ class GGUFModelRunner(ExternalModelInterface):
     """
 
     def __init__(self, model_name: str):
-        self.model_spec = get_model_spec(model_name)
+        self.model_name = model_name
         self.session = ModelSession()
 
     # ------------------------------------------------------------------
     # Model identity helper
     # ------------------------------------------------------------------
 
-    def _model_id(self) -> str:
+    def _model_id(self, model_spec) -> str:
         """
         Safely resolve a printable model identifier
         regardless of ModelSpec structure.
         """
 
         for field in ["name", "model_name", "model", "id"]:
-            if hasattr(self.model_spec, field):
-                return getattr(self.model_spec, field)
+            if hasattr(model_spec, field):
+                return getattr(model_spec, field)
 
-        return "unknown-model"
+        return self.model_name
 
     # ------------------------------------------------------------------
     # JSON extraction
     # ------------------------------------------------------------------
 
     def _extract_json(self, text: str) -> Dict[str, Any]:
-
         start = text.find("{")
         end = text.rfind("}") + 1
 
@@ -75,7 +74,6 @@ class GGUFModelRunner(ExternalModelInterface):
         return {}
 
     def _extract_answer(self, text: str) -> str:
-
         data = self._extract_json(text)
 
         answer = data.get("answer", "")
@@ -85,7 +83,6 @@ class GGUFModelRunner(ExternalModelInterface):
         return ""
 
     def _extract_model_confidence(self, text: str) -> float:
-
         data = self._extract_json(text)
 
         if "confidence" in data:
@@ -111,7 +108,6 @@ class GGUFModelRunner(ExternalModelInterface):
     # ------------------------------------------------------------------
 
     def _heuristic_confidence(self, text: str) -> float:
-
         answer = self._extract_answer(text)
 
         if not answer:
@@ -141,26 +137,27 @@ class GGUFModelRunner(ExternalModelInterface):
         return max(0.0, min(1.0, score))
 
     def _combine_confidence(self, text: str) -> float:
-
         model_conf = self._extract_model_confidence(text)
         heuristic_conf = self._heuristic_confidence(text)
 
+        # If no heuristic signal, trust model
         if heuristic_conf == 0.0:
-            return 0.0
+            return model_conf
 
-        combined = (0.35 * model_conf) + (0.65 * heuristic_conf)
+        # Model-dominant fusion
+        combined = (0.85 * model_conf) + (0.15 * heuristic_conf)
 
-        return max(0.0, min(1.0, combined))
+        return max(0.0, min(1.0, round(combined, 4)))
 
     # ------------------------------------------------------------------
     # Execution
     # ------------------------------------------------------------------
 
     def produce_output(self, input_payload: Dict[str, Any]) -> AIOutputBundle:
-
+        model_spec = get_model_spec(self.model_name)
         prompt = build_prompt(input_payload)
 
-        model_id = self._model_id()
+        model_id = self._model_id(model_spec)
 
         print("\n================================")
         print(f"MODEL START: {model_id}")
@@ -170,12 +167,12 @@ class GGUFModelRunner(ExternalModelInterface):
         raw_output = ""
 
         try:
-            self.session.load(self.model_spec)
+            self.session.load(model_spec)
 
             raw_output = self.session.generate(prompt)
 
-            print("MODEL OUTPUT:\n")
-            print(raw_output)
+            #print("MODEL OUTPUT:\n")
+            #print(raw_output)
             print()
 
         finally:

@@ -14,6 +14,7 @@ Responsibilities
 """
 
 from typing import Dict, Any, List
+import os
 
 from integration.ai_surface.ai_output_bundle import AIOutputBundle
 from integration.model_runtime.gguf_model_runner import GGUFModelRunner
@@ -24,37 +25,44 @@ class ModelRouter:
     Deterministic deliberative multi-model router.
     """
 
-    # -----------------------------------------------------
-    # Escalation chain
-    # -----------------------------------------------------
-
-    ROUTE_CHAIN: List[str] = [
-        "phi3",   # initial reasoning attempt
-        "phi4",   # critique / improvement
-        "qwen",   # deeper analysis
-        "llama",  # final verification
+    DESKTOP_ROUTE_CHAIN: List[str] = [
+        "phi3",
+        "phi4",
+        "qwen",
+        "llama",
     ]
 
-    # -----------------------------------------------------
-    # Confidence threshold
-    # -----------------------------------------------------
+    LAPTOP_ROUTE_CHAIN: List[str] = [
+        "phi3",
+        "qwen",
+    ]
 
-    CONFIDENCE_THRESHOLD: float = 0.95
-
-    # -----------------------------------------------------
-    # Initialization
-    # -----------------------------------------------------
+    DESKTOP_CONFIDENCE_THRESHOLD: float = 0.78
+    LAPTOP_CONFIDENCE_THRESHOLD: float = 0.78
 
     def __init__(self) -> None:
+        self.profile = os.getenv("DELTA_MACHINE_PROFILE", "desktop").strip().lower()
 
+        if self.profile == "laptop":
+            route_chain = list(self.LAPTOP_ROUTE_CHAIN)
+            self.confidence_threshold = self.LAPTOP_CONFIDENCE_THRESHOLD
+        else:
+            route_chain = list(self.DESKTOP_ROUTE_CHAIN)
+            self.confidence_threshold = self.DESKTOP_CONFIDENCE_THRESHOLD
+
+        max_models = os.getenv("DELTA_MAX_MODELS", "").strip()
+        if max_models:
+            try:
+                n = max(1, int(max_models))
+                route_chain = route_chain[:n]
+            except Exception:
+                pass
+
+        self.route_chain = route_chain
         self.runners: Dict[str, GGUFModelRunner] = {
             model_name: GGUFModelRunner(model_name)
-            for model_name in self.ROUTE_CHAIN
+            for model_name in self.route_chain
         }
-
-    # -----------------------------------------------------
-    # Routing logic
-    # -----------------------------------------------------
 
     def route(self, input_payload: Dict[str, Any]) -> AIOutputBundle:
         """
@@ -68,9 +76,11 @@ class ModelRouter:
         print("\n======================================")
         print("BEGIN MODEL PIPELINE")
         print("======================================\n")
+        print(f"[Router] Machine profile = {self.profile}")
+        print(f"[Router] Route chain = {self.route_chain}")
+        print(f"[Router] Confidence threshold = {self.confidence_threshold}\n")
 
-        for model_name in self.ROUTE_CHAIN:
-
+        for model_name in self.route_chain:
             runner = self.runners[model_name]
 
             print("-------------------------------------")
@@ -78,7 +88,6 @@ class ModelRouter:
             print("-------------------------------------")
 
             result: AIOutputBundle = runner.produce_output(context_payload)
-
             last_result = result
 
             raw_output = result.payload.get("raw_model_output", "")
@@ -87,32 +96,21 @@ class ModelRouter:
             print(raw_output)
             print(f"\n[Router] {model_name} confidence = {confidence:.3f}")
 
-            # ---------------------------------------------
-            # stop escalation if confident
-            # ---------------------------------------------
-
-            if confidence >= self.CONFIDENCE_THRESHOLD:
-
+            if confidence >= self.confidence_threshold:
                 print("[Router] Confidence threshold met.")
                 print("[Router] Accepting result.\n")
-
                 return result
 
-            # ---------------------------------------------
-            # prepare critique payload
-            # ---------------------------------------------
-
             print("[Router] Confidence too low.")
-            print("[Router] Passing result to next model for critique.\n")
 
-            context_payload = {
-                "question": input_payload.get("question"),
-                "previous_model_output": raw_output
-            }
-
-        # -------------------------------------------------
-        # fallback
-        # -------------------------------------------------
+            if model_name != self.route_chain[-1]:
+                print("[Router] Passing result to next model for critique.\n")
+                context_payload = {
+                    "question": input_payload.get("question"),
+                    "previous_model_output": raw_output,
+                }
+            else:
+                print("[Router] No more models available in this profile.\n")
 
         if last_result is None:
             raise RuntimeError("Model routing failed to produce output")
