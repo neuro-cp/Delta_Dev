@@ -113,17 +113,36 @@ ws ::= [ \t\n\r]*
             )
 
         # -----------------------------
-        # Stream tokens live
+        # Stream tokens live (with passive confidence tracking)
         # -----------------------------
+        running_conf = 0.0
+        token_count = 0
+
         for chunk in stream:
             token = chunk["choices"][0]["text"]
+
+            if not token:
+                continue
 
             # Print live (streaming)
             print(token, end="", flush=True)
 
             full_text += token
+            token_count += 1
+
+            # --- lightweight confidence signal (non-intrusive) ---
+            if len(full_text) > 50:
+                running_conf += 0.01
+
+            if "confidence" in full_text:
+                running_conf += 0.03
+
+            running_conf = min(1.0, running_conf)
 
         print("\n")  # clean newline after completion
+
+        # Optional debug (remove later)
+        # print(f"[STREAM CONF] {running_conf:.3f}")
 
         return full_text.strip()
 

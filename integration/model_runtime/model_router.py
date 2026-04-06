@@ -93,7 +93,7 @@ class ModelRouter:
             raw_output = result.payload.get("raw_model_output", "")
             confidence = result.confidence_band or 0.0
 
-            print(raw_output)
+            #print(raw_output)
             print(f"\n[Router] {model_name} confidence = {confidence:.3f}")
 
             if confidence >= self.confidence_threshold:
