@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import json
 import operator as op
 from typing import Any, Callable, Optional
 
@@ -44,15 +45,13 @@ class ResolutionExecutor:
         self._answer_memory = AnswerMemory()
         self._recall_bridge = RecallBridge()
 
-        # 🔥 Replay manager (NEW)
         self._replay_manager: Optional[ReplayManager] = None
         if replay_storage_pipeline_factory is not None:
             self._replay_manager = ReplayManager(
                 replay_storage_pipeline_factory,
-                auto_flush_threshold=None,  # manual control
+                auto_flush_threshold=None,
             )
 
-        # thresholds
         self._store_threshold = 0.5
         self._admin_threshold = 0.3
 
@@ -65,11 +64,36 @@ class ResolutionExecutor:
         print(f"[ROUTING] selected route = {route}")
 
         # ----------------------------------------
-        # 0. FAST MEMORY
+        # 0. MEMORY + RECALL COMPETITION
         # ----------------------------------------
         memory_hit = self._answer_memory.lookup(inquiry.raw_text)
+
+        recall_candidate = None
+        if self._replay_recall_pipeline and self._recall_registry:
+            query = self._build_recall_query(inquiry)
+
+            suggestions = self._replay_recall_pipeline.run(
+                self._recall_registry,
+                query,
+            )
+
+            recall_candidate = self._recall_bridge.interpret(suggestions, inquiry)
+
+        # ----------------------------------------
+        # PRIORITY: RECALL → MEMORY
+        # ----------------------------------------
+        if recall_candidate:
+            print("[RECALL] selected over memory")
+            return ExecutionResult(
+                plan_id=plan.plan_id,
+                route_type="recall",
+                success=True,
+                output=recall_candidate["answer"],
+                confidence=float(recall_candidate["confidence"]),
+            )
+
         if memory_hit:
-            print("[MEMORY] hit")
+            print("[MEMORY] fallback")
             return ExecutionResult(
                 plan_id=plan.plan_id,
                 route_type="memory",
@@ -77,7 +101,6 @@ class ResolutionExecutor:
                 output=memory_hit["answer"],
                 confidence=float(memory_hit["confidence"]),
             )
-
         # ----------------------------------------
         # 1. DETERMINISTIC
         # ----------------------------------------
@@ -158,7 +181,22 @@ class ResolutionExecutor:
 
         payload = getattr(result, "payload", {}) or {}
         confidence = float(getattr(result, "confidence_band", 0.0) or 0.0)
-        output = payload.get("raw_model_output", payload)
+        raw_output = payload.get("raw_model_output", payload)
+
+        parsed_output = raw_output
+        parsed_confidence = confidence
+
+        if isinstance(raw_output, str):
+            try:
+                parsed = json.loads(raw_output)
+                if isinstance(parsed, dict):
+                    parsed_output = parsed.get("answer", raw_output)
+                    parsed_confidence = float(parsed.get("confidence", confidence))
+            except Exception:
+                pass
+
+        output = parsed_output
+        confidence = parsed_confidence
 
         # ----------------------------------------
         # STORE (USER CONFIRM)
@@ -203,10 +241,8 @@ class ResolutionExecutor:
         confidence: float,
         source: str,
     ):
-        # fast layer
         self._answer_memory.add(inquiry.raw_text, answer, confidence)
 
-        # deep layer → queue (NOT immediate replay)
         if not self._replay_manager or not self._learning_bundle_factory:
             return
 

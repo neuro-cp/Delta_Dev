@@ -12,7 +12,7 @@ class AnswerMemory:
         self._store = []
 
         # tuning knobs (safe defaults)
-        self._fuzzy_threshold = 0.78
+        self._fuzzy_threshold = 0.96
         self._min_tokens = 2
 
     def add(self, inquiry: str, answer: str, confidence: float):

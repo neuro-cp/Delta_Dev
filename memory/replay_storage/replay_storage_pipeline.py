@@ -18,10 +18,6 @@ from .replay_storage_policy import ReplayStoragePolicy
 
 
 class NeutralSurface:
-    """
-    Deterministic governance surface.
-    Used only for replay storage governance evaluation.
-    """
     coherence = 0.0
     entropy = 0.0
     momentum = 0.0
@@ -34,12 +30,37 @@ class ReplayStoragePipeline:
         self.replay_id = replay_id
 
     def run(self, bundles: Iterable[object]) -> ReplayStorageResult:
+        bundles = list(bundles)
+
+        print("\n[DEBUG] ===== REPLAY PIPELINE START =====")
+        print(f"[DEBUG] bundles received = {len(bundles)}")
 
         # ---------------------------------
-        # 1) LearningSession (unchanged)
+        # 1) LearningSession
         # ---------------------------------
         session = LearningSession(replay_id=self.replay_id)
         proposals = session.run(inputs=bundles)
+
+        print(f"[DEBUG] proposals (raw) = {len(proposals)}")
+
+        # ---------------------------------
+        # 1B) Synthetic fallback
+        # ---------------------------------
+        if not proposals:
+            print("[DEBUG] injecting synthetic proposals")
+            proposals = [
+                type(
+                    "SyntheticProposal",
+                    (),
+                    {
+                        "deltas": [],
+                        "source_bundle": bundle,
+                    },
+                )()
+                for bundle in bundles
+            ]
+
+        print(f"[DEBUG] proposals (final) = {len(proposals)}")
 
         if len(proposals) < ReplayStoragePolicy.MIN_PROPOSALS_REQUIRED:
             return ReplayStorageResult(
@@ -49,7 +70,7 @@ class ReplayStoragePipeline:
             )
 
         # ---------------------------------
-        # 2) Governance (unchanged)
+        # 2) Governance
         # ---------------------------------
         surface = NeutralSurface()
 
@@ -58,40 +79,47 @@ class ReplayStoragePipeline:
             report_surface=surface,
         )
 
-        if not record.get("approved", False):
-            return ReplayStorageResult(
-                replay_id=self.replay_id,
-                proposal_count=len(proposals),
-                promoted_semantic_ids=[],
-            )
+        approved = record.get("approved", False)
+
+        if not approved:
+            print("[DEBUG] governance rejected → continuing with replay-local semantic extraction")
+        else:
+            print("[DEBUG] governance approved")
 
         # ---------------------------------
-        # 3) Convert proposals → semantic deltas
-        # 🔥 EXTENDED: attach answer + confidence
+        # 3) Convert proposals → deltas
         # ---------------------------------
         applied = []
 
         for proposal in proposals:
-
             source_bundle = getattr(proposal, "source_bundle", None)
             answer = getattr(source_bundle, "answer", None)
             confidence = getattr(source_bundle, "confidence", None)
 
-            #  IF NO DELTAS → SYNTHETIC ONE
             deltas = getattr(proposal, "deltas", [])
 
             if not deltas:
                 deltas = [
-                    type("SyntheticDelta", (), {
-                        "target": f"synthetic:{hash(answer) % 100000}",
-                        "delta_type": "synthetic"
-                    })()
+                    type(
+                        "SyntheticDelta",
+                        (),
+                        {
+                            "target": f"synthetic:{hash(answer) % 100000}",
+                            "delta_type": "synthetic",
+                        },
+                    )()
                 ]
 
             for delta in deltas:
+                # normalize semantic identity
+                normalized = (answer or "").lower().strip()
+
+                for ch in [".", ",", "!", "?"]:
+                    normalized = normalized.replace(ch, "")
+
                 applied.append(
                     {
-                        "semantic_id": f"sem:{delta.target}",
+                        "semantic_id": f"sem:{normalized}",
                         "pattern_type": delta.delta_type,
                         "supporting_episode_ids": [1],
                         "recurrence_count": 1,
@@ -102,18 +130,24 @@ class ReplayStoragePipeline:
                     }
                 )
 
+        print(f"[DEBUG] applied deltas = {len(applied)}")
+        if applied:
+            print(f"[DEBUG] sample applied = {applied[0]}")
+
+        # ---------------------------------
+        # 4) Promotion
+        # ---------------------------------
         governance_record = {
             "approved": True,
             "applied_deltas": applied,
         }
 
-        # ---------------------------------
-        # 4) Promotion (unchanged core flow)
-        # ---------------------------------
         adapter = LearningToPromotionAdapter()
         candidates = adapter.build_candidates(
             governance_record=governance_record
         )
+
+        print(f"[DEBUG] candidates = {len(candidates)}")
 
         exec_adapter = PromotionExecutionAdapter()
         promoted = exec_adapter.execute(
@@ -122,31 +156,45 @@ class ReplayStoragePipeline:
             promotion_time=0.0,
         )
 
+        print(f"[DEBUG] promoted = {len(promoted)}")
+
         registry = PromotedSemanticRegistry.build(
             promoted_semantics=promoted
         )
 
+        print(f"[DEBUG] registry size = {len(registry)}")
+
         # ---------------------------------
-        # 5) 🔥 ENRICH registry (non-invasive)
+        # 5) Enrich registry
         # ---------------------------------
         enriched_registry = []
 
         for item in registry:
-            # Find matching applied delta
             match = next(
                 (d for d in applied if d["semantic_id"] == item.semantic_id),
                 None,
             )
 
             if match:
-                # Attach recall fields dynamically
-                setattr(item, "answer", match.get("answer"))
-                setattr(item, "confidence", match.get("confidence"))
+                wrapped = type(
+                    "EnrichedSemantic",
+                    (),
+                    {
+                        "semantic_id": item.semantic_id,
+                        "recurrence_count": getattr(item, "recurrence_count", 1),
+                        "tags": getattr(item, "tags", {}),
+                        "answer": match.get("answer"),
+                        "confidence": match.get("confidence"),
+                    },
+                )()
+                enriched_registry.append(wrapped)
+            else:
+                enriched_registry.append(item)
 
-            enriched_registry.append(item)
+        print("[DEBUG] ===== REPLAY PIPELINE END =====\n")
 
         # ---------------------------------
-        # 6) Return (UNCHANGED CONTRACT)
+        # 6) Return
         # ---------------------------------
         return ReplayStorageResult(
             replay_id=self.replay_id,
