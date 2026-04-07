@@ -60,8 +60,17 @@ class CognitiveLoop:
         # ---------------------------------
         # Memory / recall surfaces
         # ---------------------------------
+        from integration.bridge.runtime_artifact_store import RuntimeArtifactStore
+
         self.answer_memory = AnswerMemory()
-        self.recall_bridge = RecallBridge()
+
+        # CREATE SHARED STORE
+        artifact_store = RuntimeArtifactStore()
+
+        # PASS SAME STORE TO RECALL
+        self.recall_bridge = RecallBridge(
+            artifact_store=artifact_store
+        )
 
         # ---------------------------------
         # Replay / learning references
@@ -74,7 +83,8 @@ class CognitiveLoop:
         self.replay_manager: Optional[ReplayManager] = None
         if self._replay_storage_pipeline_factory is not None:
             self.replay_manager = ReplayManager(
-                replay_storage_pipeline_factory=self._replay_storage_pipeline_factory
+                replay_storage_pipeline_factory=self._replay_storage_pipeline_factory,
+                artifact_store=artifact_store,
             )
 
         # ---------------------------------

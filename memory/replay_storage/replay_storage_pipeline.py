@@ -1,56 +1,26 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from typing import Any, List
+from typing import Any
 
 
 class ReplayStoragePipeline:
-    """
-    Replay-local semantic extraction pipeline.
-
-    Contract:
-    - May be constructed with a replay_id
-    - Accepts a sequence of bundle-like or proposal-like objects
-    - Produces replay-local semantic records
-    - Never executes work at import time
-    - Stays tolerant to partial/in-progress bundle schemas
-    """
 
     def __init__(self, replay_id: str | None = None):
         self.replay_id = replay_id or "replay_local"
+        self._accumulator = {}
 
     # =========================================================
-    # MAIN ENTRY
+    # MAIN
     # =========================================================
 
     def run(self, bundles) -> list[dict]:
-        print("\n[DEBUG] ===== REPLAY PIPELINE START =====")
-        print(f"[DEBUG] replay_id = {self.replay_id}")
-        print(f"[DEBUG] bundles received = {0 if not bundles else len(bundles)}")
-
-        if not bundles:
-            print("[DEBUG] no bundles provided")
-            print("[DEBUG] ===== REPLAY PIPELINE END =====\n")
-            return []
-
         proposals = self._extract_proposals(bundles)
 
-        print(f"[DEBUG] proposals (raw) = {len(proposals)}")
-
         if not proposals:
-            print("[DEBUG] injecting synthetic proposals")
             proposals = self._inject_synthetic_proposals(bundles)
 
-        print(f"[DEBUG] proposals (final) = {len(proposals)}")
-
-        applied = self._build_semantic_records(proposals)
-
-        print(f"[DEBUG] applied deltas = {len(applied)}")
-        if applied:
-            print(f"[DEBUG] sample applied = {applied[0]}")
-
-        print("[DEBUG] ===== REPLAY PIPELINE END =====\n")
-        return applied
+        return self._build_semantic_records(proposals)
 
     # =========================================================
     # PROPOSAL EXTRACTION
@@ -63,24 +33,28 @@ class ReplayStoragePipeline:
             if bundle is None:
                 continue
 
-            # Case 1: bundle already is proposal-like
+            # Already proposal-like
             if hasattr(bundle, "source_bundle") or hasattr(bundle, "deltas"):
                 proposals.append(bundle)
                 continue
 
-            # Case 2: bundle has .proposals
+            # Bundle has proposals
             bundle_proposals = getattr(bundle, "proposals", None)
             if bundle_proposals:
                 proposals.extend(bundle_proposals)
                 continue
 
-            # Case 3: dict bundle with proposals
+            # Dict case
             if isinstance(bundle, dict):
                 dict_proposals = bundle.get("proposals")
                 if dict_proposals:
                     proposals.extend(dict_proposals)
 
         return proposals
+
+    # =========================================================
+    # SYNTHETIC PROPOSALS
+    # =========================================================
 
     def _inject_synthetic_proposals(self, bundles) -> list[Any]:
         synthetic = []
@@ -92,27 +66,24 @@ class ReplayStoragePipeline:
             if not answer:
                 continue
 
-            inquiry_text = getattr(source_bundle, "inquiry", "") or ""
-            delta_key = self._stable_key(inquiry_text, answer)
-
             proposal = SimpleNamespace(
                 source_bundle=source_bundle,
                 deltas=[
                     SimpleNamespace(
-                        target=f"synthetic:{delta_key}",
+                        target="synthetic",
                         delta_type="synthetic",
                     )
                 ],
                 bounded=True,
                 replay_consistent=True,
-                proposal_id=f"proposal:{delta_key}",
             )
+
             synthetic.append(proposal)
 
         return synthetic
 
     # =========================================================
-    # RECORD BUILDING
+    # ACCUMULATION LOGIC
     # =========================================================
 
     def _build_semantic_records(self, proposals) -> list[dict]:
@@ -124,34 +95,27 @@ class ReplayStoragePipeline:
                 continue
 
             answer = getattr(source_bundle, "answer", None)
-            confidence = getattr(source_bundle, "confidence", None)
             inquiry_text = getattr(source_bundle, "inquiry", "") or ""
 
             if not answer:
                 continue
 
             deltas = getattr(proposal, "deltas", None) or []
-            if not deltas:
-                deltas = [
-                    SimpleNamespace(
-                        target=f"synthetic:{self._stable_key(inquiry_text, answer)}",
-                        delta_type="synthetic",
-                    )
-                ]
 
             for delta in deltas:
                 combined = self._build_semantic_text(inquiry_text, answer)
+                semantic_id = f"sem:{self._normalize_semantic(combined)}"
 
-                print("\n[SEMANTIC BUILD] ----------------")
-                print("inquiry_text:", inquiry_text)
-                print("answer:", answer)
-                print("combined_raw:", f"{inquiry_text} {answer}".strip())
-                print("combined_normalized:", combined)
-                print("--------------------------------\n")
+                if semantic_id in self._accumulator:
+                    record = self._accumulator[semantic_id]
+                    record["recurrence_count"] += 1
+                    record["supporting_episode_ids"].append(self.replay_id)
 
-                applied.append(
-                    {
-                        "semantic_id": f"sem:{combined}",
+                    if record["recurrence_count"] > 2:
+                        record["stability_classification"] = "stable"
+                else:
+                    record = {
+                        "semantic_id": semantic_id,
                         "pattern_type": getattr(delta, "delta_type", "unknown"),
                         "supporting_episode_ids": [self.replay_id],
                         "recurrence_count": 1,
@@ -159,10 +123,12 @@ class ReplayStoragePipeline:
                         "stability_classification": "unstable",
                         "inquiry": inquiry_text,
                         "answer": answer,
-                        "confidence": self._safe_confidence(confidence),
+                        "confidence": 1.0,
                         "source_replay_id": self.replay_id,
                     }
-                )
+                    self._accumulator[semantic_id] = record
+
+                applied.append(self._accumulator[semantic_id])
 
         return applied
 
@@ -174,19 +140,13 @@ class ReplayStoragePipeline:
         if bundle is None:
             return SimpleNamespace(inquiry="", answer=None, confidence=0.0)
 
-        # Already source-bundle shaped
-        if (
-            hasattr(bundle, "inquiry")
-            or hasattr(bundle, "answer")
-            or hasattr(bundle, "confidence")
-        ):
+        if hasattr(bundle, "inquiry") or hasattr(bundle, "answer"):
             return SimpleNamespace(
                 inquiry=getattr(bundle, "inquiry", "") or "",
                 answer=getattr(bundle, "answer", None),
                 confidence=getattr(bundle, "confidence", 0.0),
             )
 
-        # Dict bundle
         if isinstance(bundle, dict):
             return SimpleNamespace(
                 inquiry=bundle.get("inquiry", "") or "",
@@ -194,7 +154,6 @@ class ReplayStoragePipeline:
                 confidence=bundle.get("confidence", 0.0),
             )
 
-        # Nested source bundle
         source_bundle = getattr(bundle, "source_bundle", None)
         if source_bundle is not None:
             return SimpleNamespace(
@@ -211,19 +170,8 @@ class ReplayStoragePipeline:
 
     def _build_semantic_text(self, inquiry_text: str, answer: str) -> str:
         combined = f"{inquiry_text} {answer}".strip().lower()
-
-        for ch in (".", ",", "!", "?", ":", ";"):
-            combined = combined.replace(ch, "")
-
         combined = " ".join(combined.split())
         return combined
 
-    def _stable_key(self, inquiry_text: str, answer: str) -> int:
-        cleaned = self._build_semantic_text(inquiry_text, answer)
-        return abs(hash(cleaned)) % 100000
-
-    def _safe_confidence(self, value) -> float:
-        try:
-            return float(value)
-        except (TypeError, ValueError):
-            return 0.0
+    def _normalize_semantic(self, text: str) -> str:
+        return str(text).strip().lower()

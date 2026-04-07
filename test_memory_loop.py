@@ -1,16 +1,15 @@
 import os
-from typing import Any, Callable
+from typing import Any
 
 from orchestration.loop.cognitive_loop import CognitiveLoop
 from integration.model_runtime.model_router import ModelRouter
 
-# 🔧 existing system components
+# existing system components
 from memory.replay_storage.replay_storage_pipeline import ReplayStoragePipeline
 from orchestration.memory.learning_integrator import LearningIntegrator
 
-# 🔥 NEW: recall system imports
+# recall system
 from memory.replay_recall.replay_recall_pipeline import ReplayRecallPipeline
-from memory.semantic_promotion.promoted_semantic_registry import PromotedSemanticRegistry
 
 
 # =========================================
@@ -30,14 +29,14 @@ def setup_env():
 
 
 # =========================================
-# FACTORIES (CRITICAL)
+# FACTORIES
 # =========================================
 
 def build_replay_storage_pipeline(replay_id: str) -> ReplayStoragePipeline:
     return ReplayStoragePipeline(replay_id=replay_id)
 
 
-# 🔥 GLOBAL REGISTRY (minimal viable persistence)
+# 🔥 GLOBAL REGISTRY (NOW ACTUALLY POPULATED)
 GLOBAL_SEMANTIC_REGISTRY = []
 
 
@@ -79,11 +78,9 @@ def main():
 
     router = ModelRouter()
 
-    # 🔥 Instantiate recall system
+    # recall pipeline
     recall_pipeline = ReplayRecallPipeline()
 
-    # NOTE:
-    # We pass a list reference that we will update after replay
     loop = CognitiveLoop(
         model_router=router,
         replay_storage_pipeline_factory=build_replay_storage_pipeline,
@@ -127,21 +124,34 @@ def main():
             else:
                 result = replay_manager.run()
 
-                # 🔥 CRITICAL: capture promoted semantics
-                if result and hasattr(result, "promoted_semantic_ids"):
+                # 🔥 FIXED: populate registry from replay output
+                if result:
                     GLOBAL_SEMANTIC_REGISTRY.clear()
 
-                    for sem_id in result.promoted_semantic_ids:
-                        GLOBAL_SEMANTIC_REGISTRY.append(
-                            type("SemanticStub", (), {
-                                "semantic_id": sem_id,
-                                "recurrence_count": 1,
-                                "tags": {
-                                    "regions": ["PFC"],
-                                    "decision_present": False
-                                }
-                            })()
-                        )
+                    for d in result:
+                        if not isinstance(d, dict):
+                            continue
+
+                        sem_id = d.get("semantic_id")
+                        inquiry = d.get("inquiry")
+                        answer = d.get("answer")
+
+                        if not sem_id:
+                            continue
+
+                    GLOBAL_SEMANTIC_REGISTRY.append(
+                        type("SemanticStub", (), {
+                            "semantic_id": sem_id,
+                            "recurrence_count": 1,
+                            "inquiry": inquiry,
+                            "answer": answer,
+
+                            # 🔥 REQUIRED FOR MATCHER
+                            "tags": {
+                                "regions": ["pfc", "vta", "urgency"]
+                            }
+                        })()
+                    )
 
                     print(f"[RECALL] registry updated: {len(GLOBAL_SEMANTIC_REGISTRY)} items")
 

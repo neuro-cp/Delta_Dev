@@ -14,11 +14,6 @@ class ResolutionExecutor:
     2. AnswerMemory
     3. Route-specific execution
     4. LLM fallback
-
-    Notes:
-    - This class executes routes only.
-    - It does NOT own store-prompt / replay queue prompting.
-    - Replay prompting is handled by CognitiveLoop after evaluation.
     """
 
     def __init__(
@@ -73,6 +68,37 @@ class ResolutionExecutor:
                 self._recall_registry,
                 query,
             ) or []
+
+            # =========================================
+            # 🔴 ENRICHMENT LAYER (CRITICAL FIX)
+            # =========================================
+            enriched = []
+
+            for s in suggestions:
+                semantic_id = self._read_field(s, "semantic_id")
+
+                if not semantic_id:
+                    continue
+
+                semantic = next(
+                    (x for x in self._recall_registry if getattr(x, "semantic_id", None) == semantic_id),
+                    None
+                )
+                # fallback symbolic recovery via AnswerMemory
+                mem = self._answer_memory.lookup(query_text) if self._answer_memory else None
+
+            enriched.append(
+                type("RecallEnriched", (), {
+                    "semantic_id": semantic_id,
+                    "pressure": self._read_field(s, "pressure", 0.0),
+                    "inquiry": (mem or {}).get("inquiry") if mem else None,
+                    "answer": (mem or {}).get("answer") if mem else None,
+                    "confidence": (mem or {}).get("confidence", 1.0) if mem else 1.0,
+                })()
+            )
+
+            suggestions = enriched
+            # =========================================
 
             print("\n[RECALL INPUT]")
             print("query:", query_text)
@@ -214,9 +240,27 @@ class ResolutionExecutor:
     # HELPERS
     # =========================================================
 
-    def _build_recall_query(self, inquiry) -> str:
-        return getattr(inquiry, "raw_text", "") or ""
+    def _build_recall_query(self, inquiry):
+        if not self._recall_bridge:
+            return None
 
+        query_text = getattr(inquiry, "raw_text", "") or ""
+
+        if not query_text:
+            return None
+
+        # Build runtime artifact
+        artifact = self._recall_bridge._artifact_builder.build_from_text(query_text)
+
+        return type("RecallQuery", (), {
+            "active_regions": set(artifact.keys()),
+            "artifact": artifact,
+            "raw_text": query_text,
+
+            # 🔥 REQUIRED FOR MATCHER
+            "decision_present": False
+        })()
+    
     def _lookup_memory(self, query_text: str):
         if not self._answer_memory:
             return None
@@ -272,7 +316,6 @@ class ResolutionExecutor:
         if not raw_output:
             return ""
 
-        # Exact JSON body
         try:
             data = json.loads(raw_output)
             answer = data.get("answer", "")
@@ -280,7 +323,6 @@ class ResolutionExecutor:
         except Exception:
             pass
 
-        # Embedded JSON object inside surrounding text
         start = raw_output.find("{")
         end = raw_output.rfind("}") + 1
 
@@ -292,5 +334,4 @@ class ResolutionExecutor:
             except Exception:
                 pass
 
-        # Fallback to raw stripped text
         return raw_output.strip()

@@ -31,6 +31,7 @@ class ReplayManager:
         auto_flush_threshold: Optional[int] = None,
         verbose: bool = True,
         repo_root: Path = None,
+        artifact_store=None,
     ):
         self._factory = replay_storage_pipeline_factory
         self._queue: List[Any] = []
@@ -47,7 +48,7 @@ class ReplayManager:
 
         self._runtime = build_runtime(repo_root)
         self._artifact_builder = RuntimeArtifactBuilder(self._runtime)
-        self._artifact_store = RuntimeArtifactStore()
+        self._artifact_store = artifact_store or RuntimeArtifactStore()
 
     # =========================================================
     # QUEUE OPERATIONS

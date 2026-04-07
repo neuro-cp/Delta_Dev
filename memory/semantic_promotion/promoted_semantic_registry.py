@@ -1,4 +1,3 @@
-# memory/semantic_promotion/promoted_semantic_registry.py
 
 from __future__ import annotations
 
@@ -10,20 +9,6 @@ from memory.semantic_promotion.promoted_semantic import PromotedSemantic
 
 @dataclass(frozen=True)
 class PromotedSemanticRegistry:
-    """
-    Read-only registry of promoted semantic patterns.
-
-    CONTRACT:
-    - Offline only
-    - Immutable after construction
-    - No promotion logic
-    - No runtime authority
-    - No learning semantics
-    - Safe to discard and rebuild
-
-    This registry is the sole canonical owner of
-    PromotedSemantic artifacts.
-    """
 
     _by_id: Dict[str, PromotedSemantic]
 
@@ -33,14 +18,34 @@ class PromotedSemanticRegistry:
         *,
         promoted_semantics: Iterable[PromotedSemantic],
     ) -> PromotedSemanticRegistry:
+
         by_id: Dict[str, PromotedSemantic] = {}
 
         for semantic in promoted_semantics:
-            if semantic.semantic_id in by_id:
-                raise ValueError(
-                    f"Duplicate promoted semantic_id: {semantic.semantic_id}"
+            sid = semantic.semantic_id
+
+            if sid in by_id:
+                existing = by_id[sid]
+
+                merged = PromotedSemantic(
+                    semantic_id=sid,
+                    promotion_policy_version=semantic.promotion_policy_version,
+                    promotion_step=semantic.promotion_step,
+                    promotion_time=semantic.promotion_time,
+                    source_candidate_ids=existing.source_candidate_ids + semantic.source_candidate_ids,
+                    supporting_episode_ids=list(set(existing.supporting_episode_ids + semantic.supporting_episode_ids)),
+                    recurrence_count=existing.recurrence_count + semantic.recurrence_count,
+                    persistence_span=max(existing.persistence_span, semantic.persistence_span),
+                    stability_classification="stable" if (existing.recurrence_count + semantic.recurrence_count) > 2 else "unstable",
+                    confidence_estimate=max(existing.confidence_estimate, semantic.confidence_estimate),
+                    tags=semantic.tags or existing.tags,
+                    notes=semantic.notes or existing.notes,
                 )
-            by_id[semantic.semantic_id] = semantic
+
+                by_id[sid] = merged
+
+            else:
+                by_id[sid] = semantic
 
         return cls(_by_id=by_id)
 
