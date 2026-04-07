@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import ast
 import operator as op
-from typing import Any, Optional
+from typing import Any, Callable, Optional
+
+from integration.bridge.answer_memory import AnswerMemory
+from integration.bridge.recall_bridge import RecallBridge
+from integration.bridge.store_prompt import ask_store_prompt
+from integration.bridge.replay_manager import ReplayManager
 
 from orchestration.schemas.execution_plan import ExecutionPlan
 from orchestration.schemas.execution_result import ExecutionResult
@@ -11,12 +16,11 @@ from orchestration.schemas.inquiry_packet import InquiryPacket
 
 class ResolutionExecutor:
     """
-    Executes a selected plan.
-
-    External surfaces are injected optionally:
-    - model_router: must expose route(payload)
-    - replay_recall_pipeline: must expose run(registry, query)
-    - learning_adapter: handled elsewhere
+    Execution layer with:
+    - AnswerMemory (fast recall)
+    - ReplayManager (queued learning)
+    - Semantic recall bridge
+    - LLM + admin fallback
     """
 
     def __init__(
@@ -25,187 +29,232 @@ class ResolutionExecutor:
         model_router: Optional[Any] = None,
         replay_recall_pipeline: Optional[Any] = None,
         recall_registry: Optional[Any] = None,
+        replay_storage_pipeline_factory: Optional[Callable[[str], Any]] = None,
+        learning_bundle_factory: Optional[
+            Callable[[InquiryPacket, str, float, str], Any]
+        ] = None,
     ) -> None:
         self._model_router = model_router
         self._replay_recall_pipeline = replay_recall_pipeline
         self._recall_registry = recall_registry
 
+        self._replay_storage_pipeline_factory = replay_storage_pipeline_factory
+        self._learning_bundle_factory = learning_bundle_factory
+
+        self._answer_memory = AnswerMemory()
+        self._recall_bridge = RecallBridge()
+
+        # 🔥 Replay manager (NEW)
+        self._replay_manager: Optional[ReplayManager] = None
+        if replay_storage_pipeline_factory is not None:
+            self._replay_manager = ReplayManager(
+                replay_storage_pipeline_factory,
+                auto_flush_threshold=None,  # manual control
+            )
+
+        # thresholds
+        self._store_threshold = 0.5
+        self._admin_threshold = 0.3
+
+    # =========================================================
+    # MAIN EXECUTION
+    # =========================================================
+
     def execute(self, inquiry: InquiryPacket, plan: ExecutionPlan) -> ExecutionResult:
         route = plan.selected_route_type
         print(f"[ROUTING] selected route = {route}")
 
+        # ----------------------------------------
+        # 0. FAST MEMORY
+        # ----------------------------------------
+        memory_hit = self._answer_memory.lookup(inquiry.raw_text)
+        if memory_hit:
+            print("[MEMORY] hit")
+            return ExecutionResult(
+                plan_id=plan.plan_id,
+                route_type="memory",
+                success=True,
+                output=memory_hit["answer"],
+                confidence=float(memory_hit["confidence"]),
+            )
+
+        # ----------------------------------------
+        # 1. DETERMINISTIC
+        # ----------------------------------------
         if route == "deterministic_solver":
-            output = self._solve_math(inquiry.raw_text)
+            result = self._solve_math(inquiry.raw_text)
             return ExecutionResult(
                 plan_id=plan.plan_id,
                 route_type=route,
                 success=True,
-                output=str(output),
+                output=str(result),
                 confidence=1.0,
             )
 
-        if route == "llm":
-            return self._execute_llm(inquiry=inquiry, plan=plan, route_type=route)
-
+        # ----------------------------------------
+        # 2. RECALL
+        # ----------------------------------------
         if route == "recall":
-            if self._replay_recall_pipeline is not None and self._recall_registry is not None:
-                query = self._build_recall_query(inquiry)
-                suggestions = self._replay_recall_pipeline.run(self._recall_registry, query)
+            return self._handle_recall(inquiry, plan)
 
-                return ExecutionResult(
-                    plan_id=plan.plan_id,
-                    route_type=route,
-                    success=True,
-                    output=suggestions,
-                    confidence=0.7 if suggestions else 0.0,
-                    artifacts={"recall_query": query},
-                )
+        # ----------------------------------------
+        # 3. LLM
+        # ----------------------------------------
+        return self._execute_llm(inquiry, plan, route)
 
-            if self._model_router is not None:
-                return self._execute_llm(
-                    inquiry=inquiry,
-                    plan=plan,
-                    route_type="llm_fallback",
-                    artifacts={"fallback_reason": "no_recall_surface"},
-                )
+    # =========================================================
+    # RECALL HANDLER
+    # =========================================================
 
-            return ExecutionResult(
-                plan_id=plan.plan_id,
-                route_type=route,
-                success=False,
-                output=None,
-                confidence=0.0,
-                artifacts={"reason": "no_recall_surface"},
+    def _handle_recall(
+        self,
+        inquiry: InquiryPacket,
+        plan: ExecutionPlan,
+    ) -> ExecutionResult:
+        if self._replay_recall_pipeline and self._recall_registry:
+            query = self._build_recall_query(inquiry)
+
+            suggestions = self._replay_recall_pipeline.run(
+                self._recall_registry,
+                query,
             )
 
-        if route == "operator_query":
-            if self._requires_operator_clarification(inquiry):
+            candidate = self._recall_bridge.interpret(suggestions, inquiry)
+
+            if candidate:
+                print("[RECALL] strong match")
                 return ExecutionResult(
                     plan_id=plan.plan_id,
-                    route_type=route,
+                    route_type="recall",
                     success=True,
-                    output="operator clarification required",
-                    confidence=0.0,
+                    output=candidate["answer"],
+                    confidence=float(candidate["confidence"]),
                 )
 
-            if self._model_router is not None:
-                return self._execute_llm(
-                    inquiry=inquiry,
-                    plan=plan,
-                    route_type="llm_fallback",
-                    artifacts={"fallback_reason": "soft_ambiguity"},
-                )
+            print("[RECALL] weak → fallback")
 
-            return ExecutionResult(
-                plan_id=plan.plan_id,
-                route_type=route,
-                success=True,
-                output="operator clarification required",
-                confidence=0.0,
-            )
+        return self._execute_llm(inquiry, plan, "llm_fallback")
 
-        return ExecutionResult(
-            plan_id=plan.plan_id,
-            route_type=route,
-            success=False,
-            output=None,
-            confidence=0.0,
-            artifacts={"reason": "unknown_route"},
-        )
+    # =========================================================
+    # LLM EXECUTION
+    # =========================================================
 
     def _execute_llm(
         self,
-        *,
         inquiry: InquiryPacket,
         plan: ExecutionPlan,
         route_type: str,
-        artifacts: Optional[dict[str, Any]] = None,
     ) -> ExecutionResult:
-        if self._model_router is None:
+        if not self._model_router:
             return ExecutionResult(
                 plan_id=plan.plan_id,
                 route_type=route_type,
                 success=False,
                 output=None,
                 confidence=0.0,
-                artifacts={"reason": "no_model_router"},
             )
 
         result = self._model_router.route({"question": inquiry.raw_text})
-        payload = getattr(result, "payload", {})
-        confidence = float(getattr(result, "confidence_band", 0.0) or 0.0)
 
-        merged_artifacts = {"model_bundle": result}
-        if artifacts:
-            merged_artifacts.update(artifacts)
+        payload = getattr(result, "payload", {}) or {}
+        confidence = float(getattr(result, "confidence_band", 0.0) or 0.0)
+        output = payload.get("raw_model_output", payload)
+
+        # ----------------------------------------
+        # STORE (USER CONFIRM)
+        # ----------------------------------------
+        if confidence >= self._store_threshold:
+            if ask_store_prompt(str(output), confidence):
+                self._store(inquiry, str(output), confidence, "llm")
+
+        # ----------------------------------------
+        # ADMIN FALLBACK
+        # ----------------------------------------
+        if confidence < self._admin_threshold:
+            print("\n[ADMIN] low confidence")
+
+            admin = input("Provide answer (or enter to skip): ").strip()
+            if admin:
+                self._store(inquiry, admin, 1.0, "admin")
+                return ExecutionResult(
+                    plan_id=plan.plan_id,
+                    route_type="admin_override",
+                    success=True,
+                    output=admin,
+                    confidence=1.0,
+                )
 
         return ExecutionResult(
             plan_id=plan.plan_id,
             route_type=route_type,
             success=True,
-            output=payload.get("raw_model_output", payload),
+            output=output,
             confidence=confidence,
-            artifacts=merged_artifacts,
         )
 
-    def _requires_operator_clarification(self, inquiry: InquiryPacket) -> bool:
-        text = (inquiry.raw_text or "").strip()
-        if not text:
-            return True
+    # =========================================================
+    # STORAGE (UPDATED)
+    # =========================================================
 
-        lower = text.lower()
+    def _store(
+        self,
+        inquiry: InquiryPacket,
+        answer: str,
+        confidence: float,
+        source: str,
+    ):
+        # fast layer
+        self._answer_memory.add(inquiry.raw_text, answer, confidence)
 
-        if len(lower) <= 2:
-            return True
-
-        ambiguous_tokens = {"help", "hello", "hi", "hey", "what", "why"}
-        if lower in ambiguous_tokens:
-            return False
-
-        return False
-
-    def _build_recall_query(self, inquiry: InquiryPacket) -> Any:
-        active_regions = set()
-        for token in inquiry.semantic_tokens:
-            upper = token.upper()
-            if upper in {"PFC", "STN", "GPi".upper(), "GPI", "TRN", "MD"}:
-                active_regions.add(upper)
+        # deep layer → queue (NOT immediate replay)
+        if not self._replay_manager or not self._learning_bundle_factory:
+            return
 
         try:
-            from memory.replay_recall.recall_query import RecallQuery  # type: ignore
+            bundle = self._learning_bundle_factory(
+                inquiry,
+                answer,
+                confidence,
+                source,
+            )
+
+            if isinstance(bundle, (list, tuple)):
+                for b in bundle:
+                    self._replay_manager.enqueue(b)
+            else:
+                self._replay_manager.enqueue(bundle)
+
+        except Exception as e:
+            print(f"[STORE] replay enqueue failed: {e}")
+
+    # =========================================================
+    # HELPERS
+    # =========================================================
+
+    def _build_recall_query(self, inquiry: InquiryPacket) -> Any:
+        try:
+            from memory.replay_recall.recall_query import RecallQuery
+
             return RecallQuery(
-                active_regions=active_regions,
-                decision_present="decision" in inquiry.semantic_tokens,
+                active_regions=set(),
+                decision_present=False,
             )
         except Exception:
-            return {
-                "active_regions": active_regions,
-                "decision_present": "decision" in inquiry.semantic_tokens,
-            }
+            return {}
 
     def _solve_math(self, text: str) -> float:
         expr = self._extract_expression(text)
         node = ast.parse(expr, mode="eval").body
-        return float(self._eval_node(node))
+        return float(self._eval(node))
 
-    @staticmethod
-    def _extract_expression(text: str) -> str:
-            cleaned = text.strip()
-            lower = cleaned.lower()
+    def _extract_expression(self, text: str) -> str:
+        cleaned = text.strip().lower()
+        for prefix in ["what is", "calculate", "solve"]:
+            if cleaned.startswith(prefix):
+                cleaned = cleaned[len(prefix):].strip()
+        return cleaned.replace("^", "**")
 
-            for prefix in ["what is", "calculate", "solve"]:
-                if lower.startswith(prefix):
-                    cleaned = cleaned[len(prefix):].strip()
-                    break
-
-            cleaned = cleaned.rstrip(" ?.")
-
-            # 🔥 FIX: support ^ as exponent
-            cleaned = cleaned.replace("^", "**")
-
-            return cleaned
-
-    def _eval_node(self, node: ast.AST) -> float:
+    def _eval(self, node: ast.AST) -> float:
         ops = {
             ast.Add: op.add,
             ast.Sub: op.sub,
@@ -214,13 +263,16 @@ class ResolutionExecutor:
             ast.Pow: op.pow,
         }
 
-        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+        if isinstance(node, ast.Constant):
             return float(node.value)
 
-        if isinstance(node, ast.BinOp) and type(node.op) in ops:
-            return ops[type(node.op)](self._eval_node(node.left), self._eval_node(node.right))
+        if isinstance(node, ast.BinOp):
+            return ops[type(node.op)](
+                self._eval(node.left),
+                self._eval(node.right),
+            )
 
-        if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub):
-            return -self._eval_node(node.operand)
+        if isinstance(node, ast.UnaryOp):
+            return -self._eval(node.operand)
 
-        raise ValueError("Unsupported arithmetic expression")
+        raise ValueError("Unsupported expression")

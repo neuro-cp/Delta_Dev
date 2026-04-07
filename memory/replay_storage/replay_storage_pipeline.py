@@ -35,7 +35,9 @@ class ReplayStoragePipeline:
 
     def run(self, bundles: Iterable[object]) -> ReplayStorageResult:
 
-        # 1) Run LearningSession (audit + governance enforced internally)
+        # ---------------------------------
+        # 1) LearningSession (unchanged)
+        # ---------------------------------
         session = LearningSession(replay_id=self.replay_id)
         proposals = session.run(inputs=bundles)
 
@@ -46,7 +48,9 @@ class ReplayStoragePipeline:
                 promoted_semantic_ids=[],
             )
 
-        # 2) Re-evaluate governance deterministically (pure function)
+        # ---------------------------------
+        # 2) Governance (unchanged)
+        # ---------------------------------
         surface = NeutralSurface()
 
         record = run_governance_chain(
@@ -61,11 +65,30 @@ class ReplayStoragePipeline:
                 promoted_semantic_ids=[],
             )
 
+        # ---------------------------------
         # 3) Convert proposals → semantic deltas
+        # 🔥 EXTENDED: attach answer + confidence
+        # ---------------------------------
         applied = []
 
         for proposal in proposals:
-            for delta in proposal.deltas:
+
+            source_bundle = getattr(proposal, "source_bundle", None)
+            answer = getattr(source_bundle, "answer", None)
+            confidence = getattr(source_bundle, "confidence", None)
+
+            #  IF NO DELTAS → SYNTHETIC ONE
+            deltas = getattr(proposal, "deltas", [])
+
+            if not deltas:
+                deltas = [
+                    type("SyntheticDelta", (), {
+                        "target": f"synthetic:{hash(answer) % 100000}",
+                        "delta_type": "synthetic"
+                    })()
+                ]
+
+            for delta in deltas:
                 applied.append(
                     {
                         "semantic_id": f"sem:{delta.target}",
@@ -74,6 +97,8 @@ class ReplayStoragePipeline:
                         "recurrence_count": 1,
                         "persistence_span": 1,
                         "stability_classification": "unstable",
+                        "answer": answer,
+                        "confidence": confidence,
                     }
                 )
 
@@ -82,7 +107,9 @@ class ReplayStoragePipeline:
             "applied_deltas": applied,
         }
 
-        # 4) Promotion
+        # ---------------------------------
+        # 4) Promotion (unchanged core flow)
+        # ---------------------------------
         adapter = LearningToPromotionAdapter()
         candidates = adapter.build_candidates(
             governance_record=governance_record
@@ -99,8 +126,30 @@ class ReplayStoragePipeline:
             promoted_semantics=promoted
         )
 
+        # ---------------------------------
+        # 5) 🔥 ENRICH registry (non-invasive)
+        # ---------------------------------
+        enriched_registry = []
+
+        for item in registry:
+            # Find matching applied delta
+            match = next(
+                (d for d in applied if d["semantic_id"] == item.semantic_id),
+                None,
+            )
+
+            if match:
+                # Attach recall fields dynamically
+                setattr(item, "answer", match.get("answer"))
+                setattr(item, "confidence", match.get("confidence"))
+
+            enriched_registry.append(item)
+
+        # ---------------------------------
+        # 6) Return (UNCHANGED CONTRACT)
+        # ---------------------------------
         return ReplayStorageResult(
             replay_id=self.replay_id,
             proposal_count=len(proposals),
-            promoted_semantic_ids=[p.semantic_id for p in registry],
+            promoted_semantic_ids=[p.semantic_id for p in enriched_registry],
         )
