@@ -2,14 +2,14 @@
 
 ## Current Phase
 
-Phase 2: Build The Cognitive Core
+Phase 8: Governance And Stability
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
-`docs/UPDATE.md` before continuing implementation.
+`docs/INVARIANTS.md`, then `docs/UPDATE.md` before continuing implementation.
 
-The current goal is to make Delta understandable and runnable before adding
-major new cognitive capabilities. Delta should now develop around a continuous
-cognitive cycle rather than disconnected components.
+The current goal is to prove that Delta's existing cognitive substrate remains
+stable, auditable, and bounded over longer runtimes. The roadmap should now ask:
+what evidence says Delta is ready to build the next thing?
 
 ## Core Cognitive Cycle
 
@@ -151,6 +151,98 @@ Memory is the substrate. The loop is the organism.
 - Stabilize knowledge evolution before longer runtimes.
 - Prevent repeated runtime ticks from flooding semantic knowledge, predictions,
   or contradictions.
+
+## Phase 8: Governance And Stability
+
+Goals:
+
+- Stable bounded runtime.
+- Controlled semantic growth.
+- Correct current-state metrics over append-only history.
+- Prediction lifecycle tracking.
+- Evidence-based confidence evolution.
+- Duplicate suppression.
+- Provenance validation.
+
+Exit criteria:
+
+- 100-tick isolated runtime without runaway growth.
+- Stable self-model metrics based on latest valid state.
+- No duplicate semantic explosion.
+- Predictions remain bounded and traceable through revisions.
+- Confidence changes are monotonic and evidence-based.
+- Agency proposals remain bounded and non-executing.
+
+## Phase 9: Observability
+
+Goals:
+
+- Delta Console.
+- Live cognitive timeline.
+- Region activity visualization.
+- Working memory inspector.
+- Attention inspector.
+- Knowledge graph viewer.
+- Runtime debugger.
+
+Exit criteria:
+
+- A developer can explain why Delta made every important cognitive decision.
+
+## Phase 10: Grounded Intelligence
+
+Goals:
+
+- Richer bootstrap knowledge.
+- Semantic organization.
+- Curiosity and question formation.
+- Knowledge revision.
+- Long-term learning.
+
+Exit criteria:
+
+- Delta demonstrates measurable improvement after repeated runtime experiments.
+
+## Phase 11: External Cognition
+
+Goals:
+
+- GPT integration.
+- Local model integration.
+- Speech.
+- Vision.
+- External tools.
+
+Exit criteria:
+
+- External models improve reasoning without compromising governance.
+
+## Maturity Scorecard
+
+These percentages are explicit engineering estimates, not objective truth. They
+should change only when runtime evidence or implementation review justifies it.
+
+| Capability | Status | Confidence |
+| --- | --- | --- |
+| Experience Memory | Stable | 95% |
+| Relationships | Stable | 90% |
+| Semantic Knowledge | Stable | 80% |
+| Consolidation | Stable | 75% |
+| Prediction | Experimental | 60% |
+| Confidence Evolution | Experimental | 55% |
+| Self Model | Stable | 80% |
+| Simulation | Experimental | 65% |
+| Agency | Experimental | 55% |
+| Runtime | Stable | 85% |
+| Console | Planned | 10% |
+
+## Stabilization Rule
+
+For the next several milestones, assume Delta has enough cognitive regions.
+Unless a fundamental architectural deficiency is discovered, do not solve
+problems by creating additional top-level regions. Prefer improving governance,
+interaction quality, observability, scalability, and long-run stability of the
+existing architecture.
 
 ## Next Recommended Task
 

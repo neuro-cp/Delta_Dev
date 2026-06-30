@@ -31,6 +31,9 @@ It now adds Phase 8 grounding and runtime foundations: curated bootstrap
 knowledge, a bounded runtime tick loop, first console foundations, first-life
 runtime reporting, historical concept review, and first consolidation
 governance after observing runaway amplification.
+It now adds `docs/INVARIANTS.md` and shifts the roadmap toward
+evidence-gated governance, stability, observability, and maturity scoring before
+additional capability expansion.
 
 ### Architectural Decisions
 
@@ -88,6 +91,11 @@ governance after observing runaway amplification.
 - Delta may expose conversation, coding, automation, robotics, dashboards,
   APIs, or future embodied inputs. These are clients of the substrate, not the
   substrate itself. The architecture must not optimize around one interface.
+- Delta's near-term roadmap is evidence-gated. The question is no longer only
+  what should be built next, but what evidence shows Delta is ready for it.
+- For the next milestones, Delta should prefer governance, observability,
+  reproducibility, metric accuracy, and long-run stability over adding new
+  top-level cognitive regions.
 - Bootstrap knowledge is curated and idempotent. It seeds only foundational
   primitives with explicit provenance.
 - Runtime execution is bounded by ticks or operator interruption. Delta does not
@@ -147,6 +155,7 @@ governance after observing runaway amplification.
 - `docs/FIRST_LIFE_POSTMORTEM.md`
 - `docs/HISTORICAL_CONCEPT_REVIEW.md`
 - `docs/GOVERNANCE_RUNTIME_REPORT.md`
+- `docs/INVARIANTS.md`
 - `docs/COGNITIVE_GAP_ANALYSIS.md`
 - `orchestration/simulation/__init__.py`
 - `orchestration/simulation/simulation_region.py`
