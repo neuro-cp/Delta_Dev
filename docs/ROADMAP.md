@@ -63,6 +63,13 @@ Memory is the substrate. The loop is the organism.
   metrics, subsystem health, and cognitive health reporting.
 - Added a first non-executing Simulation Region for comparing hypothetical
   futures.
+- Added the first Agency slice:
+  - persistent goal records
+  - executive goal prioritization
+  - proposed non-executing plans
+  - explicit decision records
+  - agency proposals
+- Added `docs/COGNITIVE_GAP_ANALYSIS.md`.
 
 ## Phase 1: Stabilize Architecture
 
@@ -118,12 +125,24 @@ Memory is the substrate. The loop is the organism.
 - Compare later observations against simulated expectations for prediction
   validation.
 
+## Phase 7: Agency And Adaptive Cognition
+
+- Keep agency non-executing and fully inspectable.
+- Complete goal evolution from learning and reflection outputs.
+- Connect goals into attention, working memory, and simulation.
+- Persist plans across sessions and attach execution outcomes later.
+- Use decision records to explain why a goal, plan, or action was proposed.
+- Begin adaptive prioritization from repeated success, repeated failure,
+  uncertainty, and contradiction pressure.
+
 ## Next Recommended Task
 
-Build goals, prediction evaluation, and simulation feedback:
+Build adaptive goal integration:
 
-1. Add explicit goal records and goal relevance scoring.
-2. Feed goals into working memory and attention scoring.
-3. Feed goals into simulation reports.
-4. Evaluate predictions and simulated expectations against later observations.
-5. Use prediction success/failure to propose confidence changes.
+1. Promote learning goal candidates into explicit goals through a bounded review
+   path.
+2. Feed active goals into working memory, attention scoring, and simulation.
+3. Add prediction/simulation outcome evaluation against later observations.
+4. Use repeated success/failure to adjust goal priority and plan confidence.
+5. Start a cognitive timeline for major learning, goal, prediction, and
+   reflection events.

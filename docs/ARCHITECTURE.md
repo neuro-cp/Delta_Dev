@@ -85,6 +85,10 @@ analogies.
 - Reasoning Region: transforms attended context into conclusions.
 - Planning Region: selects possible future actions.
 - Goal Region: tracks active objectives and priorities.
+- Agency Region: proposes what Delta should do next from goals, planning,
+  simulation, self-model, and confidence signals without executing.
+- Executive Controller: prioritizes goals and allocates cognitive focus without
+  replacing attention or execution.
 - Learning Region: proposes durable changes from experience.
 - Execution Region: performs bounded actions through explicit authorization.
 - Reflection Region: evaluates what changed, repeated, failed, or should be
@@ -151,11 +155,15 @@ Implemented early:
 - generated self-model snapshots with temporal continuity, cognitive metrics,
   and health indicators
 - non-executing simulation reports over hypothetical futures
+- append-only goal records
+- proposed plans that survive across sessions
+- explicit decision records for proposed plans
+- agency proposals that answer what Delta should do next without execution
 
 Incomplete:
 
-- goals
-- planning
+- applied goal evolution from learning/reflection
+- completed plan execution histories
 - action beyond returning orchestration output
 - applied confidence evolution
 - prediction validation
@@ -216,6 +224,30 @@ references, and rationale.
 
 Planning may eventually consume simulation reports. Simulation itself must not
 choose actions, mutate state, or bypass the cognitive cycle.
+
+## Agency
+
+Agency answers: what should Delta do next?
+
+Agency owns no knowledge and has no hidden execution authority. It consumes
+goals, planning, simulation, confidence, attention outputs, self-model signals,
+and working memory when available. It returns inspectable proposals only.
+
+Current Agency implementation:
+
+- persistent append-only goal records
+- executive goal prioritization
+- non-executing plan generation from goals and simulation
+- explicit decision records that score expected reward, goal satisfaction,
+  confidence, resource cost, and risk
+- intrinsic virtual goals derived from self-model observations when no
+  persistent goals exist
+
+Agency determines what deserves action. Attention determines what deserves
+thought. Planning determines how action might proceed. Execution determines
+what actually happens through bounded interfaces.
+
+Agency proposals, plans, and decisions do not execute automatically.
 
 ## Knowledge Layer
 

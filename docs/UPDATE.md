@@ -25,6 +25,8 @@ It now adds a derived Self Model Region with temporal continuity, cognitive
 metrics, subsystem health, and cognitive health reporting.
 It now adds the first non-executing Simulation Region for comparing
 hypothetical futures.
+It now adds the first Agency slice: persistent goals, executive prioritization,
+non-executing plans, explicit decisions, and agency proposals.
 
 ### Architectural Decisions
 
@@ -74,6 +76,11 @@ hypothetical futures.
 - Simulation is non-executing. It can estimate hypothetical outcomes,
   confidence, risk, and supporting evidence, but it cannot choose actions or
   mutate state.
+- Agency owns no knowledge and has no execution authority.
+- Goals and plans are persistent append-only records. Agency proposals and
+  decisions are inspectable recommendations only.
+- Executive control prioritizes cognitive work. It does not replace attention,
+  planning, simulation, or execution.
 - `docs/UPDATE.md` is the canonical handoff log. `docs/ROADMAP.md` is the
   canonical planning file. `docs/ARCHITECTURE.md` is the canonical architecture
   constitution.
@@ -116,7 +123,15 @@ hypothetical futures.
 - `orchestration/simulation/simulation_region.py`
 - `orchestration/tests/self_model/test_self_model.py`
 - `orchestration/tests/simulation/test_simulation_region.py`
+- `orchestration/agency/__init__.py`
+- `orchestration/agency/agency_region.py`
+- `orchestration/agency/decision_engine.py`
+- `orchestration/agency/executive_controller.py`
+- `orchestration/agency/goal_system.py`
+- `orchestration/agency/planning_engine.py`
+- `orchestration/tests/agency/test_agency_region.py`
 - `integration/model_runtime/prompt_builder.py`
+- `docs/COGNITIVE_GAP_ANALYSIS.md`
 - `docs/ARCHITECTURE.md`
 - `docs/ROADMAP.md`
 - `docs/UPDATE.md`
@@ -176,6 +191,11 @@ The Simulation Region gives Delta the first mechanism for evaluating possible
 futures before planning exists. It is intentionally read-only and
 non-executing.
 
+The Agency slice starts turning internal state into proposed intentional
+behavior. It adds durable goals, proposed plans, decision scoring, and executive
+prioritization while preserving the boundary that nothing executes
+automatically.
+
 ### Validation
 
 Run:
@@ -196,6 +216,10 @@ Run:
 .\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --self-model --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --simulate-option "run knowledge consolidation" --simulate-option "skip knowledge consolidation" --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --create-goal "Improve prediction accuracy"
+.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --list-goals
+.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --plan-path .tmp\agency_plans.jsonl --plan-goals --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --agency-report --json
 .\.venv311\Scripts\python.exe -m pytest orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
@@ -216,6 +240,9 @@ Expected status:
 - reflection receives working memory summary
 - self-model report derives metrics and health from existing stores
 - simulation report compares hypothetical futures without executing them
+- goal creation and goal listing work through explicit CLI commands
+- planning creates proposed non-executing plans
+- agency report proposes a next action without execution authority
 - targeted orchestration tests pass
 
 Latest observed cycle validation:
@@ -280,6 +307,15 @@ Latest simulation validation:
 - generated two hypothetical outcomes
 - report marked simulation as non-executing
 
+Latest agency validation:
+
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --create-goal "Improve prediction accuracy"`
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --list-goals`
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --plan-path .tmp\agency_plans.jsonl --plan-goals --json`
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --agency-report --json`
+- result: created a persistent temporary goal, produced a proposed plan, and
+  generated an agency proposal with `execution_authority=false`
+
 ### Cold-Session Resume Instructions
 
 1. Read `docs/ARCHITECTURE.md`.
@@ -301,9 +337,11 @@ git status --short --branch
 .\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --self-model --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --simulate-option "run knowledge consolidation" --simulate-option "skip knowledge consolidation" --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --create-goal "Improve prediction accuracy"
+.\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --agency-report --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-learning
 .\.venv311\Scripts\python.exe tools\delta_cli.py --consolidate-knowledge
-.\.venv311\Scripts\python.exe -m pytest orchestration\tests\self_model\test_self_model.py orchestration\tests\simulation\test_simulation_region.py orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
+.\.venv311\Scripts\python.exe -m pytest orchestration\tests\agency\test_agency_region.py orchestration\tests\self_model\test_self_model.py orchestration\tests\simulation\test_simulation_region.py orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
 6. Continue with the recommended next task unless the user redirects.
@@ -321,6 +359,10 @@ Current functional entrypoints:
   health inspection.
 - `tools/delta_cli.py --simulate-option` for non-executing hypothetical future
   comparison.
+- `tools/delta_cli.py --create-goal` for explicit persistent goal creation.
+- `tools/delta_cli.py --list-goals` for active goal inspection.
+- `tools/delta_cli.py --plan-goals` for proposed non-executing plan creation.
+- `tools/delta_cli.py --agency-report` for proposed next-action inspection.
 
 Important local paths:
 
@@ -330,6 +372,8 @@ Important local paths:
 - semantic knowledge data: `data/knowledge/semantic_knowledge.jsonl`
 - contradiction data: `data/knowledge/contradictions.jsonl`
 - prediction data: `data/knowledge/predictions.jsonl`
+- goal data: `data/agency/goals.jsonl`
+- plan data: `data/agency/plans.jsonl`
 - local models: `C:\Users\Admin\Desktop\models`
 - external legacy backup: `C:\Users\Admin\Desktop\delta backup`
 
@@ -360,6 +404,12 @@ Important local paths:
   runtime loop.
 - Simulation exists as an explicit non-executing region, but it is not yet fed
   back into planning, prediction validation, or learning.
+- Agency exists as a proposal layer only. It is not yet integrated into the
+  main cognitive cycle.
+- Goals can be created explicitly, but learning/reflection goal candidates are
+  not yet promoted into persistent goals.
+- Plans persist, but execution outcomes are not yet attached as episodic
+  memories.
 - Learning records are advisory only. They do not yet promote semantic memory,
   update confidence, or create goals.
 - Knowledge consolidation exists, but confidence evolution is still proposal
@@ -377,7 +427,8 @@ Important local paths:
 
 Extend the cognitive cycle:
 
-1. Add explicit goal records and goal relevance scoring.
+1. Promote learning goal candidates into explicit goals through a bounded review
+   path.
 2. Feed goals into working memory, attention scoring, and simulation.
 3. Evaluate predictions and simulated expectations against future observations.
-4. Use prediction success/failure to propose confidence changes.
+4. Use prediction success/failure to propose confidence and priority changes.

@@ -23,6 +23,7 @@ from knowledge import (
 from learning.region import LearningStore
 from memory.persistent import MemoryStore
 from memory.relationships import RelationshipStore
+from orchestration.agency import AgencyRegion, GoalStore, PlanStore, PlanningEngine
 from orchestration.cycle import CognitiveCycle
 from orchestration.loop.cognitive_loop import CognitiveLoop
 from orchestration.self_model import SelfModelRegion
@@ -154,6 +155,16 @@ def main() -> int:
         help="Path to Delta's append-only prediction store.",
     )
     parser.add_argument(
+        "--goal-path",
+        default=str(ROOT / "data" / "agency" / "goals.jsonl"),
+        help="Path to Delta's append-only goal store.",
+    )
+    parser.add_argument(
+        "--plan-path",
+        default=str(ROOT / "data" / "agency" / "plans.jsonl"),
+        help="Path to Delta's append-only plan store.",
+    )
+    parser.add_argument(
         "--remember",
         help="Store an explicit memory record and exit.",
     )
@@ -198,6 +209,25 @@ def main() -> int:
         help="Evaluate a hypothetical future. Repeat to compare multiple options.",
     )
     parser.add_argument(
+        "--create-goal",
+        help="Create a persistent goal record and exit.",
+    )
+    parser.add_argument(
+        "--list-goals",
+        action="store_true",
+        help="List active persistent goals.",
+    )
+    parser.add_argument(
+        "--plan-goals",
+        action="store_true",
+        help="Create proposed non-executing plans for prioritized active goals.",
+    )
+    parser.add_argument(
+        "--agency-report",
+        action="store_true",
+        help="Generate an agency proposal without executing it.",
+    )
+    parser.add_argument(
         "--cycle",
         action="store_true",
         help="Run one explicit observe-interpret-store-reflect cognitive cycle.",
@@ -215,6 +245,8 @@ def main() -> int:
     knowledge = SemanticKnowledgeStore(args.knowledge_path)
     contradictions = ContradictionEngine(args.contradiction_path)
     predictions = PredictionEngine(args.prediction_path)
+    goals = GoalStore(args.goal_path)
+    plans = PlanStore(args.plan_path)
 
     if args.remember:
         record = memory.add(
@@ -224,6 +256,35 @@ def main() -> int:
             tags=("operator",),
         )
         print(f"remembered: {record.memory_id}")
+        return 0
+
+    if args.create_goal:
+        record = goals.create(
+            description=args.create_goal,
+            priority=0.65,
+            urgency=0.5,
+            expected_value=0.65,
+            estimated_effort=0.5,
+            confidence=0.6,
+        )
+        print(f"goal_created: {record.goal_id}")
+        return 0
+
+    if args.list_goals:
+        records = goals.active()
+        if not records:
+            print("no active goals")
+            return 0
+        for record in sorted(
+            records,
+            key=lambda candidate: candidate.action_pressure,
+            reverse=True,
+        )[:10]:
+            print(f"{record.goal_id} pressure={record.action_pressure:.3f}")
+            print("description:", record.description)
+            print("origin:", record.origin)
+            print("progress:", record.progress)
+            print()
         return 0
 
     if args.recall_memory:
@@ -318,7 +379,7 @@ def main() -> int:
             print(f"- {observation['kind']}: {observation['summary']}")
         return 0
 
-    if args.simulate_option:
+    if args.simulate_option and not args.plan_goals and not args.agency_report:
         report = SimulationRegion().simulate(
             options=args.simulate_option,
             semantic_knowledge=knowledge.latest(),
@@ -338,6 +399,70 @@ def main() -> int:
             print("expected_outcome:", outcome.expected_outcome)
             print("confidence:", outcome.confidence)
             print("risk:", outcome.risk)
+        return 0
+
+    if args.plan_goals or args.agency_report:
+        snapshot = SelfModelRegion(
+            memory_store=memory,
+            relationship_store=relationships,
+            learning_store=learning,
+            semantic_store=knowledge,
+            contradiction_engine=contradictions,
+            prediction_engine=predictions,
+        ).generate()
+        active_goals = goals.active()
+        option_texts = (
+            args.simulate_option
+            or [f"pursue goal: {goal.description}" for goal in active_goals[:3]]
+            or [
+                f"investigate: {observation['summary']}"
+                for observation in snapshot.self_observations[:3]
+            ]
+        )
+        simulation = SimulationRegion().simulate(
+            options=option_texts,
+            semantic_knowledge=knowledge.latest(),
+            relationships=relationships.all(),
+            predictions=predictions.all(),
+            goals=[goal.description for goal in active_goals],
+        )
+
+        if args.plan_goals:
+            planner = PlanningEngine()
+            records = [
+                plans.add(planner.build_plan(goal=goal, simulation=simulation))
+                for goal in active_goals[:3]
+            ]
+            if args.json:
+                print(json.dumps(_to_jsonable(records), indent=2, sort_keys=True))
+                return 0
+            print("\nDELTA PLANS")
+            if not records:
+                print("no active goals to plan")
+                return 0
+            for record in records:
+                print(f"{record.plan_id} goal={record.goal_id}")
+                print("strategy:", record.strategy)
+                print("expected_benefit:", record.expected_benefit)
+                print("expected_risk:", record.expected_risk)
+                print("uncertainty:", record.uncertainty)
+                print()
+            return 0
+
+        proposal = AgencyRegion().propose(
+            goals=active_goals,
+            simulation=simulation,
+            self_model=snapshot.to_dict(),
+        )
+        if args.json:
+            print(json.dumps(_to_jsonable(proposal), indent=2, sort_keys=True))
+            return 0
+        print("\nDELTA AGENCY")
+        print("proposed_action:", proposal.proposed_action)
+        print("goal_id:", proposal.goal_id)
+        print("plan_id:", proposal.plan_id)
+        print("rationale:", proposal.rationale)
+        print("execution_authority:", proposal.metadata["execution_authority"])
         return 0
 
     prompt = " ".join(args.prompt).strip()
