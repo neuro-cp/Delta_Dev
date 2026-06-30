@@ -57,6 +57,10 @@ class SemanticConsolidationEngine:
                 if not text.strip():
                     continue
 
+                equivalent = self._semantic_store.find_equivalent(text)
+                if equivalent is not None:
+                    continue
+
                 related = self._semantic_store.find_related(text, threshold=0.65)
                 now = datetime.now(timezone.utc).isoformat()
                 record = SemanticKnowledgeRecord(

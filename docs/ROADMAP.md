@@ -70,6 +70,13 @@ Memory is the substrate. The loop is the organism.
   - explicit decision records
   - agency proposals
 - Added `docs/COGNITIVE_GAP_ANALYSIS.md`.
+- Added Phase 8 grounding/runtime foundations:
+  - curated bootstrap knowledge
+  - idempotent bootstrap loader
+  - bounded runtime ticks
+  - first Delta Console inspection surface
+  - first runtime and postmortem reports
+- Added initial consolidation governance and prediction validation.
 
 ## Phase 1: Stabilize Architecture
 
@@ -135,14 +142,23 @@ Memory is the substrate. The loop is the organism.
 - Begin adaptive prioritization from repeated success, repeated failure,
   uncertainty, and contradiction pressure.
 
+## Phase 8: Grounding And First Runtime
+
+- Seed foundational semantic concepts with provenance.
+- Run bounded runtime ticks, not a permanent daemon.
+- Keep interfaces as clients of the substrate, not the substrate itself.
+- Observe runtime behavior through reports and the Delta Console.
+- Stabilize knowledge evolution before longer runtimes.
+- Prevent repeated runtime ticks from flooding semantic knowledge, predictions,
+  or contradictions.
+
 ## Next Recommended Task
 
-Build adaptive goal integration:
+Continue governance and validation:
 
-1. Promote learning goal candidates into explicit goals through a bounded review
-   path.
-2. Feed active goals into working memory, attention scoring, and simulation.
-3. Add prediction/simulation outcome evaluation against later observations.
-4. Use repeated success/failure to adjust goal priority and plan confidence.
-5. Start a cognitive timeline for major learning, goal, prediction, and
-   reflection events.
+1. Replace token-overlap prediction validation with evidence-aware validation.
+2. Add provenance-preserving confidence revision records for semantic knowledge.
+3. Add goal progress feedback from runtime outcomes.
+4. Add relationship strengthening between repeated runtime observations.
+5. Design Global Workspace as a tick-local integration surface before deeper
+   runtime coupling.

@@ -16,6 +16,10 @@
 - Non-executing simulation over hypothetical futures.
 - First agency slice: persistent goals, executive prioritization, proposed
   plans, explicit decisions, and agency proposals.
+- Curated bootstrap knowledge and idempotent bootstrap loading.
+- Bounded runtime ticks with runtime event logging.
+- First read-only Delta Console inspection surface.
+- Initial consolidation governance and append-only prediction validation.
 
 ## Remaining Placeholders
 
@@ -23,14 +27,14 @@
 - Planning is a proposed-plan layer only; it is not connected to executed
   outcomes.
 - Agency is not yet part of the main cognitive cycle.
-- Prediction validation against later observations is not implemented.
+- Prediction validation exists only as a shallow token-overlap pass.
 - Confidence evolution is still proposal-based.
 - Attention does not yet use goal relevance, novelty, contradiction pressure, or
   nervous-system signals.
 - Episodic memory exists elsewhere in the repository but is not yet integrated
   into the canonical Delta cycle.
-- Continuous runtime scheduling, idle reflection, and background consolidation
-  are not implemented.
+- Bounded runtime scheduling exists, but idle reflection and production
+  background consolidation are not implemented.
 
 ## Missing Interactions
 
@@ -43,10 +47,12 @@
 - Plan outcomes should become episodic memories.
 - Self-model health warnings should influence intrinsic goal priority.
 - Contradiction pressure should increase investigation priority.
+- Prediction validation should become evidence-aware rather than token-overlap
+  based.
 
 ## Continuous Operation Blockers
 
-- No scheduler or daemon exists for repeated observe/reflect/consolidate cycles.
+- A bounded runtime scheduler exists, but no production daemon exists.
 - No bounded execution adapter is connected to agency proposals.
 - No event timeline tracks major learning, goal, prediction, and reflection
   events.
@@ -61,17 +67,14 @@
   failures.
 - Knowledge, goals, planning, and agency are not yet integrated into a single
   cycle-level context object.
-- There is no canonical outcome evaluator for predictions, simulations, plans,
-  or decisions.
+- Prediction outcome evaluation exists only as a primitive first pass; there is
+  no canonical evaluator for simulations, plans, or decisions.
 
 ## Highest-Leverage Next Improvements
 
-1. Promote learning/reflection goal candidates into persistent goals through a
-   bounded, inspectable path.
-2. Feed active goals into working memory, attention, simulation, and agency
-   scoring.
-3. Add prediction and simulation outcome evaluation against later observations.
-4. Add a cognitive timeline for learning events, knowledge revisions, goal
-   changes, prediction failures, and important reflections.
-5. Move CLI assembly logic into reusable orchestration services so the CLI
-   remains an inspection surface instead of becoming the application core.
+1. Replace token-overlap prediction validation with evidence-aware validation.
+2. Add provenance-preserving confidence revision records for semantic knowledge.
+3. Add goal progress feedback from runtime outcomes.
+4. Add relationship strengthening between repeated runtime observations.
+5. Design Global Workspace as a tick-local integration surface before deeper
+   runtime coupling.

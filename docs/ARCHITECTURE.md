@@ -109,6 +109,17 @@ Every subsystem should:
 - avoid direct hidden mutation of other regions
 - return structured outputs where possible
 
+## Interface Surface Principle
+
+Delta may expose many interfaces over time: conversation, coding, automation,
+robotics, dashboards, APIs, and future embodied inputs.
+
+These interfaces are clients of the substrate. They are not the substrate
+itself.
+
+Never optimize the architecture around a single interface. Conversation is one
+possible surface over Delta's cognition, not the organizing principle of Delta.
+
 ## Attention Principle
 
 Attention is not retrieval.

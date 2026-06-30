@@ -63,6 +63,34 @@ class SemanticKnowledgeStore:
                 matches.append(record)
         return matches
 
+    def find_equivalent(
+        self,
+        text: str,
+        *,
+        threshold: float = 0.82,
+    ) -> SemanticKnowledgeRecord | None:
+        query_tokens = self._tokens(text)
+        normalized = self._normalize(text)
+        if not query_tokens:
+            return None
+
+        for record in self.latest():
+            candidate_text = record.concept + " " + record.definition
+            if normalized == self._normalize(record.definition):
+                return record
+            record_tokens = self._tokens(candidate_text)
+            if not record_tokens:
+                continue
+            overlap = len(query_tokens & record_tokens)
+            union = len(query_tokens | record_tokens)
+            if union and (overlap / union) >= threshold:
+                return record
+        return None
+
     @staticmethod
     def _tokens(text: str) -> set[str]:
         return set(re.findall(r"[a-z0-9_]+", str(text).lower()))
+
+    @staticmethod
+    def _normalize(text: str) -> str:
+        return " ".join(sorted(SemanticKnowledgeStore._tokens(text)))

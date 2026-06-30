@@ -27,6 +27,10 @@ It now adds the first non-executing Simulation Region for comparing
 hypothetical futures.
 It now adds the first Agency slice: persistent goals, executive prioritization,
 non-executing plans, explicit decisions, and agency proposals.
+It now adds Phase 8 grounding and runtime foundations: curated bootstrap
+knowledge, a bounded runtime tick loop, first console foundations, first-life
+runtime reporting, historical concept review, and first consolidation
+governance after observing runaway amplification.
 
 ### Architectural Decisions
 
@@ -81,6 +85,18 @@ non-executing plans, explicit decisions, and agency proposals.
   decisions are inspectable recommendations only.
 - Executive control prioritizes cognitive work. It does not replace attention,
   planning, simulation, or execution.
+- Delta may expose conversation, coding, automation, robotics, dashboards,
+  APIs, or future embodied inputs. These are clients of the substrate, not the
+  substrate itself. The architecture must not optimize around one interface.
+- Bootstrap knowledge is curated and idempotent. It seeds only foundational
+  primitives with explicit provenance.
+- Runtime execution is bounded by ticks or operator interruption. Delta does not
+  run as a permanent daemon by default.
+- Consolidation now suppresses near-duplicate semantic promotions.
+- Prediction generation now suppresses near-duplicate expectations.
+- Prediction validation is append-only and currently shallow. It can mark
+  predictions as supported from token-overlap observations, but this is not deep
+  semantic validation.
 - `docs/UPDATE.md` is the canonical handoff log. `docs/ROADMAP.md` is the
   canonical planning file. `docs/ARCHITECTURE.md` is the canonical architecture
   constitution.
@@ -119,6 +135,19 @@ non-executing plans, explicit decisions, and agency proposals.
 - `memory/working_memory/active_context.py`
 - `orchestration/self_model/__init__.py`
 - `orchestration/self_model/self_model.py`
+- `knowledge/bootstrap.py`
+- `orchestration/runtime/__init__.py`
+- `orchestration/runtime/cognitive_runtime.py`
+- `orchestration/tests/runtime/__init__.py`
+- `orchestration/tests/runtime/test_bootstrap_runtime.py`
+- `tools/delta_console.py`
+- `tools/runtime_report.py`
+- `docs/BOOTSTRAP_KNOWLEDGE.md`
+- `docs/FIRST_RUNTIME_REPORT.md`
+- `docs/FIRST_LIFE_POSTMORTEM.md`
+- `docs/HISTORICAL_CONCEPT_REVIEW.md`
+- `docs/GOVERNANCE_RUNTIME_REPORT.md`
+- `docs/COGNITIVE_GAP_ANALYSIS.md`
 - `orchestration/simulation/__init__.py`
 - `orchestration/simulation/simulation_region.py`
 - `orchestration/tests/self_model/test_self_model.py`
@@ -196,6 +225,15 @@ behavior. It adds durable goals, proposed plans, decision scoring, and executive
 prioritization while preserving the boundary that nothing executes
 automatically.
 
+The Phase 8 runtime slice grounds Delta with a small curated concept set and
+tests whether the cognitive cycle can run continuously without pretending to be
+intelligent. The first-life run stayed stable but exposed a real architectural
+problem: consolidation and prediction amplified faster than validation,
+confidence revision, and goal feedback could correct them. The follow-up
+governance pass suppresses duplicate semantic promotion and duplicate
+prediction generation, then validates a short five-tick run with controlled
+semantic growth.
+
 ### Validation
 
 Run:
@@ -220,6 +258,10 @@ Run:
 .\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --list-goals
 .\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --plan-path .tmp\agency_plans.jsonl --plan-goals --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --agency-report --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --bootstrap-knowledge
+.\.venv311\Scripts\python.exe tools\delta_cli.py --runtime-ticks 5 --runtime-interval 1 --model mock
+.\.venv311\Scripts\python.exe tools\delta_cli.py --write-runtime-report
+.\.venv311\Scripts\python.exe tools\delta_console.py --port 8765
 .\.venv311\Scripts\python.exe -m pytest orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
@@ -243,6 +285,13 @@ Expected status:
 - goal creation and goal listing work through explicit CLI commands
 - planning creates proposed non-executing plans
 - agency report proposes a next action without execution authority
+- bootstrap seeding is idempotent
+- bounded runtime executes the requested number of ticks
+- runtime events are written for inspection
+- console state endpoint renders current cognitive stores
+- duplicate semantic consolidation is suppressed
+- duplicate prediction generation is suppressed
+- shallow prediction validation can append supported prediction revisions
 - targeted orchestration tests pass
 
 Latest observed cycle validation:
@@ -316,6 +365,37 @@ Latest agency validation:
 - result: created a persistent temporary goal, produced a proposed plan, and
   generated an agency proposal with `execution_authority=false`
 
+Latest first-life runtime:
+
+- report: `docs/FIRST_RUNTIME_REPORT.md`
+- ticks: `20`
+- result: runtime remained stable, but consolidation/prediction/contradiction
+  amplification was observed
+- postmortem: `docs/FIRST_LIFE_POSTMORTEM.md`
+- recommended correction: add consolidation governance, prediction validation,
+  confidence revision, goal feedback, and Global Workspace design
+
+Latest governance validation:
+
+- report: `docs/GOVERNANCE_RUNTIME_REPORT.md`
+- bootstrap result: `16` semantic concepts, `16` predictions, `4` goals
+- runtime result: `5` requested ticks and `5` completed ticks
+- semantic growth: `1` new semantic record on tick 1, `0` on ticks 2 through 5
+- latest prediction state: `17` predictions, `0` open predictions after shallow
+  validation
+- warning: validation is token-overlap based and should not be treated as
+  robust predictive cognition
+
+Latest targeted tests:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_bootstrap_runtime.py orchestration\tests\agency\test_agency_region.py orchestration\tests\self_model\test_self_model.py orchestration\tests\simulation\test_simulation_region.py orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py`
+- result: `16 passed`
+
+Latest compile check:
+
+- command: `.\.venv311\Scripts\python.exe -m py_compile knowledge\semantic_store.py knowledge\prediction_engine.py knowledge\consolidation_engine.py orchestration\runtime\cognitive_runtime.py tools\delta_cli.py`
+- result: passed
+
 ### Cold-Session Resume Instructions
 
 1. Read `docs/ARCHITECTURE.md`.
@@ -339,9 +419,11 @@ git status --short --branch
 .\.venv311\Scripts\python.exe tools\delta_cli.py --simulate-option "run knowledge consolidation" --simulate-option "skip knowledge consolidation" --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --create-goal "Improve prediction accuracy"
 .\.venv311\Scripts\python.exe tools\delta_cli.py --goal-path .tmp\agency_goals.jsonl --agency-report --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --bootstrap-knowledge
+.\.venv311\Scripts\python.exe tools\delta_cli.py --runtime-ticks 5 --runtime-interval 1 --model mock
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-learning
 .\.venv311\Scripts\python.exe tools\delta_cli.py --consolidate-knowledge
-.\.venv311\Scripts\python.exe -m pytest orchestration\tests\agency\test_agency_region.py orchestration\tests\self_model\test_self_model.py orchestration\tests\simulation\test_simulation_region.py orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
+.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_bootstrap_runtime.py orchestration\tests\agency\test_agency_region.py orchestration\tests\self_model\test_self_model.py orchestration\tests\simulation\test_simulation_region.py orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
 6. Continue with the recommended next task unless the user redirects.
@@ -363,6 +445,14 @@ Current functional entrypoints:
 - `tools/delta_cli.py --list-goals` for active goal inspection.
 - `tools/delta_cli.py --plan-goals` for proposed non-executing plan creation.
 - `tools/delta_cli.py --agency-report` for proposed next-action inspection.
+- `tools/delta_cli.py --bootstrap-knowledge` for idempotent foundational
+  semantic seeding.
+- `tools/delta_cli.py --runtime-ticks N` for bounded cognitive runtime ticks.
+- `tools/delta_cli.py --runtime-until-interrupted` for operator-bounded runtime
+  operation.
+- `tools/delta_cli.py --write-runtime-report` for first-runtime report
+  generation.
+- `tools/delta_console.py --port 8765` for the read-only cognitive observatory.
 
 Important local paths:
 
@@ -374,6 +464,7 @@ Important local paths:
 - prediction data: `data/knowledge/predictions.jsonl`
 - goal data: `data/agency/goals.jsonl`
 - plan data: `data/agency/plans.jsonl`
+- runtime event data: `data/runtime/events.jsonl`
 - local models: `C:\Users\Admin\Desktop\models`
 - external legacy backup: `C:\Users\Admin\Desktop\delta backup`
 
@@ -415,7 +506,12 @@ Important local paths:
 - Knowledge consolidation exists, but confidence evolution is still proposal
   based. Semantic confidence is not yet revised from prediction success/failure.
 - Prediction generation exists, but prediction evaluation against future
-  observations is not implemented.
+  observations is only shallow token-overlap validation.
+- The first-life run exposed consolidation/prediction/contradiction
+  amplification. Do not run longer unattended runtimes until governance,
+  validation, confidence revision, and goal feedback improve.
+- Global Workspace is identified as missing. Working Memory is close, but there
+  is no tick-local publish/subscribe integration surface for all regions yet.
 - The current CLI mock router is intentionally simple and not a reasoning
   engine.
 - Local GGUF inference works, but CPU-only execution is slow. A one-model Phi-3
@@ -425,10 +521,11 @@ Important local paths:
 
 ### Recommended Next Task
 
-Extend the cognitive cycle:
+Continue governance and validation:
 
-1. Promote learning goal candidates into explicit goals through a bounded review
-   path.
-2. Feed goals into working memory, attention scoring, and simulation.
-3. Evaluate predictions and simulated expectations against future observations.
-4. Use prediction success/failure to propose confidence and priority changes.
+1. Replace token-overlap prediction validation with evidence-aware validation.
+2. Add provenance-preserving confidence revision records for semantic knowledge.
+3. Add goal progress feedback from runtime outcomes.
+4. Add relationship strengthening between repeated runtime observations.
+5. Design Global Workspace as a tick-local integration surface before deeper
+   runtime coupling.

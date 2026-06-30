@@ -149,7 +149,7 @@ class SelfModelRegion:
         learning = self._learning_store.all()
         knowledge = self._semantic_store.latest()
         contradictions = self._contradiction_engine.all()
-        predictions = self._prediction_engine.all()
+        predictions = self._prediction_engine.latest()
 
         metrics = self._metrics(
             now=now,
@@ -191,12 +191,15 @@ class SelfModelRegion:
                 "emit structured reflection and learning records",
                 "consolidate semantic knowledge from learning records",
                 "generate predictions from confident semantic knowledge",
+                "validate predictions through append-only evidence records",
+                "track explicit goals, proposed plans, and agency proposals",
+                "run bounded cognitive runtime ticks",
                 "generate self-model metrics from existing regions",
             ],
             limitations=[
-                "goals are not yet implemented",
-                "planning is not yet implemented",
-                "prediction evaluation is not yet implemented",
+                "goal progress feedback is not yet implemented",
+                "planning is proposal-only and non-executing",
+                "prediction evaluation is shallow token-overlap validation",
                 "confidence evolution is proposal-based only",
                 "attention has no durable decay model yet",
                 "self-model is generated on demand, not continuously scheduled",
@@ -256,12 +259,12 @@ class SelfModelRegion:
         evaluated_predictions = [
             prediction
             for prediction in predictions
-            if prediction.status in {"succeeded", "failed"}
+            if prediction.status in {"supported", "succeeded", "failed"}
         ]
         succeeded_predictions = [
             prediction
             for prediction in evaluated_predictions
-            if prediction.status == "succeeded"
+            if prediction.status in {"supported", "succeeded"}
         ]
         temporal = self._temporal_summary(now, memories, learning)
 
@@ -362,8 +365,8 @@ class SelfModelRegion:
             "contradictions": {
                 "status": "pressurized" if contradiction_count else "clear"
             },
-            "goals": {"status": "not_implemented"},
-            "planning": {"status": "not_implemented"},
+            "goals": {"status": "proposal_layer"},
+            "planning": {"status": "proposal_layer"},
         }
 
     @staticmethod

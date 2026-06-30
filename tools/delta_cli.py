@@ -20,12 +20,14 @@ from knowledge import (
     SemanticConsolidationEngine,
     SemanticKnowledgeStore,
 )
+from knowledge.bootstrap import KnowledgeBootstrapper
 from learning.region import LearningStore
 from memory.persistent import MemoryStore
 from memory.relationships import RelationshipStore
 from orchestration.agency import AgencyRegion, GoalStore, PlanStore, PlanningEngine
 from orchestration.cycle import CognitiveCycle
 from orchestration.loop.cognitive_loop import CognitiveLoop
+from orchestration.runtime import CognitiveRuntime
 from orchestration.self_model import SelfModelRegion
 from orchestration.simulation import SimulationRegion
 
@@ -165,6 +167,11 @@ def main() -> int:
         help="Path to Delta's append-only plan store.",
     )
     parser.add_argument(
+        "--runtime-event-path",
+        default=str(ROOT / "data" / "runtime" / "events.jsonl"),
+        help="Path to Delta's append-only runtime event log.",
+    )
+    parser.add_argument(
         "--remember",
         help="Store an explicit memory record and exit.",
     )
@@ -228,6 +235,38 @@ def main() -> int:
         help="Generate an agency proposal without executing it.",
     )
     parser.add_argument(
+        "--bootstrap-knowledge",
+        action="store_true",
+        help="Seed foundational semantic knowledge idempotently.",
+    )
+    parser.add_argument(
+        "--runtime-ticks",
+        type=int,
+        help="Run a bounded cognitive runtime for N ticks.",
+    )
+    parser.add_argument(
+        "--runtime-duration",
+        type=int,
+        default=0,
+        help="Run the bounded cognitive runtime for this many seconds.",
+    )
+    parser.add_argument(
+        "--runtime-interval",
+        type=int,
+        default=30,
+        help="Seconds between runtime ticks.",
+    )
+    parser.add_argument(
+        "--runtime-until-interrupted",
+        action="store_true",
+        help="Run bounded runtime ticks until interrupted.",
+    )
+    parser.add_argument(
+        "--write-runtime-report",
+        action="store_true",
+        help="Write docs/FIRST_RUNTIME_REPORT.md after runtime execution.",
+    )
+    parser.add_argument(
         "--cycle",
         action="store_true",
         help="Run one explicit observe-interpret-store-reflect cognitive cycle.",
@@ -247,6 +286,88 @@ def main() -> int:
     predictions = PredictionEngine(args.prediction_path)
     goals = GoalStore(args.goal_path)
     plans = PlanStore(args.plan_path)
+
+    if args.bootstrap_knowledge:
+        result = KnowledgeBootstrapper(
+            semantic_store=knowledge,
+            memory_store=memory,
+            goal_store=goals,
+            prediction_engine=predictions,
+        ).seed()
+        print("semantic_created:", len(result["semantic_created"]))
+        print("predictions_created:", len(result["predictions_created"]))
+        print("goals_created:", len(result["goals_created"]))
+        return 0
+
+    if (
+        args.runtime_ticks is not None
+        or args.runtime_duration
+        or args.runtime_until_interrupted
+    ):
+        runtime = CognitiveRuntime(
+            loop=build_loop(
+                args.model,
+                enable_recall=args.recall,
+                enable_replay_prompt=args.replay_prompt,
+            ),
+            memory_store=memory,
+            relationship_store=relationships,
+            learning_store=learning,
+            semantic_store=knowledge,
+            contradiction_engine=contradictions,
+            prediction_engine=predictions,
+            goal_store=goals,
+            event_path=args.runtime_event_path,
+        )
+        if args.runtime_until_interrupted:
+            tick_index = 0
+            try:
+                while True:
+                    tick_index += 1
+                    result = runtime.tick(tick_index=tick_index)
+                    print(
+                        f"tick={tick_index} cycle={result.cycle_id} "
+                        f"semantic_created={result.consolidation['semantic_created']}"
+                    )
+                    import time
+
+                    time.sleep(max(1, int(args.runtime_interval)))
+            except KeyboardInterrupt:
+                print("runtime interrupted")
+                return 0
+
+        duration = int(args.runtime_duration or 0)
+        max_ticks = args.runtime_ticks
+        if max_ticks is not None and max_ticks <= 0:
+            max_ticks = None
+        results = runtime.run(
+            duration_seconds=duration,
+            interval_seconds=max(1, int(args.runtime_interval)),
+            max_ticks=max_ticks,
+        )
+        for index, result in enumerate(results, start=1):
+            print(
+                f"tick={index} cycle={result.cycle_id} "
+                f"semantic_created={result.consolidation['semantic_created']} "
+                f"agency={result.agency.get('proposed_action')}"
+            )
+        if args.write_runtime_report:
+            from tools.runtime_report import write_first_runtime_report
+
+            path = write_first_runtime_report(
+                root=ROOT,
+                memory=memory,
+                relationships=relationships,
+                learning=learning,
+                knowledge=knowledge,
+                contradictions=contradictions,
+                predictions=predictions,
+                goals=goals,
+                plans=plans,
+                event_path=args.runtime_event_path,
+            )
+            print("runtime_report:", path)
+        return 0
 
     if args.remember:
         record = memory.add(
