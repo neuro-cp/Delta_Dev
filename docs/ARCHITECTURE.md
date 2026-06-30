@@ -89,6 +89,10 @@ analogies.
 - Execution Region: performs bounded actions through explicit authorization.
 - Reflection Region: evaluates what changed, repeated, failed, or should be
   consolidated.
+- Self Model Region: derives Delta's current capabilities, limitations,
+  metrics, health, and temporal continuity from existing regions.
+- Simulation Region: evaluates hypothetical futures without executing,
+  planning, or mutating state.
 
 ## Interface Principles
 
@@ -144,6 +148,9 @@ Implemented early:
 - prediction records generated from sufficiently confident knowledge
 - per-cycle working memory context assembled from observation, attention,
   semantic knowledge, and predictions
+- generated self-model snapshots with temporal continuity, cognitive metrics,
+  and health indicators
+- non-executing simulation reports over hypothetical futures
 
 Incomplete:
 
@@ -153,6 +160,8 @@ Incomplete:
 - applied confidence evolution
 - prediction validation
 - durable attention state
+- scheduled consolidation
+- simulation feedback into prediction evaluation and planning
 - live visual and auditory input
 - regulable nervous-system signals
 
@@ -170,6 +179,43 @@ Current working memory inputs:
 
 Working memory is advisory context. It does not persist as truth and has no
 execution authority.
+
+## Self Model
+
+The Self Model is a derived region, not an authoritative region. It must not
+become another persistent database of facts.
+
+Every Self Model field should be computed from existing regions whenever
+possible. If information already exists elsewhere, the Self Model should
+reference or summarize it rather than duplicate it.
+
+Current Self Model outputs:
+
+- current capabilities and limitations
+- knowledge coverage
+- confidence distribution
+- prediction status and accuracy when outcomes exist
+- contradiction pressure
+- recent learning
+- temporal continuity across today, the last seven days, and full history
+- subsystem health
+- cognitive health indicators
+- structured self-observations generated from metrics
+
+Self-observations are generated report outputs. They are not semantic knowledge
+and have no execution authority.
+
+## Simulation
+
+Simulation is not execution and is not planning.
+
+The Simulation Region evaluates hypothetical futures using working memory,
+semantic knowledge, relationships, predictions, and goals when available. It
+returns hypothetical outcomes, confidence estimates, risks, supporting evidence
+references, and rationale.
+
+Planning may eventually consume simulation reports. Simulation itself must not
+choose actions, mutate state, or bypass the cognitive cycle.
 
 ## Knowledge Layer
 

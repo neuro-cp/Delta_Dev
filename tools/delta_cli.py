@@ -25,6 +25,8 @@ from memory.persistent import MemoryStore
 from memory.relationships import RelationshipStore
 from orchestration.cycle import CognitiveCycle
 from orchestration.loop.cognitive_loop import CognitiveLoop
+from orchestration.self_model import SelfModelRegion
+from orchestration.simulation import SimulationRegion
 
 
 class MockModelRouter:
@@ -185,6 +187,17 @@ def main() -> int:
         help="List generated open prediction records.",
     )
     parser.add_argument(
+        "--self-model",
+        action="store_true",
+        help="Generate Delta's current self-model and cognitive health report.",
+    )
+    parser.add_argument(
+        "--simulate-option",
+        action="append",
+        default=[],
+        help="Evaluate a hypothetical future. Repeat to compare multiple options.",
+    )
+    parser.add_argument(
         "--cycle",
         action="store_true",
         help="Run one explicit observe-interpret-store-reflect cognitive cycle.",
@@ -274,6 +287,57 @@ def main() -> int:
             print("source:", record.source_concept_id)
             print(record.expectation)
             print()
+        return 0
+
+    if args.self_model:
+        snapshot = SelfModelRegion(
+            memory_store=memory,
+            relationship_store=relationships,
+            learning_store=learning,
+            semantic_store=knowledge,
+            contradiction_engine=contradictions,
+            prediction_engine=predictions,
+        ).generate()
+        if args.json:
+            payload = _to_jsonable(snapshot)
+            print(json.dumps(payload, indent=2, sort_keys=True))
+            return 0
+
+        print("\nDELTA SELF MODEL")
+        print("generated_at:", snapshot.generated_at)
+        print("identity:", snapshot.identity["type"])
+        print("experiences:", snapshot.metrics["experience_count"])
+        print("semantic_knowledge:", snapshot.metrics["semantic_knowledge_count"])
+        print("relationships:", snapshot.metrics["relationship_count"])
+        print("contradictions:", snapshot.metrics["contradiction_count"])
+        print("open_predictions:", snapshot.metrics["open_prediction_count"])
+        print("learning_records:", snapshot.metrics["learning_record_count"])
+        print("cognitive_health:", snapshot.cognitive_health)
+        print("self_observations:")
+        for observation in snapshot.self_observations:
+            print(f"- {observation['kind']}: {observation['summary']}")
+        return 0
+
+    if args.simulate_option:
+        report = SimulationRegion().simulate(
+            options=args.simulate_option,
+            semantic_knowledge=knowledge.latest(),
+            relationships=relationships.all(),
+            predictions=predictions.all(),
+        )
+        if args.json:
+            print(json.dumps(_to_jsonable(report), indent=2, sort_keys=True))
+            return 0
+
+        print("\nDELTA SIMULATION")
+        print("simulation_id:", report.simulation_id)
+        print("basis:", report.selected_basis)
+        for outcome in report.outcomes:
+            print()
+            print("option:", outcome.option)
+            print("expected_outcome:", outcome.expected_outcome)
+            print("confidence:", outcome.confidence)
+            print("risk:", outcome.risk)
         return 0
 
     prompt = " ".join(args.prompt).strip()

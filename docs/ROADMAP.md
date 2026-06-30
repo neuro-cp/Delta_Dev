@@ -59,6 +59,10 @@ Memory is the substrate. The loop is the organism.
   - CLI knowledge inspection
 - Added per-cycle working memory context and forwarded it into orchestration as
   advisory active context.
+- Added a derived Self Model Region with temporal continuity, cognitive
+  metrics, subsystem health, and cognitive health reporting.
+- Added a first non-executing Simulation Region for comparing hypothetical
+  futures.
 
 ## Phase 1: Stabilize Architecture
 
@@ -102,11 +106,24 @@ Memory is the substrate. The loop is the organism.
 - Add repeatable setup and run commands.
 - Harden tests around canonical APIs and user-facing entrypoints.
 
+## Phase 6: Internal Simulation
+
+- Keep simulation non-executing and cycle-compatible.
+- Feed working memory, semantic knowledge, relationships, predictions, and
+  goals into simulation.
+- Produce hypothetical outcomes with confidence, risk, rationale, and evidence
+  references.
+- Feed simulation reports into planning only after planning has explicit
+  interfaces.
+- Compare later observations against simulated expectations for prediction
+  validation.
+
 ## Next Recommended Task
 
-Build goals and prediction evaluation:
+Build goals, prediction evaluation, and simulation feedback:
 
 1. Add explicit goal records and goal relevance scoring.
 2. Feed goals into working memory and attention scoring.
-3. Evaluate predictions against later observations.
-4. Use prediction success/failure to propose confidence changes.
+3. Feed goals into simulation reports.
+4. Evaluate predictions and simulated expectations against later observations.
+5. Use prediction success/failure to propose confidence changes.

@@ -21,6 +21,10 @@ It now adds the first Knowledge Layer: explicit semantic consolidation,
 contradiction records, and prediction records.
 It now adds canonical per-cycle Working Memory and forwards it into
 orchestration/model prompts as advisory active context.
+It now adds a derived Self Model Region with temporal continuity, cognitive
+metrics, subsystem health, and cognitive health reporting.
+It now adds the first non-executing Simulation Region for comparing
+hypothetical futures.
 
 ### Architectural Decisions
 
@@ -64,6 +68,12 @@ orchestration/model prompts as advisory active context.
 - Working Memory is assembled per cycle from observation, attended experience,
   semantic knowledge, and open predictions.
 - Reflection inspects working memory before it disappears.
+- The Self Model is derived and non-authoritative. It computes from existing
+  regions and must not become a duplicate source of truth.
+- Self-observations are structured report outputs, not semantic knowledge.
+- Simulation is non-executing. It can estimate hypothetical outcomes,
+  confidence, risk, and supporting evidence, but it cannot choose actions or
+  mutate state.
 - `docs/UPDATE.md` is the canonical handoff log. `docs/ROADMAP.md` is the
   canonical planning file. `docs/ARCHITECTURE.md` is the canonical architecture
   constitution.
@@ -100,6 +110,12 @@ orchestration/model prompts as advisory active context.
 - `knowledge/semantic_record.py`
 - `knowledge/semantic_store.py`
 - `memory/working_memory/active_context.py`
+- `orchestration/self_model/__init__.py`
+- `orchestration/self_model/self_model.py`
+- `orchestration/simulation/__init__.py`
+- `orchestration/simulation/simulation_region.py`
+- `orchestration/tests/self_model/test_self_model.py`
+- `orchestration/tests/simulation/test_simulation_region.py`
 - `integration/model_runtime/prompt_builder.py`
 - `docs/ARCHITECTURE.md`
 - `docs/ROADMAP.md`
@@ -152,6 +168,14 @@ Working Memory now provides the cycle's temporary active context. It bridges
 attention, knowledge, prediction, interpretation, and reflection without
 becoming durable truth.
 
+The Self Model gives Delta introspection without adding authority. It derives
+metrics, temporal continuity, subsystem health, cognitive health, and
+self-observations from existing stores.
+
+The Simulation Region gives Delta the first mechanism for evaluating possible
+futures before planning exists. It is intentionally read-only and
+non-executing.
+
 ### Validation
 
 Run:
@@ -170,6 +194,8 @@ Run:
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-knowledge
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-predictions
 .\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --self-model --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --simulate-option "run knowledge consolidation" --simulate-option "skip knowledge consolidation" --json
 .\.venv311\Scripts\python.exe -m pytest orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
@@ -188,6 +214,8 @@ Expected status:
 - confident semantic records generate open predictions
 - working memory stage assembles active context
 - reflection receives working memory summary
+- self-model report derives metrics and health from existing stores
+- simulation report compares hypothetical futures without executing them
 - targeted orchestration tests pass
 
 Latest observed cycle validation:
@@ -239,6 +267,19 @@ Latest working-memory validation:
 - working memory included: observation plus attended experience
 - reflection metadata included working memory summary
 
+Latest self-model validation:
+
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py --self-model --json`
+- generated temporal continuity, subsystem health, cognitive health, confidence
+  distribution, and self-observations
+- observed warning: learning records exist but semantic knowledge is empty
+
+Latest simulation validation:
+
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py --simulate-option "run knowledge consolidation" --simulate-option "skip knowledge consolidation" --json`
+- generated two hypothetical outcomes
+- report marked simulation as non-executing
+
 ### Cold-Session Resume Instructions
 
 1. Read `docs/ARCHITECTURE.md`.
@@ -258,9 +299,11 @@ git status --short --branch
 .\.venv311\Scripts\python.exe tools\delta_cli.py "What is 8 + 2?" --model none --cycle --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta memory and attention" --model mock --cycle --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --self-model --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py --simulate-option "run knowledge consolidation" --simulate-option "skip knowledge consolidation" --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-learning
 .\.venv311\Scripts\python.exe tools\delta_cli.py --consolidate-knowledge
-.\.venv311\Scripts\python.exe -m pytest orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
+.\.venv311\Scripts\python.exe -m pytest orchestration\tests\self_model\test_self_model.py orchestration\tests\simulation\test_simulation_region.py orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
 6. Continue with the recommended next task unless the user redirects.
@@ -274,6 +317,10 @@ Current functional entrypoints:
 - `tools/delta_cli.py --remember` for explicit persistent memory writes.
 - `tools/delta_cli.py --recall-memory` for persistent memory recall.
 - `tools/delta_cli.py --list-models` for model discovery.
+- `tools/delta_cli.py --self-model` for derived self-model and cognitive
+  health inspection.
+- `tools/delta_cli.py --simulate-option` for non-executing hypothetical future
+  comparison.
 
 Important local paths:
 
@@ -309,6 +356,10 @@ Important local paths:
   payloads and assembled into per-cycle working memory, but it has no execution
   authority.
 - Working memory is per-cycle only. It is not yet connected to active goals.
+- Self Model is generated on demand. It is not scheduled into a continuous
+  runtime loop.
+- Simulation exists as an explicit non-executing region, but it is not yet fed
+  back into planning, prediction validation, or learning.
 - Learning records are advisory only. They do not yet promote semantic memory,
   update confidence, or create goals.
 - Knowledge consolidation exists, but confidence evolution is still proposal
@@ -327,6 +378,6 @@ Important local paths:
 Extend the cognitive cycle:
 
 1. Add explicit goal records and goal relevance scoring.
-2. Feed goals into working memory and attention scoring.
-3. Evaluate predictions against future observations.
+2. Feed goals into working memory, attention scoring, and simulation.
+3. Evaluate predictions and simulated expectations against future observations.
 4. Use prediction success/failure to propose confidence changes.
