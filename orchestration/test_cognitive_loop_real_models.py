@@ -11,11 +11,10 @@ def _ensure_env():
     max_models = os.getenv("DELTA_MAX_MODELS")
 
     if run_flag is None:
-        run_flag = input("set run real models (1 or 0): ").strip()
-        os.environ["RUN_REAL_MODELS"] = run_flag
+        pytest.skip("RUN_REAL_MODELS not enabled")
 
     if profile is None:
-        profile = input("set env (desktop or laptop ?): ").strip().lower()
+        profile = "desktop"
         os.environ["DELTA_MACHINE_PROFILE"] = profile
 
     if max_models is None:

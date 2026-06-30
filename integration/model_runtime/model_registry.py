@@ -173,3 +173,15 @@ def get_model_spec(model_name: str) -> ModelSpec:
 
 def list_models() -> Dict[str, ModelSpec]:
     return {name: get_model_spec(name) for name in MODEL_REGISTRY}
+
+
+def list_available_models() -> Dict[str, ModelSpec]:
+    available: Dict[str, ModelSpec] = {}
+
+    for name in MODEL_REGISTRY:
+        try:
+            available[name] = get_model_spec(name)
+        except ValueError:
+            continue
+
+    return available

@@ -44,6 +44,8 @@ class CognitiveLoop:
         learning_bundle_factory: Optional[
             Callable[[Any, str, float, str], Any]
         ] = None,
+        enable_recall: bool = True,
+        enable_replay_prompt: bool = True,
     ) -> None:
         # ---------------------------------
         # Core inquiry / routing stack
@@ -68,8 +70,10 @@ class CognitiveLoop:
         artifact_store = RuntimeArtifactStore()
 
         # PASS SAME STORE TO RECALL
-        self.recall_bridge = RecallBridge(
-            artifact_store=artifact_store
+        self.recall_bridge = (
+            RecallBridge(artifact_store=artifact_store)
+            if enable_recall
+            else None
         )
 
         # ---------------------------------
@@ -79,6 +83,7 @@ class CognitiveLoop:
         self._recall_registry = recall_registry
         self._replay_storage_pipeline_factory = replay_storage_pipeline_factory
         self._learning_bundle_factory = learning_bundle_factory
+        self._enable_replay_prompt = bool(enable_replay_prompt)
 
         self.replay_manager: Optional[ReplayManager] = None
         if self._replay_storage_pipeline_factory is not None:
@@ -223,6 +228,9 @@ class CognitiveLoop:
         """
         Ask whether to store the result as a replay trace and enqueue if approved.
         """
+        if not self._enable_replay_prompt:
+            return
+
         if not evaluated.success:
             return
 

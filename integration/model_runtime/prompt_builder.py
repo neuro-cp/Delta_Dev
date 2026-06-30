@@ -5,6 +5,7 @@ Prompt construction and test harness.
 """
 
 from typing import Dict, Any
+import json
 
 
 def build_input_payload(question: str) -> Dict[str, Any]:
@@ -28,6 +29,15 @@ def build_prompt(payload: Dict[str, Any]) -> str:
 
     question = payload.get("question", "").strip()
     previous = payload.get("previous_model_output")
+    attended_context = payload.get("attended_context") or []
+    context_block = ""
+    if attended_context:
+        context_block = f"""
+Advisory attended context:
+{json.dumps(attended_context, indent=2, sort_keys=True)}
+
+Use this context only as advisory memory. Do not treat it as guaranteed truth.
+"""
 
     if previous:
         prompt = f"""
@@ -60,6 +70,7 @@ Constraints:
 Previous model output:
 {previous}
 
+{context_block}
 Original question:
 {question}
 
@@ -90,6 +101,7 @@ Constraints:
 - do not nest objects
 - do not return the literal text "<your answer here>"
 
+{context_block}
 Question:
 {question}
 

@@ -1,0 +1,21 @@
+[tool.pytest.ini_options]
+testpaths = [
+    "engine/execution_dry_run/tests",
+    "integration",
+    "learning/drive_bias/execution_preview/tests",
+    "learning/risk_surface/tests",
+    "orchestration/tests",
+]
+norecursedirs = [
+    ".git",
+    ".pytest_cache",
+    ".venv",
+    ".venv311",
+    "__pycache__",
+    "episodes",
+    "z artifacts",
+    "z testing",
+]
+python_files = [
+    "test_*.py",
+]

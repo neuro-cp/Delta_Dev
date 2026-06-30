@@ -18,6 +18,7 @@ import os
 
 from integration.ai_surface.ai_output_bundle import AIOutputBundle
 from integration.model_runtime.gguf_model_runner import GGUFModelRunner
+from integration.model_runtime.model_registry import list_available_models
 
 
 class ModelRouter:
@@ -57,6 +58,11 @@ class ModelRouter:
                 route_chain = route_chain[:n]
             except Exception:
                 pass
+
+        available = set(list_available_models())
+        route_chain = [name for name in route_chain if name in available]
+        if not route_chain:
+            raise RuntimeError("No configured local models are available")
 
         self.route_chain = route_chain
         self.runners: Dict[str, GGUFModelRunner] = {

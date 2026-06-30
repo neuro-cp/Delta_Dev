@@ -87,15 +87,15 @@ class ResolutionExecutor:
                 # fallback symbolic recovery via AnswerMemory
                 mem = self._answer_memory.lookup(query_text) if self._answer_memory else None
 
-            enriched.append(
-                type("RecallEnriched", (), {
-                    "semantic_id": semantic_id,
-                    "pressure": self._read_field(s, "pressure", 0.0),
-                    "inquiry": (mem or {}).get("inquiry") if mem else None,
-                    "answer": (mem or {}).get("answer") if mem else None,
-                    "confidence": (mem or {}).get("confidence", 1.0) if mem else 1.0,
-                })()
-            )
+                enriched.append(
+                    type("RecallEnriched", (), {
+                        "semantic_id": semantic_id,
+                        "pressure": self._read_field(s, "pressure", 0.0),
+                        "inquiry": (mem or {}).get("inquiry") if mem else None,
+                        "answer": (mem or {}).get("answer") if mem else None,
+                        "confidence": (mem or {}).get("confidence", 1.0) if mem else 1.0,
+                    })()
+                )
 
             suggestions = enriched
             # =========================================
@@ -207,6 +207,10 @@ class ResolutionExecutor:
         payload = {
             "question": getattr(inquiry, "raw_text", "") or "",
         }
+        metadata = getattr(inquiry, "metadata", {}) or {}
+        attended_context = metadata.get("attended_context", [])
+        if attended_context:
+            payload["attended_context"] = attended_context
 
         bundle = self._model_router.route(payload)
 

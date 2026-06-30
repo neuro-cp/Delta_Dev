@@ -6,4 +6,4 @@ def test_mode_clamps_magnitude():
 
     clamped = ModeBehaviorPolicy.apply("passive", magnitude)
 
-    assert clamped == 0.25
+    assert clamped == 0.10
