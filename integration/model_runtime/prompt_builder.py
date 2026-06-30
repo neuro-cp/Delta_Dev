@@ -30,6 +30,7 @@ def build_prompt(payload: Dict[str, Any]) -> str:
     question = payload.get("question", "").strip()
     previous = payload.get("previous_model_output")
     attended_context = payload.get("attended_context") or []
+    working_memory = payload.get("working_memory") or []
     context_block = ""
     if attended_context:
         context_block = f"""
@@ -37,6 +38,14 @@ Advisory attended context:
 {json.dumps(attended_context, indent=2, sort_keys=True)}
 
 Use this context only as advisory memory. Do not treat it as guaranteed truth.
+"""
+    working_memory_block = ""
+    if working_memory:
+        working_memory_block = f"""
+Current working memory:
+{json.dumps(working_memory, indent=2, sort_keys=True)}
+
+Use working memory as temporary active context, not permanent truth.
 """
 
     if previous:
@@ -71,6 +80,7 @@ Previous model output:
 {previous}
 
 {context_block}
+{working_memory_block}
 Original question:
 {question}
 
@@ -102,6 +112,7 @@ Constraints:
 - do not return the literal text "<your answer here>"
 
 {context_block}
+{working_memory_block}
 Question:
 {question}
 

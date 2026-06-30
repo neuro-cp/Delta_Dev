@@ -11,3 +11,14 @@ __all__ = [
     "WorkingMemoryRuntimeHook",
     "WorkingMemoryTrace",
 ]
+from memory.working_memory.active_context import (
+    WorkingMemoryContext,
+    WorkingMemoryContextBuilder,
+    WorkingMemoryContextItem,
+)
+
+__all__ = [
+    "WorkingMemoryContext",
+    "WorkingMemoryContextBuilder",
+    "WorkingMemoryContextItem",
+]

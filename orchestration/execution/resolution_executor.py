@@ -211,6 +211,9 @@ class ResolutionExecutor:
         attended_context = metadata.get("attended_context", [])
         if attended_context:
             payload["attended_context"] = attended_context
+        working_memory = metadata.get("working_memory", [])
+        if working_memory:
+            payload["working_memory"] = working_memory
 
         bundle = self._model_router.route(payload)
 

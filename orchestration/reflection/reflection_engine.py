@@ -19,6 +19,7 @@ class ReflectionEngine:
         success: bool,
         attended_items: Iterable[AttentionItem],
         memory_ids: Iterable[str],
+        working_memory_summary: dict | None = None,
     ) -> ReflectionRecord:
         learned = []
         if success and output:
@@ -44,5 +45,6 @@ class ReflectionEngine:
                 "output_length": len(str(output)),
                 "attended_count": len(attended),
                 "success": bool(success),
+                "working_memory": dict(working_memory_summary or {}),
             },
         )

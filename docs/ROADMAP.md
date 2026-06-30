@@ -57,6 +57,8 @@ Memory is the substrate. The loop is the organism.
   - contradiction records
   - prediction records
   - CLI knowledge inspection
+- Added per-cycle working memory context and forwarded it into orchestration as
+  advisory active context.
 
 ## Phase 1: Stabilize Architecture
 
@@ -105,6 +107,6 @@ Memory is the substrate. The loop is the organism.
 Build goals and prediction evaluation:
 
 1. Add explicit goal records and goal relevance scoring.
-2. Feed goal relevance into attention scoring.
+2. Feed goals into working memory and attention scoring.
 3. Evaluate predictions against later observations.
 4. Use prediction success/failure to propose confidence changes.

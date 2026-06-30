@@ -4,8 +4,10 @@ import uuid
 from typing import Iterable, List
 
 from learning.region import LearningEngine, LearningStore
+from knowledge import PredictionEngine, SemanticKnowledgeStore
 from memory.persistent import MemoryStore
 from memory.relationships import RelationshipStore
+from memory.working_memory import WorkingMemoryContextBuilder
 from orchestration.attention import AttentionService
 from orchestration.cycle.cycle_result import CognitiveCycleResult, CycleStageRecord
 from orchestration.loop.cognitive_loop import CognitiveLoop
@@ -34,17 +36,23 @@ class CognitiveCycle:
         memory_store: MemoryStore,
         relationship_store: RelationshipStore | None = None,
         learning_store: LearningStore | None = None,
+        semantic_store: SemanticKnowledgeStore | None = None,
+        prediction_engine: PredictionEngine | None = None,
         attention_service: AttentionService | None = None,
         reflection_engine: ReflectionEngine | None = None,
         learning_engine: LearningEngine | None = None,
+        working_memory_builder: WorkingMemoryContextBuilder | None = None,
     ) -> None:
         self._loop = loop
         self._memory_store = memory_store
         self._relationship_store = relationship_store
         self._learning_store = learning_store
+        self._semantic_store = semantic_store
+        self._prediction_engine = prediction_engine
         self._attention = attention_service or AttentionService()
         self._reflection = reflection_engine or ReflectionEngine()
         self._learning = learning_engine or LearningEngine()
+        self._working_memory = working_memory_builder or WorkingMemoryContextBuilder()
 
     def run(self, prompt: str, *, tags: Iterable[str] = ()) -> CognitiveCycleResult:
         normalized_prompt = str(prompt).strip()
@@ -112,11 +120,45 @@ class CognitiveCycle:
             for item in attended
         ]
 
+        semantic_context = (
+            self._semantic_store.find_related(normalized_prompt)
+            if self._semantic_store is not None
+            else []
+        )
+        semantic_ids = {record.concept_id for record in semantic_context}
+        prediction_context = []
+        if self._prediction_engine is not None:
+            prediction_context = [
+                prediction
+                for prediction in self._prediction_engine.all()
+                if prediction.status == "open"
+                and (
+                    not semantic_ids
+                    or prediction.source_concept_id in semantic_ids
+                )
+            ][:5]
+
+        working_memory = self._working_memory.build(
+            cycle_id=cycle_id,
+            observation=normalized_prompt,
+            attended_context=attended_context,
+            semantic_knowledge=semantic_context,
+            predictions=prediction_context,
+        )
+        stages.append(
+            CycleStageRecord(
+                stage="working_memory",
+                summary="Assembled per-cycle working memory context.",
+                metadata=working_memory.summary(),
+            )
+        )
+
         result = self._loop.run(
             {
                 "question": normalized_prompt,
                 "cycle_id": cycle_id,
                 "attended_context": attended_context,
+                "working_memory": working_memory.as_advisory_payload(),
             }
         )
         execution = result["result"]
@@ -132,6 +174,7 @@ class CognitiveCycle:
                     "success": execution.success,
                     "confidence": execution.confidence,
                     "attended_context_count": len(attended_context),
+                    "working_memory_item_count": len(working_memory.items),
                 },
             )
         )
@@ -200,6 +243,7 @@ class CognitiveCycle:
             success=bool(execution.success),
             attended_items=attended,
             memory_ids=memory_ids,
+            working_memory_summary=working_memory.summary(),
         )
         stages.append(
             CycleStageRecord(

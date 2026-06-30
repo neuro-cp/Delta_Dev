@@ -111,6 +111,36 @@ def test_resolution_executor_forwards_attended_context_to_llm():
     assert router.last_payload["attended_context"][0]["memory_id"] == "m1"
 
 
+def test_resolution_executor_forwards_working_memory_to_llm():
+    router = DummyRouter()
+    inquiry = InquiryPacket(
+        inquiry_id="i1",
+        raw_text="Compare alpha and beta",
+        metadata={
+            "working_memory": [
+                {
+                    "key": "wm1",
+                    "kind": "semantic_knowledge",
+                    "text": "alpha is prior context",
+                    "priority": 0.9,
+                }
+            ]
+        },
+    )
+    plan = ExecutionPlan(
+        plan_id="p2",
+        selected_route_id="r2",
+        selected_route_type="llm",
+        target_node_id="root",
+        steps=[],
+    )
+
+    result = ResolutionExecutor(model_router=router).execute(inquiry, plan)
+
+    assert result.success is True
+    assert router.last_payload["working_memory"][0]["key"] == "wm1"
+
+
 def test_resolution_executor_recall_enriches_all_suggestions():
     inquiry = InquiryPacket(inquiry_id="i1", raw_text="remember this answer")
     plan = ExecutionPlan(

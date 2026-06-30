@@ -294,6 +294,8 @@ def main() -> int:
             memory_store=memory,
             relationship_store=relationships,
             learning_store=learning,
+            semantic_store=knowledge,
+            prediction_engine=predictions,
         )
         cycle_result = cycle.run(prompt)
         if args.json:

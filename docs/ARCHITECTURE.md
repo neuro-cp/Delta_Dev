@@ -142,6 +142,8 @@ Implemented early:
 - explicit semantic consolidation from learning records
 - contradiction records for preserved conflicting claims
 - prediction records generated from sufficiently confident knowledge
+- per-cycle working memory context assembled from observation, attention,
+  semantic knowledge, and predictions
 
 Incomplete:
 
@@ -153,6 +155,21 @@ Incomplete:
 - durable attention state
 - live visual and auditory input
 - regulable nervous-system signals
+
+## Working Memory
+
+Working memory is the temporary active context for one cognitive cycle. It is
+assembled, inspected by reflection, and then discarded.
+
+Current working memory inputs:
+
+- current observation
+- attended experience memories
+- related semantic knowledge
+- open predictions
+
+Working memory is advisory context. It does not persist as truth and has no
+execution authority.
 
 ## Knowledge Layer
 

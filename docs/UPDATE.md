@@ -19,6 +19,8 @@ It now forwards attended memory context into orchestration as advisory metadata.
 It now adds the first non-authoritative Learning Region attached to the cycle.
 It now adds the first Knowledge Layer: explicit semantic consolidation,
 contradiction records, and prediction records.
+It now adds canonical per-cycle Working Memory and forwards it into
+orchestration/model prompts as advisory active context.
 
 ### Architectural Decisions
 
@@ -59,6 +61,9 @@ contradiction records, and prediction records.
 - Contradiction records preserve conflicting claims instead of overwriting them.
 - Prediction records are generated from sufficiently confident semantic
   knowledge.
+- Working Memory is assembled per cycle from observation, attended experience,
+  semantic knowledge, and open predictions.
+- Reflection inspects working memory before it disappears.
 - `docs/UPDATE.md` is the canonical handoff log. `docs/ROADMAP.md` is the
   canonical planning file. `docs/ARCHITECTURE.md` is the canonical architecture
   constitution.
@@ -94,6 +99,7 @@ contradiction records, and prediction records.
 - `knowledge/prediction_record.py`
 - `knowledge/semantic_record.py`
 - `knowledge/semantic_store.py`
+- `memory/working_memory/active_context.py`
 - `integration/model_runtime/prompt_builder.py`
 - `docs/ARCHITECTURE.md`
 - `docs/ROADMAP.md`
@@ -142,6 +148,10 @@ The Knowledge Layer turns selected learning records into durable semantic
 knowledge while preserving provenance. It is explicit, non-destructive, and
 separate from autobiographical memory.
 
+Working Memory now provides the cycle's temporary active context. It bridges
+attention, knowledge, prediction, interpretation, and reflection without
+becoming durable truth.
+
 ### Validation
 
 Run:
@@ -159,6 +169,7 @@ Run:
 .\.venv311\Scripts\python.exe tools\delta_cli.py --consolidate-knowledge
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-knowledge
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-predictions
+.\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json
 .\.venv311\Scripts\python.exe -m pytest orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
 ```
 
@@ -175,6 +186,8 @@ Expected status:
 - cognitive cycle emits and stores structured learning records
 - knowledge consolidation creates semantic records from learning candidates
 - confident semantic records generate open predictions
+- working memory stage assembles active context
+- reflection receives working memory summary
 - targeted orchestration tests pass
 
 Latest observed cycle validation:
@@ -219,6 +232,13 @@ Latest knowledge validation:
 - contradictions detected: `0`
 - predictions generated: `2`
 
+Latest working-memory validation:
+
+- command: `.\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json`
+- working memory items: `6`
+- working memory included: observation plus attended experience
+- reflection metadata included working memory summary
+
 ### Cold-Session Resume Instructions
 
 1. Read `docs/ARCHITECTURE.md`.
@@ -237,6 +257,7 @@ git status --short --branch
 .\.venv311\Scripts\python.exe tools\delta_cli.py --recall-memory "What is 4 + 6"
 .\.venv311\Scripts\python.exe tools\delta_cli.py "What is 8 + 2?" --model none --cycle --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta memory and attention" --model mock --cycle --json
+.\.venv311\Scripts\python.exe tools\delta_cli.py "Compare Delta working memory and attention" --model mock --cycle --json
 .\.venv311\Scripts\python.exe tools\delta_cli.py --list-learning
 .\.venv311\Scripts\python.exe tools\delta_cli.py --consolidate-knowledge
 .\.venv311\Scripts\python.exe -m pytest orchestration\tests\loop\test_cognitive_loop.py orchestration\tests\execution\test_resolution_executor.py
@@ -285,7 +306,9 @@ Important local paths:
   confidence, merge memories, or create semantic knowledge.
 - Relationship storage currently records direct temporal sequence links only.
 - Attended context is advisory only. It is passed into interpretation/model
-  payloads, but it is not yet integrated with a working-memory region.
+  payloads and assembled into per-cycle working memory, but it has no execution
+  authority.
+- Working memory is per-cycle only. It is not yet connected to active goals.
 - Learning records are advisory only. They do not yet promote semantic memory,
   update confidence, or create goals.
 - Knowledge consolidation exists, but confidence evolution is still proposal
@@ -304,6 +327,6 @@ Important local paths:
 Extend the cognitive cycle:
 
 1. Add explicit goal records and goal relevance scoring.
-2. Feed goal relevance into attention scoring.
+2. Feed goals into working memory and attention scoring.
 3. Evaluate predictions against future observations.
 4. Use prediction success/failure to propose confidence changes.
