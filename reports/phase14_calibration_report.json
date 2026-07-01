@@ -1,0 +1,280 @@
+{
+  "average_information_gain": 0.5525,
+  "average_surprise": 0.2422,
+  "average_utility": 0.6081,
+  "by_capability": {
+    "contradiction": {
+      "average_information_gain": 0.5257,
+      "average_surprise": 0.25,
+      "average_utility": 0.5692,
+      "count": 4
+    },
+    "cross_domain": {
+      "average_information_gain": 0.5859,
+      "average_surprise": 0.2188,
+      "average_utility": 0.6426,
+      "count": 8
+    },
+    "planning": {
+      "average_information_gain": 0.4911,
+      "average_surprise": 0.1812,
+      "average_utility": 0.5458,
+      "count": 8
+    },
+    "prediction": {
+      "average_information_gain": 0.6133,
+      "average_surprise": 0.35,
+      "average_utility": 0.6781,
+      "count": 8
+    },
+    "transfer": {
+      "average_information_gain": 0.5134,
+      "average_surprise": 0.1875,
+      "average_utility": 0.5628,
+      "count": 4
+    }
+  },
+  "by_objective": {
+    "contradictory-policy": {
+      "average_information_gain": 0.5257,
+      "average_surprise": 0.25,
+      "average_utility": 0.5692,
+      "count": 4
+    },
+    "cross-domain-budget-weather": {
+      "average_information_gain": 0.6014,
+      "average_surprise": 0.25,
+      "average_utility": 0.6559,
+      "count": 4
+    },
+    "cross-domain-research-policy": {
+      "average_information_gain": 0.5703,
+      "average_surprise": 0.1875,
+      "average_utility": 0.6293,
+      "count": 4
+    },
+    "planning-failure-construction": {
+      "average_information_gain": 0.5415,
+      "average_surprise": 0.1875,
+      "average_utility": 0.5964,
+      "count": 4
+    },
+    "planning-failure-hospital": {
+      "average_information_gain": 0.4407,
+      "average_surprise": 0.175,
+      "average_utility": 0.4953,
+      "count": 4
+    },
+    "prediction-error-inventory": {
+      "average_information_gain": 0.5576,
+      "average_surprise": 0.1875,
+      "average_utility": 0.6189,
+      "count": 4
+    },
+    "prediction-error-snow-route": {
+      "average_information_gain": 0.669,
+      "average_surprise": 0.5125,
+      "average_utility": 0.7372,
+      "count": 4
+    },
+    "transfer-medical-to-maintenance": {
+      "average_information_gain": 0.5134,
+      "average_surprise": 0.1875,
+      "average_utility": 0.5628,
+      "count": 4
+    }
+  },
+  "by_provider": {
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m": {
+      "average_information_gain": 0.5378,
+      "average_surprise": 0.1875,
+      "average_utility": 0.5919,
+      "count": 8
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m": {
+      "average_information_gain": 0.5056,
+      "average_surprise": 0.2125,
+      "average_utility": 0.5599,
+      "count": 8
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m": {
+      "average_information_gain": 0.5578,
+      "average_surprise": 0.2625,
+      "average_utility": 0.6104,
+      "count": 8
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": {
+      "average_information_gain": 0.6087,
+      "average_surprise": 0.3063,
+      "average_utility": 0.6702,
+      "count": 8
+    }
+  },
+  "by_provider_capability": {
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::contradiction": {
+      "average_information_gain": 0.506,
+      "average_surprise": 0.25,
+      "average_utility": 0.5456,
+      "capability": "contradiction",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::cross_domain": {
+      "average_information_gain": 0.6284,
+      "average_surprise": 0.25,
+      "average_utility": 0.6863,
+      "capability": "cross_domain",
+      "count": 2,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::planning": {
+      "average_information_gain": 0.3715,
+      "average_surprise": 0.0,
+      "average_utility": 0.4207,
+      "capability": "planning",
+      "count": 2,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::prediction": {
+      "average_information_gain": 0.6165,
+      "average_surprise": 0.25,
+      "average_utility": 0.6807,
+      "capability": "prediction",
+      "count": 2,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::transfer": {
+      "average_information_gain": 0.5639,
+      "average_surprise": 0.25,
+      "average_utility": 0.6145,
+      "capability": "transfer",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::contradiction": {
+      "average_information_gain": 0.5454,
+      "average_surprise": 0.25,
+      "average_utility": 0.5927,
+      "capability": "contradiction",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::cross_domain": {
+      "average_information_gain": 0.4735,
+      "average_surprise": 0.125,
+      "average_utility": 0.5222,
+      "capability": "cross_domain",
+      "count": 2,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::planning": {
+      "average_information_gain": 0.5249,
+      "average_surprise": 0.3,
+      "average_utility": 0.5787,
+      "capability": "planning",
+      "count": 2,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::prediction": {
+      "average_information_gain": 0.5703,
+      "average_surprise": 0.3,
+      "average_utility": 0.6385,
+      "capability": "prediction",
+      "count": 2,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::transfer": {
+      "average_information_gain": 0.362,
+      "average_surprise": 0.0,
+      "average_utility": 0.4078,
+      "capability": "transfer",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::contradiction": {
+      "average_information_gain": 0.506,
+      "average_surprise": 0.25,
+      "average_utility": 0.5456,
+      "capability": "contradiction",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::cross_domain": {
+      "average_information_gain": 0.6109,
+      "average_surprise": 0.25,
+      "average_utility": 0.6692,
+      "capability": "cross_domain",
+      "count": 2,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::planning": {
+      "average_information_gain": 0.4702,
+      "average_surprise": 0.125,
+      "average_utility": 0.5177,
+      "capability": "planning",
+      "count": 2,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::prediction": {
+      "average_information_gain": 0.6149,
+      "average_surprise": 0.425,
+      "average_utility": 0.6746,
+      "capability": "prediction",
+      "count": 2,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::transfer": {
+      "average_information_gain": 0.5639,
+      "average_surprise": 0.25,
+      "average_utility": 0.6145,
+      "capability": "transfer",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::contradiction": {
+      "average_information_gain": 0.5454,
+      "average_surprise": 0.25,
+      "average_utility": 0.5927,
+      "capability": "contradiction",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::cross_domain": {
+      "average_information_gain": 0.6306,
+      "average_surprise": 0.25,
+      "average_utility": 0.6927,
+      "capability": "cross_domain",
+      "count": 2,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::planning": {
+      "average_information_gain": 0.598,
+      "average_surprise": 0.3,
+      "average_utility": 0.6663,
+      "capability": "planning",
+      "count": 2,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::prediction": {
+      "average_information_gain": 0.6515,
+      "average_surprise": 0.425,
+      "average_utility": 0.7184,
+      "capability": "prediction",
+      "count": 2,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::transfer": {
+      "average_information_gain": 0.5639,
+      "average_surprise": 0.25,
+      "average_utility": 0.6145,
+      "capability": "transfer",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    }
+  },
+  "completed": 32,
+  "count": 32,
+  "failed": 0,
+  "generated_experience_count": 128,
+  "run_id": "calibration_20260701T040306Z"
+}

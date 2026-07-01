@@ -24,8 +24,12 @@ class InquiryAdapter:
     ) -> InquiryPacket:
         if isinstance(raw_input, dict):
             raw_text = str(raw_input.get("question") or raw_input.get("raw_text") or "").strip()
-            semantic_tokens = list(raw_input.get("semantic_tokens", []))
-            quantitative_fields = dict(raw_input.get("quantitative_fields", {}))
+            semantic_tokens = list(
+                raw_input.get("semantic_tokens") or self._tokenize(raw_text)
+            )
+            quantitative_fields = dict(
+                raw_input.get("quantitative_fields") or self._extract_numbers(raw_text)
+            )
             role = raw_input.get("role", role)
             mode = raw_input.get("mode", mode)
             confidence = raw_input.get("confidence", confidence)

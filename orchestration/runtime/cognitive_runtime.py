@@ -93,10 +93,20 @@ class CognitiveRuntime:
             time.sleep(min(max(0, int(interval_seconds)), remaining))
         return results
 
-    def tick(self, *, tick_index: int) -> RuntimeTickResult:
+    def tick(
+        self,
+        *,
+        tick_index: int,
+        prompt_override: str | None = None,
+        tags: tuple[str, ...] = ("runtime",),
+    ) -> RuntimeTickResult:
         self_model = self._self_model().generate()
         active_goals = self._goal_store.active()
-        prompt = self._prompt_for_tick(tick_index=tick_index, self_model=self_model.to_dict())
+        prompt = (
+            str(prompt_override).strip()
+            if prompt_override is not None and str(prompt_override).strip()
+            else self._prompt_for_tick(tick_index=tick_index, self_model=self_model.to_dict())
+        )
 
         cycle = CognitiveCycle(
             loop=self._loop,
@@ -106,7 +116,7 @@ class CognitiveRuntime:
             semantic_store=self._semantic_store,
             prediction_engine=self._prediction_engine,
         )
-        cycle_result = cycle.run(prompt, tags=("runtime",))
+        cycle_result = cycle.run(prompt, tags=tags)
         validated_predictions = self._prediction_engine.validate_against_observations(
             self._memory_store.all()[-20:]
         )

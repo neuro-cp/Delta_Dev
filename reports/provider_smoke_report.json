@@ -1,0 +1,350 @@
+{
+  "average_information_gain": 0.384,
+  "average_surprise": 0.0804,
+  "average_utility": 0.43,
+  "by_capability": {
+    "coding": {
+      "average_information_gain": 0.5854,
+      "average_surprise": 0.25,
+      "average_utility": 0.6391,
+      "count": 4
+    },
+    "deterministic": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "count": 4
+    },
+    "explanation": {
+      "average_information_gain": 0.3282,
+      "average_surprise": 0.0,
+      "average_utility": 0.3754,
+      "count": 4
+    },
+    "json": {
+      "average_information_gain": 0.3265,
+      "average_surprise": 0.0,
+      "average_utility": 0.3719,
+      "count": 4
+    },
+    "planning": {
+      "average_information_gain": 0.3282,
+      "average_surprise": 0.0,
+      "average_utility": 0.3754,
+      "count": 4
+    },
+    "reasoning": {
+      "average_information_gain": 0.3552,
+      "average_surprise": 0.0625,
+      "average_utility": 0.3998,
+      "count": 4
+    },
+    "reflection": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "count": 4
+    }
+  },
+  "by_objective": {
+    "coding": {
+      "average_information_gain": 0.5854,
+      "average_surprise": 0.25,
+      "average_utility": 0.6391,
+      "count": 4
+    },
+    "deterministic": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "count": 4
+    },
+    "explanation": {
+      "average_information_gain": 0.3282,
+      "average_surprise": 0.0,
+      "average_utility": 0.3754,
+      "count": 4
+    },
+    "json": {
+      "average_information_gain": 0.3265,
+      "average_surprise": 0.0,
+      "average_utility": 0.3719,
+      "count": 4
+    },
+    "planning": {
+      "average_information_gain": 0.3282,
+      "average_surprise": 0.0,
+      "average_utility": 0.3754,
+      "count": 4
+    },
+    "reasoning": {
+      "average_information_gain": 0.3552,
+      "average_surprise": 0.0625,
+      "average_utility": 0.3998,
+      "count": 4
+    },
+    "reflection": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "count": 4
+    }
+  },
+  "by_provider": {
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m": {
+      "average_information_gain": 0.3886,
+      "average_surprise": 0.0714,
+      "average_utility": 0.4366,
+      "count": 7
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m": {
+      "average_information_gain": 0.3949,
+      "average_surprise": 0.1071,
+      "average_utility": 0.4392,
+      "count": 7
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m": {
+      "average_information_gain": 0.3752,
+      "average_surprise": 0.0714,
+      "average_utility": 0.4211,
+      "count": 7
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": {
+      "average_information_gain": 0.3773,
+      "average_surprise": 0.0714,
+      "average_utility": 0.4232,
+      "count": 7
+    }
+  },
+  "by_provider_capability": {
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::coding": {
+      "average_information_gain": 0.5854,
+      "average_surprise": 0.25,
+      "average_utility": 0.6391,
+      "capability": "coding",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::deterministic": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "capability": "deterministic",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::explanation": {
+      "average_information_gain": 0.3479,
+      "average_surprise": 0.0,
+      "average_utility": 0.399,
+      "capability": "explanation",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::json": {
+      "average_information_gain": 0.3265,
+      "average_surprise": 0.0,
+      "average_utility": 0.3719,
+      "capability": "json",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::planning": {
+      "average_information_gain": 0.3872,
+      "average_surprise": 0.0,
+      "average_utility": 0.446,
+      "capability": "planning",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::reasoning": {
+      "average_information_gain": 0.3085,
+      "average_surprise": 0.0,
+      "average_utility": 0.3518,
+      "capability": "reasoning",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m::reflection": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "capability": "reflection",
+      "count": 1,
+      "provider": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::coding": {
+      "average_information_gain": 0.5854,
+      "average_surprise": 0.25,
+      "average_utility": 0.6391,
+      "capability": "coding",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::deterministic": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "capability": "deterministic",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::explanation": {
+      "average_information_gain": 0.3085,
+      "average_surprise": 0.0,
+      "average_utility": 0.3518,
+      "capability": "explanation",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::json": {
+      "average_information_gain": 0.3265,
+      "average_surprise": 0.0,
+      "average_utility": 0.3719,
+      "capability": "json",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::planning": {
+      "average_information_gain": 0.3085,
+      "average_surprise": 0.0,
+      "average_utility": 0.3518,
+      "capability": "planning",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::reasoning": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "capability": "reasoning",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m::reflection": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "capability": "reflection",
+      "count": 1,
+      "provider": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::coding": {
+      "average_information_gain": 0.5854,
+      "average_surprise": 0.25,
+      "average_utility": 0.6391,
+      "capability": "coding",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::deterministic": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "capability": "deterministic",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::explanation": {
+      "average_information_gain": 0.3479,
+      "average_surprise": 0.0,
+      "average_utility": 0.399,
+      "capability": "explanation",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::json": {
+      "average_information_gain": 0.3265,
+      "average_surprise": 0.0,
+      "average_utility": 0.3719,
+      "capability": "json",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::planning": {
+      "average_information_gain": 0.3085,
+      "average_surprise": 0.0,
+      "average_utility": 0.3518,
+      "capability": "planning",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::reasoning": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "capability": "reasoning",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m::reflection": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "capability": "reflection",
+      "count": 1,
+      "provider": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::coding": {
+      "average_information_gain": 0.5854,
+      "average_surprise": 0.25,
+      "average_utility": 0.6391,
+      "capability": "coding",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::deterministic": {
+      "average_information_gain": 0.2935,
+      "average_surprise": 0.0,
+      "average_utility": 0.3372,
+      "capability": "deterministic",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::explanation": {
+      "average_information_gain": 0.3085,
+      "average_surprise": 0.0,
+      "average_utility": 0.3518,
+      "capability": "explanation",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::json": {
+      "average_information_gain": 0.3265,
+      "average_surprise": 0.0,
+      "average_utility": 0.3719,
+      "capability": "json",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::planning": {
+      "average_information_gain": 0.3085,
+      "average_surprise": 0.0,
+      "average_utility": 0.3518,
+      "capability": "planning",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::reasoning": {
+      "average_information_gain": 0.3479,
+      "average_surprise": 0.0,
+      "average_utility": 0.399,
+      "capability": "reasoning",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    },
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m::reflection": {
+      "average_information_gain": 0.471,
+      "average_surprise": 0.25,
+      "average_utility": 0.5113,
+      "capability": "reflection",
+      "count": 1,
+      "provider": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m"
+    }
+  },
+  "completed": 28,
+  "count": 28,
+  "failed": 0,
+  "generated_experience_count": 112,
+  "run_id": "provider_smoke_20260701T035235Z"
+}

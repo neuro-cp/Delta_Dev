@@ -59,8 +59,9 @@ events, and operator notes. This is the autobiographical substrate.
 ### Semantic Memory
 
 Consolidated knowledge derived from repeated or trusted experiences. Semantic
-memory may change over time through explicit consolidation and confidence
-updates.
+memory may change over time through explicit consolidation and evidence-backed
+justification updates. Confidence should be derived from that justification,
+not silently mutated as standalone state.
 
 ### Episodic Memory
 
@@ -120,6 +121,125 @@ itself.
 Never optimize the architecture around a single interface. Conversation is one
 possible surface over Delta's cognition, not the organizing principle of Delta.
 
+## Reasoning Provider Principle
+
+External and local models are reasoning providers, not the substrate.
+
+Delta receives canonical inference results with model identity, provider,
+answer, raw output, confidence, latency, token counts, evidence, and metadata.
+The substrate must not depend on whether an answer came from Phi, Qwen, Llama,
+GPT, a mock provider, or a future provider.
+
+Models propose. Delta evaluates, validates, governs, and revises knowledge.
+
+Provider identity is an implementation detail. Persistent memory, knowledge,
+evidence, governance, goals, and self-model state belong exclusively to Delta,
+not to Phi, Qwen, Llama, GPT, or any future reasoning provider.
+
+Delta should perform capability selection before provider selection. It should
+ask what the current cognitive task requires, such as reasoning, planning,
+retrieval, translation, mathematics, coding, vision, speech, search, or
+optimization, then route to one or more providers only when those providers can
+contribute useful capability under governance.
+
+The Capability Planner records this decision explicitly. A provider route may
+consume a capability plan, but it must not replace one. Provider allocation is
+an implementation detail of capability planning.
+
+Routing policy is explicit: deterministic routes avoid provider inference,
+local providers are preferred before cloud providers, and cloud use requires
+explicit permission. Inference events are recorded through an append-only
+observatory store with provider, model ID, route, task type, latency, token
+counts, confidence, and evidence count. The observatory is an inference
+observatory, not an LLM-only model tracker, because future providers may include
+symbolic solvers, planners, search, vision, OCR, robotics, or external APIs.
+
+Provider learning is derived from inference observatory records. It may profile
+latency, confidence, evidence count, and capability-specific effectiveness, but
+it must not create permanent hardcoded provider preferences. Provider learning
+is evidence for future allocation, not authority.
+
+Multi-model comparison measures agreement, confidence spread, latency spread,
+and evidence availability across canonical inference results. Consensus is
+non-authoritative: it can summarize agreement, but it must not override
+evidence validation, provenance, contradiction handling, or governance.
+Provider comparison is diagnostic. Delta is not a leaderboard, benchmark suite,
+or provider-facing product.
+
+Cognitive evaluation is separate from benchmarking. Evaluation cases run through
+isolated stores and measure cycle behavior such as route, success, confidence,
+latency, memory creation, relationship creation, learning records, and stage
+coverage.
+
+The Delta Console is a read-only observability surface. It may display model
+inventory, inference observatory metrics, and recent inference events, but it
+must not route, execute, validate, or revise knowledge on its own.
+It may also display generated experiences, provider effectiveness, knowledge
+quality, and world-model snapshots as observatory state only.
+
+Runtime laboratory experiments must use isolated stores. Structured experiment
+kinds may feed curriculum prompts into runtime ticks, but the resulting reports
+must distinguish mechanical completion from cognitive quality findings.
+
+## Benchmark Principle
+
+Progress should be measured as capability change over experience, not subsystem
+count.
+
+Benchmark reports must separate:
+
+- engineering correctness: tests pass, runtimes complete, stores remain
+  consistent
+- cognitive correctness: prediction accuracy, prediction coverage,
+  contradiction pressure, calibration, evidence quality, and belief stability
+- task performance: coding, research, scheduling, planning, analysis, and other
+  domain outcomes improve on held-out tasks
+
+If a benchmark dimension lacks evidence, report `insufficient_data` rather than
+guessing. A benchmark should be able to compare 100, 1,000, 10,000, and larger
+experience runs and answer whether Delta became more capable, not merely larger.
+
+## Curriculum Principle
+
+Delta should receive directed experience, not random inference.
+
+The Curriculum Engine generates structured cognitive tasks across domains such
+as arithmetic, logic, causal reasoning, abstraction, planning, scheduling,
+contradiction, prediction, uncertainty, language, software engineering,
+scientific reasoning, government workflows, and research methodology.
+
+Curriculum tasks are experiences, not knowledge. They may enter evaluation,
+reflection, learning, evidence, and governance pipelines, but they must not
+directly create semantic knowledge or bypass provenance requirements.
+
+Curriculum difficulty should adapt from observed performance. Weak domains
+should receive more practice. Strong domains may increase difficulty.
+
+## Experience Generation Principle
+
+Reasoning providers may generate candidate experiences, not knowledge.
+
+Generated experiences may include observations, hypotheses, plans, simulations,
+predictions, and reflections. Each generated experience must preserve provider
+provenance, remain pending governance by default, and explicitly forbid direct
+knowledge promotion.
+
+Generated experiences enter the existing evidence and governance pipeline.
+Only governed evidence can later support semantic knowledge, prediction
+validation, contradiction resolution, or confidence revision.
+
+## World Model Principle
+
+The world model is built from governed experience, not provider assertion.
+
+World-model records may represent objects, events, and relationships such as
+mentions, dependencies, causes, effects, agents, actions, states, and time. The
+first implementation extracts objects, events, and mention relations from
+accepted, supported, or validated experiences only.
+
+Pending generated experiences must not enter the world model until governance
+accepts them.
+
 ## Attention Principle
 
 Attention is not retrieval.
@@ -131,6 +251,17 @@ Attention answers: what matters right now?
 Attention may use retrieved memory as one input, but it should also account for
 recency, confidence, novelty, contradiction, goal relevance, task relevance,
 operator priority, salience, and future nervous-system signals.
+
+## Evidence Principle
+
+Evidence is the currency of durable cognition.
+
+Knowledge promotion, prediction validation, contradiction resolution, self-model
+assessment, and confidence revision must be justified by evidence. Confidence is
+a derived summary of supporting evidence, counter-evidence, validation history,
+contradiction pressure, and provenance.
+
+Delta should always be able to answer: what evidence changed this belief?
 
 ## Authority Principles
 
@@ -154,6 +285,8 @@ Implemented early:
 - simple attention ranking over recalled memory
 - attended memory context forwarded into orchestration as advisory metadata
 - structured reflection records
+- reflection quality metadata scoring whether success, output, attention,
+  working memory, consolidation candidates, and repetition were observed
 - non-authoritative Learning Region records
 - cycle-attached learning stage producing semantic candidates, confidence
   update suggestions, questions, and goal candidates
@@ -161,10 +294,14 @@ Implemented early:
 - explicit semantic consolidation from learning records
 - contradiction records for preserved conflicting claims
 - prediction records generated from sufficiently confident knowledge
+- evidence-aware prediction validation through append-only supported or failed
+  prediction revisions
 - per-cycle working memory context assembled from observation, attention,
   semantic knowledge, and predictions
 - generated self-model snapshots with temporal continuity, cognitive metrics,
   and health indicators
+- self-model observations for contradiction pressure, prediction evaluation
+  gaps, learning without consolidation, and memory fragmentation
 - non-executing simulation reports over hypothetical futures
 - append-only goal records
 - proposed plans that survive across sessions
@@ -176,8 +313,8 @@ Incomplete:
 - applied goal evolution from learning/reflection
 - completed plan execution histories
 - action beyond returning orchestration output
-- applied confidence evolution
-- prediction validation
+- derived confidence from evidence-backed justification history
+- deeper semantic prediction validation beyond first-pass claim scoring
 - durable attention state
 - scheduled consolidation
 - simulation feedback into prediction evaluation and planning
@@ -236,6 +373,9 @@ references, and rationale.
 Planning may eventually consume simulation reports. Simulation itself must not
 choose actions, mutate state, or bypass the cognitive cycle.
 
+Simulation tokenization is cached as a bounded performance optimization. This
+does not change simulation authority or persistence.
+
 ## Agency
 
 Agency answers: what should Delta do next?
@@ -271,9 +411,104 @@ Current knowledge implementation:
 - every semantic record preserves supporting evidence and creation source
 - revisions append new records rather than overwriting old records
 - contradictions preserve both claims and link them through contradiction records
+- contradiction resolution appends a resolved contradiction revision with
+  evidence and rationale; it never deletes either claim
 - predictions are generated from sufficiently confident semantic records
+- prediction validation compares extracted claims against later evidence,
+  preserves supporting or failing observation IDs, and records an evidence score
+  on the appended prediction revision
+- prediction quality metrics summarize latest prediction state, including
+  evaluated coverage, accuracy, failure rate, and average evidence score
+- confidence should become a consequence of evidence, validation history,
+  contradictions, and provenance rather than a manually updated field
+- semantic knowledge revisions are append-only records that preserve the prior
+  concept ID in `revision_history` and carry justification metadata explaining
+  derived confidence
+- relationship records carry confidence, weight, and reinforcement count;
+  repeated evidence strengthens relationships through append-only revisions
+- knowledge quality reports summarize evidence, counter-evidence,
+  relationships, prediction outcomes, validation history, revision history,
+  derived confidence, and uncertainty without mutating semantic records
 
 Knowledge has no direct execution authority.
+
+Knowledge distillation is report-only until explicitly governed. Distillation
+may identify stable concepts, weak concepts, and discard candidates from
+knowledge quality reports, but it must not promote, delete, or rewrite
+knowledge automatically.
+
+Codex mentorship is an engineering workflow, not a cognition editor. Codex may
+inspect runtime reports, knowledge quality, contradiction pressure, provider
+allocation, and observatory evidence, then propose architecture or governance
+work. Codex must not directly edit Delta's memories, beliefs, goals, or
+self-model as if they were its own cognition.
+
+## Reasoning Provider Runtime
+
+Reasoning providers are interchangeable cognitive components. Delta's objective
+is not to expose provider identity to the user or crown a single winner, but to
+integrate provider capabilities under one governed cognitive substrate.
+
+Provider identity is an implementation detail. Persistent memory, knowledge,
+evidence, governance, goals, runtime history, and the self-model belong to
+Delta.
+
+Current provider runtime implementation:
+
+- local GGUF models are discovered dynamically from `G:\models`
+- discovered models are not assumed usable until the Provider Qualification
+  Suite proves load, inference, unload, and memory-return behavior
+- capability planning happens before provider allocation
+- routing uses capability-family priors and local providers before cloud
+  escalation
+- cloud providers are allowed only when explicitly enabled and no suitable
+  local provider is available
+- `ProviderManager` keeps at most one local provider resident at a time
+- provider load/unload state can be published for console observation
+- GPU layer offload is controlled by `DELTA_N_GPU_LAYERS`, explicit manager
+  configuration, or the empirical recommendation stored in
+  `data/model_runtime/provider_capabilities.json`
+- the experiment scheduler runs capability-specific queues through serial
+  provider allocation and scores generated experiences for utility,
+  information gain, and surprise
+- when `data/model_runtime/provider_capabilities.json` exists, experiment
+  scheduling uses only qualified providers unless the operator explicitly
+  overrides the qualification gate
+
+The provider manager and scheduler are infrastructure. They do not own
+knowledge, validate truth, or promote generated text. All generated experiences
+must still pass through evidence and governance before knowledge formation.
+
+Calibration curriculum generation is also infrastructure, not a cognitive
+region. It designs higher-pressure experiences and rejects low-value prompts
+before scheduling. It may optimize for novelty, information gain, surprise,
+prediction opportunity, belief challenge, transfer, and cross-domain reasoning,
+but it does not promote provider output into knowledge.
+
+Provider qualification writes:
+
+- `reports/provider_qualification.json`
+- `reports/provider_qualification.md`
+- `data/model_runtime/provider_capabilities.json`
+
+The capability database is empirical hardware evidence for the current desktop.
+It should be regenerated after changing models, llama.cpp builds, GPU drivers,
+or offload policy.
+
+Current desktop baseline:
+
+- CUDA-backed `llama-cpp-python` is operational through the `.venv311`
+  environment.
+- Four text providers are qualified and backend validated on the RTX 3060
+  12 GB: Llama 3.1 8B Q4_K_M, Mistral 7B Q4_K_M, Phi-3.1 Mini Q4_K_M, and
+  Qwen2.5 7B Q4_K_M.
+- The empirical offload recommendation for those four providers is
+  `recommended_gpu_layers = 36`.
+- The experiment scheduler consumes the capability database when allocating
+  local providers and records utility, information gain, and surprise for the
+  generated experience candidates.
+- The first corrected integrated provider smoke run is recorded in
+  `reports/provider_smoke_report.md`.
 
 ## Non-Negotiable Design Rule
 

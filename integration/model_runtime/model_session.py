@@ -31,9 +31,10 @@ class ModelSession:
     Controls lifecycle of a single active model instance.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, n_gpu_layers: int | None = None) -> None:
         self._current_model: Optional[ModelSpec] = None
         self._engine: Optional[Llama] = None
+        self._n_gpu_layers = self._resolve_gpu_layers(n_gpu_layers)
 
     # ------------------------------------------------------------
     # Model lifecycle
@@ -54,7 +55,7 @@ class ModelSession:
             model_path=model_spec.path,
             n_ctx=model_spec.context_length,
             n_threads=cpu_threads,
-            n_gpu_layers=0,  # deterministic CPU execution
+            n_gpu_layers=self._n_gpu_layers,
             verbose=False,
         )
 
@@ -96,9 +97,10 @@ ws ::= [ \t\n\r]*
         # Streaming call
         # -----------------------------
         try:
+            max_tokens = self._resolve_max_tokens()
             stream = self._engine(
                 prompt,
-                max_tokens=1000,
+                max_tokens=max_tokens,
                 temperature=0.4,
                 stream=True,
                 grammar=grammar if grammar else None,
@@ -107,7 +109,7 @@ ws ::= [ \t\n\r]*
             # Some llama-cpp builds don't allow grammar + stream together
             stream = self._engine(
                 prompt,
-                max_tokens=1000,
+                max_tokens=self._resolve_max_tokens(),
                 temperature=0.4,
                 stream=True,
             )
@@ -167,3 +169,23 @@ ws ::= [ \t\n\r]*
         if self._current_model is None:
             return None
         return self._current_model.name
+
+    def _resolve_gpu_layers(self, configured: int | None) -> int:
+        if configured is not None:
+            return int(configured)
+        raw = os.getenv("DELTA_N_GPU_LAYERS", "").strip()
+        if not raw:
+            return 0
+        try:
+            return int(raw)
+        except ValueError:
+            return 0
+
+    def _resolve_max_tokens(self) -> int:
+        raw = os.getenv("DELTA_MAX_TOKENS", "").strip()
+        if not raw:
+            return 1000
+        try:
+            return max(1, int(raw))
+        except ValueError:
+            return 1000

@@ -1,0 +1,549 @@
+{
+  "baseline_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 0,
+    "memories": 16,
+    "predictions": 16,
+    "relationships": 0,
+    "semantic_knowledge": 16
+  },
+  "baseline_prediction_quality": {
+    "accuracy": null,
+    "average_evidence_score": null,
+    "coverage": 0.0,
+    "evaluated": 0,
+    "failed": 0,
+    "failure_rate": null,
+    "open": 16,
+    "supported": 0,
+    "total": 16
+  },
+  "bootstrap": {
+    "goals_created": 4,
+    "predictions_created": 16,
+    "semantic_created": 16
+  },
+  "count_delta": {
+    "contradictions": 27,
+    "goals": 0,
+    "learning": 12,
+    "memories": 24,
+    "predictions": 6,
+    "relationships": 12,
+    "semantic_knowledge": 3
+  },
+  "cycle_summaries": [
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 1,
+        "predictions_validated": 1,
+        "semantic_created": 1
+      },
+      "objective_id": "cross-domain-research-policy",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 20,
+        "learning_record_count": 2,
+        "semantic_knowledge_count": 17,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "tick": 3
+    },
+    {
+      "capability": "contradiction",
+      "consolidation": {
+        "contradictions_detected": 12,
+        "predictions_generated": 1,
+        "predictions_validated": 1,
+        "semantic_created": 1
+      },
+      "objective_id": "contradictory-policy",
+      "provider_model": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+      "self_model": {
+        "experience_count": 22,
+        "learning_record_count": 3,
+        "semantic_knowledge_count": 17,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "tick": 4
+    },
+    {
+      "capability": "planning",
+      "consolidation": {
+        "contradictions_detected": 1,
+        "predictions_generated": 1,
+        "predictions_validated": 1,
+        "semantic_created": 1
+      },
+      "objective_id": "planning-failure-construction",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 24,
+        "learning_record_count": 4,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high",
+          "experience memory is sparsely related"
+        ]
+      },
+      "tick": 5
+    },
+    {
+      "capability": "transfer",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 1,
+        "predictions_validated": 1,
+        "semantic_created": 1
+      },
+      "objective_id": "transfer-medical-to-maintenance",
+      "provider_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 26,
+        "learning_record_count": 5,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high",
+          "experience memory is sparsely related"
+        ]
+      },
+      "tick": 6
+    },
+    {
+      "capability": "prediction",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 1,
+        "semantic_created": 1
+      },
+      "objective_id": "prediction-error-snow-route",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 28,
+        "learning_record_count": 6,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "contradiction pressure is high",
+          "experience memory is sparsely related"
+        ]
+      },
+      "tick": 7
+    },
+    {
+      "capability": "prediction",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "prediction-error-inventory",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 30,
+        "learning_record_count": 7,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high",
+          "experience memory is sparsely related"
+        ]
+      },
+      "tick": 8
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "cross-domain-research-policy",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 32,
+        "learning_record_count": 8,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 9
+    },
+    {
+      "capability": "contradiction",
+      "consolidation": {
+        "contradictions_detected": 13,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "contradictory-policy",
+      "provider_model": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+      "self_model": {
+        "experience_count": 34,
+        "learning_record_count": 9,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 10
+    },
+    {
+      "capability": "planning",
+      "consolidation": {
+        "contradictions_detected": 1,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "planning-failure-construction",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 36,
+        "learning_record_count": 10,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 11
+    },
+    {
+      "capability": "transfer",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "transfer-medical-to-maintenance",
+      "provider_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 38,
+        "learning_record_count": 11,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 12
+    }
+  ],
+  "cycles_completed": 12,
+  "cycles_per_second": 0.1727,
+  "cycles_requested": 12,
+  "elapsed_seconds": 69.4952,
+  "final_counts": {
+    "contradictions": 27,
+    "goals": 4,
+    "learning": 12,
+    "memories": 40,
+    "predictions": 22,
+    "relationships": 12,
+    "semantic_knowledge": 19
+  },
+  "final_prediction_quality": {
+    "accuracy": 1.0,
+    "average_evidence_score": 0.7333,
+    "coverage": 0.9545,
+    "evaluated": 21,
+    "failed": 0,
+    "failure_rate": 0.0,
+    "open": 1,
+    "supported": 21,
+    "total": 22
+  },
+  "objectives": [
+    {
+      "calibration_score": 0.7405,
+      "capability": "prediction",
+      "objective_id": "prediction-error-snow-route",
+      "surprise": 0.6,
+      "utility": 0.756
+    },
+    {
+      "calibration_score": 0.691,
+      "capability": "prediction",
+      "objective_id": "prediction-error-inventory",
+      "surprise": 0.25,
+      "utility": 0.7345
+    },
+    {
+      "calibration_score": 0.6555,
+      "capability": "cross_domain",
+      "objective_id": "cross-domain-research-policy",
+      "surprise": 0.25,
+      "utility": 0.6807
+    },
+    {
+      "calibration_score": 0.61,
+      "capability": "contradiction",
+      "objective_id": "contradictory-policy",
+      "surprise": 0.25,
+      "utility": 0.661
+    },
+    {
+      "calibration_score": 0.587,
+      "capability": "planning",
+      "objective_id": "planning-failure-construction",
+      "surprise": 0.25,
+      "utility": 0.6268
+    },
+    {
+      "calibration_score": 0.4883,
+      "capability": "transfer",
+      "objective_id": "transfer-medical-to-maintenance",
+      "surprise": 0.0,
+      "utility": 0.5211
+    }
+  ],
+  "provider_hints": {
+    "contradiction": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "cross_domain": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "planning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "prediction": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "transfer": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+  },
+  "run_id": "governed_training_20260701T041913Z",
+  "self_model": {
+    "capabilities": [
+      "run one explicit cognitive cycle",
+      "store immutable experience records",
+      "rank recalled memories through attention",
+      "assemble per-cycle working memory",
+      "emit structured reflection and learning records",
+      "consolidate semantic knowledge from learning records",
+      "generate predictions from confident semantic knowledge",
+      "validate predictions through append-only evidence records",
+      "track explicit goals, proposed plans, and agency proposals",
+      "run bounded cognitive runtime ticks",
+      "generate self-model metrics from existing regions"
+    ],
+    "cognitive_health": {
+      "contradiction_pressure": 1.4211,
+      "fragmentation": 0.7,
+      "goal_overload": "unknown",
+      "knowledge_stability": 0.0,
+      "learning_efficiency": 1.0,
+      "memory_growth": 40,
+      "prediction_quality": 1.0,
+      "reflection_coverage": 0.3,
+      "warnings": [
+        "contradiction pressure is high"
+      ]
+    },
+    "confidence_distribution": {
+      "memory": {
+        "high": 30,
+        "low": 8,
+        "medium": 2
+      },
+      "predictions": {
+        "high": 0,
+        "low": 0,
+        "medium": 22
+      },
+      "semantic_knowledge": {
+        "high": 19,
+        "low": 0,
+        "medium": 0
+      }
+    },
+    "contradictions": {
+      "pressure": 1.4211,
+      "total": 27
+    },
+    "generated_at": "2026-07-01T04:19:13.310988+00:00",
+    "identity": {
+      "continuity_source": "append-only state and generated reports",
+      "name": "Delta",
+      "type": "persistent cognitive substrate"
+    },
+    "knowledge_coverage": {
+      "concepts": [
+        "planning",
+        "prediction",
+        "simulation",
+        "learning",
+        "language",
+        "number",
+        "curiosity",
+        "Repeated attended context appears relevant to the prompt",
+        "Repeated attended context appears relevant to the prompt",
+        "Repeated attended context appears relevant to the prompt"
+      ],
+      "coverage_note": "coverage is inferred from explicit semantic records only",
+      "semantic_records": 19
+    },
+    "learning": {
+      "recent_questions": [],
+      "recent_records": 12,
+      "records": 12
+    },
+    "limitations": [
+      "goal progress feedback is not yet implemented",
+      "planning is proposal-only and non-executing",
+      "prediction evaluation is first-pass evidence claim scoring",
+      "confidence is not yet derived from complete justification history",
+      "attention has no durable decay model yet",
+      "self-model is generated on demand, not continuously scheduled"
+    ],
+    "metrics": {
+      "attention_distribution": {
+        "agency": 3,
+        "bootstrap": 16,
+        "calibration": 24,
+        "contradiction": 4,
+        "contradictory-policy": 4,
+        "cross-domain-research-policy": 4,
+        "cross_domain": 4,
+        "cycle": 24,
+        "governed": 24,
+        "knowledge": 3,
+        "learning": 1,
+        "llm": 6,
+        "memory": 6,
+        "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m": 4,
+        "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m": 4,
+        "motivation": 1,
+        "observation": 12,
+        "output": 12,
+        "planning": 4,
+        "planning-failure-construction": 4,
+        "prediction": 8,
+        "prediction-error-inventory": 4,
+        "prediction-error-snow-route": 4,
+        "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": 16,
+        "reasoning": 2,
+        "self_world": 1,
+        "simulation": 2,
+        "training": 24,
+        "transfer": 4,
+        "transfer-medical-to-maintenance": 4,
+        "world_model": 3
+      },
+      "average_knowledge_confidence": 0.8205,
+      "average_memory_confidence": 0.7014,
+      "average_prediction_confidence": 0.7074,
+      "consolidation_rate": 1.5833,
+      "contradiction_count": 27,
+      "experience_count": 40,
+      "generated_at": "2026-07-01T04:19:13.310988+00:00",
+      "learning_record_count": 12,
+      "open_prediction_count": 1,
+      "prediction_accuracy": 1.0,
+      "prediction_count": 22,
+      "recent_learning_count": 12,
+      "recent_reflection_count": 12,
+      "reflection_count": 12,
+      "relationship_count": 12,
+      "relationship_density": 0.3,
+      "semantic_knowledge_count": 19,
+      "temporal": {
+        "history": {
+          "first_experience_at": "2026-07-01T04:18:03.623430+00:00",
+          "first_learning_at": "2026-07-01T04:18:21.586178+00:00",
+          "latest_experience_at": "2026-07-01T04:19:13.274422+00:00",
+          "latest_learning_at": "2026-07-01T04:19:13.275456+00:00"
+        },
+        "last_7_days": {
+          "experience_count": 40,
+          "learning_count": 12
+        },
+        "today": {
+          "experience_count": 40,
+          "learning_count": 12
+        }
+      },
+      "working_memory_utilization": null
+    },
+    "predictions": {
+      "accuracy": 1.0,
+      "open": 1,
+      "quality": {
+        "accuracy": 1.0,
+        "average_evidence_score": 0.7333,
+        "coverage": 0.9545,
+        "evaluated": 21,
+        "failed": 0,
+        "failure_rate": 0.0,
+        "open": 1,
+        "supported": 21,
+        "total": 22
+      },
+      "recent": [
+        "6f5e7806-2f83-4497-a20e-1b7cbf110519",
+        "b5bd9958-d0a1-4851-ba0f-325cbaa58fd4",
+        "76ef7aba-31f3-4776-ac59-e36917f9f656",
+        "e9f6a769-e061-493a-859e-e352daa14e8f",
+        "a8a82f95-2255-4eb0-a202-c9bb292153af",
+        "a6a43341-7fb2-4a96-9556-f8ed24f63d96",
+        "3fa3ab46-4fd8-4fff-ae31-d1fb258e84df",
+        "53fc3bbe-53e1-4347-9436-53159f977d77",
+        "865a7000-2daf-4561-a358-8ecc596e74e5",
+        "21a788bf-cbbf-4fc6-910b-972e5b6dffbd"
+      ],
+      "total": 22
+    },
+    "self_observations": [
+      {
+        "kind": "contradiction_pressure",
+        "severity": "medium",
+        "summary": "Contradiction pressure is high relative to semantic knowledge."
+      }
+    ],
+    "subsystem_health": {
+      "contradictions": {
+        "status": "pressurized"
+      },
+      "goals": {
+        "status": "proposal_layer"
+      },
+      "knowledge": {
+        "status": "active"
+      },
+      "learning": {
+        "status": "active"
+      },
+      "memory": {
+        "status": "active"
+      },
+      "planning": {
+        "status": "proposal_layer"
+      },
+      "predictions": {
+        "status": "active"
+      },
+      "relationships": {
+        "status": "active"
+      }
+    },
+    "temporal_continuity": {
+      "history": {
+        "first_experience_at": "2026-07-01T04:18:03.623430+00:00",
+        "first_learning_at": "2026-07-01T04:18:21.586178+00:00",
+        "latest_experience_at": "2026-07-01T04:19:13.274422+00:00",
+        "latest_learning_at": "2026-07-01T04:19:13.275456+00:00"
+      },
+      "last_7_days": {
+        "experience_count": 40,
+        "learning_count": 12
+      },
+      "today": {
+        "experience_count": 40,
+        "learning_count": 12
+      }
+    }
+  },
+  "store_root": "data\\training\\phase14_shakedown_idempotent"
+}

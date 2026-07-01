@@ -9,10 +9,45 @@ roadmap items or feature goals; they are substrate invariants.
 - Knowledge is derived, never silently rewritten.
 - Provenance is never lost.
 - Contradictions are linked, not erased.
-- Confidence changes require evidence.
-- LLMs propose; Delta governs.
+- Reasoning providers propose; Delta governs.
 - Agency proposes; execution remains bounded and explicit.
 - No subsystem receives hidden execution authority.
+
+## Reasoning Providers
+
+- Reasoning providers are interchangeable cognitive components.
+- Delta's objective is capability integration, not provider competition.
+- Provider identity is an implementation detail, not a user-facing cognitive
+  identity.
+- Persistent memory, knowledge, evidence, governance, goals, and self-model
+  state belong exclusively to Delta.
+- Providers may contribute reasoning, planning, retrieval, translation,
+  mathematics, coding, vision, speech, search, or external tool capability, but
+  none of those providers owns Delta's cognition.
+- Capability selection should decide what kind of cognition is needed before
+  selecting a provider that can contribute it.
+- Provider comparison is a diagnostic instrument. It must not turn Delta into a
+  leaderboard, benchmark suite, or model-facing product.
+- Codex is Delta's engineering mentor, not the author of Delta's cognition.
+  Codex may inspect reports and propose system improvements, but it must not
+  directly edit Delta's memories, beliefs, goals, or self-model as cognition.
+
+## Evidence And Justification
+
+- Evidence is the canonical justification for knowledge promotion, prediction
+  validation, contradiction resolution, self-model assessment, and confidence
+  revision.
+- Experiences are not knowledge.
+- Generated provider experiences must enter governance before they can support
+  persistent knowledge.
+- No persistent knowledge may change without evidence.
+- Confidence is derived from justification; it must not become an unexplained
+  mutable state variable.
+- Every confidence change must be explainable through supporting evidence,
+  counter-evidence, validation history, contradiction pressure, and provenance.
+- Every knowledge revision must preserve what evidence caused the belief to
+  change.
+- Delta should always be able to answer: what evidence changed this belief?
 
 ## State
 

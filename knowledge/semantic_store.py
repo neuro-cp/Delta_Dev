@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import json
 import re
+import uuid
 from dataclasses import asdict
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List
 
+from knowledge.justification_engine import JustificationReport
 from knowledge.semantic_record import SemanticKnowledgeRecord
 
 
@@ -25,6 +28,38 @@ class SemanticKnowledgeStore:
         with self.path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(asdict(record), sort_keys=True) + "\n")
         return record
+
+    def add_revision(
+        self,
+        record: SemanticKnowledgeRecord,
+        *,
+        justification: JustificationReport,
+        reason: str,
+    ) -> SemanticKnowledgeRecord:
+        now = datetime.now(timezone.utc).isoformat()
+        revision = SemanticKnowledgeRecord(
+            concept_id=str(uuid.uuid4()),
+            created_at=record.created_at,
+            updated_at=now,
+            concept=record.concept,
+            definition=record.definition,
+            confidence=justification.confidence,
+            supporting_evidence=list(record.supporting_evidence),
+            contradicting_evidence=list(record.contradicting_evidence),
+            relationship_ids=list(record.relationship_ids),
+            creation_source=record.creation_source,
+            last_validation=now,
+            revision_history=list(
+                dict.fromkeys([*record.revision_history, record.concept_id])
+            ),
+            metadata={
+                **record.metadata,
+                "previous_concept_id": record.concept_id,
+                "revision_reason": str(reason),
+                "justification": justification.to_metadata(),
+            },
+        )
+        return self.add(revision)
 
     def all(self) -> List[SemanticKnowledgeRecord]:
         if not self.path.exists():

@@ -29,6 +29,7 @@ from integration.ai_surface.ai_model_interface import ExternalModelInterface
 from integration.model_runtime.model_registry import get_model_spec
 from integration.model_runtime.model_session import ModelSession
 from integration.model_runtime.prompt_builder import build_prompt
+from integration.model_runtime.inference_types import CanonicalInferenceResult
 
 
 class GGUFModelRunner(ExternalModelInterface):
@@ -36,9 +37,9 @@ class GGUFModelRunner(ExternalModelInterface):
     Executes a single GGUF model through a controlled ModelSession.
     """
 
-    def __init__(self, model_name: str):
+    def __init__(self, model_name: str, *, n_gpu_layers: int | None = None):
         self.model_name = model_name
-        self.session = ModelSession()
+        self.session = ModelSession(n_gpu_layers=n_gpu_layers)
 
     # ------------------------------------------------------------------
     # Model identity helper
@@ -185,12 +186,29 @@ class GGUFModelRunner(ExternalModelInterface):
         print("================================\n")
 
         confidence = self._combine_confidence(raw_output)
+        answer = self._extract_answer(raw_output) or raw_output.strip()
+        canonical = CanonicalInferenceResult(
+            provider="local_gguf",
+            model_id=model_id,
+            answer=answer,
+            raw_output=raw_output,
+            confidence=confidence,
+            latency_seconds=round(elapsed, 4),
+            prompt_tokens=len(prompt.split()),
+            response_tokens=len(raw_output.split()),
+            evidence=[],
+            metadata={
+                "model_path": model_spec.path,
+                "family": model_spec.family,
+                "quantization": model_spec.quantization,
+                "context_length": model_spec.context_length,
+                "capabilities": list(model_spec.capabilities),
+            },
+        )
 
         return AIOutputBundle(
             role="strategic_defense_advisor",
             mode="active",
-            payload={
-                "raw_model_output": raw_output,
-            },
+            payload=canonical.to_ai_output_payload(),
             confidence_band=confidence,
         )

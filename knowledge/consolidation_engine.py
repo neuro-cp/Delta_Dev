@@ -39,9 +39,17 @@ class SemanticConsolidationEngine:
         contradictions = []
         predictions = []
 
+        all_existing = self._semantic_store.all()
         existing = self._semantic_store.latest()
+        consolidated_learning_ids = {
+            str(record.creation_source).split("learning:", 1)[1]
+            for record in all_existing
+            if str(record.creation_source).startswith("learning:")
+        }
 
         for learning in learning_records:
+            if learning.learning_id in consolidated_learning_ids:
+                continue
             for candidate in learning.semantic_candidates:
                 if hasattr(candidate, "text"):
                     text = candidate.text
@@ -84,6 +92,7 @@ class SemanticConsolidationEngine:
 
                 self._semantic_store.add(record)
                 created.append(record)
+                consolidated_learning_ids.add(learning.learning_id)
 
                 if self._contradiction_engine is not None:
                     found = self._contradiction_engine.detect_for(

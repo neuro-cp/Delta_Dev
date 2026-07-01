@@ -12,4 +12,7 @@ class ContradictionRecord:
     claim_b_id: str
     reason: str
     severity: float
+    status: str = "open"
+    resolution: str | None = None
+    resolved_at: str | None = None
     metadata: Dict[str, Any] = field(default_factory=dict)

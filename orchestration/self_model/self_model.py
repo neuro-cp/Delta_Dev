@@ -150,6 +150,7 @@ class SelfModelRegion:
         knowledge = self._semantic_store.latest()
         contradictions = self._contradiction_engine.all()
         predictions = self._prediction_engine.latest()
+        prediction_quality = self._prediction_engine.quality_metrics()
 
         metrics = self._metrics(
             now=now,
@@ -199,8 +200,8 @@ class SelfModelRegion:
             limitations=[
                 "goal progress feedback is not yet implemented",
                 "planning is proposal-only and non-executing",
-                "prediction evaluation is shallow token-overlap validation",
-                "confidence evolution is proposal-based only",
+                "prediction evaluation is first-pass evidence claim scoring",
+                "confidence is not yet derived from complete justification history",
                 "attention has no durable decay model yet",
                 "self-model is generated on demand, not continuously scheduled",
             ],
@@ -218,6 +219,7 @@ class SelfModelRegion:
                 "total": len(predictions),
                 "open": metrics.open_prediction_count,
                 "accuracy": metrics.prediction_accuracy,
+                "quality": prediction_quality,
                 "recent": [prediction.prediction_id for prediction in predictions[-10:]],
             },
             contradictions={
@@ -428,6 +430,14 @@ class SelfModelRegion:
                 {
                     "kind": "prediction_evaluation_gap",
                     "summary": "Predictions exist, but no prediction outcomes have been evaluated.",
+                    "severity": "medium",
+                }
+            )
+        if cognitive_health["contradiction_pressure"] > 0.25:
+            observations.append(
+                {
+                    "kind": "contradiction_pressure",
+                    "summary": "Contradiction pressure is high relative to semantic knowledge.",
                     "severity": "medium",
                 }
             )

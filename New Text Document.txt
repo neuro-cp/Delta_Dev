@@ -1,0 +1,290 @@
+(.venv311) PS C:\Users\Admin\Desktop\deltagem> python test_full_system_cycle.py -s
+
+======================================
+FULL SYSTEM TEST ENVIRONMENT
+======================================
+RUN_REAL_MODELS = 1
+DELTA_MACHINE_PROFILE = laptop
+DELTA_MAX_MODELS = 2
+DELTA_MAX_DELIBERATIONS = 1
+
+Enter test question (blank = use test_prompt.txt):
+
+[DEBUG] Neuron bases loaded: 5
+[DEBUG] Loading regions from: C:\Users\Admin\Desktop\deltagem\regions
+[DEBUG] BrainMap loaded from brain_map.json
+[DEBUG] RegionAliasRegistry loaded from region_aliases.json
+[DEBUG] Loaded region: amyg_base | populations=0
+[DEBUG] Loaded region: bla | populations=2
+[DEBUG] Loaded region: cea | populations=1
+[DEBUG] Loaded region: mea | populations=1
+[DEBUG] Loaded region: bg_base | populations=0
+[DEBUG] Loaded region: gpe | populations=1
+[DEBUG] Loaded region: gpi | populations=1
+[DEBUG] Loaded region: snc | populations=1
+[DEBUG] Loaded region: stn | populations=1
+[DEBUG] Loaded region: striatum | populations=3
+[DEBUG] Loaded region: autonomic_system | populations=2
+[DEBUG] Loaded region: brainstem_base | populations=0
+[DEBUG] Loaded region: locus_coeruleus | populations=1
+[DEBUG] Loaded region: medulla | populations=1
+[DEBUG] Loaded region: pons | populations=1
+[DEBUG] Loaded region: raphe | populations=1
+[DEBUG] Loaded region: vta | populations=2
+[DEBUG] Loaded region: cerebellar_cortex | populations=3
+[DEBUG] Loaded region: cerebellum_base | populations=0
+[DEBUG] Loaded region: deep_nuclei | populations=1
+[DEBUG] Loaded region: a1 | populations=4
+[DEBUG] Loaded region: cortex_base | populations=5
+[DEBUG] Loaded region: insula | populations=3
+[DEBUG] Loaded region: m1 | populations=3
+[DEBUG] Loaded region: s1 | populations=5
+[DEBUG] Loaded region: v1 | populations=5
+[DEBUG] Loaded region: endocrine_system | populations=0
+[DEBUG] Loaded region: hypothalamus | populations=4
+[DEBUG] Loaded region: anterior_pituitary | populations=5
+[DEBUG] Loaded region: posterior_pituitary | populations=2
+[DEBUG] Loaded region: lgn | populations=1
+[DEBUG] Loaded region: md | populations=1
+[DEBUG] Loaded region: mgb | populations=1
+[DEBUG] Loaded region: pulvinar | populations=1
+[DEBUG] Loaded region: thalamus_base | populations=0
+[DEBUG] Loaded region: trn | populations=1
+[DEBUG] Loaded region: vpl | populations=2
+[DEBUG] Loaded region: vpm | populations=1
+[DEBUG] Loaded region: ca1 | populations=2
+[DEBUG] Loaded region: ca3 | populations=2
+[DEBUG] Loaded region: dentate_gyrus | populations=2
+[DEBUG] Loaded region: hip_base | populations=0
+[DEBUG] Loaded region: subiculum | populations=1
+[DEBUG] Loaded region: association_cortex | populations=4
+[DEBUG] Loaded region: corpus_callosum | populations=1
+[DEBUG] Loaded region: Intralaminar | populations=1
+[DEBUG] Loaded region: pfc | populations=6
+[DEBUG] Loaded region: inferior_colliculus | populations=3
+[DEBUG] Loaded region: superior_colliculus | populations=3
+[DEBUG] Loaded region: auditory_input | populations=0
+[DEBUG] Loaded region: gustatory_input | populations=0
+[DEBUG] Loaded region: sensory_base | populations=0
+[DEBUG] Loaded region: somato_input | populations=0
+[DEBUG] Loaded region: visual_input | populations=1
+[DEBUG] Total regions loaded: 54
+[DEBUG] Profiles loaded: 12
+[DEBUG] Global dynamics loaded from C:\Users\Admin\Desktop\deltagem\config\global_dynamics.json
+[DEBUG] Routing defaults loaded from C:\Users\Admin\Desktop\deltagem\config\routing_defaults.json
+[DEBUG] Compile complete.
+  Regions: 54
+  Assembly downscale: 1.0
+
+======================================
+PHASE 1 — MODEL / COGNITIVE EXECUTION
+======================================
+
+Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
+
+[ROUTING] selected route = llm
+
+[MEMORY DEBUG]
+query: Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
+memory_hit: None
+----------------
+
+[RECALL OUTPUT]
+recall_candidate: None
+----------------
+
+[DECISION] LLM ROUTE SELECTED
+
+======================================
+BEGIN MODEL PIPELINE
+======================================
+
+[Router] Machine profile = laptop
+[Router] Route chain = ['phi3', 'qwen']
+[Router] Confidence threshold = 0.78
+
+-------------------------------------
+MODEL: phi3
+-------------------------------------
+
+================================
+MODEL START: phi3
+================================
+
+[ModelSession] Loading model: phi3
+[ModelSession] Path: C:\Users\Admin\Desktop\models\lmstudio-community\Phi-3.1-mini-4k-instruct-GGUF\Phi-3.1-mini-4k-instruct-Q4_K_M.gguf
+
+{"action":"compare","target":"tokamak_control_comparison", "answer": "ITER's plasma control design focuses on conservative integrated stability, ensuring robustness against perturbations. DIII-D experiments prioritize advanced feedback development to enhance operational efficiency and performance under various conditions.", "confidence":0.9}
+
+[VALIDATOR CLOSED] INCOMPLETE_ANSWER: answer does not address required entities: EAST
+[ANALYSIS PARALYSIS] SLM failed to find a safe hypothesis. Cortical freeze triggered.
+[ModelSession] Unloading model: phi3
+MODEL COMPLETE: phi3
+EXECUTION TIME: 79.72s
+================================
+
+
+[Router] phi3 confidence = 0.000
+[Router] Confidence too low.
+[Router] Passing result to next model for critique.
+
+-------------------------------------
+MODEL: qwen
+-------------------------------------
+
+================================
+MODEL START: qwen
+================================
+
+[ModelSession] Loading model: qwen
+[ModelSession] Path: C:\Users\Admin\Desktop\models\lmstudio-community\Qwen2.5-7B-Instruct-GGUF\Qwen2.5-7B-Instruct-Q4_K_M.gguf
+llama_new_context_with_model: n_ctx_per_seq (8192) < n_ctx_train (32768) -- the full capacity of the model will not be utilized
+ {"action":"compare","target":"tokamak_control_comparison","answer":"ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.","confidence":0.9}
+
+[VALIDATOR OPEN] Response passed validation.
+
+[ML GENERATION] SLM Proposes: compare
+[AR SIMULATION] PFC isolating 'What-If' scenario...
+[AR EVALUATION] Somatic Score: 0.4
+[GATE OPEN] Thought aligns with AR bounds. Proceed to physical execution.
+[ModelSession] Unloading model: qwen
+MODEL COMPLETE: qwen
+EXECUTION TIME: 128.62s
+================================
+
+
+[Router] qwen confidence = 0.900
+[Router] Confidence threshold met.
+[Router] Accepting result.
+
+
+[LLM DEBUG]
+raw_output: {"action":"compare","target":"tokamak_control_comparison","answer":"ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.","confidence":0.9}
+parsed_answer: ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+final_output: ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+confidence: 0.9
+----------------
+[STORE CHECK] route = llm
+
+--- STORE DECISION ---
+ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+confidence: 0.900
+Store this as memory trace? (y/n): y
+[REPLAY] enqueued bundle (queue size=1)
+
+--- FIRST RESULT ---
+route: llm
+output: ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+confidence: 0.9
+success: True
+--------------------
+
+[REPLAY] pending bundles: 1
+
+======================================
+PHASE 2 — REPLAY
+======================================
+
+[REPLAY] starting run id=bridge_replay_0
+[REPLAY] processing 1 bundle(s)
+[REPLAY] building artifact for inquiry: Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
+[REPLAY] artifact: {'pfc': 17.878996333283027, 'vta': 0.4279107878178565, 'urgency': 0.0}
+[REPLAY] pipeline execution complete
+[REPLAY] stored artifact for sem:compare the stability criteria used in three different tokamak control strategies: iter plasma control design, diii-d advanced tokamak experiments, and east superconducting tokamak operations. explain the differences in feedback control loops and confinement stability mechanisms. iter, diii-d and east use different stability criteria. iter focuses on integrated plasma control design with a conservative approach, while diii-d emphasizes experimental advanced tokamak feedback development for optimizing performance. east, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+[REPLAY] stored 1 artifact(s)
+[REPLAY] queue cleared
+[RECALL] registry updated: 1 item(s)
+
+======================================
+PHASE 3 — RECALL CHECK
+======================================
+
+Recall prompt:
+Compare ITER, DIII-D, and EAST tokamak control stability methods.
+
+[ROUTING] selected route = llm
+
+[MEMORY DEBUG]
+query: Compare ITER, DIII-D, and EAST tokamak control stability methods.
+memory_hit: None
+----------------
+
+[RECALL INPUT]
+query: Compare ITER, DIII-D, and EAST tokamak control stability methods.
+suggestion_count: 1
+ -> semantic_id: sem:compare the stability criteria used in three different tokamak control strategies: iter plasma control design, diii-d advanced tokamak experiments, and east superconducting tokamak operations. explain the differences in feedback control loops and confinement stability mechanisms. iter, diii-d and east use different stability criteria. iter focuses on integrated plasma control design with a conservative approach, while diii-d emphasizes experimental advanced tokamak feedback development for optimizing performance. east, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+    answer: ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+    inquiry: Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
+----------------
+
+[RECALL DEBUG] ----------------
+mode: STATE
+query: compare iter, diii-d, and east tokamak control stability methods.
+candidate inquiry: Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
+answer: ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+semantic_id: sem:compare the stability criteria used in three different tokamak control strategies: iter plasma control design, diii-d advanced tokamak experiments, and east superconducting tokamak operations. explain the differences in feedback control loops and confinement stability mechanisms. iter, diii-d and east use different stability criteria. iter focuses on integrated plasma control design with a conservative approach, while diii-d emphasizes experimental advanced tokamak feedback development for optimizing performance. east, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+artifact_found: True
+query_artifact: {'pfc': 16.79416084977399, 'vta': 0.45414644285493694, 'urgency': 0.0}
+stored_artifact: {'pfc': 17.878996333283027, 'vta': 0.4279107878178565, 'urgency': 0.0}
+similarity: 0.9255167881931736
+pressure: 1.0
+score: 0.9478617517352215
+filtered: False
+----------------
+
+[RECALL RESULT]
+best inquiry: Compare the stability criteria used in three different tokamak control strategies:
+ITER plasma control design,
+DIII-D advanced tokamak experiments,
+and EAST superconducting tokamak operations.
+
+Explain the differences in feedback control loops and confinement stability mechanisms.
+best semantic_id: sem:compare the stability criteria used in three different tokamak control strategies: iter plasma control design, diii-d advanced tokamak experiments, and east superconducting tokamak operations. explain the differences in feedback control loops and confinement stability mechanisms. iter, diii-d and east use different stability criteria. iter focuses on integrated plasma control design with a conservative approach, while diii-d emphasizes experimental advanced tokamak feedback development for optimizing performance. east, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+best similarity: 0.9255167881931736
+best score: 0.9478617517352215
+----------------
+
+
+[RECALL OUTPUT]
+recall_candidate: {'answer': 'ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.', 'confidence': 0.9, 'source': 'recall', 'semantic_id': 'sem:compare the stability criteria used in three different tokamak control strategies: iter plasma control design, diii-d advanced tokamak experiments, and east superconducting tokamak operations. explain the differences in feedback control loops and confinement stability mechanisms. iter, diii-d and east use different stability criteria. iter focuses on integrated plasma control design with a conservative approach, while diii-d emphasizes experimental advanced tokamak feedback development for optimizing performance. east, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.'}
+----------------
+
+[DECISION] RECALL SELECTED
+[REPLAY] skipping store (source = recall)
+
+--- SECOND RESULT ---
+route: recall
+output: ITER, DIII-D and EAST use different stability criteria. ITER focuses on integrated plasma control design with a conservative approach, while DIII-D emphasizes experimental advanced tokamak feedback development for optimizing performance. EAST, on the other hand, prioritizes long-pulse superconducting operational stability to achieve sustained high-confinement modes.
+confidence: 0.9
+success: True
+---------------------
+
+======================================
+FULL SYSTEM CYCLE COMPLETE
+======================================
+(.venv311) PS C:\Users\Admin\Desktop\deltagem>

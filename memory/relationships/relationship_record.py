@@ -12,5 +12,7 @@ class RelationshipRecord:
     target_id: str
     relationship_type: str
     confidence: float = 1.0
+    weight: float = 1.0
+    reinforcement_count: int = 1
     evidence: str = ""
     metadata: Dict[str, Any] = field(default_factory=dict)

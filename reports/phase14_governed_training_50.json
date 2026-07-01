@@ -1,0 +1,561 @@
+{
+  "baseline_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 0,
+    "memories": 16,
+    "predictions": 16,
+    "relationships": 0,
+    "semantic_knowledge": 16
+  },
+  "baseline_prediction_quality": {
+    "accuracy": null,
+    "average_evidence_score": null,
+    "coverage": 0.0,
+    "evaluated": 0,
+    "failed": 0,
+    "failure_rate": null,
+    "open": 16,
+    "supported": 0,
+    "total": 16
+  },
+  "bootstrap": {
+    "goals_created": 4,
+    "predictions_created": 16,
+    "semantic_created": 16
+  },
+  "count_delta": {
+    "contradictions": 12,
+    "goals": 0,
+    "learning": 50,
+    "memories": 100,
+    "predictions": 8,
+    "relationships": 50,
+    "semantic_knowledge": 1
+  },
+  "cycle_summaries": [
+    {
+      "capability": "prediction",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "prediction-error-snow-route",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 96,
+        "learning_record_count": 40,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 41
+    },
+    {
+      "capability": "prediction",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "prediction-error-inventory",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 98,
+        "learning_record_count": 41,
+        "semantic_knowledge_count": 17,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 42
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "cross-domain-research-policy",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 100,
+        "learning_record_count": 42,
+        "semantic_knowledge_count": 17,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 43
+    },
+    {
+      "capability": "contradiction",
+      "consolidation": {
+        "contradictions_detected": 1,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "contradictory-policy",
+      "provider_model": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+      "self_model": {
+        "experience_count": 102,
+        "learning_record_count": 43,
+        "semantic_knowledge_count": 17,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 44
+    },
+    {
+      "capability": "planning",
+      "consolidation": {
+        "contradictions_detected": 1,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "planning-failure-construction",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 104,
+        "learning_record_count": 44,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 45
+    },
+    {
+      "capability": "transfer",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "transfer-medical-to-maintenance",
+      "provider_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 106,
+        "learning_record_count": 45,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 46
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "cross-domain-budget-weather",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 108,
+        "learning_record_count": 46,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 47
+    },
+    {
+      "capability": "planning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "planning-failure-hospital",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 110,
+        "learning_record_count": 47,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 48
+    },
+    {
+      "capability": "prediction",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "prediction-error-snow-route",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 112,
+        "learning_record_count": 48,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 49
+    },
+    {
+      "capability": "prediction",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "prediction-error-inventory",
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 114,
+        "learning_record_count": 49,
+        "semantic_knowledge_count": 17,
+        "warnings": [
+          "contradiction pressure is high"
+        ]
+      },
+      "tick": 50
+    }
+  ],
+  "cycles_completed": 50,
+  "cycles_per_second": 0.6576,
+  "cycles_requested": 50,
+  "elapsed_seconds": 76.0311,
+  "final_counts": {
+    "contradictions": 12,
+    "goals": 4,
+    "learning": 50,
+    "memories": 116,
+    "predictions": 24,
+    "relationships": 50,
+    "semantic_knowledge": 17
+  },
+  "final_prediction_quality": {
+    "accuracy": 1.0,
+    "average_evidence_score": 0.7348,
+    "coverage": 0.9583,
+    "evaluated": 23,
+    "failed": 0,
+    "failure_rate": 0.0,
+    "open": 1,
+    "supported": 23,
+    "total": 24
+  },
+  "objectives": [
+    {
+      "calibration_score": 0.7405,
+      "capability": "prediction",
+      "objective_id": "prediction-error-snow-route",
+      "surprise": 0.6,
+      "utility": 0.756
+    },
+    {
+      "calibration_score": 0.691,
+      "capability": "prediction",
+      "objective_id": "prediction-error-inventory",
+      "surprise": 0.25,
+      "utility": 0.7345
+    },
+    {
+      "calibration_score": 0.6555,
+      "capability": "cross_domain",
+      "objective_id": "cross-domain-research-policy",
+      "surprise": 0.25,
+      "utility": 0.6807
+    },
+    {
+      "calibration_score": 0.61,
+      "capability": "contradiction",
+      "objective_id": "contradictory-policy",
+      "surprise": 0.25,
+      "utility": 0.661
+    },
+    {
+      "calibration_score": 0.587,
+      "capability": "planning",
+      "objective_id": "planning-failure-construction",
+      "surprise": 0.25,
+      "utility": 0.6268
+    },
+    {
+      "calibration_score": 0.4883,
+      "capability": "transfer",
+      "objective_id": "transfer-medical-to-maintenance",
+      "surprise": 0.0,
+      "utility": 0.5211
+    },
+    {
+      "calibration_score": 0.4875,
+      "capability": "cross_domain",
+      "objective_id": "cross-domain-budget-weather",
+      "surprise": 0.0,
+      "utility": 0.5211
+    },
+    {
+      "calibration_score": 0.4721,
+      "capability": "planning",
+      "objective_id": "planning-failure-hospital",
+      "surprise": 0.35,
+      "utility": 0.5678
+    }
+  ],
+  "provider_hints": {
+    "contradiction": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "cross_domain": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "planning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "prediction": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "transfer": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+  },
+  "run_id": "governed_training_20260701T042214Z",
+  "self_model": {
+    "capabilities": [
+      "run one explicit cognitive cycle",
+      "store immutable experience records",
+      "rank recalled memories through attention",
+      "assemble per-cycle working memory",
+      "emit structured reflection and learning records",
+      "consolidate semantic knowledge from learning records",
+      "generate predictions from confident semantic knowledge",
+      "validate predictions through append-only evidence records",
+      "track explicit goals, proposed plans, and agency proposals",
+      "run bounded cognitive runtime ticks",
+      "generate self-model metrics from existing regions"
+    ],
+    "cognitive_health": {
+      "contradiction_pressure": 0.7059,
+      "fragmentation": 0.569,
+      "goal_overload": "unknown",
+      "knowledge_stability": 0.2941,
+      "learning_efficiency": 0.34,
+      "memory_growth": 116,
+      "prediction_quality": 1.0,
+      "reflection_coverage": 0.431,
+      "warnings": [
+        "contradiction pressure is high"
+      ]
+    },
+    "confidence_distribution": {
+      "memory": {
+        "high": 72,
+        "low": 37,
+        "medium": 7
+      },
+      "predictions": {
+        "high": 0,
+        "low": 0,
+        "medium": 24
+      },
+      "semantic_knowledge": {
+        "high": 17,
+        "low": 0,
+        "medium": 0
+      }
+    },
+    "contradictions": {
+      "pressure": 0.7059,
+      "total": 12
+    },
+    "generated_at": "2026-07-01T04:22:14.150874+00:00",
+    "identity": {
+      "continuity_source": "append-only state and generated reports",
+      "name": "Delta",
+      "type": "persistent cognitive substrate"
+    },
+    "knowledge_coverage": {
+      "concepts": [
+        "goal",
+        "action",
+        "planning",
+        "prediction",
+        "simulation",
+        "learning",
+        "language",
+        "number",
+        "curiosity",
+        "Repeated attended context appears relevant to the prompt"
+      ],
+      "coverage_note": "coverage is inferred from explicit semantic records only",
+      "semantic_records": 17
+    },
+    "learning": {
+      "recent_questions": [],
+      "recent_records": 50,
+      "records": 50
+    },
+    "limitations": [
+      "goal progress feedback is not yet implemented",
+      "planning is proposal-only and non-executing",
+      "prediction evaluation is first-pass evidence claim scoring",
+      "confidence is not yet derived from complete justification history",
+      "attention has no durable decay model yet",
+      "self-model is generated on demand, not continuously scheduled"
+    ],
+    "metrics": {
+      "attention_distribution": {
+        "agency": 3,
+        "bootstrap": 16,
+        "calibration": 100,
+        "contradiction": 12,
+        "contradictory-policy": 12,
+        "cross-domain-budget-weather": 12,
+        "cross-domain-research-policy": 12,
+        "cross_domain": 24,
+        "cycle": 100,
+        "governed": 100,
+        "knowledge": 3,
+        "learning": 1,
+        "llm": 8,
+        "memory": 42,
+        "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m": 12,
+        "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m": 12,
+        "motivation": 1,
+        "observation": 50,
+        "output": 50,
+        "planning": 24,
+        "planning-failure-construction": 12,
+        "planning-failure-hospital": 12,
+        "prediction": 28,
+        "prediction-error-inventory": 14,
+        "prediction-error-snow-route": 14,
+        "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": 76,
+        "reasoning": 2,
+        "self_world": 1,
+        "simulation": 2,
+        "training": 100,
+        "transfer": 12,
+        "transfer-medical-to-maintenance": 12,
+        "world_model": 3
+      },
+      "average_knowledge_confidence": 0.8171,
+      "average_memory_confidence": 0.6277,
+      "average_prediction_confidence": 0.7093,
+      "consolidation_rate": 0.34,
+      "contradiction_count": 12,
+      "experience_count": 116,
+      "generated_at": "2026-07-01T04:22:14.150874+00:00",
+      "learning_record_count": 50,
+      "open_prediction_count": 1,
+      "prediction_accuracy": 1.0,
+      "prediction_count": 24,
+      "recent_learning_count": 50,
+      "recent_reflection_count": 50,
+      "reflection_count": 50,
+      "relationship_count": 50,
+      "relationship_density": 0.431,
+      "semantic_knowledge_count": 17,
+      "temporal": {
+        "history": {
+          "first_experience_at": "2026-07-01T04:20:57.970578+00:00",
+          "first_learning_at": "2026-07-01T04:21:11.149943+00:00",
+          "latest_experience_at": "2026-07-01T04:22:14.103074+00:00",
+          "latest_learning_at": "2026-07-01T04:22:14.103074+00:00"
+        },
+        "last_7_days": {
+          "experience_count": 116,
+          "learning_count": 50
+        },
+        "today": {
+          "experience_count": 116,
+          "learning_count": 50
+        }
+      },
+      "working_memory_utilization": null
+    },
+    "predictions": {
+      "accuracy": 1.0,
+      "open": 1,
+      "quality": {
+        "accuracy": 1.0,
+        "average_evidence_score": 0.7348,
+        "coverage": 0.9583,
+        "evaluated": 23,
+        "failed": 0,
+        "failure_rate": 0.0,
+        "open": 1,
+        "supported": 23,
+        "total": 24
+      },
+      "recent": [
+        "4cfd57a6-0eca-4a09-a589-9c563efaf2bf",
+        "a2c39cc6-4a32-47ba-a7bf-dab494cf8bb5",
+        "a0a7a5e0-17b4-4f0e-ade2-a2eed974ece6",
+        "6ced17e1-7a8d-4a3e-88dc-b3b08ad3ea95",
+        "a758ab1c-0914-4deb-8bf5-ce8d104609d4",
+        "02133c3e-1d26-4a43-80dc-0280c5b359c8",
+        "95b7c56e-a82b-4a2a-bfda-2cc2c4a9e938",
+        "69d3c3da-95d1-491e-9e8a-3c518b1caff5",
+        "3b0c5ed1-38b3-47ad-b3e0-fdffb0f7d522",
+        "eb4e4af3-8b32-4867-bd87-58f7e0c85f74"
+      ],
+      "total": 24
+    },
+    "self_observations": [
+      {
+        "kind": "contradiction_pressure",
+        "severity": "medium",
+        "summary": "Contradiction pressure is high relative to semantic knowledge."
+      }
+    ],
+    "subsystem_health": {
+      "contradictions": {
+        "status": "pressurized"
+      },
+      "goals": {
+        "status": "proposal_layer"
+      },
+      "knowledge": {
+        "status": "active"
+      },
+      "learning": {
+        "status": "active"
+      },
+      "memory": {
+        "status": "active"
+      },
+      "planning": {
+        "status": "proposal_layer"
+      },
+      "predictions": {
+        "status": "active"
+      },
+      "relationships": {
+        "status": "active"
+      }
+    },
+    "temporal_continuity": {
+      "history": {
+        "first_experience_at": "2026-07-01T04:20:57.970578+00:00",
+        "first_learning_at": "2026-07-01T04:21:11.149943+00:00",
+        "latest_experience_at": "2026-07-01T04:22:14.103074+00:00",
+        "latest_learning_at": "2026-07-01T04:22:14.103074+00:00"
+      },
+      "last_7_days": {
+        "experience_count": 116,
+        "learning_count": 50
+      },
+      "today": {
+        "experience_count": 116,
+        "learning_count": 50
+      }
+    }
+  },
+  "store_root": "data\\training\\phase14_governed_50"
+}

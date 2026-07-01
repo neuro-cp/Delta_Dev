@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from functools import lru_cache
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Iterable, Sequence
@@ -217,6 +218,7 @@ class SimulationRegion:
         return sum(items) / len(items)
 
     @staticmethod
+    @lru_cache(maxsize=8192)
     def _tokens(value: str) -> set[str]:
         return {
             token
