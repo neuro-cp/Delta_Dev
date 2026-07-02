@@ -1,0 +1,395 @@
+We are working in G:\Delta_Dev on DELTA.
+
+Runtime V1.3 is complete.
+
+Final V1.3 state:
+- Model B remains default.
+- HYB1 is retained only as dormant/env-gated prototype.
+- HYB1 flag: DELTA_RUNTIME_V13_HYB1_ENABLED=true.
+- HYB1 default parity passed.
+- HYB1 enabled validation passed.
+- No further V1.3 variant work should continue.
+
+Current strategic direction:
+Build outward from the stable V1.3 core.
+
+Stable core already largely ready:
+- activation
+- attention selection
+- lane/citation/reasoning gate
+- reasoning/planning
+- uncertainty/safety check
+
+V1.4A goal:
+Build the nearest missing scaffolds around the core:
+1. evidence role metadata
+2. lane-specific permission schema
+3. CandidateEnvelope lifecycle
+4. negative feedback / selective pruning record schema
+5. report-only original DELTA gap map
+
+This is safe scaffolding for future learning, not active learning.
+
+Hard boundaries:
+Do not train.
+Do not promote memories.
+Do not prune live memory.
+Do not mutate canonical storage.
+Do not delete concepts.
+Do not enable HYB1 by default.
+Do not change Model B default behavior.
+Do not modify benchmark fixtures.
+Do not modify provider prompts.
+Do not implement active specialist routing yet.
+Do not execute actions.
+Do not make external network calls.
+
+Step 1 — Repo-aware inspection:
+Read:
+- docs/ARCHITECTURE.md
+- docs/INVARIANTS.md
+- docs/ROADMAP.md
+- docs/UPDATE.md
+- orchestration/runtime/
+- reports/runtime_v13_model_b_mbv2_hybrid_test.md
+- reports/runtime_v14_corpus_sufficiency_audit.md
+
+Before implementing, identify existing patterns for:
+- runtime dataclasses/types
+- enum style
+- report generation
+- tests
+- default runtime selection
+- HYB1 env-gated pattern
+- no-env default parity protection
+
+Step 2 — Implement only V1.4A safe scaffolds.
+
+Create or update:
+
+orchestration/runtime/v14_signals.py
+orchestration/runtime/v14_lanes.py
+orchestration/runtime/v14_pruning.py
+orchestration/runtime/v14_candidate_envelope.py
+orchestration/runtime/v14_gap_map.py
+tests/runtime_v14/test_v14_safe_scaffolds.py
+reports/runtime_v14_original_delta_gap_map.md
+reports/runtime_v14_original_delta_gap_map.json
+
+Also update orchestration/runtime/__init__.py only if safe exports are appropriate.
+Do not alter default runtime selection.
+
+Implementation requirements:
+
+1. v14_signals.py
+
+Define enums/dataclasses for evidence-role metadata:
+
+- EvidenceFunction:
+  - causal_evidence
+  - contradiction_evidence
+  - exception_evidence
+  - constraint_evidence
+  - revision_evidence
+  - tradeoff_evidence
+  - uncertainty_evidence
+  - planning_dependency
+  - generic_context
+  - unknown
+
+- CausalRole:
+  - cause
+  - effect
+  - mediator
+  - inhibitor
+  - amplifier
+  - precondition
+  - consequence
+  - unknown
+
+- ClaimPolarity:
+  - supports
+  - contradicts
+  - qualifies
+  - uncertain
+  - neutral
+  - unknown
+
+- ContradictionDirection:
+  - direct_conflict
+  - exception_to_rule
+  - weakens_claim
+  - reverses_claim
+  - no_contradiction
+  - unknown
+
+- DecisionCriticality:
+  - action_blocking
+  - action_guiding
+  - context_only
+  - low
+  - unknown
+
+- UncertaintyRole:
+  - risk_marker
+  - missing_evidence
+  - conflicting_evidence
+  - estimate
+  - unknown
+
+- EvidenceRoleMetadata dataclass:
+  - evidence_function
+  - causal_role
+  - claim_polarity
+  - contradiction_direction
+  - decision_criticality
+  - uncertainty_role
+  - confidence
+  - notes
+
+- SemanticSignalSet dataclass:
+  - evidence_role
+  - relation_terms
+  - action_terms
+  - outcome_terms
+  - constraint_terms
+  - uncertainty_terms
+  - source
+
+Add helpers:
+- empty_signal_set()
+- merge_signal_sets()
+- is_strong_evidence_role()
+
+2. v14_lanes.py
+
+Define:
+
+- RuntimeLane:
+  - activation
+  - attention
+  - reasoning
+  - planning
+  - response
+  - execution
+
+- LanePermission:
+  - visible
+  - selectable
+  - citable
+  - planning_support
+  - response_support
+  - executable
+  - blocked
+
+- LanePolicy dataclass:
+  - lane
+  - permission
+  - reason
+  - confidence
+  - reversible
+
+- ConceptLaneState dataclass:
+  - concept_id
+  - policies
+  - source
+  - created_at
+
+Add helpers:
+- allow_activation_only(concept_id, reason)
+- block_reasoning_lane(concept_id, reason)
+- block_planning_lane(concept_id, reason)
+- can_use_in_lane(state, lane, required_permission)
+
+3. v14_pruning.py
+
+Define selective pruning / corrective dampening record schema.
+
+Enums:
+
+- PruningFailureType:
+  - same_topic_noise
+  - wrong_relation_usage
+  - wrong_evidence_role
+  - generic_anchor_dominance
+  - centrality_bias
+  - confidence_promotion_error
+  - planning_drift
+  - reasoning_drift
+  - response_drift
+  - false_or_corrupt_concept
+  - benchmark_artifact
+
+- CorrectiveAction:
+  - dampen
+  - lane_block
+  - require_context
+  - quarantine
+  - review_required
+  - no_action
+
+Dataclass:
+
+- PruningRecord:
+  - concept_id
+  - failure_context_hash
+  - failure_type
+  - affected_lane
+  - corrective_action
+  - evidence_snapshot
+  - confidence
+  - decay_rule
+  - reversal_condition
+  - source_report
+  - human_review_required
+  - created_at
+
+Add helpers:
+- propose_pruning_record(...)
+- apply_pruning_projection(...)
+- should_require_human_review(...)
+- is_reversible_action(...)
+
+Important:
+Do not actually prune anything.
+This module proposes records/projections only.
+
+4. v14_candidate_envelope.py
+
+Define lifecycle schema.
+
+Enums:
+- CandidateState:
+  - generated
+  - validated
+  - queued_for_replay
+  - replay_completed
+  - eligible_for_review
+  - authorized
+  - vetoed
+  - archived
+
+Dataclasses:
+- CandidateProvenance
+- CandidateConfidence
+- CandidateDecisionTrace
+- CandidateEnvelope
+
+Helpers:
+- create_candidate_envelope(...)
+- transition_candidate(...)
+- validate_transition(...)
+- archive_candidate(...)
+
+Invalid lifecycle transitions must be rejected.
+
+5. v14_gap_map.py
+
+Create report-only mapping of original DELTA concepts to current repo readiness.
+
+Include concepts:
+- evidence role metadata
+- lane-specific permissions
+- selective pruning / corrective dampening
+- negative feedback memory
+- CandidateEnvelope lifecycle
+- replay-driven learning
+- episodic-to-semantic consolidation
+- live canonical memory store
+- structural semantic adapter
+- hypothesis arbitration
+- confidence inertia / volatility
+- internal rollout
+- execution authorization
+- DMSA/multi-stream assessment
+- specialist routing
+- unknown-answer output port
+- controlled training
+
+Classify each as:
+- implemented
+- partially_implemented
+- scaffold_added
+- not_implemented
+- must_wait
+
+Add helpers:
+- build_original_delta_gap_map()
+- write_gap_map_report(md_path, json_path)
+
+Report must mention:
+- V1.3 complete
+- Model B default
+- HYB1 dormant/env-gated
+- corpus sufficiency result: no concept_absent; most misses redundant/buried/benchmark/new-signal
+- V1.4A scaffolds added
+- no training/pruning/canonical mutation happened
+- recommended next step
+
+6. Tests
+
+Create:
+tests/runtime_v14/test_v14_safe_scaffolds.py
+
+Test:
+- all new modules import
+- empty_signal_set works
+- strong evidence role detection works
+- lane policy can allow activation but block reasoning
+- pruning records default to reversible for dampen/require_context/lane_block
+- quarantine or false/corrupt concept requires human review
+- apply_pruning_projection does not mutate input object
+- CandidateEnvelope valid transitions work
+- invalid transitions are rejected
+- archive_candidate works
+- gap map builds and includes required concepts
+- Model B default behavior is not changed by imports
+- HYB1 flag is not enabled by default
+
+7. Reports
+
+Create:
+reports/runtime_v14_original_delta_gap_map.md
+reports/runtime_v14_original_delta_gap_map.json
+
+Report sections:
+1. Summary
+2. Current V1.3 final state
+3. Corpus sufficiency result
+4. V1.4A scaffolds added
+5. Original DELTA concepts implemented/partial/scaffolded/missing
+6. What remains dormant
+7. What must wait for live canonical storage
+8. Safety boundaries preserved
+9. Recommended next step
+10. Continuation checkpoint
+
+Final recommendation must be exactly one of:
+- PROCEED_OUTPUT_DISCIPLINE_SCAFFOLD
+- PROCEED_LIVE_CANONICAL_STORE_DESIGN
+- PROCEED_SELECTIVE_PRUNING_PROTOTYPE_REPORT_ONLY
+- CHECKPOINT_V14A_SCAFFOLD_COMPLETE
+- RUN_MORE_DIAGNOSTICS
+
+Expected recommendation:
+PROCEED_OUTPUT_DISCIPLINE_SCAFFOLD
+
+Verification:
+Run py_compile on each new Python file:
+.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\v14_signals.py
+.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\v14_lanes.py
+.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\v14_pruning.py
+.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\v14_candidate_envelope.py
+.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\v14_gap_map.py
+
+Then run:
+.\.venv311\Scripts\python.exe -m pytest tests\runtime_v14\test_v14_safe_scaffolds.py
+
+Do not run destructive commands.
+
+Final Codex response should report only:
+- files created/updated
+- compile status
+- test status
+- default behavior status
+- final recommendation

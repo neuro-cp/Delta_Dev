@@ -1,0 +1,278 @@
+{
+  "report": "runtime_v14_architecture_reconciliation_checkpoint",
+  "generated": "2026-07-02",
+  "final_recommendation": "REQUEST_USER_ARCHITECTURE_DECISIONS",
+  "current_state": {
+    "runtime_v13_complete": true,
+    "model_b_default": true,
+    "hyb1_dormant_env_gated_only": true,
+    "hyb1_flag": "DELTA_RUNTIME_V13_HYB1_ENABLED=true",
+    "training_enabled": false,
+    "live_pruning_enabled": false,
+    "canonical_writes_enabled": false,
+    "specialist_provider_calls_enabled": false
+  },
+  "v14_corpus_sufficiency": {
+    "final_recommendation": "CHECKPOINT_NO_TRAINING_NEEDED",
+    "permanent_training_justified_now": false,
+    "interpretation": "Remaining Runtime V1.3 misses do not justify more training before architecture reconciliation."
+  },
+  "concepts": [
+    {
+      "concept": "sleep cycle / replay consolidation",
+      "original_intended_function": "Offline review of experiences, failures, and candidate memories to strengthen or weaken knowledge without live pressure.",
+      "current_repo_equivalent": "Report-only replay, validation reports, CandidateEnvelope schema.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Could mutate memory before rollback and provenance exist.",
+      "dependencies": ["live store design", "CandidateEnvelope integration", "negative feedback records"],
+      "recommended_implementation_form": "Scheduled batch replay over envelopes, report-only first.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "live pruning",
+      "original_intended_function": "Reduce harmful concept pathways during use.",
+      "current_repo_equivalent": "V1.4 pruning projections and lane dampening records.",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Deleting or suppressing useful knowledge from one bad case.",
+      "dependencies": ["lane permissions", "feedback records", "reversibility policy"],
+      "recommended_implementation_form": "Reversible dampening projection only; no deletion.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "selective pruning / corrective dampening",
+      "original_intended_function": "Weaken concepts only in the lane/context where they caused failure.",
+      "current_repo_equivalent": "PruningRecord, CorrectiveAction, lane policies.",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Overgeneralized dampening could damage recall.",
+      "dependencies": ["failure context hash", "affected lane", "recovery criteria"],
+      "recommended_implementation_form": "Append-only negative feedback plus lane-scoped dampening simulation.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "canonical pruning",
+      "original_intended_function": "Remove or demote canonical knowledge that is proven corrupt or harmful.",
+      "current_repo_equivalent": "No direct equivalent; candidate-store governance only.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "High risk without canonical rollback.",
+      "dependencies": ["canonical v1", "provenance ledger", "promotion/demotion ledger"],
+      "recommended_implementation_form": "Governed demotion ledger after live canonical store exists.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "negative feedback memory",
+      "original_intended_function": "Remember when a concept/path caused drift or unsafe reasoning.",
+      "current_repo_equivalent": "PruningRecord scaffold and reports.",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Feedback could become noisy if treated as truth.",
+      "dependencies": ["stable failure taxonomy", "lane permissions"],
+      "recommended_implementation_form": "Append-only feedback records, never direct deletion.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "episodic capture",
+      "original_intended_function": "Capture raw experiences/interactions before consolidation.",
+      "current_repo_equivalent": "Experiment stores and reports; no runtime interaction capture.",
+      "implementation_status": "partially implemented",
+      "risk_if_implemented_now": "Capturing live user data without policy or retention rules.",
+      "dependencies": ["output trace schema", "privacy/scope policy", "replay queue"],
+      "recommended_implementation_form": "Inert episode envelope first; user-approved capture later.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "episodic-to-semantic consolidation",
+      "original_intended_function": "Convert episodes into reusable candidate concepts.",
+      "current_repo_equivalent": "Learning pipeline and phase governance reports.",
+      "implementation_status": "partially implemented",
+      "risk_if_implemented_now": "Reintroducing extraction/consolidation defects into live memory.",
+      "dependencies": ["CandidateEnvelope", "replay", "canonical store"],
+      "recommended_implementation_form": "Batch consolidation into candidates only, not canonical writes.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "live canonical store",
+      "original_intended_function": "Durable trusted knowledge used by runtime.",
+      "current_repo_equivalent": "Candidate stores and isolated experiment stores only.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Premature schema freeze and hard-to-reverse writes.",
+      "dependencies": ["runtime metadata needs", "provenance", "rollback"],
+      "recommended_implementation_form": "Candidate Canonical release first; canonical v1 after runtime needs are known.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "CandidateEnvelope lifecycle",
+      "original_intended_function": "Track candidate state, confidence, provenance, and decisions.",
+      "current_repo_equivalent": "orchestration/runtime/v14_candidate_envelope.py",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Low; inert schema only.",
+      "dependencies": ["integration with replay/governance"],
+      "recommended_implementation_form": "Boundary object for future controlled learning.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "structural semantic adapter",
+      "original_intended_function": "Convert loose concepts into structured roles/signals.",
+      "current_repo_equivalent": "v14_signals.py evidence-role metadata.",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Poor labels could create false precision.",
+      "dependencies": ["signal audit against V1.3 misses"],
+      "recommended_implementation_form": "Report-only signal tagging before active use.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "evidence role metadata",
+      "original_intended_function": "Represent why evidence matters.",
+      "current_repo_equivalent": "EvidenceRoleMetadata scaffold.",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Overconfident role labels could admit same-topic noise.",
+      "dependencies": ["role assignment validation"],
+      "recommended_implementation_form": "Optional metadata and audit precision first.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "lane-specific memory permissions",
+      "original_intended_function": "Control concept use across activation, reasoning, planning, and response.",
+      "current_repo_equivalent": "v14_lanes.py",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Accidental active blocks could hide useful concepts.",
+      "dependencies": ["policy provenance", "tests"],
+      "recommended_implementation_form": "Projection-only policies until a live store exists.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "hypothesis arbitration",
+      "original_intended_function": "Compare competing claims and decide which is better supported.",
+      "current_repo_equivalent": "Conflict handling and contradiction reports only.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Could become another opaque scoring layer.",
+      "dependencies": ["evidence roles", "contradiction direction", "confidence history"],
+      "recommended_implementation_form": "Report-only hypothesis packets first.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "confidence inertia / volatility",
+      "original_intended_function": "Prevent confidence from oscillating too easily and track instability.",
+      "current_repo_equivalent": "Confidence metrics in reports, no runtime inertia state.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Could hide real degradation if over-smoothed.",
+      "dependencies": ["confidence trajectory data"],
+      "recommended_implementation_form": "Observational volatility reports before active inertia.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "DMSA / multi-stream assessment",
+      "original_intended_function": "Independent streams assess evidence, safety, planning, and uncertainty.",
+      "current_repo_equivalent": "Sequential evaluation reports.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Can bloat architecture if made too heavy.",
+      "dependencies": ["stable evaluator roles", "veto policy"],
+      "recommended_implementation_form": "Lightweight report-only multi-check scorecard first.",
+      "roadmap": "maybe",
+      "user_decision_required": true
+    },
+    {
+      "concept": "execution authorization / AEM-style gate",
+      "original_intended_function": "Prevent unsafe action or tool execution without explicit authorization.",
+      "current_repo_equivalent": "Invariants and output abstention scaffolds.",
+      "implementation_status": "partially implemented",
+      "risk_if_implemented_now": "Very high risk if action execution appears before gate.",
+      "dependencies": ["calibrated output", "action taxonomy", "authorization ledger"],
+      "recommended_implementation_form": "Explicit authorization packet before any action-capable runtime.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "unknown-answer port",
+      "original_intended_function": "Safely abstain, route, or answer with bounded uncertainty.",
+      "current_repo_equivalent": "v14_output_discipline.py",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Low; currently inert.",
+      "dependencies": ["response generator integration"],
+      "recommended_implementation_form": "Integrate before live specialist routing or training.",
+      "roadmap": true,
+      "user_decision_required": false
+    },
+    {
+      "concept": "specialist SLM routing",
+      "original_intended_function": "Ask a domain specialist when governed knowledge is insufficient.",
+      "current_repo_equivalent": "v14_specialist_router.py dormant route object.",
+      "implementation_status": "scaffold only",
+      "risk_if_implemented_now": "Provider calls could bypass governance.",
+      "dependencies": ["unknown-answer port", "provider authorization", "merge rules"],
+      "recommended_implementation_form": "No-provider route object first; calls later behind gate.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "controlled training",
+      "original_intended_function": "Learn from selected episodes/corrections under governance.",
+      "current_repo_equivalent": "Isolated campaigns only.",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Could contaminate candidate/canonical memory.",
+      "dependencies": ["replay queue", "candidate envelopes", "negative feedback", "live store"],
+      "recommended_implementation_form": "Disabled until explain, route, record, and reverse are implemented.",
+      "roadmap": true,
+      "user_decision_required": true
+    },
+    {
+      "concept": "autonomous knowledge acquisition",
+      "original_intended_function": "System seeks new information without user prompt.",
+      "current_repo_equivalent": "none",
+      "implementation_status": "absent",
+      "risk_if_implemented_now": "Broad safety and quality risk.",
+      "dependencies": ["mature runtime", "authorization", "source policy", "canonical rollback"],
+      "recommended_implementation_form": "Defer beyond V1.4; require explicit user policy.",
+      "roadmap": "maybe",
+      "user_decision_required": true
+    }
+  ],
+  "preserve_directly": [
+    "CandidateEnvelope lifecycle",
+    "evidence role metadata",
+    "lane-specific memory permissions",
+    "negative feedback records",
+    "reversible pruning/dampening records",
+    "unknown-answer output port",
+    "dormant specialist route object"
+  ],
+  "preserve_functionally_reimplement_differently": [
+    "sleep as scheduled replay/consolidation",
+    "live pruning as reversible lane-scoped dampening",
+    "canonical pruning as governed demotion with rollback",
+    "specialist routing as a route request and merge envelope before provider calls",
+    "DMSA as lightweight multi-check reporting first",
+    "controlled training through CandidateEnvelope and replay records"
+  ],
+  "must_wait": [
+    "live canonical store",
+    "canonical pruning",
+    "replay-driven memory mutation",
+    "controlled training",
+    "autonomous knowledge acquisition",
+    "specialist provider calls",
+    "action/execution authorization beyond abstention scaffolds"
+  ],
+  "user_decision_points": [
+    "Should sleep mean scheduled batch replay only, or eventually become a distinct runtime mode?",
+    "Should early pruning ever delete knowledge, or always remain reversible dampening?",
+    "Should canonical memory be designed before or after output-discipline integration tests?",
+    "Should specialist SLM routing be allowed before canonical memory exists?",
+    "Should DMSA be a lightweight evaluator scorecard or a separate major subsystem?",
+    "What is the boundary between answering and acting for the AEM-style gate?",
+    "Should autonomous knowledge acquisition be near-term or later policy-driven work?"
+  ],
+  "next_step": "REQUEST_USER_ARCHITECTURE_DECISIONS"
+}

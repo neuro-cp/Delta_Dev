@@ -1,0 +1,773 @@
+{
+  "concept_statuses": [
+    {
+      "concept": "conservative runtime inference",
+      "current_repo_evidence": [
+        "orchestration/runtime/runtime_reasoning.py",
+        "reports/runtime_v13_model_b_catastrophic_safety_review.md"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "contextualized corpus support and citation gate",
+      "current_repo_evidence": [
+        "orchestration/runtime/runtime_reasoning.py",
+        "reports/runtime_v13_query_evidence_model_b_live_prototype.md"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "activation and attention diagnostics",
+      "current_repo_evidence": [
+        "orchestration/runtime/candidate_knowledge_retrieval.py",
+        "orchestration/runtime/knowledge_attention.py"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "same-topic noise analysis",
+      "current_repo_evidence": [
+        "reports/runtime_v13_deep_activation_diagnostic.md",
+        "reports/runtime_v14_corpus_sufficiency_audit.md"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "dormant variant path",
+      "current_repo_evidence": [
+        "orchestration/runtime/runtime_reasoning.py",
+        "tests/runtime_v13/test_hyb1_dormant_prototype.py"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "evidence role metadata",
+      "current_repo_evidence": [
+        "reports/runtime_v13_expected_evidence_usability_audit.md",
+        "orchestration/runtime/v14_signals.py"
+      ],
+      "missing_scaffold": [
+        "durable assignment path",
+        "validation against V1.3 misses"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "lane-specific permissions",
+      "current_repo_evidence": [
+        "reports/runtime_v13_evidence_stage_separation_diagnostic.md",
+        "orchestration/runtime/v14_lanes.py"
+      ],
+      "missing_scaffold": [
+        "live read-only policy evaluation",
+        "lane policy provenance"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "selective pruning / corrective dampening",
+      "current_repo_evidence": [
+        "reports/runtime_v13_model_b_remaining_noise_audit.md",
+        "orchestration/runtime/v14_pruning.py"
+      ],
+      "missing_scaffold": [
+        "negative feedback store",
+        "dampening projection validation",
+        "recovery criteria"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "negative feedback memory",
+      "current_repo_evidence": [
+        "orchestration/runtime/v14_pruning.py"
+      ],
+      "missing_scaffold": [
+        "append-only feedback storage",
+        "feedback lifecycle reports"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "CandidateEnvelope lifecycle",
+      "current_repo_evidence": [
+        "orchestration/runtime/v14_candidate_envelope.py"
+      ],
+      "missing_scaffold": [
+        "integration with replay/promotion review",
+        "authorization packets"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "structural semantic adapter",
+      "current_repo_evidence": [
+        "orchestration/runtime/v14_signals.py"
+      ],
+      "missing_scaffold": [
+        "text-to-structure extraction",
+        "evidence function assignment"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "future_v14_signal_design",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "unknown-answer output port",
+      "current_repo_evidence": [
+        "runtime response generator sparse answer behavior"
+      ],
+      "missing_scaffold": [
+        "explicit abstention envelope",
+        "calibrated output bands"
+      ],
+      "status": "not_implemented",
+      "v14_action": "next_v14b",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "specialist routing",
+      "current_repo_evidence": [
+        "provider abstraction docs"
+      ],
+      "missing_scaffold": [
+        "dormant router port",
+        "no-provider mock specialist responses"
+      ],
+      "status": "not_implemented",
+      "v14_action": "next_v14b_dormant_only",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "live canonical memory store",
+      "current_repo_evidence": [
+        "docs/ROADMAP.md",
+        "reports/runtime_v14_corpus_sufficiency_audit.md"
+      ],
+      "missing_scaffold": [
+        "canonical concept registry",
+        "provenance ledger",
+        "version history",
+        "rollback support"
+      ],
+      "status": "must_wait",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "replay-driven learning",
+      "current_repo_evidence": [
+        "reports/runtime_v13_* benchmark replay reports"
+      ],
+      "missing_scaffold": [
+        "episodic replay queue",
+        "replay outcome records",
+        "reinforcement/dampening rules"
+      ],
+      "status": "must_wait",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "episodic-to-semantic consolidation",
+      "current_repo_evidence": [
+        "learning and knowledge stores",
+        "reports/phase* governance reports"
+      ],
+      "missing_scaffold": [
+        "live canonical promotion path",
+        "rollback support"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "hypothesis arbitration",
+      "current_repo_evidence": [
+        "runtime ranking/score reports"
+      ],
+      "missing_scaffold": [
+        "hypothesis objects",
+        "arbitration trace",
+        "disconfirming evidence"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "confidence inertia / volatility",
+      "current_repo_evidence": [
+        "confidence calibration benchmark metric"
+      ],
+      "missing_scaffold": [
+        "internal inertia state",
+        "volatility history",
+        "decay/reinforcement policy"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "internal rollout",
+      "current_repo_evidence": [
+        "Simulation Region in architecture"
+      ],
+      "missing_scaffold": [
+        "runtime action rollout",
+        "failure-mode prediction"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "execution authorization",
+      "current_repo_evidence": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md"
+      ],
+      "missing_scaffold": [
+        "authorization packet",
+        "permit/veto ledger",
+        "execution isolation"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "DMSA/multi-stream assessment",
+      "current_repo_evidence": [
+        "sequential report-only validators"
+      ],
+      "missing_scaffold": [
+        "independent evaluator streams",
+        "veto stream",
+        "cross-stream confidence"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "controlled training",
+      "current_repo_evidence": [
+        "reports/runtime_v14_corpus_sufficiency_audit.md"
+      ],
+      "missing_scaffold": [
+        "live canonical store",
+        "feedback capture",
+        "safe pruning projection"
+      ],
+      "status": "must_wait",
+      "v14_action": "wait",
+      "wait_for_live_store": true
+    }
+  ],
+  "continuation_checkpoint": {
+    "do_not_prune": true,
+    "do_not_train": true,
+    "hyb1_dormant_only": true,
+    "model_b_default_remains_active": true,
+    "next_step": "PROCEED_OUTPUT_DISCIPLINE_SCAFFOLD",
+    "runtime_v13_complete": true,
+    "v14a_scaffold_complete": true
+  },
+  "corpus_sufficiency_result": {
+    "counts": {
+      "benchmark_expected_but_not_live_usable": 2,
+      "concept_present_but_buried_by_noise": 3,
+      "concept_redundant_with_used_evidence": 11,
+      "requires_new_live_signal_not_training": 1
+    },
+    "final_recommendation": "CHECKPOINT_NO_TRAINING_NEEDED",
+    "permanent_training_justified_now": false
+  },
+  "current_v13_final_state": {
+    "default": "Model B",
+    "hyb1": "dormant/env-gated only",
+    "hyb1_flag": "DELTA_RUNTIME_V13_HYB1_ENABLED=true",
+    "v13_variant_work": "stopped unless explicitly requested"
+  },
+  "final_recommendation": "PROCEED_OUTPUT_DISCIPLINE_SCAFFOLD",
+  "generated_at": "2026-07-02T18:13:29",
+  "implemented": [
+    {
+      "concept": "conservative runtime inference",
+      "current_repo_evidence": [
+        "orchestration/runtime/runtime_reasoning.py",
+        "reports/runtime_v13_model_b_catastrophic_safety_review.md"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "contextualized corpus support and citation gate",
+      "current_repo_evidence": [
+        "orchestration/runtime/runtime_reasoning.py",
+        "reports/runtime_v13_query_evidence_model_b_live_prototype.md"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "activation and attention diagnostics",
+      "current_repo_evidence": [
+        "orchestration/runtime/candidate_knowledge_retrieval.py",
+        "orchestration/runtime/knowledge_attention.py"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "same-topic noise analysis",
+      "current_repo_evidence": [
+        "reports/runtime_v13_deep_activation_diagnostic.md",
+        "reports/runtime_v14_corpus_sufficiency_audit.md"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "dormant variant path",
+      "current_repo_evidence": [
+        "orchestration/runtime/runtime_reasoning.py",
+        "tests/runtime_v13/test_hyb1_dormant_prototype.py"
+      ],
+      "missing_scaffold": [],
+      "status": "implemented",
+      "v14_action": "checkpoint",
+      "wait_for_live_store": false
+    }
+  ],
+  "learning_changed": false,
+  "minimal_schema_proposal": {
+    "CandidateEnvelope": [
+      "envelope_id",
+      "candidate_type",
+      "payload",
+      "provenance",
+      "confidence",
+      "decision_trace",
+      "state",
+      "signal_set",
+      "lane_state",
+      "pruning_records"
+    ],
+    "EvidenceRoleMetadata": [
+      "evidence_function",
+      "causal_role",
+      "claim_polarity",
+      "contradiction_direction",
+      "decision_criticality",
+      "uncertainty_role",
+      "confidence",
+      "notes"
+    ],
+    "LanePolicy": [
+      "lane",
+      "permission",
+      "reason",
+      "confidence",
+      "reversible"
+    ],
+    "PruningRecord": [
+      "concept_id",
+      "failure_context_hash",
+      "failure_type",
+      "affected_lane",
+      "corrective_action",
+      "evidence_snapshot",
+      "confidence",
+      "decay_rule",
+      "reversal_condition",
+      "source_report",
+      "human_review_required"
+    ]
+  },
+  "must_wait": [
+    {
+      "concept": "live canonical memory store",
+      "current_repo_evidence": [
+        "docs/ROADMAP.md",
+        "reports/runtime_v14_corpus_sufficiency_audit.md"
+      ],
+      "missing_scaffold": [
+        "canonical concept registry",
+        "provenance ledger",
+        "version history",
+        "rollback support"
+      ],
+      "status": "must_wait",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "replay-driven learning",
+      "current_repo_evidence": [
+        "reports/runtime_v13_* benchmark replay reports"
+      ],
+      "missing_scaffold": [
+        "episodic replay queue",
+        "replay outcome records",
+        "reinforcement/dampening rules"
+      ],
+      "status": "must_wait",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "episodic-to-semantic consolidation",
+      "current_repo_evidence": [
+        "learning and knowledge stores",
+        "reports/phase* governance reports"
+      ],
+      "missing_scaffold": [
+        "live canonical promotion path",
+        "rollback support"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "hypothesis arbitration",
+      "current_repo_evidence": [
+        "runtime ranking/score reports"
+      ],
+      "missing_scaffold": [
+        "hypothesis objects",
+        "arbitration trace",
+        "disconfirming evidence"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "confidence inertia / volatility",
+      "current_repo_evidence": [
+        "confidence calibration benchmark metric"
+      ],
+      "missing_scaffold": [
+        "internal inertia state",
+        "volatility history",
+        "decay/reinforcement policy"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "internal rollout",
+      "current_repo_evidence": [
+        "Simulation Region in architecture"
+      ],
+      "missing_scaffold": [
+        "runtime action rollout",
+        "failure-mode prediction"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "execution authorization",
+      "current_repo_evidence": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md"
+      ],
+      "missing_scaffold": [
+        "authorization packet",
+        "permit/veto ledger",
+        "execution isolation"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "DMSA/multi-stream assessment",
+      "current_repo_evidence": [
+        "sequential report-only validators"
+      ],
+      "missing_scaffold": [
+        "independent evaluator streams",
+        "veto stream",
+        "cross-stream confidence"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "controlled training",
+      "current_repo_evidence": [
+        "reports/runtime_v14_corpus_sufficiency_audit.md"
+      ],
+      "missing_scaffold": [
+        "live canonical store",
+        "feedback capture",
+        "safe pruning projection"
+      ],
+      "status": "must_wait",
+      "v14_action": "wait",
+      "wait_for_live_store": true
+    }
+  ],
+  "not_implemented": [
+    {
+      "concept": "unknown-answer output port",
+      "current_repo_evidence": [
+        "runtime response generator sparse answer behavior"
+      ],
+      "missing_scaffold": [
+        "explicit abstention envelope",
+        "calibrated output bands"
+      ],
+      "status": "not_implemented",
+      "v14_action": "next_v14b",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "specialist routing",
+      "current_repo_evidence": [
+        "provider abstraction docs"
+      ],
+      "missing_scaffold": [
+        "dormant router port",
+        "no-provider mock specialist responses"
+      ],
+      "status": "not_implemented",
+      "v14_action": "next_v14b_dormant_only",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "hypothesis arbitration",
+      "current_repo_evidence": [
+        "runtime ranking/score reports"
+      ],
+      "missing_scaffold": [
+        "hypothesis objects",
+        "arbitration trace",
+        "disconfirming evidence"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "confidence inertia / volatility",
+      "current_repo_evidence": [
+        "confidence calibration benchmark metric"
+      ],
+      "missing_scaffold": [
+        "internal inertia state",
+        "volatility history",
+        "decay/reinforcement policy"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "DMSA/multi-stream assessment",
+      "current_repo_evidence": [
+        "sequential report-only validators"
+      ],
+      "missing_scaffold": [
+        "independent evaluator streams",
+        "veto stream",
+        "cross-stream confidence"
+      ],
+      "status": "not_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    }
+  ],
+  "partially_implemented": [
+    {
+      "concept": "structural semantic adapter",
+      "current_repo_evidence": [
+        "orchestration/runtime/v14_signals.py"
+      ],
+      "missing_scaffold": [
+        "text-to-structure extraction",
+        "evidence function assignment"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "future_v14_signal_design",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "episodic-to-semantic consolidation",
+      "current_repo_evidence": [
+        "learning and knowledge stores",
+        "reports/phase* governance reports"
+      ],
+      "missing_scaffold": [
+        "live canonical promotion path",
+        "rollback support"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "wait_for_live_store_design",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "internal rollout",
+      "current_repo_evidence": [
+        "Simulation Region in architecture"
+      ],
+      "missing_scaffold": [
+        "runtime action rollout",
+        "failure-mode prediction"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    },
+    {
+      "concept": "execution authorization",
+      "current_repo_evidence": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md"
+      ],
+      "missing_scaffold": [
+        "authorization packet",
+        "permit/veto ledger",
+        "execution isolation"
+      ],
+      "status": "partially_implemented",
+      "v14_action": "defer",
+      "wait_for_live_store": true
+    }
+  ],
+  "recommended_next_step": "Build V1.4B output discipline scaffolds: unknown-answer port, calibrated output bands, dormant specialist-router interface, and no-provider mock specialist responses.",
+  "report_only": true,
+  "runtime_behavior_changed": false,
+  "safety_boundaries_preserved": {
+    "benchmark_fixtures_changed": false,
+    "canonical_mutation": false,
+    "hyb1_default_enabled": false,
+    "live_pruning": false,
+    "model_b_default_changed": false,
+    "provider_prompts_changed": false,
+    "training": false
+  },
+  "scaffold_added": [
+    {
+      "concept": "evidence role metadata",
+      "current_repo_evidence": [
+        "reports/runtime_v13_expected_evidence_usability_audit.md",
+        "orchestration/runtime/v14_signals.py"
+      ],
+      "missing_scaffold": [
+        "durable assignment path",
+        "validation against V1.3 misses"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "lane-specific permissions",
+      "current_repo_evidence": [
+        "reports/runtime_v13_evidence_stage_separation_diagnostic.md",
+        "orchestration/runtime/v14_lanes.py"
+      ],
+      "missing_scaffold": [
+        "live read-only policy evaluation",
+        "lane policy provenance"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "selective pruning / corrective dampening",
+      "current_repo_evidence": [
+        "reports/runtime_v13_model_b_remaining_noise_audit.md",
+        "orchestration/runtime/v14_pruning.py"
+      ],
+      "missing_scaffold": [
+        "negative feedback store",
+        "dampening projection validation",
+        "recovery criteria"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "negative feedback memory",
+      "current_repo_evidence": [
+        "orchestration/runtime/v14_pruning.py"
+      ],
+      "missing_scaffold": [
+        "append-only feedback storage",
+        "feedback lifecycle reports"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    },
+    {
+      "concept": "CandidateEnvelope lifecycle",
+      "current_repo_evidence": [
+        "orchestration/runtime/v14_candidate_envelope.py"
+      ],
+      "missing_scaffold": [
+        "integration with replay/promotion review",
+        "authorization packets"
+      ],
+      "status": "scaffold_added",
+      "v14_action": "scaffold_complete",
+      "wait_for_live_store": false
+    }
+  ],
+  "storage_changed": false,
+  "training_run": false,
+  "v14a_scaffolds_added": [
+    "orchestration/runtime/v14_signals.py",
+    "orchestration/runtime/v14_lanes.py",
+    "orchestration/runtime/v14_pruning.py",
+    "orchestration/runtime/v14_candidate_envelope.py",
+    "orchestration/runtime/v14_gap_map.py"
+  ]
+}
