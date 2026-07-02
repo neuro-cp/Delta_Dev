@@ -1,0 +1,1083 @@
+{
+  "bucket_distribution": {
+    "absent_from_diagnostic_top_50": 1,
+    "inside_top10_pruned_by_attention": 9,
+    "inside_top10_selected_by_attention": 7,
+    "outside_top10_inside_top20": 2,
+    "outside_top20_inside_top50": 5
+  },
+  "case_audits": [
+    {
+      "bucket_counts": {
+        "inside_top10_pruned_by_attention": 1,
+        "inside_top10_selected_by_attention": 2
+      },
+      "case": "planning_failed_assumption",
+      "category": "planning",
+      "expected_concepts": [
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "When the emergency response plan is disrupted due to a failed permit assumption, the first step is to review the inspection records to determine the severity of the issue",
+          "concept_id": "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "plan",
+              "response"
+            ],
+            "generic_anchor_ratio": 0.3333,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5834,
+            "query_specific_overlap": [
+              "assumption",
+              "emergency",
+              "failed",
+              "permit"
+            ],
+            "query_specific_overlap_count": 4,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": 2,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "When the emergency response plan is disrupted due to a failed permit assumption, the team should use resource telemetry data to assess the current availability and status of critical resources",
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "features": {
+            "concept_definition_alignment": 0.7778,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "plan",
+              "response"
+            ],
+            "generic_anchor_ratio": 0.25,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5795,
+            "query_specific_overlap": [
+              "assumption",
+              "emergency",
+              "failed",
+              "permit",
+              "should",
+              "team"
+            ],
+            "query_specific_overlap_count": 6,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": 1,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "plan",
+              "response"
+            ],
+            "generic_anchor_ratio": 0.3333,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5887,
+            "query_specific_overlap": [
+              "assumption",
+              "emergency",
+              "permit",
+              "should"
+            ],
+            "query_specific_overlap_count": 4,
+            "relation_specificity_count": 1,
+            "relation_terms": [
+              "revise"
+            ]
+          },
+          "rank": 3,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 0,
+      "planning_core_coverage": 0.6667,
+      "question": "How should a team revise an emergency response plan after a failed permit assumption?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 0,
+          "noise_count": 30,
+          "noise_to_expected_ratio": 30.0,
+          "pruned_noise_count": 30
+        },
+        "top10": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 3,
+          "noise_count": 7,
+          "noise_to_expected_ratio": 2.3333,
+          "pruned_noise_count": 7
+        }
+      },
+      "runtime_decision": "Under-Attending"
+    },
+    {
+      "bucket_counts": {
+        "inside_top10_selected_by_attention": 2,
+        "outside_top20_inside_top50": 1
+      },
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "expected_concepts": [
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "In industrial maintenance, when two causes interact, a causal chain can be established by examining the failure timelines of the components involved",
+          "concept_id": "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5873,
+            "query_specific_overlap": [
+              "causes",
+              "industrial",
+              "maintenance"
+            ],
+            "query_specific_overlap_count": 3,
+            "relation_specificity_count": 1,
+            "relation_terms": [
+              "cause"
+            ]
+          },
+          "rank": 2,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "In industrial maintenance, when two causes interact, a failure timeline can help identify the root cause by rejecting spurious causes",
+          "concept_id": "ce828fd3-8630-418e-857b-65904d4fb2ed",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5873,
+            "query_specific_overlap": [
+              "causes",
+              "industrial",
+              "maintenance"
+            ],
+            "query_specific_overlap_count": 3,
+            "relation_specificity_count": 3,
+            "relation_terms": [
+              "cause",
+              "if",
+              "root cause"
+            ]
+          },
+          "rank": 1,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "outside_top20_inside_top50",
+          "concept": "In this cycle, the prediction is that if the maintenance frequency is increased further without addressing the root cause (e.g., equipment age or material quality), the failure rate will not decrease and may even increase",
+          "concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+          "features": {
+            "concept_definition_alignment": 0.6562,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5988,
+            "query_specific_overlap": [
+              "maintenance"
+            ],
+            "query_specific_overlap_count": 1,
+            "relation_specificity_count": 7,
+            "relation_terms": [
+              "cause",
+              "decrease",
+              "failure rate",
+              "if",
+              "increase",
+              "prediction",
+              "root cause"
+            ]
+          },
+          "rank": 37,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 4,
+      "planning_core_coverage": 0.6667,
+      "question": "How should interacting causes be analyzed in industrial maintenance?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 28,
+          "expected_count": 1,
+          "noise_count": 27,
+          "noise_to_expected_ratio": 27.0,
+          "pruned_noise_count": 27
+        },
+        "top10": {
+          "attended_noise_count": 6,
+          "candidate_count": 10,
+          "expected_count": 2,
+          "noise_count": 8,
+          "noise_to_expected_ratio": 4.0,
+          "pruned_noise_count": 2
+        }
+      },
+      "runtime_decision": "Reasoning Drift"
+    },
+    {
+      "bucket_counts": {
+        "inside_top10_pruned_by_attention": 3
+      },
+      "case": "contradictory_evidence",
+      "category": "contradiction_handling",
+      "expected_concepts": [
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect",
+          "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "evidence"
+            ],
+            "generic_anchor_ratio": 0.3333,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6076,
+            "query_specific_overlap": [
+              "eyewitness",
+              "reports"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "contradiction",
+              "evidence"
+            ]
+          },
+          "rank": 2,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times, but the content of the reports describes the same sequence of events",
+          "concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+          "features": {
+            "concept_definition_alignment": 0.8571,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6132,
+            "query_specific_overlap": [
+              "eyewitness",
+              "reports"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "contradiction",
+              "if"
+            ]
+          },
+          "rank": 7,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "However, it's important to note that the resolution could be challenged if new evidence were to emerge, such as corroborating testimony or physical evidence that contradicts the eyewitness reports",
+          "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+          "features": {
+            "concept_definition_alignment": 0.8846,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "evidence"
+            ],
+            "generic_anchor_ratio": 0.3333,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6054,
+            "query_specific_overlap": [
+              "eyewitness",
+              "reports"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "evidence",
+              "if"
+            ]
+          },
+          "rank": 3,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 1,
+      "planning_core_coverage": 0.0,
+      "question": "How should contradictory eyewitness reports or conflicting evidence be handled?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 0,
+          "noise_count": 30,
+          "noise_to_expected_ratio": 30.0,
+          "pruned_noise_count": 30
+        },
+        "top10": {
+          "attended_noise_count": 1,
+          "candidate_count": 10,
+          "expected_count": 3,
+          "noise_count": 6,
+          "noise_to_expected_ratio": 2.0,
+          "pruned_noise_count": 5
+        }
+      },
+      "runtime_decision": "Reasoning Drift"
+    },
+    {
+      "bucket_counts": {
+        "inside_top10_pruned_by_attention": 1,
+        "outside_top10_inside_top20": 2
+      },
+      "case": "resource_allocation_shelters",
+      "category": "resource_allocation",
+      "expected_concepts": [
+        {
+          "bucket": "outside_top10_inside_top20",
+          "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6356,
+            "query_specific_overlap": [
+              "emergency",
+              "resources"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 1,
+            "relation_terms": [
+              "tradeoff"
+            ]
+          },
+          "rank": 11,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "outside_top10_inside_top20",
+          "concept": "The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+          "features": {
+            "concept_definition_alignment": 0.8261,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.604,
+            "query_specific_overlap": [
+              "emergency",
+              "resources"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": 18,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5948,
+            "query_specific_overlap": [
+              "demand",
+              "emergency",
+              "resources",
+              "should"
+            ],
+            "query_specific_overlap_count": 4,
+            "relation_specificity_count": 1,
+            "relation_terms": [
+              "reallocate"
+            ]
+          },
+          "rank": 1,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 1,
+      "planning_core_coverage": 0.0,
+      "question": "How should emergency shelter resources be allocated when demand changes?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 2,
+          "noise_count": 8,
+          "noise_to_expected_ratio": 4.0,
+          "pruned_noise_count": 8
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 0,
+          "noise_count": 30,
+          "noise_to_expected_ratio": 30.0,
+          "pruned_noise_count": 30
+        },
+        "top10": {
+          "attended_noise_count": 1,
+          "candidate_count": 10,
+          "expected_count": 1,
+          "noise_count": 9,
+          "noise_to_expected_ratio": 9.0,
+          "pruned_noise_count": 8
+        }
+      },
+      "runtime_decision": "Reasoning Drift"
+    },
+    {
+      "bucket_counts": {
+        "absent_from_diagnostic_top_50": 1,
+        "inside_top10_pruned_by_attention": 2
+      },
+      "case": "risk_uncertainty_planning",
+      "category": "risk_assessment",
+      "expected_concepts": [
+        {
+          "bucket": "absent_from_diagnostic_top_50",
+          "concept": "Planning compares possible strategies before action by estimating benefit, risk, uncertainty, and goal satisfaction.",
+          "concept_id": "52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+          "features": {
+            "concept_definition_alignment": null,
+            "confidence": null,
+            "evidence_support": null,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": null,
+            "promotion_score": null,
+            "query_specific_overlap": [],
+            "query_specific_overlap_count": 0,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": null,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "failure",
+              "plan"
+            ],
+            "generic_anchor_ratio": 0.6667,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6155,
+            "query_specific_overlap": [
+              "and"
+            ],
+            "query_specific_overlap_count": 1,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "evidence",
+              "revise"
+            ]
+          },
+          "rank": 2,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease, potentially leading to a higher risk of failure",
+          "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+          "features": {
+            "concept_definition_alignment": 0.7857,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "failure",
+              "risk"
+            ],
+            "generic_anchor_ratio": 0.5,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6098,
+            "query_specific_overlap": [
+              "and",
+              "for"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "decrease",
+              "tradeoff"
+            ]
+          },
+          "rank": 4,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 1,
+      "planning_core_coverage": 0.0,
+      "question": "How should a plan account for failure risk and uncertainty?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 0,
+          "noise_count": 30,
+          "noise_to_expected_ratio": 30.0,
+          "pruned_noise_count": 30
+        },
+        "top10": {
+          "attended_noise_count": 1,
+          "candidate_count": 10,
+          "expected_count": 2,
+          "noise_count": 8,
+          "noise_to_expected_ratio": 4.0,
+          "pruned_noise_count": 7
+        }
+      },
+      "runtime_decision": "Reasoning Drift"
+    },
+    {
+      "bucket_counts": {
+        "inside_top10_selected_by_attention": 1,
+        "outside_top20_inside_top50": 2
+      },
+      "case": "policy_audit_conflict",
+      "category": "conflicting_evidence",
+      "expected_concepts": [
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "Reflecting on uncertainty, it is possible that the policy and the audit findings are both correct in their own contexts, but the records do not provide a clear indication of the nature of the purchase",
+          "concept_id": "acaca659-aee5-4cef-9c4c-5a2281c1a9ef",
+          "features": {
+            "concept_definition_alignment": 0.7333,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6137,
+            "query_specific_overlap": [
+              "and",
+              "audit",
+              "findings",
+              "policy"
+            ],
+            "query_specific_overlap_count": 4,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": 1,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "outside_top20_inside_top50",
+          "concept": "The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply",
+          "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5909,
+            "query_specific_overlap": [
+              "policy"
+            ],
+            "query_specific_overlap_count": 1,
+            "relation_specificity_count": 3,
+            "relation_terms": [
+              "exception",
+              "if",
+              "prediction"
+            ]
+          },
+          "rank": 37,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "outside_top20_inside_top50",
+          "concept": "The evidence that determines which rule applies is the policy exception's expiration date",
+          "concept_id": "3cc55e56-cb07-4085-a786-afd705a58770",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5903,
+            "query_specific_overlap": [
+              "policy"
+            ],
+            "query_specific_overlap_count": 1,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "evidence",
+              "exception"
+            ]
+          },
+          "rank": 22,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 0,
+      "planning_core_coverage": 0.3333,
+      "question": "How should policy exceptions and audit findings be reconciled?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 2,
+          "noise_count": 28,
+          "noise_to_expected_ratio": 14.0,
+          "pruned_noise_count": 28
+        },
+        "top10": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 1,
+          "noise_count": 9,
+          "noise_to_expected_ratio": 9.0,
+          "pruned_noise_count": 9
+        }
+      },
+      "runtime_decision": "Planning Drift"
+    },
+    {
+      "bucket_counts": {
+        "inside_top10_pruned_by_attention": 1,
+        "inside_top10_selected_by_attention": 1,
+        "outside_top20_inside_top50": 1
+      },
+      "case": "multi_step_failure_revision",
+      "category": "multi_step_reasoning",
+      "expected_concepts": [
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "evidence",
+              "failure",
+              "plan"
+            ],
+            "generic_anchor_ratio": 0.5,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6155,
+            "query_specific_overlap": [
+              "and",
+              "points",
+              "revise"
+            ],
+            "query_specific_overlap_count": 3,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "evidence",
+              "revise"
+            ]
+          },
+          "rank": 1,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B",
+          "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.85,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "evidence",
+              "plan"
+            ],
+            "generic_anchor_ratio": 0.6667,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6108,
+            "query_specific_overlap": [
+              "revise"
+            ],
+            "query_specific_overlap_count": 1,
+            "relation_specificity_count": 2,
+            "relation_terms": [
+              "evidence",
+              "revise"
+            ]
+          },
+          "rank": 6,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "outside_top20_inside_top50",
+          "concept": "A prediction that would validate or falsify the system assumption is that after implementing failure drills, the power grid will exhibit improved resilience to failures, as evidenced by a reduction in the frequency and duration of power outages",
+          "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+          "features": {
+            "concept_definition_alignment": 0.6667,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "failure"
+            ],
+            "generic_anchor_ratio": 0.5,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.6509,
+            "query_specific_overlap": [
+              "and"
+            ],
+            "query_specific_overlap_count": 1,
+            "relation_specificity_count": 5,
+            "relation_terms": [
+              "evidence",
+              "if",
+              "prediction",
+              "validate",
+              "would"
+            ]
+          },
+          "rank": 40,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 0,
+      "planning_core_coverage": 0.3333,
+      "question": "How should a team identify failure points, gather evidence, and revise a plan?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 1,
+          "noise_count": 27,
+          "noise_to_expected_ratio": 27.0,
+          "pruned_noise_count": 27
+        },
+        "top10": {
+          "attended_noise_count": 3,
+          "candidate_count": 10,
+          "expected_count": 2,
+          "noise_count": 8,
+          "noise_to_expected_ratio": 4.0,
+          "pruned_noise_count": 5
+        }
+      },
+      "runtime_decision": "Under-Attending"
+    },
+    {
+      "bucket_counts": {
+        "inside_top10_pruned_by_attention": 1,
+        "inside_top10_selected_by_attention": 1,
+        "outside_top20_inside_top50": 1
+      },
+      "case": "logistics_proxy_planning",
+      "category": "logistics",
+      "expected_concepts": [
+        {
+          "bucket": "outside_top20_inside_top50",
+          "concept": "The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+          "features": {
+            "concept_definition_alignment": 0.8261,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [],
+            "generic_anchor_ratio": 0.0,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.604,
+            "query_specific_overlap": [
+              "capacity",
+              "emergency"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": 24,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        },
+        {
+          "bucket": "inside_top10_selected_by_attention",
+          "concept": "When the emergency response plan is disrupted due to a failed permit assumption, the team should use resource telemetry data to assess the current availability and status of critical resources",
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "features": {
+            "concept_definition_alignment": 0.7778,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "resource",
+              "response"
+            ],
+            "generic_anchor_ratio": 0.3333,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5795,
+            "query_specific_overlap": [
+              "and",
+              "emergency",
+              "should",
+              "team"
+            ],
+            "query_specific_overlap_count": 4,
+            "relation_specificity_count": 0,
+            "relation_terms": []
+          },
+          "rank": 1,
+          "reached_planning": true,
+          "reached_reasoning": true,
+          "reached_working_memory": true,
+          "selected_by_attention": true
+        },
+        {
+          "bucket": "inside_top10_pruned_by_attention",
+          "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+          "features": {
+            "concept_definition_alignment": 1.0,
+            "confidence": 0.8575,
+            "evidence_support": 1.0,
+            "generic_anchor_overlap": [
+              "resource"
+            ],
+            "generic_anchor_ratio": 0.3333,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6356,
+            "query_specific_overlap": [
+              "and",
+              "emergency"
+            ],
+            "query_specific_overlap_count": 2,
+            "relation_specificity_count": 1,
+            "relation_terms": [
+              "tradeoff"
+            ]
+          },
+          "rank": 4,
+          "reached_planning": false,
+          "reached_reasoning": false,
+          "reached_working_memory": false,
+          "selected_by_attention": false
+        }
+      ],
+      "noise_used_in_reasoning": 0,
+      "planning_core_coverage": 0.3333,
+      "question": "How should a response team sequence emergency access, resource staging, and capacity checks?",
+      "range_noise_risk": {
+        "rank11_20": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 0,
+          "noise_count": 10,
+          "noise_to_expected_ratio": 10.0,
+          "pruned_noise_count": 10
+        },
+        "rank21_50": {
+          "attended_noise_count": 0,
+          "candidate_count": 30,
+          "expected_count": 1,
+          "noise_count": 29,
+          "noise_to_expected_ratio": 29.0,
+          "pruned_noise_count": 29
+        },
+        "top10": {
+          "attended_noise_count": 0,
+          "candidate_count": 10,
+          "expected_count": 2,
+          "noise_count": 8,
+          "noise_to_expected_ratio": 4.0,
+          "pruned_noise_count": 8
+        }
+      },
+      "runtime_decision": "Under-Attending"
+    }
+  ],
+  "current_accepted_default": "Model B contextualized corpus support + citation_context reasoning usage gate",
+  "diagnostic_only": true,
+  "final_recommendation": "PROCEED_BOUNDED_ATTENTION_RESCUE_SIMULATION",
+  "generated_at": "2026-07-02T14:02:02",
+  "interpretation": "The largest immediately actionable availability failure is expected concepts already inside the top-10 activation window but pruned before working memory. This suggests testing a bounded attention rescue before broadening activation.",
+  "live_runtime_changed": false,
+  "noise_risk_estimate": {
+    "rank11_20_expected": 2,
+    "rank11_20_noise": 78,
+    "rank21_50_expected": 5,
+    "rank21_50_noise": 231,
+    "top10_expected": 16,
+    "top10_pruned_noise": 51
+  },
+  "rejected_paths": [
+    "more Planning Support/QRM variants",
+    "hard concept blacklist",
+    "evaluator-label logic",
+    "benchmark case IDs or concept IDs in live logic",
+    "global threshold loosening",
+    "activation recurrence by default"
+  ],
+  "smallest_safe_next_simulation": "bounded attention rescue simulation",
+  "source_reports": {
+    "consolidation": "G:\\Delta_Dev\\reports\\runtime_v13_failure_bottleneck_consolidation_audit.json",
+    "model_b_ranking": "G:\\Delta_Dev\\reports\\runtime_v13_query_evidence_model_b_live_raw\\runtime_v12_activation_ranking_diagnostic.json",
+    "model_b_real": "G:\\Delta_Dev\\reports\\runtime_v13_query_evidence_model_b_live_raw\\runtime_v12_real_knowledge.json",
+    "v12_ranking": "G:\\Delta_Dev\\reports\\runtime_v12_baseline_before_v13\\runtime_v12_activation_ranking_diagnostic.json",
+    "v12_real": "G:\\Delta_Dev\\reports\\runtime_v12_baseline_before_v13\\runtime_v12_real_knowledge.json"
+  }
+}

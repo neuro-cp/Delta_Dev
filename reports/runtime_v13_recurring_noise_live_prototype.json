@@ -1,0 +1,78 @@
+{
+  "acceptance_criteria": {
+    "confidence_calibration_not_regress": true,
+    "expected_outside_top10_not_worse": true,
+    "expected_outside_top20_not_worse": true,
+    "grounding_score_remains_1": true,
+    "hallucinations_remain_0": true,
+    "mean_expected_rank_improves": true,
+    "mean_noise_above_expected_improves": true,
+    "no_expected_top10_pushed_out": true,
+    "noise_used_in_reasoning_not_increase": false,
+    "planning_score_not_regress": true,
+    "read_only_verified": true
+  },
+  "baseline_reports": "reports/runtime_v12_baseline_before_v13 and restored reports/runtime_v12_* files",
+  "expected_top10_pushed_out": [],
+  "final_decision": "REJECT_LIVE_RECURRING_NOISE_SUPPRESSION",
+  "metrics": {
+    "attention_precision": [
+      0.55,
+      0.4172
+    ],
+    "attention_recall": [
+      0.4333,
+      0.4667
+    ],
+    "confidence_calibration": [
+      1.0,
+      1.0
+    ],
+    "expected_outside_top10": [
+      8,
+      7
+    ],
+    "expected_outside_top20": [
+      6,
+      4
+    ],
+    "grounding_score": [
+      1.0,
+      1.0
+    ],
+    "hallucinations": [
+      0.0,
+      0.0
+    ],
+    "mean_expected_rank": [
+      10,
+      7.1739
+    ],
+    "mean_noise_above_expected": [
+      9.7083,
+      7
+    ],
+    "noise_used_in_reasoning": [
+      12.0,
+      24.0
+    ],
+    "planning_score": [
+      1.0,
+      1.0
+    ],
+    "read_only_verified": [
+      true,
+      true
+    ],
+    "retrieval_precision": [
+      0.16,
+      0.17
+    ],
+    "retrieval_recall": [
+      0.5333,
+      0.5667
+    ]
+  },
+  "prototype_reports": "reports/runtime_v13_recurring_noise_live_raw",
+  "reason": "Ranking metrics improved, but noise_used_in_reasoning increased from 12 to 24 and attention precision regressed from 0.55 to 0.4172. The live patch violates acceptance criteria and must be reverted."
+}

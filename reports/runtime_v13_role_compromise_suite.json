@@ -1,0 +1,1602 @@
+{
+  "commands": [
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m py_compile orchestration/runtime/runtime_reasoning.py orchestration/runtime/runtime_evaluation.py orchestration/runtime/runtime_planning.py orchestration/runtime/response_generation.py orchestration/tests/runtime/test_runtime_reasoning.py tools/runtime_v13_role_compromise_suite.py",
+      "returncode": 0,
+      "role_mode": "r4_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "r4_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": "......................                                                   [100%]\n22 passed in 0.24s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_candidate_knowledge_retrieval.py orchestration/tests/runtime/test_runtime_v12_real_knowledge.py orchestration/tests/runtime/test_runtime_evaluation.py orchestration/tests/runtime/test_knowledge_attention.py orchestration/tests/runtime/test_runtime_v1_pipeline.py orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "r4_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.61s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "r4_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "r4_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m py_compile orchestration/runtime/runtime_reasoning.py orchestration/runtime/runtime_evaluation.py orchestration/runtime/runtime_planning.py orchestration/runtime/response_generation.py orchestration/tests/runtime/test_runtime_reasoning.py tools/runtime_v13_role_compromise_suite.py",
+      "returncode": 0,
+      "role_mode": "r4_operational_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "r4_operational_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": "......................                                                   [100%]\n22 passed in 0.26s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_candidate_knowledge_retrieval.py orchestration/tests/runtime/test_runtime_v12_real_knowledge.py orchestration/tests/runtime/test_runtime_evaluation.py orchestration/tests/runtime/test_knowledge_attention.py orchestration/tests/runtime/test_runtime_v1_pipeline.py orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "r4_operational_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.64s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "r4_operational_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "r4_operational_planning_support",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m py_compile orchestration/runtime/runtime_reasoning.py orchestration/runtime/runtime_evaluation.py orchestration/runtime/runtime_planning.py orchestration/runtime/response_generation.py orchestration/tests/runtime/test_runtime_reasoning.py tools/runtime_v13_role_compromise_suite.py",
+      "returncode": 0,
+      "role_mode": "response_citation_gate",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "response_citation_gate",
+      "stderr_tail": "",
+      "stdout_tail": "......................                                                   [100%]\n22 passed in 0.24s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_candidate_knowledge_retrieval.py orchestration/tests/runtime/test_runtime_v12_real_knowledge.py orchestration/tests/runtime/test_runtime_evaluation.py orchestration/tests/runtime/test_knowledge_attention.py orchestration/tests/runtime/test_runtime_v1_pipeline.py orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "response_citation_gate",
+      "stderr_tail": "",
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.56s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "response_citation_gate",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "response_citation_gate",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m py_compile orchestration/runtime/runtime_reasoning.py orchestration/runtime/runtime_evaluation.py orchestration/runtime/runtime_planning.py orchestration/runtime/response_generation.py orchestration/tests/runtime/test_runtime_reasoning.py tools/runtime_v13_role_compromise_suite.py",
+      "returncode": 0,
+      "role_mode": "role_metadata_only",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "role_metadata_only",
+      "stderr_tail": "",
+      "stdout_tail": "......................                                                   [100%]\n22 passed in 0.28s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_candidate_knowledge_retrieval.py orchestration/tests/runtime/test_runtime_v12_real_knowledge.py orchestration/tests/runtime/test_runtime_evaluation.py orchestration/tests/runtime/test_knowledge_attention.py orchestration/tests/runtime/test_runtime_v1_pipeline.py orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "role_metadata_only",
+      "stderr_tail": "",
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.56s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "role_metadata_only",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "role_metadata_only",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m py_compile orchestration/runtime/runtime_reasoning.py orchestration/runtime/runtime_evaluation.py orchestration/runtime/runtime_planning.py orchestration/runtime/response_generation.py orchestration/tests/runtime/test_runtime_reasoning.py tools/runtime_v13_role_compromise_suite.py",
+      "returncode": 0,
+      "role_mode": "r4_soft",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "r4_soft",
+      "stderr_tail": "",
+      "stdout_tail": "......................                                                   [100%]\n22 passed in 0.24s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe -m pytest orchestration/tests/runtime/test_candidate_knowledge_retrieval.py orchestration/tests/runtime/test_runtime_v12_real_knowledge.py orchestration/tests/runtime/test_runtime_evaluation.py orchestration/tests/runtime/test_knowledge_attention.py orchestration/tests/runtime/test_runtime_v1_pipeline.py orchestration/tests/runtime/test_runtime_reasoning.py -q",
+      "returncode": 0,
+      "role_mode": "r4_soft",
+      "stderr_tail": "",
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.69s\n"
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "r4_soft",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    },
+    {
+      "cmd": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      "returncode": 0,
+      "role_mode": "r4_soft",
+      "stderr_tail": "",
+      "stdout_tail": ""
+    }
+  ],
+  "disabled_default": [
+    "activation recurrence",
+    "R4/role compromise variants unless explicitly enabled"
+  ],
+  "enabled_default": [
+    "citation_context reasoning usage gate",
+    "Query Evidence Model B contextualized corpus support"
+  ],
+  "final_decision": "ACCEPT_SAFE_ROLE_GUARD_DORMANT_ON_BASELINE",
+  "generated_at": "2026-07-02T13:32:43",
+  "next_recommended_task": "Run focused diagnostics on ambiguous role-compromise failures before changing defaults.",
+  "reports": {
+    "handoff": "reports/runtime_v13_role_compromise_continuation_handoff.md",
+    "json": "reports/runtime_v13_role_compromise_suite.json",
+    "markdown": "reports/runtime_v13_role_compromise_suite.md",
+    "raw_root": "reports/runtime_v13_role_compromise_suite_raw/"
+  },
+  "starting_baseline": {
+    "model_b": {
+      "attention_precision": 0.6333,
+      "attention_recall": 0.4333,
+      "case_count": 10.0,
+      "confidence_calibration": 1.0,
+      "grounding_score": 1.0,
+      "hallucinations": 0.0,
+      "noise_used_in_reasoning": 7.0,
+      "pass_rate": 0.0,
+      "planning_core_coverage": 0.4333,
+      "planning_drift_cases": 1.0,
+      "planning_score": 1.0,
+      "read_only_verified": true,
+      "reasoning_drift_cases": 4.0,
+      "response_core_coverage": 0.4333,
+      "response_drift_cases": 0.0,
+      "retrieval_precision": 0.16,
+      "retrieval_recall": 0.5333,
+      "working_memory_efficiency": 0.14
+    },
+    "model_b_ranking": {
+      "expected_outside_top_10": 8,
+      "expected_outside_top_20": 6,
+      "mean_expected_rank": 10,
+      "mean_noise_above_expected": 9.7083,
+      "median_expected_rank": 3
+    },
+    "v12": {
+      "attention_precision": 0.55,
+      "attention_recall": 0.4333,
+      "case_count": 10.0,
+      "confidence_calibration": 1.0,
+      "grounding_score": 1.0,
+      "hallucinations": 0.0,
+      "noise_used_in_reasoning": 12.0,
+      "pass_rate": 0.0,
+      "planning_core_coverage": 0.4333,
+      "planning_drift_cases": 1.0,
+      "planning_score": 1.0,
+      "read_only_verified": true,
+      "reasoning_drift_cases": 5.0,
+      "response_core_coverage": 0.4333,
+      "response_drift_cases": 0.0,
+      "retrieval_precision": 0.16,
+      "retrieval_recall": 0.5333,
+      "working_memory_efficiency": 0.19
+    },
+    "v12_ranking": {
+      "expected_outside_top_10": 8,
+      "expected_outside_top_20": 6,
+      "mean_expected_rank": 10,
+      "mean_noise_above_expected": 9.7083,
+      "median_expected_rank": 3
+    }
+  },
+  "stop_reason": "",
+  "variants": [
+    {
+      "case_deltas": [
+        {
+          "name": "planning_failed_assumption",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 076c39f2-9cf5-45c7-ac1b-e379da875926, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 4b01b020-00b1-4d40-9422-aba2288625d4, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, df85054d-ffcd-4c50-8118-ecb512271eaf",
+            "activation noise detected: 7",
+            "ignored activations: 8"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "causal_industrial_failure",
+          "noise_after": 0,
+          "noise_before": 4,
+          "notes_after": [
+            "missed expected concepts: 45d9686a-fded-4818-ae8e-47007cd33529",
+            "irrelevant concepts activated: 0fb23c0b-b877-4cf2-a66d-94d927b77542, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 183718d2-9612-4057-94b7-4ad8fd896278, 65e4ca55-7169-4ee4-b388-a6927043a92d, 9d5b7363-5857-4091-8449-9374d6b4b68f, b1f3eca3-5024-45c1-a91d-68ef0d7d28e5, c5cc234b-b4ae-4f0c-98f7-c7f04e320abf, cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+            "activation noise detected: 8",
+            "ignored activations: 4"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "response_evidence_before": [
+            "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+            "9d5b7363-5857-4091-8449-9374d6b4b68f",
+            "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "contradictory_evidence",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "irrelevant concepts activated: 1450511f-f0dd-4e2f-8598-1cf1511a2811, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 5ff60e9f-a309-4902-aaee-2611b5743833, 800c60da-06fc-41b6-b259-b4f98e08cd79, e0038487-2363-4ba8-8e2e-a1b465c44ee0, ef940f21-c49c-41f8-b86e-12a02a0f37f6, fb9f365a-95c7-4757-92f6-e55f4580c57b",
+            "activation noise detected: 6",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "resource_allocation_shelters",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 380b765f-ffa2-4296-a66e-527bacb75a64, 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 6b704bd9-ecc5-4066-b351-a4eda0ba5c8d, 76120648-7522-4025-8176-5e5fb199c687, 7e5bf5f6-780a-4ba7-85c1-b514b848a162, 97190912-de2a-4fa6-b283-a9a1baafb53c, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6, f567a38f-be7c-4783-972f-d82e8fb2e36f",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "response_evidence_before": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "risk_uncertainty_planning",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+            "irrelevant concepts activated: 0e3fdeda-0d38-40ad-993c-480703e55f9e, 6457f783-957c-4e69-95bb-bacf18f6fd32, 7b1fd455-c6f7-4dcf-a109-11fc3c89262f, ad599dfe-ddbd-4689-ad43-4dc8249fdab1, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, d9ba0c9f-f458-4512-a0e3-40892ef333b6, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "policy_audit_conflict",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 1b324e50-0b5b-43b4-befd-f4e6e25d5e01, 3cc55e56-cb07-4085-a786-afd705a58770",
+            "irrelevant concepts activated: 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 65e4ca55-7169-4ee4-b388-a6927043a92d, 89b85467-0655-47d3-9a0c-89da364cd487, b85b0a01-9c3f-4c42-a26a-01741c84682c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "response_evidence_before": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Planning Drift"
+        },
+        {
+          "name": "multi_step_failure_revision",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 1ecc06d3-3c05-4224-9d30-3111a0533f50, 22471376-888c-42fb-ac5d-c06d09f25345, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 76120648-7522-4025-8176-5e5fb199c687, e0038487-2363-4ba8-8e2e-a1b465c44ee0, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "response_evidence_before": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "logistics_proxy_planning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 4b01b020-00b1-4d40-9422-aba2288625d4, 65e4ca55-7169-4ee4-b388-a6927043a92d, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "sparse_violin_tuning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 1c6bd504-03b0-4c4f-b9c4-026bb1722420, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f, bc2086b3-87d9-479a-935f-805fe7d523c7, c456133c-be3b-43da-8d46-b983619f01bf, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, efb9555a-e0d2-41f4-8706-7ed612988e42",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        },
+        {
+          "name": "unsupported_recipe",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 06c7ab71-397c-4754-984d-48cbdcec18bd, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 6b396377-f29f-44d8-8adb-10016fbb07a5, 7a4b823b-f9df-4e77-b3b7-744ee834741c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, df85054d-ffcd-4c50-8118-ecb512271eaf, ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        }
+      ],
+      "checks": {
+        "citable_noise_below_model_b": true,
+        "confidence_no_regress": true,
+        "expected_outside_top10_no_regress": true,
+        "expected_outside_top20_no_regress": true,
+        "grounding_score_1": true,
+        "hallucinations_0": true,
+        "mean_expected_rank_no_material_regress": true,
+        "mean_noise_above_expected_no_material_regress": true,
+        "noise_no_increase": true,
+        "planning_core_no_regress": true,
+        "planning_drift_no_increase": false,
+        "planning_score_no_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_no_increase": true,
+        "response_core_no_regress": true,
+        "response_drift_no_increase": true,
+        "retrieval_recall_no_regress": true
+      },
+      "decision": "REJECT",
+      "metrics": {
+        "attention_precision": 0.6333,
+        "attention_recall": 0.4333,
+        "case_count": 10.0,
+        "citable_noise_used_in_reasoning": 1.0,
+        "confidence_calibration": 1.0,
+        "core_evidence_count": 8.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "noise_used_in_reasoning": 1.0,
+        "non_evidence_count": 5.0,
+        "pass_rate": 0.0,
+        "peripheral_context_count": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 2.0,
+        "planning_score": 1.0,
+        "planning_support_count": 0.0,
+        "read_only_verified": true,
+        "reasoning_drift_cases": 1.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_context_count": 0.0,
+        "working_memory_efficiency": 0.14
+      },
+      "ranking_metrics": {
+        "expected_outside_top_10": 8,
+        "expected_outside_top_20": 6,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "median_expected_rank": 3
+      },
+      "raw_dir": "reports\\runtime_v13_role_compromise_suite_raw\\variant_a_r4_planning_support",
+      "reason": "Failed checks: planning_drift_no_increase",
+      "variant": {
+        "active": true,
+        "description": "R4 plus a general Planning Support lane.",
+        "mode": "r4_planning_support",
+        "name": "variant_a_r4_planning_support"
+      }
+    },
+    {
+      "case_deltas": [
+        {
+          "name": "planning_failed_assumption",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 076c39f2-9cf5-45c7-ac1b-e379da875926, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 4b01b020-00b1-4d40-9422-aba2288625d4, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, df85054d-ffcd-4c50-8118-ecb512271eaf",
+            "activation noise detected: 7",
+            "ignored activations: 8"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "causal_industrial_failure",
+          "noise_after": 0,
+          "noise_before": 4,
+          "notes_after": [
+            "missed expected concepts: 45d9686a-fded-4818-ae8e-47007cd33529",
+            "irrelevant concepts activated: 0fb23c0b-b877-4cf2-a66d-94d927b77542, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 183718d2-9612-4057-94b7-4ad8fd896278, 65e4ca55-7169-4ee4-b388-a6927043a92d, 9d5b7363-5857-4091-8449-9374d6b4b68f, b1f3eca3-5024-45c1-a91d-68ef0d7d28e5, c5cc234b-b4ae-4f0c-98f7-c7f04e320abf, cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+            "activation noise detected: 8",
+            "ignored activations: 4"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "response_evidence_before": [
+            "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+            "9d5b7363-5857-4091-8449-9374d6b4b68f",
+            "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "contradictory_evidence",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "irrelevant concepts activated: 1450511f-f0dd-4e2f-8598-1cf1511a2811, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 5ff60e9f-a309-4902-aaee-2611b5743833, 800c60da-06fc-41b6-b259-b4f98e08cd79, e0038487-2363-4ba8-8e2e-a1b465c44ee0, ef940f21-c49c-41f8-b86e-12a02a0f37f6, fb9f365a-95c7-4757-92f6-e55f4580c57b",
+            "activation noise detected: 6",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "resource_allocation_shelters",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 380b765f-ffa2-4296-a66e-527bacb75a64, 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 6b704bd9-ecc5-4066-b351-a4eda0ba5c8d, 76120648-7522-4025-8176-5e5fb199c687, 7e5bf5f6-780a-4ba7-85c1-b514b848a162, 97190912-de2a-4fa6-b283-a9a1baafb53c, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6, f567a38f-be7c-4783-972f-d82e8fb2e36f",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "response_evidence_before": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "risk_uncertainty_planning",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+            "irrelevant concepts activated: 0e3fdeda-0d38-40ad-993c-480703e55f9e, 6457f783-957c-4e69-95bb-bacf18f6fd32, 7b1fd455-c6f7-4dcf-a109-11fc3c89262f, ad599dfe-ddbd-4689-ad43-4dc8249fdab1, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, d9ba0c9f-f458-4512-a0e3-40892ef333b6, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 0.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "policy_audit_conflict",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 1b324e50-0b5b-43b4-befd-f4e6e25d5e01, 3cc55e56-cb07-4085-a786-afd705a58770",
+            "irrelevant concepts activated: 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 65e4ca55-7169-4ee4-b388-a6927043a92d, 89b85467-0655-47d3-9a0c-89da364cd487, b85b0a01-9c3f-4c42-a26a-01741c84682c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "response_evidence_before": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Planning Drift"
+        },
+        {
+          "name": "multi_step_failure_revision",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 1ecc06d3-3c05-4224-9d30-3111a0533f50, 22471376-888c-42fb-ac5d-c06d09f25345, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 76120648-7522-4025-8176-5e5fb199c687, e0038487-2363-4ba8-8e2e-a1b465c44ee0, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "response_evidence_before": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "logistics_proxy_planning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 4b01b020-00b1-4d40-9422-aba2288625d4, 65e4ca55-7169-4ee4-b388-a6927043a92d, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "sparse_violin_tuning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 1c6bd504-03b0-4c4f-b9c4-026bb1722420, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f, bc2086b3-87d9-479a-935f-805fe7d523c7, c456133c-be3b-43da-8d46-b983619f01bf, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, efb9555a-e0d2-41f4-8706-7ed612988e42",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        },
+        {
+          "name": "unsupported_recipe",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 06c7ab71-397c-4754-984d-48cbdcec18bd, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 6b396377-f29f-44d8-8adb-10016fbb07a5, 7a4b823b-f9df-4e77-b3b7-744ee834741c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, df85054d-ffcd-4c50-8118-ecb512271eaf, ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        }
+      ],
+      "checks": {
+        "citable_noise_below_model_b": true,
+        "confidence_no_regress": true,
+        "expected_outside_top10_no_regress": true,
+        "expected_outside_top20_no_regress": true,
+        "grounding_score_1": true,
+        "hallucinations_0": true,
+        "mean_expected_rank_no_material_regress": true,
+        "mean_noise_above_expected_no_material_regress": true,
+        "noise_no_increase": true,
+        "planning_core_no_regress": true,
+        "planning_drift_no_increase": false,
+        "planning_score_no_regress": false,
+        "read_only_verified": true,
+        "reasoning_drift_no_increase": true,
+        "response_core_no_regress": true,
+        "response_drift_no_increase": true,
+        "retrieval_recall_no_regress": true
+      },
+      "decision": "REJECT",
+      "metrics": {
+        "attention_precision": 0.7333,
+        "attention_recall": 0.4333,
+        "case_count": 10.0,
+        "citable_noise_used_in_reasoning": 1.0,
+        "confidence_calibration": 1.0,
+        "core_evidence_count": 8.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "noise_used_in_reasoning": 1.0,
+        "non_evidence_count": 5.0,
+        "pass_rate": 0.0,
+        "peripheral_context_count": 1.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 2.0,
+        "planning_score": 0.9,
+        "planning_support_count": 0.0,
+        "read_only_verified": true,
+        "reasoning_drift_cases": 1.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_context_count": 0.0,
+        "working_memory_efficiency": 0.13
+      },
+      "ranking_metrics": {
+        "expected_outside_top_10": 8,
+        "expected_outside_top_20": 6,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "median_expected_rank": 3
+      },
+      "raw_dir": "reports\\runtime_v13_role_compromise_suite_raw\\variant_b_r4_operational_planning_support",
+      "reason": "Failed checks: planning_score_no_regress, planning_drift_no_increase",
+      "variant": {
+        "active": true,
+        "description": "R4 plus Planning Support only for operational/action questions.",
+        "mode": "r4_operational_planning_support",
+        "name": "variant_b_r4_operational_planning_support"
+      }
+    },
+    {
+      "case_deltas": [
+        {
+          "name": "planning_failed_assumption",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 076c39f2-9cf5-45c7-ac1b-e379da875926, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 4b01b020-00b1-4d40-9422-aba2288625d4, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, df85054d-ffcd-4c50-8118-ecb512271eaf",
+            "activation noise detected: 7",
+            "ignored activations: 8"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "causal_industrial_failure",
+          "noise_after": 0,
+          "noise_before": 4,
+          "notes_after": [
+            "missed expected concepts: 45d9686a-fded-4818-ae8e-47007cd33529",
+            "irrelevant concepts activated: 0fb23c0b-b877-4cf2-a66d-94d927b77542, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 183718d2-9612-4057-94b7-4ad8fd896278, 65e4ca55-7169-4ee4-b388-a6927043a92d, 9d5b7363-5857-4091-8449-9374d6b4b68f, b1f3eca3-5024-45c1-a91d-68ef0d7d28e5, c5cc234b-b4ae-4f0c-98f7-c7f04e320abf, cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+            "activation noise detected: 8",
+            "ignored activations: 5"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "response_evidence_before": [
+            "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+            "9d5b7363-5857-4091-8449-9374d6b4b68f",
+            "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "contradictory_evidence",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "irrelevant concepts activated: 1450511f-f0dd-4e2f-8598-1cf1511a2811, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 5ff60e9f-a309-4902-aaee-2611b5743833, 800c60da-06fc-41b6-b259-b4f98e08cd79, e0038487-2363-4ba8-8e2e-a1b465c44ee0, ef940f21-c49c-41f8-b86e-12a02a0f37f6, fb9f365a-95c7-4757-92f6-e55f4580c57b",
+            "activation noise detected: 6",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "resource_allocation_shelters",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 380b765f-ffa2-4296-a66e-527bacb75a64, 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 6b704bd9-ecc5-4066-b351-a4eda0ba5c8d, 76120648-7522-4025-8176-5e5fb199c687, 7e5bf5f6-780a-4ba7-85c1-b514b848a162, 97190912-de2a-4fa6-b283-a9a1baafb53c, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6, f567a38f-be7c-4783-972f-d82e8fb2e36f",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "response_evidence_before": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "risk_uncertainty_planning",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+            "irrelevant concepts activated: 0e3fdeda-0d38-40ad-993c-480703e55f9e, 6457f783-957c-4e69-95bb-bacf18f6fd32, 7b1fd455-c6f7-4dcf-a109-11fc3c89262f, ad599dfe-ddbd-4689-ad43-4dc8249fdab1, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, d9ba0c9f-f458-4512-a0e3-40892ef333b6, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "policy_audit_conflict",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 1b324e50-0b5b-43b4-befd-f4e6e25d5e01, 3cc55e56-cb07-4085-a786-afd705a58770",
+            "irrelevant concepts activated: 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 65e4ca55-7169-4ee4-b388-a6927043a92d, 89b85467-0655-47d3-9a0c-89da364cd487, b85b0a01-9c3f-4c42-a26a-01741c84682c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "response_evidence_before": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Planning Drift"
+        },
+        {
+          "name": "multi_step_failure_revision",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 1ecc06d3-3c05-4224-9d30-3111a0533f50, 22471376-888c-42fb-ac5d-c06d09f25345, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 76120648-7522-4025-8176-5e5fb199c687, e0038487-2363-4ba8-8e2e-a1b465c44ee0, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "response_evidence_before": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "logistics_proxy_planning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 4b01b020-00b1-4d40-9422-aba2288625d4, 65e4ca55-7169-4ee4-b388-a6927043a92d, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "sparse_violin_tuning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 1c6bd504-03b0-4c4f-b9c4-026bb1722420, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f, bc2086b3-87d9-479a-935f-805fe7d523c7, c456133c-be3b-43da-8d46-b983619f01bf, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, efb9555a-e0d2-41f4-8706-7ed612988e42",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        },
+        {
+          "name": "unsupported_recipe",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 06c7ab71-397c-4754-984d-48cbdcec18bd, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 6b396377-f29f-44d8-8adb-10016fbb07a5, 7a4b823b-f9df-4e77-b3b7-744ee834741c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, df85054d-ffcd-4c50-8118-ecb512271eaf, ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        }
+      ],
+      "checks": {
+        "citable_noise_below_model_b": true,
+        "confidence_no_regress": true,
+        "expected_outside_top10_no_regress": true,
+        "expected_outside_top20_no_regress": true,
+        "grounding_score_1": true,
+        "hallucinations_0": true,
+        "mean_expected_rank_no_material_regress": true,
+        "mean_noise_above_expected_no_material_regress": true,
+        "noise_no_increase": true,
+        "planning_core_no_regress": true,
+        "planning_drift_no_increase": false,
+        "planning_score_no_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_no_increase": true,
+        "response_core_no_regress": true,
+        "response_drift_no_increase": true,
+        "retrieval_recall_no_regress": true
+      },
+      "decision": "REJECT",
+      "metrics": {
+        "attention_precision": 0.64,
+        "attention_recall": 0.4333,
+        "case_count": 10.0,
+        "citable_noise_used_in_reasoning": 1.0,
+        "confidence_calibration": 1.0,
+        "core_evidence_count": 8.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "noise_used_in_reasoning": 1.0,
+        "non_evidence_count": 5.0,
+        "pass_rate": 0.0,
+        "peripheral_context_count": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 2.0,
+        "planning_score": 1.0,
+        "planning_support_count": 6.0,
+        "read_only_verified": true,
+        "reasoning_drift_cases": 1.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_context_count": 0.0,
+        "working_memory_efficiency": 0.13
+      },
+      "ranking_metrics": {
+        "expected_outside_top_10": 8,
+        "expected_outside_top_20": 6,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "median_expected_rank": 3
+      },
+      "raw_dir": "reports\\runtime_v13_role_compromise_suite_raw\\variant_c_response_citation_gate",
+      "reason": "Failed checks: planning_drift_no_increase",
+      "variant": {
+        "active": true,
+        "description": "Model B-like reasoning/planning with final response citation restricted to Core Evidence.",
+        "mode": "response_citation_gate",
+        "name": "variant_c_response_citation_gate"
+      }
+    },
+    {
+      "case_deltas": [
+        {
+          "name": "planning_failed_assumption",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 076c39f2-9cf5-45c7-ac1b-e379da875926, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 4b01b020-00b1-4d40-9422-aba2288625d4, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, df85054d-ffcd-4c50-8118-ecb512271eaf",
+            "activation noise detected: 7",
+            "ignored activations: 8"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "causal_industrial_failure",
+          "noise_after": 4,
+          "noise_before": 4,
+          "notes_after": [
+            "missed expected concepts: 45d9686a-fded-4818-ae8e-47007cd33529",
+            "irrelevant concepts activated: 0fb23c0b-b877-4cf2-a66d-94d927b77542, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 183718d2-9612-4057-94b7-4ad8fd896278, 65e4ca55-7169-4ee4-b388-a6927043a92d, 9d5b7363-5857-4091-8449-9374d6b4b68f, b1f3eca3-5024-45c1-a91d-68ef0d7d28e5, c5cc234b-b4ae-4f0c-98f7-c7f04e320abf, cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+            "activation noise detected: 8",
+            "ignored activations: 4"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+            "9d5b7363-5857-4091-8449-9374d6b4b68f",
+            "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "response_evidence_before": [
+            "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+            "9d5b7363-5857-4091-8449-9374d6b4b68f",
+            "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "contradictory_evidence",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "irrelevant concepts activated: 1450511f-f0dd-4e2f-8598-1cf1511a2811, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 5ff60e9f-a309-4902-aaee-2611b5743833, 800c60da-06fc-41b6-b259-b4f98e08cd79, e0038487-2363-4ba8-8e2e-a1b465c44ee0, ef940f21-c49c-41f8-b86e-12a02a0f37f6, fb9f365a-95c7-4757-92f6-e55f4580c57b",
+            "activation noise detected: 6",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+          ],
+          "response_evidence_before": [
+            "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "resource_allocation_shelters",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 380b765f-ffa2-4296-a66e-527bacb75a64, 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 6b704bd9-ecc5-4066-b351-a4eda0ba5c8d, 76120648-7522-4025-8176-5e5fb199c687, 7e5bf5f6-780a-4ba7-85c1-b514b848a162, 97190912-de2a-4fa6-b283-a9a1baafb53c, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6, f567a38f-be7c-4783-972f-d82e8fb2e36f",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "response_evidence_before": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "risk_uncertainty_planning",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+            "irrelevant concepts activated: 0e3fdeda-0d38-40ad-993c-480703e55f9e, 6457f783-957c-4e69-95bb-bacf18f6fd32, 7b1fd455-c6f7-4dcf-a109-11fc3c89262f, ad599dfe-ddbd-4689-ad43-4dc8249fdab1, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, d9ba0c9f-f458-4512-a0e3-40892ef333b6, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+          ],
+          "response_evidence_before": [
+            "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "policy_audit_conflict",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 1b324e50-0b5b-43b4-befd-f4e6e25d5e01, 3cc55e56-cb07-4085-a786-afd705a58770",
+            "irrelevant concepts activated: 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 65e4ca55-7169-4ee4-b388-a6927043a92d, 89b85467-0655-47d3-9a0c-89da364cd487, b85b0a01-9c3f-4c42-a26a-01741c84682c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "response_evidence_before": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Planning Drift"
+        },
+        {
+          "name": "multi_step_failure_revision",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 1ecc06d3-3c05-4224-9d30-3111a0533f50, 22471376-888c-42fb-ac5d-c06d09f25345, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 76120648-7522-4025-8176-5e5fb199c687, e0038487-2363-4ba8-8e2e-a1b465c44ee0, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "response_evidence_before": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "logistics_proxy_planning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 4b01b020-00b1-4d40-9422-aba2288625d4, 65e4ca55-7169-4ee4-b388-a6927043a92d, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "sparse_violin_tuning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 1c6bd504-03b0-4c4f-b9c4-026bb1722420, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f, bc2086b3-87d9-479a-935f-805fe7d523c7, c456133c-be3b-43da-8d46-b983619f01bf, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, efb9555a-e0d2-41f4-8706-7ed612988e42",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        },
+        {
+          "name": "unsupported_recipe",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 06c7ab71-397c-4754-984d-48cbdcec18bd, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 6b396377-f29f-44d8-8adb-10016fbb07a5, 7a4b823b-f9df-4e77-b3b7-744ee834741c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, df85054d-ffcd-4c50-8118-ecb512271eaf, ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        }
+      ],
+      "checks": {
+        "citable_noise_below_model_b": false,
+        "confidence_no_regress": true,
+        "expected_outside_top10_no_regress": true,
+        "expected_outside_top20_no_regress": true,
+        "grounding_score_1": true,
+        "hallucinations_0": true,
+        "mean_expected_rank_no_material_regress": true,
+        "mean_noise_above_expected_no_material_regress": true,
+        "noise_no_increase": true,
+        "planning_core_no_regress": true,
+        "planning_drift_no_increase": true,
+        "planning_score_no_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_no_increase": true,
+        "response_core_no_regress": true,
+        "response_drift_no_increase": true,
+        "retrieval_recall_no_regress": true
+      },
+      "decision": "ACCEPT_SAFE_ROLE_GUARD_DORMANT_ON_BASELINE",
+      "metrics": {
+        "attention_precision": 0.6333,
+        "attention_recall": 0.4333,
+        "case_count": 10.0,
+        "citable_noise_used_in_reasoning": 7.0,
+        "confidence_calibration": 1.0,
+        "core_evidence_count": 14.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "noise_used_in_reasoning": 7.0,
+        "non_evidence_count": 5.0,
+        "pass_rate": 0.0,
+        "peripheral_context_count": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 1.0,
+        "planning_support_count": 0.0,
+        "read_only_verified": true,
+        "reasoning_drift_cases": 4.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_context_count": 0.0,
+        "working_memory_efficiency": 0.14
+      },
+      "ranking_metrics": {
+        "expected_outside_top_10": 8,
+        "expected_outside_top_20": 6,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "median_expected_rank": 3
+      },
+      "raw_dir": "reports\\runtime_v13_role_compromise_suite_raw\\variant_d_role_metadata_only",
+      "reason": "Metadata-only role guard is safe but not an active improvement.",
+      "variant": {
+        "active": false,
+        "description": "Model B behavior with role metadata only.",
+        "mode": "role_metadata_only",
+        "name": "variant_d_role_metadata_only"
+      }
+    },
+    {
+      "case_deltas": [
+        {
+          "name": "planning_failed_assumption",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 076c39f2-9cf5-45c7-ac1b-e379da875926, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 4b01b020-00b1-4d40-9422-aba2288625d4, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, df85054d-ffcd-4c50-8118-ecb512271eaf",
+            "activation noise detected: 7",
+            "ignored activations: 8"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687",
+            "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "causal_industrial_failure",
+          "noise_after": 0,
+          "noise_before": 4,
+          "notes_after": [
+            "missed expected concepts: 45d9686a-fded-4818-ae8e-47007cd33529",
+            "irrelevant concepts activated: 0fb23c0b-b877-4cf2-a66d-94d927b77542, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 183718d2-9612-4057-94b7-4ad8fd896278, 65e4ca55-7169-4ee4-b388-a6927043a92d, 9d5b7363-5857-4091-8449-9374d6b4b68f, b1f3eca3-5024-45c1-a91d-68ef0d7d28e5, c5cc234b-b4ae-4f0c-98f7-c7f04e320abf, cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+            "activation noise detected: 8",
+            "ignored activations: 4"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "response_evidence_before": [
+            "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+            "9d5b7363-5857-4091-8449-9374d6b4b68f",
+            "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+            "ce828fd3-8630-418e-857b-65904d4fb2ed",
+            "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "contradictory_evidence",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "irrelevant concepts activated: 1450511f-f0dd-4e2f-8598-1cf1511a2811, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 5ff60e9f-a309-4902-aaee-2611b5743833, 800c60da-06fc-41b6-b259-b4f98e08cd79, e0038487-2363-4ba8-8e2e-a1b465c44ee0, ef940f21-c49c-41f8-b86e-12a02a0f37f6, fb9f365a-95c7-4757-92f6-e55f4580c57b",
+            "activation noise detected: 6",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "resource_allocation_shelters",
+          "noise_after": 1,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 380b765f-ffa2-4296-a66e-527bacb75a64, 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 6b704bd9-ecc5-4066-b351-a4eda0ba5c8d, 76120648-7522-4025-8176-5e5fb199c687, 7e5bf5f6-780a-4ba7-85c1-b514b848a162, 97190912-de2a-4fa6-b283-a9a1baafb53c, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6, f567a38f-be7c-4783-972f-d82e8fb2e36f",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "response_evidence_before": [
+            "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+          ],
+          "runtime_decision_after": "Reasoning Drift",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "risk_uncertainty_planning",
+          "noise_after": 0,
+          "noise_before": 1,
+          "notes_after": [
+            "missed expected concepts: 52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+            "irrelevant concepts activated: 0e3fdeda-0d38-40ad-993c-480703e55f9e, 6457f783-957c-4e69-95bb-bacf18f6fd32, 7b1fd455-c6f7-4dcf-a109-11fc3c89262f, ad599dfe-ddbd-4689-ad43-4dc8249fdab1, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab, d9ba0c9f-f458-4512-a0e3-40892ef333b6, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [
+            "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Reasoning Drift"
+        },
+        {
+          "name": "policy_audit_conflict",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 1b324e50-0b5b-43b4-befd-f4e6e25d5e01, 3cc55e56-cb07-4085-a786-afd705a58770",
+            "irrelevant concepts activated: 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 5252e50d-b97e-4d57-a79a-b9d64ddbbec7, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 65e4ca55-7169-4ee4-b388-a6927043a92d, 89b85467-0655-47d3-9a0c-89da364cd487, b85b0a01-9c3f-4c42-a26a-01741c84682c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+            "activation noise detected: 9",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "response_evidence_before": [
+            "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+          ],
+          "runtime_decision_after": "Planning Drift",
+          "runtime_decision_before": "Planning Drift"
+        },
+        {
+          "name": "multi_step_failure_revision",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 1ecc06d3-3c05-4224-9d30-3111a0533f50, 22471376-888c-42fb-ac5d-c06d09f25345, 3a9f7658-b877-4532-b9c8-1a79b360c5d4, 5ac48263-cbff-4380-bf63-fc9500bcad8d, 76120648-7522-4025-8176-5e5fb199c687, e0038487-2363-4ba8-8e2e-a1b465c44ee0, fec7285c-8ebf-45ba-8197-911a515e4e0b",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "response_evidence_before": [
+            "4b01b020-00b1-4d40-9422-aba2288625d4"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "logistics_proxy_planning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "missed expected concepts: 68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+            "irrelevant concepts activated: 0586e881-099d-4866-a1cf-4ed571139c70, 06b4d255-58d5-49f5-adec-43426ce0d09b, 17a8d30a-9f2d-4d15-8100-d4bf18ca2e71, 2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d, 4b01b020-00b1-4d40-9422-aba2288625d4, 65e4ca55-7169-4ee4-b388-a6927043a92d, bc2086b3-87d9-479a-935f-805fe7d523c7, d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+            "activation noise detected: 8",
+            "ignored activations: 9"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "response_evidence_before": [
+            "76120648-7522-4025-8176-5e5fb199c687"
+          ],
+          "runtime_decision_after": "Under-Attending",
+          "runtime_decision_before": "Under-Attending"
+        },
+        {
+          "name": "sparse_violin_tuning",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 1c6bd504-03b0-4c4f-b9c4-026bb1722420, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f, bc2086b3-87d9-479a-935f-805fe7d523c7, c456133c-be3b-43da-8d46-b983619f01bf, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, efb9555a-e0d2-41f4-8706-7ed612988e42",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        },
+        {
+          "name": "unsupported_recipe",
+          "noise_after": 0,
+          "noise_before": 0,
+          "notes_after": [
+            "irrelevant concepts activated: 0121143f-0779-4965-9405-2e7b3eabcd05, 06c7ab71-397c-4754-984d-48cbdcec18bd, 380b765f-ffa2-4296-a66e-527bacb75a64, 698a613f-15a8-4919-b1f1-3f383f34a1d9, 6b396377-f29f-44d8-8adb-10016fbb07a5, 7a4b823b-f9df-4e77-b3b7-744ee834741c, cb4f7649-cbdd-4cb3-905d-6f5f69832e9c, d53e3d9f-445c-4ab7-9b3c-8acb899caa78, df85054d-ffcd-4c50-8118-ecb512271eaf, ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+            "sparse-knowledge case activated candidate knowledge",
+            "activation noise detected: 10",
+            "ignored activations: 10"
+          ],
+          "planning_score_after": 1.0,
+          "planning_score_before": 1.0,
+          "response_evidence_after": [],
+          "response_evidence_before": [],
+          "runtime_decision_after": "Healthy",
+          "runtime_decision_before": "Healthy"
+        }
+      ],
+      "checks": {
+        "citable_noise_below_model_b": true,
+        "confidence_no_regress": true,
+        "expected_outside_top10_no_regress": true,
+        "expected_outside_top20_no_regress": true,
+        "grounding_score_1": true,
+        "hallucinations_0": true,
+        "mean_expected_rank_no_material_regress": true,
+        "mean_noise_above_expected_no_material_regress": true,
+        "noise_no_increase": true,
+        "planning_core_no_regress": true,
+        "planning_drift_no_increase": false,
+        "planning_score_no_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_no_increase": true,
+        "response_core_no_regress": true,
+        "response_drift_no_increase": true,
+        "retrieval_recall_no_regress": true
+      },
+      "decision": "REJECT",
+      "metrics": {
+        "attention_precision": 0.6333,
+        "attention_recall": 0.4333,
+        "case_count": 10.0,
+        "citable_noise_used_in_reasoning": 1.0,
+        "confidence_calibration": 1.0,
+        "core_evidence_count": 8.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "noise_used_in_reasoning": 1.0,
+        "non_evidence_count": 5.0,
+        "pass_rate": 0.0,
+        "peripheral_context_count": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 2.0,
+        "planning_score": 1.0,
+        "planning_support_count": 0.0,
+        "read_only_verified": true,
+        "reasoning_drift_cases": 1.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_context_count": 0.0,
+        "working_memory_efficiency": 0.14
+      },
+      "ranking_metrics": {
+        "expected_outside_top_10": 8,
+        "expected_outside_top_20": 6,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "median_expected_rank": 3
+      },
+      "raw_dir": "reports\\runtime_v13_role_compromise_suite_raw\\variant_e_r4_soft",
+      "reason": "Failed checks: planning_drift_no_increase",
+      "variant": {
+        "active": true,
+        "description": "R4 soft mode: near-neighbors may support planning but not response citation.",
+        "mode": "r4_soft",
+        "name": "variant_e_r4_soft"
+      }
+    }
+  ]
+}

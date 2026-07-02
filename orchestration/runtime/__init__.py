@@ -18,6 +18,8 @@ from orchestration.runtime.runtime_reasoning import (
     ReasoningFinding,
     RuntimeReasoningEngine,
     RuntimeReasoningReport,
+    runtime_v13_hyb1_enabled,
+    runtime_v13_select_hyb1_projection,
 )
 from orchestration.runtime.runtime_evaluation import (
     RuntimeCaseScorecard,
@@ -55,4 +57,6 @@ __all__ = [
     "RuntimeTickResult",
     "RuntimeV1Pipeline",
     "RuntimeV1Result",
+    "runtime_v13_hyb1_enabled",
+    "runtime_v13_select_hyb1_projection",
 ]

@@ -1,0 +1,1023 @@
+{
+  "acceptance": {
+    "citable_noise_no_increase": false,
+    "confidence_1": true,
+    "grounding_score_1": true,
+    "hallucinations_0": true,
+    "improves_failed_case": false,
+    "noise_no_increase": false,
+    "planning_core_no_regress": true,
+    "planning_drift_no_increase": true,
+    "planning_score_1": true,
+    "reasoning_drift_no_increase": false,
+    "response_core_no_regress": true,
+    "response_drift_no_increase": true,
+    "sparse_safe": true,
+    "unsupported_safe": true
+  },
+  "aggregate": {
+    "cases_improved": 0,
+    "cases_regressed": 4,
+    "citable_noise_used_in_reasoning": 33,
+    "confidence_calibration": 1.0,
+    "expected_evidence_recovered": 14,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "noise_used_in_reasoning": 33,
+    "planning_core_coverage": 0.6667,
+    "planning_drift_cases": 0,
+    "planning_score": 1.0,
+    "reasoning_drift_cases": 8,
+    "response_core_coverage": 0.6667,
+    "response_drift_cases": 0,
+    "same_topic_noise_admitted": 31,
+    "sparse_violin_tuning_safe": true,
+    "unsupported_recipe_safe": true
+  },
+  "cases": [
+    {
+      "baseline_decision": "Under-Attending",
+      "case": "planning_failed_assumption",
+      "citable_noise": [
+        "076c39f2-9cf5-45c7-ac1b-e379da875926",
+        "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+      ],
+      "expected_recovered": [
+        "76120648-7522-4025-8176-5e5fb199c687",
+        "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+        "d9ba0c9f-f458-4512-a0e3-40892ef333b6"
+      ],
+      "family": "planning",
+      "noise_entering_reasoning": [
+        "076c39f2-9cf5-45c7-ac1b-e379da875926",
+        "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+      ],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 1.0,
+      "same_topic_noise_admitted": [
+        "076c39f2-9cf5-45c7-ac1b-e379da875926",
+        "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+      ],
+      "top10": [
+        {
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "original_rank": 1,
+          "role": "expected",
+          "score": 1.3834,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "original_rank": 3,
+          "role": "expected",
+          "score": 1.3743,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+          "original_rank": 2,
+          "role": "expected",
+          "score": 1.2029,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "original_rank": 5,
+          "role": "noise",
+          "score": 1.0015,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "original_rank": 4,
+          "role": "noise",
+          "score": 0.8299,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+          "original_rank": 12,
+          "role": "noise",
+          "score": 0.8099,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+          "original_rank": 9,
+          "role": "noise",
+          "score": 0.6939,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "1ce7238b-68bb-4411-ae90-044239d9c0cd",
+          "original_rank": 14,
+          "role": "noise",
+          "score": 0.6835,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+          "original_rank": 10,
+          "role": "noise",
+          "score": 0.6418,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "c1e211e3-975a-4d14-b65b-255612ba16f3",
+          "original_rank": 42,
+          "role": "noise",
+          "score": 0.6003,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "causal_industrial_failure",
+      "citable_noise": [
+        "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+        "12f78b8d-dd08-440a-80c6-8cb3b188a01b",
+        "183718d2-9612-4057-94b7-4ad8fd896278",
+        "7cc932e8-ccbf-47dc-8c14-8ac0dc3dd4c5",
+        "992ea373-bcb6-4755-b64c-09c97f42cdcf",
+        "9d5b7363-5857-4091-8449-9374d6b4b68f",
+        "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+        "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf"
+      ],
+      "expected_recovered": [
+        "45d9686a-fded-4818-ae8e-47007cd33529",
+        "ce828fd3-8630-418e-857b-65904d4fb2ed",
+        "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+      ],
+      "family": "causal",
+      "noise_entering_reasoning": [
+        "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+        "12f78b8d-dd08-440a-80c6-8cb3b188a01b",
+        "183718d2-9612-4057-94b7-4ad8fd896278",
+        "7cc932e8-ccbf-47dc-8c14-8ac0dc3dd4c5",
+        "992ea373-bcb6-4755-b64c-09c97f42cdcf",
+        "9d5b7363-5857-4091-8449-9374d6b4b68f",
+        "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+        "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf"
+      ],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 1.0,
+      "same_topic_noise_admitted": [
+        "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+        "12f78b8d-dd08-440a-80c6-8cb3b188a01b",
+        "183718d2-9612-4057-94b7-4ad8fd896278",
+        "7cc932e8-ccbf-47dc-8c14-8ac0dc3dd4c5",
+        "992ea373-bcb6-4755-b64c-09c97f42cdcf",
+        "9d5b7363-5857-4091-8449-9374d6b4b68f",
+        "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5"
+      ],
+      "top10": [
+        {
+          "concept_id": "ce828fd3-8630-418e-857b-65904d4fb2ed",
+          "original_rank": 1,
+          "role": "expected",
+          "score": 1.4615,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+          "original_rank": 37,
+          "role": "expected",
+          "score": 1.3578,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce",
+          "original_rank": 2,
+          "role": "expected",
+          "score": 1.2865,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+          "original_rank": 5,
+          "role": "noise",
+          "score": 1.2191,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "7cc932e8-ccbf-47dc-8c14-8ac0dc3dd4c5",
+          "original_rank": 30,
+          "role": "noise",
+          "score": 0.999,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "original_rank": 3,
+          "role": "noise",
+          "score": 0.9721,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "original_rank": 6,
+          "role": "noise",
+          "score": 0.9151,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "original_rank": 7,
+          "role": "noise",
+          "score": 0.909,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "12f78b8d-dd08-440a-80c6-8cb3b188a01b",
+          "original_rank": 24,
+          "role": "noise",
+          "score": 0.8767,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "992ea373-bcb6-4755-b64c-09c97f42cdcf",
+          "original_rank": 32,
+          "role": "noise",
+          "score": 0.8727,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_noise": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+        "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+        "800c60da-06fc-41b6-b259-b4f98e08cd79",
+        "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+      ],
+      "expected_recovered": [
+        "8430c4bb-9070-4e98-aaa6-90404f2da021",
+        "a1e249bd-67dc-4056-9120-89380cbe5928"
+      ],
+      "family": "contradiction",
+      "noise_entering_reasoning": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+        "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+        "800c60da-06fc-41b6-b259-b4f98e08cd79",
+        "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+      ],
+      "planning_core_coverage": 0.6667,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 0.6667,
+      "same_topic_noise_admitted": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+        "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+        "800c60da-06fc-41b6-b259-b4f98e08cd79",
+        "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+      ],
+      "top10": [
+        {
+          "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021",
+          "original_rank": 2,
+          "role": "expected",
+          "score": 1.2972,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+          "original_rank": 11,
+          "role": "noise",
+          "score": 0.9236,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+          "original_rank": 3,
+          "role": "expected",
+          "score": 0.8956,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+          "original_rank": 1,
+          "role": "noise",
+          "score": 0.887,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "800c60da-06fc-41b6-b259-b4f98e08cd79",
+          "original_rank": 8,
+          "role": "noise",
+          "score": 0.8518,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+          "original_rank": 7,
+          "role": "expected",
+          "score": 0.8359,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "41cc8fe7-a7a2-4cd9-8e17-4c5336b8ac28",
+          "original_rank": 15,
+          "role": "noise",
+          "score": 0.7888,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "original_rank": 5,
+          "role": "noise",
+          "score": 0.7242,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "1ecc06d3-3c05-4224-9d30-3111a0533f50",
+          "original_rank": 14,
+          "role": "noise",
+          "score": 0.7235,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "0e3fdeda-0d38-40ad-993c-480703e55f9e",
+          "original_rank": 34,
+          "role": "noise",
+          "score": 0.692,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_noise": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d",
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "79a12afb-b846-4281-a157-c2378539cb64",
+        "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+        "97190912-de2a-4fa6-b283-a9a1baafb53c",
+        "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+      ],
+      "expected_recovered": [],
+      "family": "resource",
+      "noise_entering_reasoning": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d",
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "79a12afb-b846-4281-a157-c2378539cb64",
+        "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+        "97190912-de2a-4fa6-b283-a9a1baafb53c",
+        "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+      ],
+      "planning_core_coverage": 0.0,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 0.0,
+      "same_topic_noise_admitted": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d",
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "79a12afb-b846-4281-a157-c2378539cb64",
+        "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+        "97190912-de2a-4fa6-b283-a9a1baafb53c",
+        "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+      ],
+      "top10": [
+        {
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d",
+          "original_rank": 2,
+          "role": "noise",
+          "score": 1.1731,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "0121143f-0779-4965-9405-2e7b3eabcd05",
+          "original_rank": 36,
+          "role": "noise",
+          "score": 1.0076,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+          "original_rank": 1,
+          "role": "expected",
+          "score": 0.9851,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "original_rank": 4,
+          "role": "noise",
+          "score": 0.9224,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "97190912-de2a-4fa6-b283-a9a1baafb53c",
+          "original_rank": 10,
+          "role": "noise",
+          "score": 0.9095,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+          "original_rank": 13,
+          "role": "noise",
+          "score": 0.9045,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+          "original_rank": 24,
+          "role": "noise",
+          "score": 0.8888,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+          "original_rank": 11,
+          "role": "expected",
+          "score": 0.8655,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "7e5bf5f6-780a-4ba7-85c1-b514b848a162",
+          "original_rank": 8,
+          "role": "noise",
+          "score": 0.7884,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "79a12afb-b846-4281-a157-c2378539cb64",
+          "original_rank": 27,
+          "role": "noise",
+          "score": 0.7608,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "risk_uncertainty_planning",
+      "citable_noise": [
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+        "fd95d878-5bf2-498b-9f69-5eebd7ea49c0"
+      ],
+      "expected_recovered": [
+        "98154cbb-a296-4bc9-87e5-83e1e6fbd245"
+      ],
+      "family": "resource",
+      "noise_entering_reasoning": [
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+        "fd95d878-5bf2-498b-9f69-5eebd7ea49c0"
+      ],
+      "planning_core_coverage": 0.3333,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 0.3333,
+      "same_topic_noise_admitted": [
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "fd95d878-5bf2-498b-9f69-5eebd7ea49c0"
+      ],
+      "top10": [
+        {
+          "concept_id": "fd95d878-5bf2-498b-9f69-5eebd7ea49c0",
+          "original_rank": 24,
+          "role": "noise",
+          "score": 1.0554,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+          "original_rank": 35,
+          "role": "noise",
+          "score": 0.8655,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+          "original_rank": 14,
+          "role": "noise",
+          "score": 0.8392,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+          "original_rank": 4,
+          "role": "expected",
+          "score": 0.8042,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+          "original_rank": 44,
+          "role": "noise",
+          "score": 0.7901,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+          "original_rank": 12,
+          "role": "noise",
+          "score": 0.6873,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "35f7296f-3e5d-4372-8819-a3e769cde611",
+          "original_rank": 17,
+          "role": "noise",
+          "score": 0.6794,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "4ed48c4d-2273-4fd5-be65-4452627810b5",
+          "original_rank": 19,
+          "role": "noise",
+          "score": 0.6784,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+          "original_rank": 38,
+          "role": "noise",
+          "score": 0.6665,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "original_rank": 3,
+          "role": "noise",
+          "score": 0.6525,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "citable_noise": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e"
+      ],
+      "expected_recovered": [
+        "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+      ],
+      "family": "policy",
+      "noise_entering_reasoning": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e"
+      ],
+      "planning_core_coverage": 0.3333,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 0.3333,
+      "same_topic_noise_admitted": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e"
+      ],
+      "top10": [
+        {
+          "concept_id": "acaca659-aee5-4cef-9c4c-5a2281c1a9ef",
+          "original_rank": 1,
+          "role": "expected",
+          "score": 1.2314,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "3cc55e56-cb07-4085-a786-afd705a58770",
+          "original_rank": 22,
+          "role": "expected",
+          "score": 1.0712,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+          "original_rank": 16,
+          "role": "noise",
+          "score": 0.8748,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01",
+          "original_rank": 37,
+          "role": "expected",
+          "score": 0.8659,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "19c469f2-b11b-445a-9b0c-fcd2ee80bd1f",
+          "original_rank": 11,
+          "role": "noise",
+          "score": 0.6686,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+          "original_rank": 2,
+          "role": "noise",
+          "score": 0.5561,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "65e4ca55-7169-4ee4-b388-a6927043a92d",
+          "original_rank": 3,
+          "role": "noise",
+          "score": 0.5544,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "original_rank": 7,
+          "role": "noise",
+          "score": 0.55,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "b85b0a01-9c3f-4c42-a26a-01741c84682c",
+          "original_rank": 5,
+          "role": "noise",
+          "score": 0.5042,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "0586e881-099d-4866-a1cf-4ed571139c70",
+          "original_rank": 14,
+          "role": "noise",
+          "score": 0.504,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Under-Attending",
+      "case": "multi_step_failure_revision",
+      "citable_noise": [
+        "76120648-7522-4025-8176-5e5fb199c687",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "expected_recovered": [
+        "4b01b020-00b1-4d40-9422-aba2288625d4"
+      ],
+      "family": "planning",
+      "noise_entering_reasoning": [
+        "76120648-7522-4025-8176-5e5fb199c687",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "planning_core_coverage": 0.3333,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 0.3333,
+      "same_topic_noise_admitted": [
+        "76120648-7522-4025-8176-5e5fb199c687",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "top10": [
+        {
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "original_rank": 1,
+          "role": "expected",
+          "score": 1.1753,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "original_rank": 4,
+          "role": "noise",
+          "score": 0.967,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "original_rank": 41,
+          "role": "noise",
+          "score": 0.9239,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "original_rank": 48,
+          "role": "noise",
+          "score": 0.7846,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+          "original_rank": 8,
+          "role": "noise",
+          "score": 0.7479,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+          "original_rank": 6,
+          "role": "expected",
+          "score": 0.7116,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "1adaa011-9a30-45bc-a78e-c8ba659af51a",
+          "original_rank": 19,
+          "role": "noise",
+          "score": 0.6777,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+          "original_rank": 40,
+          "role": "expected",
+          "score": 0.6666,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "260cf055-74ee-4e61-9fac-b66377ba2f9a",
+          "original_rank": 44,
+          "role": "noise",
+          "score": 0.6555,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+          "original_rank": 10,
+          "role": "noise",
+          "score": 0.6432,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "citable_noise": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "2391bb60-0240-4998-9e82-797f1b465491",
+        "4671a015-f904-4f7a-b1f8-efd3f4a93b09",
+        "7a2eb17f-e0ae-46ec-878e-e28521d7b7f5",
+        "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+        "fd95d878-5bf2-498b-9f69-5eebd7ea49c0"
+      ],
+      "expected_recovered": [
+        "380b765f-ffa2-4296-a66e-527bacb75a64",
+        "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+        "76120648-7522-4025-8176-5e5fb199c687"
+      ],
+      "family": "resource",
+      "noise_entering_reasoning": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "2391bb60-0240-4998-9e82-797f1b465491",
+        "4671a015-f904-4f7a-b1f8-efd3f4a93b09",
+        "7a2eb17f-e0ae-46ec-878e-e28521d7b7f5",
+        "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+        "fd95d878-5bf2-498b-9f69-5eebd7ea49c0"
+      ],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Reasoning Drift",
+      "response_core_coverage": 1.0,
+      "same_topic_noise_admitted": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "2391bb60-0240-4998-9e82-797f1b465491",
+        "4671a015-f904-4f7a-b1f8-efd3f4a93b09",
+        "7a2eb17f-e0ae-46ec-878e-e28521d7b7f5",
+        "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+        "fd95d878-5bf2-498b-9f69-5eebd7ea49c0"
+      ],
+      "top10": [
+        {
+          "concept_id": "7a2eb17f-e0ae-46ec-878e-e28521d7b7f5",
+          "original_rank": 30,
+          "role": "noise",
+          "score": 1.0945,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "0121143f-0779-4965-9405-2e7b3eabcd05",
+          "original_rank": 18,
+          "role": "noise",
+          "score": 1.0163,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "2391bb60-0240-4998-9e82-797f1b465491",
+          "original_rank": 35,
+          "role": "noise",
+          "score": 0.9583,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+          "original_rank": 4,
+          "role": "expected",
+          "score": 0.9444,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "fd95d878-5bf2-498b-9f69-5eebd7ea49c0",
+          "original_rank": 39,
+          "role": "noise",
+          "score": 0.9281,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "4671a015-f904-4f7a-b1f8-efd3f4a93b09",
+          "original_rank": 32,
+          "role": "noise",
+          "score": 0.8588,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+          "original_rank": 24,
+          "role": "expected",
+          "score": 0.8427,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "original_rank": 1,
+          "role": "expected",
+          "score": 0.8096,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+          "original_rank": 22,
+          "role": "noise",
+          "score": 0.7794,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+          "original_rank": 40,
+          "role": "noise",
+          "score": 0.7701,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Healthy",
+      "case": "sparse_violin_tuning",
+      "citable_noise": [],
+      "expected_recovered": [],
+      "family": "planning",
+      "noise_entering_reasoning": [],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Healthy",
+      "response_core_coverage": 1.0,
+      "same_topic_noise_admitted": [],
+      "top10": [
+        {
+          "concept_id": "c456133c-be3b-43da-8d46-b983619f01bf",
+          "original_rank": 5,
+          "role": "noise_sparse_case",
+          "score": 0.5733,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "original_rank": 37,
+          "role": "noise_sparse_case",
+          "score": 0.5668,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "e2ad3694-8cae-4df0-83db-b6908ff2463e",
+          "original_rank": 35,
+          "role": "noise_sparse_case",
+          "score": 0.5372,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "original_rank": 34,
+          "role": "noise_sparse_case",
+          "score": 0.5332,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "original_rank": 13,
+          "role": "noise_sparse_case",
+          "score": 0.527,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "7cc932e8-ccbf-47dc-8c14-8ac0dc3dd4c5",
+          "original_rank": 26,
+          "role": "noise_sparse_case",
+          "score": 0.4999,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+          "original_rank": 16,
+          "role": "noise_sparse_case",
+          "score": 0.4657,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f",
+          "original_rank": 1,
+          "role": "noise_sparse_case",
+          "score": 0.4574,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "d53e3d9f-445c-4ab7-9b3c-8acb899caa78",
+          "original_rank": 6,
+          "role": "noise_sparse_case",
+          "score": 0.4547,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "original_rank": 3,
+          "role": "noise_sparse_case",
+          "score": 0.4506,
+          "simulated_rank": 10
+        }
+      ]
+    },
+    {
+      "baseline_decision": "Healthy",
+      "case": "unsupported_recipe",
+      "citable_noise": [],
+      "expected_recovered": [],
+      "family": "planning",
+      "noise_entering_reasoning": [],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Healthy",
+      "response_core_coverage": 1.0,
+      "same_topic_noise_admitted": [],
+      "top10": [
+        {
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "original_rank": 35,
+          "role": "noise_sparse_case",
+          "score": 1.0394,
+          "simulated_rank": 1
+        },
+        {
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "original_rank": 20,
+          "role": "noise_sparse_case",
+          "score": 0.6692,
+          "simulated_rank": 2
+        },
+        {
+          "concept_id": "e2ad3694-8cae-4df0-83db-b6908ff2463e",
+          "original_rank": 14,
+          "role": "noise_sparse_case",
+          "score": 0.6395,
+          "simulated_rank": 3
+        },
+        {
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "original_rank": 15,
+          "role": "noise_sparse_case",
+          "score": 0.623,
+          "simulated_rank": 4
+        },
+        {
+          "concept_id": "7cc932e8-ccbf-47dc-8c14-8ac0dc3dd4c5",
+          "original_rank": 21,
+          "role": "noise_sparse_case",
+          "score": 0.5988,
+          "simulated_rank": 5
+        },
+        {
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+          "original_rank": 9,
+          "role": "noise_sparse_case",
+          "score": 0.5656,
+          "simulated_rank": 6
+        },
+        {
+          "concept_id": "d53e3d9f-445c-4ab7-9b3c-8acb899caa78",
+          "original_rank": 1,
+          "role": "noise_sparse_case",
+          "score": 0.5618,
+          "simulated_rank": 7
+        },
+        {
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "original_rank": 2,
+          "role": "noise_sparse_case",
+          "score": 0.5529,
+          "simulated_rank": 8
+        },
+        {
+          "concept_id": "527623e3-ae77-4c75-b1e2-f9db386ba568",
+          "original_rank": 19,
+          "role": "noise_sparse_case",
+          "score": 0.5475,
+          "simulated_rank": 9
+        },
+        {
+          "concept_id": "698a613f-15a8-4919-b1f1-3f383f34a1d9",
+          "original_rank": 4,
+          "role": "noise_sparse_case",
+          "score": 0.5459,
+          "simulated_rank": 10
+        }
+      ]
+    }
+  ],
+  "model": "RAA6",
+  "passed": false
+}

@@ -1,0 +1,2804 @@
+{
+  "baseline_metrics": {
+    "attention_precision": 0.55,
+    "attention_recall": 0.4333,
+    "expected_outside_top_10": 8,
+    "expected_outside_top_20": 6,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "mean_expected_rank": 10,
+    "mean_noise_above_expected": 9.7083,
+    "noise_used_in_reasoning": 12.0,
+    "planning_core_coverage": 0.4333,
+    "planning_drift_cases": 1.0,
+    "reasoning_drift_cases": 5.0,
+    "response_core_coverage": 0.4333,
+    "response_drift_cases": 0.0
+  },
+  "current_model_b_metrics": {
+    "attention_precision": 0.6333,
+    "attention_recall": 0.4333,
+    "expected_outside_top_10": 8,
+    "expected_outside_top_20": 6,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "mean_expected_rank": 10,
+    "mean_noise_above_expected": 9.7083,
+    "noise_used_in_reasoning": 7.0,
+    "planning_core_coverage": 0.4333,
+    "planning_drift_cases": 1.0,
+    "reasoning_drift_cases": 4.0,
+    "response_core_coverage": 0.4333,
+    "response_drift_cases": 0.0
+  },
+  "explicitly_rejected_models": [
+    {
+      "failed_gates": [
+        "planning_drift_increased",
+        "response_drift_increased",
+        "expected_concepts_blocked_from_needed_use"
+      ],
+      "model": "R1"
+    }
+  ],
+  "final_recommendation": "PROCEED_ROLE_MODEL_R4",
+  "model_results": [
+    {
+      "acceptance": {
+        "can_proceed_to_live_prototype": false,
+        "failed_gates": [
+          "planning_drift_increased",
+          "response_drift_increased",
+          "expected_concepts_blocked_from_needed_use"
+        ]
+      },
+      "can_implement_without_evaluator_labels": true,
+      "case_level_impact": [
+        {
+          "blocked": [
+            {
+              "classification": "Core",
+              "concept_id": "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+              "role": "Non-Evidence"
+            }
+          ],
+          "case": "planning_failed_assumption",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 2,
+          "reasoned_after": 1,
+          "reasoned_before": 2,
+          "response_after": 1,
+          "response_before": 2,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "causal_industrial_failure",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 4,
+          "planning_after": 2,
+          "planning_before": 5,
+          "reasoned_after": 2,
+          "reasoned_before": 6,
+          "response_after": 2,
+          "response_before": 5,
+          "supporting_context_after": 4
+        },
+        {
+          "blocked": [],
+          "case": "contradictory_evidence",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 0,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "resource_allocation_shelters",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 0,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "risk_uncertainty_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 0,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [
+            {
+              "classification": "Core",
+              "concept_id": "acaca659-aee5-4cef-9c4c-5a2281c1a9ef",
+              "role": "Non-Evidence"
+            }
+          ],
+          "case": "policy_audit_conflict",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 0,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "multi_step_failure_revision",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "logistics_proxy_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        }
+      ],
+      "concepts_moved_from_evidence_to_supporting_context": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "description": "Strict Core Evidence",
+      "expected_concepts_accidentally_downgraded_or_blocked": [
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.5697,
+          "case": "planning_failed_assumption",
+          "classification": "Core",
+          "concept": "When the emergency response plan is disrupted due to a failed permit assumption, the first step is to review the inspection records to determine the severity of the issue",
+          "concept_id": "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.4512,
+            "attention_classification": "Supporting",
+            "attention_score": 0.5697,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 6,
+            "direct_action_language": false,
+            "domain_anchor_count": 3,
+            "domain_anchor_overlap": [
+              "assumption",
+              "emergency",
+              "permit"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.3158,
+            "generic_overlap": [
+              "emergency",
+              "plan",
+              "response"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5834,
+            "query_overlap": [
+              "assumption",
+              "emergency",
+              "failed",
+              "permit",
+              "plan",
+              "response"
+            ],
+            "specific_overlap": [
+              "assumption",
+              "failed",
+              "permit"
+            ],
+            "specific_overlap_count": 3
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.7504,
+          "case": "policy_audit_conflict",
+          "classification": "Core",
+          "concept": "Reflecting on uncertainty it is possible that the policy and the audit findings are both correct in their own contexts but the records do",
+          "concept_id": "acaca659-aee5-4cef-9c4c-5a2281c1a9ef",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3979,
+            "attention_classification": "Core",
+            "attention_score": 0.7504,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "audit"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "finding",
+              "policy"
+            ],
+            "generic_ratio": 0.6667,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6137,
+            "query_overlap": [
+              "audit",
+              "finding",
+              "policy"
+            ],
+            "specific_overlap": [
+              "audit"
+            ],
+            "specific_overlap_count": 1
+          }
+        }
+      ],
+      "model": "R1",
+      "projected_metrics": {
+        "attention_precision": 1.0,
+        "attention_recall": 0.7143,
+        "grounding_score": 1.0,
+        "hallucinations": 0,
+        "noise_used_in_reasoning": 0,
+        "planning_core_coverage": 0.7143,
+        "planning_drift_cases": 2,
+        "reasoning_drift_cases": 0,
+        "response_core_coverage": 0.7143,
+        "response_drift_cases": 2
+      },
+      "remaining_noisy_concept_roles": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.698,
+          "case": "risk_uncertainty_planning",
+          "classification": "Noise",
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3842,
+            "attention_classification": "Supporting",
+            "attention_score": 0.698,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 0,
+            "direct_action_language": false,
+            "domain_anchor_count": 0,
+            "domain_anchor_overlap": [],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5998,
+            "query_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "role_counts": {
+        "Core Evidence": 5,
+        "Peripheral Context": 1,
+        "Supporting Context": 8
+      },
+      "useful_neighbor_concepts_accidentally_blocked": []
+    },
+    {
+      "acceptance": {
+        "can_proceed_to_live_prototype": true,
+        "failed_gates": []
+      },
+      "can_implement_without_evaluator_labels": true,
+      "case_level_impact": [
+        {
+          "blocked": [],
+          "case": "planning_failed_assumption",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 2,
+          "planning_before": 2,
+          "reasoned_after": 2,
+          "reasoned_before": 2,
+          "response_after": 2,
+          "response_before": 2,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "causal_industrial_failure",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 4,
+          "planning_after": 2,
+          "planning_before": 5,
+          "reasoned_after": 6,
+          "reasoned_before": 6,
+          "response_after": 2,
+          "response_before": 5,
+          "supporting_context_after": 4
+        },
+        {
+          "blocked": [],
+          "case": "contradictory_evidence",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "resource_allocation_shelters",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "risk_uncertainty_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "policy_audit_conflict",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "multi_step_failure_revision",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "logistics_proxy_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        }
+      ],
+      "concepts_moved_from_evidence_to_supporting_context": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.698,
+          "case": "risk_uncertainty_planning",
+          "classification": "Noise",
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3842,
+            "attention_classification": "Supporting",
+            "attention_score": 0.698,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 0,
+            "direct_action_language": false,
+            "domain_anchor_count": 0,
+            "domain_anchor_overlap": [],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5998,
+            "query_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "description": "Supporting Context Split",
+      "expected_concepts_accidentally_downgraded_or_blocked": [],
+      "model": "R2",
+      "projected_metrics": {
+        "attention_precision": 0.9,
+        "attention_recall": 1.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0,
+        "noise_used_in_reasoning": 1,
+        "planning_core_coverage": 1.0,
+        "planning_drift_cases": 0,
+        "reasoning_drift_cases": 1,
+        "response_core_coverage": 1.0,
+        "response_drift_cases": 0
+      },
+      "remaining_noisy_concept_roles": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.698,
+          "case": "risk_uncertainty_planning",
+          "classification": "Noise",
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3842,
+            "attention_classification": "Supporting",
+            "attention_score": 0.698,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 0,
+            "direct_action_language": false,
+            "domain_anchor_count": 0,
+            "domain_anchor_overlap": [],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5998,
+            "query_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "role_counts": {
+        "Core Evidence": 7,
+        "Supporting Context": 7
+      },
+      "useful_neighbor_concepts_accidentally_blocked": []
+    },
+    {
+      "acceptance": {
+        "can_proceed_to_live_prototype": true,
+        "failed_gates": []
+      },
+      "can_implement_without_evaluator_labels": true,
+      "case_level_impact": [
+        {
+          "blocked": [],
+          "case": "planning_failed_assumption",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 2,
+          "planning_before": 2,
+          "reasoned_after": 2,
+          "reasoned_before": 2,
+          "response_after": 2,
+          "response_before": 2,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "causal_industrial_failure",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 4,
+          "planning_after": 2,
+          "planning_before": 5,
+          "reasoned_after": 6,
+          "reasoned_before": 6,
+          "response_after": 2,
+          "response_before": 5,
+          "supporting_context_after": 4
+        },
+        {
+          "blocked": [],
+          "case": "contradictory_evidence",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "resource_allocation_shelters",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "risk_uncertainty_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "policy_audit_conflict",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "multi_step_failure_revision",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "logistics_proxy_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        }
+      ],
+      "concepts_moved_from_evidence_to_supporting_context": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.698,
+          "case": "risk_uncertainty_planning",
+          "classification": "Noise",
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3842,
+            "attention_classification": "Supporting",
+            "attention_score": 0.698,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 0,
+            "direct_action_language": false,
+            "domain_anchor_count": 0,
+            "domain_anchor_overlap": [],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5998,
+            "query_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "description": "Citation-Only Role Gate",
+      "expected_concepts_accidentally_downgraded_or_blocked": [],
+      "model": "R3",
+      "projected_metrics": {
+        "attention_precision": 0.9,
+        "attention_recall": 1.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0,
+        "noise_used_in_reasoning": 1,
+        "planning_core_coverage": 1.0,
+        "planning_drift_cases": 0,
+        "reasoning_drift_cases": 1,
+        "response_core_coverage": 1.0,
+        "response_drift_cases": 0
+      },
+      "remaining_noisy_concept_roles": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.698,
+          "case": "risk_uncertainty_planning",
+          "classification": "Noise",
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3842,
+            "attention_classification": "Supporting",
+            "attention_score": 0.698,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 0,
+            "direct_action_language": false,
+            "domain_anchor_count": 0,
+            "domain_anchor_overlap": [],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5998,
+            "query_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "role_counts": {
+        "Core Evidence": 7,
+        "Supporting Context": 7
+      },
+      "useful_neighbor_concepts_accidentally_blocked": []
+    },
+    {
+      "acceptance": {
+        "can_proceed_to_live_prototype": true,
+        "failed_gates": []
+      },
+      "can_implement_without_evaluator_labels": true,
+      "case_level_impact": [
+        {
+          "blocked": [],
+          "case": "planning_failed_assumption",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 2,
+          "planning_before": 2,
+          "reasoned_after": 2,
+          "reasoned_before": 2,
+          "response_after": 2,
+          "response_before": 2,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "causal_industrial_failure",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 4,
+          "planning_after": 2,
+          "planning_before": 5,
+          "reasoned_after": 6,
+          "reasoned_before": 6,
+          "response_after": 2,
+          "response_before": 5,
+          "supporting_context_after": 4
+        },
+        {
+          "blocked": [],
+          "case": "contradictory_evidence",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "resource_allocation_shelters",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 1
+        },
+        {
+          "blocked": [],
+          "case": "risk_uncertainty_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 1,
+          "planning_after": 0,
+          "planning_before": 1,
+          "reasoned_after": 0,
+          "reasoned_before": 1,
+          "response_after": 0,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "policy_audit_conflict",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "multi_step_failure_revision",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        },
+        {
+          "blocked": [],
+          "case": "logistics_proxy_planning",
+          "noise_evidence_after": 0,
+          "noise_evidence_before": 0,
+          "planning_after": 1,
+          "planning_before": 1,
+          "reasoned_after": 1,
+          "reasoned_before": 1,
+          "response_after": 1,
+          "response_before": 1,
+          "supporting_context_after": 0
+        }
+      ],
+      "concepts_moved_from_evidence_to_supporting_context": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "description": "Hybrid Role Gate",
+      "expected_concepts_accidentally_downgraded_or_blocked": [],
+      "model": "R4",
+      "projected_metrics": {
+        "attention_precision": 0.9,
+        "attention_recall": 1.0,
+        "grounding_score": 1.0,
+        "hallucinations": 0,
+        "noise_used_in_reasoning": 1,
+        "planning_core_coverage": 1.0,
+        "planning_drift_cases": 0,
+        "reasoning_drift_cases": 1,
+        "response_core_coverage": 1.0,
+        "response_drift_cases": 0
+      },
+      "remaining_noisy_concept_roles": [
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4973,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+          "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.352,
+            "attention_classification": "Core",
+            "attention_score": 0.4973,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5878,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3941,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3571,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3941,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1176,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.5945,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Core",
+          "attention_score": 0.4951,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+          "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.354,
+            "attention_classification": "Core",
+            "attention_score": 0.4951,
+            "confidence": 0.8575,
+            "context_marker": true,
+            "contextual_overlap_count": 4,
+            "direct_action_language": false,
+            "domain_anchor_count": 2,
+            "domain_anchor_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2883,
+            "promotion_score": 0.6022,
+            "query_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "industrial",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.3974,
+          "case": "causal_industrial_failure",
+          "classification": "Noise",
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3568,
+            "attention_classification": "Supporting",
+            "attention_score": 0.3974,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 3,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "maintenance"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1,
+            "generic_overlap": [],
+            "generic_ratio": 0.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.6,
+            "query_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap": [
+              "cause",
+              "maintenance"
+            ],
+            "specific_overlap_count": 2
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.6879,
+          "case": "contradictory_evidence",
+          "classification": "Noise",
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.372,
+            "attention_classification": "Supporting",
+            "attention_score": 0.6879,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 2,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "contradictory"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.1429,
+            "generic_overlap": [
+              "report"
+            ],
+            "generic_ratio": 0.5,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.5973,
+            "query_overlap": [
+              "contradictory",
+              "report"
+            ],
+            "specific_overlap": [
+              "contradictory"
+            ],
+            "specific_overlap_count": 1
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.8123,
+          "case": "resource_allocation_shelters",
+          "classification": "Noise",
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3933,
+            "attention_classification": "Supporting",
+            "attention_score": 0.8123,
+            "confidence": 0.85,
+            "context_marker": false,
+            "contextual_overlap_count": 1,
+            "direct_action_language": false,
+            "domain_anchor_count": 1,
+            "domain_anchor_overlap": [
+              "emergency"
+            ],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.4444,
+            "generic_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.3433,
+            "promotion_score": 0.559,
+            "query_overlap": [
+              "change",
+              "emergency",
+              "resource"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        },
+        {
+          "attention_classification": "Supporting",
+          "attention_score": 0.698,
+          "case": "risk_uncertainty_planning",
+          "classification": "Noise",
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "role": "Non-Evidence",
+          "signals": {
+            "activation_score": 0.3842,
+            "attention_classification": "Supporting",
+            "attention_score": 0.698,
+            "confidence": 0.85,
+            "context_marker": true,
+            "contextual_overlap_count": 0,
+            "direct_action_language": false,
+            "domain_anchor_count": 0,
+            "domain_anchor_overlap": [],
+            "evidence_support": 1.0,
+            "expanded_jaccard_to_question": 0.087,
+            "generic_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "generic_ratio": 1.0,
+            "implementation_available": true,
+            "projected_centrality": 0.2333,
+            "promotion_score": 0.5998,
+            "query_overlap": [
+              "plan",
+              "uncertainty"
+            ],
+            "specific_overlap": [],
+            "specific_overlap_count": 0
+          }
+        }
+      ],
+      "role_counts": {
+        "Core Evidence": 7,
+        "Peripheral Context": 1,
+        "Supporting Context": 6
+      },
+      "useful_neighbor_concepts_accidentally_blocked": []
+    }
+  ],
+  "summary": {
+    "accepted_models": [
+      "R4",
+      "R2",
+      "R3"
+    ],
+    "current_model_b_decision": "ACCEPT_RUNTIME_V13_QUERY_EVIDENCE_MODEL_B",
+    "final_recommendation": "PROCEED_ROLE_MODEL_R4",
+    "recommended_model": "R4",
+    "remaining_noise_count": 7,
+    "remaining_noise_dominant_failures": {
+      "attention_misclassification": 7,
+      "evaluator_or_benchmark_label_issue": 1,
+      "insufficient_query_specific_evidence_modeling": 7,
+      "missing_concept_role_metadata": 1,
+      "overly_broad_concept": 2,
+      "reasoning_gate_override_too_permissive": 5,
+      "role_ambiguity_between_useful_neighbor_and_noise": 6
+    }
+  }
+}

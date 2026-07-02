@@ -1,0 +1,1094 @@
+{
+  "baseline_metrics": {
+    "attention_precision": 0.55,
+    "attention_recall": 0.4333,
+    "confidence_calibration": 1.0,
+    "evidence_audit_noise_used": 12,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "mean_expected_rank": 10,
+    "mean_noise_above_expected": 9.7083,
+    "noise_used_in_reasoning": 12.0,
+    "planning_score": 1.0,
+    "retrieval_precision": 0.16,
+    "retrieval_recall": 0.5333
+  },
+  "expected_or_useful_concepts_at_risk": [
+    {
+      "activation_score": 0.4476,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.3401,
+      "case": "planning_failed_assumption",
+      "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+      "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+      "rank": 3,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3271,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "causal_industrial_failure",
+      "concept": "In this cycle the prediction is that if the maintenance frequency is increased further without addressing the root cause e g equipment age or",
+      "concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+      "rank": 37,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.4072,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.3274,
+      "case": "contradictory_evidence",
+      "concept": "The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect",
+      "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021",
+      "rank": 2,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3635,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.2841,
+      "case": "contradictory_evidence",
+      "concept": "The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times but the content of the reports",
+      "concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+      "rank": 7,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.384,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.3232,
+      "case": "contradictory_evidence",
+      "concept": "However it s important to note that the resolution could be challenged if new evidence were to emerge such as corroborating testimony or physical",
+      "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+      "rank": 3,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3615,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "resource_allocation_shelters",
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "rank": 11,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3557,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "resource_allocation_shelters",
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "rank": 18,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.4151,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.3175,
+      "case": "resource_allocation_shelters",
+      "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+      "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+      "rank": 1,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": null,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "risk_uncertainty_planning",
+      "concept": null,
+      "concept_id": "52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+      "rank": null,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3991,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.3042,
+      "case": "risk_uncertainty_planning",
+      "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+      "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+      "rank": 2,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3958,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.3044,
+      "case": "risk_uncertainty_planning",
+      "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease",
+      "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+      "rank": 4,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3385,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "policy_audit_conflict",
+      "concept": "The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply",
+      "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01",
+      "rank": 37,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3437,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "policy_audit_conflict",
+      "concept": "The evidence that determines which rule applies is the policy exception's expiration date",
+      "concept_id": "3cc55e56-cb07-4085-a786-afd705a58770",
+      "rank": 22,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3749,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.2945,
+      "case": "multi_step_failure_revision",
+      "concept": "Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B",
+      "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+      "rank": 6,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3465,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "multi_step_failure_revision",
+      "concept": "A prediction that would validate or falsify the system assumption is that after implementing failure drills the power grid will exhibit improved resilience to",
+      "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+      "rank": 40,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3519,
+      "attended": false,
+      "attention_classification": null,
+      "attention_score": null,
+      "case": "logistics_proxy_planning",
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "rank": 24,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    },
+    {
+      "activation_score": 0.3777,
+      "attended": false,
+      "attention_classification": "Peripheral",
+      "attention_score": 0.2626,
+      "case": "logistics_proxy_planning",
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "rank": 4,
+      "reason": "expected concept did not fully pass attention/reasoning",
+      "reasoned": false
+    }
+  ],
+  "explicitly_rejected_experiments": [
+    "stronger_activation_recurrence_by_default",
+    "hard_concept_blacklist",
+    "global_attention_threshold_loosening",
+    "learning_governance_or_promotion_changes",
+    "provider_prompt_changes"
+  ],
+  "per_case": [
+    {
+      "baseline_noise_used": 0,
+      "case": "planning_failed_assumption",
+      "category": "planning",
+      "dominant_remaining_causes": {},
+      "expected_at_risk": 1,
+      "expected_concepts": 3,
+      "question": "How should a team revise an emergency response plan after a failed permit assumption?",
+      "refined_noise_used": 0,
+      "removed_noise": 0,
+      "unchanged_noise": 0
+    },
+    {
+      "baseline_noise_used": 6,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "dominant_remaining_causes": {
+        "attention_misclassification": 4,
+        "insufficient_query_specific_evidence_modeling": 4,
+        "reasoning_gate_override_too_permissive": 4,
+        "role_ambiguity_between_useful_neighbor_and_noise": 4
+      },
+      "expected_at_risk": 1,
+      "expected_concepts": 3,
+      "question": "How should interacting causes be analyzed in industrial maintenance?",
+      "refined_noise_used": 4,
+      "removed_noise": 2,
+      "unchanged_noise": 4
+    },
+    {
+      "baseline_noise_used": 1,
+      "case": "contradictory_evidence",
+      "category": "contradiction_handling",
+      "dominant_remaining_causes": {
+        "attention_misclassification": 1,
+        "insufficient_query_specific_evidence_modeling": 1,
+        "reasoning_gate_override_too_permissive": 1,
+        "role_ambiguity_between_useful_neighbor_and_noise": 1
+      },
+      "expected_at_risk": 3,
+      "expected_concepts": 3,
+      "question": "How should contradictory eyewitness reports or conflicting evidence be handled?",
+      "refined_noise_used": 1,
+      "removed_noise": 0,
+      "unchanged_noise": 1
+    },
+    {
+      "baseline_noise_used": 1,
+      "case": "resource_allocation_shelters",
+      "category": "resource_allocation",
+      "dominant_remaining_causes": {
+        "attention_misclassification": 1,
+        "evaluator_or_benchmark_label_issue": 1,
+        "insufficient_query_specific_evidence_modeling": 1,
+        "overly_broad_concept": 1,
+        "role_ambiguity_between_useful_neighbor_and_noise": 1
+      },
+      "expected_at_risk": 3,
+      "expected_concepts": 3,
+      "question": "How should emergency shelter resources be allocated when demand changes?",
+      "refined_noise_used": 1,
+      "removed_noise": 0,
+      "unchanged_noise": 1
+    },
+    {
+      "baseline_noise_used": 1,
+      "case": "risk_uncertainty_planning",
+      "category": "risk_assessment",
+      "dominant_remaining_causes": {
+        "attention_misclassification": 1,
+        "insufficient_query_specific_evidence_modeling": 1,
+        "missing_concept_role_metadata": 1,
+        "overly_broad_concept": 1
+      },
+      "expected_at_risk": 3,
+      "expected_concepts": 3,
+      "question": "How should a plan account for failure risk and uncertainty?",
+      "refined_noise_used": 1,
+      "removed_noise": 0,
+      "unchanged_noise": 1
+    },
+    {
+      "baseline_noise_used": 0,
+      "case": "policy_audit_conflict",
+      "category": "conflicting_evidence",
+      "dominant_remaining_causes": {},
+      "expected_at_risk": 2,
+      "expected_concepts": 3,
+      "question": "How should policy exceptions and audit findings be reconciled?",
+      "refined_noise_used": 0,
+      "removed_noise": 0,
+      "unchanged_noise": 0
+    },
+    {
+      "baseline_noise_used": 3,
+      "case": "multi_step_failure_revision",
+      "category": "multi_step_reasoning",
+      "dominant_remaining_causes": {
+        "attention_misclassification": 1,
+        "insufficient_query_specific_evidence_modeling": 1,
+        "missing_concept_role_metadata": 1,
+        "overly_broad_concept": 1,
+        "role_ambiguity_between_useful_neighbor_and_noise": 1
+      },
+      "expected_at_risk": 2,
+      "expected_concepts": 3,
+      "question": "How should a team identify failure points, gather evidence, and revise a plan?",
+      "refined_noise_used": 1,
+      "removed_noise": 2,
+      "unchanged_noise": 1
+    },
+    {
+      "baseline_noise_used": 0,
+      "case": "logistics_proxy_planning",
+      "category": "logistics",
+      "dominant_remaining_causes": {},
+      "expected_at_risk": 2,
+      "expected_concepts": 3,
+      "question": "How should a response team sequence emergency access, resource staging, and capacity checks?",
+      "refined_noise_used": 0,
+      "removed_noise": 0,
+      "unchanged_noise": 0
+    },
+    {
+      "baseline_noise_used": 0,
+      "case": "sparse_violin_tuning",
+      "category": "sparse_knowledge",
+      "dominant_remaining_causes": {},
+      "expected_at_risk": 0,
+      "expected_concepts": 0,
+      "question": "Explain violin tuning for a beginner.",
+      "refined_noise_used": 0,
+      "removed_noise": 0,
+      "unchanged_noise": 0
+    },
+    {
+      "baseline_noise_used": 0,
+      "case": "unsupported_recipe",
+      "category": "unsupported_questions",
+      "dominant_remaining_causes": {},
+      "expected_at_risk": 0,
+      "expected_concepts": 0,
+      "question": "What is the best recipe for sourdough bread?",
+      "refined_noise_used": 0,
+      "removed_noise": 0,
+      "unchanged_noise": 0
+    }
+  ],
+  "recommended_next_experiment": "PROCEED_QUERY_SPECIFIC_EVIDENCE_MODELING",
+  "refined_metrics": {
+    "attention_precision": 0.5833,
+    "attention_recall": 0.4333,
+    "average_activated_concepts": 10.0,
+    "average_ignored_concepts": 8.5,
+    "average_ignored_noise": 7.5,
+    "average_noise_concepts": 8.3,
+    "average_suppressed_core": 0.9,
+    "average_used_concepts": 1.5,
+    "average_used_noise": 0.8,
+    "average_useful_neighbors": 0.1,
+    "case_count": 10.0,
+    "confidence_calibration": 1.0,
+    "conflict_score": 1.0,
+    "evidence_audit_noise_used": 8,
+    "expected_outside_top10": 8,
+    "expected_outside_top20": 6,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "healthy_cases": 2.0,
+    "mean_expected_rank": 10,
+    "mean_noise_above_expected": 9.7083,
+    "noise_used_in_reasoning": 8.0,
+    "over_attending_cases": 0.0,
+    "overall_utilization_ratio": 0.15,
+    "pass_rate": 0.0,
+    "peripheral_ratio": 0.0,
+    "planning_core_coverage": 0.4333,
+    "planning_drift_cases": 1.0,
+    "planning_score": 1.0,
+    "planning_utilization_ratio": 0.14,
+    "read_only_verified": true,
+    "reasoning_contribution_ratio": 0.35,
+    "reasoning_drift_cases": 5.0,
+    "response_core_coverage": 0.4333,
+    "response_drift_cases": 0.0,
+    "response_utilization_ratio": 0.14,
+    "retrieval_precision": 0.16,
+    "retrieval_recall": 0.5333,
+    "supporting_ratio": 0.0,
+    "under_attending_cases": 2.0,
+    "working_memory_efficiency": 0.15
+  },
+  "remaining_noisy_reasoning_concepts": [
+    {
+      "activation_rank": 7,
+      "activation_score": 0.352,
+      "attention_classification": "Core",
+      "attention_score": 0.4973,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce",
+        "nearest_expected_jaccard": 0.1071,
+        "nearest_expected_shared_term_sample": [
+          "can",
+          "industrial",
+          "interact"
+        ],
+        "nearest_expected_shared_terms": 3
+      },
+      "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+      "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+      "confidence": 0.85,
+      "definition": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real-world industrial settings where multiple factors can interact to influence maintenance needs.\",\"confidence\":0.8}",
+      "domain_anchor_overlap": [
+        "industrial",
+        "maintenance"
+      ],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.087,
+      "generic_overlap": [],
+      "pass_reason": "high_corpus_support_plus_context_overlap",
+      "planned": true,
+      "projected_centrality": 0.3433,
+      "promotion_score": 0.5878,
+      "query_overlap": [
+        "industrial",
+        "maintenance"
+      ],
+      "question": "How should interacting causes be analyzed in industrial maintenance?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [
+        "industrial",
+        "maintenance"
+      ],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "reasoning_gate_override_too_permissive",
+        "role_ambiguity_between_useful_neighbor_and_noise"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Core",
+        "attention_score": 0.4973,
+        "domain_anchor_overlap": [
+          "industrial",
+          "maintenance"
+        ],
+        "evidence_support": 1.0,
+        "generic_overlap": [],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [
+          "industrial",
+          "maintenance"
+        ],
+        "summary": "high_corpus_support_plus_context_overlap"
+      }
+    },
+    {
+      "activation_rank": 3,
+      "activation_score": 0.3571,
+      "attention_classification": "Supporting",
+      "attention_score": 0.3941,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+        "nearest_expected_jaccard": 0.1852,
+        "nearest_expected_shared_term_sample": [
+          "equipment",
+          "frequency",
+          "increased",
+          "maintenance",
+          "that"
+        ],
+        "nearest_expected_shared_terms": 5
+      },
+      "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+      "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+      "confidence": 0.85,
+      "definition": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+      "domain_anchor_overlap": [
+        "maintenance"
+      ],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.1176,
+      "generic_overlap": [],
+      "pass_reason": "corpus_support_override",
+      "planned": false,
+      "projected_centrality": 0.2883,
+      "promotion_score": 0.5945,
+      "query_overlap": [
+        "causes",
+        "maintenance"
+      ],
+      "question": "How should interacting causes be analyzed in industrial maintenance?",
+      "reasoned": true,
+      "responded": false,
+      "specific_overlap": [
+        "causes",
+        "maintenance"
+      ],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "reasoning_gate_override_too_permissive",
+        "role_ambiguity_between_useful_neighbor_and_noise"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Supporting",
+        "attention_score": 0.3941,
+        "domain_anchor_overlap": [
+          "maintenance"
+        ],
+        "evidence_support": 1.0,
+        "generic_overlap": [],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [
+          "causes",
+          "maintenance"
+        ],
+        "summary": "corpus_support_override"
+      }
+    },
+    {
+      "activation_rank": 6,
+      "activation_score": 0.354,
+      "attention_classification": "Core",
+      "attention_score": 0.4951,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce",
+        "nearest_expected_jaccard": 0.16,
+        "nearest_expected_shared_term_sample": [
+          "can",
+          "causal",
+          "industrial",
+          "maintenance"
+        ],
+        "nearest_expected_shared_terms": 4
+      },
+      "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+      "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+      "confidence": 0.8575,
+      "definition": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors, leading to uncertainty in predicting the exact outcomes of maintenance interventions",
+      "domain_anchor_overlap": [
+        "industrial",
+        "maintenance"
+      ],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.1,
+      "generic_overlap": [],
+      "pass_reason": "high_corpus_support_plus_context_overlap",
+      "planned": true,
+      "projected_centrality": 0.2883,
+      "promotion_score": 0.6022,
+      "query_overlap": [
+        "industrial",
+        "maintenance"
+      ],
+      "question": "How should interacting causes be analyzed in industrial maintenance?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [
+        "industrial",
+        "maintenance"
+      ],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "reasoning_gate_override_too_permissive",
+        "role_ambiguity_between_useful_neighbor_and_noise"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Core",
+        "attention_score": 0.4951,
+        "domain_anchor_overlap": [
+          "industrial",
+          "maintenance"
+        ],
+        "evidence_support": 1.0,
+        "generic_overlap": [],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [
+          "industrial",
+          "maintenance"
+        ],
+        "summary": "high_corpus_support_plus_context_overlap"
+      }
+    },
+    {
+      "activation_rank": 4,
+      "activation_score": 0.3568,
+      "attention_classification": "Supporting",
+      "attention_score": 0.3974,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+        "nearest_expected_jaccard": 0.0667,
+        "nearest_expected_shared_term_sample": [
+          "maintenance",
+          "that"
+        ],
+        "nearest_expected_shared_terms": 2
+      },
+      "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+      "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+      "confidence": 0.85,
+      "definition": "For instance, if a maintenance team observes that a machine's downtime is correlated with a specific type of weather, they might mistakenly conclude that the weather causes the machine to break down",
+      "domain_anchor_overlap": [
+        "maintenance"
+      ],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.1,
+      "generic_overlap": [],
+      "pass_reason": "corpus_support_override",
+      "planned": true,
+      "projected_centrality": 0.3433,
+      "promotion_score": 0.6,
+      "query_overlap": [
+        "causes",
+        "maintenance"
+      ],
+      "question": "How should interacting causes be analyzed in industrial maintenance?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [
+        "causes",
+        "maintenance"
+      ],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "reasoning_gate_override_too_permissive",
+        "role_ambiguity_between_useful_neighbor_and_noise"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Supporting",
+        "attention_score": 0.3974,
+        "domain_anchor_overlap": [
+          "maintenance"
+        ],
+        "evidence_support": 1.0,
+        "generic_overlap": [],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [
+          "causes",
+          "maintenance"
+        ],
+        "summary": "corpus_support_override"
+      }
+    },
+    {
+      "activation_rank": 5,
+      "activation_score": 0.372,
+      "attention_classification": "Supporting",
+      "attention_score": 0.6879,
+      "case": "contradictory_evidence",
+      "category": "contradiction_handling",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+        "nearest_expected_jaccard": 0.0833,
+        "nearest_expected_shared_term_sample": [
+          "reports",
+          "that"
+        ],
+        "nearest_expected_shared_terms": 2
+      },
+      "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+      "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+      "confidence": 0.85,
+      "definition": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+      "domain_anchor_overlap": [
+        "contradictory"
+      ],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.1429,
+      "generic_overlap": [],
+      "pass_reason": "high_corpus_support_plus_context_overlap",
+      "planned": true,
+      "projected_centrality": 0.3433,
+      "promotion_score": 0.5973,
+      "query_overlap": [
+        "contradictory",
+        "reports"
+      ],
+      "question": "How should contradictory eyewitness reports or conflicting evidence be handled?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [
+        "contradictory"
+      ],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "reasoning_gate_override_too_permissive",
+        "role_ambiguity_between_useful_neighbor_and_noise"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Supporting",
+        "attention_score": 0.6879,
+        "domain_anchor_overlap": [
+          "contradictory"
+        ],
+        "evidence_support": 1.0,
+        "generic_overlap": [],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [
+          "contradictory"
+        ],
+        "summary": "high_corpus_support_plus_context_overlap"
+      }
+    },
+    {
+      "activation_rank": 4,
+      "activation_score": 0.3933,
+      "attention_classification": "Supporting",
+      "attention_score": 0.8123,
+      "case": "resource_allocation_shelters",
+      "category": "resource_allocation",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+        "nearest_expected_jaccard": 0.24,
+        "nearest_expected_shared_term_sample": [
+          "allocation",
+          "emergency",
+          "needs",
+          "resources",
+          "shelters",
+          "that"
+        ],
+        "nearest_expected_shared_terms": 6
+      },
+      "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+      "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+      "confidence": 0.85,
+      "definition": "When allocating resources for emergency shelters, the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can adapt to changes in the priority group",
+      "domain_anchor_overlap": [
+        "emergency"
+      ],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.4444,
+      "generic_overlap": [
+        "change",
+        "emergency",
+        "resource"
+      ],
+      "pass_reason": "high_corpus_support_plus_context_overlap",
+      "planned": true,
+      "projected_centrality": 0.3433,
+      "promotion_score": 0.559,
+      "query_overlap": [
+        "changes",
+        "emergency",
+        "resources",
+        "when"
+      ],
+      "question": "How should emergency shelter resources be allocated when demand changes?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "overly_broad_concept",
+        "role_ambiguity_between_useful_neighbor_and_noise",
+        "evaluator_or_benchmark_label_issue"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Supporting",
+        "attention_score": 0.8123,
+        "domain_anchor_overlap": [
+          "emergency"
+        ],
+        "evidence_support": 1.0,
+        "generic_overlap": [
+          "change",
+          "emergency",
+          "resource"
+        ],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [],
+        "summary": "high_corpus_support_plus_context_overlap"
+      }
+    },
+    {
+      "activation_rank": 7,
+      "activation_score": 0.3842,
+      "attention_classification": "Supporting",
+      "attention_score": 0.698,
+      "case": "risk_uncertainty_planning",
+      "category": "risk_assessment",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+        "nearest_expected_jaccard": 0.04,
+        "nearest_expected_shared_term_sample": [
+          "plan"
+        ],
+        "nearest_expected_shared_terms": 1
+      },
+      "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+      "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+      "confidence": 0.85,
+      "definition": "Uncertainty: The certainty of the revised plan depends on the specific requirements and regulations of the project's location, as well as the potential for additional delays or complications due to the false permit assumption.\",\"confidence\":0.95}",
+      "domain_anchor_overlap": [],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.087,
+      "generic_overlap": [
+        "plan",
+        "uncertainty"
+      ],
+      "pass_reason": "supporting_attention_plus_generic_overlap",
+      "planned": true,
+      "projected_centrality": 0.2333,
+      "promotion_score": 0.5998,
+      "query_overlap": [
+        "and",
+        "for",
+        "plan",
+        "uncertainty"
+      ],
+      "question": "How should a plan account for failure risk and uncertainty?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "overly_broad_concept",
+        "missing_concept_role_metadata"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Supporting",
+        "attention_score": 0.698,
+        "domain_anchor_overlap": [],
+        "evidence_support": 1.0,
+        "generic_overlap": [
+          "plan",
+          "uncertainty"
+        ],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [],
+        "summary": "supporting_attention_plus_generic_overlap"
+      }
+    },
+    {
+      "activation_rank": 10,
+      "activation_score": 0.3698,
+      "attention_classification": "Core",
+      "attention_score": 0.4613,
+      "case": "multi_step_failure_revision",
+      "category": "multi_step_reasoning",
+      "comparison_to_expected": {
+        "nearest_expected_concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+        "nearest_expected_jaccard": 0.1154,
+        "nearest_expected_shared_term_sample": [
+          "drills",
+          "failure",
+          "system"
+        ],
+        "nearest_expected_shared_terms": 3
+      },
+      "concept": "To predict cascade risk, failure drills can be used to identify dependencies and tradeoffs within the system",
+      "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+      "confidence": 0.85,
+      "definition": "To predict cascade risk, failure drills can be used to identify dependencies and tradeoffs within the system",
+      "domain_anchor_overlap": [],
+      "evidence_support": 1.0,
+      "expanded_jaccard_to_question": 0.1111,
+      "generic_overlap": [
+        "failure"
+      ],
+      "pass_reason": "core_attention_classification",
+      "planned": true,
+      "projected_centrality": 0.2333,
+      "promotion_score": 0.5226,
+      "query_overlap": [
+        "and",
+        "failure",
+        "identify"
+      ],
+      "question": "How should a team identify failure points, gather evidence, and revise a plan?",
+      "reasoned": true,
+      "responded": true,
+      "specific_overlap": [],
+      "taxonomy": [
+        "insufficient_query_specific_evidence_modeling",
+        "attention_misclassification",
+        "overly_broad_concept",
+        "role_ambiguity_between_useful_neighbor_and_noise",
+        "missing_concept_role_metadata"
+      ],
+      "why_refined_gate_allowed_it": {
+        "attention_classification": "Core",
+        "attention_score": 0.4613,
+        "domain_anchor_overlap": [],
+        "evidence_support": 1.0,
+        "generic_overlap": [
+          "failure"
+        ],
+        "note": "Inferred from archived diagnostics; the audit does not execute or mutate runtime code.",
+        "specific_overlap": [],
+        "summary": "core_attention_classification"
+      }
+    }
+  ],
+  "successful_noise_removals": [
+    {
+      "baseline_activation_score": 0.3541,
+      "baseline_attention_classification": "Supporting",
+      "baseline_attention_score": 0.3502,
+      "baseline_rank": 5,
+      "case": "causal_industrial_failure",
+      "concept": "This cycle can be completed by making a testable prediction: if the maintenance introduces stress, then reducing the frequency of maintenance should lower the failure rate",
+      "concept_id": "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+      "refined_activation_score": 0.3541,
+      "refined_attention_classification": "Supporting",
+      "refined_attention_score": 0.3502,
+      "refined_rank": 5,
+      "refined_reasoned": false
+    },
+    {
+      "baseline_activation_score": 0.3478,
+      "baseline_attention_classification": "Supporting",
+      "baseline_attention_score": 0.3524,
+      "baseline_rank": 8,
+      "case": "causal_industrial_failure",
+      "concept": "If the increased maintenance requirements persist, it would support the hypothesis that temperature is a key factor",
+      "concept_id": "cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+      "refined_activation_score": 0.3478,
+      "refined_attention_classification": "Supporting",
+      "refined_attention_score": 0.3524,
+      "refined_rank": 8,
+      "refined_reasoned": false
+    },
+    {
+      "baseline_activation_score": 0.3705,
+      "baseline_attention_classification": "Supporting",
+      "baseline_attention_score": 0.3673,
+      "baseline_rank": 9,
+      "case": "multi_step_failure_revision",
+      "concept": "To identify each party's likely belief, predict their response, and determine evidence that would change the strategy, you can follow these steps: 1",
+      "concept_id": "22471376-888c-42fb-ac5d-c06d09f25345",
+      "refined_activation_score": 0.3705,
+      "refined_attention_classification": "Supporting",
+      "refined_attention_score": 0.3673,
+      "refined_rank": 9,
+      "refined_reasoned": false
+    },
+    {
+      "baseline_activation_score": 0.3775,
+      "baseline_attention_classification": "Supporting",
+      "baseline_attention_score": 0.3627,
+      "baseline_rank": 4,
+      "case": "multi_step_failure_revision",
+      "concept": "When the emergency response plan is disrupted due to a failed permit assumption the team should use resource telemetry data to assess the current",
+      "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+      "refined_activation_score": 0.3775,
+      "refined_attention_classification": "Supporting",
+      "refined_attention_score": 0.3627,
+      "refined_rank": 4,
+      "refined_reasoned": false
+    }
+  ],
+  "summary": {
+    "cases_with_remaining_noise": 5,
+    "dominant_failure_modes": {
+      "attention_misclassification": 8,
+      "evaluator_or_benchmark_label_issue": 1,
+      "insufficient_query_specific_evidence_modeling": 8,
+      "missing_concept_role_metadata": 2,
+      "overly_broad_concept": 3,
+      "reasoning_gate_override_too_permissive": 5,
+      "role_ambiguity_between_useful_neighbor_and_noise": 7
+    },
+    "expected_or_useful_at_risk": 17,
+    "final_recommendation": "PROCEED_QUERY_SPECIFIC_EVIDENCE_MODELING",
+    "pass_reason_counts": {
+      "core_attention_classification": 1,
+      "corpus_support_override": 2,
+      "high_corpus_support_plus_context_overlap": 4,
+      "supporting_attention_plus_generic_overlap": 1
+    },
+    "remaining_noisy_reasoning_concepts": 8,
+    "successful_noise_removals": 4,
+    "unchanged_noise": 8
+  },
+  "unchanged_noise": [
+    {
+      "activation_score": 0.352,
+      "attention_classification": "Core",
+      "attention_score": 0.4973,
+      "case": "causal_industrial_failure",
+      "concept": "The uncertainty in this scenario lies in the potential confounding variables and the complexity of real world industrial settings where multiple factors can interact",
+      "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+      "rank": 7
+    },
+    {
+      "activation_score": 0.3571,
+      "attention_classification": "Supporting",
+      "attention_score": 0.3941,
+      "case": "causal_industrial_failure",
+      "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+      "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+      "rank": 3
+    },
+    {
+      "activation_score": 0.354,
+      "attention_classification": "Core",
+      "attention_score": 0.4951,
+      "case": "causal_industrial_failure",
+      "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+      "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+      "rank": 6
+    },
+    {
+      "activation_score": 0.3568,
+      "attention_classification": "Supporting",
+      "attention_score": 0.3974,
+      "case": "causal_industrial_failure",
+      "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+      "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+      "rank": 4
+    },
+    {
+      "activation_score": 0.372,
+      "attention_classification": "Supporting",
+      "attention_score": 0.6879,
+      "case": "contradictory_evidence",
+      "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+      "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+      "rank": 5
+    },
+    {
+      "activation_score": 0.3933,
+      "attention_classification": "Supporting",
+      "attention_score": 0.8123,
+      "case": "resource_allocation_shelters",
+      "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+      "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+      "rank": 4
+    },
+    {
+      "activation_score": 0.3842,
+      "attention_classification": "Supporting",
+      "attention_score": 0.698,
+      "case": "risk_uncertainty_planning",
+      "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+      "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+      "rank": 7
+    },
+    {
+      "activation_score": 0.3698,
+      "attention_classification": "Core",
+      "attention_score": 0.4613,
+      "case": "multi_step_failure_revision",
+      "concept": "To predict cascade risk, failure drills can be used to identify dependencies and tradeoffs within the system",
+      "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+      "rank": 10
+    }
+  ]
+}

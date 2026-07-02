@@ -1,0 +1,820 @@
+{
+  "conclusion": {
+    "Experiments explicitly rejected": [
+      "stronger global generic-token dampening",
+      "live activation scoring changes based on the failed formula",
+      "loosening attention thresholds to compensate for activation noise",
+      "learning/governance/promotion changes"
+    ],
+    "Metrics to monitor": [
+      "expected_outside_top10",
+      "expected_outside_top20",
+      "mean_expected_rank",
+      "mean_noise_above_expected",
+      "expected top-10 concepts pushed out",
+      "sparse top activation score",
+      "noise_used_in_reasoning",
+      "grounding_score",
+      "hallucinations"
+    ],
+    "Recommended next experiment": "Do not revise live activation yet. Run a separate simulation for recurring-noise suppression and a separate sparse-abstention simulation. Keep attention rescue as a distinct experiment for attention-primary cases.",
+    "Root cause of failed formula": "The formula treated generic task-domain terms as globally weak signals. In the Phase A corpus, words such as resource, risk, plan, failure, and evidence are often the actual domain anchors for valid concepts, so blunt dampening punished expected concepts while allowing other recurring noisy concepts to dominate.",
+    "Whether to keep, revise, or delete tools/runtime_v13_scoring_simulation.py": "Keep it as a failed prototype artifact and baseline simulation harness. Revise by adding alternative named formulas rather than overwriting this result."
+  },
+  "failed_metrics": {
+    "expected_concepts_worsened_out_of_top10": [
+      {
+        "case": "risk_uncertainty_planning",
+        "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+        "original_rank": 2,
+        "simulated_rank": 26
+      },
+      {
+        "case": "risk_uncertainty_planning",
+        "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+        "original_rank": 4,
+        "simulated_rank": 27
+      },
+      {
+        "case": "multi_step_failure_revision",
+        "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+        "original_rank": 6,
+        "simulated_rank": 25
+      },
+      {
+        "case": "logistics_proxy_planning",
+        "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+        "original_rank": 4,
+        "simulated_rank": 33
+      }
+    ],
+    "moved_into_top10_from_outside_top10": 0,
+    "moved_into_top20_from_outside_top10": 1,
+    "original_expected_outside_top10": 8,
+    "original_expected_outside_top20": 6,
+    "original_mean_expected_rank": 10,
+    "original_mean_noise_above_expected": 7.7083,
+    "original_median_expected_rank": 3,
+    "recurring_noise_after": [
+      [
+        "65e4ca55-7169-4ee4-b388-a6927043a92d",
+        11
+      ],
+      [
+        "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+        11
+      ],
+      [
+        "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+        11
+      ],
+      [
+        "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+        11
+      ],
+      [
+        "89b85467-0655-47d3-9a0c-89da364cd487",
+        11
+      ],
+      [
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+        11
+      ],
+      [
+        "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+        11
+      ],
+      [
+        "b85b0a01-9c3f-4c42-a26a-01741c84682c",
+        11
+      ],
+      [
+        "0586e881-099d-4866-a1cf-4ed571139c70",
+        11
+      ],
+      [
+        "0e3fdeda-0d38-40ad-993c-480703e55f9e",
+        11
+      ]
+    ],
+    "recurring_noise_before": [
+      [
+        "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+        7
+      ],
+      [
+        "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+        7
+      ],
+      [
+        "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+        7
+      ],
+      [
+        "0586e881-099d-4866-a1cf-4ed571139c70",
+        7
+      ],
+      [
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+        6
+      ],
+      [
+        "06b4d255-58d5-49f5-adec-43426ce0d09b",
+        6
+      ],
+      [
+        "65e4ca55-7169-4ee4-b388-a6927043a92d",
+        5
+      ],
+      [
+        "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+        5
+      ],
+      [
+        "89b85467-0655-47d3-9a0c-89da364cd487",
+        5
+      ],
+      [
+        "b85b0a01-9c3f-4c42-a26a-01741c84682c",
+        5
+      ]
+    ],
+    "simulated_expected_outside_top10": 12,
+    "simulated_expected_outside_top20": 11,
+    "simulated_mean_expected_rank": 16.6522,
+    "simulated_mean_noise_above_expected": 14.0417,
+    "simulated_median_expected_rank": 8
+  },
+  "final_decision_from_simulation": "REVISE_SIMULATION_FORMULA",
+  "improved_vs_worsened_cases": [
+    {
+      "baseline_diagnosis": "activation_ranking_primary",
+      "case": "causal_industrial_failure",
+      "expected_improved": 2,
+      "expected_outside_top10_before": 1,
+      "expected_pruned_by_attention_before": 0,
+      "expected_worsened": 1,
+      "interpretation": "formula helped some concepts, but verify gains are not isolated or label-dependent"
+    },
+    {
+      "baseline_diagnosis": "mixed_activation_attention",
+      "case": "logistics_proxy_planning",
+      "expected_improved": 0,
+      "expected_outside_top10_before": 1,
+      "expected_pruned_by_attention_before": 1,
+      "expected_worsened": 2,
+      "interpretation": "formula harmed this case; do not use this scoring direction for it"
+    },
+    {
+      "baseline_diagnosis": "mixed_activation_attention",
+      "case": "multi_step_failure_revision",
+      "expected_improved": 0,
+      "expected_outside_top10_before": 1,
+      "expected_pruned_by_attention_before": 1,
+      "expected_worsened": 2,
+      "interpretation": "formula harmed this case; do not use this scoring direction for it"
+    },
+    {
+      "baseline_diagnosis": "activation_ranking_primary",
+      "case": "policy_audit_conflict",
+      "expected_improved": 2,
+      "expected_outside_top10_before": 2,
+      "expected_pruned_by_attention_before": 0,
+      "expected_worsened": 0,
+      "interpretation": "formula helped some concepts, but verify gains are not isolated or label-dependent"
+    },
+    {
+      "baseline_diagnosis": "activation_ranking_primary",
+      "case": "resource_allocation_shelters",
+      "expected_improved": 0,
+      "expected_outside_top10_before": 2,
+      "expected_pruned_by_attention_before": 1,
+      "expected_worsened": 3,
+      "interpretation": "formula harmed this case; do not use this scoring direction for it"
+    },
+    {
+      "baseline_diagnosis": "attention_primary",
+      "case": "risk_uncertainty_planning",
+      "expected_improved": 0,
+      "expected_outside_top10_before": 1,
+      "expected_pruned_by_attention_before": 2,
+      "expected_worsened": 2,
+      "interpretation": "formula harmed this case; do not use this scoring direction for it"
+    }
+  ],
+  "next_formula_assessment": {
+    "A_revised_generic_token_dampening": "reject_for_now",
+    "B_domain_aware_generic_token_dampening": "possible_but_not_first",
+    "C_query_specific_rarity_weighting": "possible_with_care",
+    "D_duplicate_or_noisy_concept_suppression": "recommended_next_activation_simulation",
+    "E_separate_sparse_abstention_gate": "recommended_separate_simulation",
+    "F_attention_rescue_instead_of_activation_scoring": "recommended_for_attention_primary_cases",
+    "rationale": [
+      "11 expected concepts worsened under blunt generic dampening.",
+      "10 recurring noisy concepts became more dominant after simulation.",
+      "2 sparse cases behave structurally differently and should not be folded into normal activation scoring.",
+      "attention-primary cases remain distinct: logistics_proxy_planning, multi_step_failure_revision, risk_uncertainty_planning"
+    ]
+  },
+  "recurring_noise_analysis": [
+    {
+      "after_count": 11,
+      "average_activation_score": 0.356,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.8575,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6178,
+      "before_count": 7,
+      "concept_id": "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+      "count_delta": 4,
+      "example_concept": "Service-level data, such as historical usage patterns, demographic information, and current demand, should guide the reallocation",
+      "generic_terms": [],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should, demand",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ],
+        [
+          "demand",
+          1
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3575,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6019,
+      "before_count": 7,
+      "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+      "count_delta": 4,
+      "example_concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+      "generic_terms": [
+        [
+          "evidence",
+          2
+        ]
+      ],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3597,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6183,
+      "before_count": 7,
+      "concept_id": "0586e881-099d-4866-a1cf-4ed571139c70",
+      "count_delta": 4,
+      "example_concept": "These records should provide evidence of whether the purchase was indeed an emergency one and, if so, whether the appropriate steps were taken to bypass the approval process",
+      "generic_terms": [
+        [
+          "emergency",
+          3
+        ],
+        [
+          "evidence",
+          2
+        ]
+      ],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3615,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6005,
+      "before_count": 7,
+      "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+      "count_delta": 4,
+      "example_concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+      "generic_terms": [
+        [
+          "evidence",
+          2
+        ]
+      ],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3567,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6012,
+      "before_count": 6,
+      "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+      "count_delta": 5,
+      "example_concept": "Staffing should be revised first, as it directly impacts the number of personnel needed for inspections and delivery",
+      "generic_terms": [],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3559,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.8575,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6029,
+      "before_count": 5,
+      "concept_id": "65e4ca55-7169-4ee4-b388-a6927043a92d",
+      "count_delta": 6,
+      "example_concept": "Customer communication should be revised next, as it is closely tied to the revised delivery dates and staffing levels",
+      "generic_terms": [],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3563,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6012,
+      "before_count": 5,
+      "concept_id": "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+      "count_delta": 6,
+      "example_concept": "Each agent's belief and incentives should be identified and understood to predict potential handoff failures",
+      "generic_terms": [
+        [
+          "failure",
+          2
+        ]
+      ],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3529,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.5912,
+      "before_count": 5,
+      "concept_id": "89b85467-0655-47d3-9a0c-89da364cd487",
+      "count_delta": 6,
+      "example_concept": "Each agent's belief about their role and the overall situation should be regularly shared",
+      "generic_terms": [],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3508,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.5462,
+      "before_count": 5,
+      "concept_id": "b85b0a01-9c3f-4c42-a26a-01741c84682c",
+      "count_delta": 6,
+      "example_concept": "However, this reallocation should be temporary and should not compromise long-term preparedness",
+      "generic_terms": [],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 11,
+      "average_activation_score": 0.3501,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.6019,
+      "before_count": 0,
+      "concept_id": "0e3fdeda-0d38-40ad-993c-480703e55f9e",
+      "count_delta": 11,
+      "example_concept": "To address the challenge of unresolved disagreements, both parties should focus on past concessions and use them as a basis for future discussions",
+      "generic_terms": [],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          8
+        ]
+      ]
+    },
+    {
+      "after_count": 0,
+      "average_activation_score": 0.3572,
+      "average_centrality": 0.3433,
+      "average_confidence": 0.85,
+      "average_evidence_support": 1.0,
+      "average_promotion_score": 0.5362,
+      "before_count": 6,
+      "concept_id": "06b4d255-58d5-49f5-adec-43426ce0d09b",
+      "count_delta": -6,
+      "example_concept": "Each party's likely belief should be acknowledged, and a prediction about their response should be made",
+      "generic_terms": [
+        [
+          "response",
+          2
+        ]
+      ],
+      "likely_reason_it_survived_or_gained": "survived through accidental or broad non-generic overlap: should",
+      "specific_terms": [
+        [
+          "should",
+          7
+        ]
+      ]
+    }
+  ],
+  "source_reports": {
+    "baseline": "reports/runtime_v12_activation_ranking_diagnostic.json",
+    "simulation": "reports/runtime_v13_scoring_simulation.json"
+  },
+  "sparse_behavior": [
+    {
+      "case": "sparse_violin_tuning",
+      "original_sparse_top_score": 0.3501,
+      "separate_sparse_gate_recommended": true,
+      "simulated_sparse_top_score": 0.1701,
+      "sparse_behavior_ok": true,
+      "top_after_concept_id": "85ba1ed5-56cf-4cbd-a3ec-c4290ab0fc9f",
+      "top_before_generic_terms": [],
+      "top_before_overlap": [
+        "for"
+      ],
+      "why": "the top candidate had only weak stopword/generic overlap and was sufficiently penalized below the abstention threshold"
+    },
+    {
+      "case": "unsupported_recipe",
+      "original_sparse_top_score": 0.3749,
+      "separate_sparse_gate_recommended": true,
+      "simulated_sparse_top_score": 0.1949,
+      "sparse_behavior_ok": false,
+      "top_after_concept_id": "d53e3d9f-445c-4ab7-9b3c-8acb899caa78",
+      "top_before_generic_terms": [],
+      "top_before_overlap": [
+        "for",
+        "the"
+      ],
+      "why": "the top candidate remained above the abstention threshold despite weak overlap; sparse behavior needs a separate abstention gate instead of being folded into normal activation scoring"
+    }
+  ],
+  "worsened_expected_concepts": [
+    {
+      "case": "logistics_proxy_planning",
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "concept_overlap": [
+        "and",
+        "emergency",
+        "resource"
+      ],
+      "definition_overlap": [
+        "and",
+        "emergency",
+        "resource"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "emergency",
+        "resource"
+      ],
+      "likely_failure_reason": "expected concept depended mostly on domain-generic terms and was over-penalized",
+      "mostly_generic_overlap": true,
+      "original_rank": 4,
+      "original_score": 0.3777,
+      "rank_delta": -29,
+      "simulated_rank": 33,
+      "simulated_score": 0.0777,
+      "specific_terms_matched": []
+    },
+    {
+      "case": "logistics_proxy_planning",
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "concept_overlap": [
+        "emergency"
+      ],
+      "definition_overlap": [
+        "capacity",
+        "emergency"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "capacity",
+        "emergency",
+        "resource"
+      ],
+      "likely_failure_reason": "expected concept depended mostly on domain-generic terms and was over-penalized",
+      "mostly_generic_overlap": true,
+      "original_rank": 24,
+      "original_score": 0.3519,
+      "rank_delta": -26,
+      "simulated_rank": 50,
+      "simulated_score": 0.0319,
+      "specific_terms_matched": []
+    },
+    {
+      "case": "resource_allocation_shelters",
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "concept_overlap": [
+        "emergency",
+        "resources"
+      ],
+      "definition_overlap": [
+        "emergency",
+        "resources"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "emergency",
+        "resource"
+      ],
+      "likely_failure_reason": "expected concept combined generic domain anchors with specific terms, but the generic penalty dominated",
+      "mostly_generic_overlap": true,
+      "original_rank": 11,
+      "original_score": 0.3615,
+      "rank_delta": -24,
+      "simulated_rank": 35,
+      "simulated_score": 0.3575,
+      "specific_terms_matched": [
+        "resources"
+      ]
+    },
+    {
+      "case": "risk_uncertainty_planning",
+      "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+      "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+      "concept_overlap": [
+        "and",
+        "failure",
+        "plan"
+      ],
+      "definition_overlap": [
+        "and",
+        "failure",
+        "plan"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "failure",
+        "plan"
+      ],
+      "likely_failure_reason": "expected concept depended mostly on domain-generic terms and was over-penalized",
+      "mostly_generic_overlap": true,
+      "original_rank": 2,
+      "original_score": 0.3991,
+      "rank_delta": -24,
+      "simulated_rank": 26,
+      "simulated_score": 0.0991,
+      "specific_terms_matched": []
+    },
+    {
+      "case": "risk_uncertainty_planning",
+      "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease",
+      "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+      "concept_overlap": [
+        "and",
+        "for"
+      ],
+      "definition_overlap": [
+        "and",
+        "failure",
+        "for",
+        "risk"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "failure",
+        "risk"
+      ],
+      "likely_failure_reason": "expected concept depended mostly on domain-generic terms and was over-penalized",
+      "mostly_generic_overlap": true,
+      "original_rank": 4,
+      "original_score": 0.3958,
+      "rank_delta": -23,
+      "simulated_rank": 27,
+      "simulated_score": 0.0958,
+      "specific_terms_matched": []
+    },
+    {
+      "case": "resource_allocation_shelters",
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "concept_overlap": [
+        "emergency",
+        "resources"
+      ],
+      "definition_overlap": [
+        "emergency",
+        "resources"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "emergency",
+        "resource"
+      ],
+      "likely_failure_reason": "expected concept combined generic domain anchors with specific terms, but the generic penalty dominated",
+      "mostly_generic_overlap": true,
+      "original_rank": 18,
+      "original_score": 0.3557,
+      "rank_delta": -22,
+      "simulated_rank": 40,
+      "simulated_score": 0.3517,
+      "specific_terms_matched": [
+        "resources"
+      ]
+    },
+    {
+      "case": "multi_step_failure_revision",
+      "concept": "Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B",
+      "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+      "concept_overlap": [
+        "evidence",
+        "plan",
+        "revise"
+      ],
+      "definition_overlap": [
+        "evidence",
+        "plan",
+        "revise"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "evidence",
+        "plan"
+      ],
+      "likely_failure_reason": "expected concept combined generic domain anchors with specific terms, but the generic penalty dominated",
+      "mostly_generic_overlap": true,
+      "original_rank": 6,
+      "original_score": 0.3749,
+      "rank_delta": -19,
+      "simulated_rank": 25,
+      "simulated_score": 0.3709,
+      "specific_terms_matched": [
+        "revise"
+      ]
+    },
+    {
+      "case": "contradictory_evidence",
+      "concept": "However it s important to note that the resolution could be challenged if new evidence were to emerge such as corroborating testimony or physical",
+      "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+      "concept_overlap": [
+        "evidence"
+      ],
+      "definition_overlap": [
+        "evidence",
+        "eyewitness",
+        "reports"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "evidence"
+      ],
+      "likely_failure_reason": "expected concept combined generic domain anchors with specific terms, but the generic penalty dominated",
+      "mostly_generic_overlap": false,
+      "original_rank": 3,
+      "original_score": 0.384,
+      "rank_delta": -5,
+      "simulated_rank": 8,
+      "simulated_score": 0.426,
+      "specific_terms_matched": [
+        "eyewitness",
+        "reports"
+      ]
+    },
+    {
+      "case": "multi_step_failure_revision",
+      "concept": "A prediction that would validate or falsify the system assumption is that after implementing failure drills the power grid will exhibit improved resilience to",
+      "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+      "concept_overlap": [
+        "failure"
+      ],
+      "definition_overlap": [
+        "and",
+        "failure"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "failure"
+      ],
+      "likely_failure_reason": "expected concept depended mostly on domain-generic terms and was over-penalized",
+      "mostly_generic_overlap": true,
+      "original_rank": 40,
+      "original_score": 0.3465,
+      "rank_delta": -3,
+      "simulated_rank": 43,
+      "simulated_score": 0.0665,
+      "specific_terms_matched": []
+    },
+    {
+      "case": "causal_industrial_failure",
+      "concept": "In industrial maintenance, when two causes interact, a failure timeline can help identify the root cause by rejecting spurious causes",
+      "concept_id": "ce828fd3-8630-418e-857b-65904d4fb2ed",
+      "concept_overlap": [
+        "causes",
+        "industrial",
+        "maintenance"
+      ],
+      "definition_overlap": [
+        "causes",
+        "industrial",
+        "maintenance"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [],
+      "likely_failure_reason": "expected concept was outranked by other concepts after unrelated score shifts",
+      "mostly_generic_overlap": false,
+      "original_rank": 1,
+      "original_score": 0.3965,
+      "rank_delta": -1,
+      "simulated_rank": 2,
+      "simulated_score": 0.5345,
+      "specific_terms_matched": [
+        "causes",
+        "industrial",
+        "maintenance"
+      ]
+    },
+    {
+      "case": "resource_allocation_shelters",
+      "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+      "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+      "concept_overlap": [
+        "demand",
+        "emergency",
+        "resources",
+        "should"
+      ],
+      "definition_overlap": [
+        "demand",
+        "emergency",
+        "resources",
+        "should"
+      ],
+      "domain_relevant_despite_generic_terms": true,
+      "generic_terms_matched": [
+        "emergency",
+        "resource"
+      ],
+      "likely_failure_reason": "expected concept combined generic domain anchors with specific terms, but the generic penalty dominated",
+      "mostly_generic_overlap": false,
+      "original_rank": 1,
+      "original_score": 0.4151,
+      "rank_delta": -1,
+      "simulated_rank": 2,
+      "simulated_score": 0.5331,
+      "specific_terms_matched": [
+        "demand",
+        "resources",
+        "should"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "last_result": {
+    "aggregate": {
+      "attention_precision": 0.2105,
+      "attention_recall": 0.5,
+      "case_count": 10,
+      "cases_improved": 0,
+      "cases_regressed": 4,
+      "citable_noise_used_in_reasoning": 47,
+      "confidence_calibration": 1.0,
+      "expected_reaching_planning": 13,
+      "expected_reaching_reasoning": 13,
+      "expected_reaching_response": 13,
+      "expected_reaching_working_memory": 12,
+      "grounding_score": 1.0,
+      "hallucinations": 0.0,
+      "noise_used_in_reasoning": 47,
+      "planning_core_coverage": 0.6333,
+      "planning_drift_cases": 0,
+      "planning_score": 1.0,
+      "reasoning_drift_cases": 8,
+      "response_core_coverage": 0.6333,
+      "response_drift_cases": 0,
+      "sparse_violin_tuning_safe": true,
+      "unsupported_recipe_safe": true
+    },
+    "failure_reason": "noise_enters_reasoning",
+    "passed": false
+  },
+  "last_variant": "arr3_expected_window_compression",
+  "updated_at": "2026-07-02T14:18:12",
+  "variants_tested": 3
+}

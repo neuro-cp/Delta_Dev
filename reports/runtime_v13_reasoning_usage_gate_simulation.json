@@ -1,0 +1,868 @@
+{
+  "acceptance_criteria": {
+    "grounding_score_stable": true,
+    "hallucinations_stable": true,
+    "no_expected_concepts_blocked": true,
+    "no_useful_neighbors_blocked": true,
+    "noise_used_in_reasoning_decreases_materially": true,
+    "planning_core_coverage_not_regress": true,
+    "reasoning_drift_decreases": true,
+    "reasoning_drift_not_worse": true,
+    "response_core_coverage_not_regress": true
+  },
+  "baseline_vs_rejected_vs_simulated": {
+    "attention_precision": {
+      "baseline": 0.55,
+      "rejected_prototype": 0.4172,
+      "simulated_usage_gate": 0.4172
+    },
+    "attention_recall": {
+      "baseline": 0.4333,
+      "rejected_prototype": 0.4667,
+      "simulated_usage_gate": 0.4667
+    },
+    "grounding_score": {
+      "baseline": 1.0,
+      "rejected_prototype": 1.0,
+      "simulated_usage_gate": 1.0
+    },
+    "hallucinations": {
+      "baseline": 0.0,
+      "rejected_prototype": 0.0,
+      "simulated_usage_gate": 0.0
+    },
+    "noise_used_in_reasoning": {
+      "baseline": 12.0,
+      "rejected_prototype": 24.0,
+      "simulated_usage_gate": 12
+    },
+    "planning_core_coverage": {
+      "baseline": 0.4333,
+      "rejected_prototype": 0.4667,
+      "simulated_usage_gate": 0.4667
+    },
+    "reasoning_drift_cases": {
+      "baseline": 5.0,
+      "rejected_prototype": 8.0,
+      "simulated_usage_gate": 5
+    },
+    "response_core_coverage": {
+      "baseline": 0.4333,
+      "rejected_prototype": 0.4667,
+      "simulated_usage_gate": 0.4667
+    }
+  },
+  "design_recommendation": "SIMULATE_REASONING_USAGE_GATE",
+  "final_recommendation": "PROCEED_REASONING_USAGE_GATE_LIVE_PROTOTYPE",
+  "gate_coverage": {
+    "blocked_noise_ratio": 1.0,
+    "expected_concepts_blocked": 0,
+    "newly_used_noise_blocked": 12,
+    "newly_used_noise_not_blocked": 0,
+    "total_newly_used_noise_concepts": 12,
+    "useful_neighbors_blocked": 0
+  },
+  "implementation_boundary": {
+    "evaluation_label_counts_seen_in_blocked_set": {
+      "Noise": 12
+    },
+    "evaluation_only_labels_not_allowed_live": [
+      "Noise",
+      "Core",
+      "expected concept",
+      "useful neighbor",
+      "human/evaluator correctness labels"
+    ],
+    "implementation_signal_counts_seen_in_blocked_set": {
+      "attention_core_or_supporting": 12,
+      "replacement_risk_top10": 12,
+      "shallow_query_overlap": 9,
+      "weak_specificity": 6
+    },
+    "safe_future_live_signals": [
+      "attention_classification",
+      "attention_score",
+      "activation_rank",
+      "activation_score",
+      "query_overlap_terms",
+      "specific_overlap_count",
+      "entered_activation_top10",
+      "recurrence_or_replacement_risk_metadata",
+      "evidence_support_if_available",
+      "centrality/promotion/confidence if already present in candidate metadata"
+    ]
+  },
+  "per_case_gate_results": [
+    {
+      "baseline_noise_used": 0,
+      "baseline_reasoning_drift": false,
+      "blocked_details": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3465,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4518,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "weak_specificity",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "after",
+            "assumption"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "after"
+          ],
+          "weak_specificity": true
+        }
+      ],
+      "case": "planning_failed_assumption",
+      "category": "planning",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [
+        "76120648-7522-4025-8176-5e5fb199c687"
+      ],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e"
+      ],
+      "projected_reasoning_drift_after_gate": false,
+      "prototype_noise_used": 1,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 0,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 6,
+      "baseline_reasoning_drift": true,
+      "blocked_details": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3381,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3514,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "weak_specificity",
+            "replacement_risk_top10"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "maintenance"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": false,
+          "role": "noise",
+          "shallow_overlap_terms": [],
+          "weak_specificity": true
+        }
+      ],
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [
+        "ce828fd3-8630-418e-857b-65904d4fb2ed",
+        "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce"
+      ],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [
+        "48c454a5-6362-4533-a53e-b6d6f9c19a00"
+      ],
+      "projected_reasoning_drift_after_gate": true,
+      "prototype_noise_used": 7,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 6,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 1,
+      "baseline_reasoning_drift": true,
+      "blocked_details": [
+        {
+          "activation_rank": 9,
+          "activation_score": 0.3615,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4853,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "weak_specificity",
+            "replacement_risk_top10"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "conflicting",
+            "reports"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [],
+          "weak_specificity": true
+        }
+      ],
+      "case": "contradictory_evidence",
+      "category": "contradiction_handling",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb"
+      ],
+      "projected_reasoning_drift_after_gate": true,
+      "prototype_noise_used": 2,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 1,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 1,
+      "baseline_reasoning_drift": true,
+      "blocked_details": [],
+      "case": "resource_allocation_shelters",
+      "category": "resource_allocation",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [],
+      "projected_reasoning_drift_after_gate": true,
+      "prototype_noise_used": 1,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 1,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 1,
+      "baseline_reasoning_drift": true,
+      "blocked_details": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3756,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3372,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "uncertainty"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "should",
+            "uncertainty"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": false,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "and",
+            "should",
+            "uncertainty"
+          ],
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 9,
+          "activation_score": 0.3758,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4612,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "plan",
+            "uncertainty"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "weak_specificity",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "plan",
+            "uncertainty"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "plan",
+            "uncertainty"
+          ],
+          "weak_specificity": true
+        },
+        {
+          "activation_rank": 5,
+          "activation_score": 0.385,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3389,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "plan"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "for",
+            "plan"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": false,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "and",
+            "for",
+            "plan"
+          ],
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 7,
+          "activation_score": 0.3809,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3389,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "failure"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "failure",
+            "for"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": false,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "and",
+            "failure",
+            "for"
+          ],
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 4,
+          "activation_score": 0.3917,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4608,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 1,
+          "activation_score": 0.3997,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4589,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "plan",
+            "risk"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "for",
+            "plan",
+            "risk",
+            "should"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "for",
+            "plan",
+            "risk",
+            "should"
+          ],
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 8,
+          "activation_score": 0.3773,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4549,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": false,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "weak_specificity": false
+        }
+      ],
+      "case": "risk_uncertainty_planning",
+      "category": "risk_assessment",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [
+        "4b01b020-00b1-4d40-9422-aba2288625d4",
+        "98154cbb-a296-4bc9-87e5-83e1e6fbd245"
+      ],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+        "6457f783-957c-4e69-95bb-bacf18f6fd32",
+        "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+        "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+        "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "projected_reasoning_drift_after_gate": true,
+      "prototype_noise_used": 8,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 1,
+      "unblocked_details": [
+        {
+          "activation_rank": 2,
+          "activation_score": 0.3991,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4654,
+          "blocked": false,
+          "classification": "Core",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "evaluation_only_labels": [
+            "Core"
+          ],
+          "gate_reason": "allowed",
+          "generic_terms": [
+            "failure",
+            "plan"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "plan"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "expected",
+          "shallow_overlap_terms": [
+            "and",
+            "failure",
+            "plan"
+          ],
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 3,
+          "activation_score": 0.3958,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4656,
+          "blocked": false,
+          "classification": "Core",
+          "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+          "evaluation_only_labels": [
+            "Core"
+          ],
+          "gate_reason": "allowed",
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "for",
+            "risk"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "expected",
+          "shallow_overlap_terms": [
+            "and",
+            "failure",
+            "for",
+            "risk"
+          ],
+          "weak_specificity": false
+        }
+      ],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 0,
+      "baseline_reasoning_drift": false,
+      "blocked_details": [
+        {
+          "activation_rank": 5,
+          "activation_score": 0.3565,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4981,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "weak_specificity",
+            "replacement_risk_top10"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "audit",
+            "policy"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [],
+          "weak_specificity": true
+        }
+      ],
+      "case": "policy_audit_conflict",
+      "category": "conflicting_evidence",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [
+        "acaca659-aee5-4cef-9c4c-5a2281c1a9ef"
+      ],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e"
+      ],
+      "projected_reasoning_drift_after_gate": false,
+      "prototype_noise_used": 1,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 0,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 3,
+      "baseline_reasoning_drift": true,
+      "blocked_details": [],
+      "case": "multi_step_failure_revision",
+      "category": "multi_step_reasoning",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [
+        "4b01b020-00b1-4d40-9422-aba2288625d4"
+      ],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [],
+      "projected_reasoning_drift_after_gate": true,
+      "prototype_noise_used": 3,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 3,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 0,
+      "baseline_reasoning_drift": false,
+      "blocked_details": [
+        {
+          "activation_rank": 8,
+          "activation_score": 0.3563,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4836,
+          "blocked": true,
+          "classification": "Noise",
+          "concept_id": "0121143f-0779-4965-9405-2e7b3eabcd05",
+          "evaluation_only_labels": [
+            "Noise"
+          ],
+          "gate_reason": "newly-used noisy attended concept with weak/replacement-risk support",
+          "generic_terms": [
+            "capacity",
+            "emergency",
+            "resource"
+          ],
+          "implementation_available_signals": [
+            "attention_core_or_supporting",
+            "weak_specificity",
+            "replacement_risk_top10",
+            "shallow_query_overlap"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "capacity",
+            "resource"
+          ],
+          "reasoned": true,
+          "replacement_risk": true,
+          "responded": true,
+          "role": "noise",
+          "shallow_overlap_terms": [
+            "resource"
+          ],
+          "weak_specificity": true
+        }
+      ],
+      "case": "logistics_proxy_planning",
+      "category": "logistics",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [
+        "76120648-7522-4025-8176-5e5fb199c687"
+      ],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05"
+      ],
+      "projected_reasoning_drift_after_gate": false,
+      "prototype_noise_used": 1,
+      "prototype_reasoning_drift": true,
+      "simulated_noise_used": 0,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 0,
+      "baseline_reasoning_drift": false,
+      "blocked_details": [],
+      "case": "sparse_violin_tuning",
+      "category": "sparse_knowledge",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [],
+      "projected_reasoning_drift_after_gate": false,
+      "prototype_noise_used": 0,
+      "prototype_reasoning_drift": false,
+      "simulated_noise_used": 0,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    },
+    {
+      "baseline_noise_used": 0,
+      "baseline_reasoning_drift": false,
+      "blocked_details": [],
+      "case": "unsupported_recipe",
+      "category": "unsupported_questions",
+      "expected_concepts_accidentally_blocked": [],
+      "expected_concepts_that_remain_usable": [],
+      "newly_used_noise_not_blocked": [],
+      "newly_used_noisy_concepts_blocked": [],
+      "projected_reasoning_drift_after_gate": false,
+      "prototype_noise_used": 0,
+      "prototype_reasoning_drift": false,
+      "simulated_noise_used": 0,
+      "unblocked_details": [],
+      "useful_neighbors_accidentally_blocked": []
+    }
+  ],
+  "read_only": true,
+  "recommendation": "Proceed to a live prototype only if it preserves the simulation boundary: keep activation and attention visible, gate reasoning usage, and add regression checks for expected concepts in risk_uncertainty_planning.",
+  "risk_analysis": {
+    "blocked_expected_count": 0,
+    "blocked_useful_neighbor_count": 0,
+    "cases_where_gate_helps": [
+      "planning_failed_assumption",
+      "causal_industrial_failure",
+      "contradictory_evidence",
+      "risk_uncertainty_planning",
+      "policy_audit_conflict",
+      "logistics_proxy_planning"
+    ],
+    "cases_where_gate_is_risky": [],
+    "planning_failed_assumption": {
+      "blocked_noise": [
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e"
+      ],
+      "expected_blocked": [],
+      "expected_remain_usable": [
+        "76120648-7522-4025-8176-5e5fb199c687"
+      ],
+      "interpretation": "expected evidence remains usable"
+    },
+    "risk_uncertainty_planning": {
+      "blocked_noise": [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+        "6457f783-957c-4e69-95bb-bacf18f6fd32",
+        "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+        "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+        "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "expected_blocked": [],
+      "interpretation": "improves without suppressing expected concepts"
+    },
+    "unblocked_new_noise": []
+  },
+  "simulation_only": true,
+  "source_report_health": {
+    "audit_final_decision": "MOVE_SIGNAL_TO_ATTENTION_GATING",
+    "baseline_case_count": 10,
+    "baseline_ranking_case_count": 10,
+    "prototype_case_count": 10,
+    "prototype_ranking_case_count": 10
+  }
+}

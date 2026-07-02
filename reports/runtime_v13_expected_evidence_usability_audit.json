@@ -1,0 +1,1391 @@
+{
+  "case_level_bottlenecks": {
+    "causal_industrial_failure": {
+      "visible_citable_and_used": 2,
+      "visible_rejected_by_citation_gate": 1
+    },
+    "contradictory_evidence": {
+      "visible_rejected_by_citation_gate": 3
+    },
+    "logistics_proxy_planning": {
+      "unavailable_even_with_visibility": 1,
+      "visible_rejected_by_citation_gate": 2
+    },
+    "multi_step_failure_revision": {
+      "visible_citable_and_used": 1,
+      "visible_unsafe_due_same_topic_noise_risk": 2
+    },
+    "planning_failed_assumption": {
+      "visible_citable_and_used": 2,
+      "visible_planning_only": 1
+    },
+    "policy_audit_conflict": {
+      "visible_citable_and_used": 1,
+      "visible_rejected_by_citation_gate": 2
+    },
+    "resource_allocation_shelters": {
+      "visible_rejected_by_citation_gate": 3
+    },
+    "risk_uncertainty_planning": {
+      "expected_benchmark_only_not_live_usable": 1,
+      "unavailable_even_with_visibility": 1,
+      "visible_unsafe_due_same_topic_noise_risk": 1
+    }
+  },
+  "classification_counts": {
+    "expected_benchmark_only_not_live_usable": 1,
+    "unavailable_even_with_visibility": 2,
+    "visible_citable_and_used": 6,
+    "visible_citable_not_response_bound": 0,
+    "visible_planning_only": 1,
+    "visible_rejected_by_citation_gate": 11,
+    "visible_response_relevant_but_not_planning": 0,
+    "visible_unsafe_due_same_topic_noise_risk": 3
+  },
+  "continuation_checkpoint": {
+    "model_b_default_remains_active": true,
+    "next_step": "PROCEED_REASONING_CITATION_GATE_REVIEW",
+    "runtime_files_modified": false
+  },
+  "current_accepted_default": "Model B contextualized corpus support + citation_context reasoning usage gate",
+  "deep_activation_recommendation": "PROCEED_RELATION_AWARE_ACTIVATION_SIMULATION",
+  "diagnostic_only": true,
+  "dominant_next_bottleneck": "citation gate too strict",
+  "final_recommendation": "PROCEED_REASONING_CITATION_GATE_REVIEW",
+  "generated_at": "2026-07-02T14:45:19",
+  "layer_counts": {
+    "activation visibility": 2,
+    "benchmark/live-window review": 1,
+    "evidence contextualization in activation": 3,
+    "none": 6,
+    "planning support binding": 1,
+    "reasoning citation gate": 11
+  },
+  "live_runtime_changed": false,
+  "qda_recommendation": "RUN_MORE_DIAGNOSTICS",
+  "raw_archive": "G:\\Delta_Dev\\reports\\runtime_v13_expected_evidence_usability_raw",
+  "relation_aware_recommendation": "PROCEED_QUERY_DECOMPOSITION_ACTIVATION_SIMULATION",
+  "visible_expected_inventory": [
+    {
+      "attention_status": true,
+      "baseline_decision": "Under-Attending",
+      "case": "planning_failed_assumption",
+      "citable_reasoning_status": true,
+      "concept": "When the emergency response plan is disrupted due to a failed permit assumption, the first step is to review the inspection records to determine the severity of the issue When the emergency response plan is disrupted due to a failed permit assumption, the first step is to review the inspection records to determine the severity of the issue",
+      "concept_id": "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+      "ess6_projected_decision": "Healthy",
+      "features": {
+        "activation_score": 0.4512,
+        "confidence": 0.85,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 3,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.2883,
+        "promotion_score": 0.5834,
+        "query_overlap": 6,
+        "relation_action_frame_match": 3
+      },
+      "noise_risk_neighbor_count": 2,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3916,
+          "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.3589,
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "rank": 5
+        }
+      ],
+      "original_model_b_activation_rank": 2,
+      "planning_support_status": true,
+      "primary_class": "visible_citable_and_used",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "none",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept passes citable reasoning and is bound into response evidence.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": true,
+      "baseline_decision": "Under-Attending",
+      "case": "planning_failed_assumption",
+      "citable_reasoning_status": true,
+      "concept": "When the emergency response plan is disrupted due to a failed permit assumption the team should use resource telemetry data to assess the current When the emergency response plan is disrupted due to a failed permit assumption, the team should use resource telemetry data to assess the current availability and status of critical resources",
+      "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+      "ess6_projected_decision": "Healthy",
+      "features": {
+        "activation_score": 0.4734,
+        "confidence": 0.8575,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 3,
+        "generic_anchor_ratio": 0.375,
+        "projected_centrality": 0.2333,
+        "promotion_score": 0.5795,
+        "query_overlap": 7,
+        "relation_action_frame_match": 3
+      },
+      "noise_risk_neighbor_count": 1,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3916,
+          "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "rank": 4
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": true,
+      "primary_class": "visible_citable_and_used",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "none",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept passes citable reasoning and is bound into response evidence.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "planning_failed_assumption",
+      "citable_reasoning_status": false,
+      "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+      "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+      "ess6_projected_decision": "Healthy",
+      "features": {
+        "activation_score": 0.4476,
+        "confidence": 0.85,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 3,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.2333,
+        "promotion_score": 0.5887,
+        "query_overlap": 5,
+        "relation_action_frame_match": 3
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3916,
+          "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.3589,
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3579,
+          "concept": "Each party's likely belief should be acknowledged, and a prediction about their response should be made",
+          "concept_id": "06b4d255-58d5-49f5-adec-43426ce0d09b",
+          "rank": 6
+        }
+      ],
+      "original_model_b_activation_rank": 3,
+      "planning_support_status": true,
+      "primary_class": "visible_planning_only",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "planning support binding",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept is usable only as non-citable planning support.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "causal_industrial_failure",
+      "citable_reasoning_status": false,
+      "concept": "In this cycle the prediction is that if the maintenance frequency is increased further without addressing the root cause e g equipment age or In this cycle, the prediction is that if the maintenance frequency is increased further without addressing the root cause (e.g., equipment age or material quality), the failure rate will not decrease and may even increase",
+      "concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3271,
+        "confidence": 0.85,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.2883,
+        "promotion_score": 0.5988,
+        "query_overlap": 1,
+        "relation_action_frame_match": 4
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3303,
+          "concept": "The uncertainty in this analysis can be reduced by implementing more rigorous monitoring and logging of environmental conditions and raw material quality as well",
+          "concept_id": "009bb376-da9b-441c-8ed5-1ebe79d4326b",
+          "rank": 34
+        },
+        {
+          "activation_score": 0.3303,
+          "concept": "For instance shelters located in areas with the highest risk of power outages or those housing the most vulnerable populations e g the elderly",
+          "concept_id": "35f7296f-3e5d-4372-8819-a3e769cde611",
+          "rank": 35
+        },
+        {
+          "activation_score": 0.3291,
+          "concept": "For instance if a maintenance intervention was performed on a machine and a delayed side effect such as increased wear on another component is",
+          "concept_id": "8d5ec69e-ce8e-474c-96ee-ef08a89155c8",
+          "rank": 36
+        },
+        {
+          "activation_score": 0.327,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 38
+        },
+        {
+          "activation_score": 0.3259,
+          "concept": "The uncertainty in this causal relationship can be reduced by conducting a controlled experiment to test the impact of maintenance on downtime which would",
+          "concept_id": "cc2432d5-9b0a-4cce-a34c-32304cea6333",
+          "rank": 39
+        }
+      ],
+      "original_model_b_activation_rank": 37,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": true,
+      "baseline_decision": "Reasoning Drift",
+      "case": "causal_industrial_failure",
+      "citable_reasoning_status": true,
+      "concept": "In industrial maintenance, when two causes interact, a causal chain can be established by examining the failure timelines of the components involved In industrial maintenance, when two causes interact, a causal chain can be established by examining the failure timelines of the components involved",
+      "concept_id": "e3bd802d-b767-4d7d-9dd5-72fb30bd08ce",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3965,
+        "confidence": 0.8575,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5873,
+        "query_overlap": 3,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3571,
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3568,
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.3541,
+          "concept": "This cycle can be completed by making a testable prediction: if the maintenance introduces stress, then reducing the frequency of maintenance should lower the failure rate",
+          "concept_id": "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+          "rank": 5
+        }
+      ],
+      "original_model_b_activation_rank": 2,
+      "planning_support_status": true,
+      "primary_class": "visible_citable_and_used",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "none",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept passes citable reasoning and is bound into response evidence.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": true,
+      "baseline_decision": "Reasoning Drift",
+      "case": "causal_industrial_failure",
+      "citable_reasoning_status": true,
+      "concept": "In industrial maintenance, when two causes interact, a failure timeline can help identify the root cause by rejecting spurious causes In industrial maintenance, when two causes interact, a failure timeline can help identify the root cause by rejecting spurious causes",
+      "concept_id": "ce828fd3-8630-418e-857b-65904d4fb2ed",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3965,
+        "confidence": 0.8575,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5873,
+        "query_overlap": 3,
+        "relation_action_frame_match": 4
+      },
+      "noise_risk_neighbor_count": 2,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3571,
+          "concept": "For instance, if increased maintenance frequency is correlated with higher equipment failure rates, it might be tempting to conclude that frequent maintenance causes failures",
+          "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3568,
+          "concept": "For instance if a maintenance team observes that a machine s downtime is correlated with a specific type of weather they might mistakenly conclude",
+          "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+          "rank": 4
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": true,
+      "primary_class": "visible_citable_and_used",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "none",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept passes citable reasoning and is bound into response evidence.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_reasoning_status": false,
+      "concept": "The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect",
+      "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.4072,
+        "confidence": 0.85,
+        "evidence_need": "contradiction_resolution",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6076,
+        "query_overlap": 3,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.422,
+          "concept": "The resolution evidence is the raw logs that contain the timestamps of the eyewitness reports",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "rank": 5
+        }
+      ],
+      "original_model_b_activation_rank": 2,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_reasoning_status": false,
+      "concept": "The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times but the content of the reports The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times, but the content of the reports describes the same sequence of events",
+      "concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3635,
+        "confidence": 0.8575,
+        "evidence_need": "contradiction_resolution",
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6132,
+        "query_overlap": 2,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3671,
+          "concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+          "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+          "rank": 6
+        },
+        {
+          "activation_score": 0.3635,
+          "concept": "The resolution evidence could be a calibration record or any other reliable source that can help reconcile the discrepancies between the two reports",
+          "concept_id": "800c60da-06fc-41b6-b259-b4f98e08cd79",
+          "rank": 8
+        },
+        {
+          "activation_score": 0.3624,
+          "concept": "Reflecting on uncertainty, it's important to acknowledge that eyewitness reports can be fallible and that further investigation is necessary to corroborate or refute the claims",
+          "concept_id": "fb9f365a-95c7-4757-92f6-e55f4580c57b",
+          "rank": 9
+        }
+      ],
+      "original_model_b_activation_rank": 7,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_reasoning_status": false,
+      "concept": "However it s important to note that the resolution could be challenged if new evidence were to emerge such as corroborating testimony or physical However, it's important to note that the resolution could be challenged if new evidence were to emerge, such as corroborating testimony or physical evidence that contradicts the eyewitness reports",
+      "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.384,
+        "confidence": 0.85,
+        "evidence_need": "contradiction_resolution",
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6054,
+        "query_overlap": 3,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 4,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.422,
+          "concept": "The resolution evidence is the raw logs that contain the timestamps of the eyewitness reports",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3671,
+          "concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+          "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+          "rank": 6
+        }
+      ],
+      "original_model_b_activation_rank": 3,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_reasoning_status": false,
+      "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+      "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.4151,
+        "confidence": 0.8575,
+        "evidence_need": "resource_constraint",
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5948,
+        "query_overlap": 3,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.4081,
+          "concept": "If the generator is allocated to a shelter with higher demand, it may not be available when needed elsewhere, leading to potential failures",
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.4041,
+          "concept": "Allocating resources for emergency shelters requires a careful balance, especially when one resource is indivisible",
+          "concept_id": "bc2086b3-87d9-479a-935f-805fe7d523c7",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3933,
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "rank": 4
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3615,
+        "confidence": 0.8575,
+        "evidence_need": "resource_constraint",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6356,
+        "query_overlap": 2,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3684,
+          "concept": "If demand forecasts predict a significant spike, it is essential to reallocate resources to meet the immediate needs of the increased population",
+          "concept_id": "7e5bf5f6-780a-4ba7-85c1-b514b848a162",
+          "rank": 8
+        },
+        {
+          "activation_score": 0.3661,
+          "concept": "Service-level data, such as historical usage patterns, demographic information, and current demand, should guide the reallocation",
+          "concept_id": "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+          "rank": 9
+        },
+        {
+          "activation_score": 0.3645,
+          "concept": "A failure mode could occur if the initial allocation of resources is not flexible enough to accommodate sudden increases in demand",
+          "concept_id": "97190912-de2a-4fa6-b283-a9a1baafb53c",
+          "rank": 10
+        },
+        {
+          "activation_score": 0.3609,
+          "concept": "If resources are not allocated equitably, certain groups may be disproportionately affected, leading to potential social unrest or public health issues",
+          "concept_id": "1be89cfb-2a02-4183-8054-00c0186f6271",
+          "rank": 12
+        },
+        {
+          "activation_score": 0.3595,
+          "concept": "If the indivisible resource is a key component for the shelter's operation, such as a generator, its cost should be prioritized to ensure the continuity of the service",
+          "concept_id": "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+          "rank": 13
+        }
+      ],
+      "original_model_b_activation_rank": 11,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3557,
+        "confidence": 0.8575,
+        "evidence_need": "resource_constraint",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.604,
+        "query_overlap": 2,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3574,
+          "concept": "Equity constraints suggest that resources should be distributed to ensure that the most marginalized and vulnerable populations receive support",
+          "concept_id": "b887cc74-2628-4fbd-8890-38792ed54876",
+          "rank": 15
+        },
+        {
+          "activation_score": 0.3564,
+          "concept": "Equity constraints in allocating resources for emergency shelters require balancing the need for fairness with the practical limitations of indivisible resources",
+          "concept_id": "9fafbb71-ef17-4c05-8764-3577ae15ef59",
+          "rank": 16
+        },
+        {
+          "activation_score": 0.356,
+          "concept": "If the large tent is allocated to one location it may not be available when needed at another location potentially leading to failure modes",
+          "concept_id": "d45f3c3d-86fa-4ee5-a75a-fd988642038b",
+          "rank": 17
+        },
+        {
+          "activation_score": 0.3539,
+          "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease",
+          "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+          "rank": 19
+        },
+        {
+          "activation_score": 0.3519,
+          "concept": "When the priority group changes, it is crucial to reassess the allocation to ensure that the most vulnerable populations are supported",
+          "concept_id": "88b2e857-6d3d-45f0-be3f-d01cbc1e2023",
+          "rank": 20
+        }
+      ],
+      "original_model_b_activation_rank": 18,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "risk_uncertainty_planning",
+      "citable_reasoning_status": false,
+      "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease, potentially leading to a higher risk of failure",
+      "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3958,
+        "confidence": 0.8575,
+        "evidence_need": "risk_uncertainty",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.5,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6098,
+        "query_overlap": 2,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3997,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3971,
+          "concept": "Staffing should be revised first, as it directly impacts the number of personnel needed for inspections and delivery",
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3917,
+          "concept": "Failure drills can predict cascade risk by simulating potential failures and their impacts",
+          "concept_id": "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.385,
+          "concept": "For example, if a subtask blocks a parent goal, we may need to re-evaluate the plan and adjust the dependencies",
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "rank": 6
+        },
+        {
+          "activation_score": 0.3842,
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "rank": 7
+        }
+      ],
+      "original_model_b_activation_rank": 4,
+      "planning_support_status": false,
+      "primary_class": "visible_unsafe_due_same_topic_noise_risk",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "evidence contextualization in activation",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept is surrounded by same-topic noise and has a generic-anchor-heavy match.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "risk_uncertainty_planning",
+      "citable_reasoning_status": false,
+      "concept": "planning Planning compares possible strategies before action by estimating benefit, risk, uncertainty, and goal satisfaction.",
+      "concept_id": "52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": null,
+        "confidence": null,
+        "evidence_need": "risk_uncertainty",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": null,
+        "promotion_score": null,
+        "query_overlap": 2,
+        "relation_action_frame_match": 0
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3997,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3971,
+          "concept": "Staffing should be revised first, as it directly impacts the number of personnel needed for inspections and delivery",
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3917,
+          "concept": "Failure drills can predict cascade risk by simulating potential failures and their impacts",
+          "concept_id": "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.385,
+          "concept": "For example, if a subtask blocks a parent goal, we may need to re-evaluate the plan and adjust the dependencies",
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "rank": 6
+        },
+        {
+          "activation_score": 0.3842,
+          "concept": "Uncertainty The certainty of the revised plan depends on the specific requirements and regulations of the project s location as well as the potential",
+          "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+          "rank": 7
+        }
+      ],
+      "original_model_b_activation_rank": null,
+      "planning_support_status": false,
+      "primary_class": "expected_benchmark_only_not_live_usable",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "benchmark/live-window review",
+      "visible_under_ess": false,
+      "visible_under_qda": false,
+      "why_not_used": "Expected concept is outside the diagnostic live window and cannot be safely used by runtime stages.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "risk_uncertainty_planning",
+      "citable_reasoning_status": false,
+      "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+      "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3991,
+        "confidence": 0.85,
+        "evidence_need": "risk_uncertainty",
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.6667,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6155,
+        "query_overlap": 2,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3997,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3971,
+          "concept": "Staffing should be revised first, as it directly impacts the number of personnel needed for inspections and delivery",
+          "concept_id": "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3917,
+          "concept": "Failure drills can predict cascade risk by simulating potential failures and their impacts",
+          "concept_id": "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+          "rank": 5
+        }
+      ],
+      "original_model_b_activation_rank": 2,
+      "planning_support_status": false,
+      "primary_class": "unavailable_even_with_visibility",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "activation visibility",
+      "visible_under_ess": false,
+      "visible_under_qda": false,
+      "why_not_used": "Expected concept remains outside QDA/ESS visibility even though it is present in the top-50 diagnostic window.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "citable_reasoning_status": false,
+      "concept": "The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply",
+      "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3385,
+        "confidence": 0.8575,
+        "evidence_need": "exception_rule",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5909,
+        "query_overlap": 1,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.339,
+          "concept": "A prediction is that the other party will be defensive and may view any new proposals as an attempt to exploit past concessions",
+          "concept_id": "dfb2f67e-ef17-4272-bb3e-cef6ed923eb1",
+          "rank": 34
+        },
+        {
+          "activation_score": 0.3388,
+          "concept": "For instance, if a machine fails due to both a software bug and a hardware issue, the timeline might show the software bug occurring before the hardware issue",
+          "concept_id": "698a613f-15a8-4919-b1f1-3f383f34a1d9",
+          "rank": 35
+        },
+        {
+          "activation_score": 0.3385,
+          "concept": "Reflecting on uncertainty, it's important to remember that the actual beliefs and interests of the parties may not align with the initial assumptions",
+          "concept_id": "321b093f-f3fe-452d-9ad6-ba409944c164",
+          "rank": 36
+        },
+        {
+          "activation_score": 0.338,
+          "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+          "rank": 38
+        },
+        {
+          "activation_score": 0.3378,
+          "concept": "For instance if a machine part A fails due to wear and tear and this failure leads to part B failing due to increased",
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "rank": 39
+        }
+      ],
+      "original_model_b_activation_rank": 37,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "citable_reasoning_status": false,
+      "concept": "The evidence that determines which rule applies is the policy exception's expiration date The evidence that determines which rule applies is the policy exception's expiration date",
+      "concept_id": "3cc55e56-cb07-4085-a786-afd705a58770",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3437,
+        "confidence": 0.85,
+        "evidence_need": "exception_rule",
+        "evidence_need_match": 5,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5903,
+        "query_overlap": 1,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3453,
+          "concept": "The uncertainty in demand forecasts means that the allocation strategy must be robust and adaptable",
+          "concept_id": "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+          "rank": 19
+        },
+        {
+          "activation_score": 0.3444,
+          "concept": "Prediction If the comparison reveals that the government report s data and methodology are less rigorous than the scientific study s the government report",
+          "concept_id": "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+          "rank": 20
+        },
+        {
+          "activation_score": 0.3443,
+          "concept": "This would require us to go back and re-evaluate the plan and adjust the dependencies accordingly",
+          "concept_id": "636f4a37-3296-4858-be5d-99d1988bc3d6",
+          "rank": 21
+        },
+        {
+          "activation_score": 0.3436,
+          "concept": "However this alternative is less likely if the failure pattern shows a sudden and significant increase in frequency and severity which is more consistent",
+          "concept_id": "1adaa011-9a30-45bc-a78e-c8ba659af51a",
+          "rank": 23
+        },
+        {
+          "activation_score": 0.3429,
+          "concept": "Identifying and addressing overlapping responsibilities among multiple agents in a mutual aid response requires clear communication and coordination",
+          "concept_id": "21b090dc-e87c-4a05-8db1-b06e0b62bf42",
+          "rank": 24
+        }
+      ],
+      "original_model_b_activation_rank": 22,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": true,
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "citable_reasoning_status": true,
+      "concept": "Reflecting on uncertainty it is possible that the policy and the audit findings are both correct in their own contexts but the records do Reflecting on uncertainty, it is possible that the policy and the audit findings are both correct in their own contexts, but the records do not provide a clear indication of the nature of the purchase",
+      "concept_id": "acaca659-aee5-4cef-9c4c-5a2281c1a9ef",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3979,
+        "confidence": 0.85,
+        "evidence_need": "exception_rule",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6137,
+        "query_overlap": 3,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3757,
+          "concept": "Each agent's belief and incentives should be identified and understood to predict potential handoff failures",
+          "concept_id": "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.3741,
+          "concept": "Customer communication should be revised next, as it is closely tied to the revised delivery dates and staffing levels",
+          "concept_id": "65e4ca55-7169-4ee4-b388-a6927043a92d",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": true,
+      "primary_class": "visible_citable_and_used",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "none",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept passes citable reasoning and is bound into response evidence.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "multi_step_failure_revision",
+      "citable_reasoning_status": false,
+      "concept": "A prediction that would validate or falsify the system assumption is that after implementing failure drills the power grid will exhibit improved resilience to A prediction that would validate or falsify the system assumption is that after implementing failure drills, the power grid will exhibit improved resilience to failures, as evidenced by a reduction in the frequency and duration of power outages",
+      "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3465,
+        "confidence": 0.8575,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.5,
+        "projected_centrality": 0.2333,
+        "promotion_score": 0.6509,
+        "query_overlap": 1,
+        "relation_action_frame_match": 3
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3501,
+          "concept": "For example, if the buyer is concerned about the seller's ability to deliver quality work, the seller can provide evidence of past successful projects and relevant experience",
+          "concept_id": "6c5b5b83-5bdf-4ab5-b3f6-241a8b566464",
+          "rank": 37
+        },
+        {
+          "activation_score": 0.3477,
+          "concept": "To control for this, a comparison between a controlled group that receives maintenance and an uncontrolled group that does not, can help identify if the maintenance was effective",
+          "concept_id": "d793f313-ba33-42fa-9fb6-b606f327a4ce",
+          "rank": 38
+        },
+        {
+          "activation_score": 0.3471,
+          "concept": "This cycle can be completed by making a testable prediction: if the maintenance introduces stress, then reducing the frequency of maintenance should lower the failure rate",
+          "concept_id": "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+          "rank": 39
+        },
+        {
+          "activation_score": 0.3448,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 41
+        },
+        {
+          "activation_score": 0.3438,
+          "concept": "simulation",
+          "concept_id": "c429336d-96dc-4c89-9931-f6dbecdc83ff",
+          "rank": 42
+        }
+      ],
+      "original_model_b_activation_rank": 40,
+      "planning_support_status": false,
+      "primary_class": "visible_unsafe_due_same_topic_noise_risk",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "evidence contextualization in activation",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept is surrounded by same-topic noise and has a generic-anchor-heavy match.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": true,
+      "baseline_decision": "Under-Attending",
+      "case": "multi_step_failure_revision",
+      "citable_reasoning_status": true,
+      "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+      "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.4903,
+        "confidence": 0.85,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.5,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6155,
+        "query_overlap": 5,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3931,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.3865,
+          "concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+          "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3775,
+          "concept": "When the emergency response plan is disrupted due to a failed permit assumption the team should use resource telemetry data to assess the current",
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "rank": 4
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": true,
+      "primary_class": "visible_citable_and_used",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "none",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept passes citable reasoning and is bound into response evidence.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "multi_step_failure_revision",
+      "citable_reasoning_status": false,
+      "concept": "Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B",
+      "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3749,
+        "confidence": 0.85,
+        "evidence_need": "revision_action",
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.6667,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6108,
+        "query_overlap": 3,
+        "relation_action_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3865,
+          "concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+          "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3775,
+          "concept": "When the emergency response plan is disrupted due to a failed permit assumption the team should use resource telemetry data to assess the current",
+          "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.376,
+          "concept": "These records should provide evidence of whether the purchase was indeed an emergency one and, if so, whether the appropriate steps were taken to bypass the approval process",
+          "concept_id": "0586e881-099d-4866-a1cf-4ed571139c70",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "confidence",
+          "concept_id": "1ecc06d3-3c05-4224-9d30-3111a0533f50",
+          "rank": 7
+        },
+        {
+          "activation_score": 0.3714,
+          "concept": "Delta should revise its belief to acknowledge that while GPS estimates are generally reliable in downtown areas, they can be unreliable in tunnels and urban canyons",
+          "concept_id": "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+          "rank": 8
+        }
+      ],
+      "original_model_b_activation_rank": 6,
+      "planning_support_status": false,
+      "primary_class": "visible_unsafe_due_same_topic_noise_risk",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "evidence contextualization in activation",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept is surrounded by same-topic noise and has a generic-anchor-heavy match.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": true,
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "citable_reasoning_status": true,
+      "concept": "When the emergency response plan is disrupted due to a failed permit assumption the team should use resource telemetry data to assess the current When the emergency response plan is disrupted due to a failed permit assumption, the team should use resource telemetry data to assess the current availability and status of critical resources",
+      "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+      "ess6_projected_decision": "Under-Attending",
+      "features": {
+        "activation_score": 0.4179,
+        "confidence": 0.8575,
+        "evidence_need": "resource_constraint",
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.5,
+        "projected_centrality": 0.2333,
+        "promotion_score": 0.5795,
+        "query_overlap": 4,
+        "relation_action_frame_match": 3
+      },
+      "noise_risk_neighbor_count": 2,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3841,
+          "concept": "Each party's likely belief should be acknowledged, and a prediction about their response should be made",
+          "concept_id": "06b4d255-58d5-49f5-adec-43426ce0d09b",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.3779,
+          "concept": "Tradeoffs in allocating resources for emergency shelters, particularly when one resource is indivisible, involve balancing equity and efficiency",
+          "concept_id": "2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d",
+          "rank": 3
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": true,
+      "primary_class": "unavailable_even_with_visibility",
+      "response_binding_status": true,
+      "smallest_layer_that_could_make_usable_safely": "activation visibility",
+      "visible_under_ess": false,
+      "visible_under_qda": false,
+      "why_not_used": "Expected concept remains outside QDA/ESS visibility even though it is present in the top-50 diagnostic window.",
+      "working_memory_status": true
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "ess6_projected_decision": "Under-Attending",
+      "features": {
+        "activation_score": 0.3777,
+        "confidence": 0.8575,
+        "evidence_need": "resource_constraint",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6356,
+        "query_overlap": 2,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3841,
+          "concept": "Each party's likely belief should be acknowledged, and a prediction about their response should be made",
+          "concept_id": "06b4d255-58d5-49f5-adec-43426ce0d09b",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.3779,
+          "concept": "Tradeoffs in allocating resources for emergency shelters, particularly when one resource is indivisible, involve balancing equity and efficiency",
+          "concept_id": "2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3739,
+          "concept": "These records should provide evidence of whether the purchase was indeed an emergency one and, if so, whether the appropriate steps were taken to bypass the approval process",
+          "concept_id": "0586e881-099d-4866-a1cf-4ed571139c70",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3652,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 6
+        },
+        {
+          "activation_score": 0.3651,
+          "concept": "Allocating resources for emergency shelters requires a careful balance, especially when one resource is indivisible",
+          "concept_id": "bc2086b3-87d9-479a-935f-805fe7d523c7",
+          "rank": 7
+        }
+      ],
+      "original_model_b_activation_rank": 4,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "ess6_projected_decision": "Under-Attending",
+      "features": {
+        "activation_score": 0.3519,
+        "confidence": 0.8575,
+        "evidence_need": "resource_constraint",
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.604,
+        "query_overlap": 2,
+        "relation_action_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3544,
+          "concept": "If the indivisible resource is a key component for the shelter's operation, such as a generator, its cost should be prioritized to ensure the continuity of the service",
+          "concept_id": "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+          "rank": 21
+        },
+        {
+          "activation_score": 0.3544,
+          "concept": "A failure mode could arise if the indivisible resource is not properly accounted for in the capacity reports, leading to an imbalance in resource distribution",
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+          "rank": 22
+        },
+        {
+          "activation_score": 0.354,
+          "concept": "To address the challenge of unresolved disagreements, both parties should focus on past concessions and use them as a basis for future discussions",
+          "concept_id": "0e3fdeda-0d38-40ad-993c-480703e55f9e",
+          "rank": 23
+        },
+        {
+          "activation_score": 0.3519,
+          "concept": "Equity constraints suggest that resources should be distributed to ensure that the most marginalized and vulnerable populations receive support",
+          "concept_id": "b887cc74-2628-4fbd-8890-38792ed54876",
+          "rank": 25
+        },
+        {
+          "activation_score": 0.3508,
+          "concept": "Delta should revise its belief to acknowledge that while GPS estimates are generally reliable in downtown areas, they can be unreliable in tunnels and urban canyons",
+          "concept_id": "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+          "rank": 26
+        }
+      ],
+      "original_model_b_activation_rank": 24,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    }
+  ],
+  "why_ess_failed": "RUN_MORE_DIAGNOSTICS"
+}

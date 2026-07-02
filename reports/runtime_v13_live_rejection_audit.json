@@ -1,0 +1,971 @@
+{
+  "acceptance_criteria_failures": {
+    "noise_used_in_reasoning_not_increase": false
+  },
+  "decision_assessment": {
+    "abandoned": false,
+    "combined_with_usage_gating": true,
+    "diagnostic_only": true,
+    "move_signal_to_attention_gating": true,
+    "retested_with_stricter_cap": "not before attention/usage diagnostics",
+    "tiebreaker_only": false
+  },
+  "experiments_explicitly_rejected": [
+    "direct activation-score recurring-noise suppression",
+    "stronger recurrence penalty",
+    "global attention threshold loosening",
+    "learning/governance/promotion changes"
+  ],
+  "final_decision": "MOVE_SIGNAL_TO_ATTENTION_GATING",
+  "newly_used_concepts": [
+    [
+      "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+      1
+    ],
+    [
+      "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+      1
+    ],
+    [
+      "0121143f-0779-4965-9405-2e7b3eabcd05",
+      1
+    ],
+    [
+      "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+      1
+    ],
+    [
+      "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+      1
+    ],
+    [
+      "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+      1
+    ],
+    [
+      "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+      1
+    ],
+    [
+      "4b01b020-00b1-4d40-9422-aba2288625d4",
+      1
+    ],
+    [
+      "6457f783-957c-4e69-95bb-bacf18f6fd32",
+      1
+    ],
+    [
+      "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+      1
+    ],
+    [
+      "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+      1
+    ],
+    [
+      "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+      1
+    ],
+    [
+      "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+      1
+    ],
+    [
+      "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+      1
+    ]
+  ],
+  "newly_used_noisy_concepts": [
+    [
+      "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+      1
+    ],
+    [
+      "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+      1
+    ],
+    [
+      "0121143f-0779-4965-9405-2e7b3eabcd05",
+      1
+    ],
+    [
+      "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+      1
+    ],
+    [
+      "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+      1
+    ],
+    [
+      "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+      1
+    ],
+    [
+      "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+      1
+    ],
+    [
+      "6457f783-957c-4e69-95bb-bacf18f6fd32",
+      1
+    ],
+    [
+      "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+      1
+    ],
+    [
+      "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+      1
+    ],
+    [
+      "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+      1
+    ],
+    [
+      "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+      1
+    ]
+  ],
+  "no_longer_used_concepts": [
+    [
+      "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+      1
+    ]
+  ],
+  "per_case": [
+    {
+      "attention_precision_delta": -0.0278,
+      "baseline_attention_precision": 0.25,
+      "baseline_noise_used": 6,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "entered_activation_top10": [
+        "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+        "df85054d-ffcd-4c50-8118-ecb512271eaf"
+      ],
+      "left_activation_top10": [
+        "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+        "65e4ca55-7169-4ee4-b388-a6927043a92d"
+      ],
+      "newly_used_concepts": [
+        "48c454a5-6362-4533-a53e-b6d6f9c19a00"
+      ],
+      "newly_used_details": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3381,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3514,
+          "classification": "Noise",
+          "concept_id": "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+          "generic_terms": [],
+          "planned": false,
+          "query_overlap": [
+            "maintenance"
+          ],
+          "reasoned": true,
+          "responded": false,
+          "role": "noise"
+        }
+      ],
+      "newly_used_noisy_concepts": [
+        "48c454a5-6362-4533-a53e-b6d6f9c19a00"
+      ],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 1,
+      "prototype_attention_precision": 0.2222,
+      "prototype_noise_used": 7,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "baseline_attention_precision": 0.0,
+      "baseline_noise_used": 1,
+      "case": "contradictory_evidence",
+      "category": "contradiction_handling",
+      "entered_activation_top10": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+        "8cc42686-7fc3-4e08-b295-515b26899606"
+      ],
+      "left_activation_top10": [
+        "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+        "e0038487-2363-4ba8-8e2e-a1b465c44ee0"
+      ],
+      "newly_used_concepts": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb"
+      ],
+      "newly_used_details": [
+        {
+          "activation_rank": 9,
+          "activation_score": 0.3615,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4853,
+          "classification": "Noise",
+          "concept_id": "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+          "generic_terms": [],
+          "planned": true,
+          "query_overlap": [
+            "conflicting",
+            "reports"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        }
+      ],
+      "newly_used_noisy_concepts": [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb"
+      ],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 1,
+      "prototype_attention_precision": 0.0,
+      "prototype_noise_used": 2,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": -0.5,
+      "baseline_attention_precision": 1.0,
+      "baseline_noise_used": 0,
+      "case": "logistics_proxy_planning",
+      "category": "logistics",
+      "entered_activation_top10": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        "0820a071-1bc7-42e2-8365-554a1e92900a",
+        "21b090dc-e87c-4a05-8db1-b06e0b62bf42",
+        "df85054d-ffcd-4c50-8118-ecb512271eaf"
+      ],
+      "left_activation_top10": [
+        "0586e881-099d-4866-a1cf-4ed571139c70",
+        "06b4d255-58d5-49f5-adec-43426ce0d09b",
+        "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+        "65e4ca55-7169-4ee4-b388-a6927043a92d"
+      ],
+      "newly_used_concepts": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05"
+      ],
+      "newly_used_details": [
+        {
+          "activation_rank": 8,
+          "activation_score": 0.3563,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4836,
+          "classification": "Noise",
+          "concept_id": "0121143f-0779-4965-9405-2e7b3eabcd05",
+          "generic_terms": [
+            "capacity",
+            "emergency",
+            "resource"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "capacity",
+            "resource"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        }
+      ],
+      "newly_used_noisy_concepts": [
+        "0121143f-0779-4965-9405-2e7b3eabcd05"
+      ],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 1,
+      "prototype_attention_precision": 0.5,
+      "prototype_noise_used": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "baseline_attention_precision": 0.25,
+      "baseline_noise_used": 3,
+      "case": "multi_step_failure_revision",
+      "category": "multi_step_reasoning",
+      "entered_activation_top10": [
+        "1adaa011-9a30-45bc-a78e-c8ba659af51a",
+        "2b9eb759-86cc-4d3d-b136-dae4abfe4246",
+        "636f4a37-3296-4858-be5d-99d1988bc3d6"
+      ],
+      "left_activation_top10": [
+        "0586e881-099d-4866-a1cf-4ed571139c70",
+        "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+        "e0038487-2363-4ba8-8e2e-a1b465c44ee0"
+      ],
+      "newly_used_concepts": [],
+      "newly_used_details": [],
+      "newly_used_noisy_concepts": [],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "prototype_attention_precision": 0.25,
+      "prototype_noise_used": 3,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": -0.5,
+      "baseline_attention_precision": 1.0,
+      "baseline_noise_used": 0,
+      "case": "planning_failed_assumption",
+      "category": "planning",
+      "entered_activation_top10": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e"
+      ],
+      "left_activation_top10": [
+        "0586e881-099d-4866-a1cf-4ed571139c70",
+        "06b4d255-58d5-49f5-adec-43426ce0d09b"
+      ],
+      "newly_used_concepts": [
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e"
+      ],
+      "newly_used_details": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3465,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4518,
+          "classification": "Noise",
+          "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+          "generic_terms": [],
+          "planned": true,
+          "query_overlap": [
+            "after",
+            "assumption"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        }
+      ],
+      "newly_used_noisy_concepts": [
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e"
+      ],
+      "no_longer_used_concepts": [
+        "aa6c1ba8-9c57-474c-afa5-7383a4733cae"
+      ],
+      "no_longer_used_details": [
+        {
+          "activation_rank": 2,
+          "activation_score": 0.4512,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.5697,
+          "classification": "Core",
+          "concept_id": "aa6c1ba8-9c57-474c-afa5-7383a4733cae",
+          "generic_terms": [
+            "emergency",
+            "plan",
+            "response"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "assumption",
+            "emergency",
+            "failed",
+            "permit",
+            "plan",
+            "response"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "expected"
+        }
+      ],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 1,
+      "prototype_attention_precision": 0.5,
+      "prototype_noise_used": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": -0.5,
+      "baseline_attention_precision": 1.0,
+      "baseline_noise_used": 0,
+      "case": "policy_audit_conflict",
+      "category": "conflicting_evidence",
+      "entered_activation_top10": [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        "19c469f2-b11b-445a-9b0c-fcd2ee80bd1f",
+        "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+        "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+        "636f4a37-3296-4858-be5d-99d1988bc3d6",
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        "a61cdfc3-a845-4b83-94b6-cf93ff6b0a08",
+        "b887cc74-2628-4fbd-8890-38792ed54876"
+      ],
+      "left_activation_top10": [
+        "06b4d255-58d5-49f5-adec-43426ce0d09b",
+        "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+        "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+        "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+        "65e4ca55-7169-4ee4-b388-a6927043a92d",
+        "89b85467-0655-47d3-9a0c-89da364cd487",
+        "b85b0a01-9c3f-4c42-a26a-01741c84682c",
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+        "e0038487-2363-4ba8-8e2e-a1b465c44ee0"
+      ],
+      "newly_used_concepts": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e"
+      ],
+      "newly_used_details": [
+        {
+          "activation_rank": 5,
+          "activation_score": 0.3565,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4981,
+          "classification": "Noise",
+          "concept_id": "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+          "generic_terms": [],
+          "planned": true,
+          "query_overlap": [
+            "audit",
+            "policy"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        }
+      ],
+      "newly_used_noisy_concepts": [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e"
+      ],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 1,
+      "prototype_attention_precision": 0.5,
+      "prototype_noise_used": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "baseline_attention_precision": 0.0,
+      "baseline_noise_used": 1,
+      "case": "resource_allocation_shelters",
+      "category": "resource_allocation",
+      "entered_activation_top10": [
+        "380b765f-ffa2-4296-a66e-527bacb75a64"
+      ],
+      "left_activation_top10": [
+        "5252e50d-b97e-4d57-a79a-b9d64ddbbec7"
+      ],
+      "newly_used_concepts": [],
+      "newly_used_details": [],
+      "newly_used_noisy_concepts": [],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "prototype_attention_precision": 0.0,
+      "prototype_noise_used": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": 0.2,
+      "baseline_attention_precision": 0.0,
+      "baseline_noise_used": 1,
+      "case": "risk_uncertainty_planning",
+      "category": "risk_assessment",
+      "entered_activation_top10": [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc"
+      ],
+      "left_activation_top10": [
+        "0e3fdeda-0d38-40ad-993c-480703e55f9e",
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c"
+      ],
+      "newly_used_concepts": [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+        "4b01b020-00b1-4d40-9422-aba2288625d4",
+        "6457f783-957c-4e69-95bb-bacf18f6fd32",
+        "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+        "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+        "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+        "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "newly_used_details": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3756,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3372,
+          "classification": "Noise",
+          "concept_id": "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+          "generic_terms": [
+            "uncertainty"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "should",
+            "uncertainty"
+          ],
+          "reasoned": true,
+          "responded": false,
+          "role": "noise"
+        },
+        {
+          "activation_rank": 9,
+          "activation_score": 0.3758,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4612,
+          "classification": "Noise",
+          "concept_id": "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+          "generic_terms": [
+            "plan",
+            "uncertainty"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "plan",
+            "uncertainty"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        },
+        {
+          "activation_rank": 2,
+          "activation_score": 0.3991,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4654,
+          "classification": "Core",
+          "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+          "generic_terms": [
+            "failure",
+            "plan"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "plan"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "expected"
+        },
+        {
+          "activation_rank": 5,
+          "activation_score": 0.385,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3389,
+          "classification": "Noise",
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "generic_terms": [
+            "plan"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "for",
+            "plan"
+          ],
+          "reasoned": true,
+          "responded": false,
+          "role": "noise"
+        },
+        {
+          "activation_rank": 7,
+          "activation_score": 0.3809,
+          "attended": true,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3389,
+          "classification": "Noise",
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "generic_terms": [
+            "failure"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "failure",
+            "for"
+          ],
+          "reasoned": true,
+          "responded": false,
+          "role": "noise"
+        },
+        {
+          "activation_rank": 3,
+          "activation_score": 0.3958,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4656,
+          "classification": "Core",
+          "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "for",
+            "risk"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "expected"
+        },
+        {
+          "activation_rank": 4,
+          "activation_score": 0.3917,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4608,
+          "classification": "Noise",
+          "concept_id": "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        },
+        {
+          "activation_rank": 1,
+          "activation_score": 0.3997,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4589,
+          "classification": "Noise",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "generic_terms": [
+            "plan",
+            "risk"
+          ],
+          "planned": true,
+          "query_overlap": [
+            "for",
+            "plan",
+            "risk",
+            "should"
+          ],
+          "reasoned": true,
+          "responded": true,
+          "role": "noise"
+        },
+        {
+          "activation_rank": 8,
+          "activation_score": 0.3773,
+          "attended": true,
+          "attention_classification": "Core",
+          "attention_score": 0.4549,
+          "classification": "Noise",
+          "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "reasoned": true,
+          "responded": false,
+          "role": "noise"
+        }
+      ],
+      "newly_used_noisy_concepts": [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+        "6457f783-957c-4e69-95bb-bacf18f6fd32",
+        "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+        "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+        "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b"
+      ],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 7,
+      "prototype_attention_precision": 0.2,
+      "prototype_noise_used": 8,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "baseline_attention_precision": 1.0,
+      "baseline_noise_used": 0,
+      "case": "sparse_violin_tuning",
+      "category": "sparse_knowledge",
+      "entered_activation_top10": [
+        "df85054d-ffcd-4c50-8118-ecb512271eaf"
+      ],
+      "left_activation_top10": [
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c"
+      ],
+      "newly_used_concepts": [],
+      "newly_used_details": [],
+      "newly_used_noisy_concepts": [],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "prototype_attention_precision": 1.0,
+      "prototype_noise_used": 0,
+      "reasoning_drift_after": false,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "baseline_attention_precision": 1.0,
+      "baseline_noise_used": 0,
+      "case": "unsupported_recipe",
+      "category": "unsupported_questions",
+      "entered_activation_top10": [
+        "f2ffe815-a7f5-453f-8e8f-644aa264e07c"
+      ],
+      "left_activation_top10": [
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c"
+      ],
+      "newly_used_concepts": [],
+      "newly_used_details": [],
+      "newly_used_noisy_concepts": [],
+      "no_longer_used_concepts": [],
+      "no_longer_used_details": [],
+      "no_longer_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "prototype_attention_precision": 1.0,
+      "prototype_noise_used": 0,
+      "reasoning_drift_after": false,
+      "reasoning_drift_before": false
+    }
+  ],
+  "recommended_next_experiment": "Test recurrence as attention-side diagnostic metadata or a reasoning usage gate, not as direct activation score mutation.",
+  "replacement_noise_analysis": {
+    "cases_with_noise_increase": [
+      "causal_industrial_failure",
+      "contradictory_evidence",
+      "logistics_proxy_planning",
+      "planning_failed_assumption",
+      "policy_audit_conflict",
+      "risk_uncertainty_planning"
+    ],
+    "entered_top10_frequency": [
+      [
+        "df85054d-ffcd-4c50-8118-ecb512271eaf",
+        2
+      ],
+      [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+        2
+      ],
+      [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        2
+      ],
+      [
+        "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+        1
+      ],
+      [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+        1
+      ],
+      [
+        "8cc42686-7fc3-4e08-b295-515b26899606",
+        1
+      ],
+      [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        1
+      ],
+      [
+        "0820a071-1bc7-42e2-8365-554a1e92900a",
+        1
+      ],
+      [
+        "21b090dc-e87c-4a05-8db1-b06e0b62bf42",
+        1
+      ],
+      [
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+        1
+      ],
+      [
+        "19c469f2-b11b-445a-9b0c-fcd2ee80bd1f",
+        1
+      ],
+      [
+        "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+        1
+      ],
+      [
+        "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+        1
+      ],
+      [
+        "636f4a37-3296-4858-be5d-99d1988bc3d6",
+        1
+      ],
+      [
+        "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+        1
+      ],
+      [
+        "a61cdfc3-a845-4b83-94b6-cf93ff6b0a08",
+        1
+      ],
+      [
+        "b887cc74-2628-4fbd-8890-38792ed54876",
+        1
+      ],
+      [
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+        1
+      ]
+    ],
+    "interpretation": "Recurring-noise suppression removed or demoted some repeat offenders, but the newly opened activation slots were filled by other weak candidates that attention treated as usable.",
+    "newly_used_noise_frequency": [
+      [
+        "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+        1
+      ],
+      [
+        "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+        1
+      ],
+      [
+        "0121143f-0779-4965-9405-2e7b3eabcd05",
+        1
+      ],
+      [
+        "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+        1
+      ],
+      [
+        "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+        1
+      ],
+      [
+        "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+        1
+      ],
+      [
+        "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+        1
+      ],
+      [
+        "6457f783-957c-4e69-95bb-bacf18f6fd32",
+        1
+      ],
+      [
+        "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+        1
+      ],
+      [
+        "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+        1
+      ],
+      [
+        "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+        1
+      ],
+      [
+        "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+        1
+      ]
+    ],
+    "total_noise_delta": 12
+  },
+  "source_reports": {
+    "baseline_ranking": "reports/runtime_v12_baseline_before_v13/runtime_v12_activation_ranking_diagnostic.json",
+    "baseline_real": "reports/runtime_v12_baseline_before_v13/runtime_v12_real_knowledge.json",
+    "prototype_ranking": "reports/runtime_v13_recurring_noise_live_raw/runtime_v12_activation_ranking_diagnostic.json",
+    "prototype_real": "reports/runtime_v13_recurring_noise_live_raw/runtime_v12_real_knowledge.json",
+    "prototype_report": "reports/runtime_v13_recurring_noise_live_prototype.json"
+  },
+  "summary": {
+    "attention_precision": [
+      0.55,
+      0.4172
+    ],
+    "attention_recall": [
+      0.4333,
+      0.4667
+    ],
+    "expected_outside_top10": [
+      8,
+      7
+    ],
+    "expected_outside_top20": [
+      6,
+      4
+    ],
+    "grounding_score": [
+      1.0,
+      1.0
+    ],
+    "hallucinations": [
+      0.0,
+      0.0
+    ],
+    "mean_expected_rank": [
+      10,
+      7.1739
+    ],
+    "mean_noise_above_expected": [
+      9.7083,
+      7
+    ],
+    "noise_used_in_reasoning": [
+      12.0,
+      24.0
+    ],
+    "read_only_verified": [
+      true,
+      true
+    ],
+    "reasoning_drift_cases": [
+      5.0,
+      8.0
+    ],
+    "retrieval_precision": [
+      0.16,
+      0.17
+    ],
+    "retrieval_recall": [
+      0.5333,
+      0.5667
+    ]
+  },
+  "why_isolated_passed_live_failed": "The isolated simulation measured activation rank movement only. In live runtime, the altered activation distribution changed which candidates attention selected and reasoning consumed. Ranking improved, but selected replacement concepts were often noise, doubling noise_used_in_reasoning."
+}

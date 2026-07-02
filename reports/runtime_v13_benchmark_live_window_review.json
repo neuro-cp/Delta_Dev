@@ -1,0 +1,357 @@
+{
+  "classification_counts": {
+    "benchmark_expected_but_not_live_citable": 0,
+    "benchmark_expected_but_planning_only": 1,
+    "benchmark_expected_redundant_with_used_evidence": 0,
+    "live_usable_and_should_be_recovered": 0,
+    "live_usable_but_requires_new_signal": 1,
+    "outside_reasonable_activation_window": 3,
+    "unavailable_or_unfair_target": 1,
+    "visible_but_not_safely_separable": 11
+  },
+  "continuation_checkpoint": {
+    "model_b_default_remains_active": true,
+    "next_step": "CHECKPOINT_MODEL_B_STOP_RUNTIME_V13",
+    "runtime_files_modified": false
+  },
+  "current_accepted_default": "Model B contextualized corpus support + citation_context reasoning usage gate",
+  "final_recommendation": "CHECKPOINT_MODEL_B_STOP_RUNTIME_V13",
+  "generated_at": "2026-07-02T17:09:22",
+  "live_runtime_changed": false,
+  "live_usability": {
+    "known_limitations_or_artifacts": 16,
+    "requires_new_live_signal": 1,
+    "should_count_against_runtime_v13": 13
+  },
+  "missed_expected_concepts": [
+    {
+      "activation_rank": 3,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ESS planning support, ECA context strong, ECA projected gate admission",
+      "case": "planning_failed_assumption",
+      "classification": "benchmark_expected_but_planning_only",
+      "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+      "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+      "current_model_b_decision": "Under-Attending",
+      "redundant_with_used_evidence": false,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "Concept appears useful as planning support but not as citable reasoning/response evidence."
+    },
+    {
+      "activation_rank": 37,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "causal_industrial_failure",
+      "classification": "outside_reasonable_activation_window",
+      "concept": "In this cycle the prediction is that if the maintenance frequency is increased further without addressing the root cause e g equipment age or In this cycle, the prediction is that if the maintenance frequency is increased further without addressing the root cause (e.g., equipment age or material quality), the failure rate will not decrease and may even increase",
+      "concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": false,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": false,
+      "should_count_against_runtime_v13": false,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "Concept is present but low-ranked (rank 37), outside the practical V1.3 activation window."
+    },
+    {
+      "activation_rank": 7,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "contradictory_evidence",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times but the content of the reports The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times, but the content of the reports describes the same sequence of events",
+      "concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 2,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "contradictory_evidence",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect",
+      "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 3,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "contradictory_evidence",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "However it s important to note that the resolution could be challenged if new evidence were to emerge such as corroborating testimony or physical However, it's important to note that the resolution could be challenged if new evidence were to emerge, such as corroborating testimony or physical evidence that contradicts the eyewitness reports",
+      "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 11,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "resource_allocation_shelters",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 18,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "resource_allocation_shelters",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 1,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "resource_allocation_shelters",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+      "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 2,
+      "best_attempted_recovery_path": "none",
+      "case": "risk_uncertainty_planning",
+      "classification": "live_usable_but_requires_new_signal",
+      "concept": "By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained By analyzing the likely failure points and the evidence required to revise the plan, a robust response can be maintained",
+      "concept_id": "4b01b020-00b1-4d40-9422-aba2288625d4",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": false,
+      "requires_signal_not_currently_available_live": true,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": false,
+      "why_recovery_failed": "Concept is in the top-20 but not made usable by current activation/attention/citation signals."
+    },
+    {
+      "activation_rank": null,
+      "best_attempted_recovery_path": "none",
+      "case": "risk_uncertainty_planning",
+      "classification": "unavailable_or_unfair_target",
+      "concept": "planning Planning compares possible strategies before action by estimating benefit, risk, uncertainty, and goal satisfaction.",
+      "concept_id": "52ca9d0c-f68c-429a-afe8-285bf2ceb996",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": false,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": false,
+      "should_count_against_runtime_v13": false,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "Concept is absent from the diagnostic top-50 live window."
+    },
+    {
+      "activation_rank": 4,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "risk_uncertainty_planning",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease, potentially leading to a higher risk of failure",
+      "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+      "current_model_b_decision": "Reasoning Drift",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 37,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "policy_audit_conflict",
+      "classification": "outside_reasonable_activation_window",
+      "concept": "The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply",
+      "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01",
+      "current_model_b_decision": "Planning Drift",
+      "redundant_with_used_evidence": false,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": false,
+      "should_count_against_runtime_v13": false,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "Concept is present but low-ranked (rank 37), outside the practical V1.3 activation window."
+    },
+    {
+      "activation_rank": 22,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "policy_audit_conflict",
+      "classification": "outside_reasonable_activation_window",
+      "concept": "The evidence that determines which rule applies is the policy exception's expiration date The evidence that determines which rule applies is the policy exception's expiration date",
+      "concept_id": "3cc55e56-cb07-4085-a786-afd705a58770",
+      "current_model_b_decision": "Planning Drift",
+      "redundant_with_used_evidence": false,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": false,
+      "should_count_against_runtime_v13": false,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "Concept is present but low-ranked (rank 22), outside the practical V1.3 activation window."
+    },
+    {
+      "activation_rank": 6,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "multi_step_failure_revision",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B Evidence needed to revise the plan could be a direct communication from Agent B stating that they will not share the information, or a history of similar behavior from Agent B",
+      "concept_id": "076c39f2-9cf5-45c7-ac1b-e379da875926",
+      "current_model_b_decision": "Under-Attending",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 40,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility",
+      "case": "multi_step_failure_revision",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "A prediction that would validate or falsify the system assumption is that after implementing failure drills the power grid will exhibit improved resilience to A prediction that would validate or falsify the system assumption is that after implementing failure drills, the power grid will exhibit improved resilience to failures, as evidenced by a reduction in the frequency and duration of power outages",
+      "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+      "current_model_b_decision": "Under-Attending",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 4,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "logistics_proxy_planning",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "current_model_b_decision": "Under-Attending",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    },
+    {
+      "activation_rank": 24,
+      "best_attempted_recovery_path": "QDA visibility, ESS visibility, ECA context strong, ECA projected gate admission",
+      "case": "logistics_proxy_planning",
+      "classification": "visible_but_not_safely_separable",
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "current_model_b_decision": "Under-Attending",
+      "redundant_with_used_evidence": true,
+      "requires_signal_not_currently_available_live": false,
+      "same_topic_noise_inseparable_under_live_safe_signals": true,
+      "should_count_against_runtime_v13": true,
+      "should_remain_known_limitation": true,
+      "why_recovery_failed": "The concept becomes visible, but all attempted live-safe recovery paths also expose same-topic noise."
+    }
+  ],
+  "mitigation_ladder_summary": {
+    "availability": null,
+    "consolidation": "RETURN_TO_ACTIVATION_ATTENTION_DIAGNOSTICS",
+    "deep_activation": "PROCEED_RELATION_AWARE_ACTIVATION_SIMULATION",
+    "evidence_contextualization": "RUN_MORE_DIAGNICS",
+    "evidence_stage_separation": "RUN_MORE_DIAGNOSTICS",
+    "query_decomposition": "RUN_MORE_DIAGNOSTICS",
+    "reasoning_citation_gate_review": "PROCEED_EVIDENCE_CONTEXTUALIZATION_IN_ACTIVATION_SIMULATION",
+    "relation_aware_activation": "PROCEED_QUERY_DECOMPOSITION_ACTIVATION_SIMULATION",
+    "stabilizer": "PROCEED_DEEP_ACTIVATION_DIAGNOSTICS"
+  },
+  "model_b_stable_v13_local_optimum": true,
+  "recommended_final_v13_disposition": "Model B is a stable V1.3 local optimum under current live-safe signals.",
+  "remaining_failed_cases": {
+    "causal_industrial_failure": {
+      "classifications": {
+        "outside_reasonable_activation_window": 1
+      },
+      "current_model_b_decision": "Reasoning Drift",
+      "missed_expected_count": 1
+    },
+    "contradictory_evidence": {
+      "classifications": {
+        "visible_but_not_safely_separable": 3
+      },
+      "current_model_b_decision": "Reasoning Drift",
+      "missed_expected_count": 3
+    },
+    "logistics_proxy_planning": {
+      "classifications": {
+        "visible_but_not_safely_separable": 2
+      },
+      "current_model_b_decision": "Under-Attending",
+      "missed_expected_count": 2
+    },
+    "multi_step_failure_revision": {
+      "classifications": {
+        "visible_but_not_safely_separable": 2
+      },
+      "current_model_b_decision": "Under-Attending",
+      "missed_expected_count": 2
+    },
+    "planning_failed_assumption": {
+      "classifications": {
+        "benchmark_expected_but_planning_only": 1
+      },
+      "current_model_b_decision": "Under-Attending",
+      "missed_expected_count": 1
+    },
+    "policy_audit_conflict": {
+      "classifications": {
+        "outside_reasonable_activation_window": 2
+      },
+      "current_model_b_decision": "Planning Drift",
+      "missed_expected_count": 2
+    },
+    "resource_allocation_shelters": {
+      "classifications": {
+        "visible_but_not_safely_separable": 3
+      },
+      "current_model_b_decision": "Reasoning Drift",
+      "missed_expected_count": 3
+    },
+    "risk_uncertainty_planning": {
+      "classifications": {
+        "live_usable_but_requires_new_signal": 1,
+        "unavailable_or_unfair_target": 1,
+        "visible_but_not_safely_separable": 1
+      },
+      "current_model_b_decision": "Reasoning Drift",
+      "missed_expected_count": 3
+    }
+  },
+  "review_only": true
+}

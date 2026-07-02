@@ -53,7 +53,7 @@ class RuntimeResponseGenerator:
         return RuntimeResponseDraft(
             answer=answer,
             confidence=option.confidence,
-            evidence_used=list(option.supporting_evidence),
+            evidence_used=list(option.metadata.get("response_citable_evidence", option.supporting_evidence)),
             assumptions=list(reasoning.assumptions),
             metadata={
                 "recommended_option": plan.recommended_option,

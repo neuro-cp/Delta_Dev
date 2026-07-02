@@ -721,3 +721,20 @@ Roadmap implications:
    confirms the same operating behavior.
 5. Do not add semantic roles, goal management, or richer planning until real
    candidate-store evaluation exposes a specific need.
+
+## Runtime V1.3 HYB1 Dormant Prototype Update
+
+HYB1 is now available only as a dormant/env-gated Runtime V1.3 prototype:
+`DELTA_RUNTIME_V13_HYB1_ENABLED=true`. Model B remains the default.
+
+Roadmap implications:
+
+1. Treat Model B as the stable Runtime V1.3 baseline.
+2. Treat HYB1 as an experimental checkpoint from the Model B + MBV2 hybrid test,
+   not as a default replacement.
+3. Do not enable HYB1 by default until a future validation pass confirms the
+   projected improvement still holds on the active real-store benchmark.
+4. Preserve the validated HYB1 target: noise `7 -> 5`, reasoning drift `4 -> 2`,
+   and no planning/response coverage regression.
+5. Continue Runtime V1.3 work only if new evidence justifies it; otherwise
+   checkpoint Model B and proceed to the next runtime milestone.

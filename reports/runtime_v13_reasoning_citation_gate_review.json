@@ -1,0 +1,929 @@
+{
+  "best_gate_audit_variant": null,
+  "continuation_checkpoint": {
+    "model_b_default_remains_active": true,
+    "next_step": "PROCEED_EVIDENCE_CONTEXTUALIZATION_IN_ACTIVATION_SIMULATION",
+    "runtime_files_modified": false
+  },
+  "current_accepted_default": "Model B contextualized corpus support + citation_context reasoning usage gate",
+  "final_recommendation": "PROCEED_EVIDENCE_CONTEXTUALIZATION_IN_ACTIVATION_SIMULATION",
+  "generated_at": "2026-07-02T14:48:41",
+  "live_runtime_changed": false,
+  "noise_candidates_reviewed": 50,
+  "rejected_concept_class_counts": {
+    "benchmark_expected_but_not_live_citable": 0,
+    "rejected_due_gate_false_negative": 0,
+    "rejected_due_missing_citation_context": 0,
+    "rejected_due_planning_only_signal": 0,
+    "rejected_due_response_only_signal": 0,
+    "rejected_due_same_topic_noise_risk": 0,
+    "rejected_due_weak_contextual_alignment": 11
+  },
+  "rejected_concepts": [
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "causal_industrial_failure",
+      "citable_reasoning_status": false,
+      "concept": "In this cycle the prediction is that if the maintenance frequency is increased further without addressing the root cause e g equipment age or In this cycle, the prediction is that if the maintenance frequency is increased further without addressing the root cause (e.g., equipment age or material quality), the failure rate will not decrease and may even increase",
+      "concept_id": "45d9686a-fded-4818-ae8e-47007cd33529",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3271,
+        "confidence": 0.85,
+        "direct_query_alignment": 1,
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.2883,
+        "promotion_score": 0.5988,
+        "relation_frame_match": 4
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3303,
+          "concept": "The uncertainty in this analysis can be reduced by implementing more rigorous monitoring and logging of environmental conditions and raw material quality as well",
+          "concept_id": "009bb376-da9b-441c-8ed5-1ebe79d4326b",
+          "rank": 34
+        },
+        {
+          "activation_score": 0.3303,
+          "concept": "For instance shelters located in areas with the highest risk of power outages or those housing the most vulnerable populations e g the elderly",
+          "concept_id": "35f7296f-3e5d-4372-8819-a3e769cde611",
+          "rank": 35
+        },
+        {
+          "activation_score": 0.3291,
+          "concept": "For instance if a maintenance intervention was performed on a machine and a delayed side effect such as increased wear on another component is",
+          "concept_id": "8d5ec69e-ce8e-474c-96ee-ef08a89155c8",
+          "rank": 36
+        },
+        {
+          "activation_score": 0.327,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 38
+        },
+        {
+          "activation_score": 0.3259,
+          "concept": "The uncertainty in this causal relationship can be reduced by conducting a controlled experiment to test the impact of maintenance on downtime which would",
+          "concept_id": "cc2432d5-9b0a-4cce-a34c-32304cea6333",
+          "rank": 39
+        }
+      ],
+      "original_model_b_activation_rank": 37,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_reasoning_status": false,
+      "concept": "The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect",
+      "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.4072,
+        "confidence": 0.85,
+        "direct_query_alignment": 3,
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6076,
+        "relation_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.422,
+          "concept": "The resolution evidence is the raw logs that contain the timestamps of the eyewitness reports",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "rank": 5
+        }
+      ],
+      "original_model_b_activation_rank": 2,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_reasoning_status": false,
+      "concept": "The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times but the content of the reports The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times, but the content of the reports describes the same sequence of events",
+      "concept_id": "0249542c-c698-4a93-805c-8f83c40f8c34",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3635,
+        "confidence": 0.8575,
+        "direct_query_alignment": 2,
+        "evidence_need_match": 0,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6132,
+        "relation_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3671,
+          "concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+          "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+          "rank": 6
+        },
+        {
+          "activation_score": 0.3635,
+          "concept": "The resolution evidence could be a calibration record or any other reliable source that can help reconcile the discrepancies between the two reports",
+          "concept_id": "800c60da-06fc-41b6-b259-b4f98e08cd79",
+          "rank": 8
+        },
+        {
+          "activation_score": 0.3624,
+          "concept": "Reflecting on uncertainty, it's important to acknowledge that eyewitness reports can be fallible and that further investigation is necessary to corroborate or refute the claims",
+          "concept_id": "fb9f365a-95c7-4757-92f6-e55f4580c57b",
+          "rank": 9
+        }
+      ],
+      "original_model_b_activation_rank": 7,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "citable_reasoning_status": false,
+      "concept": "However it s important to note that the resolution could be challenged if new evidence were to emerge such as corroborating testimony or physical However, it's important to note that the resolution could be challenged if new evidence were to emerge, such as corroborating testimony or physical evidence that contradicts the eyewitness reports",
+      "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.384,
+        "confidence": 0.85,
+        "direct_query_alignment": 3,
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6054,
+        "relation_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 4,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.422,
+          "concept": "The resolution evidence is the raw logs that contain the timestamps of the eyewitness reports",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811",
+          "rank": 1
+        },
+        {
+          "activation_score": 0.3724,
+          "concept": "The strategy should be flexible, and evidence of the other party's commitment should be sought to adjust the approach accordingly",
+          "concept_id": "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+          "rank": 4
+        },
+        {
+          "activation_score": 0.372,
+          "concept": "If the sources are found to be the same, it would suggest that one or both of the reports are inaccurate or contradictory",
+          "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3671,
+          "concept": "To preserve unresolved disagreement, both parties should be transparent about their beliefs and the evidence supporting them",
+          "concept_id": "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+          "rank": 6
+        }
+      ],
+      "original_model_b_activation_rank": 3,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_reasoning_status": false,
+      "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+      "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.4151,
+        "confidence": 0.8575,
+        "direct_query_alignment": 3,
+        "evidence_need_match": 1,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5948,
+        "relation_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 3,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.4081,
+          "concept": "If the generator is allocated to a shelter with higher demand, it may not be available when needed elsewhere, leading to potential failures",
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.4041,
+          "concept": "Allocating resources for emergency shelters requires a careful balance, especially when one resource is indivisible",
+          "concept_id": "bc2086b3-87d9-479a-935f-805fe7d523c7",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3933,
+          "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+          "rank": 4
+        }
+      ],
+      "original_model_b_activation_rank": 1,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3615,
+        "confidence": 0.8575,
+        "direct_query_alignment": 2,
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6356,
+        "relation_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3684,
+          "concept": "If demand forecasts predict a significant spike, it is essential to reallocate resources to meet the immediate needs of the increased population",
+          "concept_id": "7e5bf5f6-780a-4ba7-85c1-b514b848a162",
+          "rank": 8
+        },
+        {
+          "activation_score": 0.3661,
+          "concept": "Service-level data, such as historical usage patterns, demographic information, and current demand, should guide the reallocation",
+          "concept_id": "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+          "rank": 9
+        },
+        {
+          "activation_score": 0.3645,
+          "concept": "A failure mode could occur if the initial allocation of resources is not flexible enough to accommodate sudden increases in demand",
+          "concept_id": "97190912-de2a-4fa6-b283-a9a1baafb53c",
+          "rank": 10
+        },
+        {
+          "activation_score": 0.3609,
+          "concept": "If resources are not allocated equitably, certain groups may be disproportionately affected, leading to potential social unrest or public health issues",
+          "concept_id": "1be89cfb-2a02-4183-8054-00c0186f6271",
+          "rank": 12
+        },
+        {
+          "activation_score": 0.3595,
+          "concept": "If the indivisible resource is a key component for the shelter's operation, such as a generator, its cost should be prioritized to ensure the continuity of the service",
+          "concept_id": "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+          "rank": 13
+        }
+      ],
+      "original_model_b_activation_rank": 11,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "ess6_projected_decision": "Reasoning Drift",
+      "features": {
+        "activation_score": 0.3557,
+        "confidence": 0.8575,
+        "direct_query_alignment": 2,
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.604,
+        "relation_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3574,
+          "concept": "Equity constraints suggest that resources should be distributed to ensure that the most marginalized and vulnerable populations receive support",
+          "concept_id": "b887cc74-2628-4fbd-8890-38792ed54876",
+          "rank": 15
+        },
+        {
+          "activation_score": 0.3564,
+          "concept": "Equity constraints in allocating resources for emergency shelters require balancing the need for fairness with the practical limitations of indivisible resources",
+          "concept_id": "9fafbb71-ef17-4c05-8764-3577ae15ef59",
+          "rank": 16
+        },
+        {
+          "activation_score": 0.356,
+          "concept": "If the large tent is allocated to one location it may not be available when needed at another location potentially leading to failure modes",
+          "concept_id": "d45f3c3d-86fa-4ee5-a75a-fd988642038b",
+          "rank": 17
+        },
+        {
+          "activation_score": 0.3539,
+          "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease",
+          "concept_id": "98154cbb-a296-4bc9-87e5-83e1e6fbd245",
+          "rank": 19
+        },
+        {
+          "activation_score": 0.3519,
+          "concept": "When the priority group changes, it is crucial to reassess the allocation to ensure that the most vulnerable populations are supported",
+          "concept_id": "88b2e857-6d3d-45f0-be3f-d01cbc1e2023",
+          "rank": 20
+        }
+      ],
+      "original_model_b_activation_rank": 18,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "citable_reasoning_status": false,
+      "concept": "The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply The testable prediction is that if the policy exception is not extended or renewed before it expires, the older operating procedure will apply",
+      "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3385,
+        "confidence": 0.8575,
+        "direct_query_alignment": 1,
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5909,
+        "relation_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.339,
+          "concept": "A prediction is that the other party will be defensive and may view any new proposals as an attempt to exploit past concessions",
+          "concept_id": "dfb2f67e-ef17-4272-bb3e-cef6ed923eb1",
+          "rank": 34
+        },
+        {
+          "activation_score": 0.3388,
+          "concept": "For instance, if a machine fails due to both a software bug and a hardware issue, the timeline might show the software bug occurring before the hardware issue",
+          "concept_id": "698a613f-15a8-4919-b1f1-3f383f34a1d9",
+          "rank": 35
+        },
+        {
+          "activation_score": 0.3385,
+          "concept": "Reflecting on uncertainty, it's important to remember that the actual beliefs and interests of the parties may not align with the initial assumptions",
+          "concept_id": "321b093f-f3fe-452d-9ad6-ba409944c164",
+          "rank": 36
+        },
+        {
+          "activation_score": 0.338,
+          "concept": "In the event of unexpected demand spikes for emergency shelters, resources should be reallocated using equity constraints to ensure fair distribution",
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf",
+          "rank": 38
+        },
+        {
+          "activation_score": 0.3378,
+          "concept": "For instance if a machine part A fails due to wear and tear and this failure leads to part B failing due to increased",
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "rank": 39
+        }
+      ],
+      "original_model_b_activation_rank": 37,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "citable_reasoning_status": false,
+      "concept": "The evidence that determines which rule applies is the policy exception's expiration date The evidence that determines which rule applies is the policy exception's expiration date",
+      "concept_id": "3cc55e56-cb07-4085-a786-afd705a58770",
+      "ess6_projected_decision": "Planning Drift",
+      "features": {
+        "activation_score": 0.3437,
+        "confidence": 0.85,
+        "direct_query_alignment": 1,
+        "evidence_need_match": 5,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.5903,
+        "relation_frame_match": 1
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3453,
+          "concept": "The uncertainty in demand forecasts means that the allocation strategy must be robust and adaptable",
+          "concept_id": "77b37207-0a4f-4af1-a029-1ead85cc56ce",
+          "rank": 19
+        },
+        {
+          "activation_score": 0.3444,
+          "concept": "Prediction If the comparison reveals that the government report s data and methodology are less rigorous than the scientific study s the government report",
+          "concept_id": "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+          "rank": 20
+        },
+        {
+          "activation_score": 0.3443,
+          "concept": "This would require us to go back and re-evaluate the plan and adjust the dependencies accordingly",
+          "concept_id": "636f4a37-3296-4858-be5d-99d1988bc3d6",
+          "rank": 21
+        },
+        {
+          "activation_score": 0.3436,
+          "concept": "However this alternative is less likely if the failure pattern shows a sudden and significant increase in frequency and severity which is more consistent",
+          "concept_id": "1adaa011-9a30-45bc-a78e-c8ba659af51a",
+          "rank": 23
+        },
+        {
+          "activation_score": 0.3429,
+          "concept": "Identifying and addressing overlapping responsibilities among multiple agents in a mutual aid response requires clear communication and coordination",
+          "concept_id": "21b090dc-e87c-4a05-8db1-b06e0b62bf42",
+          "rank": 24
+        }
+      ],
+      "original_model_b_activation_rank": 22,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+      "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64",
+      "ess6_projected_decision": "Under-Attending",
+      "features": {
+        "activation_score": 0.3777,
+        "confidence": 0.8575,
+        "direct_query_alignment": 2,
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.3333,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.6356,
+        "relation_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3841,
+          "concept": "Each party's likely belief should be acknowledged, and a prediction about their response should be made",
+          "concept_id": "06b4d255-58d5-49f5-adec-43426ce0d09b",
+          "rank": 2
+        },
+        {
+          "activation_score": 0.3779,
+          "concept": "Tradeoffs in allocating resources for emergency shelters, particularly when one resource is indivisible, involve balancing equity and efficiency",
+          "concept_id": "2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d",
+          "rank": 3
+        },
+        {
+          "activation_score": 0.3739,
+          "concept": "These records should provide evidence of whether the purchase was indeed an emergency one and, if so, whether the appropriate steps were taken to bypass the approval process",
+          "concept_id": "0586e881-099d-4866-a1cf-4ed571139c70",
+          "rank": 5
+        },
+        {
+          "activation_score": 0.3652,
+          "concept": "When a permit assumption fails, the emergency response plan should be revised to include alternative routes or methods for the lowest-risk work",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "rank": 6
+        },
+        {
+          "activation_score": 0.3651,
+          "concept": "Allocating resources for emergency shelters requires a careful balance, especially when one resource is indivisible",
+          "concept_id": "bc2086b3-87d9-479a-935f-805fe7d523c7",
+          "rank": 7
+        }
+      ],
+      "original_model_b_activation_rank": 4,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    },
+    {
+      "attention_status": false,
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "citable_reasoning_status": false,
+      "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable The allocation of resources for emergency shelters, given a 20 percent reduction, requires a strategic approach that balances the needs of the most vulnerable populations with the available capacity",
+      "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad",
+      "ess6_projected_decision": "Under-Attending",
+      "features": {
+        "activation_score": 0.3519,
+        "confidence": 0.8575,
+        "direct_query_alignment": 2,
+        "evidence_need_match": 2,
+        "generic_anchor_ratio": 0.0,
+        "projected_centrality": 0.3433,
+        "promotion_score": 0.604,
+        "relation_frame_match": 2
+      },
+      "noise_risk_neighbor_count": 5,
+      "noise_risk_neighbors": [
+        {
+          "activation_score": 0.3544,
+          "concept": "If the indivisible resource is a key component for the shelter's operation, such as a generator, its cost should be prioritized to ensure the continuity of the service",
+          "concept_id": "7a4b823b-f9df-4e77-b3b7-744ee834741c",
+          "rank": 21
+        },
+        {
+          "activation_score": 0.3544,
+          "concept": "A failure mode could arise if the indivisible resource is not properly accounted for in the capacity reports, leading to an imbalance in resource distribution",
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b",
+          "rank": 22
+        },
+        {
+          "activation_score": 0.354,
+          "concept": "To address the challenge of unresolved disagreements, both parties should focus on past concessions and use them as a basis for future discussions",
+          "concept_id": "0e3fdeda-0d38-40ad-993c-480703e55f9e",
+          "rank": 23
+        },
+        {
+          "activation_score": 0.3519,
+          "concept": "Equity constraints suggest that resources should be distributed to ensure that the most marginalized and vulnerable populations receive support",
+          "concept_id": "b887cc74-2628-4fbd-8890-38792ed54876",
+          "rank": 25
+        },
+        {
+          "activation_score": 0.3508,
+          "concept": "Delta should revise its belief to acknowledge that while GPS estimates are generally reliable in downtown areas, they can be unreliable in tunnels and urban canyons",
+          "concept_id": "3a9f7658-b877-4532-b9c8-1a79b360c5d4",
+          "rank": 26
+        }
+      ],
+      "original_model_b_activation_rank": 24,
+      "planning_support_status": false,
+      "primary_class": "visible_rejected_by_citation_gate",
+      "rejection_class": "rejected_due_weak_contextual_alignment",
+      "rejection_reason": "Concept has partial context alignment but not enough citation-context support.",
+      "response_binding_status": false,
+      "smallest_layer_that_could_make_usable_safely": "reasoning citation gate",
+      "visible_under_ess": true,
+      "visible_under_qda": true,
+      "why_not_used": "Visible concept has intent/evidence signals but is not accepted by the citation/reasoning gate.",
+      "working_memory_status": false
+    }
+  ],
+  "rejected_concepts_reviewed": 11,
+  "review_only": true,
+  "variants": {
+    "RCG1": {
+      "acceptance": {
+        "admits_expected": true,
+        "citable_noise_no_increase": false,
+        "no_fixture_specific_logic": true,
+        "reasoning_drift_no_increase": false,
+        "sparse_unsupported_safe": true
+      },
+      "citable_noise_used_in_reasoning_projection": 10,
+      "concepts_become_usable": [
+        {
+          "case": "contradictory_evidence",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021"
+        },
+        {
+          "case": "contradictory_evidence",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf"
+        }
+      ],
+      "dangerous_noise": [
+        {
+          "case": "contradictory_evidence",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811"
+        },
+        {
+          "case": "contradictory_evidence",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d"
+        }
+      ],
+      "expected_admitted": 3,
+      "model": "RCG1",
+      "noise_admitted": 3,
+      "passed_for_future_prototype_consideration": false,
+      "planning_response_impact_estimate": "positive if admitted concepts bind to response; unsafe if noise admitted",
+      "reasoning_drift_projection": 6
+    },
+    "RCG2": {
+      "acceptance": {
+        "admits_expected": true,
+        "citable_noise_no_increase": false,
+        "no_fixture_specific_logic": true,
+        "reasoning_drift_no_increase": false,
+        "sparse_unsupported_safe": true
+      },
+      "citable_noise_used_in_reasoning_projection": 18,
+      "concepts_become_usable": [
+        {
+          "case": "contradictory_evidence",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "8430c4bb-9070-4e98-aaa6-90404f2da021"
+        },
+        {
+          "case": "contradictory_evidence",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "a1e249bd-67dc-4056-9120-89380cbe5928"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "df85054d-ffcd-4c50-8118-ecb512271eaf"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad"
+        }
+      ],
+      "dangerous_noise": [
+        {
+          "case": "contradictory_evidence",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811"
+        },
+        {
+          "case": "contradictory_evidence",
+          "concept_id": "800c60da-06fc-41b6-b259-b4f98e08cd79"
+        },
+        {
+          "case": "contradictory_evidence",
+          "concept_id": "1450511f-f0dd-4e2f-8598-1cf1511a2811"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "bc2086b3-87d9-479a-935f-805fe7d523c7"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "7e5bf5f6-780a-4ba7-85c1-b514b848a162"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "97190912-de2a-4fa6-b283-a9a1baafb53c"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "concept_id": "2ecb3022-1ce7-46e9-b1e5-4da1ffd0ac7d"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "concept_id": "bc2086b3-87d9-479a-935f-805fe7d523c7"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b"
+        }
+      ],
+      "expected_admitted": 7,
+      "model": "RCG2",
+      "noise_admitted": 11,
+      "passed_for_future_prototype_consideration": false,
+      "planning_response_impact_estimate": "positive if admitted concepts bind to response; unsafe if noise admitted",
+      "reasoning_drift_projection": 7
+    },
+    "RCG3": {
+      "acceptance": {
+        "admits_expected": true,
+        "citable_noise_no_increase": false,
+        "no_fixture_specific_logic": true,
+        "reasoning_drift_no_increase": false,
+        "sparse_unsupported_safe": true
+      },
+      "citable_noise_used_in_reasoning_projection": 13,
+      "concepts_become_usable": [
+        {
+          "case": "resource_allocation_shelters",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad"
+        },
+        {
+          "case": "policy_audit_conflict",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "1b324e50-0b5b-43b4-befd-f4e6e25d5e01"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "380b765f-ffa2-4296-a66e-527bacb75a64"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "class": "rejected_due_weak_contextual_alignment",
+          "concept_id": "68ae35cf-2be5-4dfc-bdd0-b179682163ad"
+        }
+      ],
+      "dangerous_noise": [
+        {
+          "case": "causal_industrial_failure",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "7e5bf5f6-780a-4ba7-85c1-b514b848a162"
+        },
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "97190912-de2a-4fa6-b283-a9a1baafb53c"
+        },
+        {
+          "case": "logistics_proxy_planning",
+          "concept_id": "ee7f9d7a-56de-41a7-bebb-681cf7cdc54b"
+        }
+      ],
+      "expected_admitted": 5,
+      "model": "RCG3",
+      "noise_admitted": 6,
+      "passed_for_future_prototype_consideration": false,
+      "planning_response_impact_estimate": "positive if admitted concepts bind to response; unsafe if noise admitted",
+      "reasoning_drift_projection": 7
+    },
+    "RCG4": {
+      "acceptance": {
+        "admits_expected": false,
+        "citable_noise_no_increase": false,
+        "no_fixture_specific_logic": true,
+        "reasoning_drift_no_increase": false,
+        "sparse_unsupported_safe": true
+      },
+      "citable_noise_used_in_reasoning_projection": 8,
+      "concepts_become_usable": [],
+      "dangerous_noise": [
+        {
+          "case": "resource_allocation_shelters",
+          "concept_id": "6b704bd9-ecc5-4066-b351-a4eda0ba5c8d"
+        }
+      ],
+      "expected_admitted": 0,
+      "model": "RCG4",
+      "noise_admitted": 1,
+      "passed_for_future_prototype_consideration": false,
+      "planning_response_impact_estimate": "none",
+      "reasoning_drift_projection": 5
+    }
+  }
+}

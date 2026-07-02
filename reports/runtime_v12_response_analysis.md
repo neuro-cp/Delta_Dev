@@ -8,7 +8,7 @@
 | resource_allocation_shelters | `1.0` | `0.0` | `0` | `0.773` |
 | risk_uncertainty_planning | `1.0` | `0.0` | `0` | `0.724` |
 | policy_audit_conflict | `1.0` | `0.3333` | `0` | `0.7529` |
-| multi_step_failure_revision | `1.0` | `0.3333` | `0` | `0.5914` |
+| multi_step_failure_revision | `1.0` | `0.3333` | `0` | `0.6636` |
 | logistics_proxy_planning | `1.0` | `0.3333` | `0` | `0.7303` |
 | sparse_violin_tuning | `1.0` | `1.0` | `0` | `0.25` |
 | unsupported_recipe | `1.0` | `1.0` | `0` | `0.25` |

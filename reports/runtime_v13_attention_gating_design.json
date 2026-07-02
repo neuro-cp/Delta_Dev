@@ -1,0 +1,722 @@
+{
+  "attention_classifications_that_admitted_noise": {
+    "Core": 4,
+    "Supporting": 8
+  },
+  "baseline_failure_summary": {
+    "acceptance_criteria_failures": {
+      "noise_used_in_reasoning_not_increase": false
+    },
+    "audit_decision": "MOVE_SIGNAL_TO_ATTENTION_GATING",
+    "baseline_ranking_case_count": 10,
+    "case_count": 10,
+    "interpretation": "The rejected prototype improved activation rank metrics but admitted replacement noise through attention, increasing reasoning consumption of noisy concepts.",
+    "metrics": {
+      "attention_precision": [
+        0.55,
+        0.4172
+      ],
+      "attention_recall": [
+        0.4333,
+        0.4667
+      ],
+      "expected_outside_top10": [
+        8,
+        7
+      ],
+      "expected_outside_top20": [
+        6,
+        4
+      ],
+      "grounding_score": [
+        1.0,
+        1.0
+      ],
+      "hallucinations": [
+        0.0,
+        0.0
+      ],
+      "mean_expected_rank": [
+        10,
+        7.1739
+      ],
+      "mean_noise_above_expected": [
+        9.7083,
+        7
+      ],
+      "noise_used_in_reasoning": [
+        12.0,
+        24.0
+      ],
+      "read_only_verified": [
+        true,
+        true
+      ],
+      "reasoning_drift_cases": [
+        5.0,
+        8.0
+      ],
+      "retrieval_precision": [
+        0.16,
+        0.17
+      ],
+      "retrieval_recall": [
+        0.5333,
+        0.5667
+      ]
+    },
+    "prototype_decision": "REJECT_LIVE_RECURRING_NOISE_SUPPRESSION"
+  },
+  "explicitly_rejected_strategies": [
+    "global attention threshold loosening",
+    "stronger activation recurrence penalty",
+    "hard concept blacklist",
+    "learning/governance/promotion changes",
+    "provider prompt changes"
+  ],
+  "final_recommendation": "SIMULATE_REASONING_USAGE_GATE",
+  "high_risk_cases": {
+    "logistics_proxy_planning": {
+      "newly_used_noise_count": 1,
+      "risk_reason": "Rejected prototype admitted newly used noisy concepts in this high-risk runtime case."
+    },
+    "planning_failed_assumption": {
+      "newly_used_noise_count": 1,
+      "risk_reason": "Rejected prototype admitted newly used noisy concepts in this high-risk runtime case."
+    },
+    "policy_audit_conflict": {
+      "newly_used_noise_count": 1,
+      "risk_reason": "Rejected prototype admitted newly used noisy concepts in this high-risk runtime case."
+    },
+    "risk_uncertainty_planning": {
+      "newly_used_noise_count": 7,
+      "risk_reason": "Rejected prototype admitted newly used noisy concepts in this high-risk runtime case."
+    }
+  },
+  "inputs": {
+    "audit_final_decision": "MOVE_SIGNAL_TO_ATTENTION_GATING",
+    "isolated_final_recommendation": "PROCEED_RECURRING_NOISE_SUPPRESSION_PROTOTYPE",
+    "prototype_final_decision": "REJECT_LIVE_RECURRING_NOISE_SUPPRESSION"
+  },
+  "newly_used_noisy_concepts_by_case": [
+    {
+      "attention_precision_delta": -0.0278,
+      "case": "causal_industrial_failure",
+      "category": "causal_reasoning",
+      "high_risk_case": false,
+      "newly_used_noisy_concepts": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3381,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3514,
+          "case": "causal_industrial_failure",
+          "category": "causal_reasoning",
+          "concept_id": "48c454a5-6362-4533-a53e-b6d6f9c19a00",
+          "entered_activation_top10": true,
+          "generic_terms": [],
+          "high_risk_case": false,
+          "planned": false,
+          "query_overlap": [
+            "maintenance"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": false,
+          "specific_overlap_count": 1,
+          "weak_specificity": true
+        }
+      ],
+      "noise_used_delta": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "case": "contradictory_evidence",
+      "category": "contradiction_handling",
+      "high_risk_case": false,
+      "newly_used_noisy_concepts": [
+        {
+          "activation_rank": 9,
+          "activation_score": 0.3615,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4853,
+          "case": "contradictory_evidence",
+          "category": "contradiction_handling",
+          "concept_id": "011d4f3b-e7d2-4865-9fe3-b269795e07cb",
+          "entered_activation_top10": true,
+          "generic_terms": [],
+          "high_risk_case": false,
+          "planned": true,
+          "query_overlap": [
+            "conflicting",
+            "reports"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 2,
+          "weak_specificity": true
+        }
+      ],
+      "noise_used_delta": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": -0.5,
+      "case": "logistics_proxy_planning",
+      "category": "logistics",
+      "high_risk_case": true,
+      "newly_used_noisy_concepts": [
+        {
+          "activation_rank": 8,
+          "activation_score": 0.3563,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4836,
+          "case": "logistics_proxy_planning",
+          "category": "logistics",
+          "concept_id": "0121143f-0779-4965-9405-2e7b3eabcd05",
+          "entered_activation_top10": true,
+          "generic_terms": [
+            "capacity",
+            "emergency",
+            "resource"
+          ],
+          "high_risk_case": true,
+          "planned": true,
+          "query_overlap": [
+            "capacity",
+            "resource"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 2,
+          "weak_specificity": true
+        }
+      ],
+      "noise_used_delta": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "case": "multi_step_failure_revision",
+      "category": "multi_step_reasoning",
+      "high_risk_case": false,
+      "newly_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": -0.5,
+      "case": "planning_failed_assumption",
+      "category": "planning",
+      "high_risk_case": true,
+      "newly_used_noisy_concepts": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3465,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4518,
+          "case": "planning_failed_assumption",
+          "category": "planning",
+          "concept_id": "e6f9a5a0-a724-48c4-ba2b-5d279555a25e",
+          "entered_activation_top10": true,
+          "generic_terms": [],
+          "high_risk_case": true,
+          "planned": true,
+          "query_overlap": [
+            "after",
+            "assumption"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 2,
+          "weak_specificity": true
+        }
+      ],
+      "noise_used_delta": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": -0.5,
+      "case": "policy_audit_conflict",
+      "category": "conflicting_evidence",
+      "high_risk_case": true,
+      "newly_used_noisy_concepts": [
+        {
+          "activation_rank": 5,
+          "activation_score": 0.3565,
+          "attention_classification": "Supporting",
+          "attention_score": 0.4981,
+          "case": "policy_audit_conflict",
+          "category": "conflicting_evidence",
+          "concept_id": "5894bef8-228f-4466-9152-cf7dfec7fa4e",
+          "entered_activation_top10": true,
+          "generic_terms": [],
+          "high_risk_case": true,
+          "planned": true,
+          "query_overlap": [
+            "audit",
+            "policy"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 2,
+          "weak_specificity": true
+        }
+      ],
+      "noise_used_delta": 1,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "case": "resource_allocation_shelters",
+      "category": "resource_allocation",
+      "high_risk_case": false,
+      "newly_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": 0.2,
+      "case": "risk_uncertainty_planning",
+      "category": "risk_assessment",
+      "high_risk_case": true,
+      "newly_used_noisy_concepts": [
+        {
+          "activation_rank": 10,
+          "activation_score": 0.3756,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3372,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "0ada7d73-b196-40cc-b6bb-031ac1eaa8cd",
+          "entered_activation_top10": true,
+          "generic_terms": [
+            "uncertainty"
+          ],
+          "high_risk_case": true,
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "should",
+            "uncertainty"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": false,
+          "specific_overlap_count": 3,
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 9,
+          "activation_score": 0.3758,
+          "attention_classification": "Core",
+          "attention_score": 0.4612,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "16ce389d-1c43-4d03-94e3-f16ad8259cbc",
+          "entered_activation_top10": true,
+          "generic_terms": [
+            "plan",
+            "uncertainty"
+          ],
+          "high_risk_case": true,
+          "planned": true,
+          "query_overlap": [
+            "plan",
+            "uncertainty"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 2,
+          "weak_specificity": true
+        },
+        {
+          "activation_rank": 5,
+          "activation_score": 0.385,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3389,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "6457f783-957c-4e69-95bb-bacf18f6fd32",
+          "entered_activation_top10": false,
+          "generic_terms": [
+            "plan"
+          ],
+          "high_risk_case": true,
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "for",
+            "plan"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": false,
+          "specific_overlap_count": 3,
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 7,
+          "activation_score": 0.3809,
+          "attention_classification": "Supporting",
+          "attention_score": 0.3389,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "7b1fd455-c6f7-4dcf-a109-11fc3c89262f",
+          "entered_activation_top10": false,
+          "generic_terms": [
+            "failure"
+          ],
+          "high_risk_case": true,
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "failure",
+            "for"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": false,
+          "specific_overlap_count": 3,
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 4,
+          "activation_score": 0.3917,
+          "attention_classification": "Core",
+          "attention_score": 0.4608,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "ad599dfe-ddbd-4689-ad43-4dc8249fdab1",
+          "entered_activation_top10": false,
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "high_risk_case": true,
+          "planned": true,
+          "query_overlap": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 3,
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 1,
+          "activation_score": 0.3997,
+          "attention_classification": "Core",
+          "attention_score": 0.4589,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "d9ba0c9f-f458-4512-a0e3-40892ef333b6",
+          "entered_activation_top10": false,
+          "generic_terms": [
+            "plan",
+            "risk"
+          ],
+          "high_risk_case": true,
+          "planned": true,
+          "query_overlap": [
+            "for",
+            "plan",
+            "risk",
+            "should"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": true,
+          "specific_overlap_count": 4,
+          "weak_specificity": false
+        },
+        {
+          "activation_rank": 8,
+          "activation_score": 0.3773,
+          "attention_classification": "Core",
+          "attention_score": 0.4549,
+          "case": "risk_uncertainty_planning",
+          "category": "risk_assessment",
+          "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+          "entered_activation_top10": false,
+          "generic_terms": [
+            "failure",
+            "risk"
+          ],
+          "high_risk_case": true,
+          "planned": false,
+          "query_overlap": [
+            "and",
+            "failure",
+            "risk"
+          ],
+          "reasoned": true,
+          "recurrence_prior": {},
+          "recurrence_risk": false,
+          "responded": false,
+          "specific_overlap_count": 3,
+          "weak_specificity": false
+        }
+      ],
+      "noise_used_delta": 7,
+      "reasoning_drift_after": true,
+      "reasoning_drift_before": true
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "case": "sparse_violin_tuning",
+      "category": "sparse_knowledge",
+      "high_risk_case": false,
+      "newly_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "reasoning_drift_after": false,
+      "reasoning_drift_before": false
+    },
+    {
+      "attention_precision_delta": 0.0,
+      "case": "unsupported_recipe",
+      "category": "unsupported_questions",
+      "high_risk_case": false,
+      "newly_used_noisy_concepts": [],
+      "noise_used_delta": 0,
+      "reasoning_drift_after": false,
+      "reasoning_drift_before": false
+    }
+  ],
+  "predicted_effects": {
+    "A. Recurrence-risk metadata only": {
+      "attention_precision": "unchanged",
+      "attention_recall": "unchanged",
+      "grounding_score": "unchanged",
+      "hallucinations": "unchanged",
+      "noise_used_in_reasoning": "unchanged",
+      "planning_core_coverage": "unchanged",
+      "response_core_coverage": "unchanged"
+    },
+    "B. Negative attention feature": {
+      "attention_precision": "likely improves",
+      "attention_recall": "possible mild regression if expected concepts have sparse overlap",
+      "grounding_score": "should remain stable",
+      "hallucinations": "should remain 0 if response remains evidence bounded",
+      "noise_used_in_reasoning": "likely decreases",
+      "planning_core_coverage": "watch for under-attending",
+      "response_core_coverage": "watch for under-attending"
+    },
+    "C. Usage gate before reasoning": {
+      "attention_precision": "selection metric may remain similar",
+      "attention_recall": "selection recall should remain stable",
+      "grounding_score": "should remain stable",
+      "hallucinations": "should remain 0 if response still cites used evidence only",
+      "noise_used_in_reasoning": "likely decreases sharply",
+      "planning_core_coverage": "lower risk than selection penalty because core concepts remain visible",
+      "response_core_coverage": "lower risk than selection penalty because core concepts remain visible"
+    },
+    "D. Supporting-only downgrade": {
+      "attention_precision": "likely improves if Peripheral is not counted as attended",
+      "attention_recall": "possible regression on sparse expected concepts",
+      "grounding_score": "should remain stable",
+      "hallucinations": "should remain 0",
+      "noise_used_in_reasoning": "likely decreases",
+      "planning_core_coverage": "watch expected Supporting concepts",
+      "response_core_coverage": "watch expected Supporting concepts"
+    },
+    "E. Case-local replacement-noise guard": {
+      "attention_precision": "likely improves in affected cases",
+      "attention_recall": "unknown until expected concepts newly entering top-10 are checked",
+      "grounding_score": "should remain stable",
+      "hallucinations": "should remain 0",
+      "noise_used_in_reasoning": "likely decreases in up to 6 noisy cases",
+      "planning_core_coverage": "requires simulation",
+      "response_core_coverage": "requires simulation"
+    }
+  },
+  "proposed_gating_strategies": [
+    {
+      "assessment": "Useful instrumentation, but insufficient as the next prototype because it cannot reduce noise consumption.",
+      "coverage_of_new_noise": 0.0,
+      "mechanism": "Expose recurrence-risk and weak-specificity flags in attention traces without changing selection.",
+      "name": "A. Recurrence-risk metadata only",
+      "predicted_effect": {
+        "attention_precision": "unchanged",
+        "attention_recall": "unchanged",
+        "grounding_score": "unchanged",
+        "hallucinations": "unchanged",
+        "noise_used_in_reasoning": "unchanged",
+        "planning_core_coverage": "unchanged",
+        "response_core_coverage": "unchanged"
+      },
+      "regression_risk": "lowest",
+      "would_block_new_noise": 0
+    },
+    {
+      "assessment": "Good candidate, but it changes selection and could repeat the activation-prototype mistake at the attention layer.",
+      "coverage_of_new_noise": 0.5,
+      "mechanism": "Subtract a bounded attention penalty when recurrence-risk or replacement-risk combines with weak specific query overlap.",
+      "name": "B. Negative attention feature",
+      "predicted_effect": {
+        "attention_precision": "likely improves",
+        "attention_recall": "possible mild regression if expected concepts have sparse overlap",
+        "grounding_score": "should remain stable",
+        "hallucinations": "should remain 0 if response remains evidence bounded",
+        "noise_used_in_reasoning": "likely decreases",
+        "planning_core_coverage": "watch for under-attending",
+        "response_core_coverage": "watch for under-attending"
+      },
+      "regression_risk": "medium",
+      "would_block_new_noise": 6
+    },
+    {
+      "assessment": "Best next simulation because the observed failure is not retrieval presence; it is noisy concepts entering reasoning.",
+      "coverage_of_new_noise": 0.5,
+      "mechanism": "Allow weak replacement-risk candidates into working memory for observability, but prevent reasoning from consuming them unless they have stronger support than shallow query overlap.",
+      "name": "C. Usage gate before reasoning",
+      "predicted_effect": {
+        "attention_precision": "selection metric may remain similar",
+        "attention_recall": "selection recall should remain stable",
+        "grounding_score": "should remain stable",
+        "hallucinations": "should remain 0 if response still cites used evidence only",
+        "noise_used_in_reasoning": "likely decreases sharply",
+        "planning_core_coverage": "lower risk than selection penalty because core concepts remain visible",
+        "response_core_coverage": "lower risk than selection penalty because core concepts remain visible"
+      },
+      "regression_risk": "low-medium",
+      "would_block_new_noise": 6
+    },
+    {
+      "assessment": "Potentially equivalent to a hard attention penalty unless carefully limited to usage, not visibility.",
+      "coverage_of_new_noise": 1.0,
+      "mechanism": "Downgrade weak replacement-risk Core/Supporting concepts to Peripheral before reasoning.",
+      "name": "D. Supporting-only downgrade",
+      "predicted_effect": {
+        "attention_precision": "likely improves if Peripheral is not counted as attended",
+        "attention_recall": "possible regression on sparse expected concepts",
+        "grounding_score": "should remain stable",
+        "hallucinations": "should remain 0",
+        "noise_used_in_reasoning": "likely decreases",
+        "planning_core_coverage": "watch expected Supporting concepts",
+        "response_core_coverage": "watch expected Supporting concepts"
+      },
+      "regression_risk": "medium",
+      "would_block_new_noise": 12
+    },
+    {
+      "assessment": "Explains the failure but is too coupled to the rejected activation mutation to be the first live design.",
+      "coverage_of_new_noise": 0.5833,
+      "mechanism": "For concepts that newly entered activation top-10 after recurring concepts were suppressed, require stronger query specificity before attention selection.",
+      "name": "E. Case-local replacement-noise guard",
+      "predicted_effect": {
+        "attention_precision": "likely improves in affected cases",
+        "attention_recall": "unknown until expected concepts newly entering top-10 are checked",
+        "grounding_score": "should remain stable",
+        "hallucinations": "should remain 0",
+        "noise_used_in_reasoning": "likely decreases in up to 6 noisy cases",
+        "planning_core_coverage": "requires simulation",
+        "response_core_coverage": "requires simulation"
+      },
+      "regression_risk": "medium-high",
+      "would_block_new_noise": 7
+    }
+  ],
+  "query_overlap_signals_that_admitted_noise": [
+    [
+      "and",
+      5
+    ],
+    [
+      "plan",
+      3
+    ],
+    [
+      "for",
+      3
+    ],
+    [
+      "failure",
+      3
+    ],
+    [
+      "risk",
+      3
+    ],
+    [
+      "should",
+      2
+    ],
+    [
+      "uncertainty",
+      2
+    ],
+    [
+      "maintenance",
+      1
+    ],
+    [
+      "conflicting",
+      1
+    ],
+    [
+      "reports",
+      1
+    ],
+    [
+      "capacity",
+      1
+    ],
+    [
+      "resource",
+      1
+    ],
+    [
+      "after",
+      1
+    ],
+    [
+      "assumption",
+      1
+    ],
+    [
+      "audit",
+      1
+    ],
+    [
+      "policy",
+      1
+    ]
+  ],
+  "read_only": true,
+  "recommended_next_simulation": "Replay the V1.2/V1.3 contribution traces with a read-only usage gate: recurrence-risk or replacement-risk plus weak specificity remains visible in working memory but cannot contribute to reasoning, planning, or response unless stronger evidence support is present.",
+  "regression_risks": [
+    "Over-gating could suppress sparse but valid expected concepts before they influence reasoning.",
+    "A negative attention feature could recreate the live-prototype failure if it changes selection without checking downstream use.",
+    "Usage gating could preserve attention recall but make planning appear to ignore visible supporting evidence if reports do not distinguish visible from usable.",
+    "Hard discard would hide diagnostic evidence and make future activation failures harder to explain.",
+    "Query-overlap rules are brittle because broad terms such as risk, evidence, plan, resource, and failure can be legitimate anchors."
+  ]
+}

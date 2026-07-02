@@ -1,0 +1,149 @@
+{
+  "aggregate": {
+    "attention_precision": 0.6333,
+    "attention_recall": 0.4333,
+    "cases_improved": 0.0,
+    "cases_regressed": 0.0,
+    "citable_noise_used_in_reasoning": 7.0,
+    "confidence_calibration": 1.0,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "healthy_to_drift_regressions": 0.0,
+    "noise_used_in_reasoning": 7.0,
+    "planning_core_coverage": 0.4333,
+    "planning_drift_cases": 1.0,
+    "planning_score": 1.0,
+    "reasoning_drift_cases": 4.0,
+    "response_core_coverage": 0.4333,
+    "response_drift_cases": 0.0,
+    "sparse_violin_tuning_safe": true,
+    "unsupported_recipe_safe": true
+  },
+  "beats_model_b": false,
+  "cases": [
+    {
+      "baseline_decision": "Under-Attending",
+      "case": "planning_failed_assumption",
+      "notes": [],
+      "planning_core_coverage": 0.6667,
+      "projected_decision": "Under-Attending",
+      "reasoning_noise": [],
+      "response_core_coverage": 0.6667
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "causal_industrial_failure",
+      "notes": [],
+      "planning_core_coverage": 0.6667,
+      "projected_decision": "Reasoning Drift",
+      "reasoning_noise": [
+        "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+        "183718d2-9612-4057-94b7-4ad8fd896278",
+        "9d5b7363-5857-4091-8449-9374d6b4b68f",
+        "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf"
+      ],
+      "response_core_coverage": 0.6667
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "contradictory_evidence",
+      "notes": [],
+      "planning_core_coverage": 0.0,
+      "projected_decision": "Reasoning Drift",
+      "reasoning_noise": [
+        "ef940f21-c49c-41f8-b86e-12a02a0f37f6"
+      ],
+      "response_core_coverage": 0.0
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "resource_allocation_shelters",
+      "notes": [],
+      "planning_core_coverage": 0.0,
+      "projected_decision": "Reasoning Drift",
+      "reasoning_noise": [
+        "f567a38f-be7c-4783-972f-d82e8fb2e36f"
+      ],
+      "response_core_coverage": 0.0
+    },
+    {
+      "baseline_decision": "Reasoning Drift",
+      "case": "risk_uncertainty_planning",
+      "notes": [],
+      "planning_core_coverage": 0.0,
+      "projected_decision": "Reasoning Drift",
+      "reasoning_noise": [
+        "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab"
+      ],
+      "response_core_coverage": 0.0
+    },
+    {
+      "baseline_decision": "Planning Drift",
+      "case": "policy_audit_conflict",
+      "notes": [],
+      "planning_core_coverage": 0.3333,
+      "projected_decision": "Planning Drift",
+      "reasoning_noise": [],
+      "response_core_coverage": 0.3333
+    },
+    {
+      "baseline_decision": "Under-Attending",
+      "case": "multi_step_failure_revision",
+      "notes": [],
+      "planning_core_coverage": 0.3333,
+      "projected_decision": "Under-Attending",
+      "reasoning_noise": [],
+      "response_core_coverage": 0.3333
+    },
+    {
+      "baseline_decision": "Under-Attending",
+      "case": "logistics_proxy_planning",
+      "notes": [],
+      "planning_core_coverage": 0.3333,
+      "projected_decision": "Under-Attending",
+      "reasoning_noise": [],
+      "response_core_coverage": 0.3333
+    },
+    {
+      "baseline_decision": "Healthy",
+      "case": "sparse_violin_tuning",
+      "notes": [],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Healthy",
+      "reasoning_noise": [],
+      "response_core_coverage": 1.0
+    },
+    {
+      "baseline_decision": "Healthy",
+      "case": "unsupported_recipe",
+      "notes": [],
+      "planning_core_coverage": 1.0,
+      "projected_decision": "Healthy",
+      "reasoning_noise": [],
+      "response_core_coverage": 1.0
+    }
+  ],
+  "gates": {
+    "citable_noise_used_in_reasoning": true,
+    "confidence_calibration": true,
+    "grounding_score": true,
+    "hallucinations": true,
+    "healthy_no_regress": true,
+    "improves_case": false,
+    "no_fixture_specific_logic": true,
+    "no_unsafe_same_topic_noise": true,
+    "noise_used_in_reasoning": true,
+    "planning_core_coverage": true,
+    "planning_drift_cases": true,
+    "planning_score": true,
+    "reasoning_drift_cases": true,
+    "response_core_coverage": true,
+    "response_drift_cases": true,
+    "sparse_violin_tuning": true,
+    "unsupported_recipe": true
+  },
+  "pass_fail_reason": "failed: improves_case",
+  "passed": false,
+  "should_consider_dormant_prototype_later": false,
+  "variant": "MBV1"
+}

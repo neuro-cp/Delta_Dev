@@ -83,6 +83,12 @@ class RuntimeCaseScorecard:
     runtime_decision: str
     passed: bool
     notes: list[str] = field(default_factory=list)
+    core_evidence_count: int = 0
+    planning_support_count: int = 0
+    supporting_context_count: int = 0
+    peripheral_context_count: int = 0
+    non_evidence_count: int = 0
+    citable_noise_used_in_reasoning: int = 0
 
 
 @dataclass(frozen=True)
@@ -159,6 +165,7 @@ def evaluate_runtime_case(case: RuntimeEvaluationCase, result: RuntimeV1Result) 
     planning = 1.0 if not case.expected_plan or result.plan.recommended_option == case.expected_plan else 0.0
     efficiency = _efficiency_metrics(case, result)
     contribution = _contribution_metrics(case, result, efficiency)
+    role_counts = _role_counts(case, result)
 
     notes: list[str] = []
     if missed:
@@ -229,6 +236,12 @@ def evaluate_runtime_case(case: RuntimeEvaluationCase, result: RuntimeV1Result) 
         noise_used_in_reasoning=contribution["noise_used_in_reasoning"],
         planning_core_coverage=contribution["planning_core_coverage"],
         response_core_coverage=contribution["response_core_coverage"],
+        core_evidence_count=role_counts["core_evidence_count"],
+        planning_support_count=role_counts["planning_support_count"],
+        supporting_context_count=role_counts["supporting_context_count"],
+        peripheral_context_count=role_counts["peripheral_context_count"],
+        non_evidence_count=role_counts["non_evidence_count"],
+        citable_noise_used_in_reasoning=role_counts["citable_noise_used_in_reasoning"],
         runtime_decision=contribution["runtime_decision"],
         passed=passed,
         notes=notes,
@@ -305,6 +318,12 @@ def runtime_report_to_markdown(report: RuntimeEvaluationReport) -> str:
                 f"- supporting ratio: `{case.supporting_ratio}`",
                 f"- peripheral ratio: `{case.peripheral_ratio}`",
                 f"- noise used in reasoning: `{case.noise_used_in_reasoning}`",
+                f"- core evidence roles: `{case.core_evidence_count}`",
+                f"- planning support roles: `{case.planning_support_count}`",
+                f"- supporting context roles: `{case.supporting_context_count}`",
+                f"- peripheral context roles: `{case.peripheral_context_count}`",
+                f"- non-evidence roles: `{case.non_evidence_count}`",
+                f"- citable noise used in reasoning: `{case.citable_noise_used_in_reasoning}`",
                 f"- runtime decision: `{case.runtime_decision}`",
                 f"- hallucinations: `{case.hallucination_count}`",
             ]
@@ -502,6 +521,66 @@ def _contribution_metrics(
     }
 
 
+def _role_counts(case: RuntimeEvaluationCase, result: RuntimeV1Result) -> dict[str, int]:
+    expected = set(case.expected_concepts)
+    useful_neighbors = set(case.useful_neighbor_concepts)
+    role_count = {
+        "core_evidence_count": 0,
+        "planning_support_count": 0,
+        "supporting_context_count": 0,
+        "peripheral_context_count": 0,
+        "non_evidence_count": 0,
+    }
+    for finding in result.reasoning.findings:
+        role = finding.metadata.get("query_local_role", "Core Evidence")
+        if role == "Core Evidence":
+            role_count["core_evidence_count"] += 1
+        elif role == "Planning Support":
+            role_count["planning_support_count"] += 1
+        elif role == "Supporting Context":
+            role_count["supporting_context_count"] += 1
+        elif role == "Peripheral Context":
+            role_count["peripheral_context_count"] += 1
+        else:
+            role_count["non_evidence_count"] += 1
+    for item in result.reasoning.supporting_context_items:
+        role = item.get("query_local_role", "Supporting Context")
+        if role == "Core Evidence":
+            role_count["core_evidence_count"] += 1
+        elif role == "Planning Support":
+            role_count["planning_support_count"] += 1
+        elif role == "Supporting Context":
+            role_count["supporting_context_count"] += 1
+        elif role == "Peripheral Context":
+            role_count["peripheral_context_count"] += 1
+        else:
+            role_count["non_evidence_count"] += 1
+    for item in result.reasoning.usage_gated_items:
+        role = item.get("query_local_role", "Non-Evidence")
+        if role == "Core Evidence":
+            role_count["core_evidence_count"] += 1
+        elif role == "Planning Support":
+            role_count["planning_support_count"] += 1
+        elif role == "Supporting Context":
+            role_count["supporting_context_count"] += 1
+        elif role == "Peripheral Context":
+            role_count["peripheral_context_count"] += 1
+        else:
+            role_count["non_evidence_count"] += 1
+
+    citable_noise = 0
+    for finding in result.reasoning.findings:
+        if finding.metadata.get("citable_evidence") is not True:
+            continue
+        for key in finding.supporting_keys:
+            if key not in expected and key not in useful_neighbors:
+                citable_noise += 1
+    return {
+        **role_count,
+        "citable_noise_used_in_reasoning": citable_noise,
+    }
+
+
 def _runtime_decision(
     *,
     contributions: list[RuntimeConceptContribution],
@@ -592,6 +671,12 @@ def _category_scores(cases: list[RuntimeCaseScorecard]) -> dict[str, dict[str, f
             "noise_used_in_reasoning": round(_mean([float(case.noise_used_in_reasoning) for case in subset]), 4),
             "planning_core_coverage": round(_mean([case.planning_core_coverage for case in subset]), 4),
             "response_core_coverage": round(_mean([case.response_core_coverage for case in subset]), 4),
+            "core_evidence_count": float(sum(case.core_evidence_count for case in subset)),
+            "planning_support_count": float(sum(case.planning_support_count for case in subset)),
+            "supporting_context_count": float(sum(case.supporting_context_count for case in subset)),
+            "peripheral_context_count": float(sum(case.peripheral_context_count for case in subset)),
+            "non_evidence_count": float(sum(case.non_evidence_count for case in subset)),
+            "citable_noise_used_in_reasoning": float(sum(case.citable_noise_used_in_reasoning for case in subset)),
         }
     return scores
 
@@ -627,6 +712,12 @@ def _aggregate_scores(cases: list[RuntimeCaseScorecard]) -> dict[str, float]:
         "noise_used_in_reasoning": float(sum(case.noise_used_in_reasoning for case in cases)),
         "planning_core_coverage": round(_mean([case.planning_core_coverage for case in cases]), 4),
         "response_core_coverage": round(_mean([case.response_core_coverage for case in cases]), 4),
+        "core_evidence_count": float(sum(case.core_evidence_count for case in cases)),
+        "planning_support_count": float(sum(case.planning_support_count for case in cases)),
+        "supporting_context_count": float(sum(case.supporting_context_count for case in cases)),
+        "peripheral_context_count": float(sum(case.peripheral_context_count for case in cases)),
+        "non_evidence_count": float(sum(case.non_evidence_count for case in cases)),
+        "citable_noise_used_in_reasoning": float(sum(case.citable_noise_used_in_reasoning for case in cases)),
         "healthy_cases": float(sum(1 for case in cases if case.runtime_decision == "Healthy")),
         "under_attending_cases": float(sum(1 for case in cases if case.runtime_decision == "Under-Attending")),
         "reasoning_drift_cases": float(sum(1 for case in cases if case.runtime_decision == "Reasoning Drift")),

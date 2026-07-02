@@ -78,3 +78,15 @@ roadmap items or feature goals; they are substrate invariants.
 - Reports must distinguish observed behavior from aspiration.
 - Documentation must be sufficient for a cold Codex session to resume without
   rediscovering context.
+
+## Runtime V1.3 Defaults
+
+- Runtime V1.3's accepted no-env default is Model B contextualized corpus
+  support plus the `citation_context` reasoning usage gate.
+- Experimental variants must remain dormant unless an explicit environment flag
+  enables them.
+- `DELTA_RUNTIME_V13_HYB1_ENABLED=true` enables only the HYB1 dormant prototype.
+  HYB1 must not become the default without a separate validation pass.
+- Dormant runtime variants must preserve read-only behavior and must not modify
+  learning, governance, storage, provider prompts, candidate stores, canonical
+  storage, or benchmark fixtures.

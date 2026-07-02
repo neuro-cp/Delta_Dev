@@ -1,0 +1,285 @@
+{
+  "acceptance_checks": {
+    "retrieval_ranking": {
+      "expected_outside_top10_no_regress": true,
+      "expected_outside_top20_no_regress": true,
+      "mean_expected_rank_no_material_regress": true,
+      "mean_noise_above_expected_no_material_regress": true,
+      "retrieval_recall_no_regress": true
+    },
+    "runtime_quality": {
+      "noise_no_regress": true,
+      "planning_core_no_regress": true,
+      "planning_drift_no_regress": true,
+      "reasoning_drift_no_regress": true,
+      "response_core_no_regress": true,
+      "response_drift_no_regress": true
+    },
+    "safety": {
+      "confidence_no_regress": true,
+      "grounding_score_1": true,
+      "hallucinations_0": true,
+      "planning_score_no_regress": true,
+      "read_only_verified": true
+    }
+  },
+  "attempted_live_default_r4": {
+    "aggregate": {
+      "attention_precision": 0.9,
+      "attention_recall": 0.4333,
+      "citable_noise_used_in_reasoning": 1.0,
+      "core_evidence_count": 8.0,
+      "grounding_score": 1.0,
+      "hallucinations": 0.0,
+      "noise_used_in_reasoning": 1.0,
+      "non_evidence_count": 5.0,
+      "peripheral_context_count": 1.0,
+      "planning_core_coverage": 0.4333,
+      "planning_drift_cases": 2.0,
+      "planning_score": 0.8,
+      "reasoning_drift_cases": 1.0,
+      "response_core_coverage": 0.4333,
+      "response_drift_cases": 0.0,
+      "supporting_context_count": 5.0
+    },
+    "rejection_reason": "live-default R4 reduced citable noise but over-pruned citable evidence, causing planning_score and planning_drift regression versus Model B.",
+    "source": "observed from first no-env R4 live-default benchmark before rerun restored dormant default",
+    "status": "rejected_before_final_default_restore"
+  },
+  "comparison": [
+    {
+      "metric": "read_only_verified",
+      "model_b_accepted": true,
+      "r4_dormant_no_env_final": true,
+      "r4_live_default_attempt": null,
+      "v12_baseline": true
+    },
+    {
+      "metric": "grounding_score",
+      "model_b_accepted": 1.0,
+      "r4_dormant_no_env_final": 1.0,
+      "r4_live_default_attempt": 1.0,
+      "v12_baseline": 1.0
+    },
+    {
+      "metric": "hallucinations",
+      "model_b_accepted": 0.0,
+      "r4_dormant_no_env_final": 0.0,
+      "r4_live_default_attempt": 0.0,
+      "v12_baseline": 0.0
+    },
+    {
+      "metric": "confidence_calibration",
+      "model_b_accepted": 1.0,
+      "r4_dormant_no_env_final": 1.0,
+      "r4_live_default_attempt": null,
+      "v12_baseline": 1.0
+    },
+    {
+      "metric": "planning_score",
+      "model_b_accepted": 1.0,
+      "r4_dormant_no_env_final": 1.0,
+      "r4_live_default_attempt": 0.8,
+      "v12_baseline": 1.0
+    },
+    {
+      "metric": "retrieval_precision",
+      "model_b_accepted": 0.16,
+      "r4_dormant_no_env_final": 0.16,
+      "r4_live_default_attempt": null,
+      "v12_baseline": 0.16
+    },
+    {
+      "metric": "retrieval_recall",
+      "model_b_accepted": 0.5333,
+      "r4_dormant_no_env_final": 0.5333,
+      "r4_live_default_attempt": null,
+      "v12_baseline": 0.5333
+    },
+    {
+      "metric": "attention_precision",
+      "model_b_accepted": 0.6333,
+      "r4_dormant_no_env_final": 0.6333,
+      "r4_live_default_attempt": 0.9,
+      "v12_baseline": 0.55
+    },
+    {
+      "metric": "attention_recall",
+      "model_b_accepted": 0.4333,
+      "r4_dormant_no_env_final": 0.4333,
+      "r4_live_default_attempt": 0.4333,
+      "v12_baseline": 0.4333
+    },
+    {
+      "metric": "noise_used_in_reasoning",
+      "model_b_accepted": 7.0,
+      "r4_dormant_no_env_final": 7.0,
+      "r4_live_default_attempt": 1.0,
+      "v12_baseline": 12.0
+    },
+    {
+      "metric": "citable_noise_used_in_reasoning",
+      "model_b_accepted": null,
+      "r4_dormant_no_env_final": 7.0,
+      "r4_live_default_attempt": 1.0,
+      "v12_baseline": null
+    },
+    {
+      "metric": "reasoning_drift_cases",
+      "model_b_accepted": 4.0,
+      "r4_dormant_no_env_final": 4.0,
+      "r4_live_default_attempt": 1.0,
+      "v12_baseline": 5.0
+    },
+    {
+      "metric": "planning_drift_cases",
+      "model_b_accepted": 1.0,
+      "r4_dormant_no_env_final": 1.0,
+      "r4_live_default_attempt": 2.0,
+      "v12_baseline": 1.0
+    },
+    {
+      "metric": "response_drift_cases",
+      "model_b_accepted": 0.0,
+      "r4_dormant_no_env_final": 0.0,
+      "r4_live_default_attempt": 0.0,
+      "v12_baseline": 0.0
+    },
+    {
+      "metric": "working_memory_efficiency",
+      "model_b_accepted": 0.14,
+      "r4_dormant_no_env_final": 0.14,
+      "r4_live_default_attempt": null,
+      "v12_baseline": 0.19
+    },
+    {
+      "metric": "planning_core_coverage",
+      "model_b_accepted": 0.4333,
+      "r4_dormant_no_env_final": 0.4333,
+      "r4_live_default_attempt": 0.4333,
+      "v12_baseline": 0.4333
+    },
+    {
+      "metric": "response_core_coverage",
+      "model_b_accepted": 0.4333,
+      "r4_dormant_no_env_final": 0.4333,
+      "r4_live_default_attempt": 0.4333,
+      "v12_baseline": 0.4333
+    },
+    {
+      "metric": "pass_rate",
+      "model_b_accepted": 0.0,
+      "r4_dormant_no_env_final": 0.0,
+      "r4_live_default_attempt": null,
+      "v12_baseline": 0.0
+    },
+    {
+      "metric": "core_evidence_count",
+      "model_b_accepted": null,
+      "r4_dormant_no_env_final": 14.0,
+      "r4_live_default_attempt": 8.0,
+      "v12_baseline": null
+    },
+    {
+      "metric": "supporting_context_count",
+      "model_b_accepted": null,
+      "r4_dormant_no_env_final": 0.0,
+      "r4_live_default_attempt": 5.0,
+      "v12_baseline": null
+    },
+    {
+      "metric": "peripheral_context_count",
+      "model_b_accepted": null,
+      "r4_dormant_no_env_final": 0.0,
+      "r4_live_default_attempt": 1.0,
+      "v12_baseline": null
+    },
+    {
+      "metric": "non_evidence_count",
+      "model_b_accepted": null,
+      "r4_dormant_no_env_final": 5.0,
+      "r4_live_default_attempt": 5.0,
+      "v12_baseline": null
+    }
+  ],
+  "decision": "ACCEPT_SAFE_ROLE_GUARD_DORMANT_ON_BASELINE",
+  "disabled_by_default": [
+    "activation recurrence",
+    "Runtime V1.3 Role Model R4 hybrid role gate"
+  ],
+  "enabled_by_default": [
+    "citation_context reasoning usage gate",
+    "Query Evidence Model B contextualized corpus support"
+  ],
+  "generated_at": "2026-07-02T13:19:54",
+  "r4_enable_env": "DELTA_RUNTIME_V13_ROLE_GATE_MODE=r4",
+  "r4_simulation": {
+    "final_recommendation": "PROCEED_ROLE_MODEL_R4",
+    "summary": {
+      "accepted_models": [
+        "R4",
+        "R2",
+        "R3"
+      ],
+      "current_model_b_decision": "ACCEPT_RUNTIME_V13_QUERY_EVIDENCE_MODEL_B",
+      "final_recommendation": "PROCEED_ROLE_MODEL_R4",
+      "recommended_model": "R4",
+      "remaining_noise_count": 7,
+      "remaining_noise_dominant_failures": {
+        "attention_misclassification": 7,
+        "evaluator_or_benchmark_label_issue": 1,
+        "insufficient_query_specific_evidence_modeling": 7,
+        "missing_concept_role_metadata": 1,
+        "overly_broad_concept": 2,
+        "reasoning_gate_override_too_permissive": 5,
+        "role_ambiguity_between_useful_neighbor_and_noise": 6
+      }
+    }
+  },
+  "ranking_comparison": [
+    {
+      "metric": "expected_outside_top_10",
+      "model_b_accepted": 8,
+      "r4_dormant_no_env_final": 8,
+      "v12_baseline": 8
+    },
+    {
+      "metric": "expected_outside_top_20",
+      "model_b_accepted": 6,
+      "r4_dormant_no_env_final": 6,
+      "v12_baseline": 6
+    },
+    {
+      "metric": "mean_expected_rank",
+      "model_b_accepted": 10,
+      "r4_dormant_no_env_final": 10,
+      "v12_baseline": 10
+    },
+    {
+      "metric": "mean_noise_above_expected",
+      "model_b_accepted": 9.7083,
+      "r4_dormant_no_env_final": 9.7083,
+      "v12_baseline": 9.7083
+    },
+    {
+      "metric": "median_expected_rank",
+      "model_b_accepted": 3,
+      "r4_dormant_no_env_final": 3,
+      "v12_baseline": 3
+    }
+  ],
+  "reports": {
+    "final_json": "reports/runtime_v13_role_model_r4_live_prototype.json",
+    "final_markdown": "reports/runtime_v13_role_model_r4_live_prototype.md",
+    "handoff": "docs/continuation_runtime_v13_role_model_r4.md",
+    "raw_dir": "reports/runtime_v13_role_model_r4_live_raw/"
+  },
+  "summary": "Live-default R4 reduced citable noise but regressed planning. R4 was retained only as an opt-in/dormant guard with focused tests; no-env runtime remains accepted Model B baseline.",
+  "tests_run": [
+    "python -m py_compile orchestration/runtime/runtime_reasoning.py orchestration/runtime/runtime_evaluation.py orchestration/tests/runtime/test_runtime_reasoning.py",
+    "pytest orchestration/tests/runtime/test_runtime_reasoning.py -q (19 passed)",
+    "pytest required runtime suite -q (37 passed)",
+    "tools/runtime_v12_real_knowledge.py --campaign overnight_3000",
+    "tools/runtime_v12_activation_ranking_diagnostic.py --campaign overnight_3000"
+  ]
+}

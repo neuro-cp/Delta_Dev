@@ -1,0 +1,3185 @@
+{
+  "evidence_support_audit": {
+    "attention_classifications": {
+      "Core": 3,
+      "Supporting": 9
+    },
+    "final_decision": "PROCEED_USAGE_GATE_REFINEMENT",
+    "high_attention_noisy_reasoned_count": 12,
+    "interpretation": "Evidence support appears to behave as corpus support rather than query-context support: noisy concepts can still be marked usable when their attention classification is Core/Supporting and query specificity is weak.",
+    "noise_used_by_variant": {
+      "baseline_reference": 12,
+      "citation_context_usage_gate": 8,
+      "conservative_recurrence_strict_gate": 6,
+      "metadata_recurrence_strict_gate": 6,
+      "strict_context_usage_gate": 6,
+      "tiebreaker_recurrence_strict_gate": 6,
+      "usage_gate_standard": 12
+    },
+    "noisy_reasoned_count": 12,
+    "sample_noisy_reasoned": [
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Core",
+        "attention_score": 0.4973,
+        "case": "causal_industrial_failure",
+        "classification": "Noise",
+        "concept_id": "0fb23c0b-b877-4cf2-a66d-94d927b77542",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.3941,
+        "case": "causal_industrial_failure",
+        "classification": "Noise",
+        "concept_id": "183718d2-9612-4057-94b7-4ad8fd896278",
+        "planned": false,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": false
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Core",
+        "attention_score": 0.4951,
+        "case": "causal_industrial_failure",
+        "classification": "Noise",
+        "concept_id": "9d5b7363-5857-4091-8449-9374d6b4b68f",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.3502,
+        "case": "causal_industrial_failure",
+        "classification": "Noise",
+        "concept_id": "b1f3eca3-5024-45c1-a91d-68ef0d7d28e5",
+        "planned": false,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": false
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.3974,
+        "case": "causal_industrial_failure",
+        "classification": "Noise",
+        "concept_id": "c5cc234b-b4ae-4f0c-98f7-c7f04e320abf",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.3524,
+        "case": "causal_industrial_failure",
+        "classification": "Noise",
+        "concept_id": "cc6cc333-f8f7-450a-b8a2-0543ae0276fb",
+        "planned": false,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": false
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.6879,
+        "case": "contradictory_evidence",
+        "classification": "Noise",
+        "concept_id": "ef940f21-c49c-41f8-b86e-12a02a0f37f6",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.8123,
+        "case": "resource_allocation_shelters",
+        "classification": "Noise",
+        "concept_id": "f567a38f-be7c-4783-972f-d82e8fb2e36f",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.698,
+        "case": "risk_uncertainty_planning",
+        "classification": "Noise",
+        "concept_id": "d3d08fe0-dbf7-437d-9c46-5c1253dbf9ab",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.3673,
+        "case": "multi_step_failure_revision",
+        "classification": "Noise",
+        "concept_id": "22471376-888c-42fb-ac5d-c06d09f25345",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Supporting",
+        "attention_score": 0.3627,
+        "case": "multi_step_failure_revision",
+        "classification": "Noise",
+        "concept_id": "76120648-7522-4025-8176-5e5fb199c687",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      },
+      {
+        "activated": true,
+        "attended": true,
+        "attention_classification": "Core",
+        "attention_score": 0.4613,
+        "case": "multi_step_failure_revision",
+        "classification": "Noise",
+        "concept_id": "fec7285c-8ebf-45ba-8197-911a515e4e0b",
+        "planned": true,
+        "rationale": "concept is unrelated or forbidden for this evaluation case",
+        "reasoned": true,
+        "responded": true
+      }
+    ]
+  },
+  "final_decision": "ACCEPT_RUNTIME_V13_REFINED_USAGE_GATE",
+  "live_behavior": {
+    "activation_recurrence_default_enabled": false,
+    "selected_refinement_enabled_by_default": true,
+    "usage_gate_remains_enabled": true
+  },
+  "recommendation": "Make the accepted refined usage gate the default and keep activation recurrence disabled.",
+  "variants": [
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": true,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": true,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": false,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.0,
+          "variant": 0.55
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": 0,
+          "variant": 8
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": 0,
+          "variant": 6
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": 0,
+          "variant": 10
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": 0.0,
+          "variant": 9.7083
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": 0.0,
+          "variant": 12.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": 0.0,
+          "variant": 5.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.0,
+          "variant": 0.16
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0,
+          "variant": 0.5333
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": 0.0,
+          "variant": 0.19
+        }
+      },
+      "description": "Preserved V1.2 baseline reports.",
+      "gated_evidence_count": 0,
+      "live": false,
+      "metrics": {
+        "attention_precision": 0.55,
+        "attention_recall": 0.4333,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.1,
+        "average_ignored_noise": 7.1,
+        "average_noise_concepts": 8.3,
+        "average_suppressed_core": 0.9,
+        "average_used_concepts": 1.9,
+        "average_used_noise": 1.2,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 8,
+        "expected_outside_top20": 6,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 2.0,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "noise_used_in_reasoning": 12.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.19,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 1.0,
+        "planning_utilization_ratio": 0.16,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.35,
+        "reasoning_drift_cases": 5.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.16,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 2.0,
+        "working_memory_efficiency": 0.19
+      },
+      "name": "baseline_reference",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.25
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            6
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.25
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            3
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\baseline_reference",
+      "recurrence_mode": null,
+      "status": {
+        "commands": [],
+        "live": false,
+        "returncode": 0
+      },
+      "usage_gate_mode": null
+    },
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": true,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": true,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": true,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.0,
+          "variant": 0.55
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": 0,
+          "variant": 8
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": 0,
+          "variant": 6
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": 0,
+          "variant": 10
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": 0.0,
+          "variant": 9.7083
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": 0.0,
+          "variant": 12.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": 0.0,
+          "variant": 5.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.0,
+          "variant": 0.16
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0,
+          "variant": 0.5333
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": 0.0,
+          "variant": 0.19
+        }
+      },
+      "description": "Accepted usage gate, activation recurrence disabled.",
+      "gated_evidence_count": 0,
+      "live": true,
+      "metrics": {
+        "attention_precision": 0.55,
+        "attention_recall": 0.4333,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.1,
+        "average_ignored_noise": 7.1,
+        "average_noise_concepts": 8.3,
+        "average_suppressed_core": 0.9,
+        "average_used_concepts": 1.9,
+        "average_used_noise": 1.2,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 8,
+        "expected_outside_top20": 6,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 2.0,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "noise_used_in_reasoning": 12.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.19,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 1.0,
+        "planning_utilization_ratio": 0.16,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.35,
+        "reasoning_drift_cases": 5.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.16,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 2.0,
+        "working_memory_efficiency": 0.19
+      },
+      "name": "usage_gate_standard",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.25
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            6
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.25
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            3
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\usage_gate_standard",
+      "recurrence_mode": "off",
+      "status": {
+        "commands": [
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          }
+        ],
+        "live": true,
+        "returncode": 0
+      },
+      "usage_gate_mode": "standard"
+    },
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": true,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": false,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": true,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": false,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.1833,
+          "variant": 0.7333
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": 0,
+          "variant": 8
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": 0,
+          "variant": 6
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": 0,
+          "variant": 10
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": 0.0,
+          "variant": 9.7083
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": -6.0,
+          "variant": 6.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": -0.1,
+          "variant": 0.9
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": -2.0,
+          "variant": 3.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.0,
+          "variant": 0.16
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0,
+          "variant": 0.5333
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": -0.06,
+          "variant": 0.13
+        }
+      },
+      "description": "Usage gate treats evidence_support as query-contextual only with specific overlap.",
+      "gated_evidence_count": 0,
+      "live": true,
+      "metrics": {
+        "attention_precision": 0.7333,
+        "attention_recall": 0.4333,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.7,
+        "average_ignored_noise": 7.7,
+        "average_noise_concepts": 8.3,
+        "average_suppressed_core": 0.9,
+        "average_used_concepts": 1.3,
+        "average_used_noise": 0.6,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 8,
+        "expected_outside_top20": 6,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 2.0,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "noise_used_in_reasoning": 6.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.13,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 0.9,
+        "planning_utilization_ratio": 0.12,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.35,
+        "reasoning_drift_cases": 3.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.12,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 4.0,
+        "working_memory_efficiency": 0.13
+      },
+      "name": "strict_context_usage_gate",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.3333
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            4
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            1.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            0
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            1.0
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\strict_context_usage_gate",
+      "recurrence_mode": "off",
+      "status": {
+        "commands": [
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          }
+        ],
+        "live": true,
+        "returncode": 0
+      },
+      "usage_gate_mode": "strict_context"
+    },
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": true,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": true,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": true,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": true,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.0333,
+          "variant": 0.5833
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": 0,
+          "variant": 8
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": 0,
+          "variant": 6
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": 0,
+          "variant": 10
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": 0.0,
+          "variant": 9.7083
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": -4.0,
+          "variant": 8.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": 0.0,
+          "variant": 5.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.0,
+          "variant": 0.16
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0,
+          "variant": 0.5333
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": -0.04,
+          "variant": 0.15
+        }
+      },
+      "description": "Middle-ground usage gate requiring stronger contextual support for citation-like use.",
+      "gated_evidence_count": 0,
+      "live": true,
+      "metrics": {
+        "attention_precision": 0.5833,
+        "attention_recall": 0.4333,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.5,
+        "average_ignored_noise": 7.5,
+        "average_noise_concepts": 8.3,
+        "average_suppressed_core": 0.9,
+        "average_used_concepts": 1.5,
+        "average_used_noise": 0.8,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 8,
+        "expected_outside_top20": 6,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 2.0,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "noise_used_in_reasoning": 8.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.15,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 1.0,
+        "planning_utilization_ratio": 0.14,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.35,
+        "reasoning_drift_cases": 5.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.14,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 2.0,
+        "working_memory_efficiency": 0.15
+      },
+      "name": "citation_context_usage_gate",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.3333
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            4
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.5
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            1
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\citation_context_usage_gate",
+      "recurrence_mode": "off",
+      "status": {
+        "commands": [
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          }
+        ],
+        "live": true,
+        "returncode": 0
+      },
+      "usage_gate_mode": "citation_context"
+    },
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": false,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": false,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": false,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": false,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.2333,
+          "variant": 0.7833
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": -0.0333,
+          "variant": 0.4
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": -1,
+          "variant": 7
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": -2,
+          "variant": 4
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": -2.7826,
+          "variant": 7.2174
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": -2.6666,
+          "variant": 7.0417
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": -6.0,
+          "variant": 6.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": -0.0333,
+          "variant": 0.4
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": -0.2,
+          "variant": 0.8
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": -2.0,
+          "variant": 3.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": -0.0333,
+          "variant": 0.4
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.01,
+          "variant": 0.17
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0334,
+          "variant": 0.5667
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": -0.07,
+          "variant": 0.12
+        }
+      },
+      "description": "Conservative activation recurrence plus strict contextual usage gate.",
+      "gated_evidence_count": 0,
+      "live": true,
+      "metrics": {
+        "attention_precision": 0.7833,
+        "attention_recall": 0.4,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.8,
+        "average_ignored_noise": 7.6,
+        "average_noise_concepts": 8.2,
+        "average_suppressed_core": 1.1,
+        "average_used_concepts": 1.2,
+        "average_used_noise": 0.6,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 7,
+        "expected_outside_top20": 4,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 3.0,
+        "mean_expected_rank": 7.2174,
+        "mean_noise_above_expected": 7.0417,
+        "noise_used_in_reasoning": 6.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.12,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.02,
+        "planning_core_coverage": 0.4,
+        "planning_drift_cases": 1.0,
+        "planning_score": 0.8,
+        "planning_utilization_ratio": 0.11,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.1972,
+        "reasoning_drift_cases": 3.0,
+        "response_core_coverage": 0.4,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.11,
+        "retrieval_precision": 0.17,
+        "retrieval_recall": 0.5667,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 3.0,
+        "working_memory_efficiency": 0.12
+      },
+      "name": "conservative_recurrence_strict_gate",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            0.5
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            1
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.3333
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            4
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            1.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            0
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            1.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            0
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            1.0
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\conservative_recurrence_strict_gate",
+      "recurrence_mode": "conservative",
+      "status": {
+        "commands": [
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          }
+        ],
+        "live": true,
+        "returncode": 0
+      },
+      "usage_gate_mode": "strict_context"
+    },
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": true,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": false,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": true,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": false,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.1833,
+          "variant": 0.7333
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": 0,
+          "variant": 8
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": 0,
+          "variant": 6
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": -0.1739,
+          "variant": 9.8261
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": -0.1666,
+          "variant": 9.5417
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": -6.0,
+          "variant": 6.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": -0.1,
+          "variant": 0.9
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": -2.0,
+          "variant": 3.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.0,
+          "variant": 0.16
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0,
+          "variant": 0.5333
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": -0.06,
+          "variant": 0.13
+        }
+      },
+      "description": "Tiebreaker activation recurrence plus strict contextual usage gate.",
+      "gated_evidence_count": 0,
+      "live": true,
+      "metrics": {
+        "attention_precision": 0.7333,
+        "attention_recall": 0.4333,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.7,
+        "average_ignored_noise": 7.7,
+        "average_noise_concepts": 8.3,
+        "average_suppressed_core": 0.9,
+        "average_used_concepts": 1.3,
+        "average_used_noise": 0.6,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 8,
+        "expected_outside_top20": 6,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 2.0,
+        "mean_expected_rank": 9.8261,
+        "mean_noise_above_expected": 9.5417,
+        "noise_used_in_reasoning": 6.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.13,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 0.9,
+        "planning_utilization_ratio": 0.12,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.3,
+        "reasoning_drift_cases": 3.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.12,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 4.0,
+        "working_memory_efficiency": 0.13
+      },
+      "name": "tiebreaker_recurrence_strict_gate",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.3333
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            4
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            1.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            0
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            1.0
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\tiebreaker_recurrence_strict_gate",
+      "recurrence_mode": "tiebreaker",
+      "status": {
+        "commands": [
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          }
+        ],
+        "live": true,
+        "returncode": 0
+      },
+      "usage_gate_mode": "strict_context"
+    },
+    {
+      "acceptance": {
+        "commands_succeeded": true,
+        "confidence_calibration_not_regress": true,
+        "expected_outside_top10_not_regress": true,
+        "expected_outside_top20_not_regress": true,
+        "expected_top10_not_pushed_out": true,
+        "grounding_score_remains_1": true,
+        "hallucinations_remain_0": true,
+        "mean_expected_rank_not_materially_regress": true,
+        "mean_noise_above_expected_not_materially_regress": true,
+        "noise_used_in_reasoning_not_increase": true,
+        "planning_core_coverage_not_regress": true,
+        "planning_drift_cases_not_increase": true,
+        "planning_score_not_regress": false,
+        "read_only_verified": true,
+        "reasoning_drift_cases_not_increase": true,
+        "response_core_coverage_not_regress": true,
+        "response_drift_cases_not_increase": true,
+        "retrieval_recall_not_regress": true,
+        "sparse_behavior_not_regress": true
+      },
+      "accepted": false,
+      "comparison": {
+        "attention_precision": {
+          "baseline": 0.55,
+          "delta": 0.1833,
+          "variant": 0.7333
+        },
+        "attention_recall": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "confidence_calibration": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "expected_outside_top10": {
+          "baseline": 8,
+          "delta": 0,
+          "variant": 8
+        },
+        "expected_outside_top20": {
+          "baseline": 6,
+          "delta": 0,
+          "variant": 6
+        },
+        "grounding_score": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "hallucinations": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "mean_expected_rank": {
+          "baseline": 10,
+          "delta": 0,
+          "variant": 10
+        },
+        "mean_noise_above_expected": {
+          "baseline": 9.7083,
+          "delta": 0.0,
+          "variant": 9.7083
+        },
+        "noise_used_in_reasoning": {
+          "baseline": 12.0,
+          "delta": -6.0,
+          "variant": 6.0
+        },
+        "pass_rate": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "planning_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "planning_drift_cases": {
+          "baseline": 1.0,
+          "delta": 0.0,
+          "variant": 1.0
+        },
+        "planning_score": {
+          "baseline": 1.0,
+          "delta": -0.1,
+          "variant": 0.9
+        },
+        "read_only_verified": {
+          "baseline": true,
+          "delta": null,
+          "variant": true
+        },
+        "reasoning_drift_cases": {
+          "baseline": 5.0,
+          "delta": -2.0,
+          "variant": 3.0
+        },
+        "response_core_coverage": {
+          "baseline": 0.4333,
+          "delta": 0.0,
+          "variant": 0.4333
+        },
+        "response_drift_cases": {
+          "baseline": 0.0,
+          "delta": 0.0,
+          "variant": 0.0
+        },
+        "retrieval_precision": {
+          "baseline": 0.16,
+          "delta": 0.0,
+          "variant": 0.16
+        },
+        "retrieval_recall": {
+          "baseline": 0.5333,
+          "delta": 0.0,
+          "variant": 0.5333
+        },
+        "working_memory_efficiency": {
+          "baseline": 0.19,
+          "delta": -0.06,
+          "variant": 0.13
+        }
+      },
+      "description": "Recurrence metadata only plus strict contextual usage gate.",
+      "gated_evidence_count": 0,
+      "live": true,
+      "metrics": {
+        "attention_precision": 0.7333,
+        "attention_recall": 0.4333,
+        "average_activated_concepts": 10.0,
+        "average_ignored_concepts": 8.7,
+        "average_ignored_noise": 7.7,
+        "average_noise_concepts": 8.3,
+        "average_suppressed_core": 0.9,
+        "average_used_concepts": 1.3,
+        "average_used_noise": 0.6,
+        "average_useful_neighbors": 0.1,
+        "case_count": 10.0,
+        "confidence_calibration": 1.0,
+        "conflict_score": 1.0,
+        "expected_outside_top10": 8,
+        "expected_outside_top20": 6,
+        "grounding_score": 1.0,
+        "hallucinations": 0.0,
+        "healthy_cases": 2.0,
+        "mean_expected_rank": 10,
+        "mean_noise_above_expected": 9.7083,
+        "noise_used_in_reasoning": 6.0,
+        "over_attending_cases": 0.0,
+        "overall_utilization_ratio": 0.13,
+        "pass_rate": 0.0,
+        "peripheral_ratio": 0.0,
+        "planning_core_coverage": 0.4333,
+        "planning_drift_cases": 1.0,
+        "planning_score": 0.9,
+        "planning_utilization_ratio": 0.12,
+        "read_only_verified": true,
+        "reasoning_contribution_ratio": 0.35,
+        "reasoning_drift_cases": 3.0,
+        "response_core_coverage": 0.4333,
+        "response_drift_cases": 0.0,
+        "response_utilization_ratio": 0.12,
+        "retrieval_precision": 0.16,
+        "retrieval_recall": 0.5333,
+        "supporting_ratio": 0.0,
+        "under_attending_cases": 4.0,
+        "working_memory_efficiency": 0.13
+      },
+      "name": "metadata_recurrence_strict_gate",
+      "per_case": [
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "planning_failed_assumption",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            0.3333
+          ],
+          "case": "causal_industrial_failure",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            6,
+            4
+          ],
+          "planning_core_coverage": [
+            0.6667,
+            0.6667
+          ],
+          "response_core_coverage": [
+            0.6667,
+            0.6667
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "contradictory_evidence",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            0.0
+          ],
+          "case": "resource_allocation_shelters",
+          "decision": [
+            "Reasoning Drift",
+            "Reasoning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            1
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            0.0,
+            1.0
+          ],
+          "case": "risk_uncertainty_planning",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            1,
+            0
+          ],
+          "planning_core_coverage": [
+            0.0,
+            0.0
+          ],
+          "response_core_coverage": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "policy_audit_conflict",
+          "decision": [
+            "Planning Drift",
+            "Planning Drift"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            0.25,
+            1.0
+          ],
+          "case": "multi_step_failure_revision",
+          "decision": [
+            "Reasoning Drift",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            3,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "logistics_proxy_planning",
+          "decision": [
+            "Under-Attending",
+            "Under-Attending"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            0.3333,
+            0.3333
+          ],
+          "response_core_coverage": [
+            0.3333,
+            0.3333
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "sparse_violin_tuning",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "attention_precision": [
+            1.0,
+            1.0
+          ],
+          "case": "unsupported_recipe",
+          "decision": [
+            "Healthy",
+            "Healthy"
+          ],
+          "noise_used_in_reasoning": [
+            0,
+            0
+          ],
+          "planning_core_coverage": [
+            1.0,
+            1.0
+          ],
+          "response_core_coverage": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "raw_dir": "reports\\runtime_v13_resolution_suite_raw\\metadata_recurrence_strict_gate",
+      "recurrence_mode": "metadata",
+      "status": {
+        "commands": [
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          {
+            "command": "G:\\Delta_Dev\\.venv311\\Scripts\\python.exe tools/runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+            "returncode": 0,
+            "stderr": "",
+            "stdout": ""
+          }
+        ],
+        "live": true,
+        "returncode": 0
+      },
+      "usage_gate_mode": "strict_context"
+    }
+  ]
+}

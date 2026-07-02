@@ -1,0 +1,121 @@
+{
+  "acceptance_criteria": {
+    "attention_recall_not_materially_regress": true,
+    "confidence_calibration_not_regress": true,
+    "grounding_score_remains_1": true,
+    "hallucinations_remain_0": true,
+    "noise_used_in_reasoning_not_increase": true,
+    "planning_core_coverage_not_regress": true,
+    "planning_score_not_regress": true,
+    "read_only_verified_remains_true": true,
+    "reasoning_drift_cases_not_increase": true,
+    "response_core_coverage_not_regress": true,
+    "sparse_behavior_not_regress": true
+  },
+  "changed_metrics": [],
+  "comparison": {
+    "attention_precision": {
+      "baseline": 0.55,
+      "delta": 0.0,
+      "live_usage_gate": 0.55
+    },
+    "attention_recall": {
+      "baseline": 0.4333,
+      "delta": 0.0,
+      "live_usage_gate": 0.4333
+    },
+    "confidence_calibration": {
+      "baseline": 1.0,
+      "delta": 0.0,
+      "live_usage_gate": 1.0
+    },
+    "expected_outside_top10": {
+      "baseline": 8,
+      "delta": 0,
+      "live_usage_gate": 8
+    },
+    "expected_outside_top20": {
+      "baseline": 6,
+      "delta": 0,
+      "live_usage_gate": 6
+    },
+    "grounding_score": {
+      "baseline": 1.0,
+      "delta": 0.0,
+      "live_usage_gate": 1.0
+    },
+    "hallucinations": {
+      "baseline": 0.0,
+      "delta": 0.0,
+      "live_usage_gate": 0.0
+    },
+    "mean_expected_rank": {
+      "baseline": 10,
+      "delta": 0,
+      "live_usage_gate": 10
+    },
+    "mean_noise_above_expected": {
+      "baseline": 9.7083,
+      "delta": 0.0,
+      "live_usage_gate": 9.7083
+    },
+    "noise_used_in_reasoning": {
+      "baseline": 12.0,
+      "delta": 0.0,
+      "live_usage_gate": 12.0
+    },
+    "planning_core_coverage": {
+      "baseline": 0.4333,
+      "delta": 0.0,
+      "live_usage_gate": 0.4333
+    },
+    "planning_drift_cases": {
+      "baseline": 1.0,
+      "delta": 0.0,
+      "live_usage_gate": 1.0
+    },
+    "planning_score": {
+      "baseline": 1.0,
+      "delta": 0.0,
+      "live_usage_gate": 1.0
+    },
+    "read_only_verified": {
+      "baseline": true,
+      "delta": null,
+      "live_usage_gate": true
+    },
+    "reasoning_drift_cases": {
+      "baseline": 5.0,
+      "delta": 0.0,
+      "live_usage_gate": 5.0
+    },
+    "response_core_coverage": {
+      "baseline": 0.4333,
+      "delta": 0.0,
+      "live_usage_gate": 0.4333
+    },
+    "response_drift_cases": {
+      "baseline": 0.0,
+      "delta": 0.0,
+      "live_usage_gate": 0.0
+    },
+    "retrieval_precision": {
+      "baseline": 0.16,
+      "delta": 0.0,
+      "live_usage_gate": 0.16
+    },
+    "retrieval_recall": {
+      "baseline": 0.5333,
+      "delta": 0.0,
+      "live_usage_gate": 0.5333
+    },
+    "working_memory_efficiency": {
+      "baseline": 0.19,
+      "delta": 0.0,
+      "live_usage_gate": 0.19
+    }
+  },
+  "final_decision": "ACCEPT_RUNTIME_V13_REASONING_USAGE_GATE",
+  "interpretation": "The live usage gate is safe against the restored V1.2 baseline but dormant on this activation path; it did not improve or regress aggregate metrics because current baseline candidates carry sufficient runtime support metadata to pass the gate.",
+  "raw_outputs": "reports/runtime_v13_reasoning_usage_gate_live_raw"
+}

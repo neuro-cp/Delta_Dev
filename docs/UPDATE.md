@@ -66,6 +66,133 @@ are activation-ranking prototyping, attention-scoring prototyping, and a
 sparse-query abstention gate, each gated by comparison against the preserved
 Runtime V1.2 reports.
 
+### Runtime V1.3 Recurring-Noise Prototype Rejection
+
+Added read-only V1.3 simulation tools:
+
+- `tools/runtime_v13_scoring_simulation.py`
+- `tools/runtime_v13_simulation_failure_analysis.py`
+- `tools/runtime_v13_isolated_simulations.py`
+
+The first combined generic-token dampening simulation failed and is preserved
+as a rejected prototype artifact. Isolated simulations then found one positive
+candidate: recurring-noise suppression improved expected rank metrics without
+pushing out expected top-10 concepts in simulation.
+
+A minimal live recurring-noise suppression prototype was then benchmarked and
+rejected. Rank metrics improved, but runtime safety regressed:
+`noise_used_in_reasoning` increased from `12` to `24` and attention precision
+fell from `0.55` to `0.4172`. Per the acceptance rule, the live runtime patch
+was reverted. The rejected live benchmark outputs are archived under
+`reports/runtime_v13_recurring_noise_live_raw`, and the preserved V1.2 baseline
+reports were restored to `reports/runtime_v12_*`.
+
+Generated reports:
+
+- `reports/runtime_v13_scoring_simulation.md`
+- `reports/runtime_v13_simulation_failure_analysis.md`
+- `reports/runtime_v13_isolated_simulations.md`
+- `reports/runtime_v13_recurring_noise_live_prototype.md`
+
+### Runtime V1.3 Reasoning Usage-Gate Prototype
+
+Added read-only post-rejection analysis and design reports:
+
+- `reports/runtime_v13_live_rejection_audit.md`
+- `reports/runtime_v13_attention_gating_design.md`
+- `reports/runtime_v13_reasoning_usage_gate_simulation.md`
+
+The analysis found that direct activation-score recurrence suppression improved
+ranking metrics but admitted replacement noise into attention and reasoning. A
+read-only reasoning usage-gate simulation projected that keeping candidates
+visible while blocking weak replacement-risk items from reasoning use would
+restore noisy-reasoning metrics without blocking expected/useful concepts.
+
+Implemented a minimal live usage gate inside `RuntimeReasoningEngine` only. It
+does not change activation ranking, attention selection, working memory
+visibility, learning, governance, provider prompts, candidate stores, or
+canonical storage. The gate records inspectable usage metadata and only filters
+which candidate-knowledge items become reasoning findings/evidence keys.
+
+The live benchmark passed acceptance criteria against the preserved V1.2
+baseline but was dormant on the restored activation path: aggregate runtime
+metrics were unchanged. Final report:
+
+- `reports/runtime_v13_reasoning_usage_gate_live_prototype.md`
+
+### Runtime V1.3 Combined Activation/Usage-Gate Sprint
+
+Added an environment-disabled activation recurrence hook for controlled Runtime
+V1.3 variant testing. The default mode remains `off`; activation recurrence is
+not enabled unless `DELTA_RUNTIME_V13_RECURRENCE_MODE` is explicitly set.
+
+Added the combined sprint runner:
+
+- `tools/runtime_v13_combined_sprint.py`
+
+The sprint compared:
+
+- preserved V1.2 baseline
+- usage-gate-only runtime
+- conservative activation recurrence plus usage gate
+- tiebreaker activation recurrence plus usage gate
+- metadata-only recurrence plus usage gate
+
+Final decision:
+
+`KEEP_USAGE_GATE_ONLY_RUN_MORE_DIAGNOSTICS`
+
+The conservative combined variant improved ranking metrics but reproduced the
+replacement-noise failure: `noise_used_in_reasoning` increased from `12` to
+`24`, reasoning drift increased from `5` to `8`, and attention precision fell
+from `0.55` to `0.4172`. The tiebreaker variant improved ranking only slightly
+and still increased noisy reasoning from `12` to `13`. Metadata-only remained
+safe but had no metric effect. Therefore activation recurrence remains disabled
+by default, while the accepted reasoning usage gate remains enabled.
+
+Generated reports:
+
+- `reports/runtime_v13_combined_sprint.md`
+- `reports/runtime_v13_combined_sprint.json`
+- `reports/runtime_v13_combined_sprint_raw/`
+
+### Runtime V1.3 Resolution Suite
+
+Added `tools/runtime_v13_resolution_suite.py` to run an autonomous controlled
+suite over usage-gate and recurrence variants. The suite tested whether the
+remaining blocker was evidence-support overtrust: candidate records can be
+well-supported in the corpus while still weakly supporting the current query.
+
+Final decision:
+
+`ACCEPT_RUNTIME_V13_REFINED_USAGE_GATE`
+
+The accepted refinement makes the reasoning usage gate treat `evidence_support`
+as query-contextual only when paired with sufficient query overlap. The
+selected live default is the middle-ground `citation_context` mode. It keeps
+activation recurrence disabled by default and does not alter learning,
+governance, storage, provider prompts, candidate stores, or canonical storage.
+
+Compared with the preserved V1.2 baseline, the accepted default keeps
+grounding at `1.0`, hallucinations at `0`, confidence calibration at `1.0`,
+planning score at `1.0`, retrieval recall at `0.5333`, and attention recall at
+`0.4333`, while improving attention precision from `0.55` to `0.5833` and
+reducing `noise_used_in_reasoning` from `12` to `8`. Ranking metrics remain
+unchanged because activation recurrence remains disabled.
+
+The stricter context gate reduced noisy reasoning further (`12` to `6`) but
+regressed planning score in fixture/runtime checks. Combined activation
+recurrence variants still failed acceptance. Therefore the resolution is a
+downstream refined usage gate, not activation recurrence.
+
+Generated reports:
+
+- `reports/runtime_v13_evidence_support_audit.md`
+- `reports/runtime_v13_evidence_support_audit.json`
+- `reports/runtime_v13_resolution_suite.md`
+- `reports/runtime_v13_resolution_suite.json`
+- `reports/runtime_v13_resolution_suite_raw/`
+
 ## 2026-06-30
 
 ### Summary
@@ -2910,3 +3037,228 @@ Stopping rule:
 Met. Do not continue tuning attention on the fixture suite. The next recommended
 step is Runtime V1.2: evaluate against real Phase A candidate knowledge and
 held-out prompts before multi-turn conversation.
+
+## Runtime V1.3 Query Evidence Model B
+
+Final decision: `ACCEPT_RUNTIME_V13_QUERY_EVIDENCE_MODEL_B`
+
+The default `citation_context` reasoning usage gate now includes query-specific
+evidence qualification. `evidence_support` is treated as corpus support unless
+paired with query-context support; high corpus support alone can no longer save
+an otherwise weak, generic candidate from being blocked at reasoning evidence
+use. This change remains inside `RuntimeReasoningEngine` and does not modify
+activation, attention, learning, validation, normalization, governance,
+promotion scoring, provider prompts, candidate stores, or canonical storage.
+
+Files changed:
+
+- `orchestration/runtime/runtime_reasoning.py`
+- `orchestration/tests/runtime/test_runtime_reasoning.py`
+
+Reports generated:
+
+- `reports/runtime_v13_query_specific_evidence_simulation.md`
+- `reports/runtime_v13_query_specific_evidence_simulation.json`
+- `reports/runtime_v13_query_evidence_model_b_live_prototype.md`
+- `reports/runtime_v13_query_evidence_model_b_live_prototype.json`
+- `reports/runtime_v13_query_evidence_model_b_live_raw/`
+
+Benchmark result:
+
+- refined default noise used in reasoning: `8.0`
+- Model B live noise used in reasoning: `7.0`
+- refined default reasoning drift cases: `5.0`
+- Model B live reasoning drift cases: `4.0`
+- grounding score: `1.0 -> 1.0`
+- hallucinations: `0.0 -> 0.0`
+- confidence calibration: `1.0 -> 1.0`
+- planning score: `1.0 -> 1.0`
+- retrieval recall: `0.5333 -> 0.5333`
+- attention precision: `0.5833 -> 0.6333`
+- planning core coverage: `0.4333 -> 0.4333`
+- response core coverage: `0.4333 -> 0.4333`
+
+Tests run:
+
+- `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_reasoning.py orchestration\tests\runtime\test_runtime_reasoning.py`
+- `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_candidate_knowledge_retrieval.py orchestration\tests\runtime\test_runtime_v12_real_knowledge.py orchestration\tests\runtime\test_runtime_evaluation.py orchestration\tests\runtime\test_knowledge_attention.py orchestration\tests\runtime\test_runtime_v1_pipeline.py orchestration\tests\runtime\test_runtime_reasoning.py`
+- result: `29 passed`
+- final no-env real-store benchmark and activation-ranking diagnostic passed
+  and were archived under `reports/runtime_v13_query_evidence_model_b_live_raw/`.
+
+Enabled:
+
+- `model_b_contextualized_corpus_support` inside the default
+  `citation_context` reasoning usage gate.
+
+Disabled:
+
+- activation recurrence remains disabled by default.
+
+Next recommended task:
+
+Audit the remaining `7` noisy reasoning concepts under live Model B. Determine
+whether the residual failures are still query-specific evidence modeling, role
+ambiguity, evaluator labels, or planning/response citation behavior before
+making another live runtime change.
+
+## Runtime V1.3 Role Model R4 Hybrid Role Gate
+
+Final decision: `ACCEPT_SAFE_ROLE_GUARD_DORMANT_ON_BASELINE`
+
+Role Model R4 was implemented as an opt-in reasoning evidence guard, not as the
+live default. The attempted live-default R4 run showed a real protective signal:
+noise used in reasoning dropped from `7.0` to `1.0`, reasoning drift dropped
+from `4.0` to `1.0`, and attention precision rose from `0.6333` to `0.9`.
+However, it over-pruned citable evidence and regressed planning:
+`planning_score` fell from `1.0` to `0.8`, and `planning_drift_cases` rose from
+`1.0` to `2.0`.
+
+The final no-env runtime therefore remains the accepted Model B baseline:
+
+- enabled: `citation_context` reasoning usage gate
+- enabled: Query Evidence Model B contextualized corpus support
+- disabled by default: activation recurrence
+- disabled by default: Role Model R4
+- opt-in R4 switch: `DELTA_RUNTIME_V13_ROLE_GATE_MODE=r4`
+
+Files changed:
+
+- `orchestration/runtime/runtime_reasoning.py`
+- `orchestration/runtime/runtime_evaluation.py`
+- `orchestration/tests/runtime/test_runtime_reasoning.py`
+- `reports/runtime_v13_role_model_r4_live_prototype.md`
+- `reports/runtime_v13_role_model_r4_live_prototype.json`
+- `reports/runtime_v13_role_model_r4_live_raw/`
+- `docs/continuation_runtime_v13_role_model_r4.md`
+
+Benchmark result:
+
+- final no-env `noise_used_in_reasoning`: `7.0`
+- final no-env `reasoning_drift_cases`: `4.0`
+- final no-env `planning_score`: `1.0`
+- final no-env `planning_drift_cases`: `1.0`
+- final no-env `grounding_score`: `1.0`
+- final no-env `hallucinations`: `0.0`
+- final no-env `retrieval_recall`: `0.5333`
+- final no-env `attention_precision`: `0.6333`
+
+Tests run:
+
+- `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_reasoning.py orchestration\runtime\runtime_evaluation.py orchestration\tests\runtime\test_runtime_reasoning.py`
+- `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_runtime_reasoning.py -q`
+- result: `19 passed`
+- `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_candidate_knowledge_retrieval.py orchestration\tests\runtime\test_runtime_v12_real_knowledge.py orchestration\tests\runtime\test_runtime_evaluation.py orchestration\tests\runtime\test_knowledge_attention.py orchestration\tests\runtime\test_runtime_v1_pipeline.py orchestration\tests\runtime\test_runtime_reasoning.py -q`
+- result: `37 passed`
+- final no-env real-store benchmark and activation-ranking diagnostic completed
+  and were archived under `reports/runtime_v13_role_model_r4_live_raw/`.
+
+Next recommended task:
+
+Revise Role Model R4 before enabling it by default. The next variant should
+preserve the citable-noise reduction while distinguishing operational citable
+evidence from near-neighbor context so planning does not regress. Keep Model B
+as the live default until that condition is met.
+
+## Runtime V1.3 Role Compromise Suite
+
+Final decision: `ACCEPT_SAFE_ROLE_GUARD_DORMANT_ON_BASELINE`
+
+An autonomous role-compromise suite tested five R4-derived variants against the
+accepted Model B baseline. The suite preserved frozen boundaries: no learning,
+validation, normalization, governance, promotion scoring, provider prompts,
+candidate stores, canonical storage, activation recurrence, activation ranking,
+or attention selection behavior were changed.
+
+Variants tested:
+
+- `variant_a_r4_planning_support`: rejected. Noise improved
+  (`7.0 -> 1.0`) and planning score stayed `1.0`, but planning drift regressed
+  (`1.0 -> 2.0`).
+- `variant_b_r4_operational_planning_support`: rejected. Noise improved
+  (`7.0 -> 1.0`), but planning score regressed (`1.0 -> 0.9`) and planning
+  drift regressed (`1.0 -> 2.0`).
+- `variant_c_response_citation_gate`: rejected. It used the Planning Support
+  lane (`planning_support_count = 6.0`) and restored planning score to `1.0`,
+  but planning drift still regressed (`1.0 -> 2.0`).
+- `variant_d_role_metadata_only`: accepted only as a safe dormant guard. It
+  matched Model B behavior and added observability, but did not improve runtime
+  quality.
+- `variant_e_r4_soft`: rejected. Noise improved (`7.0 -> 1.0`) and planning
+  score stayed `1.0`, but planning drift regressed (`1.0 -> 2.0`).
+
+Final live behavior:
+
+- enabled by default: `citation_context` reasoning usage gate
+- enabled by default: Query Evidence Model B contextualized corpus support
+- disabled by default: activation recurrence
+- disabled by default: R4 and all role-compromise variants
+- opt-in role modes remain available through `DELTA_RUNTIME_V13_ROLE_GATE_MODE`
+
+Reports generated:
+
+- `reports/runtime_v13_role_compromise_suite.md`
+- `reports/runtime_v13_role_compromise_suite.json`
+- `reports/runtime_v13_role_compromise_continuation_handoff.md`
+- `reports/runtime_v13_role_compromise_suite_raw/`
+- `docs/continuation_runtime_v13_role_compromise.md`
+
+Tests run:
+
+- `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_reasoning.py orchestration\runtime\runtime_evaluation.py orchestration\runtime\runtime_planning.py orchestration\runtime\response_generation.py orchestration\tests\runtime\test_runtime_reasoning.py tools\runtime_v13_role_compromise_suite.py`
+- `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_runtime_reasoning.py -q`
+- result: `22 passed`
+- `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_candidate_knowledge_retrieval.py orchestration\tests\runtime\test_runtime_v12_real_knowledge.py orchestration\tests\runtime\test_runtime_evaluation.py orchestration\tests\runtime\test_knowledge_attention.py orchestration\tests\runtime\test_runtime_v1_pipeline.py orchestration\tests\runtime\test_runtime_reasoning.py -q`
+- result: `40 passed`
+- per-variant real-store benchmark and activation-ranking diagnostics completed
+  and were archived under `reports/runtime_v13_role_compromise_suite_raw/`.
+
+Next recommended task:
+
+Keep Model B as the default. Do not keep broadening role gates. The role
+compromise experiments show that citable-noise reduction is achievable, but the
+remaining blocker is planning drift semantics: some concepts that are noisy as
+citations still alter the evaluator's planning-state classification. The next
+work should be a focused planning-drift audit comparing `variant_c` against
+Model B at the case level before another live role variant is attempted.
+
+## Runtime V1.3 HYB1 Dormant Prototype
+
+Final decision: `KEEP_HYB1_DORMANT_PROTOTYPE`
+
+HYB1 was added as an explicit dormant/env-gated Runtime V1.3 prototype derived
+from the Model B + MBV2 hybrid test. Model B remains the no-env default:
+
+- enabled by default: Model B contextualized corpus support
+- enabled by default: `citation_context` reasoning usage gate
+- disabled by default: HYB1
+- HYB1 opt-in flag: `DELTA_RUNTIME_V13_HYB1_ENABLED=true`
+
+HYB1 applies the MBV2 reasoning filter only when projected case-level planning
+and response coverage remain at or above Model B for that case. Otherwise it
+falls back to exact Model B behavior for that case.
+
+Validated dormant projection:
+
+- noise used in reasoning: `7.0 -> 5.0`
+- citable noise used in reasoning: `7.0 -> 5.0`
+- reasoning drift cases: `4.0 -> 2.0`
+- planning drift cases: stayed `1.0`
+- planning core coverage: stayed `0.4333`
+- response core coverage: stayed `0.4333`
+- cases improved: `2.0`
+- cases regressed: `0.0`
+
+HYB1 must not be enabled by default without a future validation pass that proves
+it remains safe on the active Runtime V1.3 benchmark.
+
+Reports generated:
+
+- `reports/runtime_v13_hyb1_dormant_prototype_validation.md`
+- `reports/runtime_v13_hyb1_dormant_prototype_validation.json`
+
+Tests run:
+
+- `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_reasoning.py orchestration\runtime\__init__.py tools\runtime_v13_model_b_mbv2_hybrid_test.py tools\runtime_v13_hyb1_dormant_prototype_validation.py tests\runtime_v13\test_hyb1_dormant_prototype.py`
+- `.\.venv311\Scripts\python.exe -m pytest tests\runtime_v13\test_hyb1_dormant_prototype.py -q`
+- result: `4 passed`

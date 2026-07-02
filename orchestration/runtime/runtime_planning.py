@@ -33,7 +33,7 @@ class RuntimePlanner:
     """
 
     def plan(self, report: RuntimeReasoningReport) -> RuntimePlan:
-        if not report.findings:
+        if not report.findings and not report.planning_support_items:
             option = RuntimePlanOption(
                 title="Low-evidence response",
                 steps=[
@@ -53,7 +53,15 @@ class RuntimePlanner:
             )
 
         top = report.findings[:5]
-        evidence = [key for finding in top for key in finding.supporting_keys]
+        finding_evidence = [key for finding in top for key in finding.supporting_keys]
+        planning_support = [item["key"] for item in report.planning_support_items[:5]]
+        evidence = [*finding_evidence, *planning_support]
+        response_citable_evidence = [
+            key
+            for finding in top
+            if finding.metadata.get("citable_evidence", True) is True
+            for key in finding.supporting_keys
+        ]
         risks = report.conflicts or ["No explicit conflict surfaced in the activated context."]
         evidence_option = RuntimePlanOption(
             title="Evidence-grounded recommendation",
@@ -63,10 +71,14 @@ class RuntimePlanner:
                 "Name tradeoffs and uncertainty before recommending an action.",
                 "Return a concise answer with evidence notes.",
             ],
-            confidence=round(report.confidence, 4),
+            confidence=round(report.confidence if report.findings else 0.45, 4),
             supporting_evidence=evidence,
             risks=risks,
-            metadata={"finding_count": len(report.findings)},
+            metadata={
+                "finding_count": len(report.findings),
+                "planning_support_count": len(planning_support),
+                "response_citable_evidence": response_citable_evidence,
+            },
         )
         conservative_option = RuntimePlanOption(
             title="Conservative clarification-first response",
@@ -77,6 +89,7 @@ class RuntimePlanner:
             confidence=round(max(0.2, report.confidence - 0.15), 4),
             supporting_evidence=evidence[:3],
             risks=["May be less useful if the user expects an immediate plan."],
+            metadata={"response_citable_evidence": response_citable_evidence[:3]},
         )
         return RuntimePlan(
             question=report.question,

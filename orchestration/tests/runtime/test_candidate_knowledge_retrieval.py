@@ -128,3 +128,75 @@ def test_candidate_knowledge_retriever_is_read_only(tmp_path):
 
     assert (store / "knowledge.jsonl").read_text(encoding="utf-8") == before
     assert sorted(path.name for path in store.iterdir()) == ["knowledge.jsonl"]
+
+
+def test_recurrence_penalty_is_bounded_and_preserves_original_score(tmp_path, monkeypatch):
+    store = tmp_path / "store"
+    prior = tmp_path / "prior.json"
+    _write_jsonl(store / "knowledge.jsonl", [_record(concept_id="concept-a")])
+    prior.write_text(
+        json.dumps({"recurring_noise_prior": {"concept-a": {"penalty": 0.14, "recurrence": 9}}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_MODE", "conservative")
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_PRIOR", str(prior))
+
+    item = KnowledgeActivationEngine(store_root=store).activate("flood", limit=1).items[0]
+
+    assert item.metadata["recurrence_risk"] is True
+    assert item.metadata["recurrence_penalty"] == 0.045
+    assert item.metadata["original_activation_score"] > item.score
+
+
+def test_recurrence_penalty_strong_specific_match_overrides(tmp_path, monkeypatch):
+    store = tmp_path / "store"
+    prior = tmp_path / "prior.json"
+    _write_jsonl(store / "knowledge.jsonl", [_record(concept_id="concept-a")])
+    prior.write_text(
+        json.dumps({"recurring_noise_prior": {"concept-a": {"penalty": 0.14, "recurrence": 9}}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_MODE", "conservative")
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_PRIOR", str(prior))
+
+    item = KnowledgeActivationEngine(store_root=store).activate("flood shelter traffic", limit=1).items[0]
+
+    assert item.metadata["recurrence_override"] is True
+    assert item.metadata["recurrence_penalty"] == 0.0
+    assert item.metadata["original_activation_score"] == item.score
+
+
+def test_recurrence_metadata_mode_does_not_change_score(tmp_path, monkeypatch):
+    store = tmp_path / "store"
+    prior = tmp_path / "prior.json"
+    _write_jsonl(store / "knowledge.jsonl", [_record(concept_id="concept-a")])
+    prior.write_text(
+        json.dumps({"recurring_noise_prior": {"concept-a": {"penalty": 0.14, "recurrence": 9}}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_MODE", "metadata")
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_PRIOR", str(prior))
+
+    item = KnowledgeActivationEngine(store_root=store).activate("flood", limit=1).items[0]
+
+    assert item.metadata["recurrence_risk"] is True
+    assert item.metadata["recurrence_penalty"] == 0.0
+    assert item.metadata["original_activation_score"] == item.score
+
+
+def test_recurrence_feature_can_be_disabled_cleanly(tmp_path, monkeypatch):
+    store = tmp_path / "store"
+    prior = tmp_path / "prior.json"
+    _write_jsonl(store / "knowledge.jsonl", [_record(concept_id="concept-a")])
+    prior.write_text(
+        json.dumps({"recurring_noise_prior": {"concept-a": {"penalty": 0.14, "recurrence": 9}}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_MODE", "off")
+    monkeypatch.setenv("DELTA_RUNTIME_V13_RECURRENCE_PRIOR", str(prior))
+
+    item = KnowledgeActivationEngine(store_root=store).activate("flood", limit=1).items[0]
+
+    assert item.metadata["recurrence_risk"] is True
+    assert item.metadata["recurrence_penalty"] == 0.0
+    assert item.metadata["original_activation_score"] == item.score
