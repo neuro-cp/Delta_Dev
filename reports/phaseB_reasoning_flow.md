@@ -1,0 +1,30 @@
+# Phase B.2 Reasoning Flow
+
+| Case | Concept | Activated | Attended | Reasoned | Planned | Responded | Classification |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| gps_drift_retrieval | `gps-atmospheric-delay` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| gps_drift_retrieval | `gps-multipath` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| gps_drift_retrieval | `gps-satellite-geometry` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| gps_drift_retrieval | `snow-plow-positioning` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| snowstorm_grounded_planning | `emergency-route-priority` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| snowstorm_grounded_planning | `resource-allocation-triage` | `True` | `False` | `False` | `False` | `False` | `Peripheral` |
+| snowstorm_grounded_planning | `risk-likelihood-impact` | `True` | `False` | `False` | `False` | `False` | `Peripheral` |
+| snowstorm_grounded_planning | `shelter-capacity` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| snowstorm_grounded_planning | `snow-plow-positioning` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| salt_tradeoff_conflict | `emergency-route-priority` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| salt_tradeoff_conflict | `resource-allocation-triage` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| salt_tradeoff_conflict | `salt-environmental-cost` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| salt_tradeoff_conflict | `salt-traction-benefit` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| salt_tradeoff_conflict | `shelter-capacity` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| salt_tradeoff_conflict | `snow-plow-positioning` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| resource_allocation_calibration | `emergency-route-priority` | `True` | `True` | `True` | `True` | `True` | `Supporting` |
+| resource_allocation_calibration | `resource-allocation-triage` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| resource_allocation_calibration | `risk-likelihood-impact` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| resource_allocation_calibration | `salt-traction-benefit` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| resource_allocation_calibration | `shelter-capacity` | `True` | `False` | `False` | `False` | `False` | `Peripheral` |
+| resource_allocation_calibration | `snow-plow-positioning` | `True` | `False` | `False` | `False` | `False` | `Noise` |
+| repeat_snowstorm_stability | `emergency-route-priority` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| repeat_snowstorm_stability | `resource-allocation-triage` | `True` | `False` | `False` | `False` | `False` | `Peripheral` |
+| repeat_snowstorm_stability | `risk-likelihood-impact` | `True` | `False` | `False` | `False` | `False` | `Peripheral` |
+| repeat_snowstorm_stability | `shelter-capacity` | `True` | `True` | `True` | `True` | `True` | `Core` |
+| repeat_snowstorm_stability | `snow-plow-positioning` | `True` | `True` | `True` | `True` | `True` | `Core` |

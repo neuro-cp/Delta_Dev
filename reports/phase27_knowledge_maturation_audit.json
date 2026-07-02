@@ -1,0 +1,2195 @@
+{
+  "bottom_reject_profiles": [
+    {
+      "centrality": 0.3983,
+      "concept": "Each party's likely belief and prediction about the other's response should be identified",
+      "concept_id": "5d8954a6-d5e9-4769-bf3c-4f3b46f0b696",
+      "confidence_slope": -0.12,
+      "confidence_trajectory": [
+        0.8,
+        0.68
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": false,
+      "objective": "negotiation-contract-terms-deadlines-are-asymmetric-communication-history-revise-trust-estimates",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "negotiation",
+      "projected_centrality": 0.3983,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "llama",
+      "recommendation": "Reject",
+      "redundancy": 0.5,
+      "related_concepts": 4,
+      "run": "broad_balanced_200",
+      "run_origin_tick": 158,
+      "score": 0.0,
+      "sentence_length": 13,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 0,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3433,
+      "concept": "If the first result is contradicted for example if the missing field is found in the database snapshot belief revision would involve re examining",
+      "concept_id": "1d500f07-b18a-4421-8828-77eb54bf616f",
+      "confidence_slope": -0.15,
+      "confidence_trajectory": [
+        0.8,
+        0.65
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": true,
+      "objective": "tool_use-incident-response-a-parser-drops-a-field-database-snapshots-preserve-provenance",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "tool_use",
+      "projected_centrality": 0.3433,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.16,
+      "provider": "qwen",
+      "recommendation": "Reject",
+      "redundancy": 0.28,
+      "related_concepts": 3,
+      "run": "broad_balanced_200",
+      "run_origin_tick": 190,
+      "score": 0.0,
+      "sentence_length": 24,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 0,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3433,
+      "concept": "The prediction is that power restoration will take longer than expected, and the evidence that would change the answer is a faster-than-expected power restoration",
+      "concept_id": "e6606973-d590-4170-83cf-2e83d2a94c88",
+      "confidence_slope": -0.15,
+      "confidence_trajectory": [
+        0.8,
+        0.65
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": false,
+      "objective": "hierarchical_planning-disaster-recovery-milestones-hide-dependencies-work-breakdown-structures-choose-a-critical-subtask",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "hierarchical_planning",
+      "projected_centrality": 0.3433,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.64,
+      "provider": "qwen",
+      "recommendation": "Reject",
+      "redundancy": 0.2609,
+      "related_concepts": 3,
+      "run": "broad_balanced_200",
+      "run_origin_tick": 126,
+      "score": 0.0,
+      "sentence_length": 24,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 0,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3433,
+      "concept": "To resolve this, we can refer to the chain-of-custody notes, which document the handling and transmission of evidence",
+      "concept_id": "31c40394-3961-45bf-98f3-fc2f19999b69",
+      "confidence_slope": -0.12,
+      "confidence_trajectory": [
+        0.8,
+        0.68
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": false,
+      "objective": "contradiction-eyewitness-reports-metadata-conflicts-with-content-chain-of-custody-notes-rank-evidence-quality",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "contradiction",
+      "projected_centrality": 0.3433,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "mistral",
+      "recommendation": "Reject",
+      "redundancy": 0.4667,
+      "related_concepts": 3,
+      "run": "broad_balanced_100",
+      "run_origin_tick": 84,
+      "score": 0.0,
+      "sentence_length": 18,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 0,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3433,
+      "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+      "concept_id": "bd3028ff-80c2-44ae-985a-1e396c1d8a9a",
+      "confidence_slope": -0.12,
+      "confidence_trajectory": [
+        0.8,
+        0.68
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": true,
+      "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-demand-forecasts-allocate-scarce-capacity",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "resource_allocation",
+      "projected_centrality": 0.3433,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "qwen",
+      "recommendation": "Reject",
+      "redundancy": 0.5,
+      "related_concepts": 3,
+      "run": "broad_balanced_100",
+      "run_origin_tick": 69,
+      "score": 0.0,
+      "sentence_length": 24,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 0,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.2733,
+      "concept": "Belief revision: If the first result from Tool A is contradicted, revise the belief to the second result from Tool B",
+      "concept_id": "76f0ed8e-8506-42f5-8001-469340bcff15",
+      "confidence_slope": -0.06,
+      "confidence_trajectory": [
+        0.8,
+        0.8,
+        0.68
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": false,
+      "objective": "tool_use-incident-response-two-tools-return-inconsistent-outputs-source-documents-reject-a-malformed-result",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "tool_use",
+      "projected_centrality": 0.2733,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "qwen",
+      "recommendation": "Reject",
+      "redundancy": 0.4615,
+      "related_concepts": 1,
+      "run": "broad_balanced_200",
+      "run_origin_tick": 120,
+      "score": 0.0439,
+      "sentence_length": 21,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 1,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3283,
+      "concept": "A tradeoff in allocating resources for emergency shelters must be made when the priority group changes",
+      "concept_id": "bb7ef810-8ba9-40c9-802c-e962d5c71557",
+      "confidence_slope": -0.06,
+      "confidence_trajectory": [
+        0.8,
+        0.8,
+        0.68
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": false,
+      "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-justify-a-tradeoff",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "resource_allocation",
+      "projected_centrality": 0.3283,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "qwen",
+      "recommendation": "Reject",
+      "redundancy": 0.5,
+      "related_concepts": 2,
+      "run": "broad_balanced_100",
+      "run_origin_tick": 78,
+      "score": 0.044,
+      "sentence_length": 16,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 1,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3833,
+      "concept": "If Party A's cost estimate for a service is significantly",
+      "concept_id": "5f3a634c-d940-468b-a7dd-d5bbdc18eabe",
+      "confidence_slope": 0.005,
+      "confidence_trajectory": [
+        0.8,
+        0.82,
+        0.81
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": true,
+      "objective": "negotiation-contract-terms-parties-hide-priorities-cost-estimates-predict-a-concession-response",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "negotiation",
+      "projected_centrality": 0.3833,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "llama",
+      "recommendation": "Reject",
+      "redundancy": 0.9167,
+      "related_concepts": 3,
+      "run": "broad_balanced_200",
+      "run_origin_tick": 128,
+      "score": 0.0452,
+      "sentence_length": 10,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 1,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.4383,
+      "concept": "If Party A has a history of prioritizing cost over",
+      "concept_id": "bd22349a-d368-4b51-842f-a433163b6420",
+      "confidence_slope": 0.005,
+      "confidence_trajectory": [
+        0.8,
+        0.82,
+        0.81
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": true,
+      "objective": "negotiation-contract-terms-trust-is-low-communication-history-predict-a-concession-response",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "negotiation",
+      "projected_centrality": 0.4383,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "llama",
+      "recommendation": "Reject",
+      "redundancy": 0.9375,
+      "related_concepts": 4,
+      "run": "broad_balanced_100",
+      "run_origin_tick": 62,
+      "score": 0.0478,
+      "sentence_length": 10,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 1,
+      "validation_count": 1
+    },
+    {
+      "centrality": 0.3433,
+      "concept": "For instance if Party A s cost estimate for a particular service is significantly higher than their asking price it might indicate that they",
+      "concept_id": "b91e93b6-a55e-457c-9083-cfcc517c885d",
+      "confidence_slope": -0.12,
+      "confidence_trajectory": [
+        0.8,
+        0.68
+      ],
+      "failed_predictions": 1,
+      "incomplete_proposition": true,
+      "objective": "negotiation-contract-terms-parties-hide-priorities-cost-estimates-revise-trust-estimates",
+      "open_contradictions": 0,
+      "prediction_accuracy": 0.0,
+      "profile": "negotiation",
+      "projected_centrality": 0.3433,
+      "projection_sources": [
+        "supporting_evidence_memory_relationships",
+        "shared_supporting_evidence",
+        "prediction_links",
+        "supporting_evidence_count",
+        "relationship_type_diversity"
+      ],
+      "prompt_artifact_penalty": 0.0,
+      "provider": "llama",
+      "recommendation": "Reject",
+      "redundancy": 0.5,
+      "related_concepts": 3,
+      "run": "broad_balanced_200",
+      "run_origin_tick": 138,
+      "score": 0.0495,
+      "sentence_length": 24,
+      "supported_predictions": 0,
+      "supporting_evidence_count": 2,
+      "supporting_memory_relationship_edges": 1,
+      "unresolved_predictions": 0,
+      "validation_count": 1
+    }
+  ],
+  "bottom_reject_similarity": {
+    "avg_confidence_slope": -0.089,
+    "avg_open_contradictions": 0.0,
+    "avg_prediction_accuracy": 0.0,
+    "avg_projected_centrality": 0.3538,
+    "avg_redundancy": 0.5323,
+    "avg_related_concepts": 2.9,
+    "avg_sentence_length": 18.4,
+    "avg_supporting_memories": 2.0,
+    "avg_validation_count": 1.0,
+    "count": 10,
+    "profiles": {
+      "contradiction": 1,
+      "hierarchical_planning": 1,
+      "negotiation": 4,
+      "resource_allocation": 2,
+      "tool_use": 2
+    },
+    "providers": {
+      "llama": 4,
+      "mistral": 1,
+      "qwen": 5
+    }
+  },
+  "campaign_root": ".tmp\\experiments\\phase26_autonomous_campaign",
+  "canonical_merge_performed": false,
+  "contradiction_taxonomy": {
+    "references_superseded_or_missing_concept": 21,
+    "resolved": 2
+  },
+  "current_concept_unresolved_taxonomy": {
+    "incomplete_current_concept_backlog": 2,
+    "late_cycle_current_concept_backlog": 19,
+    "partially_validated_current_concept_backlog": 19,
+    "prompt_specific_current_concept_backlog": 1,
+    "redundant_current_concept_backlog": 22,
+    "unvisited_current_concept_backlog": 21
+  },
+  "failure_cause_distribution": [
+    {
+      "cause": "unresolved_predictions",
+      "count": 72,
+      "percent": 74.23
+    },
+    {
+      "cause": "failed_validation",
+      "count": 14,
+      "percent": 14.43
+    },
+    {
+      "cause": "high_redundancy",
+      "count": 9,
+      "percent": 9.28
+    },
+    {
+      "cause": "contradiction_pressure",
+      "count": 1,
+      "percent": 1.03
+    },
+    {
+      "cause": "low_composite_score",
+      "count": 1,
+      "percent": 1.03
+    }
+  ],
+  "knowledge_survival_funnel": {
+    "canonical_ready": 0,
+    "evaluated": 928,
+    "generated": 812,
+    "promotion_candidate_or_better": 831,
+    "promotion_eligible": 12,
+    "survived_contradiction_review": 859,
+    "survived_redundancy_review": 769,
+    "validated_or_eligible": 460
+  },
+  "phase": "Phase 27 Knowledge Maturation Audit",
+  "phase26_reference": {
+    "average_promotion_score": 0.5546,
+    "completed_run_count": 7,
+    "promotion_eligible_total": 12,
+    "rejected_total": 63,
+    "run_count": 7,
+    "validated_total": 448
+  },
+  "promotion_eligible_by_profile": {
+    "contradiction": 1,
+    "negotiation": 1,
+    "resource_allocation": 3,
+    "risk_assessment": 1,
+    "tool_use": 1,
+    "unknown": 5
+  },
+  "promotion_eligible_by_provider": {
+    "llama": 1,
+    "mistral": 1,
+    "qwen": 10
+  },
+  "promotion_eligible_score_average": 0.6462,
+  "promotion_eligible_score_range": {
+    "max": 0.6773,
+    "min": 0.62
+  },
+  "promotion_eligible_total": 12,
+  "promotion_survivor_similarity": {
+    "avg_confidence_slope": 0.0529,
+    "avg_open_contradictions": 0.0,
+    "avg_prediction_accuracy": 1.0,
+    "avg_projected_centrality": 0.325,
+    "avg_redundancy": 0.1215,
+    "avg_related_concepts": 2.6667,
+    "avg_sentence_length": 22.4167,
+    "avg_supporting_memories": 2.0,
+    "avg_validation_count": 1.0,
+    "count": 12,
+    "profiles": {
+      "contradiction": 1,
+      "negotiation": 1,
+      "resource_allocation": 3,
+      "risk_assessment": 1,
+      "tool_use": 1,
+      "unknown": 5
+    },
+    "providers": {
+      "llama": 1,
+      "mistral": 1,
+      "qwen": 10
+    }
+  },
+  "recommendation": "Next work should audit semantic equivalence and merge candidates report-only, then schedule unresolved current-concept predictions for maturation; do not change canonical knowledge yet.",
+  "redundancy_taxonomy": {
+    "accepted_overlap_reusable": 239,
+    "high_paraphrase_overlap": 28,
+    "moderate_overlap_unmatured": 196
+  },
+  "runs": [
+    {
+      "average_score": 0.5373,
+      "confidence_summary": {
+        "average_gain": 0.0472,
+        "average_loss": -0.0738,
+        "concepts_with_trajectory": 148,
+        "strengthened_count": 135,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Uncertainty There is a moderate level of uncertainty in the outcome as the root cause of the inconsistency could be due to misconfiguration a",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty surrounding the accuracy of demand forecasts and the unpredictable nature of emergencies means that the answer is subject to revision and continuous",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in this scenario is high, as the initial trust assessment might be inaccurate, and the parties' true intentions could be different from what is initially perceived",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The resolution evidence is the chain-of-custody notes, which document the collection and handling of each witness's statement",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The resolution evidence could be a calibration record or any other reliable source that can help reconcile the discrepancies between the two reports",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The prediction that would confirm the resolution is if further investigation reveals additional evidence e g surveillance footage eyewitness interviews or physical evidence that",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The prediction that would confirm the resolution is finding and examining the video or photograph to determine the true color of the suspect's hat",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The current answer is based on the assumption that the failures are sequentially linked, and any evidence that contradicts this sequential pattern would alter the conclusion",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The contradiction in the eyewitness reports remains unresolved due to insufficient evidence to determine which claim is incorrect",
+            "delta": 0.0575
+          }
+        ],
+        "top_weakened": [
+          {
+            "concept": "On the other hand, if Party A has not made any concessions, Party B may believe that Party A is less likely to be flexible and may not make a counter-concession",
+            "delta": -0.18
+          },
+          {
+            "concept": "For example, if Party A has a history of prioritizing cost over quality, you might predict that they will push for lower prices",
+            "delta": -0.15
+          },
+          {
+            "concept": "A tradeoff in allocating resources for emergency shelters must be made when the priority group changes",
+            "delta": -0.12
+          },
+          {
+            "concept": "To resolve this, we can refer to the chain-of-custody notes, which document the handling and transmission of evidence",
+            "delta": -0.12
+          },
+          {
+            "concept": "When allocating resources for emergency shelters the tradeoff is between meeting the immediate needs of the priority group and ensuring that the allocation can",
+            "delta": -0.12
+          },
+          {
+            "concept": "For example, if Party A has made a concession in the past, they may expect Party B to reciprocate with a concession",
+            "delta": -0.04
+          },
+          {
+            "concept": "The uncertainty is reduced as the database snapshot can be used to resolve the contradiction",
+            "delta": -0.04
+          },
+          {
+            "concept": "This information can help us rank the evidence quality",
+            "delta": -0.04
+          },
+          {
+            "concept": "Conversely, if the number of incidents decreases and their impact is minimal, the risk rating will be lowered",
+            "delta": -0.03
+          },
+          {
+            "concept": "Each party's belief about the other's intentions should be openly discussed, and a prediction about the response to proposed terms should be made",
+            "delta": -0.03
+          }
+        ],
+        "weakened_count": 13
+      },
+      "contradiction_taxonomy": {
+        "references_superseded_or_missing_concept": 2,
+        "resolved": 2
+      },
+      "cycles_completed": 100,
+      "eligible_concepts": [
+        {
+          "centrality": 0.3433,
+          "concept": "However, the positive trend in user satisfaction and the recent implementation of a new security protocol may offset some of this risk",
+          "concept_id": "ae290d12-d66d-49f7-aa04-f96d6592d722",
+          "confidence_slope": 0.0413,
+          "confidence_trajectory": [
+            0.8,
+            0.8413
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "risk_assessment-infrastructure-risk-indicators-conflict-trend-data-predict-residual-risk",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "risk_assessment",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.125,
+          "related_concepts": 3,
+          "run": "broad_balanced_100",
+          "run_origin_tick": 59,
+          "score": 0.6679,
+          "sentence_length": 22,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        },
+        {
+          "centrality": 0.3433,
+          "concept": "The prediction that would confirm the resolution is if further investigation reveals additional evidence e g surveillance footage eyewitness interviews or physical evidence that",
+          "concept_id": "6e71b4d3-d2e8-4d69-bb84-6a2c0ac2dd9c",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "contradiction-eyewitness-reports-two-trusted-sources-disagree-chain-of-custody-notes-preserve-both-claims",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "contradiction",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "mistral",
+          "redundancy": 0.1923,
+          "related_concepts": 3,
+          "run": "broad_balanced_100",
+          "run_origin_tick": 12,
+          "score": 0.6621,
+          "sentence_length": 24,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 100,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 144,
+            "survival_rate": 0.9236,
+            "survivors": 133
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 132,
+            "survival_rate": 0.947,
+            "survivors": 125
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 91,
+            "survival_rate": 1.0,
+            "survivors": 91
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          }
+        ]
+      },
+      "promotion_eligible": 2,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 50,
+          "concepts_originated_by_cycle": 50,
+          "cycle": 25,
+          "promotion_eligible": 1,
+          "validated": 31
+        },
+        {
+          "candidate_or_better": 90,
+          "concepts_originated_by_cycle": 91,
+          "cycle": 50,
+          "promotion_eligible": 1,
+          "validated": 53
+        },
+        {
+          "candidate_or_better": 130,
+          "concepts_originated_by_cycle": 148,
+          "cycle": 100,
+          "promotion_eligible": 2,
+          "validated": 72
+        },
+        {
+          "candidate_or_better": 130,
+          "concepts_originated_by_cycle": 148,
+          "cycle": 150,
+          "promotion_eligible": 2,
+          "validated": 72
+        },
+        {
+          "candidate_or_better": 130,
+          "concepts_originated_by_cycle": 148,
+          "cycle": 200,
+          "promotion_eligible": 2,
+          "validated": 72
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 30,
+        "high_paraphrase_overlap": 7,
+        "moderate_overlap_unmatured": 32
+      },
+      "rejected": 11,
+      "run": "broad_balanced_100",
+      "semantic_growth": 147,
+      "unresolved_taxonomy": {
+        "never_revisited": 16,
+        "source_concept_missing_or_superseded": 162
+      },
+      "validated": 72
+    },
+    {
+      "average_score": 0.522,
+      "confidence_summary": {
+        "average_gain": 0.0456,
+        "average_loss": -0.0542,
+        "concepts_with_trajectory": 317,
+        "strengthened_count": 281,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "When assessing risk in infrastructure, it is crucial to consider the balance between primary and secondary risks",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Under uncertainty, hospital staffing should be planned using a probabilistic approach, incorporating various scenarios and their associated probabilities",
+            "delta": 0.0575
+          },
+          {
+            "concept": "To validate or falsify the assumption that this link is a critical component, one could conduct a stress test by simulating a failure scenario and observing the system's response",
+            "delta": 0.0575
+          },
+          {
+            "concept": "To predict a handoff failure, it is crucial to identify each agent's belief and the likely failure point",
+            "delta": 0.0575
+          },
+          {
+            "concept": "This cycle of negotiation should be approached with the understanding that there is uncertainty in the other party s true intentions and the strategy",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty surrounding the accuracy of demand forecasts and the unpredictable nature of emergencies means that the answer is subject to revision and continuous",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in this system assumption lies in the unpredictability of real-world scenarios and the potential for unforeseen issues that may not be fully captured in the drills",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in this plan is moderate as the tools and their expected evidence are based on typical incident response practices but there is",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in this analysis is high due to the complex and interconnected nature of power grid systems, making it challenging to predict all potential outcomes",
+            "delta": 0.0575
+          }
+        ],
+        "top_weakened": [
+          {
+            "concept": "For example, if Party A's cost estimate for a service is significantly higher than Party B's, it might indicate that Party A is more flexible on this service",
+            "delta": -0.15
+          },
+          {
+            "concept": "If the first result is contradicted for example if the missing field is found in the database snapshot belief revision would involve re examining",
+            "delta": -0.15
+          },
+          {
+            "concept": "The evidence that would change the answer is the presence of significant resistance or lack of adoption of the interface contracts by key stakeholders",
+            "delta": -0.15
+          },
+          {
+            "concept": "The evidence that would change the answer would be if Party B fails to meet their stated deadline which would suggest a need to",
+            "delta": -0.15
+          },
+          {
+            "concept": "The prediction is that power restoration will take longer than expected, and the evidence that would change the answer is a faster-than-expected power restoration",
+            "delta": -0.15
+          },
+          {
+            "concept": "Belief revision: If the first result from Tool A is contradicted, revise the belief to the second result from Tool B",
+            "delta": -0.12
+          },
+          {
+            "concept": "Each party's likely belief and prediction about the other's response should be identified",
+            "delta": -0.12
+          },
+          {
+            "concept": "For instance if Party A s cost estimate for a particular service is significantly higher than their asking price it might indicate that they",
+            "delta": -0.12
+          },
+          {
+            "concept": "The prediction that would confirm the resolution is: The video/photograph shows the suspect wearing a red hat",
+            "delta": -0.12
+          },
+          {
+            "concept": "A failure mode is if the logs are incomplete or corrupted",
+            "delta": -0.04
+          }
+        ],
+        "weakened_count": 36
+      },
+      "contradiction_taxonomy": {
+        "references_superseded_or_missing_concept": 12
+      },
+      "cycles_completed": 200,
+      "eligible_concepts": [
+        {
+          "centrality": 0.3433,
+          "concept": "By leveraging deadline records, one can make informed decisions about when to make a move in the negotiation",
+          "concept_id": "57500598-b5e7-4ea0-8f02-882e8ff7f6f8",
+          "confidence_slope": 0.0413,
+          "confidence_trajectory": [
+            0.8,
+            0.8413
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "negotiation-contract-terms-a-concession-changes-incentives-deadline-records-choose-a-bargaining-move",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "negotiation",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "llama",
+          "redundancy": 0.1429,
+          "related_concepts": 3,
+          "run": "broad_balanced_200",
+          "run_origin_tick": 198,
+          "score": 0.6654,
+          "sentence_length": 18,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 200,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 311,
+            "survival_rate": 0.8778,
+            "survivors": 273
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 285,
+            "survival_rate": 0.8912,
+            "survivors": 254
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 250,
+            "survival_rate": 0.908,
+            "survivors": 227
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 182,
+            "survival_rate": 0.9396,
+            "survivors": 171
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 96,
+            "survival_rate": 0.9479,
+            "survivors": 91
+          }
+        ]
+      },
+      "promotion_eligible": 1,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 46,
+          "concepts_originated_by_cycle": 49,
+          "cycle": 25,
+          "promotion_eligible": 0,
+          "validated": 34
+        },
+        {
+          "candidate_or_better": 91,
+          "concepts_originated_by_cycle": 96,
+          "cycle": 50,
+          "promotion_eligible": 0,
+          "validated": 62
+        },
+        {
+          "candidate_or_better": 166,
+          "concepts_originated_by_cycle": 182,
+          "cycle": 100,
+          "promotion_eligible": 0,
+          "validated": 115
+        },
+        {
+          "candidate_or_better": 219,
+          "concepts_originated_by_cycle": 250,
+          "cycle": 150,
+          "promotion_eligible": 0,
+          "validated": 151
+        },
+        {
+          "candidate_or_better": 266,
+          "concepts_originated_by_cycle": 317,
+          "cycle": 200,
+          "promotion_eligible": 1,
+          "validated": 167
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 89,
+        "high_paraphrase_overlap": 13,
+        "moderate_overlap_unmatured": 92
+      },
+      "rejected": 37,
+      "run": "broad_balanced_200",
+      "semantic_growth": 314,
+      "unresolved_taxonomy": {
+        "never_revisited": 16,
+        "source_concept_missing_or_superseded": 363
+      },
+      "validated": 167
+    },
+    {
+      "average_score": 0.5846,
+      "confidence_summary": {
+        "average_gain": 0.051,
+        "average_loss": 0.0,
+        "concepts_with_trajectory": 44,
+        "strengthened_count": 44,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Prediction: If the city experiences a mild winter, the reduced snow budget will be sufficient, and the city will have saved costs without compromising safety and accessibility",
+            "delta": 0.0575
+          },
+          {
+            "concept": "In industrial maintenance, when two causes interact, a failure timeline can help identify the root cause by rejecting spurious causes",
+            "delta": 0.0575
+          },
+          {
+            "concept": "However this alternative is less likely if the failure pattern shows a sudden and significant increase in frequency and severity which is more consistent",
+            "delta": 0.0575
+          },
+          {
+            "concept": "For instance if a machine part A fails due to wear and tear and this failure leads to part B failing due to increased",
+            "delta": 0.0575
+          },
+          {
+            "concept": "A more likely cause could be the age of the equipment, where older machines are more prone to failure and may require more frequent maintenance",
+            "delta": 0.0575
+          },
+          {
+            "concept": "When both factors are present, they can lead to a breakdown in the machinery",
+            "delta": 0.05
+          },
+          {
+            "concept": "To predict the next downstream effect, control comparisons can be used",
+            "delta": 0.05
+          },
+          {
+            "concept": "To predict the next downstream effect, baseline measurements of machine performance under various weather conditions can provide a more accurate understanding",
+            "delta": 0.05
+          },
+          {
+            "concept": "To control for this, a comparison between a controlled group that receives maintenance and an uncontrolled group that does not, can help identify if the maintenance was effective",
+            "delta": 0.05
+          }
+        ],
+        "top_weakened": [],
+        "weakened_count": 0
+      },
+      "contradiction_taxonomy": {},
+      "cycles_completed": 100,
+      "eligible_concepts": [
+        {
+          "centrality": 0.3433,
+          "concept": "This revised belief is based on evidence from repeated observations, which indicate that GPS performance degrades significantly in such environments",
+          "concept_id": "92c440de-b5d6-4f32-b1a9-0eb55a829adc",
+          "confidence_slope": 0.05,
+          "confidence_trajectory": [
+            0.8,
+            0.85
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "unknown",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.0741,
+          "related_concepts": 3,
+          "run": "causal_reasoning_100",
+          "run_origin_tick": 28,
+          "score": 0.622,
+          "sentence_length": 20,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        },
+        {
+          "centrality": 0.3433,
+          "concept": "Prediction: If the city experiences a mild winter, the reduced snow budget will be sufficient, and the city will have saved costs without compromising safety and accessibility",
+          "concept_id": "8e078e10-d3de-47bd-929f-15c09e141ed2",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "cross-domain-budget-weather",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "unknown",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.1,
+          "related_concepts": 3,
+          "run": "causal_reasoning_100",
+          "run_origin_tick": 87,
+          "score": 0.62,
+          "sentence_length": 27,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 100,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 43,
+            "survival_rate": 1.0,
+            "survivors": 43
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 40,
+            "survival_rate": 1.0,
+            "survivors": 40
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 39,
+            "survival_rate": 1.0,
+            "survivors": 39
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          }
+        ]
+      },
+      "promotion_eligible": 2,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 29,
+          "concepts_originated_by_cycle": 29,
+          "cycle": 25,
+          "promotion_eligible": 0,
+          "validated": 22
+        },
+        {
+          "candidate_or_better": 39,
+          "concepts_originated_by_cycle": 39,
+          "cycle": 50,
+          "promotion_eligible": 1,
+          "validated": 27
+        },
+        {
+          "candidate_or_better": 43,
+          "concepts_originated_by_cycle": 43,
+          "cycle": 100,
+          "promotion_eligible": 2,
+          "validated": 29
+        },
+        {
+          "candidate_or_better": 43,
+          "concepts_originated_by_cycle": 43,
+          "cycle": 150,
+          "promotion_eligible": 2,
+          "validated": 29
+        },
+        {
+          "candidate_or_better": 43,
+          "concepts_originated_by_cycle": 43,
+          "cycle": 200,
+          "promotion_eligible": 2,
+          "validated": 29
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 14,
+        "moderate_overlap_unmatured": 3
+      },
+      "rejected": 0,
+      "run": "causal_reasoning_100",
+      "semantic_growth": 43,
+      "unresolved_taxonomy": {
+        "never_revisited": 15,
+        "source_concept_missing_or_superseded": 44
+      },
+      "validated": 29
+    },
+    {
+      "average_score": 0.5776,
+      "confidence_summary": {
+        "average_gain": 0.0517,
+        "average_loss": -0.03,
+        "concepts_with_trajectory": 46,
+        "strengthened_count": 45,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in this causal relationship can be reduced by conducting a controlled experiment to test the impact of maintenance on downtime which would",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The current understanding is that causal relationships in industrial maintenance are complex and can be influenced by various factors leading to uncertainty in predicting",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Prediction: If the city experiences a mild winter, the reduced snow budget will be sufficient, and the city will have saved costs without compromising safety and accessibility",
+            "delta": 0.0575
+          },
+          {
+            "concept": "In industrial maintenance, when two causes interact, a failure timeline can help identify the root cause by rejecting spurious causes",
+            "delta": 0.0575
+          },
+          {
+            "concept": "In industrial maintenance, when two causes interact, a causal chain can be established by examining the failure timelines of the components involved",
+            "delta": 0.0575
+          },
+          {
+            "concept": "If future observations show that performance improvements occur more frequently in equipment that has undergone maintenance the conclusion that maintenance is causally linked to",
+            "delta": 0.0575
+          },
+          {
+            "concept": "However this alternative is less likely if the failure pattern shows a sudden and significant increase in frequency and severity which is more consistent",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Future observations that would change the conclusion could include the discovery of a critical component that failed just before the pump replacement or evidence",
+            "delta": 0.0575
+          },
+          {
+            "concept": "For instance if a machine part A fails due to wear and tear and this failure leads to part B failing due to increased",
+            "delta": 0.0575
+          }
+        ],
+        "top_weakened": [
+          {
+            "concept": "The evidence that would change the answer includes a consistent pattern of delayed side effects following similar maintenance interventions indicating a systematic issue with",
+            "delta": -0.03
+          }
+        ],
+        "weakened_count": 1
+      },
+      "contradiction_taxonomy": {},
+      "cycles_completed": 104,
+      "eligible_concepts": [
+        {
+          "centrality": 0.3433,
+          "concept": "This revised belief is based on evidence from repeated observations, which indicate that GPS performance degrades significantly in such environments",
+          "concept_id": "cc8865b3-7355-496a-ade3-778a1b917f1a",
+          "confidence_slope": 0.05,
+          "confidence_trajectory": [
+            0.8,
+            0.85
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "unknown",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.0714,
+          "related_concepts": 3,
+          "run": "causal_reasoning_200",
+          "run_origin_tick": 28,
+          "score": 0.6223,
+          "sentence_length": 20,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        },
+        {
+          "centrality": 0.3433,
+          "concept": "Prediction: If the city experiences a mild winter, the reduced snow budget will be sufficient, and the city will have saved costs without compromising safety and accessibility",
+          "concept_id": "2ab102e7-8dcc-4243-8dbf-346f80a7be4d",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "cross-domain-budget-weather",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "unknown",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.1,
+          "related_concepts": 3,
+          "run": "causal_reasoning_200",
+          "run_origin_tick": 104,
+          "score": 0.62,
+          "sentence_length": 27,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 104,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 42,
+            "survival_rate": 0.9762,
+            "survivors": 41
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 42,
+            "survival_rate": 0.9762,
+            "survivors": 41
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 42,
+            "survival_rate": 0.9762,
+            "survivors": 41
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 5,
+            "survival_rate": 1.0,
+            "survivors": 5
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          }
+        ]
+      },
+      "promotion_eligible": 2,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 32,
+          "concepts_originated_by_cycle": 32,
+          "cycle": 25,
+          "promotion_eligible": 0,
+          "validated": 22
+        },
+        {
+          "candidate_or_better": 41,
+          "concepts_originated_by_cycle": 42,
+          "cycle": 50,
+          "promotion_eligible": 1,
+          "validated": 25
+        },
+        {
+          "candidate_or_better": 41,
+          "concepts_originated_by_cycle": 42,
+          "cycle": 100,
+          "promotion_eligible": 1,
+          "validated": 25
+        },
+        {
+          "candidate_or_better": 44,
+          "concepts_originated_by_cycle": 45,
+          "cycle": 150,
+          "promotion_eligible": 2,
+          "validated": 27
+        },
+        {
+          "candidate_or_better": 44,
+          "concepts_originated_by_cycle": 45,
+          "cycle": 200,
+          "promotion_eligible": 2,
+          "validated": 27
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 12,
+        "moderate_overlap_unmatured": 4
+      },
+      "rejected": 1,
+      "run": "causal_reasoning_200",
+      "semantic_growth": 45,
+      "unresolved_taxonomy": {
+        "never_revisited": 15,
+        "source_concept_missing_or_superseded": 47
+      },
+      "validated": 27
+    },
+    {
+      "average_score": 0.5585,
+      "confidence_summary": {
+        "average_gain": 0.0512,
+        "average_loss": -0.03,
+        "concepts_with_trajectory": 40,
+        "strengthened_count": 39,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The resolution evidence is the chain-of-custody notes, which document the collection and handling of each witness's statement",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The resolution evidence is the chain-of-custody notes that show the hat was changed during the transfer of the suspect from one officer to another",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The resolution evidence could be a calibration record or any other reliable source that can help reconcile the discrepancies between the two reports",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The prediction that would confirm the resolution is that the sources of the reports are indeed different or that they are the same but",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The prediction that would confirm the resolution is if further investigation reveals additional evidence e g surveillance footage eyewitness interviews or physical evidence that",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The prediction that would confirm the resolution is finding and examining the video or photograph to determine the true color of the suspect's hat",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The contradiction lies in the eyewitness reports where the metadata indicates that the events occurred at different times but the content of the reports",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Reflecting on uncertainty, the resolution may be uncertain if the video or photograph is of poor quality or if the lighting conditions were not ideal",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Reflecting on uncertainty, the confidence in this resolution is lower due to the possibility of human error or miscommunication during the transfer of the suspect",
+            "delta": 0.0575
+          }
+        ],
+        "top_weakened": [
+          {
+            "concept": "The evidence that would change the answer is: A clear and undisputed eyewitness account that contradicts the initial claims",
+            "delta": -0.03
+          }
+        ],
+        "weakened_count": 1
+      },
+      "contradiction_taxonomy": {},
+      "cycles_completed": 100,
+      "eligible_concepts": [
+        {
+          "centrality": 0.3433,
+          "concept": "Prediction If the comparison reveals that the government report s data and methodology are less rigorous than the scientific study s the government report",
+          "concept_id": "02b134ed-4f29-4b16-b338-25f71b94d8c5",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "cross-domain-research-policy",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "unknown",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.0833,
+          "related_concepts": 3,
+          "run": "contradiction_100",
+          "run_origin_tick": 23,
+          "score": 0.6773,
+          "sentence_length": 24,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 100,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 39,
+            "survival_rate": 0.9487,
+            "survivors": 37
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 38,
+            "survival_rate": 0.9737,
+            "survivors": 37
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 38,
+            "survival_rate": 0.9737,
+            "survivors": 37
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          }
+        ]
+      },
+      "promotion_eligible": 1,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 29,
+          "concepts_originated_by_cycle": 30,
+          "cycle": 25,
+          "promotion_eligible": 1,
+          "validated": 21
+        },
+        {
+          "candidate_or_better": 36,
+          "concepts_originated_by_cycle": 38,
+          "cycle": 50,
+          "promotion_eligible": 1,
+          "validated": 27
+        },
+        {
+          "candidate_or_better": 36,
+          "concepts_originated_by_cycle": 39,
+          "cycle": 100,
+          "promotion_eligible": 1,
+          "validated": 27
+        },
+        {
+          "candidate_or_better": 36,
+          "concepts_originated_by_cycle": 39,
+          "cycle": 150,
+          "promotion_eligible": 1,
+          "validated": 27
+        },
+        {
+          "candidate_or_better": 36,
+          "concepts_originated_by_cycle": 39,
+          "cycle": 200,
+          "promotion_eligible": 1,
+          "validated": 27
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 22,
+        "high_paraphrase_overlap": 2,
+        "moderate_overlap_unmatured": 5
+      },
+      "rejected": 1,
+      "run": "contradiction_100",
+      "semantic_growth": 39,
+      "unresolved_taxonomy": {
+        "never_revisited": 15,
+        "source_concept_missing_or_superseded": 43
+      },
+      "validated": 27
+    },
+    {
+      "average_score": 0.5451,
+      "confidence_summary": {
+        "average_gain": 0.0505,
+        "average_loss": -0.02,
+        "concepts_with_trajectory": 82,
+        "strengthened_count": 76,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Tradeoffs in allocating resources for emergency shelters, particularly when one resource is indivisible, involve balancing equity and efficiency",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in this scenario is high, as the withholding agent's motives and the extent of the information they are withholding are unknown",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The prediction is that if the demand exceeds the allocated resources, the shelters will face a higher risk of failure, leading to potential harm to the individuals seeking refuge",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The cost records will guide the reallocation, but there is a risk of underfunding the ongoing needs of the current priority group",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Staff rosters can be used to determine which tasks have the lowest risk and should be delayed",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Service-level data, such as historical usage patterns, demographic information, and current demand, should guide the reallocation",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Mitigating the risk of underspecified interfaces in power grid systems engineering requires a thorough understanding of the dependencies and tradeoffs involved",
+            "delta": 0.0575
+          },
+          {
+            "concept": "If the large tent is allocated to one location it may not be available when needed at another location potentially leading to failure modes",
+            "delta": 0.0575
+          }
+        ],
+        "top_weakened": [
+          {
+            "concept": "A failure mode could occur if the indivisible resource is not properly maintained, leading to its failure during a critical period",
+            "delta": -0.02
+          },
+          {
+            "concept": "The failure mode would occur if the indivisible resource fails, leaving shelters without the critical service",
+            "delta": -0.02
+          },
+          {
+            "concept": "The risk in power grid systems engineering lies in the untested redundancy paths, which can lead to cascading failures if not properly managed",
+            "delta": -0.02
+          },
+          {
+            "concept": "The uncertainty in this system assumption lies in the unpredictability of real-world scenarios and the potential for unforeseen issues that may not be fully captured in the drills",
+            "delta": -0.02
+          },
+          {
+            "concept": "Uncertainty in the system assumption lies in the variability of real world conditions and the unpredictability of power grid failures which can affect the",
+            "delta": -0.02
+          },
+          {
+            "concept": "When analyzing systems engineering for power grids, it is crucial to address the risk of untested redundancy paths",
+            "delta": -0.02
+          }
+        ],
+        "weakened_count": 6
+      },
+      "contradiction_taxonomy": {
+        "references_superseded_or_missing_concept": 3
+      },
+      "cycles_completed": 100,
+      "eligible_concepts": [
+        {
+          "centrality": 0.3433,
+          "concept": "A prediction is that if the reallocation is not done promptly the number of unmet needs will increase resulting in higher stress levels and",
+          "concept_id": "3761685d-98d0-4af8-b35c-742ad0b23f46",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-service-level-data-allocate-scarce-capacity",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "resource_allocation",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.16,
+          "related_concepts": 3,
+          "run": "planning_100",
+          "run_origin_tick": 21,
+          "score": 0.6666,
+          "sentence_length": 24,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        },
+        {
+          "centrality": 0.2333,
+          "concept": "The cost records will guide the reallocation, but there is a risk of underfunding the ongoing needs of the current priority group",
+          "concept_id": "a626e504-dead-45cf-9dc7-43a58ae1dd1f",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-cost-records-rebalance-resources",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "resource_allocation",
+          "projected_centrality": 0.2333,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.1818,
+          "related_concepts": 1,
+          "run": "planning_100",
+          "run_origin_tick": 42,
+          "score": 0.6525,
+          "sentence_length": 22,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 100,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 80,
+            "survival_rate": 0.9125,
+            "survivors": 73
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 75,
+            "survival_rate": 0.9067,
+            "survivors": 68
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 61,
+            "survival_rate": 0.9016,
+            "survivors": 55
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 0,
+            "survival_rate": 0.0,
+            "survivors": 0
+          }
+        ]
+      },
+      "promotion_eligible": 2,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 32,
+          "concepts_originated_by_cycle": 32,
+          "cycle": 25,
+          "promotion_eligible": 1,
+          "validated": 21
+        },
+        {
+          "candidate_or_better": 54,
+          "concepts_originated_by_cycle": 61,
+          "cycle": 50,
+          "promotion_eligible": 2,
+          "validated": 33
+        },
+        {
+          "candidate_or_better": 70,
+          "concepts_originated_by_cycle": 81,
+          "cycle": 100,
+          "promotion_eligible": 2,
+          "validated": 44
+        },
+        {
+          "candidate_or_better": 70,
+          "concepts_originated_by_cycle": 81,
+          "cycle": 150,
+          "promotion_eligible": 2,
+          "validated": 44
+        },
+        {
+          "candidate_or_better": 70,
+          "concepts_originated_by_cycle": 81,
+          "cycle": 200,
+          "promotion_eligible": 2,
+          "validated": 44
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 26,
+        "high_paraphrase_overlap": 2,
+        "moderate_overlap_unmatured": 21
+      },
+      "rejected": 6,
+      "run": "planning_100",
+      "semantic_growth": 81,
+      "unresolved_taxonomy": {
+        "never_revisited": 15,
+        "source_concept_missing_or_superseded": 95
+      },
+      "validated": 44
+    },
+    {
+      "average_score": 0.5572,
+      "confidence_summary": {
+        "average_gain": 0.0513,
+        "average_loss": -0.02,
+        "concepts_with_trajectory": 144,
+        "strengthened_count": 137,
+        "top_strengthened": [
+          {
+            "concept": "cause and effect",
+            "delta": 0.0575
+          },
+          {
+            "concept": "When the emergency response plan is disrupted due to a failed permit assumption the team should use resource telemetry data to assess the current",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Uncertainty in the system assumption lies in the variability of real world conditions and the unpredictability of power grid failures which can affect the",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Uncertainty exists in predicting the exact impact of revised delivery dates on staffing and inspection timing as these factors can be influenced by various",
+            "delta": 0.0575
+          },
+          {
+            "concept": "Tradeoffs in allocating resources for emergency shelters, particularly when one resource is indivisible, involve balancing equity and efficiency",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The uncertainty in the negotiation can be reduced by gathering more information about the other party s true needs and constraints which could lead",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The tradeoff lies in the allocation of scarce capacity prioritizing immediate relief can lead to overburdened shelters and potential safety issues while a more",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The tradeoff in allocating resources for emergency shelters with a 20 percent reduction is that the quality and quantity of services provided may decrease",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The allocation of resources for emergency shelters, given the constraint of one indivisible resource, requires a careful tradeoff between cost and critical service protection",
+            "delta": 0.0575
+          },
+          {
+            "concept": "The allocation of resources for emergency shelters given a 20 percent reduction requires a strategic approach that balances the needs of the most vulnerable",
+            "delta": 0.0575
+          }
+        ],
+        "top_weakened": [
+          {
+            "concept": "Allocating resources for emergency shelters with one indivisible resource, such as a large tent, requires careful consideration",
+            "delta": -0.02
+          },
+          {
+            "concept": "However, a failure mode could occur if the new priority group's needs are not fully met, leading to dissatisfaction and potential public outcry",
+            "delta": -0.02
+          },
+          {
+            "concept": "However, the risk of untested redundancy paths is significant, as they may not function correctly when needed",
+            "delta": -0.02
+          },
+          {
+            "concept": "If one resource, such as a large tent, is indivisible, it may not be possible to fully utilize its capacity in all shelters, leading to underutilization and inefficiency",
+            "delta": -0.02
+          },
+          {
+            "concept": "The risk in power grid systems engineering lies in the untested redundancy paths, which can lead to cascading failures if not properly managed",
+            "delta": -0.02
+          },
+          {
+            "concept": "The risk is that a redundancy path is untested",
+            "delta": -0.02
+          },
+          {
+            "concept": "To predict the failure mode, we could observe if the new priority group's specific needs, such as language barriers or accessibility requirements, are being met",
+            "delta": -0.02
+          }
+        ],
+        "weakened_count": 7
+      },
+      "contradiction_taxonomy": {
+        "references_superseded_or_missing_concept": 4
+      },
+      "cycles_completed": 200,
+      "eligible_concepts": [
+        {
+          "centrality": 0.2333,
+          "concept": "The tradeoff lies in the allocation of scarce capacity prioritizing immediate relief can lead to overburdened shelters and potential safety issues while a more",
+          "concept_id": "9218afd4-0648-4298-b006-36f2aca23281",
+          "confidence_slope": 0.0575,
+          "confidence_trajectory": [
+            0.8,
+            0.8575
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "resource_allocation-emergency-shelters-demand-spikes-unexpectedly-capacity-reports-allocate-scarce-capacity",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "resource_allocation",
+          "projected_centrality": 0.2333,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.1471,
+          "related_concepts": 1,
+          "run": "planning_200",
+          "run_origin_tick": 93,
+          "score": 0.6574,
+          "sentence_length": 24,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        },
+        {
+          "centrality": 0.3433,
+          "concept": "Expected evidence includes log entries related to the incident, such as error messages, warnings, or unusual activity",
+          "concept_id": "7d3d6a2d-4a8b-4667-abe4-13297158d10f",
+          "confidence_slope": 0.05,
+          "confidence_trajectory": [
+            0.8,
+            0.85
+          ],
+          "failed_predictions": 0,
+          "incomplete_proposition": false,
+          "objective": "tool_use-incident-response-the-first-source-is-incomplete-application-logs-choose-the-first-tool",
+          "open_contradictions": 0,
+          "prediction_accuracy": 1.0,
+          "profile": "tool_use",
+          "projected_centrality": 0.3433,
+          "projection_sources": [
+            "supporting_evidence_memory_relationships",
+            "shared_supporting_evidence",
+            "prediction_links",
+            "supporting_evidence_count",
+            "relationship_type_diversity"
+          ],
+          "prompt_artifact_penalty": 0.0,
+          "provider": "qwen",
+          "redundancy": 0.08,
+          "related_concepts": 3,
+          "run": "planning_200",
+          "run_origin_tick": 7,
+          "score": 0.6211,
+          "sentence_length": 17,
+          "supported_predictions": 1,
+          "supporting_evidence_count": 2,
+          "supporting_memory_relationship_edges": 1,
+          "unresolved_predictions": 0,
+          "validation_count": 1
+        }
+      ],
+      "lifespan_summary": {
+        "half_life_interpretation": "not reached within observed campaign window",
+        "knowledge_half_life_cycles": null,
+        "max_tick": 200,
+        "survival_by_age": [
+          {
+            "age_cycles": 5,
+            "cohort": 140,
+            "survival_rate": 0.95,
+            "survivors": 133
+          },
+          {
+            "age_cycles": 20,
+            "cohort": 136,
+            "survival_rate": 0.9559,
+            "survivors": 130
+          },
+          {
+            "age_cycles": 50,
+            "cohort": 133,
+            "survival_rate": 0.9549,
+            "survivors": 127
+          },
+          {
+            "age_cycles": 100,
+            "cohort": 107,
+            "survival_rate": 0.9439,
+            "survivors": 101
+          },
+          {
+            "age_cycles": 150,
+            "cohort": 64,
+            "survival_rate": 0.9844,
+            "survivors": 63
+          }
+        ]
+      },
+      "promotion_eligible": 2,
+      "promotion_velocity": [
+        {
+          "candidate_or_better": 0,
+          "concepts_originated_by_cycle": 0,
+          "cycle": 0,
+          "promotion_eligible": 0,
+          "validated": 0
+        },
+        {
+          "candidate_or_better": 36,
+          "concepts_originated_by_cycle": 37,
+          "cycle": 25,
+          "promotion_eligible": 1,
+          "validated": 23
+        },
+        {
+          "candidate_or_better": 60,
+          "concepts_originated_by_cycle": 64,
+          "cycle": 50,
+          "promotion_eligible": 1,
+          "validated": 36
+        },
+        {
+          "candidate_or_better": 96,
+          "concepts_originated_by_cycle": 107,
+          "cycle": 100,
+          "promotion_eligible": 2,
+          "validated": 58
+        },
+        {
+          "candidate_or_better": 122,
+          "concepts_originated_by_cycle": 133,
+          "cycle": 150,
+          "promotion_eligible": 2,
+          "validated": 76
+        },
+        {
+          "candidate_or_better": 130,
+          "concepts_originated_by_cycle": 143,
+          "cycle": 200,
+          "promotion_eligible": 2,
+          "validated": 82
+        }
+      ],
+      "redundancy_taxonomy": {
+        "accepted_overlap_reusable": 46,
+        "high_paraphrase_overlap": 4,
+        "moderate_overlap_unmatured": 39
+      },
+      "rejected": 7,
+      "run": "planning_200",
+      "semantic_growth": 143,
+      "unresolved_taxonomy": {
+        "never_revisited": 15,
+        "source_concept_missing_or_superseded": 159
+      },
+      "validated": 82
+    }
+  ],
+  "score_trajectory_limitation": "Phase 26 stored final governance decisions, not per-cycle promotion-score snapshots. Phase 27 reports origin-cycle velocity proxies and confidence trajectories, but not true promotion-score trajectories.",
+  "state_transition_diagram": "Generated (812)\n      |\n      v\nEvaluated (928)\n      |\n      v\nValidated (448)\n      |\n  +---+----------------------+\n  |                          |\n  v                          v\nRejected (63)        Candidate (371)\n                             |\n                             v\nHold/Experimental (34)\n                             |\n                             v\nPromotion Eligible (12)\n                             |\n                             v\nCanonical Ready (0)",
+  "survivor_maturation_time": {
+    "average_first_learned_cycle": 58.5,
+    "average_observed_cycles_to_final_eligibility": 67.1667,
+    "max_observed_cycles_to_final_eligibility": 193,
+    "measurement_note": "Phase 26 stores final governance snapshots, not the exact cycle at which a concept first became Validated or Promotion Eligible. These are origin-to-final-governance maturation windows, not true state-transition timestamps.",
+    "min_observed_cycles_to_final_eligibility": 0
+  },
+  "unresolved_prediction_taxonomy": {
+    "never_revisited": 107,
+    "source_concept_missing_or_superseded": 913
+  }
+}

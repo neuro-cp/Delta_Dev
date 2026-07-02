@@ -1,0 +1,75 @@
+[
+  {
+    "artifact_rate_learned": 0.3333,
+    "avg_redundancy_learned": 0.2258,
+    "avg_score_all": 0.5291,
+    "avg_score_learned": 0.5259,
+    "concepts": 64,
+    "contradiction_delta": 1,
+    "cycles_completed": 20,
+    "incomplete_rate_learned": 0.2292,
+    "label": "Phase20 baseline planning_20",
+    "learned_concepts": 48,
+    "normalization_precision": 0.0,
+    "normalization_recovered": 0,
+    "prediction_delta": 50,
+    "recommendation_counts": {
+      "Candidate": 43,
+      "Hold for More Validation": 2,
+      "Reject": 2,
+      "Validated": 17
+    },
+    "score_ge_056_learned": 16,
+    "score_ge_062_learned": 1,
+    "semantic_delta": 48,
+    "validation_accuracy": 1.0,
+    "validation_coverage": 0.9394
+  },
+  {
+    "artifact_rate_learned": 0.3846,
+    "avg_redundancy_learned": 0.2069,
+    "avg_score_all": 0.5447,
+    "avg_score_learned": 0.5515,
+    "concepts": 29,
+    "contradiction_delta": 0,
+    "cycles_completed": 8,
+    "incomplete_rate_learned": 0.8462,
+    "label": "Phase23 formatting contract",
+    "learned_concepts": 13,
+    "normalization_precision": 0.0,
+    "normalization_recovered": 0,
+    "prediction_delta": 13,
+    "recommendation_counts": {
+      "Candidate": 29
+    },
+    "score_ge_056_learned": 6,
+    "score_ge_062_learned": 1,
+    "semantic_delta": 13,
+    "validation_accuracy": 1.0,
+    "validation_coverage": 1.0
+  },
+  {
+    "artifact_rate_learned": 0.3913,
+    "avg_redundancy_learned": 0.1613,
+    "avg_score_all": 0.5513,
+    "avg_score_learned": 0.5599,
+    "concepts": 39,
+    "contradiction_delta": 0,
+    "cycles_completed": 8,
+    "incomplete_rate_learned": 0.1739,
+    "label": "Phase24 boundary verification",
+    "learned_concepts": 23,
+    "normalization_precision": 0.0,
+    "normalization_recovered": 0,
+    "prediction_delta": 23,
+    "recommendation_counts": {
+      "Candidate": 29,
+      "Validated": 10
+    },
+    "score_ge_056_learned": 15,
+    "score_ge_062_learned": 0,
+    "semantic_delta": 23,
+    "validation_accuracy": 1.0,
+    "validation_coverage": 1.0
+  }
+]

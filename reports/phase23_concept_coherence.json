@@ -1,0 +1,2920 @@
+{
+  "baseline": {
+    "coherence": {
+      "average_concepts_per_evidence": 2.24,
+      "average_objective_neighbors": 5.1562,
+      "average_prediction_links": 0.2344,
+      "average_relationship_diversity": 0.75,
+      "average_shared_evidence_neighbors": 1.4062,
+      "cluster_count": 33,
+      "clusters": [
+        {
+          "concept_ids": [
+            "39f19b7a-7f2e-4723-9893-6d6b138ddc9a",
+            "01c663b1-6f06-4311-adff-2bbf7ac53f1f",
+            "c4d68166-2a73-4e1b-8abf-7383e2dc65a9"
+          ],
+          "sample_concepts": [
+            "Identifying and addressing overlapping responsibilities among multiple agents",
+            "Each agent s belief about their role and",
+            "Evidence that would change the answer includes feedback"
+          ],
+          "size": 3,
+          "top_terms": [
+            "agents",
+            "communication",
+            "multiple",
+            "among",
+            "aid",
+            "clear",
+            "identifying",
+            "mutual"
+          ]
+        },
+        {
+          "concept_ids": [
+            "e3b806fc-fee7-4fb1-8295-aa22cdcaa8e3",
+            "0b7ff2f3-3e1d-4454-ad10-84e1ec79c928",
+            "7ddffbc4-8010-447e-a389-31322e3a3f16"
+          ],
+          "sample_concepts": [
+            "If the initial orders fail to materialize the",
+            "Evidence that would revise the belief could include",
+            "The uncertainty can be reduced by obtaining regular"
+          ],
+          "size": 3,
+          "top_terms": [
+            "chain",
+            "could",
+            "supply",
+            "risk",
+            "materialize",
+            "disruption",
+            "fail",
+            "operational"
+          ]
+        },
+        {
+          "concept_ids": [
+            "a915d662-3402-4220-9361-c213491cb160",
+            "94945399-b7db-451a-89a4-25cbfe17d93c",
+            "5bb28ba0-1a4b-4b05-85c6-66650b8b43fd"
+          ],
+          "sample_concepts": [
+            "To predict a handoff failure status updates should",
+            "Each agent s belief about the situation should",
+            "Evidence that would change the answer includes direct"
+          ],
+          "size": 3,
+          "top_terms": [
+            "failure",
+            "should",
+            "agent",
+            "handoff",
+            "monitored",
+            "delays",
+            "predict",
+            "status"
+          ]
+        },
+        {
+          "concept_ids": [
+            "27c38b86-7634-411e-af07-037db6551b47",
+            "c8b9eb9f-a34b-48be-93b8-54fae6397e15",
+            "6e17917e-f974-4967-bb99-849c94b4558e"
+          ],
+          "sample_concepts": [
+            "If the priority group changes it may require",
+            "For example if the new priority group has",
+            "The failure mode could be a situation where"
+          ],
+          "size": 3,
+          "top_terms": [
+            "group",
+            "priority",
+            "risk",
+            "new",
+            "shelters",
+            "could",
+            "expense",
+            "may"
+          ]
+        },
+        {
+          "concept_ids": [
+            "97fd8d63-9256-48ce-8ed3-aa684a5ba4a2",
+            "6a4cd661-7ff9-4d1c-8115-e09f9de1769c",
+            "5b0dc8a7-24e9-46dd-90f0-41445528224f"
+          ],
+          "sample_concepts": [
+            "By doing so we can predict potential handoff",
+            "Each agent should maintain a belief about the",
+            "For instance if a previous handoff was delayed"
+          ],
+          "size": 3,
+          "top_terms": [
+            "handoff",
+            "current",
+            "accordingly",
+            "potential",
+            "doing",
+            "revise",
+            "predict",
+            "failures"
+          ]
+        },
+        {
+          "concept_ids": [
+            "b05e82b0-b237-4924-814f-e99318ccc76a",
+            "50783122-e20f-48d6-a582-45d3f38485f9",
+            "f91e2199-06d6-4c6b-bb7a-57d673c3b60a"
+          ],
+          "sample_concepts": [
+            "When a permit assumption fails the emergency response",
+            "A testable prediction is that the resequenced plan",
+            "Evidence that would falsify this prediction is if"
+          ],
+          "size": 3,
+          "top_terms": [
+            "plan",
+            "response",
+            "resequenced",
+            "times",
+            "prediction",
+            "based",
+            "revised",
+            "actions"
+          ]
+        },
+        {
+          "concept_ids": [
+            "160d1d31-2e77-4fbd-a6b2-0e816606c3a8",
+            "aaa86ae9-0ea7-463d-93e1-217c667ef12d",
+            "85fe9c48-7195-4d17-a626-2a57518ed1e6"
+          ],
+          "sample_concepts": [
+            "When allocating resources for emergency shelters a 20",
+            "Service level data can help identify lower risk",
+            "Evidence that would require reallocation includes a significant"
+          ],
+          "size": 3,
+          "top_terms": [
+            "resources",
+            "risk",
+            "critical",
+            "emergency",
+            "shelters",
+            "prioritizing",
+            "necessitates",
+            "areas"
+          ]
+        },
+        {
+          "concept_ids": [
+            "5152c175-9d3e-4479-9df7-c859e77a44af",
+            "8fada742-db8a-45f5-a319-feb8e8c20d03",
+            "63aecd0e-84c1-4288-aa94-a71f2941230a"
+          ],
+          "sample_concepts": [
+            "Allocating resources for emergency shelters during unexpected demand",
+            "By deferring lower risk work based on capacity",
+            "The failure mode could be a backlog of"
+          ],
+          "size": 3,
+          "top_terms": [
+            "resources",
+            "risk",
+            "work",
+            "lower",
+            "term",
+            "immediate",
+            "shelters",
+            "during"
+          ]
+        },
+        {
+          "concept_ids": [
+            "358e1c6a-7067-4056-93f2-7409df73d01e",
+            "2b8f3f29-051a-4f5c-833a-5a348e3a81c0",
+            "4a95532d-a427-4b1a-9076-fc1da3982325"
+          ],
+          "sample_concepts": [
+            "When allocating resources for emergency shelters the indivisibility",
+            "Service level data can guide decisions by identifying",
+            "However this approach introduces a tradeoff while it"
+          ],
+          "size": 3,
+          "top_terms": [
+            "risk",
+            "areas",
+            "lower",
+            "act",
+            "shelters",
+            "necessitates",
+            "indivisibility",
+            "when"
+          ]
+        },
+        {
+          "concept_ids": [
+            "b81de207-8678-4891-95ea-9b8a00505ab3",
+            "9c9d9200-7bfc-42b5-9796-bc4a455611e0",
+            "ae9bbed9-f9f2-41c5-8bee-304adf650704"
+          ],
+          "sample_concepts": [
+            "When a permit assumption fails the emergency response",
+            "A testable prediction could be that if the",
+            "Evidence that would falsify this prediction could be"
+          ],
+          "size": 3,
+          "top_terms": [
+            "risk",
+            "work",
+            "delay",
+            "could",
+            "prediction",
+            "plan",
+            "methods",
+            "revised"
+          ]
+        },
+        {
+          "concept_ids": [
+            "b1fa8e4f-eff3-4b09-b8cc-bf579f848852",
+            "bf4256b2-fa11-4b45-9d98-4686c329b10c",
+            "ecd9c308-a959-4203-b7d7-b7f50f3a1f87"
+          ],
+          "sample_concepts": [
+            "The part of the city snow removal route",
+            "This prediction is based on the assumption that",
+            "Evidence that would confirm this prediction includes reports"
+          ],
+          "size": 3,
+          "top_terms": [
+            "snow",
+            "route",
+            "removal",
+            "downstream",
+            "fail",
+            "will",
+            "delays",
+            "traffic"
+          ]
+        },
+        {
+          "concept_ids": [
+            "d182c305-d610-46cb-ae85-62fa7601a60b",
+            "4246de56-7498-4117-9772-9707f66a4ef4",
+            "50740d10-bc9b-49fe-b576-65f1f0bfd72c"
+          ],
+          "sample_concepts": [
+            "Allocating resources for emergency shelters with one indivisible",
+            "Capacity reports from previous emergencies can help predict",
+            "If the large tent is allocated to one"
+          ],
+          "size": 3,
+          "top_terms": [
+            "such",
+            "shelters",
+            "indivisible",
+            "tent",
+            "resource",
+            "one",
+            "large",
+            "requires"
+          ]
+        },
+        {
+          "concept_ids": [
+            "2c71ac8d-4256-4a03-942f-5482d1dc7d6f",
+            "90b5784e-749e-4a2d-94d4-1a26b8ea2e4a",
+            "43027457-b2a3-4fbe-89c3-d2b30cf42fe8"
+          ],
+          "sample_concepts": [
+            "Evidence that would break the chain includes the",
+            "The cycle can be completed by predicting that",
+            "This prediction can be tested by monitoring the"
+          ],
+          "size": 3,
+          "top_terms": [
+            "supplier",
+            "window",
+            "inspection",
+            "completed",
+            "time",
+            "resolving",
+            "being",
+            "delay"
+          ]
+        },
+        {
+          "concept_ids": [
+            "7db25b1a-dea0-4267-82fb-fd02f2b6a417",
+            "6696860e-4d3f-4122-91b8-065f408c8aa3",
+            "eab98338-86d5-4881-b2da-828a32ca6b06"
+          ],
+          "sample_concepts": [
+            "Agents in a mutual aid response can coordinate",
+            "Each agent s belief about the situation the",
+            "For example if an agent reports a sudden"
+          ],
+          "size": 3,
+          "top_terms": [
+            "updates",
+            "point",
+            "failure",
+            "agent",
+            "coordinate",
+            "aid",
+            "potential",
+            "mutual"
+          ]
+        },
+        {
+          "concept_ids": [
+            "7eb9f422-9adf-4df2-851f-c43a75a1b2ec",
+            "4a977d2e-fdf5-4d2f-ac3b-d7c880ca09ff"
+          ],
+          "sample_concepts": [
+            "The tradeoff lies in the allocation of scarce",
+            "To predict this we would monitor real time"
+          ],
+          "size": 2,
+          "top_terms": [
+            "capacity",
+            "allocation",
+            "shelters",
+            "cautious",
+            "potential",
+            "fail",
+            "might",
+            "scarce"
+          ]
+        },
+        {
+          "concept_ids": [
+            "cd00dd5c-331c-4427-a878-20083cd88607",
+            "ade1f955-720d-4b37-bd66-f68c98197ea0"
+          ],
+          "sample_concepts": [
+            "When allocating resources for emergency shelters the priority",
+            "Predicting the failure mode if the capacity is"
+          ],
+          "size": 2,
+          "top_terms": [
+            "capacity",
+            "resources",
+            "group",
+            "priority",
+            "shelters",
+            "necessitates",
+            "supported",
+            "when"
+          ]
+        },
+        {
+          "concept_ids": [
+            "48198805-c4ed-4e79-850f-f67c0b6d3e60",
+            "007ba69a-02ae-4c11-a017-8ab736aa2c0e"
+          ],
+          "sample_concepts": [
+            "Capacity reports are crucial for identifying the most",
+            "The uncertainty in this scenario lies in the"
+          ],
+          "size": 2,
+          "top_terms": [
+            "critical",
+            "directed",
+            "capacity",
+            "crucial",
+            "areas",
+            "where",
+            "identifying",
+            "reports"
+          ]
+        },
+        {
+          "concept_ids": [
+            "84f5d44f-c1df-467e-a655-ba5d7facf1f2"
+          ],
+          "sample_concepts": [
+            "contradiction"
+          ],
+          "size": 1,
+          "top_terms": [
+            "better",
+            "contradiction",
+            "knowledge",
+            "preserved",
+            "between",
+            "through",
+            "conflict",
+            "should"
+          ]
+        },
+        {
+          "concept_ids": [
+            "8dc713cb-7219-4e20-878e-2ebdc3fa3b5d"
+          ],
+          "sample_concepts": [
+            "learning"
+          ],
+          "size": 1,
+          "top_terms": [
+            "better",
+            "organization",
+            "knowledge",
+            "confidence",
+            "experience",
+            "relationships",
+            "goals",
+            "into"
+          ]
+        },
+        {
+          "concept_ids": [
+            "7b7836cc-743c-4902-b6ae-0d34ba44c33b"
+          ],
+          "sample_concepts": [
+            "object"
+          ],
+          "size": 1,
+          "top_terms": [
+            "bounded",
+            "relationships",
+            "object",
+            "observations",
+            "across",
+            "have",
+            "properties",
+            "participate"
+          ]
+        },
+        {
+          "concept_ids": [
+            "cc18a4f9-b1d6-42e4-907b-799fb74972ee"
+          ],
+          "sample_concepts": [
+            "curiosity"
+          ],
+          "size": 1,
+          "top_terms": [
+            "confidence",
+            "relationships",
+            "failed",
+            "investigate",
+            "curiosity",
+            "low",
+            "pressure",
+            "missing"
+          ]
+        },
+        {
+          "concept_ids": [
+            "9a0e878b-77f7-4b7e-990b-4847aefe0e00"
+          ],
+          "sample_concepts": [
+            "confidence"
+          ],
+          "size": 1,
+          "top_terms": [
+            "delta",
+            "confidence",
+            "current",
+            "should",
+            "estimates",
+            "claim",
+            "strongly",
+            "how"
+          ]
+        },
+        {
+          "concept_ids": [
+            "59c932c0-aa8f-40a9-b93a-01d084154d1e"
+          ],
+          "sample_concepts": [
+            "cause and effect"
+          ],
+          "size": 1,
+          "top_terms": [
+            "event",
+            "another",
+            "context",
+            "effect",
+            "contributes",
+            "condition",
+            "cause",
+            "effects"
+          ]
+        },
+        {
+          "concept_ids": [
+            "f0722948-7479-466a-8d2f-014c27481b42"
+          ],
+          "sample_concepts": [
+            "time"
+          ],
+          "size": 1,
+          "top_terms": [
+            "events",
+            "during",
+            "time",
+            "into",
+            "before",
+            "supports",
+            "order",
+            "planning"
+          ]
+        },
+        {
+          "concept_ids": [
+            "d3eaac90-1be1-491a-9981-b2bf03036512"
+          ],
+          "sample_concepts": [
+            "simulation"
+          ],
+          "size": 1,
+          "top_terms": [
+            "executing",
+            "risk",
+            "evaluates",
+            "confidence",
+            "without",
+            "preserve",
+            "should",
+            "hypothetical"
+          ]
+        }
+      ],
+      "concept_count": 64,
+      "duplicate_concept_texts": 1,
+      "isolated_concepts": 0,
+      "isolated_rate": 0.0,
+      "isolated_samples": [],
+      "largest_cluster_size": 3,
+      "per_concept": [
+        {
+          "concept": "identity",
+          "concept_id": "7e62afdb-d2d8-48e7-a055-4a1e5e2e4be8",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5401,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "time",
+          "concept_id": "f0722948-7479-466a-8d2f-014c27481b42",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5407,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "object",
+          "concept_id": "7b7836cc-743c-4902-b6ae-0d34ba44c33b",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5364,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "evidence",
+          "concept_id": "4c3d2865-e5b0-4a53-a3b1-0ccd3dd8cdca",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5273,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "confidence",
+          "concept_id": "9a0e878b-77f7-4b7e-990b-4847aefe0e00",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5245,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "contradiction",
+          "concept_id": "84f5d44f-c1df-467e-a655-ba5d7facf1f2",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5351,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "goal",
+          "concept_id": "de7bdf63-aa23-4c7c-bef7-d107c6d8a2f1",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5379,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "action",
+          "concept_id": "6d69af2c-4e21-4c0c-aa86-bc3d8a5aa450",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.54,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "planning",
+          "concept_id": "b27b89a1-c5a7-4964-9859-571e8d96536f",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5376,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "prediction",
+          "concept_id": "ef81527e-0095-41d9-bbed-22e9fbfb8de2",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5351,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "simulation",
+          "concept_id": "d3eaac90-1be1-491a-9981-b2bf03036512",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5288,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "learning",
+          "concept_id": "8dc713cb-7219-4e20-878e-2ebdc3fa3b5d",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5379,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "language",
+          "concept_id": "ae7c71ab-0add-48ed-af83-339a3394861d",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5287,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "number",
+          "concept_id": "dce304e0-b6d7-479d-9d6a-540ccea5dd01",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5348,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "curiosity",
+          "concept_id": "cc18a4f9-b1d6-42e4-907b-799fb74972ee",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5295,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "cause and effect",
+          "concept_id": "59c932c0-aa8f-40a9-b93a-01d084154d1e",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 0,
+          "promotion_score": 0.6083,
+          "provider": "unknown",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "If the initial orders fail to materialize the",
+          "concept_id": "e3b806fc-fee7-4fb1-8295-aa22cdcaa8e3",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "prediction-error-inventory",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5747,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would revise the belief could include",
+          "concept_id": "0b7ff2f3-3e1d-4454-ad10-84e1ec79c928",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "prediction-error-inventory",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5549,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "The uncertainty can be reduced by obtaining regular",
+          "concept_id": "7ddffbc4-8010-447e-a389-31322e3a3f16",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "prediction-error-inventory",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.529,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "By doing so we can predict potential handoff",
+          "concept_id": "97fd8d63-9256-48ce-8ed3-aa684a5ba4a2",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-handoffs-are-delayed-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5669,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Each agent should maintain a belief about the",
+          "concept_id": "6a4cd661-7ff9-4d1c-8115-e09f9de1769c",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-handoffs-are-delayed-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5572,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "For instance if a previous handoff was delayed",
+          "concept_id": "5b0dc8a7-24e9-46dd-90f0-41445528224f",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-handoffs-are-delayed-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5853,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "The tradeoff lies in the allocation of scarce",
+          "concept_id": "7eb9f422-9adf-4df2-851f-c43a75a1b2ec",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-demand-spikes-unexpectedly-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.582,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "To predict this we would monitor real time",
+          "concept_id": "4a977d2e-fdf5-4d2f-ac3b-d7c880ca09ff",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-demand-spikes-unexpectedly-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5533,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "The part of the city snow removal route",
+          "concept_id": "b1fa8e4f-eff3-4b09-b8cc-bf579f848852",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "prediction-error-snow-route",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5725,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "This prediction is based on the assumption that",
+          "concept_id": "bf4256b2-fa11-4b45-9d98-4686c329b10c",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "prediction-error-snow-route",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5347,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would confirm this prediction includes reports",
+          "concept_id": "ecd9c308-a959-4203-b7d7-b7f50f3a1f87",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "prediction-error-snow-route",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5347,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Agents in a mutual aid response can coordinate",
+          "concept_id": "7db25b1a-dea0-4267-82fb-fd02f2b6a417",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-agents-have-different-incentives-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5669,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Each agent s belief about the situation the",
+          "concept_id": "6696860e-4d3f-4122-91b8-065f408c8aa3",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-agents-have-different-incentives-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5449,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "For example if an agent reports a sudden",
+          "concept_id": "eab98338-86d5-4881-b2da-828a32ca6b06",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-agents-have-different-incentives-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5514,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Allocating resources for emergency shelters with one indivisible",
+          "concept_id": "d182c305-d610-46cb-ae85-62fa7601a60b",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-one-resource-is-indivisible-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5436,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Capacity reports from previous emergencies can help predict",
+          "concept_id": "4246de56-7498-4117-9772-9707f66a4ef4",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-one-resource-is-indivisible-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5797,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "If the large tent is allocated to one",
+          "concept_id": "50740d10-bc9b-49fe-b576-65f1f0bfd72c",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-one-resource-is-indivisible-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5796,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would break the chain includes the",
+          "concept_id": "2c71ac8d-4256-4a03-942f-5482d1dc7d6f",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "causal-chain-supply-delay",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5444,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "The cycle can be completed by predicting that",
+          "concept_id": "90b5784e-749e-4a2d-94d4-1a26b8ea2e4a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "causal-chain-supply-delay",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.6097,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "This prediction can be tested by monitoring the",
+          "concept_id": "43027457-b2a3-4fbe-89c3-d2b30cf42fe8",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "causal-chain-supply-delay",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5027,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "To predict a handoff failure status updates should",
+          "concept_id": "a915d662-3402-4220-9361-c213491cb160",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-one-agent-withholds-information-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.57,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Each agent s belief about the situation should",
+          "concept_id": "94945399-b7db-451a-89a4-25cbfe17d93c",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-one-agent-withholds-information-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5432,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would change the answer includes direct",
+          "concept_id": "5bb28ba0-1a4b-4b05-85c6-66650b8b43fd",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-one-agent-withholds-information-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.4932,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Capacity reports are crucial for identifying the most",
+          "concept_id": "48198805-c4ed-4e79-850f-f67c0b6d3e60",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-resources-drop-by-20-percent-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.515,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "The uncertainty in this scenario lies in the",
+          "concept_id": "007ba69a-02ae-4c11-a017-8ab736aa2c0e",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-resources-drop-by-20-percent-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5639,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "When a permit assumption fails the emergency response",
+          "concept_id": "b05e82b0-b237-4924-814f-e99318ccc76a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-resequence-the-plan",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.538,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "A testable prediction is that the resequenced plan",
+          "concept_id": "50783122-e20f-48d6-a582-45d3f38485f9",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-resequence-the-plan",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5257,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would falsify this prediction is if",
+          "concept_id": "f91e2199-06d6-4c6b-bb7a-57d673c3b60a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-resequence-the-plan",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5001,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Identifying and addressing overlapping responsibilities among multiple agents",
+          "concept_id": "39f19b7a-7f2e-4723-9893-6d6b138ddc9a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-responsibilities-overlap-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5763,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Each agent s belief about their role and",
+          "concept_id": "01c663b1-6f06-4311-adff-2bbf7ac53f1f",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-responsibilities-overlap-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.549,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would change the answer includes feedback",
+          "concept_id": "c4d68166-2a73-4e1b-8abf-7383e2dc65a9",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "multi_agent_coordination-mutual-aid-response-responsibilities-overlap-status-updates-predict-a-handoff-failure",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.4932,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "When allocating resources for emergency shelters the indivisibility",
+          "concept_id": "358e1c6a-7067-4056-93f2-7409df73d01e",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-one-resource-is-indivisible-service-level-data-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5436,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Service level data can guide decisions by identifying",
+          "concept_id": "2b8f3f29-051a-4f5c-833a-5a348e3a81c0",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-one-resource-is-indivisible-service-level-data-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5535,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "However this approach introduces a tradeoff while it",
+          "concept_id": "4a95532d-a427-4b1a-9076-fc1da3982325",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-one-resource-is-indivisible-service-level-data-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5778,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "When a permit assumption fails the emergency response",
+          "concept_id": "b81de207-8678-4891-95ea-9b8a00505ab3",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-delay-the-lowest-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.538,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "A testable prediction could be that if the",
+          "concept_id": "9c9d9200-7bfc-42b5-9796-bc4a455611e0",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-delay-the-lowest-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.0996,
+          "provider": "qwen",
+          "recommendation": "Reject",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would falsify this prediction could be",
+          "concept_id": "ae9bbed9-f9f2-41c5-8bee-304adf650704",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-delay-the-lowest-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.129,
+          "provider": "qwen",
+          "recommendation": "Reject",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "If the priority group changes it may require",
+          "concept_id": "27c38b86-7634-411e-af07-037db6551b47",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.6277,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "For example if the new priority group has",
+          "concept_id": "c8b9eb9f-a34b-48be-93b8-54fae6397e15",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5455,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "The failure mode could be a situation where",
+          "concept_id": "6e17917e-f974-4967-bb99-849c94b4558e",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5678,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "When allocating resources for emergency shelters the priority",
+          "concept_id": "cd00dd5c-331c-4427-a878-20083cd88607",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5032,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "Predicting the failure mode if the capacity is",
+          "concept_id": "ade1f955-720d-4b37-bd66-f68c98197ea0",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5678,
+          "provider": "qwen",
+          "recommendation": "Validated",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "When allocating resources for emergency shelters a 20",
+          "concept_id": "160d1d31-2e77-4fbd-a6b2-0e816606c3a8",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-resources-drop-by-20-percent-service-level-data-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5541,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Service level data can help identify lower risk",
+          "concept_id": "aaa86ae9-0ea7-463d-93e1-217c667ef12d",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-resources-drop-by-20-percent-service-level-data-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5502,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would require reallocation includes a significant",
+          "concept_id": "85fe9c48-7195-4d17-a626-2a57518ed1e6",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-resources-drop-by-20-percent-service-level-data-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.4165,
+          "provider": "qwen",
+          "recommendation": "Hold for More Validation",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Allocating resources for emergency shelters during unexpected demand",
+          "concept_id": "5152c175-9d3e-4479-9df7-c859e77a44af",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-demand-spikes-unexpectedly-capacity-reports-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.4015,
+          "provider": "qwen",
+          "recommendation": "Hold for More Validation",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "By deferring lower risk work based on capacity",
+          "concept_id": "8fada742-db8a-45f5-a319-feb8e8c20d03",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-demand-spikes-unexpectedly-capacity-reports-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5117,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "The failure mode could be a backlog of",
+          "concept_id": "63aecd0e-84c1-4288-aa94-a71f2941230a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-demand-spikes-unexpectedly-capacity-reports-defer-lower-risk-work",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5178,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        }
+      ],
+      "relationship_type_counts": {
+        "temporal_sequence": 20
+      },
+      "reused_evidence_count": 34,
+      "store_root": ".tmp\\experiments\\phase20_campaign\\planning_20\\store",
+      "top_cooccurring_terms": [
+        {
+          "terms": [
+            "could",
+            "risk"
+          ],
+          "weighted_count": 9
+        },
+        {
+          "terms": [
+            "risk",
+            "shelters"
+          ],
+          "weighted_count": 9
+        },
+        {
+          "terms": [
+            "agent",
+            "failure"
+          ],
+          "weighted_count": 6
+        },
+        {
+          "terms": [
+            "plan",
+            "prediction"
+          ],
+          "weighted_count": 6
+        },
+        {
+          "terms": [
+            "resources",
+            "risk"
+          ],
+          "weighted_count": 6
+        },
+        {
+          "terms": [
+            "risk",
+            "work"
+          ],
+          "weighted_count": 6
+        },
+        {
+          "terms": [
+            "lower",
+            "risk"
+          ],
+          "weighted_count": 6
+        },
+        {
+          "terms": [
+            "group",
+            "priority"
+          ],
+          "weighted_count": 5
+        },
+        {
+          "terms": [
+            "group",
+            "shelters"
+          ],
+          "weighted_count": 5
+        },
+        {
+          "terms": [
+            "priority",
+            "shelters"
+          ],
+          "weighted_count": 5
+        },
+        {
+          "terms": [
+            "resources",
+            "shelters"
+          ],
+          "weighted_count": 5
+        },
+        {
+          "terms": [
+            "necessitates",
+            "shelters"
+          ],
+          "weighted_count": 5
+        },
+        {
+          "terms": [
+            "capacity",
+            "shelters"
+          ],
+          "weighted_count": 4
+        },
+        {
+          "terms": [
+            "agents",
+            "communication"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "agents",
+            "multiple"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "agents",
+            "among"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "agents",
+            "aid"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "agents",
+            "clear"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "communication",
+            "multiple"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "among",
+            "communication"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "aid",
+            "communication"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "clear",
+            "communication"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "among",
+            "multiple"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "aid",
+            "multiple"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "clear",
+            "multiple"
+          ],
+          "weighted_count": 3
+        }
+      ]
+    },
+    "governance": {
+      "average_promotion_score": 0.5291,
+      "average_redundancy": 0.1951,
+      "concepts": 64,
+      "incomplete_count": 27,
+      "incomplete_rate": 0.4219,
+      "learned_average_promotion_score": 0.5259,
+      "learned_average_redundancy": 0.2258,
+      "learned_concepts": 48,
+      "learned_incomplete_count": 11,
+      "learned_incomplete_rate": 0.2292,
+      "learned_prompt_artifact_count": 16,
+      "learned_prompt_artifact_rate": 0.3333,
+      "learned_recommendation_counts": {
+        "Candidate": 28,
+        "Hold for More Validation": 2,
+        "Reject": 2,
+        "Validated": 16
+      },
+      "learned_score_ge_056": 16,
+      "learned_score_ge_062": 1,
+      "prediction_accuracy": 1.0,
+      "prediction_coverage": 0.9394,
+      "prediction_failed": 0,
+      "prediction_supported": 62,
+      "prompt_artifact_count": 16,
+      "prompt_artifact_rate": 0.25,
+      "recommendation_counts": {
+        "Candidate": 43,
+        "Hold for More Validation": 2,
+        "Reject": 2,
+        "Validated": 17
+      },
+      "score_ge_056": 17,
+      "score_ge_062": 1,
+      "score_max": 0.6277,
+      "score_min": 0.0996
+    },
+    "reports": ".tmp\\experiments\\phase20_campaign\\planning_20\\reports",
+    "store": ".tmp\\experiments\\phase20_campaign\\planning_20\\store"
+  },
+  "experiment": {
+    "coherence": {
+      "average_concepts_per_evidence": 1.6154,
+      "average_objective_neighbors": 9.0345,
+      "average_prediction_links": 0.5172,
+      "average_relationship_diversity": 0.4483,
+      "average_shared_evidence_neighbors": 0.7586,
+      "cluster_count": 21,
+      "clusters": [
+        {
+          "concept_ids": [
+            "d7d03a2b-1ed6-44b2-b03e-6a4fcc84fe5d",
+            "215a0fd1-8901-4295-81ff-b57e3aa965d5",
+            "0a957a1d-da10-4e40-b78f-db1a5b8ac501"
+          ],
+          "sample_concepts": [
+            "If a permit assumption fails the emergency response",
+            "A testable prediction is that the resequenced plan",
+            "Evidence that would falsify this prediction is if"
+          ],
+          "size": 3,
+          "top_terms": [
+            "plan",
+            "response",
+            "efficiency",
+            "resequenced",
+            "prediction",
+            "based",
+            "revised",
+            "actions"
+          ]
+        },
+        {
+          "concept_ids": [
+            "cad3a062-b919-40b4-88e5-34d518116352",
+            "9e824812-7798-473b-a1f4-2115648740d0",
+            "31f33fdd-287c-4150-ba6a-ad8d27cd4cf4"
+          ],
+          "sample_concepts": [
+            "Allocating resources for emergency shelters requires prioritizing based",
+            "If the priority group changes the shelters may",
+            "Evidence that would require reallocation includes a significant"
+          ],
+          "size": 3,
+          "top_terms": [
+            "priority",
+            "shelters",
+            "decrease",
+            "needs",
+            "group",
+            "changes",
+            "groups",
+            "capacity"
+          ]
+        },
+        {
+          "concept_ids": [
+            "5c4a6622-5480-49f5-8bad-a6d7103d19df",
+            "c26543c7-76fb-4915-9482-0e30104a2757",
+            "5a79c515-f7a5-4b71-82dd-5322bd2a4ce4"
+          ],
+          "sample_concepts": [
+            "If a bridge closure occurs the part of",
+            "Evidence that would confirm this prediction includes observing",
+            "Evidence that would falsify the prediction includes the"
+          ],
+          "size": 3,
+          "top_terms": [
+            "snow",
+            "route",
+            "removal",
+            "bridge",
+            "closure",
+            "remaining",
+            "would",
+            "includes"
+          ]
+        },
+        {
+          "concept_ids": [
+            "b700abd4-b1e5-4fd1-8172-15601634aca5",
+            "9460ab7d-3e1b-490a-a8e0-1ab4260688ed"
+          ],
+          "sample_concepts": [
+            "The next operational risk is that the forecasted",
+            "Evidence that would revise this belief includes a"
+          ],
+          "size": 2,
+          "top_terms": [
+            "increase",
+            "risk",
+            "materialize",
+            "excess",
+            "inventory",
+            "may",
+            "potential",
+            "operational"
+          ]
+        },
+        {
+          "concept_ids": [
+            "c2c711fd-7a6d-45a1-a534-39555fb54ac4",
+            "0e388e84-b424-43fe-beda-60152e7bff8a"
+          ],
+          "sample_concepts": [
+            "When a supplier delay occurs it disrupts the",
+            "Evidence that would break the chain includes a"
+          ],
+          "size": 2,
+          "top_terms": [
+            "tasks",
+            "supplier",
+            "crews",
+            "disrupts",
+            "delay",
+            "original",
+            "their",
+            "work"
+          ]
+        },
+        {
+          "concept_ids": [
+            "182fbcc4-03a8-4f2a-832c-19904443b6ab"
+          ],
+          "sample_concepts": [
+            "contradiction"
+          ],
+          "size": 1,
+          "top_terms": [
+            "better",
+            "contradiction",
+            "knowledge",
+            "preserved",
+            "between",
+            "through",
+            "conflict",
+            "should"
+          ]
+        },
+        {
+          "concept_ids": [
+            "4d968a91-c3d2-471b-9957-332b8ee2caf0"
+          ],
+          "sample_concepts": [
+            "learning"
+          ],
+          "size": 1,
+          "top_terms": [
+            "better",
+            "organization",
+            "knowledge",
+            "confidence",
+            "experience",
+            "relationships",
+            "goals",
+            "into"
+          ]
+        },
+        {
+          "concept_ids": [
+            "d35d3225-ce25-429b-b0de-41094fe77086"
+          ],
+          "sample_concepts": [
+            "object"
+          ],
+          "size": 1,
+          "top_terms": [
+            "bounded",
+            "relationships",
+            "object",
+            "observations",
+            "across",
+            "have",
+            "properties",
+            "participate"
+          ]
+        },
+        {
+          "concept_ids": [
+            "fd9a89f6-f76a-403a-934c-1607b1211858"
+          ],
+          "sample_concepts": [
+            "curiosity"
+          ],
+          "size": 1,
+          "top_terms": [
+            "confidence",
+            "relationships",
+            "failed",
+            "investigate",
+            "curiosity",
+            "low",
+            "pressure",
+            "missing"
+          ]
+        },
+        {
+          "concept_ids": [
+            "3963ce12-ddeb-48b9-b44c-6c1e1320eee3"
+          ],
+          "sample_concepts": [
+            "confidence"
+          ],
+          "size": 1,
+          "top_terms": [
+            "delta",
+            "confidence",
+            "current",
+            "should",
+            "estimates",
+            "claim",
+            "strongly",
+            "how"
+          ]
+        },
+        {
+          "concept_ids": [
+            "6d0dd1ff-1e00-44bc-ab7d-fe5f0a1d4ab5"
+          ],
+          "sample_concepts": [
+            "cause and effect"
+          ],
+          "size": 1,
+          "top_terms": [
+            "event",
+            "another",
+            "context",
+            "effect",
+            "contributes",
+            "condition",
+            "cause",
+            "effects"
+          ]
+        },
+        {
+          "concept_ids": [
+            "d32a465d-4ffe-49c6-bf84-ecbb4b3c7c3a"
+          ],
+          "sample_concepts": [
+            "time"
+          ],
+          "size": 1,
+          "top_terms": [
+            "events",
+            "during",
+            "time",
+            "into",
+            "before",
+            "supports",
+            "order",
+            "planning"
+          ]
+        },
+        {
+          "concept_ids": [
+            "0cc043b8-8274-45bb-bacf-e06386eac66e"
+          ],
+          "sample_concepts": [
+            "simulation"
+          ],
+          "size": 1,
+          "top_terms": [
+            "executing",
+            "risk",
+            "evaluates",
+            "confidence",
+            "without",
+            "preserve",
+            "should",
+            "hypothetical"
+          ]
+        },
+        {
+          "concept_ids": [
+            "cfbd464e-90d0-4341-8590-07863bf1165f"
+          ],
+          "sample_concepts": [
+            "prediction"
+          ],
+          "size": 1,
+          "top_terms": [
+            "knowledge",
+            "outcomes",
+            "generated",
+            "expected",
+            "observation",
+            "later",
+            "against",
+            "compared"
+          ]
+        },
+        {
+          "concept_ids": [
+            "f0499652-8eb8-41df-affd-782799e533ef"
+          ],
+          "sample_concepts": [
+            "evidence"
+          ],
+          "size": 1,
+          "top_terms": [
+            "preserved",
+            "information",
+            "confidence",
+            "weakens",
+            "increase",
+            "provenance",
+            "supports",
+            "claim"
+          ]
+        },
+        {
+          "concept_ids": [
+            "2d217edf-83ca-4f3b-a8b0-8d6896aa4bd1"
+          ],
+          "sample_concepts": [
+            "action"
+          ],
+          "size": 1,
+          "top_terms": [
+            "proposed",
+            "evaluation",
+            "action",
+            "actions",
+            "bounded",
+            "execution",
+            "change",
+            "intentional"
+          ]
+        },
+        {
+          "concept_ids": [
+            "b0794e01-7ea2-4b25-8af4-36df7bc35b47"
+          ],
+          "sample_concepts": [
+            "identity"
+          ],
+          "size": 1,
+          "top_terms": [
+            "reference",
+            "even",
+            "time",
+            "across",
+            "stable",
+            "identity",
+            "entity",
+            "while"
+          ]
+        },
+        {
+          "concept_ids": [
+            "de45ad70-24a3-4a09-8e03-149295d230e8"
+          ],
+          "sample_concepts": [
+            "number"
+          ],
+          "size": 1,
+          "top_terms": [
+            "represent",
+            "preserve",
+            "number",
+            "quantity",
+            "order",
+            "numbers",
+            "reasoning",
+            "should"
+          ]
+        },
+        {
+          "concept_ids": [
+            "0525c318-9e55-4cd1-a1cb-271a99589519"
+          ],
+          "sample_concepts": [
+            "goal"
+          ],
+          "size": 1,
+          "top_terms": [
+            "state",
+            "desired",
+            "urgency",
+            "effort",
+            "confidence",
+            "expected",
+            "priority",
+            "progress"
+          ]
+        },
+        {
+          "concept_ids": [
+            "10c1fb7c-99d9-486c-ba84-39f7ff6c0e53"
+          ],
+          "sample_concepts": [
+            "language"
+          ],
+          "size": 1,
+          "top_terms": [
+            "state",
+            "grounded",
+            "through",
+            "context",
+            "task",
+            "remain",
+            "language",
+            "should"
+          ]
+        },
+        {
+          "concept_ids": [
+            "6038feea-7c66-4a27-8c5c-5377bb259d0c"
+          ],
+          "sample_concepts": [
+            "planning"
+          ],
+          "size": 1,
+          "top_terms": [
+            "strategies",
+            "risk",
+            "estimating",
+            "action",
+            "before",
+            "planning",
+            "possible",
+            "satisfaction"
+          ]
+        }
+      ],
+      "concept_count": 29,
+      "duplicate_concept_texts": 0,
+      "isolated_concepts": 0,
+      "isolated_rate": 0.0,
+      "isolated_samples": [],
+      "largest_cluster_size": 3,
+      "per_concept": [
+        {
+          "concept": "identity",
+          "concept_id": "b0794e01-7ea2-4b25-8af4-36df7bc35b47",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.542,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "time",
+          "concept_id": "d32a465d-4ffe-49c6-bf84-ecbb4b3c7c3a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5432,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "object",
+          "concept_id": "d35d3225-ce25-429b-b0de-41094fe77086",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5364,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "evidence",
+          "concept_id": "f0499652-8eb8-41df-affd-782799e533ef",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5273,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "confidence",
+          "concept_id": "3963ce12-ddeb-48b9-b44c-6c1e1320eee3",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5245,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "contradiction",
+          "concept_id": "182fbcc4-03a8-4f2a-832c-19904443b6ab",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5351,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "goal",
+          "concept_id": "0525c318-9e55-4cd1-a1cb-271a99589519",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5379,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "action",
+          "concept_id": "2d217edf-83ca-4f3b-a8b0-8d6896aa4bd1",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.54,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "planning",
+          "concept_id": "6038feea-7c66-4a27-8c5c-5377bb259d0c",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5376,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "prediction",
+          "concept_id": "cfbd464e-90d0-4341-8590-07863bf1165f",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5351,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "simulation",
+          "concept_id": "0cc043b8-8274-45bb-bacf-e06386eac66e",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5288,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "learning",
+          "concept_id": "4d968a91-c3d2-471b-9957-332b8ee2caf0",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5379,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "language",
+          "concept_id": "10c1fb7c-99d9-486c-ba84-39f7ff6c0e53",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5287,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "number",
+          "concept_id": "de45ad70-24a3-4a09-8e03-149295d230e8",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5348,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "curiosity",
+          "concept_id": "fd9a89f6-f76a-403a-934c-1607b1211858",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 1,
+          "promotion_score": 0.5295,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "cause and effect",
+          "concept_id": "6d0dd1ff-1e00-44bc-ab7d-fe5f0a1d4ab5",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 0,
+          "evidence_relationship_diversity": 0,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "unknown",
+          "objective_neighbors": 15,
+          "prediction_count": 0,
+          "promotion_score": 0.6083,
+          "provider": "unknown",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 0
+        },
+        {
+          "concept": "The next operational risk is that the forecasted",
+          "concept_id": "b700abd4-b1e5-4fd1-8172-15601634aca5",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "prediction-error-inventory",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5897,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "Evidence that would revise this belief includes a",
+          "concept_id": "9460ab7d-3e1b-490a-a8e0-1ab4260688ed",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "prediction-error-inventory",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5444,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "Allocating resources for emergency shelters requires prioritizing based",
+          "concept_id": "cad3a062-b919-40b4-88e5-34d518116352",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5858,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "If the priority group changes the shelters may",
+          "concept_id": "9e824812-7798-473b-a1f4-2115648740d0",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5721,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would require reallocation includes a significant",
+          "concept_id": "31f33fdd-287c-4150-ba6a-ad8d27cd4cf4",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "resource_allocation-emergency-shelters-a-priority-group-changes-capacity-reports-allocate-scarce-capacity",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.6267,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "If a bridge closure occurs the part of",
+          "concept_id": "5c4a6622-5480-49f5-8bad-a6d7103d19df",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "prediction-error-snow-route",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5138,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would confirm this prediction includes observing",
+          "concept_id": "c26543c7-76fb-4915-9482-0e30104a2757",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "prediction-error-snow-route",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5279,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would falsify the prediction includes the",
+          "concept_id": "5a79c515-f7a5-4b71-82dd-5322bd2a4ce4",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "prediction-error-snow-route",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5023,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "When a supplier delay occurs it disrupts the",
+          "concept_id": "c2c711fd-7a6d-45a1-a534-39555fb54ac4",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "causal-chain-supply-delay",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.528,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "Evidence that would break the chain includes a",
+          "concept_id": "0e388e84-b424-43fe-beda-60152e7bff8a",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "causal-chain-supply-delay",
+          "objective_neighbors": 1,
+          "prediction_count": 0,
+          "promotion_score": 0.5829,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 1
+        },
+        {
+          "concept": "If a permit assumption fails the emergency response",
+          "concept_id": "d7d03a2b-1ed6-44b2-b03e-6a4fcc84fe5d",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-resequence-the-plan",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5833,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "A testable prediction is that the resequenced plan",
+          "concept_id": "215a0fd1-8901-4295-81ff-b57e3aa965d5",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": true,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-resequence-the-plan",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.5186,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        },
+        {
+          "concept": "Evidence that would falsify this prediction is if",
+          "concept_id": "0a957a1d-da10-4e40-b78f-db1a5b8ac501",
+          "direct_semantic_edges": 0,
+          "evidence_relationship_count": 2,
+          "evidence_relationship_diversity": 1,
+          "incomplete": false,
+          "isolated": false,
+          "objective": "planning-emergency-response-a-permit-assumption-fails-dispatch-logs-resequence-the-plan",
+          "objective_neighbors": 2,
+          "prediction_count": 0,
+          "promotion_score": 0.4946,
+          "provider": "qwen",
+          "recommendation": "Candidate",
+          "shared_evidence_neighbors": 2
+        }
+      ],
+      "relationship_type_counts": {
+        "temporal_sequence": 8
+      },
+      "reused_evidence_count": 10,
+      "store_root": ".tmp\\experiments\\phase23_formatting_contract\\planning_20\\store",
+      "top_cooccurring_terms": [
+        {
+          "terms": [
+            "plan",
+            "response"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "efficiency",
+            "plan"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "plan",
+            "resequenced"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "plan",
+            "prediction"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "based",
+            "plan"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "efficiency",
+            "response"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "resequenced",
+            "response"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "prediction",
+            "response"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "based",
+            "response"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "efficiency",
+            "resequenced"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "efficiency",
+            "prediction"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "based",
+            "efficiency"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "prediction",
+            "resequenced"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "based",
+            "resequenced"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "based",
+            "prediction"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "priority",
+            "shelters"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "decrease",
+            "priority"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "needs",
+            "priority"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "group",
+            "priority"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "changes",
+            "priority"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "decrease",
+            "shelters"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "needs",
+            "shelters"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "group",
+            "shelters"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "changes",
+            "shelters"
+          ],
+          "weighted_count": 3
+        },
+        {
+          "terms": [
+            "decrease",
+            "needs"
+          ],
+          "weighted_count": 3
+        }
+      ]
+    },
+    "governance": {
+      "average_promotion_score": 0.5447,
+      "average_redundancy": 0.1485,
+      "concepts": 29,
+      "incomplete_count": 27,
+      "incomplete_rate": 0.931,
+      "learned_average_promotion_score": 0.5515,
+      "learned_average_redundancy": 0.2069,
+      "learned_concepts": 13,
+      "learned_incomplete_count": 11,
+      "learned_incomplete_rate": 0.8462,
+      "learned_prompt_artifact_count": 5,
+      "learned_prompt_artifact_rate": 0.3846,
+      "learned_recommendation_counts": {
+        "Candidate": 13
+      },
+      "learned_score_ge_056": 6,
+      "learned_score_ge_062": 1,
+      "prediction_accuracy": 1.0,
+      "prediction_coverage": 1.0,
+      "prediction_failed": 0,
+      "prediction_supported": 29,
+      "prompt_artifact_count": 5,
+      "prompt_artifact_rate": 0.1724,
+      "recommendation_counts": {
+        "Candidate": 29
+      },
+      "score_ge_056": 7,
+      "score_ge_062": 1,
+      "score_max": 0.6267,
+      "score_min": 0.4946
+    },
+    "reports": ".tmp\\experiments\\phase23_formatting_contract\\planning_20\\reports",
+    "store": ".tmp\\experiments\\phase23_formatting_contract\\planning_20\\store"
+  }
+}

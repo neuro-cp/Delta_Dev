@@ -1,0 +1,588 @@
+{
+  "baseline_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 0,
+    "memories": 16,
+    "predictions": 16,
+    "relationships": 0,
+    "semantic_knowledge": 16
+  },
+  "baseline_prediction_quality": {
+    "accuracy": null,
+    "average_evidence_score": null,
+    "coverage": 0.0,
+    "evaluated": 0,
+    "failed": 0,
+    "failure_rate": null,
+    "open": 16,
+    "supported": 0,
+    "total": 16
+  },
+  "bootstrap": {
+    "goals_created": 4,
+    "predictions_created": 16,
+    "semantic_created": 16
+  },
+  "count_delta": {
+    "contradictions": 0,
+    "goals": 0,
+    "learning": 10,
+    "memories": 20,
+    "predictions": 4,
+    "relationships": 10,
+    "semantic_knowledge": 4
+  },
+  "curriculum_profiles": [
+    "scientific_reasoning"
+  ],
+  "cycle_summaries": [
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 2,
+        "predictions_validated": 15,
+        "semantic_created": 2
+      },
+      "objective_id": "cross-domain-research-policy",
+      "prediction_quality_score": 0.8703,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 16,
+        "learning_record_count": 0,
+        "semantic_knowledge_count": 16,
+        "warnings": [
+          "open predictions exist but are not yet evaluated",
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 18,
+      "tick": 1
+    },
+    {
+      "capability": "scientific_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 1,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "scientific-hypothesis-water-quality",
+      "prediction_quality_score": 0.8506,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 18,
+        "learning_record_count": 1,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 19,
+      "tick": 2
+    },
+    {
+      "capability": "scientific_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 1,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "scientific-hypothesis-battery-degradation",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 20,
+        "learning_record_count": 2,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 3
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "cross-domain-research-policy",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 22,
+        "learning_record_count": 3,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 4
+    },
+    {
+      "capability": "scientific_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "scientific-hypothesis-water-quality",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 24,
+        "learning_record_count": 4,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 5
+    },
+    {
+      "capability": "scientific_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "scientific-hypothesis-battery-degradation",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 26,
+        "learning_record_count": 5,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 6
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "cross-domain-research-policy",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 28,
+        "learning_record_count": 6,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 7
+    },
+    {
+      "capability": "scientific_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "scientific-hypothesis-water-quality",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 30,
+        "learning_record_count": 7,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 8
+    },
+    {
+      "capability": "scientific_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "scientific-hypothesis-battery-degradation",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 32,
+        "learning_record_count": 8,
+        "semantic_knowledge_count": 20,
+        "warnings": []
+      },
+      "semantic_knowledge": 20,
+      "tick": 9
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "cross-domain-research-policy",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 34,
+        "learning_record_count": 9,
+        "semantic_knowledge_count": 20,
+        "warnings": []
+      },
+      "semantic_knowledge": 20,
+      "tick": 10
+    }
+  ],
+  "cycles_completed": 10,
+  "cycles_per_second": 0.4556,
+  "cycles_requested": 12,
+  "elapsed_seconds": 21.9488,
+  "final_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 10,
+    "memories": 36,
+    "predictions": 20,
+    "relationships": 10,
+    "semantic_knowledge": 20
+  },
+  "final_prediction_quality": {
+    "accuracy": 1.0,
+    "average_evidence_score": 0.7267,
+    "coverage": 0.75,
+    "evaluated": 15,
+    "failed": 0,
+    "failure_rate": 0.0,
+    "open": 5,
+    "supported": 15,
+    "total": 20
+  },
+  "objectives": [
+    {
+      "calibration_score": 0.6646,
+      "capability": "cross_domain",
+      "objective_id": "cross-domain-research-policy",
+      "surprise": 0.25,
+      "utility": 0.6807
+    },
+    {
+      "calibration_score": 0.5242,
+      "capability": "scientific_reasoning",
+      "objective_id": "scientific-hypothesis-water-quality",
+      "surprise": 0.0,
+      "utility": 0.5749
+    },
+    {
+      "calibration_score": 0.4296,
+      "capability": "scientific_reasoning",
+      "objective_id": "scientific-hypothesis-battery-degradation",
+      "surprise": 0.25,
+      "utility": 0.5013
+    }
+  ],
+  "provider_hints": {
+    "causal_reasoning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "contradiction": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "cross_domain": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "long_dependency": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+    "planning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "prediction": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "scientific_reasoning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "tool_use": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "transfer": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+  },
+  "run_id": "governed_training_20260701T044049Z",
+  "saturation_checks": [
+    {
+      "objective_repetition_ratio": 0.625,
+      "prediction_quality_delta": -0.0375,
+      "reason": "semantic_or_quality_growth_still_detected",
+      "saturated": false,
+      "semantic_delta": 2,
+      "tick": 8,
+      "unique_objectives": 3,
+      "window": 8
+    },
+    {
+      "objective_repetition_ratio": 0.625,
+      "prediction_quality_delta": -0.0178,
+      "reason": "semantic_or_quality_growth_still_detected",
+      "saturated": false,
+      "semantic_delta": 1,
+      "tick": 9,
+      "unique_objectives": 3,
+      "window": 8
+    },
+    {
+      "objective_repetition_ratio": 0.625,
+      "prediction_quality_delta": 0.0,
+      "reason": "learning_saturation",
+      "saturated": true,
+      "semantic_delta": 0,
+      "tick": 10,
+      "unique_objectives": 3,
+      "window": 8
+    }
+  ],
+  "saturation_policy": {
+    "enabled": true,
+    "min_prediction_quality_delta": 0.02,
+    "min_semantic_delta": 1,
+    "repetition_threshold": 0.5,
+    "window": 8
+  },
+  "self_model": {
+    "capabilities": [
+      "run one explicit cognitive cycle",
+      "store immutable experience records",
+      "rank recalled memories through attention",
+      "assemble per-cycle working memory",
+      "emit structured reflection and learning records",
+      "consolidate semantic knowledge from learning records",
+      "generate predictions from confident semantic knowledge",
+      "validate predictions through append-only evidence records",
+      "track explicit goals, proposed plans, and agency proposals",
+      "run bounded cognitive runtime ticks",
+      "generate self-model metrics from existing regions"
+    ],
+    "cognitive_health": {
+      "contradiction_pressure": 0.0,
+      "fragmentation": 0.7222,
+      "goal_overload": "unknown",
+      "knowledge_stability": 1.0,
+      "learning_efficiency": 1.0,
+      "memory_growth": 36,
+      "prediction_quality": 1.0,
+      "reflection_coverage": 0.2778,
+      "warnings": []
+    },
+    "confidence_distribution": {
+      "memory": {
+        "high": 26,
+        "low": 10,
+        "medium": 0
+      },
+      "predictions": {
+        "high": 0,
+        "low": 0,
+        "medium": 20
+      },
+      "semantic_knowledge": {
+        "high": 20,
+        "low": 0,
+        "medium": 0
+      }
+    },
+    "contradictions": {
+      "pressure": 0.0,
+      "total": 0
+    },
+    "generated_at": "2026-07-01T04:40:49.484751+00:00",
+    "identity": {
+      "continuity_source": "append-only state and generated reports",
+      "name": "Delta",
+      "type": "persistent cognitive substrate"
+    },
+    "knowledge_coverage": {
+      "concepts": [
+        "prediction",
+        "simulation",
+        "learning",
+        "language",
+        "number",
+        "curiosity",
+        "answer The government report s claim about flood",
+        "On the other hand the scientific study s",
+        "For Hypothesis 1 a prediction could be that",
+        "If the control batch shows no early degradation"
+      ],
+      "coverage_note": "coverage is inferred from explicit semantic records only",
+      "semantic_records": 20
+    },
+    "learning": {
+      "recent_questions": [],
+      "recent_records": 10,
+      "records": 10
+    },
+    "limitations": [
+      "goal progress feedback is not yet implemented",
+      "planning is proposal-only and non-executing",
+      "prediction evaluation is first-pass evidence claim scoring",
+      "confidence is not yet derived from complete justification history",
+      "attention has no durable decay model yet",
+      "self-model is generated on demand, not continuously scheduled"
+    ],
+    "metrics": {
+      "attention_distribution": {
+        "agency": 3,
+        "bootstrap": 16,
+        "calibration": 20,
+        "cross-domain-research-policy": 8,
+        "cross_domain": 8,
+        "cycle": 20,
+        "governed": 20,
+        "knowledge": 3,
+        "learning": 1,
+        "llm": 3,
+        "memory": 7,
+        "motivation": 1,
+        "observation": 10,
+        "output": 10,
+        "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": 20,
+        "reasoning": 2,
+        "scientific-hypothesis-battery-degradation": 6,
+        "scientific-hypothesis-water-quality": 6,
+        "scientific_reasoning": 12,
+        "self_world": 1,
+        "simulation": 2,
+        "training": 20,
+        "world_model": 3
+      },
+      "average_knowledge_confidence": 0.812,
+      "average_memory_confidence": 0.64,
+      "average_prediction_confidence": 0.6871,
+      "consolidation_rate": 2.0,
+      "contradiction_count": 0,
+      "experience_count": 36,
+      "generated_at": "2026-07-01T04:40:49.484751+00:00",
+      "learning_record_count": 10,
+      "open_prediction_count": 5,
+      "prediction_accuracy": 1.0,
+      "prediction_count": 20,
+      "recent_learning_count": 10,
+      "recent_reflection_count": 10,
+      "reflection_count": 10,
+      "relationship_count": 10,
+      "relationship_density": 0.2778,
+      "semantic_knowledge_count": 20,
+      "temporal": {
+        "history": {
+          "first_experience_at": "2026-07-01T04:40:27.369008+00:00",
+          "first_learning_at": "2026-07-01T04:40:32.811536+00:00",
+          "latest_experience_at": "2026-07-01T04:40:49.445679+00:00",
+          "latest_learning_at": "2026-07-01T04:40:49.445679+00:00"
+        },
+        "last_7_days": {
+          "experience_count": 36,
+          "learning_count": 10
+        },
+        "today": {
+          "experience_count": 36,
+          "learning_count": 10
+        }
+      },
+      "working_memory_utilization": null
+    },
+    "predictions": {
+      "accuracy": 1.0,
+      "open": 5,
+      "quality": {
+        "accuracy": 1.0,
+        "average_evidence_score": 0.7267,
+        "coverage": 0.75,
+        "evaluated": 15,
+        "failed": 0,
+        "failure_rate": 0.0,
+        "open": 5,
+        "supported": 15,
+        "total": 20
+      },
+      "recent": [
+        "51d45708-cd23-4057-b8bd-77d4924b954e",
+        "9d7e98aa-91b1-44dc-865d-3b0ba99eb822",
+        "b5c1f4b8-f2f0-4970-adcb-eeb732f9738c",
+        "6f0b0745-3d3e-47fb-905e-bf87172067b7",
+        "29962357-d907-481c-9791-a9fe59588827",
+        "3fb4e46e-1c2b-4f1d-b8b2-19d959beb3ae",
+        "d967b60b-807c-4ae4-9cbb-5c302f696643",
+        "8b63dd33-9599-4dc7-9ea9-79a2c18acb44",
+        "a71d3fe4-6bac-4cc1-b173-34a91f9bc068",
+        "f0148000-ba76-44ff-ab68-b76832424be3"
+      ],
+      "total": 20
+    },
+    "self_observations": [
+      {
+        "kind": "baseline",
+        "severity": "info",
+        "summary": "No high-pressure self-model warnings were generated."
+      }
+    ],
+    "subsystem_health": {
+      "contradictions": {
+        "status": "clear"
+      },
+      "goals": {
+        "status": "proposal_layer"
+      },
+      "knowledge": {
+        "status": "active"
+      },
+      "learning": {
+        "status": "active"
+      },
+      "memory": {
+        "status": "active"
+      },
+      "planning": {
+        "status": "proposal_layer"
+      },
+      "predictions": {
+        "status": "active"
+      },
+      "relationships": {
+        "status": "active"
+      }
+    },
+    "temporal_continuity": {
+      "history": {
+        "first_experience_at": "2026-07-01T04:40:27.369008+00:00",
+        "first_learning_at": "2026-07-01T04:40:32.811536+00:00",
+        "latest_experience_at": "2026-07-01T04:40:49.445679+00:00",
+        "latest_learning_at": "2026-07-01T04:40:49.445679+00:00"
+      },
+      "last_7_days": {
+        "experience_count": 36,
+        "learning_count": 10
+      },
+      "today": {
+        "experience_count": 36,
+        "learning_count": 10
+      }
+    }
+  },
+  "stop_reason": {
+    "objective_repetition_ratio": 0.625,
+    "prediction_quality_delta": 0.0,
+    "reason": "learning_saturation",
+    "saturated": true,
+    "semantic_delta": 0,
+    "tick": 10,
+    "unique_objectives": 3,
+    "window": 8
+  },
+  "stopped_early": true,
+  "store_root": ".tmp\\experiments\\curriculum_profiles\\scientific_reasoning"
+}

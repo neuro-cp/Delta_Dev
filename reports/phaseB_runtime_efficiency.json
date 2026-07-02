@@ -1,0 +1,209 @@
+{
+  "aggregate": {
+    "attention_precision": 1.0,
+    "attention_recall": 1.0,
+    "average_activated_concepts": 4.3333,
+    "average_ignored_concepts": 2.0,
+    "average_ignored_noise": 1.1667,
+    "average_noise_concepts": 1.1667,
+    "average_suppressed_core": 0.0,
+    "average_used_concepts": 2.3333,
+    "average_used_noise": 0.0,
+    "average_useful_neighbors": 1.0,
+    "overall_utilization_ratio": 0.6305,
+    "planning_utilization_ratio": 0.6305,
+    "response_utilization_ratio": 0.6305,
+    "working_memory_efficiency": 0.6305
+  },
+  "cases": [
+    {
+      "activated_concepts": [
+        "gps-satellite-geometry",
+        "gps-multipath",
+        "snow-plow-positioning",
+        "gps-atmospheric-delay"
+      ],
+      "attention_precision": 1.0,
+      "attention_recall": 1.0,
+      "category": "retrieval_accuracy",
+      "ignored_count": 1,
+      "ignored_noise_count": 1,
+      "name": "gps_drift_retrieval",
+      "noise_count": 1,
+      "overall_utilization_ratio": 0.75,
+      "planning_utilization_ratio": 0.75,
+      "response_utilization_ratio": 0.75,
+      "suppressed_core_count": 0,
+      "unused_concepts": [
+        "snow-plow-positioning"
+      ],
+      "used_concepts": [
+        "gps-atmospheric-delay",
+        "gps-multipath",
+        "gps-satellite-geometry"
+      ],
+      "used_noise_count": 0,
+      "useful_neighbor_count": 0,
+      "working_memory_efficiency": 0.75
+    },
+    {
+      "activated_concepts": [
+        "snow-plow-positioning",
+        "shelter-capacity",
+        "emergency-route-priority",
+        "resource-allocation-triage",
+        "risk-likelihood-impact"
+      ],
+      "attention_precision": 1.0,
+      "attention_recall": 1.0,
+      "category": "planning",
+      "ignored_count": 2,
+      "ignored_noise_count": 0,
+      "name": "snowstorm_grounded_planning",
+      "noise_count": 0,
+      "overall_utilization_ratio": 0.6,
+      "planning_utilization_ratio": 0.6,
+      "response_utilization_ratio": 0.6,
+      "suppressed_core_count": 0,
+      "unused_concepts": [
+        "resource-allocation-triage",
+        "risk-likelihood-impact"
+      ],
+      "used_concepts": [
+        "emergency-route-priority",
+        "shelter-capacity",
+        "snow-plow-positioning"
+      ],
+      "used_noise_count": 0,
+      "useful_neighbor_count": 2,
+      "working_memory_efficiency": 0.6
+    },
+    {
+      "activated_concepts": [
+        "salt-traction-benefit",
+        "salt-environmental-cost",
+        "snow-plow-positioning",
+        "shelter-capacity",
+        "emergency-route-priority",
+        "resource-allocation-triage"
+      ],
+      "attention_precision": 1.0,
+      "attention_recall": 1.0,
+      "category": "conflict_handling",
+      "ignored_count": 4,
+      "ignored_noise_count": 4,
+      "name": "salt_tradeoff_conflict",
+      "noise_count": 4,
+      "overall_utilization_ratio": 0.3333,
+      "planning_utilization_ratio": 0.3333,
+      "response_utilization_ratio": 0.3333,
+      "suppressed_core_count": 0,
+      "unused_concepts": [
+        "emergency-route-priority",
+        "resource-allocation-triage",
+        "shelter-capacity",
+        "snow-plow-positioning"
+      ],
+      "used_concepts": [
+        "salt-environmental-cost",
+        "salt-traction-benefit"
+      ],
+      "used_noise_count": 0,
+      "useful_neighbor_count": 0,
+      "working_memory_efficiency": 0.3333
+    },
+    {
+      "activated_concepts": [
+        "resource-allocation-triage",
+        "emergency-route-priority",
+        "snow-plow-positioning",
+        "risk-likelihood-impact",
+        "shelter-capacity",
+        "salt-traction-benefit"
+      ],
+      "attention_precision": 1.0,
+      "attention_recall": 1.0,
+      "category": "confidence_calibration",
+      "ignored_count": 3,
+      "ignored_noise_count": 2,
+      "name": "resource_allocation_calibration",
+      "noise_count": 2,
+      "overall_utilization_ratio": 0.5,
+      "planning_utilization_ratio": 0.5,
+      "response_utilization_ratio": 0.5,
+      "suppressed_core_count": 0,
+      "unused_concepts": [
+        "salt-traction-benefit",
+        "shelter-capacity",
+        "snow-plow-positioning"
+      ],
+      "used_concepts": [
+        "emergency-route-priority",
+        "resource-allocation-triage",
+        "risk-likelihood-impact"
+      ],
+      "used_noise_count": 0,
+      "useful_neighbor_count": 2,
+      "working_memory_efficiency": 0.5
+    },
+    {
+      "activated_concepts": [],
+      "attention_precision": 1.0,
+      "attention_recall": 1.0,
+      "category": "sparse_knowledge",
+      "ignored_count": 0,
+      "ignored_noise_count": 0,
+      "name": "sparse_violin_question",
+      "noise_count": 0,
+      "overall_utilization_ratio": 1.0,
+      "planning_utilization_ratio": 1.0,
+      "response_utilization_ratio": 1.0,
+      "suppressed_core_count": 0,
+      "unused_concepts": [],
+      "used_concepts": [],
+      "used_noise_count": 0,
+      "useful_neighbor_count": 0,
+      "working_memory_efficiency": 1.0
+    },
+    {
+      "activated_concepts": [
+        "snow-plow-positioning",
+        "shelter-capacity",
+        "emergency-route-priority",
+        "resource-allocation-triage",
+        "risk-likelihood-impact"
+      ],
+      "attention_precision": 1.0,
+      "attention_recall": 1.0,
+      "category": "runtime_stability",
+      "ignored_count": 2,
+      "ignored_noise_count": 0,
+      "name": "repeat_snowstorm_stability",
+      "noise_count": 0,
+      "overall_utilization_ratio": 0.6,
+      "planning_utilization_ratio": 0.6,
+      "response_utilization_ratio": 0.6,
+      "suppressed_core_count": 0,
+      "unused_concepts": [
+        "resource-allocation-triage",
+        "risk-likelihood-impact"
+      ],
+      "used_concepts": [
+        "emergency-route-priority",
+        "shelter-capacity",
+        "snow-plow-positioning"
+      ],
+      "used_noise_count": 0,
+      "useful_neighbor_count": 2,
+      "working_memory_efficiency": 0.6
+    }
+  ],
+  "recommendation": {
+    "conversation_testing": "reasonable after adding held-out prompts",
+    "extra_concept_character": "mostly supportive neighbors",
+    "low_precision_harm": "not materially harmful in this suite",
+    "optimize_retrieval_next": "no",
+    "rationale": "Attention keeps noisy activations out of downstream reasoning while preserving expected concepts.",
+    "working_memory_load": "acceptable"
+  }
+}

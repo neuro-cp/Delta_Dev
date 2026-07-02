@@ -1,0 +1,144 @@
+{
+  "decisions": [
+    {
+      "concept_id": "gps-satellite-geometry",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "gps-multipath",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.61,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "gps-atmospheric-delay",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "snow-plow-positioning",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "emergency-route-priority",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.61,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "shelter-capacity",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "salt-traction-benefit",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "salt-environmental-cost",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "resource-allocation-triage",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    },
+    {
+      "concept_id": "risk-likelihood-impact",
+      "dimensions": {
+        "evidence_support": 1.0,
+        "projected_centrality": 0.3,
+        "redundancy_penalty": 0.05
+      },
+      "evidence": {
+        "failed_predictions": 0,
+        "supported_predictions": 2
+      },
+      "promotion_score": 0.56,
+      "recommendation": "Validated"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from orchestration.attention import AttentionItem
-from orchestration.reflection import ReflectionEngine
+from orchestration.reflection import ReflectionEngine, ReflectionRecord
 from learning.region import LearningEngine
 
 
@@ -135,5 +135,84 @@ def test_learning_keeps_repeated_context_as_fallback_only():
         reflection=reflection,
     )
 
-    assert learning.semantic_candidates
-    assert learning.semantic_candidates[0].text.startswith("Repeated attended context")
+    assert learning.semantic_candidates == []
+    assert learning.questions == [
+        "What reusable proposition is supported by the repeated attended context?"
+    ]
+
+
+def test_learning_rejects_prompt_scaffolding_candidates():
+    reflection = ReflectionRecord(
+        consolidation_candidates=["prompt-memory", "output-memory"],
+        metadata={"quality": {"score": 1.0}},
+    )
+
+    learning = LearningEngine().learn(
+        cycle_id="cycle-scaffold",
+        prompt="Predict a route failure.",
+        output=(
+            "Complete the cycle as Delta training data. "
+            "The cycle can be completed by predicting that. "
+            "This prediction can be tested by monitoring supplier delivery. "
+            "This process should be continuously monitored. "
+            "To mitigate this, a predictive model could be developed. "
+            "The belief revision Delta is that the original plan may need adjustment. "
+            "Evidence that would change the answer includes."
+        ),
+        success=True,
+        attended_items=[],
+        reflection=reflection,
+    )
+
+    assert learning.semantic_candidates == []
+
+
+def test_learning_rejects_dangling_conditionals_and_fragments():
+    reflection = ReflectionRecord(
+        consolidation_candidates=["prompt-memory", "output-memory"],
+        metadata={"quality": {"score": 1.0}},
+    )
+
+    learning = LearningEngine().learn(
+        cycle_id="cycle-fragments",
+        prompt="Allocate emergency shelters.",
+        output=(
+            "If the priority group changes it may require. "
+            "Evidence that would require reallocation includes a significant. "
+            "Capacity reports should be regularly updated to reflect changing shelter needs."
+        ),
+        success=True,
+        attended_items=[],
+        reflection=reflection,
+    )
+
+    candidate_texts = [candidate.text for candidate in learning.semantic_candidates]
+    assert candidate_texts == [
+        "Capacity reports should be regularly updated to reflect changing shelter needs"
+    ]
+
+
+def test_learning_extracts_bulleted_reusable_propositions():
+    reflection = ReflectionRecord(
+        consolidation_candidates=["prompt-memory", "output-memory"],
+        metadata={"quality": {"score": 1.0}},
+    )
+
+    learning = LearningEngine().learn(
+        cycle_id="cycle-bullets",
+        prompt="Explain maintenance planning.",
+        output=(
+            "Reusable propositions:\n"
+            "- Preventive maintenance reduces equipment failure risk.\n"
+            "- Maintenance schedules should balance cost against failure risk.\n"
+            "- Failure history improves maintenance planning."
+        ),
+        success=True,
+        attended_items=[],
+        reflection=reflection,
+    )
+
+    candidate_texts = [candidate.text for candidate in learning.semantic_candidates]
+    assert "Preventive maintenance reduces equipment failure risk" in candidate_texts
+    assert "Maintenance schedules should balance cost against failure risk" in candidate_texts
+    assert "Failure history improves maintenance planning" in candidate_texts

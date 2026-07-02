@@ -4,6 +4,15 @@
 
 - Explicit cognitive cycle: observe, attend, interpret/reason, relate, evaluate,
   reflect, learn, and defer incomplete stages visibly.
+- Runtime V1 now has a read-only question-answering path over candidate
+  knowledge: knowledge activation, attention, working memory, reasoning,
+  planning, and response generation.
+- Runtime V1 instrumentation measures activation, attention, working-memory
+  efficiency, reasoning contribution, planning contribution, response
+  grounding, hallucinations, and drift.
+- Runtime V1.2 can evaluate held-out questions against the actual Phase A
+  candidate store while verifying that the candidate knowledge store remains
+  unchanged.
 - Persistent experience memory with simple recall.
 - Relationship memory for direct temporal links.
 - Application-level attention over recalled memories.
@@ -91,6 +100,14 @@
 
 ## Remaining Placeholders
 
+- Runtime V1 fixture performance does not yet transfer cleanly to real Phase A
+  candidate knowledge. V1.2 found grounded, read-only responses with zero
+  hallucinations, but low real-store retrieval precision (`0.16`), low retrieval
+  recall (`0.5333`), low attention recall (`0.4333`), and noise influencing
+  reasoning in multiple cases.
+- Real-store sparse-knowledge questions still activate unrelated candidate
+  concepts before attention suppresses them. This is contained by grounding, but
+  it indicates activation is too broad against learned knowledge.
 - Goal evolution from learning and reflection is not implemented.
 - Planning is a proposed-plan layer only; it is not connected to executed
   outcomes.
@@ -181,6 +198,117 @@
   `+19` semantic knowledge records, not more. This shows repeated calibration
   objectives saturate quickly; the active bottleneck is now objective diversity
   plus outcome observations for open predictions.
+- Phase 15 broad-corpus training removed the immediate semantic saturation
+  bottleneck in an isolated store. The intentionally interrupted run reached
+  `448` latest semantic records after `190` observed cycles, but also produced
+  `471` predictions, `454` open predictions, and `46` open contradictions.
+- Phase 16 validation consumed `120` open predictions from the Phase 15 store
+  without adding new broad-corpus learning. Prediction coverage improved from
+  `0.0361` to `0.2548`, with `103` selected predictions supported and `17`
+  inconclusive. Open contradictions remained `46`, so contradiction resolution
+  is now a separate active bottleneck.
+- Phase 17 adversarial validation consumed additional open predictions from the
+  same isolated store and deliberately searched for falsification. Coverage
+  improved from `0.2548` to `0.8068`; total failed predictions increased from
+  `0` to `57`; open predictions dropped from `334` to `23`; and open
+  contradictions dropped from `46` to `17`.
+- Phase 18 semantic normalization reprocessed `40` failed predictions from the
+  same isolated store without new curriculum or canonical promotion. It
+  normalized `36`, recovered `3`, left `33` not recovered, and measured
+  normalization precision at `0.0833`. Artifact wording dropped by `6.36`, but
+  redundancy increased by `28.3561`, showing that cleanup alone does not make
+  most failed concepts durable knowledge.
+- Phase 19 promotion governance evaluated `484` isolated semantic concepts and
+  assigned report-only lifecycle recommendations: `127` validated, `188`
+  candidate, `23` hold for more validation, `2` experimental, and `144`
+  rejected. No concepts reached promotion eligibility, and no canonical merge
+  was performed. This shows the governance gate exists and is currently more
+  conservative than the candidate store quality.
+- Phase 20 ran three fresh bounded planning-profile continuous-operation
+  stores at `20`, `30`, and `40` cycles. Semantic growth increased with cycle
+  count (`48`, `60`, `75`), but average promotion score declined (`0.5291`,
+  `0.5084`, `0.4483`) and no concepts became promotion eligible after
+  recalibration. The aggregate failure distribution was led by low centrality
+  (`34`), unresolved prediction (`28`), and redundancy (`19`). Average
+  relationship centrality remained `0.0`, initially making relationship
+  formation the suspected bottleneck.
+- Phase 21 audited relationship centrality without mutating experiment stores.
+  Across `150` sampled concepts from the Phase 20 stores, `0` had direct
+  semantic relationship edges, but `114` had projected relationship edges
+  through supporting evidence memories. All `90` relationship records in the
+  audited stores were memory-to-memory; `0` were concept-to-concept or
+  concept-to-memory. The bottleneck is therefore semantic relationship
+  projection/visibility, not a total absence of relational structure.
+- Phase 22 added virtual semantic relationship projection to governance and
+  compared raw versus projected scoring on the same Phase 20 stores. Average
+  centrality rose from `0.0` to `0.2904`, average promotion score rose from
+  `0.4899` to `0.5184`, and `189` concepts were boosted through evidence
+  projection. Recommendation changes dropped to `29` after prompt-artifact and
+  incomplete-proposition gates were tightened. No concepts became promotion
+  eligible, which indicates projection is useful for visibility but not yet
+  sufficient for canonical promotion.
+- Phase 23 tested a common structured output contract under the new `20`-cycle
+  experiment cap. The run stopped after `8` cycles from saturation and initially
+  produced one promotion-eligible recommendation, but that concept was an
+  incomplete fragment. After tightening the existing incomplete-proposition
+  gate, the same store produced `0` promotion-eligible concepts. Learned-only
+  artifact rate worsened from `0.3333` to `0.3846`, learned-only incomplete
+  proposition rate worsened from `0.2292` to `0.8462`, and shared-evidence
+  connectivity declined from `1.4062` to `0.7586`. The formatting contract is
+  therefore not ready to become the default.
+- Phase 24 traced provider output through learning candidates, semantic
+  consolidation, validation, and governance. The audit changed the diagnosis:
+  many learning candidates were complete propositions, but consolidation
+  shortened them into eight-word concept labels that became fragments. The
+  deterministic replay found `26` consolidation label-truncation losses; the
+  existing Phase 23 store had an incomplete concept rate of `0.8462`, while the
+  boundary-preserving label policy would reduce that measured rate to `0.0` for
+  the traced candidates. This is an information-preservation fix, not a new
+  cognitive mechanism.
+- A fresh bounded Phase 24 verification run converted the replay result into an
+  operational improvement. The run requested `20` cycles and stopped at `8`;
+  learned incomplete proposition rate improved from the Phase 23 formatting
+  run's `0.8462` to `0.1739`, learned redundancy improved to `0.1613`, and
+  validated concepts returned from `0` to `10` without loosening governance
+  thresholds. Prompt artifact rate remained high at `0.3913`, making
+  extraction-stage artifact leakage the next narrower bottleneck.
+- Phase 25 added deterministic extraction filtering inside `LearningEngine`.
+  Replay on the Phase 24 store reduced accepted candidates from `35` to `10`,
+  prompt artifact rate from `0.4` to `0.0`, incomplete rate from `0.3143` to
+  `0.0`, and fragment rate from `0.7143` to `0.0`. A fresh bounded operational
+  run produced `10` learned concepts and `6` validated concepts in `8` cycles.
+  Compared with Phase 24, semantic throughput dropped (`23` to `10`) while
+  learned artifact rate fell to `0.0`, candidate complete rate rose to `1.0`,
+  and average learned promotion score rose to `0.5693`. The filter should be
+  frozen here to avoid overfitting; the next evidence should come from broader
+  curriculum/training runs.
+- Phase 26 ran seven autonomous bounded campaigns totaling `904` completed
+  learning cycles
+  against fresh isolated stores. The broader runs confirmed that the Phase 24
+  and Phase 25 fixes compound operationally: all campaigns reached their
+  available schedules, extracted candidate growth totaled `812`, and promotion
+  governance surfaced `12` promotion-eligible recommendations without lowering
+  thresholds. The result also exposed the next bottleneck. Quality does not
+  scale linearly with longer mixed curricula: `broad_balanced_200` produced
+  `314` semantic concepts and `167` validated concepts, but average promotion
+  score fell to `0.522`, with unresolved prediction (`80`) and redundancy (`53`)
+  dominating the aggregate failure distribution. `causal_reasoning_200`
+  completed only `104/200` scheduled cycles and produced quality similar to
+  `causal_reasoning_100`, suggesting profile-specific saturation around the
+  100-cycle window. `planning_200` completed the full `200` cycles, improved
+  planning's average score, and still showed unresolved prediction as its main
+  bottleneck. Candidate spot checks show some promotion-eligible concepts are
+  still prediction-shaped or context-specific, so promotion must remain
+  report-only.
+- Phase 27 audited the Phase 26 evidence without new learning or canonical
+  writes. The audit shows that surviving concepts are distinguished less by raw
+  graph centrality and more by low redundancy, positive confidence slope,
+  validation success, and lack of contradictions. Bottom rejects had comparable
+  or higher projected centrality but much higher redundancy and failed
+  prediction accuracy. The dominant current-concept pressure is redundant,
+  unvisited, late-cycle, and partially validated prediction backlog; the much
+  larger raw unresolved backlog is mostly superseded concept lineage and should
+  not be treated as active governance pressure without revision analysis.
 - Self-observation now explains contradiction pressure when cognitive health
   warnings include high contradiction pressure.
 
@@ -190,14 +318,182 @@
    the Phase 13 baseline.
 2. Use `reports/phase14_calibration_report.md` as the current cognitive
    calibration baseline.
-3. Generate a larger non-repeating governed objective set before longer runs.
-4. Add explicit outcome observations for open predictions before 250+ cycles.
-5. Replace repeated difficulty-1 curriculum templates with utility-seeking
+3. Use the Phase 15 broad-corpus result as evidence that objective diversity
+   can prevent semantic saturation.
+4. Use Phase 17 adversarial validation as evidence that Delta can now falsify
+   candidate predictions rather than only confirm them.
+5. Use Phase 18 semantic normalization as evidence that a few failed concepts
+   are recoverable extraction artifacts, but most normalized failures are still
+   redundant or insufficiently distinct.
+6. Use Phase 19 promotion governance as evidence that Delta can now recommend
+   lifecycle states without promoting canonical knowledge.
+7. Use Phase 20 bounded operation as evidence that the current architecture can
+   run closed-loop campaigns, but promotion quality does not improve from more
+   cycles alone.
+8. Use Phase 21 relationship centrality audit as evidence that governance is
+   blind to memory-layer relationship structure unless it is projected upward
+   into semantic concept scoring.
+9. Use Phase 22 virtual projection as evidence that evidence-memory graph
+   structure improves governance scores without requiring persistent semantic
+   edge materialization yet.
+10. Continue refinement on the remaining open and inconclusive predictions.
+11. Resolve or explain the `17` remaining open contradictions before promotion
+   is considered.
+12. Improve concept provenance links so relationship centrality, cross-profile
+   recurrence, and redundancy are measured more directly.
+13. Keep semantic relationship projection virtual until repeated bounded
+   campaigns show stable lifecycle improvement and no artifact promotion.
+14. Keep promotion report-only until concepts have validation history,
+   confidence trajectory, contradiction history, redundancy scores, and a
+   promotion-eligible recommendation.
+15. Verify boundary-preserving consolidation in a fresh bounded run before
+   trying another output formatting contract; Phase 24 shows that semantic
+   candidate completeness can be lost during consolidation labeling.
+16. Treat the Phase 24 bounded verification as evidence that the consolidation
+   boundary fix improved downstream proposition quality operationally.
+17. Treat Phase 25 as the current extraction-quality freeze point: artifacts
+   were removed, but throughput dropped, so do not tighten filters further
+   without broader evidence.
+18. Treat Phase 26 as evidence that cleaner semantic candidates do compound
+   into validated and promotion-eligible recommendations, but that longer mixed
+   curricula primarily increase validation backlog and redundancy.
+19. Keep promotion report-only until promotion-eligible concepts survive manual
+   review and recur across independent isolated stores.
+20. Prefer profile-specific campaigns when optimizing quality. The
+   `causal_reasoning_100` run had the strongest average promotion score
+   (`0.5846`) and full validation coverage.
+21. Improve validation throughput and redundancy handling before another
+   maximum-length mixed campaign.
+22. Use Phase 27 as the baseline for knowledge maturation: compare future
+   survivor profiles, failure distributions, promotion velocity, and concept
+   lifespan against `reports/phase27_knowledge_maturation_audit.md`.
+23. Before canonical promotion, run report-only semantic equivalence analysis on
+   redundant candidates and schedule unresolved predictions attached to current
+   concepts for maturation.
+24. Replace repeated difficulty-1 curriculum templates with utility-seeking
    curriculum generation.
-6. Add held-out task-performance suites for coding, research, scheduling, and
+25. Add held-out task-performance suites for coding, research, scheduling, and
    planning.
-7. Reduce repeated JSONL full-store reads in runtime hot paths.
-8. Deepen prediction validation beyond first-pass evidence claim scoring.
-9. Add goal progress feedback from runtime outcomes.
-10. Design Global Workspace as a tick-local integration surface before deeper
+26. Reduce repeated JSONL full-store reads in runtime hot paths.
+27. Deepen prediction validation beyond first-pass evidence claim scoring.
+28. Add goal progress feedback from runtime outcomes.
+29. Design Global Workspace as a tick-local integration surface before deeper
    runtime coupling.
+
+## Runtime V1 Gap Update
+
+The first output-side runtime path now exists:
+
+User question -> `KnowledgeActivationEngine` -> `WorkingMemoryContext` ->
+`RuntimeReasoningEngine` -> `RuntimePlanner` -> `RuntimeResponseGenerator`.
+
+This narrows the previous output gap from "no usage path" to "deterministic
+read-only usage path." The system can activate candidate semantic knowledge,
+inspect support and uncertainty, create simple plan options, and draft a
+grounded response without writing to learning stores or canonical knowledge.
+
+Remaining Runtime V1 gaps:
+
+1. Conversation state is not persistent across turns.
+2. Response generation is deterministic and template-like; provider-backed
+   synthesis has not been connected to activated evidence.
+3. Runtime self-critique is not yet feeding diagnostics.
+4. Retrieval ranking is lexical plus governance metadata; semantic embeddings or
+   richer activation dynamics remain future work.
+5. Runtime task-performance evaluation is not yet established.
+
+Learning architecture should remain frozen except for reproducible defects while
+these runtime gaps are explored.
+
+## Phase B Runtime Evaluation Gap Update
+
+Runtime task-performance evaluation now has a first deterministic baseline:
+`reports/phaseB_runtime_evaluation_report.md`.
+
+The scorecard shows that Runtime V1 currently has stronger grounding than
+selectivity:
+
+- expected-concept recall: `1.0`
+- grounding score: `1.0`
+- hallucinations: `0`
+- sparse-knowledge refusal: passed
+- retrieval precision: `0.6028`
+
+The active output-side gap is therefore activation precision. Runtime V1 is
+finding the right knowledge, but it also activates nearby concepts that the
+question did not require. This should be improved before multi-turn conversation
+or provider-backed response synthesis, because those layers would amplify noisy
+working memory.
+
+## Phase B.1 Runtime Efficiency Gap Update
+
+The efficiency audit clarifies the activation precision problem. Runtime V1 is
+not carrying unused context; it is using nearly all activated context:
+
+- working-memory efficiency: `1.0`
+- overall utilization: `1.0`
+- average ignored concepts: `0.0`
+- average useful neighbors: `1.0`
+- average noise concepts: `1.1667`
+
+This means noisy concepts are not harmlessly sitting in working memory. They are
+being incorporated into downstream reasoning/planning artifacts. The next
+justified runtime improvement is activation ranking/filtering, measured against
+the same Phase B scorecards. Conversation state and provider-backed synthesis
+should wait until activation noise is reduced without harming recall or useful
+neighbor retention.
+
+## Runtime Attention Gap Update
+
+The activation-precision diagnosis has been refined. Retrieval is correctly
+acting as broad candidate generation. The missing step was attention: deciding
+which activated candidates deserve immediate working-memory resources.
+
+Current attention baseline:
+
+- retrieval recall: `1.0`
+- attention precision: `1.0`
+- attention recall: `0.8611`
+- average used noise: `0.0`
+- average suppressed core: `0.3333`
+
+This shows attention is the right boundary, but the first deterministic filter
+is too lexical and too selective. It removes noise before reasoning, but it also
+suppresses some valid concepts. The active gap is attention scoring: recover
+expected concepts while preserving zero noise entering downstream reasoning.
+
+## Phase B.2 Reasoning Contribution Gap Update
+
+Reasoning contribution auditing now shows where cognition actually happens in
+the read-only runtime path. The current failure is not reasoning drift, planning
+drift, response drift, or over-attending:
+
+- noise used in reasoning: `0`
+- healthy cases: `4`
+- under-attending cases: `2`
+- reasoning drift cases: `0`
+- planning drift cases: `0`
+- response drift cases: `0`
+- over-attending cases: `0`
+
+The active output-side gap is narrower: attention suppresses some core concepts
+before reasoning. The next justified runtime improvement is attention recall
+tuning, measured by contribution scorecards, while preserving zero noise used in
+reasoning.
+
+## Runtime V1.1 Attention Gap Update
+
+The fixture-suite attention gap is closed. Runtime V1.1 now preserves all
+expected concepts while blocking noise from reasoning:
+
+- attention recall: `1.0`
+- attention precision: `1.0`
+- average used noise: `0.0`
+- planning core coverage: `1.0`
+- response core coverage: `1.0`
+
+The remaining gap is no longer fixture-suite attention behavior. The next
+unknown is transfer: whether the same activation-attention-reasoning pipeline
+works against real Phase A candidate knowledge and held-out prompts. Runtime
+V1.2 should test real-store behavior before any additional runtime architecture
+is introduced.

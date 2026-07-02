@@ -163,3 +163,42 @@ Updated conclusion:
 The current training bottleneck is objective diversity and outcome validation,
 not raw cycle count. Before 250+ cycles, Delta needs a larger non-repeating
 objective set and explicit outcome observations for open predictions.
+
+## Curriculum Profile Comparison
+
+The next pass changed only curriculum selection. Learning, governance,
+consolidation, and provider infrastructure were left unchanged.
+
+Implemented:
+
+- `CalibrationCurriculumGenerator.generate()` now accepts curriculum profiles.
+- The governed training runner can restrict objectives by profile.
+- The runner can stop early when a recent window shows low semantic growth,
+  low prediction-quality growth, and repeated objectives.
+- Added profile families for contradiction, planning, causal reasoning,
+  scientific hypothesis generation, multi-step tool use, and long dependency
+  reasoning.
+
+Compact profile comparison:
+
+| Profile | Cycles | Stopped Early | Semantic Knowledge | Predictions | Contradictions | Prediction Coverage |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| contradiction | 12 | no | +14 | +14 | 0 | 0.5333 |
+| planning | 12 | no | +15 | +15 | 0 | 0.4839 |
+| causal_reasoning | 11 | yes | +7 | +7 | 0 | 0.6522 |
+| scientific_reasoning | 10 | yes | +4 | +4 | 0 | 0.7500 |
+| tool_use | 9 | yes | +6 | +6 | 0 | 0.6818 |
+| long_dependency | 9 | yes | +6 | +6 | 0 | 0.6818 |
+
+Report:
+
+- `reports/curriculum_profile_comparison.md`
+
+Updated conclusion:
+
+Curriculum diversity is now measurable. Planning and contradiction-heavy
+objectives produced the strongest semantic growth in this compact pass, while
+narrower profiles exhausted quickly under the saturation gate. The next
+experiment should use a mixed profile curriculum weighted toward planning and
+contradiction, while expanding the causal, scientific, tool-use, and long
+dependency objective pools before longer runs.

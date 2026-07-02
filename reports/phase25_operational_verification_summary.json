@@ -1,0 +1,60 @@
+[
+  {
+    "artifact_rate_learned": 0.3913,
+    "avg_redundancy_learned": 0.1613,
+    "avg_score_learned": 0.5599,
+    "candidate_complete_rate": 0.5652,
+    "candidate_fragment_rate": 0.4348,
+    "contradiction_delta": 0,
+    "current_filter_accepted": null,
+    "current_filter_precision": null,
+    "current_filter_recall": null,
+    "cycles_completed": 8,
+    "incomplete_rate_learned": 0.1739,
+    "label": "Phase24 boundary fix",
+    "learned_concepts": 23,
+    "normalization_precision": 0.0,
+    "normalization_recovered": 0,
+    "prediction_delta": 23,
+    "promotion_eligible": 0,
+    "recommendation_counts": {
+      "Candidate": 29,
+      "Validated": 10
+    },
+    "score_ge_056": 15,
+    "score_ge_062": 0,
+    "semantic_delta": 23,
+    "validated": 10,
+    "validation_accuracy": 1.0,
+    "validation_coverage": 1.0
+  },
+  {
+    "artifact_rate_learned": 0.0,
+    "avg_redundancy_learned": 0.1274,
+    "avg_score_learned": 0.5693,
+    "candidate_complete_rate": 1.0,
+    "candidate_fragment_rate": 0.0,
+    "contradiction_delta": 0,
+    "current_filter_accepted": 10,
+    "current_filter_precision": 1.0,
+    "current_filter_recall": 1.0,
+    "cycles_completed": 8,
+    "incomplete_rate_learned": 0.2,
+    "label": "Phase25 extraction filter",
+    "learned_concepts": 10,
+    "normalization_precision": 0.0,
+    "normalization_recovered": 0,
+    "prediction_delta": 10,
+    "promotion_eligible": 0,
+    "recommendation_counts": {
+      "Candidate": 20,
+      "Validated": 6
+    },
+    "score_ge_056": 8,
+    "score_ge_062": 0,
+    "semantic_delta": 10,
+    "validated": 6,
+    "validation_accuracy": 1.0,
+    "validation_coverage": 1.0
+  }
+]

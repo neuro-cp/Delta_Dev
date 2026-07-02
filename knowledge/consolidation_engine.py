@@ -116,5 +116,11 @@ class SemanticConsolidationEngine:
 
     @staticmethod
     def _concept_name(text: str) -> str:
-        words = re.findall(r"[A-Za-z0-9_]+", text)
-        return " ".join(words[:8]) if words else "unnamed concept"
+        normalized = " ".join(str(text or "").strip().split()).strip("\"'")
+        normalized = normalized.rstrip()
+        if not normalized:
+            return "unnamed concept"
+        if len(normalized) <= 180:
+            return normalized.rstrip(".")
+        words = re.findall(r"[A-Za-z0-9_]+", normalized)
+        return " ".join(words[:24]) if words else "unnamed concept"

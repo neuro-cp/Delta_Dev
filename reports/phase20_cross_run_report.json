@@ -1,0 +1,111 @@
+{
+  "aggregate_failure_distribution": {
+    "contradiction": 8,
+    "failed_validation": 6,
+    "incomplete_proposition": 6,
+    "low_centrality": 34,
+    "prompt_artifact": 7,
+    "redundancy": 19,
+    "unresolved_prediction": 28
+  },
+  "aggregate_lifecycle_distribution": {
+    "Candidate": 138,
+    "Hold for More Validation": 9,
+    "Reject": 25,
+    "Validated": 65
+  },
+  "campaign_root": ".tmp\\experiments\\phase20_campaign",
+  "candidate_total": 138,
+  "centrality_average": 0.0,
+  "promotion_eligible_total": 0,
+  "promotion_score_average": 0.4899,
+  "provider_usage": {
+    "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": 30
+  },
+  "rejected_total": 25,
+  "run_count": 3,
+  "runs": [
+    {
+      "average_promotion_score": 0.5291,
+      "contradictions": 1,
+      "cycles_completed": 20,
+      "cycles_requested": 20,
+      "dominant_failure_reason": "unresolved_prediction",
+      "failed_predictions": 0,
+      "memory_growth": 40,
+      "normalization_precision": 0.0,
+      "normalization_recovered": 0,
+      "prediction_coverage": 0.9394,
+      "profiles": [
+        "planning"
+      ],
+      "promotion_counts": {
+        "Candidate": 43,
+        "Hold for More Validation": 2,
+        "Reject": 2,
+        "Validated": 17
+      },
+      "relationship_growth": 20,
+      "run": "planning_20",
+      "runtime_seconds": 264.6102,
+      "semantic_concepts": 64,
+      "semantic_growth": 48,
+      "supported_predictions": 62
+    },
+    {
+      "average_promotion_score": 0.5084,
+      "contradictions": 1,
+      "cycles_completed": 30,
+      "cycles_requested": 30,
+      "dominant_failure_reason": "low_centrality",
+      "failed_predictions": 2,
+      "memory_growth": 60,
+      "normalization_precision": 0.0,
+      "normalization_recovered": 0,
+      "prediction_coverage": 0.9487,
+      "profiles": [
+        "planning"
+      ],
+      "promotion_counts": {
+        "Candidate": 45,
+        "Hold for More Validation": 2,
+        "Reject": 6,
+        "Validated": 25
+      },
+      "relationship_growth": 30,
+      "run": "planning_30",
+      "runtime_seconds": 335.2337,
+      "semantic_concepts": 76,
+      "semantic_growth": 60,
+      "supported_predictions": 72
+    },
+    {
+      "average_promotion_score": 0.4483,
+      "contradictions": 4,
+      "cycles_completed": 40,
+      "cycles_requested": 40,
+      "dominant_failure_reason": "low_centrality",
+      "failed_predictions": 4,
+      "memory_growth": 80,
+      "normalization_precision": 0.0,
+      "normalization_recovered": 0,
+      "prediction_coverage": 0.8387,
+      "profiles": [
+        "planning"
+      ],
+      "promotion_counts": {
+        "Candidate": 50,
+        "Hold for More Validation": 5,
+        "Reject": 17,
+        "Validated": 23
+      },
+      "relationship_growth": 40,
+      "run": "planning_40",
+      "runtime_seconds": 429.6943,
+      "semantic_concepts": 91,
+      "semantic_growth": 75,
+      "supported_predictions": 74
+    }
+  ],
+  "validated_total": 65
+}

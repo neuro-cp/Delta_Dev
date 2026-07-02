@@ -1,0 +1,400 @@
+{
+  "baseline": {
+    "attention_precision": 0.55,
+    "attention_recall": 0.4333,
+    "grounding_score": 1.0,
+    "hallucinations": 0.0,
+    "noise_used_in_reasoning": 12.0,
+    "read_only_verified": true,
+    "retrieval_precision": 0.16,
+    "retrieval_recall": 0.5333,
+    "runtime_grade": "PASS WITH ISSUES"
+  },
+  "diagnostic_summary": {
+    "attention_primary_cases": 3,
+    "attention_secondary_to_activation_cases": 3,
+    "expected_outside_top_10": 8,
+    "expected_outside_top_20": 6,
+    "mean_expected_rank": 10,
+    "mean_noise_above_expected": 9.7083,
+    "median_expected_rank": 3,
+    "mixed_activation_attention_cases": 2,
+    "sparse_activation_abstention_cases": 2,
+    "top_recurring_lexical_attractors": [
+      [
+        "resource",
+        23
+      ],
+      [
+        "evidence",
+        21
+      ],
+      [
+        "emergency",
+        20
+      ],
+      [
+        "failure",
+        20
+      ],
+      [
+        "uncertainty",
+        14
+      ],
+      [
+        "plan",
+        13
+      ],
+      [
+        "risk",
+        10
+      ],
+      [
+        "response",
+        5
+      ],
+      [
+        "change",
+        2
+      ],
+      [
+        "capacity",
+        2
+      ]
+    ],
+    "top_recurring_noisy_concepts": [
+      [
+        "e0038487-2363-4ba8-8e2e-a1b465c44ee0",
+        8
+      ],
+      [
+        "5252e50d-b97e-4d57-a79a-b9d64ddbbec7",
+        8
+      ],
+      [
+        "5ac48263-cbff-4380-bf63-fc9500bcad8d",
+        8
+      ],
+      [
+        "0586e881-099d-4866-a1cf-4ed571139c70",
+        8
+      ],
+      [
+        "cb4f7649-cbdd-4cb3-905d-6f5f69832e9c",
+        7
+      ],
+      [
+        "06b4d255-58d5-49f5-adec-43426ce0d09b",
+        7
+      ],
+      [
+        "65e4ca55-7169-4ee4-b388-a6927043a92d",
+        6
+      ],
+      [
+        "17a8d30a-9f2d-4d15-8100-d4bf18ca2e71",
+        6
+      ],
+      [
+        "89b85467-0655-47d3-9a0c-89da364cd487",
+        6
+      ],
+      [
+        "b85b0a01-9c3f-4c42-a26a-01741c84682c",
+        6
+      ]
+    ]
+  },
+  "final_recommendation": {
+    "Benchmark commands": [
+      ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+      ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports"
+    ],
+    "Metrics that must improve": [
+      "expected_outside_top_10",
+      "expected_outside_top_20",
+      "mean_expected_rank",
+      "mean_noise_above_expected",
+      "retrieval_recall on real-store benchmark after any live change"
+    ],
+    "Metrics that must not regress": [
+      "read_only_verified",
+      "grounding_score",
+      "hallucinations",
+      "confidence_calibration",
+      "planning_score",
+      "sparse low-evidence behavior"
+    ],
+    "Minimal implementation surface": [
+      "new simulation-only script over saved V1.2 activation diagnostic data",
+      "no changes to KnowledgeActivationEngine",
+      "no changes to KnowledgeAttentionFilter",
+      "no changes to candidate stores or learning"
+    ],
+    "Recommended first Runtime V1.3 prototype": "Runtime V1.3 prototype 0: read-only scoring simulation for generic-token dampening plus specificity bonus.",
+    "Rollback plan": [
+      "keep Runtime V1.2 reports as immutable baseline artifacts",
+      "prototype in a separate simulation script first",
+      "if a live runtime change is later made, revert only the runtime activation/attention patch if benchmark invariants regress"
+    ],
+    "Why this prototype should come before the others": "The ranking diagnostic shows recurring generic lexical attractors and 8 expected concepts outside the top-10 activation window. Simulating score changes first can test rank movement without changing live runtime behavior."
+  },
+  "frozen_systems_not_touched": [
+    "learning",
+    "validation",
+    "normalization",
+    "governance",
+    "promotion scoring",
+    "provider prompts",
+    "candidate stores",
+    "canonical storage",
+    "memory architecture",
+    "concept generation"
+  ],
+  "interventions": {
+    "activation_ranking_candidates": [
+      {
+        "acceptance_criteria": [
+          "simulate against saved V1.2 diagnostic data before live runtime changes",
+          "at least 4 of 8 concepts outside top 10 move into top 10 or top 20",
+          "top recurring lexical attractor dominance decreases",
+          "no sparse case becomes a grounded false positive"
+        ],
+        "benchmark_command": [
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports"
+        ],
+        "cases_at_risk_of_regression": [
+          "planning_failed_assumption",
+          "contradictory_evidence",
+          "risk_uncertainty_planning",
+          "sparse_violin_tuning",
+          "unsupported_recipe"
+        ],
+        "cases_expected_to_improve": [
+          "causal_industrial_failure",
+          "resource_allocation_shelters",
+          "policy_audit_conflict",
+          "multi_step_failure_revision",
+          "logistics_proxy_planning"
+        ],
+        "evidence_from_v12_reports": [
+          "mean expected rank = 10",
+          "expected concepts outside top 10 = 8",
+          "mean noise above expected = 9.7083",
+          "top lexical attractors = resource, evidence, emergency, failure, uncertainty, plan, risk, response",
+          "activation-ranking primary cases = 3"
+        ],
+        "exact_metrics_expected_to_move": [
+          "expected_outside_top_10 decreases",
+          "mean_expected_rank decreases",
+          "mean_noise_above_expected decreases",
+          "retrieval_recall increases without lowering grounding"
+        ],
+        "frozen_systems_not_touched": [
+          "learning",
+          "validation",
+          "normalization",
+          "governance",
+          "promotion scoring",
+          "provider prompts",
+          "candidate stores",
+          "canonical storage"
+        ],
+        "name": "Prototype 0: generic-token dampening plus specificity bonus simulation",
+        "problem_it_targets": "Relevant concepts are often buried below broad concepts that match generic attractor tokens rather than distinctive query terms.",
+        "rejection_criteria": [
+          "expected ranks improve only by replacing one generic attractor with another",
+          "sparse questions become more likely to activate unsupported concepts",
+          "ranking gains are limited to one case"
+        ]
+      },
+      {
+        "acceptance_criteria": [
+          "precision improves without dropping expected-concept recall below V1.2 baseline",
+          "sparse activation count falls materially"
+        ],
+        "benchmark_command": [
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports"
+        ],
+        "cases_at_risk_of_regression": [
+          "causal_industrial_failure",
+          "multi_step_failure_revision"
+        ],
+        "cases_expected_to_improve": [
+          "resource_allocation_shelters",
+          "policy_audit_conflict",
+          "logistics_proxy_planning"
+        ],
+        "evidence_from_v12_reports": [
+          "generic attractors repeatedly appear above expected concepts",
+          "sparse cases activate many unrelated candidates before attention suppresses them"
+        ],
+        "exact_metrics_expected_to_move": [
+          "retrieval_precision increases",
+          "sparse activation decreases"
+        ],
+        "frozen_systems_not_touched": [
+          "learning",
+          "validation",
+          "normalization",
+          "governance",
+          "promotion scoring",
+          "provider prompts",
+          "candidate stores",
+          "canonical storage"
+        ],
+        "name": "Query coverage floor for specific activation",
+        "problem_it_targets": "Top activation admits concepts with weak specific-query coverage.",
+        "rejection_criteria": [
+          "expected concepts with broader wording fall out of top 50",
+          "retrieval recall drops below V1.2 baseline"
+        ]
+      },
+      {
+        "acceptance_criteria": [
+          "crowded cases recover expected concepts without lowering attention precision",
+          "near-duplicate clusters shrink in the top 10"
+        ],
+        "benchmark_command": [
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports"
+        ],
+        "cases_at_risk_of_regression": [
+          "planning_failed_assumption",
+          "contradictory_evidence"
+        ],
+        "cases_expected_to_improve": [
+          "resource_allocation_shelters",
+          "policy_audit_conflict",
+          "causal_industrial_failure"
+        ],
+        "evidence_from_v12_reports": [
+          "recurring noisy concept IDs appear across many expected-concept noise-above counts",
+          "real Phase A corpus contains many semantically adjacent planning/evidence/risk propositions"
+        ],
+        "exact_metrics_expected_to_move": [
+          "top-10 concept diversity increases",
+          "expected_outside_top_10 decreases"
+        ],
+        "frozen_systems_not_touched": [
+          "learning",
+          "validation",
+          "normalization",
+          "governance",
+          "promotion scoring",
+          "provider prompts",
+          "candidate stores",
+          "canonical storage"
+        ],
+        "name": "Duplicate/cluster diversity in activation window",
+        "problem_it_targets": "Near-duplicate or same-theme concepts may crowd the top 10 window.",
+        "rejection_criteria": [
+          "diversity pushes out genuinely reinforcing evidence",
+          "working-memory evidence becomes less coherent"
+        ]
+      }
+    ],
+    "attention_scoring_candidates": [
+      {
+        "acceptance_criteria": [
+          "attention recall improves while noise_used_in_reasoning remains 0 or below V1.2",
+          "no increase in hallucinations",
+          "grounding remains 1.0"
+        ],
+        "benchmark_command": [
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports"
+        ],
+        "cases_at_risk_of_regression": [
+          "causal_industrial_failure",
+          "resource_allocation_shelters",
+          "policy_audit_conflict"
+        ],
+        "cases_expected_to_improve": [
+          "planning_failed_assumption",
+          "contradictory_evidence",
+          "risk_uncertainty_planning",
+          "multi_step_failure_revision",
+          "logistics_proxy_planning"
+        ],
+        "evidence_from_v12_reports": [
+          "attention-primary cases = 3",
+          "retrieved_but_pruned_by_attention was a dominant V1.2 audit category"
+        ],
+        "exact_metrics_expected_to_move": [
+          "attention_recall increases",
+          "planning_core_coverage increases",
+          "response_core_coverage increases"
+        ],
+        "frozen_systems_not_touched": [
+          "learning",
+          "validation",
+          "normalization",
+          "governance",
+          "promotion scoring",
+          "provider prompts",
+          "candidate stores",
+          "canonical storage"
+        ],
+        "name": "Bounded attention rescue pass",
+        "problem_it_targets": "Expected concepts in top 10 are sometimes pruned before working memory.",
+        "rejection_criteria": [
+          "noise_used_in_reasoning increases",
+          "attention precision falls without coverage gains"
+        ]
+      }
+    ],
+    "sparse_abstention_candidates": [
+      {
+        "acceptance_criteria": [
+          "unsupported questions return zero or near-zero activation before attention",
+          "sparse refusal and grounding remain unchanged"
+        ],
+        "benchmark_command": [
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_real_knowledge.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports",
+          ".\\.venv311\\Scripts\\python.exe tools\\runtime_v12_activation_ranking_diagnostic.py --campaign-root .tmp\\experiments\\phaseA_architecture_graduation --campaign overnight_3000 --reports-dir reports"
+        ],
+        "cases_at_risk_of_regression": [
+          "real low-overlap but answerable questions may be under-activated",
+          "overly strict abstention may hide useful analogical context"
+        ],
+        "cases_expected_to_improve": [
+          "sparse_violin_tuning",
+          "unsupported_recipe"
+        ],
+        "evidence_from_v12_reports": [
+          "sparse abstention-needed cases = 2",
+          "sparse top-20 noise activations were high in the activation failure audit",
+          "V1.2 sparse cases remained grounded only because attention suppressed activated noise"
+        ],
+        "exact_metrics_expected_to_move": [
+          "sparse activation count decreases",
+          "retrieval precision for sparse cases improves",
+          "low-evidence response behavior remains intact"
+        ],
+        "frozen_systems_not_touched": [
+          "learning",
+          "validation",
+          "normalization",
+          "governance",
+          "promotion scoring",
+          "provider prompts",
+          "candidate stores",
+          "canonical storage"
+        ],
+        "name": "Sparse activation abstention gate",
+        "problem_it_targets": "Unsupported or sparse prompts still activate unrelated candidate knowledge.",
+        "rejection_criteria": [
+          "abstention suppresses answerable held-out questions",
+          "confidence calibration regresses"
+        ]
+      }
+    ]
+  },
+  "source_reports": {
+    "ranking_diagnostic": "reports/runtime_v12_activation_ranking_diagnostic.json",
+    "real_knowledge": "reports/runtime_v12_real_knowledge.json"
+  }
+}

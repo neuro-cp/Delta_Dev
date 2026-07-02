@@ -1,0 +1,604 @@
+{
+  "baseline_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 0,
+    "memories": 16,
+    "predictions": 16,
+    "relationships": 0,
+    "semantic_knowledge": 16
+  },
+  "baseline_prediction_quality": {
+    "accuracy": null,
+    "average_evidence_score": null,
+    "coverage": 0.0,
+    "evaluated": 0,
+    "failed": 0,
+    "failure_rate": null,
+    "open": 16,
+    "supported": 0,
+    "total": 16
+  },
+  "bootstrap": {
+    "goals_created": 4,
+    "predictions_created": 16,
+    "semantic_created": 16
+  },
+  "count_delta": {
+    "contradictions": 0,
+    "goals": 0,
+    "learning": 11,
+    "memories": 22,
+    "predictions": 7,
+    "relationships": 11,
+    "semantic_knowledge": 7
+  },
+  "curriculum_profiles": [
+    "causal_reasoning"
+  ],
+  "cycle_summaries": [
+    {
+      "capability": "causal_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 1,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "causal-counterfactual-maintenance",
+      "prediction_quality_score": 0.8506,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 18,
+        "learning_record_count": 1,
+        "semantic_knowledge_count": 18,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 19,
+      "tick": 2
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 1,
+        "predictions_validated": 0,
+        "semantic_created": 1
+      },
+      "objective_id": "cross-domain-budget-weather",
+      "prediction_quality_score": 0.8328,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 20,
+        "learning_record_count": 2,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 20,
+      "tick": 3
+    },
+    {
+      "capability": "belief_revision",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 3,
+        "predictions_validated": 0,
+        "semantic_created": 3
+      },
+      "objective_id": "belief-revision-gps",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 22,
+        "learning_record_count": 3,
+        "semantic_knowledge_count": 20,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 23,
+      "tick": 4
+    },
+    {
+      "capability": "causal_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "causal-chain-supply-delay",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 24,
+        "learning_record_count": 4,
+        "semantic_knowledge_count": 23,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 23,
+      "tick": 5
+    },
+    {
+      "capability": "causal_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "causal-counterfactual-maintenance",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 26,
+        "learning_record_count": 5,
+        "semantic_knowledge_count": 23,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 23,
+      "tick": 6
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "cross-domain-budget-weather",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 28,
+        "learning_record_count": 6,
+        "semantic_knowledge_count": 23,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 23,
+      "tick": 7
+    },
+    {
+      "capability": "belief_revision",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "belief-revision-gps",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 30,
+        "learning_record_count": 7,
+        "semantic_knowledge_count": 23,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 23,
+      "tick": 8
+    },
+    {
+      "capability": "causal_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "causal-chain-supply-delay",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 32,
+        "learning_record_count": 8,
+        "semantic_knowledge_count": 23,
+        "warnings": []
+      },
+      "semantic_knowledge": 23,
+      "tick": 9
+    },
+    {
+      "capability": "causal_reasoning",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "causal-counterfactual-maintenance",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 34,
+        "learning_record_count": 9,
+        "semantic_knowledge_count": 23,
+        "warnings": []
+      },
+      "semantic_knowledge": 23,
+      "tick": 10
+    },
+    {
+      "capability": "cross_domain",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "cross-domain-budget-weather",
+      "prediction_quality_score": 0.7888,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 36,
+        "learning_record_count": 10,
+        "semantic_knowledge_count": 23,
+        "warnings": []
+      },
+      "semantic_knowledge": 23,
+      "tick": 11
+    }
+  ],
+  "cycles_completed": 11,
+  "cycles_per_second": 0.3601,
+  "cycles_requested": 12,
+  "elapsed_seconds": 30.5488,
+  "final_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 11,
+    "memories": 38,
+    "predictions": 23,
+    "relationships": 11,
+    "semantic_knowledge": 23
+  },
+  "final_prediction_quality": {
+    "accuracy": 1.0,
+    "average_evidence_score": 0.7267,
+    "coverage": 0.6522,
+    "evaluated": 15,
+    "failed": 0,
+    "failure_rate": 0.0,
+    "open": 8,
+    "supported": 15,
+    "total": 23
+  },
+  "objectives": [
+    {
+      "calibration_score": 0.6935,
+      "capability": "causal_reasoning",
+      "objective_id": "causal-chain-supply-delay",
+      "surprise": 0.25,
+      "utility": 0.7345
+    },
+    {
+      "calibration_score": 0.6242,
+      "capability": "causal_reasoning",
+      "objective_id": "causal-counterfactual-maintenance",
+      "surprise": 0.25,
+      "utility": 0.6806
+    },
+    {
+      "calibration_score": 0.4933,
+      "capability": "cross_domain",
+      "objective_id": "cross-domain-budget-weather",
+      "surprise": 0.0,
+      "utility": 0.5211
+    },
+    {
+      "calibration_score": 0.4562,
+      "capability": "belief_revision",
+      "objective_id": "belief-revision-gps",
+      "surprise": 0.25,
+      "utility": 0.5354
+    }
+  ],
+  "provider_hints": {
+    "causal_reasoning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "contradiction": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "cross_domain": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "long_dependency": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+    "planning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "prediction": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "scientific_reasoning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "tool_use": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "transfer": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+  },
+  "run_id": "governed_training_20260701T044027Z",
+  "saturation_checks": [
+    {
+      "objective_repetition_ratio": 0.5,
+      "prediction_quality_delta": -0.0815,
+      "reason": "semantic_or_quality_growth_still_detected",
+      "saturated": false,
+      "semantic_delta": 5,
+      "tick": 8,
+      "unique_objectives": 4,
+      "window": 8
+    },
+    {
+      "objective_repetition_ratio": 0.5,
+      "prediction_quality_delta": -0.0618,
+      "reason": "semantic_or_quality_growth_still_detected",
+      "saturated": false,
+      "semantic_delta": 4,
+      "tick": 9,
+      "unique_objectives": 4,
+      "window": 8
+    },
+    {
+      "objective_repetition_ratio": 0.5,
+      "prediction_quality_delta": -0.044,
+      "reason": "semantic_or_quality_growth_still_detected",
+      "saturated": false,
+      "semantic_delta": 3,
+      "tick": 10,
+      "unique_objectives": 4,
+      "window": 8
+    },
+    {
+      "objective_repetition_ratio": 0.5,
+      "prediction_quality_delta": 0.0,
+      "reason": "learning_saturation",
+      "saturated": true,
+      "semantic_delta": 0,
+      "tick": 11,
+      "unique_objectives": 4,
+      "window": 8
+    }
+  ],
+  "saturation_policy": {
+    "enabled": true,
+    "min_prediction_quality_delta": 0.02,
+    "min_semantic_delta": 1,
+    "repetition_threshold": 0.5,
+    "window": 8
+  },
+  "self_model": {
+    "capabilities": [
+      "run one explicit cognitive cycle",
+      "store immutable experience records",
+      "rank recalled memories through attention",
+      "assemble per-cycle working memory",
+      "emit structured reflection and learning records",
+      "consolidate semantic knowledge from learning records",
+      "generate predictions from confident semantic knowledge",
+      "validate predictions through append-only evidence records",
+      "track explicit goals, proposed plans, and agency proposals",
+      "run bounded cognitive runtime ticks",
+      "generate self-model metrics from existing regions"
+    ],
+    "cognitive_health": {
+      "contradiction_pressure": 0.0,
+      "fragmentation": 0.7105,
+      "goal_overload": "unknown",
+      "knowledge_stability": 1.0,
+      "learning_efficiency": 1.0,
+      "memory_growth": 38,
+      "prediction_quality": 1.0,
+      "reflection_coverage": 0.2895,
+      "warnings": []
+    },
+    "confidence_distribution": {
+      "memory": {
+        "high": 27,
+        "low": 11,
+        "medium": 0
+      },
+      "predictions": {
+        "high": 0,
+        "low": 0,
+        "medium": 23
+      },
+      "semantic_knowledge": {
+        "high": 22,
+        "low": 0,
+        "medium": 1
+      }
+    },
+    "contradictions": {
+      "pressure": 0.0,
+      "total": 0
+    },
+    "generated_at": "2026-07-01T04:40:27.014082+00:00",
+    "identity": {
+      "continuity_source": "append-only state and generated reports",
+      "name": "Delta",
+      "type": "persistent cognitive substrate"
+    },
+    "knowledge_coverage": {
+      "concepts": [
+        "language",
+        "number",
+        "curiosity",
+        "Evidence that would break the chain includes the",
+        "The cycle can be completed by predicting that",
+        "Training objective requires reasoning about A maintenance team",
+        "answer To reduce the snow budget by 20",
+        "answer Delta should revise its belief to acknowledge",
+        "This revised belief is based on evidence from",
+        "Delta can make a testable prediction that GPS"
+      ],
+      "coverage_note": "coverage is inferred from explicit semantic records only",
+      "semantic_records": 23
+    },
+    "learning": {
+      "recent_questions": [],
+      "recent_records": 11,
+      "records": 11
+    },
+    "limitations": [
+      "goal progress feedback is not yet implemented",
+      "planning is proposal-only and non-executing",
+      "prediction evaluation is first-pass evidence claim scoring",
+      "confidence is not yet derived from complete justification history",
+      "attention has no durable decay model yet",
+      "self-model is generated on demand, not continuously scheduled"
+    ],
+    "metrics": {
+      "attention_distribution": {
+        "agency": 3,
+        "belief-revision-gps": 4,
+        "belief_revision": 4,
+        "bootstrap": 16,
+        "calibration": 22,
+        "causal-chain-supply-delay": 6,
+        "causal-counterfactual-maintenance": 6,
+        "causal_reasoning": 12,
+        "cross-domain-budget-weather": 6,
+        "cross_domain": 6,
+        "cycle": 22,
+        "governed": 22,
+        "knowledge": 3,
+        "learning": 1,
+        "llm": 4,
+        "memory": 7,
+        "motivation": 1,
+        "observation": 11,
+        "output": 11,
+        "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": 22,
+        "reasoning": 2,
+        "self_world": 1,
+        "simulation": 2,
+        "training": 22,
+        "world_model": 3
+      },
+      "average_knowledge_confidence": 0.8052,
+      "average_memory_confidence": 0.6326,
+      "average_prediction_confidence": 0.6768,
+      "consolidation_rate": 2.0909,
+      "contradiction_count": 0,
+      "experience_count": 38,
+      "generated_at": "2026-07-01T04:40:27.014082+00:00",
+      "learning_record_count": 11,
+      "open_prediction_count": 8,
+      "prediction_accuracy": 1.0,
+      "prediction_count": 23,
+      "recent_learning_count": 11,
+      "recent_reflection_count": 11,
+      "reflection_count": 11,
+      "relationship_count": 11,
+      "relationship_density": 0.2895,
+      "semantic_knowledge_count": 23,
+      "temporal": {
+        "history": {
+          "first_experience_at": "2026-07-01T04:39:56.316881+00:00",
+          "first_learning_at": "2026-07-01T04:40:05.190781+00:00",
+          "latest_experience_at": "2026-07-01T04:40:26.978918+00:00",
+          "latest_learning_at": "2026-07-01T04:40:26.978918+00:00"
+        },
+        "last_7_days": {
+          "experience_count": 38,
+          "learning_count": 11
+        },
+        "today": {
+          "experience_count": 38,
+          "learning_count": 11
+        }
+      },
+      "working_memory_utilization": null
+    },
+    "predictions": {
+      "accuracy": 1.0,
+      "open": 8,
+      "quality": {
+        "accuracy": 1.0,
+        "average_evidence_score": 0.7267,
+        "coverage": 0.6522,
+        "evaluated": 15,
+        "failed": 0,
+        "failure_rate": 0.0,
+        "open": 8,
+        "supported": 15,
+        "total": 23
+      },
+      "recent": [
+        "783a9ed2-798a-4f11-8cb7-b5b35ff1d21e",
+        "38482e12-037d-4a59-ad34-59ba6bcdf86c",
+        "c46b98d7-d934-4cad-b8b4-14ddd112ec9a",
+        "2748304a-a7a0-47b7-8044-247f8a5baa8a",
+        "16bff12b-cad8-41fd-bc09-dd087a52cd99",
+        "bc03b5a4-cad2-45b3-b686-cf77b1af3511",
+        "5e371af1-afe2-4421-ad92-1ff856f12566",
+        "25864b05-27ee-4dc2-8e9d-d9a9d28081ed",
+        "66311580-cdf2-46a7-bafd-abc385ae96e6",
+        "f839fc63-a9ac-4e75-9914-2cf4afb4e901"
+      ],
+      "total": 23
+    },
+    "self_observations": [
+      {
+        "kind": "baseline",
+        "severity": "info",
+        "summary": "No high-pressure self-model warnings were generated."
+      }
+    ],
+    "subsystem_health": {
+      "contradictions": {
+        "status": "clear"
+      },
+      "goals": {
+        "status": "proposal_layer"
+      },
+      "knowledge": {
+        "status": "active"
+      },
+      "learning": {
+        "status": "active"
+      },
+      "memory": {
+        "status": "active"
+      },
+      "planning": {
+        "status": "proposal_layer"
+      },
+      "predictions": {
+        "status": "active"
+      },
+      "relationships": {
+        "status": "active"
+      }
+    },
+    "temporal_continuity": {
+      "history": {
+        "first_experience_at": "2026-07-01T04:39:56.316881+00:00",
+        "first_learning_at": "2026-07-01T04:40:05.190781+00:00",
+        "latest_experience_at": "2026-07-01T04:40:26.978918+00:00",
+        "latest_learning_at": "2026-07-01T04:40:26.978918+00:00"
+      },
+      "last_7_days": {
+        "experience_count": 38,
+        "learning_count": 11
+      },
+      "today": {
+        "experience_count": 38,
+        "learning_count": 11
+      }
+    }
+  },
+  "stop_reason": {
+    "objective_repetition_ratio": 0.5,
+    "prediction_quality_delta": 0.0,
+    "reason": "learning_saturation",
+    "saturated": true,
+    "semantic_delta": 0,
+    "tick": 11,
+    "unique_objectives": 4,
+    "window": 8
+  },
+  "stopped_early": true,
+  "store_root": ".tmp\\experiments\\curriculum_profiles\\causal_reasoning"
+}

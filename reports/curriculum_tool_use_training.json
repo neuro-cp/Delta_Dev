@@ -1,0 +1,549 @@
+{
+  "baseline_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 0,
+    "memories": 16,
+    "predictions": 16,
+    "relationships": 0,
+    "semantic_knowledge": 16
+  },
+  "baseline_prediction_quality": {
+    "accuracy": null,
+    "average_evidence_score": null,
+    "coverage": 0.0,
+    "evaluated": 0,
+    "failed": 0,
+    "failure_rate": null,
+    "open": 16,
+    "supported": 0,
+    "total": 16
+  },
+  "bootstrap": {
+    "goals_created": 4,
+    "predictions_created": 16,
+    "semantic_created": 16
+  },
+  "count_delta": {
+    "contradictions": 0,
+    "goals": 0,
+    "learning": 9,
+    "memories": 18,
+    "predictions": 6,
+    "relationships": 9,
+    "semantic_knowledge": 6
+  },
+  "curriculum_profiles": [
+    "tool_use"
+  ],
+  "cycle_summaries": [
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 3,
+        "predictions_validated": 15,
+        "semantic_created": 3
+      },
+      "objective_id": "tool-use-invoice-audit",
+      "prediction_quality_score": 0.8506,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 16,
+        "learning_record_count": 0,
+        "semantic_knowledge_count": 16,
+        "warnings": [
+          "open predictions exist but are not yet evaluated",
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 19,
+      "tick": 1
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 3,
+        "predictions_validated": 0,
+        "semantic_created": 3
+      },
+      "objective_id": "tool-use-log-triage",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 18,
+        "learning_record_count": 1,
+        "semantic_knowledge_count": 19,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 2
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-invoice-audit",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 20,
+        "learning_record_count": 2,
+        "semantic_knowledge_count": 22,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 3
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-log-triage",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 22,
+        "learning_record_count": 3,
+        "semantic_knowledge_count": 22,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 4
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-invoice-audit",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 24,
+        "learning_record_count": 4,
+        "semantic_knowledge_count": 22,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 5
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-log-triage",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 26,
+        "learning_record_count": 5,
+        "semantic_knowledge_count": 22,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 6
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-invoice-audit",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 28,
+        "learning_record_count": 6,
+        "semantic_knowledge_count": 22,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 7
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-log-triage",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 30,
+        "learning_record_count": 7,
+        "semantic_knowledge_count": 22,
+        "warnings": [
+          "experience memory is sparsely related"
+        ]
+      },
+      "semantic_knowledge": 22,
+      "tick": 8
+    },
+    {
+      "capability": "tool_use",
+      "consolidation": {
+        "contradictions_detected": 0,
+        "predictions_generated": 0,
+        "predictions_validated": 0,
+        "semantic_created": 0
+      },
+      "objective_id": "tool-use-invoice-audit",
+      "prediction_quality_score": 0.8021,
+      "provider_model": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+      "self_model": {
+        "experience_count": 32,
+        "learning_record_count": 8,
+        "semantic_knowledge_count": 22,
+        "warnings": []
+      },
+      "semantic_knowledge": 22,
+      "tick": 9
+    }
+  ],
+  "cycles_completed": 9,
+  "cycles_per_second": 0.5111,
+  "cycles_requested": 12,
+  "elapsed_seconds": 17.6092,
+  "final_counts": {
+    "contradictions": 0,
+    "goals": 4,
+    "learning": 9,
+    "memories": 34,
+    "predictions": 22,
+    "relationships": 9,
+    "semantic_knowledge": 22
+  },
+  "final_prediction_quality": {
+    "accuracy": 1.0,
+    "average_evidence_score": 0.7267,
+    "coverage": 0.6818,
+    "evaluated": 15,
+    "failed": 0,
+    "failure_rate": 0.0,
+    "open": 7,
+    "supported": 15,
+    "total": 22
+  },
+  "objectives": [
+    {
+      "calibration_score": 0.5236,
+      "capability": "tool_use",
+      "objective_id": "tool-use-invoice-audit",
+      "surprise": 0.0,
+      "utility": 0.5749
+    },
+    {
+      "calibration_score": 0.3795,
+      "capability": "tool_use",
+      "objective_id": "tool-use-log-triage",
+      "surprise": 0.0,
+      "utility": 0.4583
+    }
+  ],
+  "provider_hints": {
+    "causal_reasoning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "contradiction": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "cross_domain": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "long_dependency": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+    "planning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "prediction": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "scientific_reasoning": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "tool_use": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+    "transfer": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m"
+  },
+  "run_id": "governed_training_20260701T044107Z",
+  "saturation_checks": [
+    {
+      "objective_repetition_ratio": 0.75,
+      "prediction_quality_delta": -0.0485,
+      "reason": "semantic_or_quality_growth_still_detected",
+      "saturated": false,
+      "semantic_delta": 3,
+      "tick": 8,
+      "unique_objectives": 2,
+      "window": 8
+    },
+    {
+      "objective_repetition_ratio": 0.75,
+      "prediction_quality_delta": 0.0,
+      "reason": "learning_saturation",
+      "saturated": true,
+      "semantic_delta": 0,
+      "tick": 9,
+      "unique_objectives": 2,
+      "window": 8
+    }
+  ],
+  "saturation_policy": {
+    "enabled": true,
+    "min_prediction_quality_delta": 0.02,
+    "min_semantic_delta": 1,
+    "repetition_threshold": 0.5,
+    "window": 8
+  },
+  "self_model": {
+    "capabilities": [
+      "run one explicit cognitive cycle",
+      "store immutable experience records",
+      "rank recalled memories through attention",
+      "assemble per-cycle working memory",
+      "emit structured reflection and learning records",
+      "consolidate semantic knowledge from learning records",
+      "generate predictions from confident semantic knowledge",
+      "validate predictions through append-only evidence records",
+      "track explicit goals, proposed plans, and agency proposals",
+      "run bounded cognitive runtime ticks",
+      "generate self-model metrics from existing regions"
+    ],
+    "cognitive_health": {
+      "contradiction_pressure": 0.0,
+      "fragmentation": 0.7353,
+      "goal_overload": "unknown",
+      "knowledge_stability": 1.0,
+      "learning_efficiency": 1.0,
+      "memory_growth": 34,
+      "prediction_quality": 1.0,
+      "reflection_coverage": 0.2647,
+      "warnings": []
+    },
+    "confidence_distribution": {
+      "memory": {
+        "high": 25,
+        "low": 9,
+        "medium": 0
+      },
+      "predictions": {
+        "high": 0,
+        "low": 0,
+        "medium": 22
+      },
+      "semantic_knowledge": {
+        "high": 22,
+        "low": 0,
+        "medium": 0
+      }
+    },
+    "contradictions": {
+      "pressure": 0.0,
+      "total": 0
+    },
+    "generated_at": "2026-07-01T04:41:07.606495+00:00",
+    "identity": {
+      "continuity_source": "append-only state and generated reports",
+      "name": "Delta",
+      "type": "persistent cognitive substrate"
+    },
+    "knowledge_coverage": {
+      "concepts": [
+        "learning",
+        "language",
+        "number",
+        "curiosity",
+        "answer When planning an invoice audit it is",
+        "Evidence that would resolve this issue includes the",
+        "If the purchase order and email approvals indicate",
+        "answer When inspecting logs for an incident report",
+        "The system logs can provide evidence of when",
+        "If the first log contradicts the report it"
+      ],
+      "coverage_note": "coverage is inferred from explicit semantic records only",
+      "semantic_records": 22
+    },
+    "learning": {
+      "recent_questions": [],
+      "recent_records": 9,
+      "records": 9
+    },
+    "limitations": [
+      "goal progress feedback is not yet implemented",
+      "planning is proposal-only and non-executing",
+      "prediction evaluation is first-pass evidence claim scoring",
+      "confidence is not yet derived from complete justification history",
+      "attention has no durable decay model yet",
+      "self-model is generated on demand, not continuously scheduled"
+    ],
+    "metrics": {
+      "attention_distribution": {
+        "agency": 3,
+        "bootstrap": 16,
+        "calibration": 18,
+        "cycle": 18,
+        "governed": 18,
+        "knowledge": 3,
+        "learning": 1,
+        "llm": 2,
+        "memory": 7,
+        "motivation": 1,
+        "observation": 9,
+        "output": 9,
+        "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m": 18,
+        "reasoning": 2,
+        "self_world": 1,
+        "simulation": 2,
+        "tool-use-invoice-audit": 10,
+        "tool-use-log-triage": 8,
+        "tool_use": 18,
+        "training": 18,
+        "world_model": 3
+      },
+      "average_knowledge_confidence": 0.8109,
+      "average_memory_confidence": 0.6482,
+      "average_prediction_confidence": 0.6828,
+      "consolidation_rate": 2.4444,
+      "contradiction_count": 0,
+      "experience_count": 34,
+      "generated_at": "2026-07-01T04:41:07.606495+00:00",
+      "learning_record_count": 9,
+      "open_prediction_count": 7,
+      "prediction_accuracy": 1.0,
+      "prediction_count": 22,
+      "recent_learning_count": 9,
+      "recent_reflection_count": 9,
+      "reflection_count": 9,
+      "relationship_count": 9,
+      "relationship_density": 0.2647,
+      "semantic_knowledge_count": 22,
+      "temporal": {
+        "history": {
+          "first_experience_at": "2026-07-01T04:40:49.839884+00:00",
+          "first_learning_at": "2026-07-01T04:40:58.764504+00:00",
+          "latest_experience_at": "2026-07-01T04:41:07.555523+00:00",
+          "latest_learning_at": "2026-07-01T04:41:07.564538+00:00"
+        },
+        "last_7_days": {
+          "experience_count": 34,
+          "learning_count": 9
+        },
+        "today": {
+          "experience_count": 34,
+          "learning_count": 9
+        }
+      },
+      "working_memory_utilization": null
+    },
+    "predictions": {
+      "accuracy": 1.0,
+      "open": 7,
+      "quality": {
+        "accuracy": 1.0,
+        "average_evidence_score": 0.7267,
+        "coverage": 0.6818,
+        "evaluated": 15,
+        "failed": 0,
+        "failure_rate": 0.0,
+        "open": 7,
+        "supported": 15,
+        "total": 22
+      },
+      "recent": [
+        "2ea30d09-2dcc-4412-a3e7-ac89d2e8a837",
+        "d8392e4c-f6c8-46f4-a311-cf7403308466",
+        "a9022bbf-ac76-42e5-8952-4f0613112c5a",
+        "e81437d7-6182-413b-aed5-fd0f586e01ff",
+        "e77c81ee-e84f-4c40-8289-5097bd0f97e3",
+        "e692798d-017c-4214-bf0e-d33cc4a953fb",
+        "906cbf09-dc87-4dd9-8086-8869157d0057",
+        "4f98924c-16d4-4e2d-b855-24193272b110",
+        "962c0f19-8a7b-4b7d-bff4-0526488ff939",
+        "763198e9-30af-41e9-a033-32bd10f31386"
+      ],
+      "total": 22
+    },
+    "self_observations": [
+      {
+        "kind": "baseline",
+        "severity": "info",
+        "summary": "No high-pressure self-model warnings were generated."
+      }
+    ],
+    "subsystem_health": {
+      "contradictions": {
+        "status": "clear"
+      },
+      "goals": {
+        "status": "proposal_layer"
+      },
+      "knowledge": {
+        "status": "active"
+      },
+      "learning": {
+        "status": "active"
+      },
+      "memory": {
+        "status": "active"
+      },
+      "planning": {
+        "status": "proposal_layer"
+      },
+      "predictions": {
+        "status": "active"
+      },
+      "relationships": {
+        "status": "active"
+      }
+    },
+    "temporal_continuity": {
+      "history": {
+        "first_experience_at": "2026-07-01T04:40:49.839884+00:00",
+        "first_learning_at": "2026-07-01T04:40:58.764504+00:00",
+        "latest_experience_at": "2026-07-01T04:41:07.555523+00:00",
+        "latest_learning_at": "2026-07-01T04:41:07.564538+00:00"
+      },
+      "last_7_days": {
+        "experience_count": 34,
+        "learning_count": 9
+      },
+      "today": {
+        "experience_count": 34,
+        "learning_count": 9
+      }
+    }
+  },
+  "stop_reason": {
+    "objective_repetition_ratio": 0.75,
+    "prediction_quality_delta": 0.0,
+    "reason": "learning_saturation",
+    "saturated": true,
+    "semantic_delta": 0,
+    "tick": 9,
+    "unique_objectives": 2,
+    "window": 8
+  },
+  "stopped_early": true,
+  "store_root": ".tmp\\experiments\\curriculum_profiles\\tool_use"
+}

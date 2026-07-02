@@ -1,11 +1,11 @@
 {
   "active_model": null,
-  "load_count": 6,
+  "load_count": 5,
   "loaded": false,
   "loaded_at": null,
   "metadata": {
     "resident_provider_count": 0
   },
   "n_gpu_layers": null,
-  "unload_count": 6
+  "unload_count": 5
 }

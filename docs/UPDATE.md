@@ -4,6 +4,68 @@ This is the canonical running handoff log for Delta development. A new Codex
 session should read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then this
 file before making changes.
 
+## 2026-07-02
+
+### Runtime V1.2 Real Knowledge Evaluation
+
+Runtime V1 is frozen as the fixture reference implementation. Runtime V1.2
+evaluated the same read-only runtime pipeline against the actual Phase A
+candidate store at `.tmp/experiments/phaseA_architecture_graduation/overnight_3000`.
+No learning, governance, promotion, canonical storage, provider prompts, or
+runtime scoring behavior were modified.
+
+The V1.2 report grade is `PASS WITH ISSUES`. The candidate store hash was
+unchanged before and after evaluation, grounding remained `1.0`, confidence
+calibration remained `1.0`, planning score remained `1.0`, and hallucinations
+remained `0`. The real-store bottleneck is no longer answer fabrication; it is
+candidate activation quality against a large learned corpus. Aggregate retrieval
+precision was `0.16`, retrieval recall was `0.5333`, attention precision was
+`0.55`, attention recall was `0.4333`, and `12` noise concepts influenced
+reasoning across the held-out suite.
+
+Generated reports:
+
+- `reports/runtime_v12_real_knowledge.md`
+- `reports/runtime_v12_real_knowledge.json`
+- `reports/runtime_v12_retrieval_analysis.md`
+- `reports/runtime_v12_attention_analysis.md`
+- `reports/runtime_v12_reasoning_analysis.md`
+- `reports/runtime_v12_planning_analysis.md`
+- `reports/runtime_v12_response_analysis.md`
+- `reports/runtime_v12_failure_catalog.md`
+- `reports/runtime_v12_runtime_health.md`
+- `reports/runtime_v12_question_scorecards.md`
+
+Focused V1.2 regression coverage now verifies real candidate-store loading,
+held-out question execution, deterministic report generation, fixed failure
+taxonomy, candidate-store immutability, and absence of canonical writes.
+
+### Runtime V1.2 Activation Ranking Diagnostic
+
+Added a read-only activation-ranking diagnostic at
+`tools/runtime_v12_activation_ranking_diagnostic.py`. It preserves Runtime V1.2
+behavior and decomposes why expected concepts rank below noisy concepts in the
+real Phase A candidate store.
+
+Generated reports:
+
+- `reports/runtime_v12_activation_ranking_diagnostic.md`
+- `reports/runtime_v12_activation_ranking_diagnostic.json`
+
+The diagnostic verified the candidate store remained read-only. It found mean
+expected rank `10`, median expected rank `3`, `8` expected concepts outside the
+top-10 activation window, `6` outside the top-20 window, and average
+noise-above-expected count `9.7083`. Case diagnosis was split across
+activation-ranking primary (`3`), attention primary (`3`), mixed activation and
+attention (`2`), and sparse activation abstention needed (`2`). Recurring
+lexical attractors included `resource`, `evidence`, `emergency`, `failure`,
+`uncertainty`, `plan`, and `risk`.
+
+No runtime behavior was changed. The recommended V1.3 intervention candidates
+are activation-ranking prototyping, attention-scoring prototyping, and a
+sparse-query abstention gate, each gated by comparison against the preserved
+Runtime V1.2 reports.
+
 ## 2026-06-30
 
 ### Summary
@@ -1508,3 +1570,1343 @@ Next gate:
 - Generate a larger non-repeating objective set.
 - Include outcome observations for open predictions.
 - Compare 50 diverse cycles against this repeated-objective 100-cycle result.
+
+## Curriculum Profile And Saturation Gate
+
+The next pass varied only curriculum selection. No learning-engine,
+governance, consolidation, or provider-infrastructure behavior was changed.
+
+Implemented:
+
+- `CalibrationCurriculumGenerator.generate()` now accepts curriculum profiles.
+- The calibration objective pool now includes explicit profile families for
+  contradiction, planning, causal reasoning, scientific hypothesis generation,
+  tool use, and long dependency reasoning.
+- `tools/governed_training_run.py` can run a profile-specific curriculum with
+  `--curriculum-profile`.
+- The governed runner can stop early with `--stop-on-saturation` when recent
+  cycles show low semantic growth, low prediction-quality growth, and repeated
+  objectives.
+- `reports/curriculum_profile_comparison.md` records the compact comparison.
+
+Compact comparison:
+
+| Profile | Cycles | Stopped Early | Semantic Knowledge | Predictions | Contradictions | Prediction Coverage |
+| --- | ---: | --- | ---: | ---: | ---: | ---: |
+| contradiction | 12 | no | +14 | +14 | 0 | 0.5333 |
+| planning | 12 | no | +15 | +15 | 0 | 0.4839 |
+| causal_reasoning | 11 | yes | +7 | +7 | 0 | 0.6522 |
+| scientific_reasoning | 10 | yes | +4 | +4 | 0 | 0.7500 |
+| tool_use | 9 | yes | +6 | +6 | 0 | 0.6818 |
+| long_dependency | 9 | yes | +6 | +6 | 0 | 0.6818 |
+
+Interpretation:
+
+- Curriculum profile is now a measurable experimental variable.
+- Planning and contradiction-heavy profiles produced the strongest semantic
+  growth in this small pass.
+- Narrower profiles saturated early because their objective pools are still too
+  small for longer runs.
+- Contradiction growth remained bounded across all profiles.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_curriculum_engine.py orchestration\tests\runtime\test_governed_training_runner.py`
+- result: `9 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile orchestration\curriculum\calibration_curriculum.py tools\governed_training_run.py orchestration\tests\runtime\test_governed_training_runner.py`
+- result: passed
+
+## Phase 15 Broad Corpus And Interrupted Run
+
+Phase 15 expanded the calibration curriculum into a broad objective corpus while
+keeping learning, governance, consolidation, and provider infrastructure fixed.
+
+Implemented:
+
+- `orchestration/curriculum/broad_corpus.py` generates at least `100`
+  materially different objectives per broad profile.
+- Broad profiles include planning, contradiction, causal reasoning, scientific
+  reasoning, tool use, long dependency reasoning, probabilistic reasoning,
+  resource allocation, multi-agent coordination, economics, medical reasoning,
+  mechanical diagnosis, software debugging, systems engineering,
+  cybersecurity defense, experimental design, ethical tradeoffs, negotiation,
+  risk assessment, failure analysis, counterfactual reasoning, analogical
+  reasoning, cross-domain transfer, hierarchical planning, information
+  synthesis, and hypothesis revision.
+- `tools/governed_training_run.py` can randomize and balance broad curriculum
+  objectives without replacement and can write report-only gold curriculum
+  candidates.
+
+The 300-cycle broad-corpus run was intentionally interrupted by the operator.
+It is not treated as a runtime failure.
+
+Interrupted run snapshot:
+
+- store: `.tmp/experiments/phase15_broad_corpus_training`
+- reconstructed summary: `reports/phase15_interrupted_summary.json`
+- report: `reports/phase15_interrupted_run_report.md`
+- completed cycles observed: `190`
+- unique objectives: `190`
+- latest semantic knowledge: `448`
+- latest predictions: `471`
+- open predictions: `454`
+- prediction coverage: `0.0361`
+- contradictions: `46`
+
+Interpretation:
+
+- The broad corpus removed the immediate semantic saturation bottleneck.
+  Previous repeated-objective training plateaued at `+19` semantic records;
+  the interrupted broad-corpus run reached `448` latest semantic records.
+- The next bottleneck is validation throughput. Delta generated many
+  predictions but evaluated only a small fraction before Phase 16.
+- Open contradictions increased but did not show unbounded runaway behavior in
+  the interrupted run.
+
+## Phase 16 Prediction Validation And Knowledge Survival
+
+Phase 16 froze new learning pressure and consumed open predictions from the
+Phase 15 isolated store. It did not merge any knowledge into the canonical
+knowledge base.
+
+Implemented:
+
+- `tools/phase16_validation.py` runs a bounded report-oriented validation pass
+  over an isolated experiment store.
+- The pass creates validation observations, appends prediction revisions,
+  appends semantic confidence revisions, and computes report-only lifecycle and
+  promotion states.
+- No new cognitive region, memory type, provider benchmark, or canonical
+  promotion path was added.
+
+Run:
+
+- command: `.\.venv311\Scripts\python.exe tools\phase16_validation.py --store-root .tmp\experiments\phase15_broad_corpus_training --max-predictions 120 --reports-dir reports`
+- report: `reports/phase16_validation_report.md`
+- JSON: `reports/phase16_validation_report.json`
+- concept survival: `reports/concept_survival_report.md`
+- prediction validation: `reports/prediction_validation_report.md`
+- promotion candidates: `reports/promotion_candidates.md`
+
+Prediction dashboard:
+
+| Metric | Before | After |
+| --- | ---: | ---: |
+| Total predictions | 471 | 471 |
+| Evaluated predictions | 17 | 120 |
+| Open predictions | 454 | 334 |
+| Supported predictions | 17 | 120 |
+| Failed predictions | 0 | 0 |
+| Coverage | 0.0361 | 0.2548 |
+
+Phase 16 selected `120` open predictions. The validation pass marked `103` as
+supported and `17` as inconclusive.
+
+Concept survival:
+
+- candidate concepts: `448`
+- stable concepts: `0`
+- rejected concepts: `146`
+- survival rate: `0.0357`
+- average confidence: `0.8112`
+- average redundancy: `0.1704`
+
+Interpretation:
+
+- Validation throughput improved substantially without adding new broad
+  curriculum learning.
+- Most predictions remain outstanding. The active bottleneck is still
+  observation and validation throughput, not semantic acquisition.
+- Contradiction pressure was not resolved by this pass: open contradictions
+  remained at `46`.
+- Promotion must remain report-only until validation coverage and
+  contradiction resolution improve.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_phase16_validation.py orchestration\tests\runtime\test_governed_training_runner.py`
+- result: `3 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\phase16_validation.py orchestration\tests\runtime\test_phase16_validation.py`
+- result: passed
+
+## Phase 17 Adversarial Validation And Knowledge Refinement
+
+Phase 17 continued from the same Phase 15 isolated store after Phase 16. It
+did not generate new curriculum, run provider inference, or promote anything
+into canonical knowledge.
+
+Implemented:
+
+- `tools/phase17_adversarial_validation.py` runs a bounded adversarial
+  validation pass over open predictions.
+- The pass deliberately challenges predictions using prompt-specificity,
+  redundancy, unresolved contradiction pressure, thin claims, and lack of
+  cross-profile reuse.
+- Failed predictions are treated as valuable evidence, not runtime errors.
+- Semantic confidence revisions are append-only and remain inside the isolated
+  experiment store.
+- Contradictions involving failed concepts can be append-only resolved inside
+  the isolated store.
+
+Run:
+
+- command: `.\.venv311\Scripts\python.exe tools\phase17_adversarial_validation.py --store-root .tmp\experiments\phase15_broad_corpus_training --max-predictions 334 --reports-dir reports`
+- report: `reports/phase17_validation_report.md`
+- JSON: `reports/phase17_validation_report.json`
+- prediction revisions: `reports/prediction_revision_report.md`
+- confidence trajectories: `reports/confidence_trajectory_report.md`
+- concept survival: `reports/concept_survival_report.md`
+- promotion candidates: `reports/promotion_candidates.md`
+
+Prediction dashboard:
+
+| Metric | Phase 16 | Phase 17 |
+| --- | ---: | ---: |
+| Coverage | 0.2548 | 0.8068 |
+| Supported | 120 | 323 |
+| Failed | 0 | 57 |
+| Outstanding open | 334 | 23 |
+
+Phase 17 pass outcomes:
+
+| Outcome | Count |
+| --- | ---: |
+| Supported | 203 |
+| Failed | 57 |
+| Inconclusive | 51 |
+
+Concept and contradiction outcomes:
+
+- candidate concepts: `448`
+- rejected concepts: `64`
+- rejection rate: `0.1429`
+- average confidence: `0.804`
+- average confidence increase: `0.0365`
+- average confidence decrease: `-0.0981`
+- open contradictions before: `46`
+- open contradictions after: `17`
+- contradictions resolved: `29`
+- contradiction resolution rate: `0.6304`
+
+Interpretation:
+
+- Phase 17 demonstrated falsification behavior. Delta can now fail predictions
+  in an isolated validation pass instead of only confirming them.
+- The failed predictions were concentrated in prompt-shaped claims, redundant
+  concepts, and contradiction-pressured candidates.
+- Validation coverage reached the requested high-coverage range while leaving
+  canonical knowledge untouched.
+- The next bottleneck is higher-quality contradiction resolution and better
+  source linkage for relationship centrality and cross-profile recurrence.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_phase17_adversarial_validation.py orchestration\tests\runtime\test_phase16_validation.py`
+- result: `2 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\phase17_adversarial_validation.py orchestration\tests\runtime\test_phase17_adversarial_validation.py`
+- result: passed
+
+## Phase 17 Failed Prediction Sanity Check
+
+The `57` Phase 17 failed predictions were sampled to check whether adversarial
+validation was rejecting the right material.
+
+Report:
+
+- `reports/phase17_failed_prediction_sanity_check.md`
+
+Findings:
+
+- Most failures were legitimate prompt artifacts, answer-prefix fragments,
+  redundant claims, or contradiction-pressured candidates.
+- Across all `57` failures, `29` had prompt-artifact wording, `14` had
+  `answer`/`goal` prefix artifacts, `35` had redundancy >= `0.32`, and `19`
+  had unresolved contradiction pressure.
+- About `8` failures look like possible false negatives: useful ideas trapped
+  inside poor extraction boundaries or overly generic phrasing.
+
+Interpretation:
+
+- Phase 17 falsification statistics are directionally valid.
+- Failed predictions should not all be treated as final rejection decisions.
+- The next refinement should preserve adversarial validation while adding a
+  failed-concept salvage/normalization pass for useful ideas with bad phrasing.
+
+## Phase 17 Prompt Artifact Provider Attribution
+
+Prompt-artifact failures were traced back through semantic supporting evidence
+to the originating `orchestration_output` memory provider tags.
+
+Report:
+
+- `reports/phase17_prompt_artifact_provider_attribution.md`
+
+Failed prediction raw counts:
+
+| Provider | Failed Predictions |
+| --- | ---: |
+| Llama 3.1 8B Q4_K_M | 26 |
+| Qwen2.5 7B Q4_K_M | 26 |
+| Mistral 7B Q4_K_M | 4 |
+| Phi-3.1 Mini Q4_K_M | 1 |
+
+Denominator-adjusted candidate quality:
+
+| Provider | Candidate Concepts | Artifact Rate | Failed Rate |
+| --- | ---: | ---: | ---: |
+| Qwen2.5 7B Q4_K_M | 270 | 0.1926 | 0.0815 |
+| Llama 3.1 8B Q4_K_M | 125 | 0.3200 | 0.2000 |
+| Mistral 7B Q4_K_M | 20 | 0.3000 | 0.2000 |
+| Phi-3.1 Mini Q4_K_M | 17 | 0.0588 | 0.0588 |
+
+Interpretation:
+
+- Prompt artifacts are not caused by a single provider.
+- Llama had a higher artifact and failed-concept rate than Qwen in this routed
+  broad-corpus dataset.
+- Mistral and Phi sample sizes are too small for strong conclusions.
+- Provider attribution is confounded with routing and profile mix; Llama handled
+  many long-dependency, transfer, analogical, and ethics-style tasks where
+  verbose answer scaffolding is more likely.
+
+Recommendation:
+
+- Keep provider attribution in semantic-candidate quality reports.
+- Do not change routing from this dataset alone.
+- Run a controlled provider artifact-rate comparison on identical prompts
+  before provider/capability penalties are introduced.
+
+Decision:
+
+- Defer provider-specific prompt adapters for now. The current extraction,
+  validation, falsification, and future normalization pipeline is already
+  catching most provider-output artifacts.
+- Provider prompt tuning should be revisited only if artifact rate becomes a
+  dominant bottleneck across multiple phases, a provider exceeds roughly `50%`
+  artifact rate, or malformed outputs begin breaking extraction rather than
+  merely lowering candidate quality.
+- Current priority remains semantic normalization, contradiction refinement,
+  promotion governance, and canonical knowledge evolution.
+
+## Phase 18 Semantic Normalization & Re-Validation
+
+Phase 18 operated only on the existing Phase 15 isolated experiment store and
+revalidated normalized versions of Phase 17 failed predictions. No provider
+inference, broad curriculum, canonical promotion, or architectural expansion was
+performed.
+
+Reports:
+
+- `reports/phase18_normalization_report.md`
+- `reports/phase18_normalization_report.json`
+- `reports/normalization_examples.md`
+- `reports/recovered_concepts.md`
+- `reports/revalidation_report.md`
+
+Results:
+
+| Metric | Value |
+| --- | ---: |
+| Failed predictions considered | `40` |
+| Normalized concepts | `36` |
+| Revalidated concepts | `36` |
+| Recovered concepts | `3` |
+| Not recovered after normalization | `33` |
+| Skipped | `4` |
+| Normalization precision | `0.0833` |
+| Artifact reduction | `6.36` |
+| Redundancy reduction | `-28.3561` |
+| Average promotion score improvement | `0.1933` |
+
+Recovered concepts:
+
+- `Risk assessment separates likelihood from impact`
+- `Counterfactual claims require comparison metrics`
+- `Preventive maintenance transfer requires failure-rate evidence`
+
+Interpretation:
+
+- Phase 18 confirmed that a subset of Phase 17 failures were extraction
+  artifacts rather than bad beliefs.
+- Deterministic normalization sharply reduced prompt-shaped wording, but most
+  normalized concepts remained inconclusive because they were redundant with
+  existing semantic material.
+- The low normalization precision is healthy evidence that the rules are
+  conservative; normalization should remain a quality filter, not a miniature
+  reasoning engine.
+- The next promotion-governance phase should use only concepts that survived
+  validation, adversarial validation, normalization, and revalidation with full
+  provenance and confidence trajectory.
+
+## Phase 19 Promotion Governance & Continuous Learning Pipeline
+
+Phase 19 added report-only promotion governance and a single continuous
+learning operator entrypoint. The governance pass evaluates isolated experiment
+knowledge and produces recommendations without merging anything into canonical
+knowledge.
+
+Implementation:
+
+- `tools/promotion_governance.py`
+- `tools/continuous_learning_operator.py`
+- `orchestration/tests/runtime/test_promotion_governance.py`
+
+Reports:
+
+- `reports/promotion_governance_report.md`
+- `reports/promotion_governance_report.json`
+- `reports/promotion_candidates.md`
+- `reports/promotion_rejections.md`
+- `reports/concept_lifecycle_report.md`
+
+Governance results on the Phase 15 isolated store:
+
+| Metric | Value |
+| --- | ---: |
+| Concepts evaluated | `484` |
+| Promotion eligible | `0` |
+| Validated | `127` |
+| Candidate | `188` |
+| Hold for more validation | `23` |
+| Experimental | `2` |
+| Rejected | `144` |
+| Average promotion score | `0.3962` |
+| Canonical merge performed | `false` |
+
+Interpretation:
+
+- Promotion governance is now an explicit decision layer instead of a manual
+  judgment.
+- The current isolated store contains validated and candidate knowledge, but no
+  concepts yet meet the default promotion-eligible threshold.
+- Recovered Phase 18 normalized concepts are no longer automatically rejected
+  for their pre-normalization failed prediction; the raw failure remains
+  auditable while `effective_failed_predictions` reflects successful recovery.
+- Canonical knowledge remains protected. The gate is working by refusing to
+  promote concepts that still show prompt residue, redundancy, unresolved
+  predictions, weak relationship centrality, or insufficient cross-profile
+  support.
+
+Continuous operator:
+
+- `tools/continuous_learning_operator.py` chains the existing bounded pipeline:
+  governed learning, validation, adversarial validation, normalization, and
+  promotion governance.
+- Verification used an empty isolated smoke store with `cycles=0`, confirming
+  the operator can execute the non-learning stages and produce governance
+  reports without touching canonical knowledge.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_promotion_governance.py`
+- result: `4 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\promotion_governance.py tools\continuous_learning_operator.py orchestration\tests\runtime\test_promotion_governance.py`
+- result: passed
+
+## Phase 20 Bounded Continuous Operation Campaign
+
+Phase 20 treated Delta as an operating learner instead of adding another
+architecture layer. Three fresh isolated planning-profile stores were run
+through the continuous operator with only cycle count varied: `20`, `30`, and
+`40` cycles. No canonical promotion was performed.
+
+Reports:
+
+- `reports/phase20_cross_run_report.md`
+- `reports/phase20_cross_run_report.json`
+- `reports/phase20_failure_distribution.md`
+- `reports/phase20_governance_trend.md`
+- `reports/phase20_promotion_trend.md`
+
+Campaign summary:
+
+| Run | Cycles | Semantic Growth | Prediction Coverage | Avg Promotion Score | Validated | Rejected | Promotion Eligible |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `planning_20` | `20` | `48` | `0.9394` | `0.5291` | `17` | `2` | `0` |
+| `planning_30` | `30` | `60` | `0.9487` | `0.5084` | `25` | `6` | `0` |
+| `planning_40` | `40` | `75` | `0.8387` | `0.4483` | `23` | `17` | `0` |
+
+Aggregate lifecycle distribution:
+
+- `Candidate`: `138`
+- `Validated`: `65`
+- `Hold for More Validation`: `9`
+- `Reject`: `25`
+- `Promotion Eligible`: `0`
+
+Failure distribution:
+
+- `low_centrality`: `34`
+- `unresolved_prediction`: `28`
+- `redundancy`: `19`
+- `contradiction`: `8`
+- `prompt_artifact`: `7`
+- `incomplete_proposition`: `6`
+- `failed_validation`: `6`
+
+Promotion-governance calibration:
+
+- The original promotion eligibility threshold was too strict for bounded runs
+  because relationship centrality is almost always `0.0`.
+- The threshold was recalibrated from an unreachable pure score gate to a lower
+  bounded-run score gate with hard quality requirements: validation support,
+  no effective failures, no unresolved predictions, no open contradictions,
+  sufficient evidence support, low redundancy, low prompt specificity, and a
+  complete proposition.
+- A temporary promotion-eligible result exposed incomplete proposition leakage,
+  so the gate was tightened to block fragments such as claims ending in
+  `may require`.
+- After recalibration and the fragment guard, the campaign still produced `0`
+  promotion-eligible concepts. This is now interpreted as an evidence result,
+  not merely a permissiveness bug.
+
+Interpretation:
+
+- More cycles generated more semantic concepts but did not improve average
+  promotion quality. Average promotion score declined from `0.5291` at `20`
+  cycles to `0.4483` at `40` cycles.
+- Prediction coverage was strong in the `20` and `30` cycle runs but dropped at
+  `40` cycles as backlog and rejection pressure increased.
+- The dominant bottleneck is now relationship formation / relationship
+  centrality. Concepts can be validated, but they are not becoming graph-central
+  enough to justify canonical promotion.
+- The next justified code change should improve how semantic concepts are
+  linked to related concepts, evidence, predictions, and objectives. It should
+  not relax promotion thresholds further.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase20_campaign_aggregate.py`
+- result: `7 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\continuous_learning_operator.py tools\promotion_governance.py tools\phase20_campaign_aggregate.py tools\phase16_validation.py orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase20_campaign_aggregate.py`
+- result: passed
+
+## Phase 21 Relationship Centrality Audit
+
+Phase 21 was a read-only diagnostic pass. It did not run learning, validation,
+normalization, promotion, or canonical merge. The goal was to determine whether
+Phase 20's `low_centrality` bottleneck meant relationships were not being
+created, or whether governance could not see existing relationships.
+
+Implementation:
+
+- `tools/phase21_relationship_centrality_audit.py`
+- `tools/phase21_audit_aggregate.py`
+- `orchestration/tests/runtime/test_phase21_relationship_centrality_audit.py`
+
+Reports:
+
+- `reports/phase21_relationship_centrality_audit.md`
+- `reports/phase21_relationship_centrality_audit.json`
+
+Audit results across the Phase 20 planning stores:
+
+| Run | Concepts Sampled | Direct Semantic Edges | Projected Memory Edges |
+| --- | ---: | ---: | ---: |
+| `planning_20` | `50` | `0` | `35` |
+| `planning_30` | `50` | `0` | `40` |
+| `planning_40` | `50` | `0` | `39` |
+
+Aggregate:
+
+- concepts sampled: `150`
+- concepts with direct semantic edges: `0`
+- concepts with projected memory edges: `114`
+- direct semantic ratio: `0.0`
+- projected memory ratio: `0.76`
+- memory-to-memory relationships: `90`
+- concept-to-concept relationships: `0`
+- concept-to-memory relationships: `0`
+
+Conclusion:
+
+- `governance_centrality_is_blind_to_existing_memory_relationships`
+
+Interpretation:
+
+- Relationships do exist, but they are memory-to-memory.
+- Semantic concepts retain supporting evidence memory IDs, and those evidence
+  memories often participate in relationship edges.
+- Promotion governance currently scores centrality against semantic concept
+  IDs, so it sees `0` centrality even when the supporting evidence is connected.
+- The next justified change is semantic relationship projection: expose
+  evidence-memory relationships at the semantic concept layer without inventing
+  new cognitive regions or changing canonical promotion rules.
+
+## Phase 22 Virtual Semantic Relationship Projection
+
+Phase 22 implemented virtual, report-derived semantic relationship projection
+inside promotion governance. It does not generate or persist concept edges, does
+not mutate experiment stores, does not loosen promotion thresholds, and does
+not promote canonical knowledge.
+
+Implementation:
+
+- `tools/promotion_governance.py`
+- `tools/phase22_projection_comparison.py`
+- `orchestration/tests/runtime/test_phase22_projection_comparison.py`
+
+Projection contributors:
+
+- direct semantic edges, if present
+- supporting evidence memory relationships
+- shared supporting evidence between concepts
+- prediction links
+- relationship type diversity
+- supporting evidence count
+
+Reports:
+
+- `reports/phase22_projection_comparison.md`
+- `reports/phase22_projection_comparison.json`
+
+Comparison results across the Phase 20 planning stores:
+
+| Metric | Value |
+| --- | ---: |
+| Concepts evaluated | `237` |
+| Average raw centrality | `0.0` |
+| Average projected centrality | `0.2904` |
+| Average raw promotion score | `0.4899` |
+| Average projected promotion score | `0.5184` |
+| Average promotion score delta | `0.0285` |
+| Recommendation changes | `29` |
+| Evidence-projection boosted concepts | `189` |
+| Promotion-eligible changes | `0` |
+
+Run-level outcomes:
+
+| Run | Raw Score | Projected Score | Delta | Recommendation Changes |
+| --- | ---: | ---: | ---: | ---: |
+| `planning_20` | `0.5291` | `0.5563` | `0.0272` | `10` |
+| `planning_30` | `0.5084` | `0.5373` | `0.0289` | `11` |
+| `planning_40` | `0.4483` | `0.4774` | `0.0291` | `8` |
+
+Interpretation:
+
+- Projected centrality revealed meaningful hidden structure: raw centrality was
+  `0.0`, while projected centrality averaged `0.2904`.
+- Governance recommendations improved modestly, mostly moving connected
+  concepts from `Candidate` to `Validated`.
+- No concepts became `Promotion Eligible` after the prompt-artifact and
+  incomplete-proposition gates were tightened.
+- Virtual projection is sufficient for scoring and diagnostics right now.
+  Persistent semantic edge materialization is not yet justified.
+- The next experiment should rerun bounded operation with virtual projection
+  enabled in governance and compare lifecycle trends before considering any
+  persistent semantic graph changes.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase22_projection_comparison.py`
+- result: `11 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\promotion_governance.py tools\phase22_projection_comparison.py`
+- result: passed
+
+## Phase 23 Concept Coherence Audit
+
+Phase 23 tested whether a common structured output contract improves the
+semantic substrate before any further promotion work. The experiment used a
+fresh isolated planning-profile store and honored the current bounded-run limit:
+no learning experiment may exceed `20` cycles without explicit approval.
+
+Formatting-contract run:
+
+- store: `.tmp/experiments/phase23_formatting_contract/planning_20/store`
+- cycles requested: `20`
+- cycles completed: `8`
+- stop behavior: early saturation
+- canonical promotion: none
+
+The run initially produced one `Promotion Eligible` recommendation, but manual
+inspection showed the concept was still an incomplete fragment:
+`Evidence that would require reallocation includes a significant`. Promotion
+governance was tightened to classify this and similar adjective/preposition
+fragments as incomplete propositions. Re-running governance against the same
+store produced `0` promotion-eligible concepts and `29` candidates.
+
+Reports:
+
+- `reports/phase23_concept_coherence.md`
+- `reports/phase23_cluster_report.md`
+- `reports/phase23_isolated_concepts.md`
+- `reports/phase23_relationship_diversity.md`
+
+Key learned-only comparison against the Phase 20 planning-20 baseline:
+
+| Metric | Baseline | Formatting Contract |
+| --- | ---: | ---: |
+| Learned concepts | `48` | `13` |
+| Prompt artifact rate | `0.3333` | `0.3846` |
+| Incomplete proposition rate | `0.2292` | `0.8462` |
+| Learned average promotion score | `0.5259` | `0.5515` |
+| Learned scores >= 0.56 | `16` | `6` |
+| Learned scores >= 0.62 | `1` | `1` |
+| Average shared-evidence neighbors | `1.4062` | `0.7586` |
+| Average relationship diversity | `0.75` | `0.4483` |
+| Isolated concept rate | `0.0` | `0.0` |
+
+Interpretation:
+
+- The formatting contract should not become the default yet.
+- The all-concept artifact-rate improvement was denominator-sensitive because
+  the formatting run stopped early and bootstrap concepts dominated the store.
+- On learned concepts only, prompt artifacts and incomplete propositions did
+  not improve.
+- Semantic organization did not improve: shared-evidence connectivity and
+  relationship diversity declined.
+- The next justified work is not provider-specific prompt tuning; it is more
+  precise extraction/proposition boundary handling, measured under the same
+  `20`-cycle cap.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase22_projection_comparison.py`
+- result: `17 passed`
+
+## Phase 24 Semantic Candidate Boundary Audit
+
+Phase 24 audited the provider-output to semantic-candidate boundary using the
+existing Phase 23 isolated store. No provider inference, canonical promotion,
+or broad training run was performed.
+
+Initial hypothesis:
+
+- provider output or the learning extractor was producing malformed semantic
+  candidates.
+
+Audit finding:
+
+- In the traced examples, the learning candidate was often a complete reusable
+  proposition.
+- Semantic consolidation then converted that candidate into an eight-word
+  `concept` label.
+- The eight-word label frequently became an incomplete fragment even though the
+  `definition` still held the complete candidate text.
+
+Example:
+
+```text
+candidate:
+Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter.
+
+old concept label:
+Evidence that would require reallocation includes a significant
+```
+
+This changed the diagnosis. The dominant boundary loss was not provider
+formatting or governance permissiveness; it was consolidation label
+truncation.
+
+Fix:
+
+- `knowledge/consolidation_engine.py` now preserves complete candidate
+  propositions as semantic concept labels when they fit within a conservative
+  length limit.
+- Long candidates still receive bounded labels, but the truncation limit was
+  widened to reduce sentence mutilation.
+- No inference, paraphrasing, canonical promotion, or threshold changes were
+  introduced.
+
+Deterministic replay comparison on the Phase 23 store:
+
+| Metric | Current Store | Preserved Label |
+| --- | ---: | ---: |
+| Semantic candidates traced | `35` | `35` |
+| Boundary losses from label truncation | `26` | avoided for future consolidation |
+| Current incomplete concept count | `22` | `0` |
+| Current incomplete concept rate | `0.8462` | `0.0` |
+
+Reports:
+
+- `reports/phase24_semantic_boundary_audit.md`
+- `reports/phase24_semantic_boundary_audit.json`
+- `reports/phase24_extraction_failure_catalog.md`
+- `reports/phase24_boundary_comparison.md`
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_bootstrap_runtime.py orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase22_projection_comparison.py`
+- result: `25 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile knowledge\consolidation_engine.py tools\phase24_semantic_boundary_audit.py`
+- result: passed
+
+### Phase 24 Operational Verification
+
+The consolidation boundary fix was verified with one fresh bounded planning run
+using the same provider routing and governance path. The experiment requested
+`20` cycles and stopped at `8` cycles due saturation.
+
+Store:
+
+- `.tmp/experiments/phase24_boundary_verification/planning_20/store`
+
+Reports:
+
+- `reports/phase24_boundary_verification_summary.md`
+- `reports/phase24_boundary_verification_summary.json`
+
+Comparison:
+
+| Metric | Phase 20 Baseline | Phase 23 Formatting | Phase 24 Boundary Fix |
+| --- | ---: | ---: | ---: |
+| Cycles completed | `20` | `8` | `8` |
+| Semantic delta | `48` | `13` | `23` |
+| Prediction delta | `50` | `13` | `23` |
+| Learned concepts | `48` | `13` | `23` |
+| Learned incomplete rate | `0.2292` | `0.8462` | `0.1739` |
+| Learned redundancy | `0.2258` | `0.2069` | `0.1613` |
+| Learned average promotion score | `0.5259` | `0.5515` | `0.5599` |
+| Learned score >= 0.56 | `16` | `6` | `15` |
+| Governance recommendations | `17 Validated` | `0 Validated` | `10 Validated` |
+
+Interpretation:
+
+- The deterministic replay result converted into an operational improvement.
+- Incomplete learned propositions dropped sharply relative to the Phase 23
+  formatting run.
+- Validated concepts returned without lowering governance thresholds.
+- Prompt artifact rate did not improve (`0.3913` learned), so remaining quality
+  loss is now likely true extraction-level artifact leakage rather than
+  consolidation label truncation.
+- No canonical promotion was performed.
+
+## Phase 25 Extraction Boundary Quality
+
+Phase 25 investigated the remaining prompt-shaped and task-shaped semantic
+candidate leakage inside `LearningEngine`. This phase used deterministic replay
+first and then one bounded operational verification. No provider-specific prompt
+tuning, governance threshold changes, promotion threshold changes, new memory
+systems, or canonical promotion were introduced.
+
+Implementation:
+
+- `learning/region/learning_engine.py`
+- `tools/phase25_extraction_boundary_audit.py`
+- `orchestration/tests/runtime/test_reflection_quality.py`
+
+Deterministic extraction changes:
+
+- reject prompt scaffolding such as `complete the cycle`, `this prediction`,
+  and `the cycle can be completed`;
+- reject answer scaffolding and task imperatives;
+- reject dangling conditionals and incomplete propositions;
+- reject missing-reference fragments such as `This process...` and
+  `To mitigate this...`;
+- split simple bullet/list formatting deterministically;
+- remove the prompt-derived semantic fallback that produced
+  `Repeated attended context appears relevant...` candidates.
+
+Replay audit on the Phase 24 boundary-verification store:
+
+| Metric | Legacy Filter | Phase 25 Filter |
+| --- | ---: | ---: |
+| Accepted candidates | `35` | `10` |
+| Acceptance rate | `0.3723` | `0.1064` |
+| Prompt artifact rate | `0.4` | `0.0` |
+| Incomplete rate | `0.3143` | `0.0` |
+| Fragment rate | `0.7143` | `0.0` |
+| Estimated precision | `0.2857` | `1.0` |
+| Estimated recall | `1.0` | `1.0` |
+
+Operational verification:
+
+- store: `.tmp/experiments/phase25_extraction_boundary_verification/planning_20/store`
+- cycles requested: `20`
+- cycles completed: `8`
+- canonical promotion: none
+
+| Metric | Phase 24 Boundary Fix | Phase 25 Extraction Filter |
+| --- | ---: | ---: |
+| Semantic delta | `23` | `10` |
+| Prediction delta | `23` | `10` |
+| Learned concepts | `23` | `10` |
+| Learned artifact rate | `0.3913` | `0.0` |
+| Learned incomplete rate | `0.1739` | `0.2` |
+| Learned redundancy | `0.1613` | `0.1274` |
+| Learned average promotion score | `0.5599` | `0.5693` |
+| Validated concepts | `10` | `6` |
+| Promotion eligible | `0` | `0` |
+| Candidate complete rate | `0.5652` | `1.0` |
+| Candidate fragment rate | `0.4348` | `0.0` |
+
+Reports:
+
+- `reports/phase25_extraction_boundary_audit.md`
+- `reports/phase25_extraction_boundary_audit.json`
+- `reports/phase25_candidate_filter_comparison.md`
+- `reports/phase25_candidate_examples.md`
+- `reports/phase25_operational_verification_summary.md`
+- `reports/phase25_operational_verification_summary.json`
+
+Interpretation:
+
+- The filter successfully removes prompt artifacts and fragments before
+  consolidation.
+- Learning was not starved: the bounded verification produced `10` learned
+  semantic concepts and `6` validated concepts.
+- Throughput dropped materially compared with Phase 24, so the extraction
+  filter should be frozen here and not tightened further without broader
+  evidence.
+- The next work should move back toward broader curriculum/training runs to
+  test whether cleaner candidates compound over more diverse experience.
+
+## Phase 26 Autonomous Curriculum Validation Campaign
+
+Phase 26 ran the current closed-loop architecture as an operating learner rather
+than adding another subsystem. The continuous operator bound was explicitly
+raised from `20` to `200` cycles for this campaign, and governance now uses the
+Phase 22 virtual relationship projection by default. Canonical knowledge was
+not modified.
+
+Implementation/reporting:
+
+- `tools/continuous_learning_operator.py`
+- `tools/phase26_autonomous_campaign.py`
+- `orchestration/tests/runtime/test_phase26_autonomous_campaign.py`
+- `.tmp/experiments/phase26_autonomous_campaign/`
+- `reports/phase26_autonomous_campaign_report.md`
+- `reports/phase26_autonomous_campaign_report.json`
+- `reports/phase26_survival_curves.md`
+- `reports/phase26_promotion_trends.md`
+- `reports/phase26_governance_trends.md`
+
+Campaign summary:
+
+| Run | Cycles | Profiles | Semantic Growth | Coverage | Failed | Avg Score | Eligible | Validated |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| planning_100 | `100/100` | planning | `81` | `0.8558` | `0` | `0.5451` | `2` | `44` |
+| contradiction_100 | `100/100` | contradiction | `39` | `0.9298` | `0` | `0.5585` | `1` | `27` |
+| causal_reasoning_100 | `100/100` | causal_reasoning | `43` | `1.0` | `0` | `0.5846` | `2` | `29` |
+| broad_balanced_100 | `100/100` | mixed | `147` | `0.9112` | `5` | `0.5373` | `2` | `72` |
+| broad_balanced_200 | `200/200` | mixed | `314` | `0.8567` | `9` | `0.522` | `1` | `167` |
+| causal_reasoning_200 | `104/200` | causal_reasoning | `45` | `0.9836` | `0` | `0.5776` | `2` | `27` |
+| planning_200 | `200/200` | planning | `143` | `0.9042` | `0` | `0.5572` | `2` | `82` |
+
+Aggregate results:
+
+- Total learning cycles: `904`.
+- Extracted candidate growth: `812`.
+- Semantic records evaluated: `928`.
+- Predictions validated: `865`.
+- Validated concepts: `448`.
+- Promotion-eligible recommendations: `12`.
+- Rejected concepts: `63`.
+- Canonical-ready concepts: `0`.
+- Average promotion score: `0.5546`.
+- Dominant failure distribution: unresolved prediction `80`, redundancy `53`,
+  contradiction `30`, failed validation `14`, incomplete proposition `9`, prompt
+  artifact `6`.
+
+Interpretation:
+
+- The Phase 24 and Phase 25 information-preservation fixes do compound under
+  larger bounded runs: the system no longer collapses to the old 8-cycle
+  saturation pattern, and it can now surface promotion-eligible recommendations
+  without lowering thresholds.
+- Curriculum profile matters. `causal_reasoning_100` produced the highest
+  average promotion score and full prediction coverage, while `planning_100`
+  produced more semantic volume. A follow-up `causal_reasoning_200` request
+  completed only `104` scheduled cycles, produced nearly the same semantic
+  growth as `causal_reasoning_100`, and kept high quality; causal reasoning
+  appears to saturate near the 100-cycle window under the current corpus.
+- Broad mixed curricula produce far more semantic material and real failed
+  predictions, but quality does not scale linearly. The `200`-cycle mixed run
+  generated `314` semantic concepts but only `1` promotion-eligible concept and
+  a lower average score.
+- `planning_200` improved the planning profile relative to `planning_100`
+  (`0.5572` average score versus `0.5451`) and produced `143` semantic concepts,
+  but unresolved predictions remained its dominant failure mode. Planning
+  compounds better than the broad mixed run, but it still creates validation
+  backlog.
+- Manual spot checks of promotion-eligible concepts show that some are still
+  prediction-shaped or context-specific. Promotion eligibility must remain
+  report-only until manual review and stricter survival/provenance checks are
+  satisfied.
+- The next bottleneck is not extraction filtering. The dominant quality limits
+  are unresolved predictions, redundancy, and context-specific candidate shape
+  under longer mixed curricula.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase20_campaign_aggregate.py orchestration\tests\runtime\test_phase26_autonomous_campaign.py`
+- result: `21 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\continuous_learning_operator.py tools\phase26_autonomous_campaign.py tools\promotion_governance.py orchestration\tests\runtime\test_promotion_governance.py orchestration\tests\runtime\test_phase26_autonomous_campaign.py`
+- result: passed
+
+## Phase 27 Knowledge Maturation Audit
+
+Phase 27 did not add learning architecture or promote canonical knowledge. It
+mined the Phase 26 campaign evidence to answer a narrower question: what
+distinguishes knowledge that survives from knowledge that dies?
+
+Deliverables:
+
+- `tools/phase27_knowledge_maturation_audit.py`
+- `orchestration/tests/runtime/test_phase27_knowledge_maturation_audit.py`
+- `reports/phase27_knowledge_maturation_audit.md`
+- `reports/phase27_knowledge_maturation_audit.json`
+- `reports/phase27_promotion_survivor_profiles.md`
+- `reports/phase27_survivor_vs_reject_comparison.md`
+- `reports/phase27_maturation_failure_taxonomy.md`
+- `reports/phase27_promotion_velocity.md`
+- `reports/phase27_concept_lifespan.md`
+- `reports/phase27_baseline_snapshot_20260702T000654Z/`
+
+Key findings:
+
+- The `12` promotion-eligible concepts share useful but not sufficient
+  properties: low average redundancy (`0.1215`), no open contradictions, positive
+  confidence slope (`0.0529`), and perfect observed prediction accuracy.
+- The bottom ten rejects are not less connected; they actually show slightly
+  higher projected centrality (`0.3538` versus `0.325`). They differ most in
+  redundancy (`0.5323`), negative confidence slope (`-0.089`), and prediction
+  accuracy (`0.0`).
+- The knowledge survival funnel is now explicit: `812` generated candidates,
+  `928` evaluated semantic records, `460` validated-or-eligible concepts, `831`
+  candidate-or-better records, `12` promotion-eligible concepts, and `0`
+  canonical-ready concepts.
+- Current governance-visible unresolved predictions are dominated by redundant
+  current concepts (`22`), unvisited current concepts (`21`), late-cycle backlog
+  (`19`), and partially validated current concepts (`19`).
+- The much larger raw prediction backlog is mostly historical or superseded
+  concept references (`913`). It should not be treated as current governance
+  pressure without revision lineage analysis.
+
+Recommendation:
+
+Next work should audit semantic equivalence and merge candidates in report-only
+mode, then schedule unresolved current-concept predictions for maturation. Do not
+change canonical knowledge or loosen promotion thresholds.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_phase27_knowledge_maturation_audit.py`
+- result: `3 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile tools\phase27_knowledge_maturation_audit.py orchestration\tests\runtime\test_phase27_knowledge_maturation_audit.py`
+- result: passed
+
+## Phase A Passive Graduation Run and Runtime Retrieval Seed
+
+Phase A is now running passively. The active local runner is allowed to finish
+the staged campaign, and a passive supervisor will launch an additional
+`overnight_3000` stress campaign afterward. Completion is signaled through
+`reports/phaseA_complete.json`; a fresh session should read that sentinel and
+the generated reports before making any graduation decision.
+
+Candidate knowledge remains isolated. No Phase A output has been migrated into
+canonical storage. The correct next storage status is candidate canonical:
+important enough to preserve and inspect, but not permanent until runtime
+retrieval/working-memory/response behavior proves what metadata the canonical
+schema needs.
+
+Runtime-v1 seed:
+
+- `orchestration/runtime/candidate_knowledge_retrieval.py`
+- `orchestration/tests/runtime/test_candidate_knowledge_retrieval.py`
+
+This adds a read-only `KnowledgeActivationEngine` that activates relevant
+semantic records from an isolated/candidate store and can assemble them into a
+`WorkingMemoryContext`. It reads `knowledge.jsonl` and optional promotion
+governance reports, excludes superseded records, includes governance metadata
+when available, and does not write to the store. The older
+`CandidateKnowledgeRetriever` name remains as a compatibility alias, but new
+runtime work should use activation terminology.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_candidate_knowledge_retrieval.py`
+- result: `4 passed`
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_phaseA_architecture_graduation.py`
+- result: `6 passed`
+
+## Phase A Promotion Churn Audit
+
+The Phase A graduation sentinel reported `Graduate Conditionally` because the
+`overnight_3000` run stopped after `411/3000` cycles on the promotion churn
+gate. A follow-up read-only churn audit inspected the chunk-to-chunk eligible
+set changes rather than treating churn as a generic failure.
+
+Deliverables:
+
+- `tools/phaseA_churn_audit.py`
+- `orchestration/tests/runtime/test_phaseA_churn_audit.py`
+- `reports/phaseA_churn_audit.md`
+- `reports/phaseA_churn_audit.json`
+
+Key findings:
+
+- Chunk 1 -> 2 was healthy expansion: eligible concepts increased from `2` to
+  `4`, with `2` stayed, `0` lost, and `2` new.
+- Chunk 2 -> 3 was the only real loss event: eligible concepts changed from `4`
+  to `3`, with `2` stayed, `2` lost, and `1` new.
+- Both lost concepts remained `Validated`; neither failed validation, gained an
+  open contradiction, became incomplete, or disappeared.
+- Both demotions were threshold-edge effects caused by small redundancy penalty
+  increases:
+  - `4d6d84dd-1073-413a-9d3f-6692daef36c7`: score `0.6211 -> 0.619`,
+    redundancy `0.08 -> 0.0952`.
+  - `5598363e-e60d-4eea-8b13-f87217252d49`: score `0.6202 -> 0.619`,
+    redundancy `0.087 -> 0.0952`.
+- Potentially harmful promotion losses: `0`.
+
+Updated interpretation:
+
+Phase A should not be read as learning instability. The architecture appears
+operationally stable under the observed run: validation coverage stayed high,
+contradiction and redundancy were bounded, concepts matured, and the stop gate
+protected canonical promotion. The remaining issue is promotion maturation
+semantics: Delta needs a way to distinguish destructive churn from threshold-edge
+oscillation or healthy replacement before canonical promotion.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_phaseA_churn_audit.py`
+- result: `2 passed`
+
+## Runtime V1 Read-Only Cognitive Pipeline
+
+Runtime development has begun without changing the learning architecture. The
+new Runtime V1 path uses candidate knowledge in a read-only manner:
+
+User question -> knowledge activation -> working memory context -> deterministic
+reasoning -> deterministic planning -> response draft.
+
+Deliverables:
+
+- `orchestration/runtime/runtime_v1_pipeline.py`
+- `orchestration/runtime/runtime_reasoning.py`
+- `orchestration/runtime/runtime_planning.py`
+- `orchestration/runtime/response_generation.py`
+- `orchestration/tests/runtime/test_runtime_v1_pipeline.py`
+
+This does not add a cognitive learning region, memory store, canonical
+promotion path, or mutation path. It consumes the existing
+`KnowledgeActivationEngine`, assembles activated concepts into a
+`WorkingMemoryContext`, identifies support/assumptions/conflicts, creates
+evidence-grounded plan options, and drafts a cautious response. Sparse
+activation intentionally produces a low-evidence response rather than inventing
+support.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_runtime_v1_pipeline.py orchestration\tests\runtime\test_candidate_knowledge_retrieval.py`
+- result: `6 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_v1_pipeline.py orchestration\runtime\runtime_reasoning.py orchestration\runtime\runtime_planning.py orchestration\runtime\response_generation.py orchestration\runtime\candidate_knowledge_retrieval.py orchestration\runtime\__init__.py orchestration\tests\runtime\test_runtime_v1_pipeline.py`
+- result: passed
+
+## Phase B Runtime Evaluation Suite
+
+Runtime Evaluation is now Delta's unit testing layer for cognition. It measures
+the read-only output loop rather than learning or provider quality:
+
+Question -> Knowledge Activation -> Working Memory -> Reasoning -> Planning ->
+Response -> Evaluation.
+
+Deliverables:
+
+- `orchestration/runtime/runtime_evaluation.py`
+- `tools/runtime_evaluation_suite.py`
+- `orchestration/tests/runtime/test_runtime_evaluation.py`
+- `reports/phaseB_runtime_evaluation_report.md`
+- `reports/phaseB_runtime_evaluation_report.json`
+- `reports/phaseB_runtime_scorecards.md`
+
+The first suite covers retrieval accuracy, grounding, conflict handling,
+confidence calibration, planning, sparse-knowledge refusal, and runtime
+stability. It uses a deterministic fixture candidate store and does not mutate
+learning, governance, or canonical knowledge.
+
+Baseline result:
+
+- cases: `6`
+- pass rate: `0.3333`
+- retrieval precision: `0.6028`
+- retrieval recall: `1.0`
+- grounding score: `1.0`
+- conflict score: `1.0`
+- confidence calibration: `1.0`
+- planning score: `1.0`
+- hallucinations: `0`
+
+Interpretation:
+
+Runtime V1 finds expected concepts and stays grounded, but activation currently
+over-retrieves adjacent concepts. The first runtime bottleneck is retrieval
+precision, not hallucination, sparse-knowledge behavior, or response grounding.
+
+Validation:
+
+- command: `.\.venv311\Scripts\python.exe -m pytest orchestration\tests\runtime\test_runtime_evaluation.py orchestration\tests\runtime\test_runtime_v1_pipeline.py orchestration\tests\runtime\test_candidate_knowledge_retrieval.py`
+- result: `8 passed`
+- command: `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_evaluation.py tools\runtime_evaluation_suite.py orchestration\tests\runtime\test_runtime_evaluation.py`
+- result: passed
+
+## Phase B.1 Runtime Efficiency Audit
+
+The Runtime Evaluation Suite now measures efficiency, utilization, activation
+waste, and neighbor utility without changing runtime behavior.
+
+New reports:
+
+- `reports/phaseB_runtime_efficiency.md`
+- `reports/phaseB_runtime_efficiency.json`
+- `reports/phaseB_activation_waste.md`
+- `reports/phaseB_neighbor_utility.md`
+- updated `reports/phaseB_runtime_scorecards.md`
+
+Baseline efficiency:
+
+- working memory efficiency: `1.0`
+- planning utilization ratio: `0.9444`
+- response utilization ratio: `0.9444`
+- overall utilization ratio: `1.0`
+- average activated concepts: `4.3333`
+- average used concepts: `4.3333`
+- average ignored concepts: `0.0`
+- average noise concepts: `1.1667`
+- average useful neighbors: `1.0`
+
+Interpretation:
+
+The issue is not that Runtime ignores extra activation. Runtime uses nearly
+everything it activates. That makes noisy activation more important, because
+irrelevant concepts can enter reasoning and response evidence instead of being
+filtered downstream. Neighbor utility was mixed: `13` core evidence activations,
+`6` useful neighbors, and `7` noise activations.
+
+Decision:
+
+Retrieval ranking refinement is justified as the next Runtime V1 optimization.
+Conversation testing should wait until activation precision improves on the same
+scorecards. No retrieval, reasoning, planning, response, learning, governance,
+or canonical behavior was changed in this audit.
+
+## Runtime Attention Layer
+
+The Phase B.1 interpretation changed after separating activation from attention.
+Runtime now has an explicit read-only attention stage:
+
+Question -> Knowledge Activation -> Attention -> Working Memory -> Reasoning ->
+Planning -> Response.
+
+Implementation:
+
+- `orchestration/runtime/knowledge_attention.py`
+- `orchestration/tests/runtime/test_knowledge_attention.py`
+
+Retrieval remains broad and unchanged. Attention classifies activated concepts as
+`Core`, `Supporting`, `Peripheral`, or `Discarded`; only `Core` and
+`Supporting` concepts enter working memory. Reasoning, planning, response
+generation, learning, governance, and canonical storage remain unchanged.
+
+Updated scorecard:
+
+- retrieval recall: `1.0`
+- retrieval precision: `0.6028`
+- attention precision: `1.0`
+- attention recall: `0.8611`
+- average used noise: `0.0`
+- average ignored noise: `1.1667`
+- average suppressed core: `0.3333`
+
+Interpretation:
+
+The deeper bottleneck is not retrieval alone. Runtime needed an attention layer
+between broad activation and working memory. The first attention pass prevents
+noise from entering downstream reasoning, but it is too selective: it suppresses
+some expected core concepts (`gps-atmospheric-delay` and
+`risk-likelihood-impact` in the fixture suite). The next Runtime V1 refinement
+should tune attention scoring to recover attention recall while preserving zero
+used noise. Conversation testing should remain deferred.
+
+## Phase B.2 Reasoning Contribution Audit
+
+Runtime Evaluation now includes deterministic contribution attribution for every
+activated concept:
+
+Activated -> Attended -> Reasoned -> Planned -> Responded -> Classification.
+
+New reports:
+
+- `reports/phaseB_reasoning_contribution.md`
+- `reports/phaseB_reasoning_contribution.json`
+- `reports/phaseB_reasoning_flow.md`
+- `reports/phaseB_contribution_scorecards.md`
+- `reports/phaseB_attention_vs_reasoning.md`
+
+Key results:
+
+- reasoning contribution ratio: `0.75`
+- supporting ratio: `0.0833`
+- peripheral ratio: `0.0`
+- noise used in reasoning: `0`
+- planning core coverage: `0.8611`
+- response core coverage: `0.8611`
+- healthy cases: `4`
+- under-attending cases: `2`
+- reasoning drift cases: `0`
+- planning drift cases: `0`
+- response drift cases: `0`
+- over-attending cases: `0`
+
+Interpretation:
+
+The runtime is not allowing noise to influence reasoning. Planning and response
+are also preserving the attended core evidence. The remaining issue is
+attention recall: `gps-atmospheric-delay` and `risk-likelihood-impact` were
+activated but suppressed before they could contribute. Phase B.2 is therefore a
+measurement success and confirms the next narrow optimization target: tune
+attention scoring to reduce under-attending while preserving zero reasoning
+noise.
+
+## Runtime V1.1 Attention Recall Optimization
+
+Attention scoring was tuned inside the Runtime-only path. Learning, extraction,
+consolidation, validation, normalization, governance, promotion, candidate
+stores, canonical stores, retrieval ranking, reasoning, planning, and response
+generation were not changed.
+
+Implementation:
+
+- `orchestration/runtime/knowledge_attention.py`
+- `tools/runtime_evaluation_suite.py`
+- `orchestration/tests/runtime/test_runtime_evaluation.py`
+
+New reports:
+
+- `reports/phaseB_attention_optimization.md`
+- `reports/phaseB_attention_optimization.json`
+- `reports/phaseB_attention_tradeoff.md`
+- `reports/phaseB_attention_score_distribution.md`
+- `reports/phaseB_runtime_progress.md`
+
+Optimization notes:
+
+- A broad focus-token relaxation was tested and rejected because it admitted
+  noise into reasoning. The regression suite caught this (`noise_used_in_reasoning`
+  became nonzero), so the change was reverted.
+- The accepted change keeps the conservative focus-token rule, adds deterministic
+  lexical expansion for scoring, and adds a narrow domain-anchor match so GPS
+  atmospheric-delay knowledge can attend without allowing snow-plow noise.
+
+Final fixture-suite metrics:
+
+- retrieval recall: `1.0`
+- retrieval precision: `0.6028`
+- attention recall: `1.0`
+- attention precision: `1.0`
+- noise used in reasoning: `0`
+- reasoning drift: `0`
+- planning drift: `0`
+- response drift: `0`
+- planning core coverage: `1.0`
+- response core coverage: `1.0`
+- grounding: `1.0`
+- hallucinations: `0`
+
+Stopping rule:
+
+Met. Do not continue tuning attention on the fixture suite. The next recommended
+step is Runtime V1.2: evaluate against real Phase A candidate knowledge and
+held-out prompts before multi-turn conversation.

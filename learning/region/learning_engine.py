@@ -52,16 +52,8 @@ class LearningEngine:
             )
 
         if success and repeated_ids and not semantic_candidates:
-            semantic_candidates.append(
-                SemanticCandidate(
-                    text=(
-                        "Repeated attended context appears relevant to the "
-                        f"prompt: {prompt}"
-                    ),
-                    evidence_memory_ids=repeated_ids[:5],
-                    confidence=min(0.85, 0.45 + (0.08 * len(repeated_ids))),
-                    rationale="Repeated attended memories overlapped with the current task.",
-                )
+            questions.append(
+                "What reusable proposition is supported by the repeated attended context?"
             )
 
         for item in attended:
@@ -131,20 +123,6 @@ class LearningEngine:
             if len(candidates) >= 3:
                 break
 
-        if not candidates:
-            prompt_claim = self._prompt_as_claim(prompt)
-            if prompt_claim:
-                candidates.append(
-                    SemanticCandidate(
-                        text=prompt_claim,
-                        evidence_memory_ids=evidence_memory_ids[:5],
-                        confidence=max(0.5, self._candidate_confidence(reflection) - 0.12),
-                        rationale=(
-                            "Extracted from a successful training prompt when provider "
-                            "output did not contain a reusable claim."
-                        ),
-                    )
-                )
         return candidates
 
     def _answer_text(self, output: str) -> str:
@@ -162,18 +140,146 @@ class LearningEngine:
         return raw
 
     def _sentences(self, text: str) -> list[str]:
-        normalized = " ".join(str(text).replace("\n", " ").split())
+        raw = str(text)
+        raw = re.sub(r"\bReusable propositions:\s*", "\n", raw, flags=re.IGNORECASE)
+        raw = re.sub(r"(?:^|\n)\s*[-*•]\s+", ". ", raw)
+        raw = re.sub(r"\s+[-*•]\s+", ". ", raw)
+        normalized = " ".join(raw.replace("\n", " ").split())
         if not normalized:
             return []
         parts = re.split(r"(?<=[.!?])\s+", normalized)
         return [self._clean_sentence(part) for part in parts if self._clean_sentence(part)]
 
     def _looks_reusable(self, sentence: str) -> bool:
-        tokens = re.findall(r"[a-z0-9_]+", sentence.lower())
-        if len(tokens) < 7:
-            return False
-        if len(sentence) > 260:
-            return False
+        return not self._candidate_rejection_reasons(sentence)
+
+    def _candidate_rejection_reasons(self, sentence: str) -> list[str]:
+        normalized = self._clean_sentence(sentence)
+        lower = normalized.lower()
+        tokens = re.findall(r"[a-z0-9_]+", lower)
+        reasons: list[str] = []
+        if len(tokens) < 5:
+            reasons.append("too_short")
+        if len(normalized) > 260:
+            reasons.append("too_long")
+        scaffolding_phrases = (
+            "complete the cycle",
+            "the cycle can be completed",
+            "delta training data",
+            "output contract",
+            "reusable propositions",
+            "this prompt",
+            "this task",
+            "this prediction",
+            "the question",
+            "the user",
+            "answer naturally",
+            "make at least one testable prediction",
+            "identify evidence that would change the answer",
+            "reflect on uncertainty",
+            "training objective requires",
+            "repeated attended context appears relevant",
+            "predicting the failure mode",
+            "belief revision delta",
+        )
+        if any(phrase in lower for phrase in scaffolding_phrases):
+            reasons.append("prompt_scaffolding")
+        if lower.startswith(("answer:", "the answer is", "based on the prompt", "based on this task")):
+            reasons.append("answer_scaffolding")
+        if lower.startswith(("this process", "to mitigate this", "this approach")):
+            reasons.append("missing_referent")
+        first_token = tokens[0] if tokens else ""
+        imperative_starts = {
+            "allocate",
+            "answer",
+            "compare",
+            "create",
+            "explain",
+            "identify",
+            "make",
+            "name",
+            "plan",
+            "predict",
+            "preserve",
+            "reflect",
+            "revise",
+            "state",
+            "use",
+        }
+        if first_token in imperative_starts:
+            reasons.append("imperative_task_wording")
+        if lower.startswith(("if ", "when ")) and "," not in lower and " then " not in lower:
+            reasons.append("dangling_conditional")
+        fragment_endings = (
+            "could include",
+            "would include",
+            "may include",
+            "could require",
+            "would require",
+            "may require",
+            "can require",
+            "is that",
+            "is the",
+            "are the",
+            "includes",
+            "include",
+            "requires",
+            "require",
+            "require",
+            "would",
+            "could",
+            "may",
+            "should",
+            "must",
+            "will",
+            "can",
+            "was",
+            "were",
+            "be",
+            "been",
+            "being",
+            "based",
+            "forecasted",
+            "significant",
+            "the",
+            "a",
+            "an",
+            "to",
+            "of",
+            "for",
+        )
+        if lower.endswith(fragment_endings):
+            reasons.append("incomplete_proposition")
+        predicate_signals = {
+            "is",
+            "are",
+            "was",
+            "were",
+            "can",
+            "should",
+            "must",
+            "may",
+            "will",
+            "requires",
+            "require",
+            "includes",
+            "reduces",
+            "increases",
+            "decreases",
+            "improves",
+            "weakens",
+            "supports",
+            "fails",
+            "changes",
+            "depends",
+            "indicates",
+        }
+        if not (set(tokens) & predicate_signals):
+            reasons.append("missing_predicate_signal")
+        if lower.startswith(("evidence that would", "a testable prediction", "testable prediction")):
+            reasons.append("prompt_artifact")
+        if len(re.findall(r"\b(and|or|while|but)\b", lower)) >= 4:
+            reasons.append("possible_merged_propositions")
         reusable_terms = {
             "because",
             "confidence",
@@ -186,27 +292,28 @@ class LearningEngine:
             "predict",
             "prediction",
             "requires",
+            "require",
             "risk",
             "should",
             "therefore",
             "uncertainty",
             "when",
+            "reduces",
+            "increases",
+            "decreases",
+            "improves",
+            "supports",
+            "depends",
+            "indicates",
         }
-        return bool(set(tokens) & reusable_terms)
-
-    def _prompt_as_claim(self, prompt: str) -> str | None:
-        normalized = self._clean_sentence(str(prompt).split("\n\n", 1)[0])
-        tokens = re.findall(r"[a-z0-9_]+", normalized.lower())
-        if len(tokens) < 8:
-            return None
-        if len(normalized) > 220:
-            normalized = normalized[:217].rstrip() + "..."
-        return f"Training objective requires reasoning about: {normalized}"
+        if not (set(tokens) & reusable_terms):
+            reasons.append("missing_reusable_signal")
+        return list(dict.fromkeys(reasons))
 
     @staticmethod
     def _clean_sentence(sentence: str) -> str:
         cleaned = str(sentence).strip().strip("\"'")
-        return cleaned.rstrip(",;:")
+        return cleaned.rstrip(",;:.!?")
 
     @staticmethod
     def _candidate_confidence(reflection: ReflectionRecord) -> float:

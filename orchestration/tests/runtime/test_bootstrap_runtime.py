@@ -117,6 +117,38 @@ def test_consolidation_suppresses_duplicate_semantic_candidates(tmp_path):
     assert len(predictions.latest()) == 1
 
 
+def test_consolidation_preserves_complete_candidate_boundary(tmp_path):
+    knowledge = SemanticKnowledgeStore(tmp_path / "knowledge.jsonl")
+    learning = LearningRecord(
+        learning_id="learning-boundary",
+        created_at="2026-06-30T00:00:00+00:00",
+        cycle_id="cycle-boundary",
+        semantic_candidates=[
+            SemanticCandidate(
+                text=(
+                    "Evidence that would require reallocation includes a significant "
+                    "increase or decrease in the number of individuals requiring shelter."
+                ),
+                evidence_memory_ids=["m1"],
+                confidence=0.8,
+                rationale="test boundary preservation",
+            )
+        ],
+    )
+    engine = SemanticConsolidationEngine(semantic_store=knowledge)
+
+    result = engine.consolidate([learning])
+
+    assert len(result["created"]) == 1
+    created = result["created"][0]
+    assert created.concept == (
+        "Evidence that would require reallocation includes a significant "
+        "increase or decrease in the number of individuals requiring shelter"
+    )
+    assert not created.concept.endswith("significant")
+    assert created.definition.endswith("requiring shelter.")
+
+
 def test_prediction_validation_marks_supported_predictions(tmp_path):
     memory = MemoryStore(tmp_path / "memory.jsonl")
     knowledge = SemanticKnowledgeStore(tmp_path / "knowledge.jsonl")

@@ -1,0 +1,106 @@
+{
+  "campaign_root": ".tmp\\experiments\\phaseA_architecture_graduation\\overnight_3000",
+  "campaign_status": "stopped",
+  "campaign_stop_reason": "promotion eligibility churn exceeded 20% without stronger replacement",
+  "conclusion": "Phase A stopped on the churn gate, but observed losses were threshold-edge demotions from Promotion Eligible to Validated, not validation failure, contradiction, or concept collapse. The architecture appears operationally stable; promotion maturation needs hysteresis or release-candidate stability semantics before canonical promotion.",
+  "harmful_losses": 0,
+  "healthy_expansion_transitions": 1,
+  "loss_cause_counts": {
+    "threshold_edge_redundancy_increase": 2
+  },
+  "threshold_edge_losses": 2,
+  "transitions": [
+    {
+      "current_eligible": 4,
+      "interpretation": "eligible set expanded; this is not harmful churn",
+      "loss_events": [],
+      "lost": 0,
+      "new": 2,
+      "new_eligible": [
+        {
+          "concept": "This revised belief is based on evidence from repeated observations, which indicate that GPS performance degrades significantly in such environments",
+          "concept_id": "5598363e-e60d-4eea-8b13-f87217252d49",
+          "score": 0.6202
+        },
+        {
+          "concept": "Prediction: If the city experiences a mild winter, the reduced snow budget will be sufficient, and the city will have saved costs without compromising safety and accessibility",
+          "concept_id": "76b94b65-ba55-4a67-8bf9-2255f654d091",
+          "score": 0.62
+        }
+      ],
+      "previous_eligible": 2,
+      "reported_churn": 1.0,
+      "stayed": 2,
+      "transition": "chunk_001_to_chunk_002"
+    },
+    {
+      "current_eligible": 3,
+      "interpretation": "lost concepts remained validated and dropped at the eligibility threshold edge",
+      "loss_events": [
+        {
+          "best_new_replacement": {
+            "concept": "Prediction If the comparison reveals that the government report s data and methodology are less rigorous than the scientific study s the government report",
+            "concept_id": "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+            "score": 0.6734,
+            "score_delta_vs_lost": 0.0523,
+            "similarity": 0.0294
+          },
+          "concept": "Expected evidence includes log entries related to the incident, such as error messages, warnings, or unusual activity",
+          "concept_id": "4d6d84dd-1073-413a-9d3f-6692daef36c7",
+          "signature": {
+            "cause": "threshold_edge_redundancy_increase",
+            "current_recommendation": "Validated",
+            "current_redundancy": 0.0952,
+            "current_score": 0.619,
+            "failed_predictions": 0,
+            "open_contradictions": 0,
+            "previous_recommendation": "Promotion Eligible",
+            "previous_redundancy": 0.08,
+            "previous_score": 0.6211,
+            "score_delta": -0.0021,
+            "supported_predictions": 1,
+            "unresolved_predictions": 0
+          }
+        },
+        {
+          "best_new_replacement": {
+            "concept": "Prediction If the comparison reveals that the government report s data and methodology are less rigorous than the scientific study s the government report",
+            "concept_id": "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+            "score": 0.6734,
+            "score_delta_vs_lost": 0.0532,
+            "similarity": 0.027
+          },
+          "concept": "This revised belief is based on evidence from repeated observations, which indicate that GPS performance degrades significantly in such environments",
+          "concept_id": "5598363e-e60d-4eea-8b13-f87217252d49",
+          "signature": {
+            "cause": "threshold_edge_redundancy_increase",
+            "current_recommendation": "Validated",
+            "current_redundancy": 0.0952,
+            "current_score": 0.619,
+            "failed_predictions": 0,
+            "open_contradictions": 0,
+            "previous_recommendation": "Promotion Eligible",
+            "previous_redundancy": 0.087,
+            "previous_score": 0.6202,
+            "score_delta": -0.0012,
+            "supported_predictions": 1,
+            "unresolved_predictions": 0
+          }
+        }
+      ],
+      "lost": 2,
+      "new": 1,
+      "new_eligible": [
+        {
+          "concept": "Prediction If the comparison reveals that the government report s data and methodology are less rigorous than the scientific study s the government report",
+          "concept_id": "3eb435c5-bca6-45e3-9dd4-9dab5289ad38",
+          "score": 0.6734
+        }
+      ],
+      "previous_eligible": 4,
+      "reported_churn": 0.75,
+      "stayed": 2,
+      "transition": "chunk_002_to_chunk_003"
+    }
+  ]
+}

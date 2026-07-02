@@ -1,0 +1,355 @@
+{
+  "aggregate": {
+    "healthy_cases": 6.0,
+    "noise_used_in_reasoning": 0.0,
+    "over_attending_cases": 0.0,
+    "peripheral_ratio": 0.0,
+    "planning_core_coverage": 1.0,
+    "planning_drift_cases": 0.0,
+    "reasoning_contribution_ratio": 0.7778,
+    "reasoning_drift_cases": 0.0,
+    "response_core_coverage": 1.0,
+    "response_drift_cases": 0.0,
+    "supporting_ratio": 0.0555,
+    "under_attending_cases": 0.0
+  },
+  "cases": [
+    {
+      "category": "retrieval_accuracy",
+      "concept_contributions": [
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "gps-atmospheric-delay",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "gps-multipath",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "gps-satellite-geometry",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "snow-plow-positioning",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        }
+      ],
+      "name": "gps_drift_retrieval",
+      "noise_used_in_reasoning": 0,
+      "peripheral_ratio": 0.0,
+      "planning_core_coverage": 1.0,
+      "reasoning_contribution_ratio": 1.0,
+      "response_core_coverage": 1.0,
+      "runtime_decision": "Healthy",
+      "supporting_ratio": 0.0
+    },
+    {
+      "category": "planning",
+      "concept_contributions": [
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "emergency-route-priority",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Peripheral",
+          "concept_id": "resource-allocation-triage",
+          "planned": false,
+          "rationale": "useful neighbor was activated but not used",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Peripheral",
+          "concept_id": "risk-likelihood-impact",
+          "planned": false,
+          "rationale": "useful neighbor was activated but not used",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "shelter-capacity",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "snow-plow-positioning",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        }
+      ],
+      "name": "snowstorm_grounded_planning",
+      "noise_used_in_reasoning": 0,
+      "peripheral_ratio": 0.0,
+      "planning_core_coverage": 1.0,
+      "reasoning_contribution_ratio": 1.0,
+      "response_core_coverage": 1.0,
+      "runtime_decision": "Healthy",
+      "supporting_ratio": 0.0
+    },
+    {
+      "category": "conflict_handling",
+      "concept_contributions": [
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "emergency-route-priority",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "resource-allocation-triage",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "salt-environmental-cost",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "salt-traction-benefit",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "shelter-capacity",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "snow-plow-positioning",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        }
+      ],
+      "name": "salt_tradeoff_conflict",
+      "noise_used_in_reasoning": 0,
+      "peripheral_ratio": 0.0,
+      "planning_core_coverage": 1.0,
+      "reasoning_contribution_ratio": 1.0,
+      "response_core_coverage": 1.0,
+      "runtime_decision": "Healthy",
+      "supporting_ratio": 0.0
+    },
+    {
+      "category": "confidence_calibration",
+      "concept_contributions": [
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Supporting",
+          "concept_id": "emergency-route-priority",
+          "planned": true,
+          "rationale": "useful neighboring concept contributed context or support",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "resource-allocation-triage",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "risk-likelihood-impact",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "salt-traction-benefit",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Peripheral",
+          "concept_id": "shelter-capacity",
+          "planned": false,
+          "rationale": "useful neighbor was activated but not used",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Noise",
+          "concept_id": "snow-plow-positioning",
+          "planned": false,
+          "rationale": "concept is unrelated or forbidden for this evaluation case",
+          "reasoned": false,
+          "responded": false
+        }
+      ],
+      "name": "resource_allocation_calibration",
+      "noise_used_in_reasoning": 0,
+      "peripheral_ratio": 0.0,
+      "planning_core_coverage": 1.0,
+      "reasoning_contribution_ratio": 0.6667,
+      "response_core_coverage": 1.0,
+      "runtime_decision": "Healthy",
+      "supporting_ratio": 0.3333
+    },
+    {
+      "category": "sparse_knowledge",
+      "concept_contributions": [],
+      "name": "sparse_violin_question",
+      "noise_used_in_reasoning": 0,
+      "peripheral_ratio": 0.0,
+      "planning_core_coverage": 1.0,
+      "reasoning_contribution_ratio": 0.0,
+      "response_core_coverage": 1.0,
+      "runtime_decision": "Healthy",
+      "supporting_ratio": 0.0
+    },
+    {
+      "category": "runtime_stability",
+      "concept_contributions": [
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "emergency-route-priority",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Peripheral",
+          "concept_id": "resource-allocation-triage",
+          "planned": false,
+          "rationale": "useful neighbor was activated but not used",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": false,
+          "classification": "Peripheral",
+          "concept_id": "risk-likelihood-impact",
+          "planned": false,
+          "rationale": "useful neighbor was activated but not used",
+          "reasoned": false,
+          "responded": false
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "shelter-capacity",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        },
+        {
+          "activated": true,
+          "attended": true,
+          "classification": "Core",
+          "concept_id": "snow-plow-positioning",
+          "planned": true,
+          "rationale": "expected concept influenced reasoning, planning, or response evidence",
+          "reasoned": true,
+          "responded": true
+        }
+      ],
+      "name": "repeat_snowstorm_stability",
+      "noise_used_in_reasoning": 0,
+      "peripheral_ratio": 0.0,
+      "planning_core_coverage": 1.0,
+      "reasoning_contribution_ratio": 1.0,
+      "response_core_coverage": 1.0,
+      "runtime_decision": "Healthy",
+      "supporting_ratio": 0.0
+    }
+  ]
+}

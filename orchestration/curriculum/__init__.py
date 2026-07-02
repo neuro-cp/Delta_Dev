@@ -3,6 +3,7 @@ from orchestration.curriculum.calibration_curriculum import (
     CalibrationObjective,
     ScoredCalibrationObjective,
 )
+from orchestration.curriculum.broad_corpus import broad_profile_names
 from orchestration.curriculum.curriculum_engine import (
     CurriculumCase,
     CurriculumEngine,
@@ -12,6 +13,7 @@ from orchestration.curriculum.curriculum_engine import (
 __all__ = [
     "CalibrationCurriculumGenerator",
     "CalibrationObjective",
+    "broad_profile_names",
     "CurriculumCase",
     "CurriculumEngine",
     "CurriculumPerformance",

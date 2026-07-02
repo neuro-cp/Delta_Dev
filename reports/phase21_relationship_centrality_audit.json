@@ -1,0 +1,62 @@
+{
+  "campaign_root": ".tmp\\experiments\\phase20_campaign",
+  "concepts_sampled": 150,
+  "concepts_with_direct_semantic_edges": 0,
+  "concepts_with_projected_memory_edges": 114,
+  "conclusion": "governance_centrality_is_blind_to_existing_memory_relationships",
+  "diagnosis_counts": {
+    "memory_graph_not_projected": 114,
+    "no_relationship_evidence": 36
+  },
+  "direct_semantic_ratio": 0.0,
+  "projected_memory_ratio": 0.76,
+  "relationship_endpoint_counts": {
+    "concept_to_concept": 0,
+    "concept_to_memory": 0,
+    "memory_to_memory": 90,
+    "other": 0,
+    "total_relationships": 90
+  },
+  "runs": [
+    {
+      "avg_direct_edges": 0.0,
+      "avg_projected_edges": 0.7,
+      "concepts_sampled": 50,
+      "diagnosis_counts": {
+        "memory_graph_not_projected": 35,
+        "no_relationship_evidence": 15
+      },
+      "direct_semantic": 0,
+      "hypothesis": "relationships_exist_at_memory_layer_but_are_not_projected_to_semantic_layer",
+      "projected_memory": 35,
+      "run": "planning_20"
+    },
+    {
+      "avg_direct_edges": 0.0,
+      "avg_projected_edges": 0.8,
+      "concepts_sampled": 50,
+      "diagnosis_counts": {
+        "memory_graph_not_projected": 40,
+        "no_relationship_evidence": 10
+      },
+      "direct_semantic": 0,
+      "hypothesis": "relationships_exist_at_memory_layer_but_are_not_projected_to_semantic_layer",
+      "projected_memory": 40,
+      "run": "planning_30"
+    },
+    {
+      "avg_direct_edges": 0.0,
+      "avg_projected_edges": 0.78,
+      "concepts_sampled": 50,
+      "diagnosis_counts": {
+        "memory_graph_not_projected": 39,
+        "no_relationship_evidence": 11
+      },
+      "direct_semantic": 0,
+      "hypothesis": "relationships_exist_at_memory_layer_but_are_not_projected_to_semantic_layer",
+      "projected_memory": 39,
+      "run": "planning_40"
+    }
+  ],
+  "runs_aggregated": 3
+}

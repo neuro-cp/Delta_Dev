@@ -1,0 +1,23 @@
+{
+  "blockers": [
+    "promotion eligibility churn exceeded 20% without stronger replacement",
+    "not all Phase A campaigns completed",
+    "promotion churn exceeded 20% in at least one mature chunk",
+    "canonical dry run produced no PROMOTE recommendations"
+  ],
+  "canonical_merge_performed": false,
+  "conclusion": "Graduate Conditionally",
+  "final_campaign": "overnight_3000",
+  "final_campaign_status": "stopped",
+  "final_stage": "stage3_graduation",
+  "report_paths": {
+    "dry_run": "reports\\phaseA_canonical_promotion_dry_run.md",
+    "graduation": "reports\\PhaseA_Architecture_Graduation.md",
+    "promotion_stability": "reports\\phaseA_promotion_stability.md",
+    "summary": "reports\\phaseA_temp_store_validation_report.md",
+    "summary_json": "reports\\phaseA_temp_store_validation_report.json"
+  },
+  "stop_reason": "promotion eligibility churn exceeded 20% without stronger replacement",
+  "success": false,
+  "timestamp": "2026-07-02T05:54:01.585665+00:00"
+}

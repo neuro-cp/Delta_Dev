@@ -1,0 +1,249 @@
+{
+  "events": 190,
+  "memory_all": 397,
+  "relationships_latest": 190,
+  "learning_all": 190,
+  "semantic_all": 472,
+  "semantic_latest": 448,
+  "predictions_all": 488,
+  "predictions_latest": 471,
+  "prediction_quality": {
+    "total": 471,
+    "open": 454,
+    "evaluated": 17,
+    "supported": 17,
+    "failed": 0,
+    "accuracy": 1.0,
+    "coverage": 0.0361,
+    "failure_rate": 0.0,
+    "average_evidence_score": 0.7276
+  },
+  "contradictions_all": 46,
+  "contradictions_latest": 46,
+  "open_contradictions": 46,
+  "profile_counts": [
+    [
+      "planning",
+      8
+    ],
+    [
+      "contradiction",
+      8
+    ],
+    [
+      "causal_reasoning",
+      8
+    ],
+    [
+      "scientific_reasoning",
+      8
+    ],
+    [
+      "tool_use",
+      8
+    ],
+    [
+      "long_dependency",
+      7
+    ],
+    [
+      "probabilistic_reasoning",
+      7
+    ],
+    [
+      "resource_allocation",
+      7
+    ],
+    [
+      "multi_agent_coordination",
+      7
+    ],
+    [
+      "economics",
+      7
+    ],
+    [
+      "medical_reasoning",
+      7
+    ],
+    [
+      "mechanical_diagnosis",
+      7
+    ],
+    [
+      "software_debugging",
+      7
+    ],
+    [
+      "systems_engineering",
+      7
+    ],
+    [
+      "cybersecurity_defense",
+      7
+    ],
+    [
+      "experimental_design",
+      7
+    ],
+    [
+      "ethical_tradeoffs",
+      7
+    ],
+    [
+      "negotiation",
+      7
+    ],
+    [
+      "risk_assessment",
+      7
+    ],
+    [
+      "failure_analysis",
+      7
+    ],
+    [
+      "counterfactual_reasoning",
+      7
+    ],
+    [
+      "analogical_reasoning",
+      7
+    ],
+    [
+      "cross_domain_transfer",
+      7
+    ],
+    [
+      "hierarchical_planning",
+      7
+    ],
+    [
+      "information_synthesis",
+      7
+    ],
+    [
+      "hypothesis_revision",
+      7
+    ],
+    [
+      "prediction",
+      2
+    ],
+    [
+      "transfer",
+      1
+    ]
+  ],
+  "unique_objectives": 190,
+  "timeline": [
+    [
+      25,
+      83,
+      98,
+      4,
+      "information_synthesis"
+    ],
+    [
+      50,
+      149,
+      164,
+      9,
+      "analogical_reasoning"
+    ],
+    [
+      75,
+      213,
+      230,
+      12,
+      "failure_analysis"
+    ],
+    [
+      100,
+      273,
+      290,
+      17,
+      "risk_assessment"
+    ],
+    [
+      125,
+      330,
+      347,
+      22,
+      "negotiation"
+    ],
+    [
+      150,
+      379,
+      395,
+      31,
+      "ethical_tradeoffs"
+    ],
+    [
+      175,
+      440,
+      456,
+      41,
+      "experimental_design"
+    ],
+    [
+      187,
+      469,
+      485,
+      46,
+      "contradiction"
+    ]
+  ],
+  "top_concepts": [
+    "identity",
+    "time",
+    "object",
+    "cause and effect",
+    "evidence",
+    "confidence",
+    "contradiction",
+    "goal",
+    "action",
+    "planning",
+    "prediction",
+    "simulation",
+    "learning",
+    "language",
+    "number",
+    "curiosity",
+    "The evidence that would falsify this prediction is",
+    "The belief revision Delta should preserve the uncertainty",
+    "The prediction that would confirm this resolution would",
+    "Evidence that would change the answer could be",
+    "Reflecting on uncertainty it is important to note",
+    "If the wear and tear is significantly higher",
+    "If the control batch shows no early degradation",
+    "Expected evidence logs network traffic system files user",
+    "Belief revision if the first result is contradicted",
+    "Testable prediction if the first source document is",
+    "The uncertainty in this scenario is the potential",
+    "As a Delta trainer I would make a",
+    "New evidence would change the probability of demand",
+    "For example if a new competitor enters the",
+    "Test sensitivity data can be used to separate",
+    "Allocating resources for emergency shelters with a 20",
+    "To predict this we would need real time",
+    "The uncertainty lies in the accuracy and timeliness",
+    "One agent withholds information causing a coordination conflict",
+    "To resolve this issue we can use handoff",
+    "To revise the plan we need evidence that",
+    "For instance if prices are rising developers may",
+    "This prediction is based on a simplified model",
+    "I am uncertain about the patient s prognosis",
+    "A prediction that would change my triage priority",
+    "When diagnosing a mechanical issue in pumps where",
+    "To falsify the diagnosis one would observe a",
+    "A testable prediction is that increased load will",
+    "When debugging a software failure in API adapters",
+    "A regression test should be created to ensure",
+    "Evidence that would disconfirm the fix would include",
+    "Evidence that would change the answer includes a",
+    "Uncertainty remains due to the complex and dynamic",
+    "If the dependency is found to be compromised"
+  ]
+}

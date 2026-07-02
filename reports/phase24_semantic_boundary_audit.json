@@ -1,0 +1,934 @@
+{
+  "boundary_loss_counts": {
+    "consolidation_concept_label_truncation": 26
+  },
+  "complete_candidate_count": 23,
+  "complete_candidate_rate": 0.6571,
+  "consolidated_candidates": 26,
+  "current_incomplete_concept_count": 22,
+  "current_incomplete_concept_rate": 0.8462,
+  "duplicate_candidate_texts": {
+    "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.": 4,
+    "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.": 4,
+    "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.": 4
+  },
+  "failure_counts": {
+    "dangling_conditional": 8,
+    "incomplete_proposition": 22,
+    "missing_predicate_signal": 6,
+    "not_consolidated": 9,
+    "prompt_artifact": 24,
+    "prompt_scaffolding_leakage": 4
+  },
+  "fragment_rate": 0.3429,
+  "hypothetical_incomplete_concept_count": 0,
+  "hypothetical_incomplete_concept_rate": 0.0,
+  "incomplete_candidate_count": 12,
+  "learning_records": 8,
+  "reports_dir": ".tmp\\experiments\\phase23_formatting_contract\\planning_20\\reports",
+  "reusable_candidate_count": 23,
+  "reusable_candidate_rate": 0.6571,
+  "semantic_candidates": 35,
+  "store_root": ".tmp\\experiments\\phase23_formatting_contract\\planning_20\\store",
+  "traces": [
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "3df8fa3b-bceb-4e64-8c36-aced7fc35f0b",
+      "cycle_id": "854e8773-e38e-4bee-bbae-c5b43c0e9955",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss",
+      "learning_id": "e7ee8009-1b26-4256-8f1b-76a33bfbb09d",
+      "promotion_score": null,
+      "provider_input": "A warehouse forecast says demand will rise, but the first two orders fail to materialize. Predict the next operational risk and explain what evidence would revise the belief.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss. Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies. Reusable propositions: \n- A sudden increase in orders would indicate a valid demand forecast.\n- A consistent pattern of delayed order fulfillment could suggest supply chain issues.\n- Customer feedback on the initial orders could provide insights into potential issues with the forecasted demand.\n- Market conditions that support the initial demand forecast would strengthen the belief in the forecast's accuracy.\n- A decrease in orders would reinforce the belief that the demand increase may not materialize.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss.",
+      "semantic_concept": "The next operational risk is that the forecasted",
+      "semantic_definition": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "b700abd4-b1e5-4fd1-8172-15601634aca5",
+      "cycle_id": "854e8773-e38e-4bee-bbae-c5b43c0e9955",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss",
+      "learning_id": "e7ee8009-1b26-4256-8f1b-76a33bfbb09d",
+      "promotion_score": 0.5897,
+      "provider_input": "A warehouse forecast says demand will rise, but the first two orders fail to materialize. Predict the next operational risk and explain what evidence would revise the belief.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss. Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies. Reusable propositions: \n- A sudden increase in orders would indicate a valid demand forecast.\n- A consistent pattern of delayed order fulfillment could suggest supply chain issues.\n- Customer feedback on the initial orders could provide insights into potential issues with the forecasted demand.\n- Market conditions that support the initial demand forecast would strengthen the belief in the forecast's accuracy.\n- A decrease in orders would reinforce the belief that the demand increase may not materialize.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss.",
+      "semantic_concept": "The next operational risk is that the forecasted",
+      "semantic_definition": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss.",
+      "validation_outcome": {
+        "concept": "The next operational risk is that the forecasted",
+        "concept_id": "b700abd4-b1e5-4fd1-8172-15601634aca5",
+        "confidence": 0.8575,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.306,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.25,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "3316e42f-7344-4e19-980b-b19e9a3ead9e",
+      "cycle_id": "854e8773-e38e-4bee-bbae-c5b43c0e9955",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies",
+      "learning_id": "e7ee8009-1b26-4256-8f1b-76a33bfbb09d",
+      "promotion_score": null,
+      "provider_input": "A warehouse forecast says demand will rise, but the first two orders fail to materialize. Predict the next operational risk and explain what evidence would revise the belief.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss. Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies. Reusable propositions: \n- A sudden increase in orders would indicate a valid demand forecast.\n- A consistent pattern of delayed order fulfillment could suggest supply chain issues.\n- Customer feedback on the initial orders could provide insights into potential issues with the forecasted demand.\n- Market conditions that support the initial demand forecast would strengthen the belief in the forecast's accuracy.\n- A decrease in orders would reinforce the belief that the demand increase may not materialize.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies.",
+      "semantic_concept": "Evidence that would revise this belief includes a",
+      "semantic_definition": "Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "9460ab7d-3e1b-490a-a8e0-1ab4260688ed",
+      "cycle_id": "854e8773-e38e-4bee-bbae-c5b43c0e9955",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies",
+      "learning_id": "e7ee8009-1b26-4256-8f1b-76a33bfbb09d",
+      "promotion_score": 0.5444,
+      "provider_input": "A warehouse forecast says demand will rise, but the first two orders fail to materialize. Predict the next operational risk and explain what evidence would revise the belief.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "The next operational risk is that the forecasted demand increase may not materialize, leading to excess inventory and potential loss. Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies. Reusable propositions: \n- A sudden increase in orders would indicate a valid demand forecast.\n- A consistent pattern of delayed order fulfillment could suggest supply chain issues.\n- Customer feedback on the initial orders could provide insights into potential issues with the forecasted demand.\n- Market conditions that support the initial demand forecast would strengthen the belief in the forecast's accuracy.\n- A decrease in orders would reinforce the belief that the demand increase may not materialize.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies.",
+      "semantic_concept": "Evidence that would revise this belief includes a",
+      "semantic_definition": "Evidence that would revise this belief includes a significant increase in orders or a clear trend indicating that the initial orders were anomalies.",
+      "validation_outcome": {
+        "concept": "Evidence that would revise this belief includes a",
+        "concept_id": "9460ab7d-3e1b-490a-a8e0-1ab4260688ed",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2341,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.16,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition"
+      ],
+      "concept_id": "d4d8a79b-2256-4e0c-8b6d-599f3d20821d",
+      "cycle_id": "e9077bcc-0cf3-420d-8b8a-6f1b19321576",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups",
+      "learning_id": "e386997c-8576-4ad8-99cf-ba2c200cbcda",
+      "promotion_score": null,
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that a priority group changes. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "semantic_concept": "Allocating resources for emergency shelters requires prioritizing based",
+      "semantic_definition": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition"
+      ],
+      "concept_id": "cad3a062-b919-40b4-88e5-34d518116352",
+      "cycle_id": "e9077bcc-0cf3-420d-8b8a-6f1b19321576",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups",
+      "learning_id": "e386997c-8576-4ad8-99cf-ba2c200cbcda",
+      "promotion_score": 0.5858,
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that a priority group changes. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "semantic_concept": "Allocating resources for emergency shelters requires prioritizing based",
+      "semantic_definition": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "validation_outcome": {
+        "concept": "Allocating resources for emergency shelters requires prioritizing based",
+        "concept_id": "cad3a062-b919-40b4-88e5-34d518116352",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2597,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact"
+      ],
+      "concept_id": "07105545-089e-4989-ae5c-ae3163661778",
+      "cycle_id": "e9077bcc-0cf3-420d-8b8a-6f1b19321576",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality",
+      "learning_id": "e386997c-8576-4ad8-99cf-ba2c200cbcda",
+      "promotion_score": null,
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that a priority group changes. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "semantic_concept": "If the priority group changes the shelters may",
+      "semantic_definition": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact"
+      ],
+      "concept_id": "9e824812-7798-473b-a1f4-2115648740d0",
+      "cycle_id": "e9077bcc-0cf3-420d-8b8a-6f1b19321576",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality",
+      "learning_id": "e386997c-8576-4ad8-99cf-ba2c200cbcda",
+      "promotion_score": 0.5721,
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that a priority group changes. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "semantic_concept": "If the priority group changes the shelters may",
+      "semantic_definition": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "validation_outcome": {
+        "concept": "If the priority group changes the shelters may",
+        "concept_id": "9e824812-7798-473b-a1f4-2115648740d0",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2597,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "370b6234-3f92-4749-926c-9298ab87ec36",
+      "cycle_id": "e9077bcc-0cf3-420d-8b8a-6f1b19321576",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs",
+      "learning_id": "e386997c-8576-4ad8-99cf-ba2c200cbcda",
+      "promotion_score": null,
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that a priority group changes. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "semantic_concept": "Evidence that would require reallocation includes a significant",
+      "semantic_definition": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "31f33fdd-287c-4150-ba6a-ad8d27cd4cf4",
+      "cycle_id": "e9077bcc-0cf3-420d-8b8a-6f1b19321576",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs",
+      "learning_id": "e386997c-8576-4ad8-99cf-ba2c200cbcda",
+      "promotion_score": 0.6267,
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that a priority group changes. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "semantic_concept": "Evidence that would require reallocation includes a significant",
+      "semantic_definition": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "validation_outcome": {
+        "concept": "Evidence that would require reallocation includes a significant",
+        "concept_id": "31f33fdd-287c-4150-ba6a-ad8d27cd4cf4",
+        "confidence": 0.8575,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.306,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.25,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact",
+        "missing_predicate_signal"
+      ],
+      "concept_id": "93b5f383-7a50-4cb8-b882-96fcad5d5979",
+      "cycle_id": "d20937ef-156b-45dc-bc45-eba4a11523a5",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route",
+      "learning_id": "855cb9d2-f8a6-4f2a-a27a-167392403690",
+      "promotion_score": null,
+      "provider_input": "Predict which part of a city snow removal route will fail after an unexpected bridge closure, then name the evidence that would confirm or falsify the prediction.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route. Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section. Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal. Reusable propositions: \n- Snow removal routes are heavily dependent on infrastructure such as bridges.\n- The functionality of a snow removal route can be assessed by observing the cleared areas.\n- Alternative routes can be established to maintain snow removal operations.\n- Infrastructure failures can impact the efficiency of snow removal operations.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route.",
+      "semantic_concept": "If a bridge closure occurs the part of",
+      "semantic_definition": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact",
+        "missing_predicate_signal"
+      ],
+      "concept_id": "5c4a6622-5480-49f5-8bad-a6d7103d19df",
+      "cycle_id": "d20937ef-156b-45dc-bc45-eba4a11523a5",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route",
+      "learning_id": "855cb9d2-f8a6-4f2a-a27a-167392403690",
+      "promotion_score": 0.5138,
+      "provider_input": "Predict which part of a city snow removal route will fail after an unexpected bridge closure, then name the evidence that would confirm or falsify the prediction.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route. Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section. Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal. Reusable propositions: \n- Snow removal routes are heavily dependent on infrastructure such as bridges.\n- The functionality of a snow removal route can be assessed by observing the cleared areas.\n- Alternative routes can be established to maintain snow removal operations.\n- Infrastructure failures can impact the efficiency of snow removal operations.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route.",
+      "semantic_concept": "If a bridge closure occurs the part of",
+      "semantic_definition": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route.",
+      "validation_outcome": {
+        "concept": "If a bridge closure occurs the part of",
+        "concept_id": "5c4a6622-5480-49f5-8bad-a6d7103d19df",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2597,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_id": "707855d2-da93-4d89-83fc-61ff79b37805",
+      "cycle_id": "d20937ef-156b-45dc-bc45-eba4a11523a5",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section",
+      "learning_id": "855cb9d2-f8a6-4f2a-a27a-167392403690",
+      "promotion_score": null,
+      "provider_input": "Predict which part of a city snow removal route will fail after an unexpected bridge closure, then name the evidence that would confirm or falsify the prediction.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route. Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section. Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal. Reusable propositions: \n- Snow removal routes are heavily dependent on infrastructure such as bridges.\n- The functionality of a snow removal route can be assessed by observing the cleared areas.\n- Alternative routes can be established to maintain snow removal operations.\n- Infrastructure failures can impact the efficiency of snow removal operations.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section.",
+      "semantic_concept": "Evidence that would confirm this prediction includes observing",
+      "semantic_definition": "Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_id": "c26543c7-76fb-4915-9482-0e30104a2757",
+      "cycle_id": "d20937ef-156b-45dc-bc45-eba4a11523a5",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section",
+      "learning_id": "855cb9d2-f8a6-4f2a-a27a-167392403690",
+      "promotion_score": 0.5279,
+      "provider_input": "Predict which part of a city snow removal route will fail after an unexpected bridge closure, then name the evidence that would confirm or falsify the prediction.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route. Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section. Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal. Reusable propositions: \n- Snow removal routes are heavily dependent on infrastructure such as bridges.\n- The functionality of a snow removal route can be assessed by observing the cleared areas.\n- Alternative routes can be established to maintain snow removal operations.\n- Infrastructure failures can impact the efficiency of snow removal operations.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section.",
+      "semantic_concept": "Evidence that would confirm this prediction includes observing",
+      "semantic_definition": "Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section.",
+      "validation_outcome": {
+        "concept": "Evidence that would confirm this prediction includes observing",
+        "concept_id": "c26543c7-76fb-4915-9482-0e30104a2757",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2341,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.16,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "1f874568-7581-4502-b794-584f93315f60",
+      "cycle_id": "d20937ef-156b-45dc-bc45-eba4a11523a5",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal",
+      "learning_id": "855cb9d2-f8a6-4f2a-a27a-167392403690",
+      "promotion_score": null,
+      "provider_input": "Predict which part of a city snow removal route will fail after an unexpected bridge closure, then name the evidence that would confirm or falsify the prediction.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route. Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section. Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal. Reusable propositions: \n- Snow removal routes are heavily dependent on infrastructure such as bridges.\n- The functionality of a snow removal route can be assessed by observing the cleared areas.\n- Alternative routes can be established to maintain snow removal operations.\n- Infrastructure failures can impact the efficiency of snow removal operations.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal.",
+      "semantic_concept": "Evidence that would falsify the prediction includes the",
+      "semantic_definition": "Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "5a79c515-f7a5-4b71-82dd-5322bd2a4ce4",
+      "cycle_id": "d20937ef-156b-45dc-bc45-eba4a11523a5",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal",
+      "learning_id": "855cb9d2-f8a6-4f2a-a27a-167392403690",
+      "promotion_score": 0.5023,
+      "provider_input": "Predict which part of a city snow removal route will fail after an unexpected bridge closure, then name the evidence that would confirm or falsify the prediction.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a bridge closure occurs, the part of the city snow removal route that relies on that bridge will fail, as the bridge is a critical link in the route. Evidence that would confirm this prediction includes observing the route becoming impassable and the snow remaining unfed from that section. Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal. Reusable propositions: \n- Snow removal routes are heavily dependent on infrastructure such as bridges.\n- The functionality of a snow removal route can be assessed by observing the cleared areas.\n- Alternative routes can be established to maintain snow removal operations.\n- Infrastructure failures can impact the efficiency of snow removal operations.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal.",
+      "semantic_concept": "Evidence that would falsify the prediction includes the",
+      "semantic_definition": "Evidence that would falsify the prediction includes the route remaining functional despite the bridge closure, or an alternative route being established for snow removal.",
+      "validation_outcome": {
+        "concept": "Evidence that would falsify the prediction includes the",
+        "concept_id": "5a79c515-f7a5-4b71-82dd-5322bd2a4ce4",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2085,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.32,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "cycle_id": "7b4baaa6-ab6e-4dc4-a9ae-caf88ce0dd45",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups",
+      "learning_id": "0fef45ca-1336-4a76-a0c0-74e64bd3919f",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that resources drop by 20 percent. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "cycle_id": "7b4baaa6-ab6e-4dc4-a9ae-caf88ce0dd45",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality",
+      "learning_id": "0fef45ca-1336-4a76-a0c0-74e64bd3919f",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that resources drop by 20 percent. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "cycle_id": "7b4baaa6-ab6e-4dc4-a9ae-caf88ce0dd45",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs",
+      "learning_id": "0fef45ca-1336-4a76-a0c0-74e64bd3919f",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that resources drop by 20 percent. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "candidate_failure_reasons": [
+        "missing_predicate_signal"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact",
+        "missing_predicate_signal"
+      ],
+      "concept_id": "e6ba7e48-9af2-4d4f-8778-ea71cdb313b5",
+      "cycle_id": "f269dbed-a41a-466a-aca4-a40c50189119",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks",
+      "learning_id": "a055d7fc-3b7a-4936-9600-fe2108da5c0c",
+      "promotion_score": null,
+      "provider_input": "A supplier delay causes crews to resequence work, which causes inspection windows to expire. Explain the causal chain, predict the next failure point, and name evidence that would break the chain.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks. This resequencing can lead to missed inspection windows, as the new schedule may not align with the required inspection timelines. The next failure point could be the quality of the work performed during the resequenced tasks, as the crews may not have the same level of familiarity with the new sequence, potentially leading to errors or substandard work. Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues. Reusable propositions: \n- Supplier delays can significantly impact project timelines and work sequences.\n- Resequencing tasks can lead to missed inspections and potential quality issues.\n- Timely supplier delivery can prevent resequencing and avoid related disruptions.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks.",
+      "semantic_concept": "When a supplier delay occurs it disrupts the",
+      "semantic_definition": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [
+        "missing_predicate_signal"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact",
+        "missing_predicate_signal"
+      ],
+      "concept_id": "c2c711fd-7a6d-45a1-a534-39555fb54ac4",
+      "cycle_id": "f269dbed-a41a-466a-aca4-a40c50189119",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks",
+      "learning_id": "a055d7fc-3b7a-4936-9600-fe2108da5c0c",
+      "promotion_score": 0.528,
+      "provider_input": "A supplier delay causes crews to resequence work, which causes inspection windows to expire. Explain the causal chain, predict the next failure point, and name evidence that would break the chain.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks. This resequencing can lead to missed inspection windows, as the new schedule may not align with the required inspection timelines. The next failure point could be the quality of the work performed during the resequenced tasks, as the crews may not have the same level of familiarity with the new sequence, potentially leading to errors or substandard work. Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues. Reusable propositions: \n- Supplier delays can significantly impact project timelines and work sequences.\n- Resequencing tasks can lead to missed inspections and potential quality issues.\n- Timely supplier delivery can prevent resequencing and avoid related disruptions.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks.",
+      "semantic_concept": "When a supplier delay occurs it disrupts the",
+      "semantic_definition": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks.",
+      "validation_outcome": {
+        "concept": "When a supplier delay occurs it disrupts the",
+        "concept_id": "c2c711fd-7a6d-45a1-a534-39555fb54ac4",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2597,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "8ca18c41-6486-4c04-833a-687f62253fb8",
+      "cycle_id": "f269dbed-a41a-466a-aca4-a40c50189119",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues",
+      "learning_id": "a055d7fc-3b7a-4936-9600-fe2108da5c0c",
+      "promotion_score": null,
+      "provider_input": "A supplier delay causes crews to resequence work, which causes inspection windows to expire. Explain the causal chain, predict the next failure point, and name evidence that would break the chain.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks. This resequencing can lead to missed inspection windows, as the new schedule may not align with the required inspection timelines. The next failure point could be the quality of the work performed during the resequenced tasks, as the crews may not have the same level of familiarity with the new sequence, potentially leading to errors or substandard work. Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues. Reusable propositions: \n- Supplier delays can significantly impact project timelines and work sequences.\n- Resequencing tasks can lead to missed inspections and potential quality issues.\n- Timely supplier delivery can prevent resequencing and avoid related disruptions.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues.",
+      "semantic_concept": "Evidence that would break the chain includes a",
+      "semantic_definition": "Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "0e388e84-b424-43fe-beda-60152e7bff8a",
+      "cycle_id": "f269dbed-a41a-466a-aca4-a40c50189119",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues",
+      "learning_id": "a055d7fc-3b7a-4936-9600-fe2108da5c0c",
+      "promotion_score": 0.5829,
+      "provider_input": "A supplier delay causes crews to resequence work, which causes inspection windows to expire. Explain the causal chain, predict the next failure point, and name evidence that would break the chain.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "When a supplier delay occurs, it disrupts the original work sequence, forcing crews to resequence their tasks. This resequencing can lead to missed inspection windows, as the new schedule may not align with the required inspection timelines. The next failure point could be the quality of the work performed during the resequenced tasks, as the crews may not have the same level of familiarity with the new sequence, potentially leading to errors or substandard work. Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues. Reusable propositions: \n- Supplier delays can significantly impact project timelines and work sequences.\n- Resequencing tasks can lead to missed inspections and potential quality issues.\n- Timely supplier delivery can prevent resequencing and avoid related disruptions.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues.",
+      "semantic_concept": "Evidence that would break the chain includes a",
+      "semantic_definition": "Evidence that would break the chain includes a supplier providing the delayed materials on time, or crews successfully completing resequenced tasks without any issues.",
+      "validation_outcome": {
+        "concept": "Evidence that would break the chain includes a",
+        "concept_id": "0e388e84-b424-43fe-beda-60152e7bff8a",
+        "confidence": 0.8575,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.306,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.25,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "cycle_id": "38f67f81-8a0a-489e-a0f4-9fb5bfcc2217",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups",
+      "learning_id": "f91e49c4-c3e6-4cbf-93a8-d2dd65857705",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that demand spikes unexpectedly. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "cycle_id": "38f67f81-8a0a-489e-a0f4-9fb5bfcc2217",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality",
+      "learning_id": "f91e49c4-c3e6-4cbf-93a8-d2dd65857705",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that demand spikes unexpectedly. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "cycle_id": "38f67f81-8a0a-489e-a0f4-9fb5bfcc2217",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs",
+      "learning_id": "f91e49c4-c3e6-4cbf-93a8-d2dd65857705",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that demand spikes unexpectedly. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact",
+        "missing_predicate_signal"
+      ],
+      "concept_id": "1c4dacb3-790b-4862-9acb-c650d6856f26",
+      "cycle_id": "4b8667f5-991b-4d98-b3d6-3d7be73c4fc3",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs",
+      "learning_id": "50b62147-7587-405c-af9b-87a261a95e1e",
+      "promotion_score": null,
+      "provider_input": "Create and revise a plan for emergency response. The plan is disrupted when a permit assumption fails. Use dispatch logs to decide whether to resequence the plan. State a testable prediction, the evidence that would falsify it, and the belief revision Delta should preserve.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs. A testable prediction is that the resequenced plan will improve the efficiency of the response. Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response. The belief revision Delta should preserve the need for a flexible and adaptive emergency response plan, as the initial assumption may not always hold true. Reusable propositions: \n- Emergency response plans should be adaptable to changing conditions.\n- Dispatch logs can provide valuable information for revising emergency response plans.\n- Permit assumptions may sometimes fail, requiring plan adjustments.\n- Efficiency of the response can be a key metric for evaluating the success of a revised plan.\n- Flexibility in emergency response planning can improve overall outcomes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs.",
+      "semantic_concept": "If a permit assumption fails the emergency response",
+      "semantic_definition": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "dangling_conditional",
+        "prompt_artifact",
+        "missing_predicate_signal"
+      ],
+      "concept_id": "d7d03a2b-1ed6-44b2-b03e-6a4fcc84fe5d",
+      "cycle_id": "4b8667f5-991b-4d98-b3d6-3d7be73c4fc3",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs",
+      "learning_id": "50b62147-7587-405c-af9b-87a261a95e1e",
+      "promotion_score": 0.5833,
+      "provider_input": "Create and revise a plan for emergency response. The plan is disrupted when a permit assumption fails. Use dispatch logs to decide whether to resequence the plan. State a testable prediction, the evidence that would falsify it, and the belief revision Delta should preserve.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs. A testable prediction is that the resequenced plan will improve the efficiency of the response. Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response. The belief revision Delta should preserve the need for a flexible and adaptive emergency response plan, as the initial assumption may not always hold true. Reusable propositions: \n- Emergency response plans should be adaptable to changing conditions.\n- Dispatch logs can provide valuable information for revising emergency response plans.\n- Permit assumptions may sometimes fail, requiring plan adjustments.\n- Efficiency of the response can be a key metric for evaluating the success of a revised plan.\n- Flexibility in emergency response planning can improve overall outcomes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs.",
+      "semantic_concept": "If a permit assumption fails the emergency response",
+      "semantic_definition": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs.",
+      "validation_outcome": {
+        "concept": "If a permit assumption fails the emergency response",
+        "concept_id": "d7d03a2b-1ed6-44b2-b03e-6a4fcc84fe5d",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2597,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.0,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "e155fd77-f038-4d59-8dfa-06592fecb171",
+      "cycle_id": "4b8667f5-991b-4d98-b3d6-3d7be73c4fc3",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "A testable prediction is that the resequenced plan will improve the efficiency of the response",
+      "learning_id": "50b62147-7587-405c-af9b-87a261a95e1e",
+      "promotion_score": null,
+      "provider_input": "Create and revise a plan for emergency response. The plan is disrupted when a permit assumption fails. Use dispatch logs to decide whether to resequence the plan. State a testable prediction, the evidence that would falsify it, and the belief revision Delta should preserve.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs. A testable prediction is that the resequenced plan will improve the efficiency of the response. Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response. The belief revision Delta should preserve the need for a flexible and adaptive emergency response plan, as the initial assumption may not always hold true. Reusable propositions: \n- Emergency response plans should be adaptable to changing conditions.\n- Dispatch logs can provide valuable information for revising emergency response plans.\n- Permit assumptions may sometimes fail, requiring plan adjustments.\n- Efficiency of the response can be a key metric for evaluating the success of a revised plan.\n- Flexibility in emergency response planning can improve overall outcomes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "A testable prediction is that the resequenced plan will improve the efficiency of the response.",
+      "semantic_concept": "A testable prediction is that the resequenced plan",
+      "semantic_definition": "A testable prediction is that the resequenced plan will improve the efficiency of the response.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "incomplete_proposition",
+        "prompt_artifact"
+      ],
+      "concept_id": "215a0fd1-8901-4295-81ff-b57e3aa965d5",
+      "cycle_id": "4b8667f5-991b-4d98-b3d6-3d7be73c4fc3",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "A testable prediction is that the resequenced plan will improve the efficiency of the response",
+      "learning_id": "50b62147-7587-405c-af9b-87a261a95e1e",
+      "promotion_score": 0.5186,
+      "provider_input": "Create and revise a plan for emergency response. The plan is disrupted when a permit assumption fails. Use dispatch logs to decide whether to resequence the plan. State a testable prediction, the evidence that would falsify it, and the belief revision Delta should preserve.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs. A testable prediction is that the resequenced plan will improve the efficiency of the response. Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response. The belief revision Delta should preserve the need for a flexible and adaptive emergency response plan, as the initial assumption may not always hold true. Reusable propositions: \n- Emergency response plans should be adaptable to changing conditions.\n- Dispatch logs can provide valuable information for revising emergency response plans.\n- Permit assumptions may sometimes fail, requiring plan adjustments.\n- Efficiency of the response can be a key metric for evaluating the success of a revised plan.\n- Flexibility in emergency response planning can improve overall outcomes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "A testable prediction is that the resequenced plan will improve the efficiency of the response.",
+      "semantic_concept": "A testable prediction is that the resequenced plan",
+      "semantic_definition": "A testable prediction is that the resequenced plan will improve the efficiency of the response.",
+      "validation_outcome": {
+        "concept": "A testable prediction is that the resequenced plan",
+        "concept_id": "215a0fd1-8901-4295-81ff-b57e3aa965d5",
+        "confidence": 0.85,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2341,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.16,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.0,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_id": "45987cf3-519c-4d27-b480-4bc0b47a7bff",
+      "cycle_id": "4b8667f5-991b-4d98-b3d6-3d7be73c4fc3",
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response",
+      "learning_id": "50b62147-7587-405c-af9b-87a261a95e1e",
+      "promotion_score": null,
+      "provider_input": "Create and revise a plan for emergency response. The plan is disrupted when a permit assumption fails. Use dispatch logs to decide whether to resequence the plan. State a testable prediction, the evidence that would falsify it, and the belief revision Delta should preserve.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs. A testable prediction is that the resequenced plan will improve the efficiency of the response. Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response. The belief revision Delta should preserve the need for a flexible and adaptive emergency response plan, as the initial assumption may not always hold true. Reusable propositions: \n- Emergency response plans should be adaptable to changing conditions.\n- Dispatch logs can provide valuable information for revising emergency response plans.\n- Permit assumptions may sometimes fail, requiring plan adjustments.\n- Efficiency of the response can be a key metric for evaluating the success of a revised plan.\n- Flexibility in emergency response planning can improve overall outcomes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response.",
+      "semantic_concept": "Evidence that would falsify this prediction is if",
+      "semantic_definition": "Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response.",
+      "validation_outcome": {}
+    },
+    {
+      "candidate_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_failure_reasons": [
+        "prompt_scaffolding_leakage",
+        "prompt_artifact"
+      ],
+      "concept_id": "0a957a1d-da10-4e40-b78f-db1a5b8ac501",
+      "cycle_id": "4b8667f5-991b-4d98-b3d6-3d7be73c4fc3",
+      "governance_recommendation": "Candidate",
+      "hypothetical_preserved_concept": "Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response",
+      "learning_id": "50b62147-7587-405c-af9b-87a261a95e1e",
+      "promotion_score": 0.4946,
+      "provider_input": "Create and revise a plan for emergency response. The plan is disrupted when a permit assumption fails. Use dispatch logs to decide whether to resequence the plan. State a testable prediction, the evidence that would falsify it, and the belief revision Delta should preserve.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "If a permit assumption fails, the emergency response plan should be revised to resequence the actions based on dispatch logs. A testable prediction is that the resequenced plan will improve the efficiency of the response. Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response. The belief revision Delta should preserve the need for a flexible and adaptive emergency response plan, as the initial assumption may not always hold true. Reusable propositions: \n- Emergency response plans should be adaptable to changing conditions.\n- Dispatch logs can provide valuable information for revising emergency response plans.\n- Permit assumptions may sometimes fail, requiring plan adjustments.\n- Efficiency of the response can be a key metric for evaluating the success of a revised plan.\n- Flexibility in emergency response planning can improve overall outcomes.",
+      "quality_loss_stage": "consolidation_concept_label_truncation",
+      "semantic_candidate": "Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response.",
+      "semantic_concept": "Evidence that would falsify this prediction is if",
+      "semantic_definition": "Evidence that would falsify this prediction is if the resequenced plan results in a decrease in the efficiency of the response.",
+      "validation_outcome": {
+        "concept": "Evidence that would falsify this prediction is if",
+        "concept_id": "0a957a1d-da10-4e40-b78f-db1a5b8ac501",
+        "confidence": 0.8575,
+        "contradictions": 0,
+        "failed_predictions": 0,
+        "promotion_score": 0.2548,
+        "promotion_state": "Experimental",
+        "prompt_specificity": 0.32,
+        "redundancy": 0.0,
+        "relationship_centrality": 0,
+        "semantic_reuse": 0.25,
+        "stage": "Experimental",
+        "supported_predictions": 0,
+        "unresolved_predictions": 0
+      }
+    },
+    {
+      "cycle_id": "b5051b94-0102-4be6-b3c0-c1c73ce9f55b",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups",
+      "learning_id": "bba1f1a2-a30d-4f0f-93ab-38d31990bc33",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that one resource is indivisible. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "cycle_id": "b5051b94-0102-4be6-b3c0-c1c73ce9f55b",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality",
+      "learning_id": "bba1f1a2-a30d-4f0f-93ab-38d31990bc33",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that one resource is indivisible. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    },
+    {
+      "cycle_id": "b5051b94-0102-4be6-b3c0-c1c73ce9f55b",
+      "failure_reasons": [
+        "not_consolidated"
+      ],
+      "governance_recommendation": null,
+      "hypothetical_preserved_concept": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs",
+      "learning_id": "bba1f1a2-a30d-4f0f-93ab-38d31990bc33",
+      "provider_input": "Allocate resources for emergency shelters. The constraint is that one resource is indivisible. Use capacity reports to allocate scarce capacity. Explain the tradeoff, predict the failure mode, and state what evidence would require reallocation.\n\nComplete the cycle as Delta training data: answer, make at least one testable prediction when possible, identify evidence that would change the answer, and reflect on uncertainty.\n\nOutput contract for Delta semantic extraction:\n- Answer naturally and complete the requested reasoning.\n- Do not refer to this prompt, this task, the question, the user, or Delta training data.\n- Complete conditional statements; avoid dangling if/when clauses and sentence fragments.\n- Avoid procedural commentary such as 'the cycle can be completed by predicting that'.\n- Prefer general reusable knowledge over task-specific wording.\n- End with a section titled 'Reusable propositions:' containing 3-5 complete bullet propositions.",
+      "provider_output": "Allocating resources for emergency shelters requires prioritizing based on capacity reports and changing priority groups. The tradeoff is between providing immediate relief to the most vulnerable and ensuring long-term sustainability of the shelters. If the priority group changes, the shelters may need to be reallocated to accommodate the new needs, potentially leading to a temporary decrease in service quality. A failure mode is that the shelters may become overcrowded or underutilized, depending on the speed of reallocation. Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs. The uncertainty lies in the accuracy of the capacity reports and the speed of response to changes in the priority group. Reusable propositions: \n- Capacity reports should be regularly updated to reflect changing needs. \n- Reallocation strategies must be flexible to accommodate dynamic changes in the priority group. \n- Communication with the priority group is essential to ensure their needs are accurately identified and met. \n- Sustained monitoring of the shelter's performance is necessary to identify and address potential failure modes.",
+      "quality_loss_stage": "candidate_not_consolidated",
+      "semantic_candidate": "Evidence that would require reallocation includes a significant increase or decrease in the number of individuals requiring shelter, or changes in the priority group's needs.",
+      "semantic_concept": null,
+      "semantic_definition": null,
+      "validation_outcome": null
+    }
+  ]
+}

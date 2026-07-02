@@ -2,17 +2,28 @@
 
 ## Current Phase
 
-Phase 12: Autonomous Cognitive Development And Experience Acquisition
+Runtime V1.2: Real Knowledge Evaluation
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
 `docs/INVARIANTS.md`, then `docs/UPDATE.md` before continuing implementation.
 
-The current goal is to prove that Delta's existing cognitive substrate remains
-stable, auditable, and bounded over longer runtimes. The roadmap should now ask:
-what evidence says Delta is ready to build the next thing?
-Phase 12 now focuses on improving cognition quality through directed
-experience, curriculum, capability planning, provider learning, and governed
-knowledge formation rather than adding new top-level cognitive regions.
+The learning architecture and Runtime V1 fixture pipeline are frozen except for
+reproducible defects. The current goal is to evaluate whether the read-only
+runtime can answer real questions from the actual Phase A candidate knowledge
+store. V1.2 produced a `PASS WITH ISSUES`: responses stayed grounded with zero
+hallucinations and no candidate-store mutation, but retrieval and attention
+quality degraded substantially on real learned knowledge compared with the
+fixture suite. The next work should inspect real-store activation failures
+before conversation support or canonical promotion.
+
+Active guardrails:
+
+- Do not modify learning, validation, normalization, governance, promotion
+  scoring, provider prompts, or canonical storage for Runtime V1.2 findings.
+- Do not migrate candidate knowledge into canonical storage yet.
+- Do not begin multi-turn conversation work until the real-store runtime
+  bottleneck is understood.
+- Treat reports under `reports/runtime_v12_*` as the current runtime baseline.
 
 ## Core Cognitive Cycle
 
@@ -341,6 +352,29 @@ Exit criteria:
   when one exists.
 - The first integrated provider smoke run completes across the qualified local
   provider pool and reports capability-level experience utility.
+- Governed curriculum runs can be filtered by profile and stopped by learning
+  saturation instead of cycle count alone.
+- Broad-corpus runs can generate large candidate semantic knowledge in
+  isolated stores without promoting it into canonical knowledge.
+- Validation-first passes can consume open predictions from an isolated store
+  and report concept lifecycle, confidence trajectory, and promotion candidates
+  without canonical merge.
+- Adversarial validation can falsify candidate predictions, lower confidence,
+  and resolve contradiction pressure inside an isolated experiment store.
+- Semantic normalization can conservatively recover useful concepts from failed
+  predictions while preserving provenance and keeping canonical knowledge
+  untouched.
+- Promotion governance can now score isolated experiment knowledge and assign
+  report-only lifecycle states without mutating canonical knowledge.
+- A continuous learning operator now chains bounded learning, validation,
+  adversarial validation, normalization, and governance as the future operating
+  mode.
+- Bounded continuous-operation campaigns can compare fresh isolated runs and
+  aggregate failure distributions across governance reports.
+- Relationship centrality audits can distinguish absent relationship formation
+  from relationship visibility/projection failures.
+- Virtual semantic relationship projection can expose evidence-memory graph
+  structure during governance without persisting semantic edges.
 
 ## Maturity Scorecard
 
@@ -377,16 +411,313 @@ Continue governance and validation:
    the Phase 13 baseline.
 2. Use `reports/phase14_calibration_report.md` as the current cognitive
    calibration baseline.
-3. Generate a larger non-repeating governed objective set before longer runs.
-4. Add explicit outcome observations for open predictions before 250+ cycles.
-5. Profile providers by capability-local experience utility rather than global
+3. Treat `reports/phase15_interrupted_run_report.md` as evidence that broad
+   curriculum removed the immediate semantic saturation bottleneck.
+4. Treat `reports/phase16_validation_report.md` as evidence that validation
+   throughput improved but confirmation bias remained.
+5. Treat `reports/phase17_validation_report.md` as evidence that adversarial
+   validation can produce failed predictions and reduce contradiction pressure.
+6. Treat `reports/phase18_normalization_report.md` as evidence that some failed
+   predictions are extraction artifacts, but deterministic cleanup has low
+   recovery precision (`0.0833`) and should remain conservative.
+7. Treat `reports/promotion_governance_report.md` as evidence that promotion
+   governance exists but has not yet found promotion-eligible concepts in the
+   Phase 15 isolated store.
+8. Treat `reports/phase20_cross_run_report.md` as evidence that bounded
+   operation works, but promotion eligibility is now limited primarily by low
+   relationship centrality and unresolved predictions.
+9. Treat `reports/phase21_relationship_centrality_audit.md` as evidence that
+   relationships exist at the memory layer but are not projected into semantic
+   concept centrality.
+10. Treat `reports/phase22_projection_comparison.md` as evidence that virtual
+   projection reveals hidden structure and modestly improves governance scores
+   without creating promotion-eligible concepts.
+11. Continue refinement passes on the remaining `23` open predictions and `51`
+   inconclusive predictions before another broad training run.
+12. Add higher-quality contradiction-resolution reporting for the `17` remaining
+   open contradictions before attempting canonical promotion.
+13. Keep semantic relationship projection virtual until repeated runs show it
+   improves lifecycle trends without elevating prompt artifacts or fragments.
+14. Improve source linkage so relationship centrality and cross-profile
+   recurrence can be measured from concept provenance rather than proxies.
+15. Keep promotion report-only until at least one isolated-store concept reaches
+   promotion eligibility under deterministic governance and survives manual
+   review.
+16. Defer provider-specific prompt adapters unless artifact rates become a
+   dominant bottleneck, a provider exceeds roughly `50%` artifact rate, or
+   malformed output starts breaking extraction.
+17. Treat `reports/phase23_concept_coherence.md` as evidence that the first
+   common structured output contract did not improve learned-concept coherence
+   and should not become the default yet.
+18. Keep bounded learning experiments capped at `20` cycles unless explicitly
+   raised.
+19. Treat `reports/phase24_semantic_boundary_audit.md` as evidence that the
+   dominant proposition-boundary loss was consolidation concept-label
+   truncation, not necessarily malformed provider output.
+20. Treat `reports/phase24_boundary_verification_summary.md` as evidence that
+   boundary-preserving consolidation improved learned proposition completeness
+   operationally.
+21. Treat `reports/phase25_operational_verification_summary.md` as evidence
+   that deterministic extraction filtering removes artifacts but reduces
+   throughput; freeze the filter here unless broader runs show starvation or
+   recurring artifacts.
+22. Return to broader bounded curriculum/training experiments before adding
+   more extraction infrastructure.
+23. Do not loosen promotion thresholds to compensate for fragments.
+24. Profile providers by capability-local experience utility rather than global
    rank.
-6. Replace repeated difficulty-1 curriculum templates with utility-seeking
+25. Replace repeated difficulty-1 curriculum templates with utility-seeking
    curriculum generation.
-7. Add held-out task-performance suites for coding, research, scheduling, and
+26. Add held-out task-performance suites for coding, research, scheduling, and
    planning.
-8. Reduce repeated JSONL full-store reads in runtime hot paths.
-9. Deepen evidence-aware prediction validation beyond first-pass claim scoring.
-10. Add goal progress feedback from runtime outcomes.
-11. Design Global Workspace as a tick-local integration surface before deeper
+27. Reduce repeated JSONL full-store reads in runtime hot paths.
+28. Deepen evidence-aware prediction validation beyond first-pass claim scoring.
+29. Add goal progress feedback from runtime outcomes.
+30. Design Global Workspace as a tick-local integration surface before deeper
    runtime coupling.
+
+## Phase 26 Roadmap Update
+
+Phase 26 explicitly raised the bounded learning limit to `200` cycles and ran
+seven isolated campaigns totaling `904` completed cycles under the current
+architecture. No canonical knowledge was modified.
+
+Roadmap implications:
+
+1. Treat the current extraction filter as frozen. Phase 26 artifact rates stayed
+   low (`0.0132` to `0.0278`) across larger runs, so further tightening is not
+   justified by current evidence.
+2. Treat promotion governance as operational but not yet canonical-promotion
+   ready. Promotion-eligible recommendations now exist (`12` total), but
+   candidate spot checks still show prediction-shaped and context-specific
+   concepts.
+3. Prioritize validation backlog and redundancy before canonical promotion. The
+   dominant Phase 26 failure causes were unresolved prediction (`80`) and
+   redundancy (`53`), not relationship centrality or artifact leakage.
+4. Prefer profile-specific curriculum campaigns over longer mixed runs when
+   optimizing knowledge quality. `causal_reasoning_100` produced the strongest
+   average promotion score (`0.5846`) and full prediction coverage, while the
+   `200`-cycle mixed run increased volume but lowered average score (`0.522`).
+   A `causal_reasoning_200` follow-up completed `104/200` scheduled cycles,
+   produced only modest additional semantic growth, and preserved high quality,
+   suggesting causal reasoning saturates near the 100-cycle window in the
+   current corpus.
+   `planning_200` completed the full `200` cycles and improved average score
+   over `planning_100`, but unresolved predictions remained the limiting
+   failure mode.
+5. Continue using virtual semantic relationship projection as the governance
+   view. Phase 26 relationship centrality remained nonzero and increased in the
+   mixed runs without persistent semantic edge materialization.
+6. Before any canonical merge, manually inspect promotion-eligible concepts and
+   require survival across repeated independent stores, not merely one campaign.
+
+## Phase 27 Roadmap Update
+
+Phase 27 is a knowledge maturation audit, not a new learning phase. It preserves
+the Phase 26 evidence as a baseline and explains why the first `12`
+promotion-eligible concepts survived while nearby rejected concepts failed.
+
+Roadmap implications:
+
+1. Keep canonical promotion disabled. Promotion-eligible is still a report-only
+   state; `canonical_ready` remains `0`.
+2. Treat survivor profiling as a required pre-promotion step. The surviving
+   concepts had low redundancy, positive confidence slope, no open
+   contradictions, and observed prediction accuracy of `1.0`, but manual review
+   is still required because some concepts remain prediction-shaped or
+   context-specific.
+3. Separate current governance pressure from historical backlog. The raw
+   unresolved prediction taxonomy is dominated by superseded concept references
+   (`913`), while the current visible backlog is much smaller and dominated by
+   redundant, unvisited, late-cycle, and partially validated concepts.
+4. Prioritize report-only semantic equivalence before any merge or promotion
+   behavior. Redundancy is now a maturation bottleneck, not a reason to loosen
+   governance thresholds.
+5. Add maturation scheduling for current unresolved predictions before another
+   broad mixed campaign. The next run should revisit existing current concepts
+   rather than simply creating more candidates.
+6. Preserve Phase 27 outputs as a longitudinal baseline for comparing future
+   survivor profiles, failure distributions, promotion velocity, and concept
+   lifespan.
+
+## Phase A and Runtime Transition Update
+
+Phase A should remain a passive temporary-store graduation campaign. The
+additional `overnight_3000` run is a stress extension, not a tuning pass. The
+project should not migrate temporary knowledge into canonical storage yet.
+
+Roadmap implications:
+
+1. Treat Phase A outputs as candidate canonical knowledge: preserved,
+   inspectable, and usable for runtime experiments, but not merged into a
+   permanent canonical store.
+2. Wait to freeze the canonical schema until retrieval, working-memory
+   activation, reasoning, planning, and response generation reveal the metadata
+   they actually need.
+3. Begin Runtime development with read-only semantic activation over candidate
+   stores. The first implemented seed is `KnowledgeActivationEngine`, which
+   ranks isolated-store semantic concepts for working-memory activation without
+   promotion or mutation.
+4. If Phase A fails, do not continue Runtime expansion. Produce a blocker report
+   and fix only the reproducible architectural defect.
+5. If Phase A passes or graduates conditionally without learning-architecture
+   blockers, shift the next major work toward semantic retrieval, active working
+   set assembly, reasoning context construction, self-critique, planning, and
+   response generation.
+
+## Phase A Churn Interpretation Update
+
+The `overnight_3000` stress extension stopped on the promotion churn gate, but a
+read-only churn audit showed no harmful promotion loss. The two concepts that
+left `Promotion Eligible` remained `Validated` and dropped only slightly below
+the eligibility edge after small redundancy-penalty increases. This should be
+treated as threshold-edge maturation behavior, not learning collapse.
+
+Roadmap implications:
+
+1. Do not revisit extraction, consolidation, normalization, validation, or
+   governance thresholds based on this result.
+2. Keep canonical promotion disabled. No dry-run candidate reached `PROMOTE`.
+3. Add report-only promotion maturation semantics before canonical promotion:
+   distinguish stable eligibility, healthy expansion, equivalent replacement,
+   threshold-edge demotion, and harmful loss.
+4. Consider promotion hysteresis or release-candidate states only after another
+   read-only audit confirms repeated threshold-edge oscillation.
+5. Runtime v1 work may proceed against candidate canonical stores because the
+   learning architecture appears operationally stable, but permanent canonical
+   knowledge should still wait.
+
+## Runtime V1 Roadmap Update
+
+Runtime V1 has started with a read-only path that uses candidate knowledge
+without modifying learning, validation, governance, or canonical storage.
+
+Implemented baseline:
+
+1. `KnowledgeActivationEngine`: activate relevant candidate concepts and assemble
+   a `WorkingMemoryContext`.
+2. `RuntimeReasoningEngine`: inspect activated knowledge for support,
+   assumptions, conflicts, and confidence.
+3. `RuntimePlanner`: produce evidence-grounded plan options from the reasoning
+   report.
+4. `RuntimeResponseGenerator`: draft a cautious response grounded in the active
+   context.
+5. `RuntimeV1Pipeline`: orchestrate activation, working memory, reasoning,
+   planning, and response generation.
+
+Roadmap implications:
+
+1. Keep Runtime V1 read-only until the retrieval/working-memory/response path
+   proves what canonical metadata it needs.
+2. Do not merge candidate knowledge into canonical storage yet.
+3. Treat conversation state, multi-turn context, provider-backed response
+   synthesis, and runtime self-critique as the next output-side milestones.
+4. Continue learning-system changes only when runtime evidence exposes a
+   concrete missing capability or defect.
+
+## Phase B Runtime Evaluation Update
+
+Runtime Evaluation is now the primary development gate for output-side cognition.
+It treats Delta's response loop as an intelligence unit test:
+
+question -> activation -> working memory -> reasoning -> planning -> response.
+
+The initial deterministic suite produced perfect expected-concept recall
+(`1.0`), clean grounding (`1.0`), clean sparse-knowledge refusal, and zero
+hallucinations, but only moderate retrieval precision (`0.6028`). Runtime V1 is
+therefore answering from activated evidence, but activation is too broad.
+
+Roadmap implications:
+
+1. Do not add conversation state or provider-backed synthesis until activation
+   precision improves on the same Phase B suite.
+2. Treat retrieval precision as the first Runtime V1 bottleneck.
+3. Improve activation ranking/filtering only under Runtime Evaluation, and rerun
+   the same scorecards after any change.
+4. Preserve sparse-knowledge refusal and grounding as regression guarantees.
+5. Expand the suite with held-out prompts before using it as a broader runtime
+   benchmark.
+
+## Phase B.1 Runtime Efficiency Update
+
+The runtime efficiency audit shows that Runtime V1 is mechanically efficient but
+not selective enough. Average working-memory efficiency is `1.0`, average
+ignored concepts are `0.0`, and overall utilization is `1.0`; however, average
+noise concepts are `1.1667` per case and noise appears in GPS, salt, and
+resource-allocation prompts.
+
+Roadmap implications:
+
+1. Treat activation precision as the next Runtime V1 optimization target.
+2. Do not proceed to multi-turn conversation testing yet; noisy activation would
+   be amplified by persistent context.
+3. Optimize retrieval ranking/filtering without changing learning, governance,
+   planning, or response generation.
+4. Rerun Phase B/B.1 scorecards after any activation change and require recall,
+   grounding, sparse refusal, and hallucination behavior to remain stable.
+5. Track useful-neighbor retention separately from noise reduction so activation
+   does not become too narrow.
+
+## Runtime Attention Update
+
+Phase B.1 exposed that retrieval and working-memory selection are separate
+responsibilities. Runtime now has a read-only attention layer after activation
+and before working memory. The first attention run kept retrieval recall at
+`1.0`, reduced used noise to `0.0`, and raised attention precision to `1.0`, but
+attention recall was only `0.8611` because two expected concepts were suppressed.
+
+Roadmap implications:
+
+1. Treat attention scoring, not retrieval ranking, as the immediate Runtime V1
+   refinement target.
+2. Preserve broad activation as candidate generation; do not narrow retrieval
+   until attention has been tuned and evaluated.
+3. Tune attention to improve recall while keeping used noise at `0.0`.
+4. Do not begin multi-turn conversation testing until attention recall improves
+   on the same Phase B scorecards.
+5. Add held-out Runtime Evaluation prompts after attention has a stable operating
+   point, so the filter is not overfit to the fixture suite.
+
+## Phase B.2 Reasoning Contribution Update
+
+Runtime Evaluation now tracks whether each activated concept was attended,
+reasoned over, used by planning, and cited in the response. This separates
+"entered working memory" from "materially influenced cognition."
+
+The first contribution audit found no reasoning drift, no planning drift, no
+response drift, and no over-attending. It found two under-attending cases:
+`gps-atmospheric-delay` and `risk-likelihood-impact` were activated but did not
+enter working memory.
+
+Roadmap implications:
+
+1. Keep retrieval broad; it found all expected concepts.
+2. Keep the attention layer; it blocked all noise from reasoning.
+3. Tune attention recall before conversation testing.
+4. Preserve `noise_used_in_reasoning = 0` as a hard regression guard.
+5. Use contribution attribution as the standard diagnostic before changing
+   reasoning, planning, or response generation.
+
+## Runtime V1.1 Attention Stabilization Update
+
+Runtime V1.1 reached the fixture-suite attention target:
+
+- retrieval recall: `1.0`
+- attention recall: `1.0`
+- attention precision: `1.0`
+- noise used in reasoning: `0`
+- reasoning/planning/response drift: `0`
+- grounding: `1.0`
+- hallucinations: `0`
+
+Roadmap implications:
+
+1. Stop tuning attention on the synthetic fixture suite.
+2. Preserve `noise_used_in_reasoning = 0` and `attention_recall >= 0.95` as
+   runtime regression gates.
+3. Begin Runtime V1.2: evaluate activation, attention, reasoning, planning, and
+   response against real Phase A candidate knowledge and held-out prompts.
+4. Do not begin multi-turn conversation until real-store single-turn evaluation
+   confirms the same operating behavior.
+5. Do not add semantic roles, goal management, or richer planning until real
+   candidate-store evaluation exposes a specific need.

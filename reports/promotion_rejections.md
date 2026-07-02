@@ -1,0 +1,146 @@
+# Promotion Rejections
+
+- `Identify the specific conflict between the local and` | score `0.1949` | failed `0` | open contradictions `0` | redundancy `0.125`
+- `Identify critical assets and prioritize them based on` | score `0.1924` | failed `0` | open contradictions `0` | redundancy `0.1429`
+- `If the alignment is correct and the components` | score `0.1924` | failed `0` | open contradictions `0` | redundancy `0.1429`
+- `Predict the propagation of the conflict within the` | score `0.1909` | failed `0` | open contradictions `0` | redundancy `0.1538`
+- `By separating probability from confidence we can make` | score `0.1891` | failed `0` | open contradictions `0` | redundancy `0.1667`
+- `These beliefs can be refined through communication and` | score `0.1891` | failed `0` | open contradictions `0` | redundancy `0.1667`
+- `To test these hypotheses we should collect evidence` | score `0.1869` | failed `0` | open contradictions `0` | redundancy `0.2222`
+- `The reusable concept is the principle of preventive` | score `0.1856` | failed `0` | open contradictions `0` | redundancy `0.3913`
+- `The resolution evidence is the later record that` | score `0.1824` | failed `0` | open contradictions `0` | redundancy `0.2143`
+- `Prediction Repeat the measurements using different lab equipment` | score `0.1813` | failed `0` | open contradictions `0` | redundancy `0.2222`
+- `If the performance metrics of the two groups` | score `0.1776` | failed `0` | open contradictions `0` | redundancy `0.2083`
+- `Develop a risk register to track and monitor` | score `0.1774` | failed `0` | open contradictions `0` | redundancy `0.25`
+- `The test should ensure that the race condition` | score `0.1774` | failed `0` | open contradictions `1` | redundancy `0.25`
+- `Evidence that would force a hypothesis revision would` | score `0.1768` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `Further observations are needed to assess the patient` | score `0.1737` | failed `0` | open contradictions `0` | redundancy `0.1765`
+- `Evidence that would change the answer includes obtaining` | score `0.1736` | failed `0` | open contradictions `0` | redundancy `0.6875`
+- `A key risk is the untested redundancy path` | score `0.1732` | failed `0` | open contradictions `0` | redundancy `0.28`
+- `Evidence that would change the answer could be` | score `0.1729` | failed `0` | open contradictions `0` | redundancy `0.6923`
+- `Evidence that would change the answer includes discovering` | score `0.1723` | failed `0` | open contradictions `0` | redundancy `0.6667`
+- `We can then make a prediction about the` | score `0.1718` | failed `0` | open contradictions `0` | redundancy `0.4545`
+- `Evidence that would change the answer could be` | score `0.1698` | failed `0` | open contradictions `0` | redundancy `0.7143`
+- `Evidence that would change the answer includes finding` | score `0.1687` | failed `0` | open contradictions `0` | redundancy `0.7222`
+- `Evidence to disconfirm the fix If the application` | score `0.1679` | failed `0` | open contradictions `1` | redundancy `0.3182`
+- `Evidence that would force a hypothesis revision is` | score `0.1671` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `Evidence that would revise the belief could include` | score `0.1671` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `Evidence that would validate the transfer includes successful` | score `0.1671` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `The prediction that would confirm the resolution is` | score `0.1671` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `The resolution evidence could be a video recording` | score `0.1671` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `answer Ethical tradeoffs in hospital allocation often arise` | score `0.1671` | failed `0` | open contradictions `0` | redundancy `0.9167`
+- `Evidence that would disconfirm the fix would be` | score `0.1657` | failed `0` | open contradictions `1` | redundancy `0.3333`
+- `A prediction that would separate the hypotheses is` | score `0.1648` | failed `0` | open contradictions `0` | redundancy `0.35`
+- `To falsify the diagnosis one would observe a` | score `0.1643` | failed `0` | open contradictions `1` | redundancy `0.3636`
+- `The analogy to this is a bridge which` | score `0.1638` | failed `0` | open contradictions `0` | redundancy `0.3571`
+- `A falsifiable prediction is that if there is` | score `0.1636` | failed `0` | open contradictions `1` | redundancy `0.3684`
+- `answer A hierarchical plan for disaster recovery should` | score `0.1632` | failed `0` | open contradictions `0` | redundancy `0.9444`
+- `However without a direct comparison the evidence is` | score `0.1629` | failed `0` | open contradictions `0` | redundancy `0.125`
+- `Evidence that would change the answer could be` | score `0.1627` | failed `0` | open contradictions `0` | redundancy `0.7647`
+- `A prediction about next attacker behavior is that` | score `0.1613` | failed `0` | open contradictions `0` | redundancy `0.375`
+- `A prediction about the next attacker s behavior` | score `0.1613` | failed `0` | open contradictions `0` | redundancy `0.375`
+- `A falsifiable prediction would be that if the` | score `0.1608` | failed `0` | open contradictions `1` | redundancy `0.3684`
+- `Analyze the impact of the conflict a` | score `0.1604` | failed `0` | open contradictions `0` | redundancy `0.1429`
+- `If the discrepancies persist it supports the` | score `0.1604` | failed `0` | open contradictions `0` | redundancy `0.1429`
+- `A software system is reliable if it has` | score `0.16` | failed `0` | open contradictions `0` | redundancy `0.3846`
+- `The cycle of Delta training data involves answering` | score `0.1592` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `To test this policy budget reports from cities` | score `0.1578` | failed `0` | open contradictions `0` | redundancy `0.4`
+- `Evidence to collect includes network logs system logs` | score `0.1555` | failed `0` | open contradictions `0` | redundancy `0.4167`
+- `The uncertainty in this experiment can be reduced` | score `0.1549` | failed `0` | open contradictions `0` | redundancy `0.1818`
+- `For example if a new policy is implemented` | score `0.1532` | failed `0` | open contradictions `0` | redundancy `0.24`
+- `A testable prediction is that if the hardware` | score `0.1518` | failed `0` | open contradictions `0` | redundancy `0.25`
+- `A prediction that would confirm the resolution is` | score `0.1508` | failed `0` | open contradictions `0` | redundancy `0.35`
+- `A prediction about the next affected node is` | score `0.1502` | failed `0` | open contradictions `0` | redundancy `0.4545`
+- `Likelihood refers to the probability of a risk` | score `0.1499` | failed `0` | open contradictions `0` | redundancy `0.4667`
+- `Confidence increased from 0 8 to 0 9` | score `0.1489` | failed `0` | open contradictions `0` | redundancy `0.125`
+- `answer When planning a negotiation about contract terms` | score `0.1429` | failed `0` | open contradictions `1` | redundancy `0.3333`
+- `answer When planning a negotiation about contract terms` | score `0.1409` | failed `0` | open contradictions `1` | redundancy `0.3478`
+- `If the results still conflict it supports Hypothesis` | score `0.1337` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `The evidence that would change the answer would` | score `0.1313` | failed `0` | open contradictions `0` | redundancy `0.3333`
+- `Goal Establish a disaster recovery team Conduct a` | score `0.1302` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would change the answer would include` | score `0.1286` | failed `0` | open contradictions `0` | redundancy `0.6154`
+- `To make a testable prediction we can analyze` | score `0.1266` | failed `0` | open contradictions `0` | redundancy `0.8125`
+- `Evidence that would change the answer could include` | score `0.1242` | failed `0` | open contradictions `0` | redundancy `0.6471`
+- `The test should fail consistently to confirm the` | score `0.1224` | failed `0` | open contradictions `1` | redundancy `0.25`
+- `Evidence that would reject the transfer includes a` | score `0.1218` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would change the answer would be` | score `0.1179` | failed `0` | open contradictions `0` | redundancy `0.6923`
+- `A testable prediction is that if the dispatch` | score `0.1104` | failed `0` | open contradictions `0` | redundancy `0.9286`
+- `answer In the context of hospital allocation an` | score `0.1104` | failed `0` | open contradictions `0` | redundancy `0.9286`
+- `answer When planning a negotiation about contract terms` | score `0.1104` | failed `0` | open contradictions `0` | redundancy `0.9286`
+- `answer In assessing risk in infrastructure the situation` | score `0.1074` | failed `0` | open contradictions `0` | redundancy `0.95`
+- `To falsify the diagnosis one would observe the` | score `0.1065` | failed `0` | open contradictions `1` | redundancy `0.3636`
+- `Evidence that would falsify the analysis would be` | score `0.1038` | failed `0` | open contradictions `1` | redundancy `0.2`
+- `Evidence that would falsify the analysis would be` | score `0.1038` | failed `0` | open contradictions `1` | redundancy `0.2`
+- `Evidence that would change the answer would be` | score `0.1028` | failed `0` | open contradictions `0` | redundancy `0.8`
+- `The evidence that would falsify this prediction is` | score `0.1002` | failed `0` | open contradictions `1` | redundancy `0.2727`
+- `The evidence that would change the answer is` | score `0.0959` | failed `0` | open contradictions `0` | redundancy `0.6667`
+- `New eyewitness accounts that support the earlier report, or physical` | score `0.0902` | failed `1` | open contradictions `0` | redundancy `0.7143`
+- `For example if the failure occurs when two` | score `0.0822` | failed `0` | open contradictions `0` | redundancy `0.9474`
+- `Likelihood refers to the probability of an incident` | score `0.0752` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would falsify this prediction would be` | score `0.0748` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would change the answer includes discovering` | score `0.0716` | failed `0` | open contradictions `0` | redundancy `0.6`
+- `Evidence that would change the answer includes comprehensive` | score `0.0665` | failed `0` | open contradictions `0` | redundancy `0.6667`
+- `A testable prediction is that software updates will` | score `0.0629` | failed `0` | open contradictions `0` | redundancy `0.875`
+- `Evidence that would change the answer includes identifying` | score `0.06` | failed `0` | open contradictions `3` | redundancy `0.35`
+- `Evidence that would change the answer is a` | score `0.0598` | failed `0` | open contradictions `0` | redundancy `0.7143`
+- `answer A hierarchical plan for disaster recovery should` | score `0.0594` | failed `0` | open contradictions `0` | redundancy `0.9`
+- `Hierarchical plan for disaster recovery should include a clear definition` | score `0.058` | failed `1` | open contradictions `0` | redundancy `0.9444`
+- `Evidence that would disconfirm the fix would be` | score `0.0514` | failed `0` | open contradictions `2` | redundancy `0.3846`
+- `Evidence that would force a hypothesis revision would include a` | score `0.0502` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `Additional audit logs showing a pattern of behavior or a` | score `0.0446` | failed `1` | open contradictions `0` | redundancy `0.6471`
+- `Obtaining a clear diagnosis, reviewing the patient's medical history, and` | score `0.0389` | failed `1` | open contradictions `0` | redundancy `0.6875`
+- `Detailed audit of system logs showing software errors leading to outages` | score `0.0383` | failed `1` | open contradictions `0` | redundancy `0.6923`
+- `Cycle of Delta training data involves answering the question, making` | score `0.0262` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `The evidence that would change the answer includes` | score `0.0236` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `If the budget reports show that the tax credit leads` | score `0.0232` | failed `1` | open contradictions `0` | redundancy `0.8`
+- `Analyze the handoff records to see if there are any` | score `0.0214` | failed `1` | open contradictions `0` | redundancy `0.8125`
+- `The boundary condition is the point at which` | score `0.0198` | failed `0` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would change the answer could be` | score `0.012` | failed `0` | open contradictions `3` | redundancy `0.3`
+- `It is testable that if the dispatch logs show a` | score `0.0052` | failed `1` | open contradictions `0` | redundancy `0.9286`
+- `When planning a negotiation about contract terms, it is important` | score `0.0052` | failed `1` | open contradictions `0` | redundancy `0.9286`
+- `In assessing risk in infrastructure, the situation where low probability` | score `0.0022` | failed `1` | open contradictions `0` | redundancy `0.95`
+- `A testable prediction in this scenario could be` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.25`
+- `A testable prediction is that after implementing a` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.4`
+- `Boundary condition is the point at which the source rule` | score `0.0` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `Clearer security footage or a statement from the car owner confirming the color of the car` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.6667`
+- `Comprehensive data on the actual impact of the tax reform` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.6667`
+- `Discovering a new dependency or a change in the handoff process` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.6`
+- `Discovering that the downstream team had already completed the handoff,` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.6667`
+- `Ethical tradeoffs in hospital allocation often arise when benefits and` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.9167`
+- `Evidence that would change the answer If both` | score `0.0` | failed `0` | open contradictions `3` | redundancy `0.3636`
+- `Evidence that would change the answer includes data` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3913`
+- `Evidence that would change the answer includes failure cases, testable` | score `0.0` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would change the answer includes feedback` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.2593`
+- `Evidence that would change the answer includes finding` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.28`
+- `Evidence that would change the answer includes the` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.2632`
+- `Evidence that would change the answer is additional` | score `0.0` | failed `0` | open contradictions `3` | redundancy `0.3913`
+- `Evidence that would falsify this prediction includes observing` | score `0.0` | failed `1` | open contradictions `1` | redundancy `0.2727`
+- `Evidence that would falsify this prediction would be a scenario` | score `0.0` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `Evidence that would reject the transfer includes a system with` | score `0.0` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `Finding a handoff record that contradicts the revised belief or` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.7222`
+- `For example if a change in an upstream` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.381`
+- `For example if a new policy was implemented` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.24`
+- `For example if a principle is transferred from` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3333`
+- `For example if the base rate for high` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3`
+- `Goal Conduct a risk assessment n a` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.5`
+- `Goal: Establish a disaster recovery team -> Conduct a risk assessment 2` | score `0.0` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `Hierarchical plan for disaster recovery should include the following goals and subgoals: 1` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.9`
+- `If the failure occurs when two threads simultaneously modify a` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.9474`
+- `If the intervention group did not show the expected improvement,` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.7222`
+- `In the context of hospital allocation, an ethical tradeoff arises` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.9286`
+- `Inconsistencies in the chain-of-custody notes or other corroborating evidence that` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.7647`
+- `It is testable that software updates will reduce the frequency of outages` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.875`
+- `Likelihood refers to the probability of an incident occurring, while` | score `0.0` | failed `1` | open contradictions `0` | redundancy `1.0`
+- `New evidence that would change the recommendation could` | score `0.0` | failed `1` | open contradictions `2` | redundancy `0.4444`
+- `New evidence would change the probability of demand` | score `0.0` | failed `0` | open contradictions `3` | redundancy `0.4444`
+- `New information about the system being analyzed or the availability of new data` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.6154`
+- `Significant increase in outages after a software update, indicating that` | score `0.0` | failed `1` | open contradictions `1` | redundancy `0.7143`
+- `Statement from the suspect or other witnesses who saw the suspect's hat change color` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.6923`
+- `The evidence that would change the answer is` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3889`
+- `The evidence that would change this answer is` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3636`
+- `answer A software system is reliable if it` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.25`
+- `answer Counterfactual claims can be challenging to make` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.4667`
+- `answer Hospital allocation policies often involve a complex` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3333`
+- `answer To plan a negotiation about contract terms` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3478`
+- `answer When analyzing systems engineering for power grids` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.28`
+- `answer When transferring principles from medicine to maintenance` | score `0.0` | failed `1` | open contradictions `0` | redundancy `0.3333`

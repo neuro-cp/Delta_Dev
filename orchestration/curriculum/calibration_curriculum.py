@@ -43,10 +43,20 @@ class CalibrationCurriculumGenerator:
         count: int,
         previous_prompts: Iterable[str] = (),
         min_utility: float = 0.45,
+        profiles: Iterable[str] = (),
     ) -> list[ScoredCalibrationObjective]:
         previous = [str(prompt) for prompt in previous_prompts if str(prompt).strip()]
+        profile_filter = {
+            str(profile).strip().lower()
+            for profile in profiles
+            if str(profile).strip()
+        }
         selected: list[ScoredCalibrationObjective] = []
         for objective in self._candidate_objectives():
+            if profile_filter and not profile_filter.intersection(
+                self._objective_profiles(objective)
+            ):
+                continue
             diversity = self._diversity_score(
                 objective.prompt,
                 [*previous, *[item.objective.prompt for item in selected]],
@@ -76,6 +86,18 @@ class CalibrationCurriculumGenerator:
             ),
         )[: max(0, int(count))]
 
+    def _objective_profiles(self, objective: CalibrationObjective) -> set[str]:
+        profiles = {objective.capability.lower(), objective.task_type.lower()}
+        metadata_profiles = objective.metadata.get("profiles", ())
+        if isinstance(metadata_profiles, str):
+            metadata_profiles = (metadata_profiles,)
+        profiles.update(
+            str(profile).strip().lower()
+            for profile in metadata_profiles
+            if str(profile).strip()
+        )
+        return profiles
+
     def _calibration_score(self, report: NoveltyReport, diversity_score: float) -> float:
         score = (
             report.experience_utility_score * 0.45
@@ -88,7 +110,9 @@ class CalibrationCurriculumGenerator:
         return round(max(0.0, min(1.0, score)), 4)
 
     def _candidate_objectives(self) -> tuple[CalibrationObjective, ...]:
-        return (
+        from orchestration.curriculum.broad_corpus import generate_broad_corpus
+
+        seed_objectives = (
             CalibrationObjective(
                 objective_id="prediction-error-snow-route",
                 capability="prediction",
@@ -100,6 +124,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("prediction", "planning", "reasoning"),
                 expected_signals=("prediction_pressure", "surprise", "falsification"),
+                metadata={"profiles": ("prediction", "planning")},
             ),
             CalibrationObjective(
                 objective_id="prediction-error-inventory",
@@ -112,6 +137,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("prediction", "uncertainty", "planning"),
                 expected_signals=("prediction_pressure", "belief_revision"),
+                metadata={"profiles": ("prediction", "planning")},
             ),
             CalibrationObjective(
                 objective_id="contradictory-witnesses",
@@ -125,6 +151,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("reasoning", "reflection", "contradiction"),
                 expected_signals=("invalidation_pressure", "contradiction_resolution"),
+                metadata={"profiles": ("contradiction",)},
             ),
             CalibrationObjective(
                 objective_id="contradictory-policy",
@@ -137,6 +164,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("reasoning", "governance", "contradiction"),
                 expected_signals=("invalidation_pressure", "provenance"),
+                metadata={"profiles": ("contradiction",)},
             ),
             CalibrationObjective(
                 objective_id="belief-revision-gps",
@@ -149,6 +177,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("reflection", "reasoning", "belief_revision"),
                 expected_signals=("belief_challenge", "confidence_revision"),
+                metadata={"profiles": ("contradiction", "causal_reasoning")},
             ),
             CalibrationObjective(
                 objective_id="belief-revision-provider-disagreement",
@@ -161,6 +190,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("reflection", "reasoning", "provider_evaluation"),
                 expected_signals=("surprise", "belief_challenge"),
+                metadata={"profiles": ("contradiction",)},
             ),
             CalibrationObjective(
                 objective_id="planning-failure-construction",
@@ -173,6 +203,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("planning", "reasoning", "reflection"),
                 expected_signals=("planning_failure", "revision"),
+                metadata={"profiles": ("planning",)},
             ),
             CalibrationObjective(
                 objective_id="planning-failure-hospital",
@@ -184,6 +215,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("planning", "simulation", "uncertainty"),
                 expected_signals=("surprise", "prediction_pressure"),
+                metadata={"profiles": ("planning",)},
             ),
             CalibrationObjective(
                 objective_id="transfer-code-to-governance",
@@ -196,6 +228,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("coding", "governance", "reasoning"),
                 expected_signals=("transfer_learning", "generalization"),
+                metadata={"profiles": ("transfer", "tool_use")},
             ),
             CalibrationObjective(
                 objective_id="transfer-medical-to-maintenance",
@@ -208,6 +241,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("reasoning", "planning", "prediction"),
                 expected_signals=("transfer_learning", "prediction_pressure"),
+                metadata={"profiles": ("transfer", "planning")},
             ),
             CalibrationObjective(
                 objective_id="cross-domain-budget-weather",
@@ -220,6 +254,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("planning", "prediction", "reasoning"),
                 expected_signals=("cross_domain_reasoning", "falsification"),
+                metadata={"profiles": ("planning", "causal_reasoning")},
             ),
             CalibrationObjective(
                 objective_id="cross-domain-research-policy",
@@ -232,6 +267,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("research", "prediction", "reasoning"),
                 expected_signals=("contradiction_resolution", "prediction_pressure"),
+                metadata={"profiles": ("scientific_reasoning", "contradiction")},
             ),
             CalibrationObjective(
                 objective_id="json-evidence-revision",
@@ -244,6 +280,7 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("json", "belief_revision", "prediction"),
                 expected_signals=("format_adherence", "belief_revision"),
+                metadata={"profiles": ("tool_use", "contradiction")},
             ),
             CalibrationObjective(
                 objective_id="coding-boundary-preservation",
@@ -255,8 +292,114 @@ class CalibrationCurriculumGenerator:
                 ),
                 required_capabilities=("coding", "reasoning", "governance"),
                 expected_signals=("boundary_preservation", "regression_test"),
+                metadata={"profiles": ("tool_use",)},
+            ),
+            CalibrationObjective(
+                objective_id="causal-chain-supply-delay",
+                capability="causal_reasoning",
+                task_type="reasoning",
+                prompt=(
+                    "A supplier delay causes crews to resequence work, which causes "
+                    "inspection windows to expire. Explain the causal chain, predict "
+                    "the next failure point, and name evidence that would break the chain."
+                ),
+                required_capabilities=("causal_reasoning", "prediction", "planning"),
+                expected_signals=("causal_chain", "prediction_pressure"),
+                metadata={"profiles": ("causal_reasoning", "planning")},
+            ),
+            CalibrationObjective(
+                objective_id="causal-counterfactual-maintenance",
+                capability="causal_reasoning",
+                task_type="reasoning",
+                prompt=(
+                    "A maintenance team believes a pump failed because of age, but "
+                    "sensor logs show vibration spiked only after a valve change. "
+                    "Compare the causal explanations and state the counterfactual test."
+                ),
+                required_capabilities=("causal_reasoning", "evidence", "prediction"),
+                expected_signals=("belief_challenge", "falsification"),
+                metadata={"profiles": ("causal_reasoning", "contradiction")},
+            ),
+            CalibrationObjective(
+                objective_id="scientific-hypothesis-water-quality",
+                capability="scientific_reasoning",
+                task_type="research",
+                prompt=(
+                    "A city observes intermittent water quality failures after heavy "
+                    "rain. Generate two hypotheses, predict distinct observations for "
+                    "each, and describe the evidence that would revise confidence."
+                ),
+                required_capabilities=("scientific_reasoning", "prediction", "evidence"),
+                expected_signals=("hypothesis_generation", "prediction_pressure"),
+                metadata={"profiles": ("scientific_reasoning",)},
+            ),
+            CalibrationObjective(
+                objective_id="scientific-hypothesis-battery-degradation",
+                capability="scientific_reasoning",
+                task_type="research",
+                prompt=(
+                    "Battery packs from one production batch degrade early while "
+                    "others do not. Form a hypothesis, identify a control comparison, "
+                    "and state what result would falsify the hypothesis."
+                ),
+                required_capabilities=("scientific_reasoning", "prediction", "reasoning"),
+                expected_signals=("hypothesis_generation", "falsification"),
+                metadata={"profiles": ("scientific_reasoning",)},
+            ),
+            CalibrationObjective(
+                objective_id="tool-use-log-triage",
+                capability="tool_use",
+                task_type="planning",
+                prompt=(
+                    "Given an incident report with missing timestamps, plan which logs "
+                    "to inspect first, what evidence each log can provide, and how the "
+                    "plan changes if the first log contradicts the report."
+                ),
+                required_capabilities=("tool_use", "planning", "contradiction"),
+                expected_signals=("tool_selection", "contradiction_resolution"),
+                metadata={"profiles": ("tool_use", "planning")},
+            ),
+            CalibrationObjective(
+                objective_id="tool-use-invoice-audit",
+                capability="tool_use",
+                task_type="planning",
+                prompt=(
+                    "Plan an invoice audit using invoices, purchase orders, and email "
+                    "approvals. Predict the most likely mismatch and name the evidence "
+                    "that would resolve it."
+                ),
+                required_capabilities=("tool_use", "planning", "prediction"),
+                expected_signals=("tool_selection", "prediction_pressure"),
+                metadata={"profiles": ("tool_use",)},
+            ),
+            CalibrationObjective(
+                objective_id="long-dependency-contract-change",
+                capability="long_dependency",
+                task_type="reasoning",
+                prompt=(
+                    "A contract change modifies delivery dates, which affects staffing, "
+                    "inspection timing, penalties, and customer communication. Trace the "
+                    "dependencies and predict which downstream belief should be revised first."
+                ),
+                required_capabilities=("long_dependency", "planning", "prediction"),
+                expected_signals=("dependency_reasoning", "belief_revision"),
+                metadata={"profiles": ("long_dependency", "planning")},
+            ),
+            CalibrationObjective(
+                objective_id="long-dependency-policy-exception",
+                capability="long_dependency",
+                task_type="reasoning",
+                prompt=(
+                    "A temporary policy exception conflicts with an older operating "
+                    "procedure, affects two teams, and expires next week. Preserve the "
+                    "dependency chain and identify what evidence determines which rule applies."
+                ),
+                required_capabilities=("long_dependency", "contradiction", "governance"),
+                expected_signals=("dependency_reasoning", "provenance"),
+                metadata={"profiles": ("long_dependency", "contradiction")},
             ),
         )
+        return (*seed_objectives, *generate_broad_corpus(minimum_per_profile=100))
 
     def _diversity_score(self, prompt: str, previous_prompts: Sequence[str]) -> float:
         tokens = self._tokens(prompt)

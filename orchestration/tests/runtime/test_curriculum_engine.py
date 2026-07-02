@@ -4,7 +4,9 @@ from orchestration.curriculum import (
     CalibrationCurriculumGenerator,
     CurriculumEngine,
     CurriculumPerformance,
+    broad_profile_names,
 )
+from orchestration.curriculum.broad_corpus import generate_broad_corpus
 from orchestration.evaluation import CognitiveEvaluationResult
 
 
@@ -88,9 +90,9 @@ def test_curriculum_derives_performance_from_evaluation_results():
 
 
 def test_calibration_curriculum_selects_high_pressure_experiences():
-    objectives = CalibrationCurriculumGenerator().generate(count=4)
+    objectives = CalibrationCurriculumGenerator().generate(count=25)
 
-    assert len(objectives) == 4
+    assert len(objectives) == 25
     assert all(item.calibration_score >= 0.4 for item in objectives)
     assert any(
         "prediction_pressure" in item.objective.expected_signals
@@ -121,3 +123,57 @@ def test_calibration_curriculum_penalizes_repetition():
     )
 
     assert repeated[0].objective.objective_id != first[0].objective.objective_id
+
+
+def test_calibration_curriculum_filters_profiles():
+    objectives = CalibrationCurriculumGenerator().generate(
+        count=6,
+        profiles=("scientific_reasoning",),
+    )
+
+    assert objectives
+    assert all(
+        item.objective.capability == "scientific_reasoning"
+        or "scientific_reasoning" in item.objective.metadata.get("profiles", ())
+        for item in objectives
+    )
+
+
+def test_calibration_curriculum_has_high_friction_profiles():
+    generator = CalibrationCurriculumGenerator()
+
+    for profile in (
+        "contradiction",
+        "planning",
+        "causal_reasoning",
+        "scientific_reasoning",
+        "tool_use",
+        "long_dependency",
+    ):
+        objectives = generator.generate(count=2, profiles=(profile,))
+        assert objectives, profile
+
+
+def test_broad_corpus_has_at_least_100_objectives_per_profile():
+    corpus = generate_broad_corpus(minimum_per_profile=100)
+
+    for profile in broad_profile_names():
+        matching = [
+            objective
+            for objective in corpus
+            if profile in objective.metadata.get("profiles", ())
+        ]
+        assert len(matching) >= 100, profile
+
+
+def test_calibration_curriculum_can_select_broad_profiles():
+    objectives = CalibrationCurriculumGenerator().generate(
+        count=25,
+        profiles=("probabilistic_reasoning", "systems_engineering"),
+    )
+
+    assert len(objectives) == 25
+    assert {
+        item.objective.metadata.get("profiles", ("",))[0]
+        for item in objectives
+    }.issubset({"probabilistic_reasoning", "systems_engineering"})
