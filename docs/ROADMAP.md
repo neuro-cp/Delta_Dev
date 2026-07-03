@@ -847,6 +847,41 @@ Recommended next phase:
 
 `PROCEED_CONTROLLED_LEARNING_REVIEW_WORKFLOW_OR_MANUAL_DEMO`
 
+## Runtime ARC I V3.2-V3.9 Cognitive Kernel Update
+
+Runtime ARC I unifies mature runtime scaffolds behind an orchestration-only
+Cognitive Kernel.
+
+Completed:
+
+- V3.2 Cognitive Kernel skeleton
+- V3.3 Runtime Message Bus
+- V3.4 Cognitive State object
+- V3.5 Cognitive Transaction Engine
+- V3.6 Unified Audit Graph
+- V3.7 Cognitive Capability Registry
+- V3.8 Dynamic Pipeline Builder
+- V3.9 Kernel Safety Checkpoint
+
+Kernel components:
+
+- Experience Manager
+- Evidence Manager
+- Recall Manager
+- Reasoning Manager
+- Learning Manager
+- Review Manager
+- Integration Manager
+- Safety Manager
+
+The kernel coordinates and audits only. It does not train, fine-tune, update
+weights, call providers, mutate memory, mutate recall, execute actions, start
+schedulers, promote HYB1, or change Model B defaults.
+
+ARC II preview:
+
+`PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN`
+
 ## Runtime V3.0 Natural Interaction And Guided Review UX Update
 
 Runtime V3.0 improves the local interaction surface without adding cognition or

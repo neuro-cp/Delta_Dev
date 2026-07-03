@@ -3550,6 +3550,50 @@ Next recommendation:
 
 `PROCEED_CONTROLLED_LEARNING_REVIEW_WORKFLOW_OR_MANUAL_DEMO`
 
+## Runtime ARC I V3.2-V3.9 Cognitive Kernel Runtime Orchestration
+
+Runtime ARC I completed the first unifying kernel layer over DELTA's mature
+runtime scaffolds.
+
+Generated artifacts:
+
+- `reports/runtime_v39_kernel_safety_checkpoint.md`
+- `reports/runtime_v39_kernel_safety_checkpoint.json`
+- `docs/runtime_arc_i_kernel_architecture.md`
+- `docs/runtime_arc_i_event_flow.md`
+- `docs/runtime_arc_i_registry.md`
+- `docs/runtime_arc_i_runtime_state.md`
+- `docs/runtime_arc_i_transaction_lifecycle.md`
+- `docs/runtime_arc_i_audit_graph.md`
+- `docs/runtime_arc_ii_knowledge_substrate_preview.md`
+- `docs/continuation_runtime_arc_i.md`
+
+New runtime objects:
+
+- `CognitiveKernel`
+- `KernelManager`
+- `KernelEvent`
+- `RuntimeMessageBus`
+- `RuntimeState`
+- `CognitiveTransaction`
+- `UnifiedAuditGraph`
+- `CapabilityRecord`
+- `CognitiveCapabilityRegistry`
+- `DynamicPipeline`
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, model artifact creation, provider authority,
+  provider calls, action execution, autonomous memory writes, hidden writes,
+  canonical memory mutation, authoritative recall, recall mutation,
+  scheduler/background worker activation, or live integration write occurred.
+
+Next recommendation:
+
+`PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN`
+
 ## Runtime V3.0 Natural Interaction, Explainability, And Guided Review UX
 
 Runtime V3.0 completed a presentation and observability pass over the V2.9 local

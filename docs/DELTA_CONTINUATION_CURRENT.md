@@ -48,6 +48,18 @@ promotion, and Model B default changes remain disabled.
 
 Current next recommendation: PROCEED_CONTROLLED_LEARNING_REVIEW_WORKFLOW_OR_MANUAL_DEMO
 
+Runtime ARC I V3.2-V3.9 is complete. DELTA now has an orchestration-only
+Cognitive Kernel, runtime event bus, unified RuntimeState snapshot, cognitive
+transaction lifecycle scaffold, unified audit graph, capability registry,
+dynamic pipeline builder, and kernel safety checkpoint.
+
+The kernel coordinates existing runtime components but does not add authority.
+No training, provider calls, provider authority, hidden writes, memory mutation,
+recall mutation, scheduler/background workers, action execution, HYB1
+promotion, or Model B default change occurred.
+
+Current next recommendation: PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN
+
 Runtime V3.0 is complete. It adds presentation-only natural interaction and
 explainability over the V2.9 local answer path: conversational answer modes,
 pipeline explanations, a static guided review console, manual demo scenarios,

@@ -1,0 +1,364 @@
+{
+  "actions": "disabled",
+  "arc": "ARC I cognitive kernel runtime orchestration",
+  "audit_graph": {
+    "edges": [
+      {
+        "relation": "feeds",
+        "source": "audit-node-53e5e7c5a8848937",
+        "target": "audit-node-ecd1378bc9dc1300"
+      },
+      {
+        "relation": "feeds",
+        "source": "audit-node-ecd1378bc9dc1300",
+        "target": "audit-node-c97ace4c8fef2cee"
+      },
+      {
+        "relation": "feeds",
+        "source": "audit-node-c97ace4c8fef2cee",
+        "target": "audit-node-c5fc37473005af64"
+      },
+      {
+        "relation": "feeds",
+        "source": "audit-node-c5fc37473005af64",
+        "target": "audit-node-da25480fb483e6ce"
+      },
+      {
+        "relation": "feeds",
+        "source": "audit-node-da25480fb483e6ce",
+        "target": "audit-node-0c4d01e81bb3d1fd"
+      }
+    ],
+    "graph_id": "audit-graph-e7371bdccac4d4c2",
+    "graph_only": true,
+    "nodes": [
+      {
+        "label": "Experience",
+        "node_id": "audit-node-53e5e7c5a8848937",
+        "node_type": "experience"
+      },
+      {
+        "label": "Proposal",
+        "node_id": "audit-node-ecd1378bc9dc1300",
+        "node_type": "proposal"
+      },
+      {
+        "label": "Review",
+        "node_id": "audit-node-c97ace4c8fef2cee",
+        "node_type": "review"
+      },
+      {
+        "label": "Integration Candidate",
+        "node_id": "audit-node-c5fc37473005af64",
+        "node_type": "integration_candidate"
+      },
+      {
+        "label": "Rollback",
+        "node_id": "audit-node-da25480fb483e6ce",
+        "node_type": "rollback"
+      },
+      {
+        "label": "Reasoning",
+        "node_id": "audit-node-0c4d01e81bb3d1fd",
+        "node_type": "reasoning"
+      }
+    ]
+  },
+  "capability_registry": {
+    "kernel_managers": [
+      "ExperienceManager",
+      "EvidenceManager",
+      "RecallManager",
+      "ReasoningManager",
+      "LearningManager",
+      "ReviewManager",
+      "IntegrationManager",
+      "SafetyManager"
+    ],
+    "phase": "Runtime V3.7",
+    "records": [
+      {
+        "active": true,
+        "authority": "orchestration_only",
+        "capability": "self_description",
+        "handler": "ReasoningManager",
+        "mutating": false
+      },
+      {
+        "active": true,
+        "authority": "orchestration_only",
+        "capability": "pipeline_explanation",
+        "handler": "ReasoningManager",
+        "mutating": false
+      },
+      {
+        "active": true,
+        "authority": "orchestration_only",
+        "capability": "learning_opportunity_detection",
+        "handler": "LearningManager",
+        "mutating": false
+      },
+      {
+        "active": true,
+        "authority": "orchestration_only",
+        "capability": "learning_review",
+        "handler": "ReviewManager",
+        "mutating": false
+      },
+      {
+        "active": true,
+        "authority": "orchestration_only",
+        "capability": "gated_integration_scaffold",
+        "handler": "IntegrationManager",
+        "mutating": false
+      },
+      {
+        "active": false,
+        "authority": "orchestration_only",
+        "capability": "provider_call",
+        "handler": "SafetyManager",
+        "mutating": false
+      },
+      {
+        "active": false,
+        "authority": "orchestration_only",
+        "capability": "training",
+        "handler": "SafetyManager",
+        "mutating": false
+      },
+      {
+        "active": false,
+        "authority": "orchestration_only",
+        "capability": "action_execution",
+        "handler": "SafetyManager",
+        "mutating": false
+      },
+      {
+        "active": false,
+        "authority": "orchestration_only",
+        "capability": "scheduler_activation",
+        "handler": "SafetyManager",
+        "mutating": false
+      }
+    ]
+  },
+  "dynamic_pipeline": {
+    "mutation_allowed": false,
+    "provider_required": false,
+    "request": "What should DELTA learn and explain routing?",
+    "steps": [
+      {
+        "active": true,
+        "capability": "self_description",
+        "handler": "ReasoningManager",
+        "mutating": false,
+        "step_id": "pipeline-step-1"
+      },
+      {
+        "active": true,
+        "capability": "pipeline_explanation",
+        "handler": "ReasoningManager",
+        "mutating": false,
+        "step_id": "pipeline-step-2"
+      },
+      {
+        "active": true,
+        "capability": "learning_opportunity_detection",
+        "handler": "LearningManager",
+        "mutating": false,
+        "step_id": "pipeline-step-3"
+      },
+      {
+        "active": true,
+        "capability": "learning_review",
+        "handler": "ReviewManager",
+        "mutating": false,
+        "step_id": "pipeline-step-4"
+      },
+      {
+        "active": true,
+        "capability": "gated_integration_scaffold",
+        "handler": "IntegrationManager",
+        "mutating": false,
+        "step_id": "pipeline-step-5"
+      }
+    ]
+  },
+  "event_flow": {
+    "events": [
+      {
+        "event_id": "kernel-event-e9d2cfbd8e993f73",
+        "event_type": "experience.observed",
+        "mutating": false,
+        "payload": {
+          "input": "What is DELTA?"
+        },
+        "source": "Kernel",
+        "target": "ExperienceManager"
+      },
+      {
+        "event_id": "kernel-event-80e19b5801cc5063",
+        "event_type": "learning.opportunity.detected",
+        "mutating": false,
+        "payload": {
+          "eligible_for_learning": false
+        },
+        "source": "ExperienceManager",
+        "target": "LearningManager"
+      },
+      {
+        "event_id": "kernel-event-2fb58a3ef7f0ebc8",
+        "event_type": "review.requested",
+        "mutating": false,
+        "payload": {
+          "requires_review": true
+        },
+        "source": "LearningManager",
+        "target": "ReviewManager"
+      }
+    ],
+    "mutations_performed": false,
+    "phase": "Runtime V3.3"
+  },
+  "final_recommendation": "PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN",
+  "hidden_memory": "disabled",
+  "hyb1": "dormant_env_gated_shadow_only",
+  "integration_writes": "disabled",
+  "kernel": {
+    "action_execution_performed": false,
+    "kernel_role": "orchestration_only",
+    "managers": [
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "ExperienceManager",
+        "responsibility": "experience capture and boundary review"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "EvidenceManager",
+        "responsibility": "evidence provenance and support inspection"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "RecallManager",
+        "responsibility": "candidate-context recall coordination"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "ReasoningManager",
+        "responsibility": "local deterministic reasoning/explanation coordination"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "LearningManager",
+        "responsibility": "learning opportunity and proposal scaffolds"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "ReviewManager",
+        "responsibility": "human/admin review state coordination"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "IntegrationManager",
+        "responsibility": "gated integration event scaffolds and rollback handles"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "SafetyManager",
+        "responsibility": "invariant checks and stop conditions"
+      }
+    ],
+    "memory_mutation_performed": false,
+    "phase": "Runtime V3.2",
+    "provider_call_performed": false,
+    "training_performed": false
+  },
+  "model_b_default": "unchanged",
+  "phase": "Runtime V3.9",
+  "provider_authority": "disabled",
+  "runtime_state": {
+    "action_execution_performed": false,
+    "evidence": {
+      "authoritative": false,
+      "evidence_count": 1
+    },
+    "experience": {
+      "captured": true,
+      "current_input": "What should DELTA learn?"
+    },
+    "hyb1_promoted": false,
+    "learning": {
+      "integration_write_performed": false,
+      "opportunities": 1,
+      "proposals": 0
+    },
+    "memory": {
+      "candidate_context_only": true,
+      "memory_mutation_performed": false
+    },
+    "model_b_default_changed": false,
+    "provider_call_performed": false,
+    "reasoning": {
+      "explanation_available": true,
+      "provider_required": false
+    },
+    "review": {
+      "admin_approved": false,
+      "requires_review": true
+    },
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "scheduler": "disabled",
+  "training": "disabled",
+  "transaction_lifecycle": {
+    "live_mutation_performed": false,
+    "phase": "Runtime V3.5",
+    "transaction": {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "learning_proposal_review",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-658bd85db7f63448",
+      "validated": true
+    }
+  }
+}

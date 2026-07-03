@@ -544,3 +544,17 @@ Do not build isolated intelligence modules. Every new subsystem must participate
 in the canonical cognitive cycle through well-defined interfaces. If a subsystem
 cannot identify where it receives information from the cycle and where it
 contributes back into the cycle, reconsider its design.
+
+## Runtime ARC I Cognitive Kernel
+
+Runtime ARC I adds an orchestration-only Cognitive Kernel above the current
+runtime scaffolds. The kernel coordinates managers for experience, evidence,
+recall, reasoning, learning, review, integration, and safety. It centralizes
+routing, event flow, state snapshots, transaction lifecycle records, audit graph
+links, capability registry lookup, and dynamic pipeline assembly.
+
+The kernel is not a new authority source. It does not train, call providers,
+mutate memory, mutate recall, execute actions, start schedulers, promote HYB1,
+or change Model B defaults. Its purpose is cohesion: every cognitive operation
+should become inspectable through kernel events, runtime state, transactions,
+audit graph links, and safety checks before future substrate work begins.
