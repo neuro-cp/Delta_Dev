@@ -1,0 +1,215 @@
+{
+  "phase": "Runtime V2.4A",
+  "cases": [
+    {
+      "phase": "Runtime V2.4A",
+      "snapshot": {
+        "snapshot_id": "v24a-snapshot-cca8d4a07f2ab6c1",
+        "host": "127.0.0.1",
+        "routes": [
+          "/",
+          "/status",
+          "/ask",
+          "/recall",
+          "/synthesis",
+          "/candidates",
+          "/memory",
+          "/evidence",
+          "/evaluator",
+          "/scheduler",
+          "/hyb1",
+          "/safety",
+          "/exports"
+        ],
+        "html": "<!doctype html>\n<html>\n<head><meta charset=\"utf-8\"><title>DELTA Full Review Console</title></head>\n<body>\n<h1>DELTA Full Review Console</h1>\n<p>Localhost-only static snapshot. No hidden writes, provider calls, schedulers, training, action execution, or HYB1 activation.</p>\n<section id=\"home\"><h2>/</h2><p>Local review surface only.</p></section>\n<section id=\"status\"><h2>/status</h2><p>Local review surface only.</p></section>\n<section id=\"ask\"><h2>/ask</h2><p>Local review surface only.</p></section>\n<section id=\"recall\"><h2>/recall</h2><p>Local review surface only.</p></section>\n<section id=\"synthesis\"><h2>/synthesis</h2><p>Local review surface only.</p></section>\n<section id=\"candidates\"><h2>/candidates</h2><p>Local review surface only.</p></section>\n<section id=\"memory\"><h2>/memory</h2><p>Local review surface only.</p></section>\n<section id=\"evidence\"><h2>/evidence</h2><p>Local review surface only.</p></section>\n<section id=\"evaluator\"><h2>/evaluator</h2><p>Local review surface only.</p></section>\n<section id=\"scheduler\"><h2>/scheduler</h2><p>Local review surface only.</p></section>\n<section id=\"hyb1\"><h2>/hyb1</h2><p>Local review surface only.</p></section>\n<section id=\"safety\"><h2>/safety</h2><p>Local review surface only.</p></section>\n<section id=\"exports\"><h2>/exports</h2><p>Local review surface only.</p></section>\n</body>\n</html>\n",
+        "static_snapshot_path": "ui\\delta_full_review_console_static.html"
+      },
+      "bind_policy": {
+        "host": "127.0.0.1",
+        "localhost_only": true,
+        "external_bind_rejected": false
+      },
+      "sections": [
+        "status",
+        "ask",
+        "recall",
+        "synthesis",
+        "candidates",
+        "memory",
+        "evidence",
+        "evaluator",
+        "scheduler",
+        "hyb1",
+        "safety",
+        "exports"
+      ],
+      "decision": {
+        "page_rendered": true,
+        "server_started": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "recall_mutated": false,
+        "api_key_rendered": false
+      },
+      "invariant_flags": {
+        "localhost_full_review_console_enabled": true,
+        "localhost_only": true,
+        "server_started_by_import_or_test": false,
+        "external_bind_allowed": false,
+        "hidden_write_allowed": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_MEMORY_WRITE_UX_TRIAL"
+    },
+    {
+      "phase": "Runtime V2.4A",
+      "snapshot": {
+        "snapshot_id": "v24a-snapshot-6ef081ae806b8c74",
+        "host": "0.0.0.0",
+        "routes": [
+          "/",
+          "/status",
+          "/ask",
+          "/recall",
+          "/synthesis",
+          "/candidates",
+          "/memory",
+          "/evidence",
+          "/evaluator",
+          "/scheduler",
+          "/hyb1",
+          "/safety",
+          "/exports"
+        ],
+        "html": "<!doctype html>\n<html>\n<head><meta charset=\"utf-8\"><title>DELTA Full Review Console</title></head>\n<body>\n<h1>DELTA Full Review Console</h1>\n<p>Localhost-only static snapshot. No hidden writes, provider calls, schedulers, training, action execution, or HYB1 activation.</p>\n<section id=\"home\"><h2>/</h2><p>Local review surface only.</p></section>\n<section id=\"status\"><h2>/status</h2><p>Local review surface only.</p></section>\n<section id=\"ask\"><h2>/ask</h2><p>Local review surface only.</p></section>\n<section id=\"recall\"><h2>/recall</h2><p>Local review surface only.</p></section>\n<section id=\"synthesis\"><h2>/synthesis</h2><p>Local review surface only.</p></section>\n<section id=\"candidates\"><h2>/candidates</h2><p>Local review surface only.</p></section>\n<section id=\"memory\"><h2>/memory</h2><p>Local review surface only.</p></section>\n<section id=\"evidence\"><h2>/evidence</h2><p>Local review surface only.</p></section>\n<section id=\"evaluator\"><h2>/evaluator</h2><p>Local review surface only.</p></section>\n<section id=\"scheduler\"><h2>/scheduler</h2><p>Local review surface only.</p></section>\n<section id=\"hyb1\"><h2>/hyb1</h2><p>Local review surface only.</p></section>\n<section id=\"safety\"><h2>/safety</h2><p>Local review surface only.</p></section>\n<section id=\"exports\"><h2>/exports</h2><p>Local review surface only.</p></section>\n</body>\n</html>\n",
+        "static_snapshot_path": "ui\\delta_full_review_console_static.html"
+      },
+      "bind_policy": {
+        "host": "0.0.0.0",
+        "localhost_only": true,
+        "external_bind_rejected": true
+      },
+      "sections": [
+        "status",
+        "ask",
+        "recall",
+        "synthesis",
+        "candidates",
+        "memory",
+        "evidence",
+        "evaluator",
+        "scheduler",
+        "hyb1",
+        "safety",
+        "exports"
+      ],
+      "decision": {
+        "page_rendered": true,
+        "server_started": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "recall_mutated": false,
+        "api_key_rendered": false
+      },
+      "invariant_flags": {
+        "localhost_full_review_console_enabled": true,
+        "localhost_only": true,
+        "server_started_by_import_or_test": false,
+        "external_bind_allowed": false,
+        "hidden_write_allowed": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_MEMORY_WRITE_UX_TRIAL"
+    },
+    {
+      "phase": "Runtime V2.4A",
+      "snapshot": {
+        "snapshot_id": "v24a-snapshot-cca8d4a07f2ab6c1",
+        "host": "127.0.0.1",
+        "routes": [
+          "/",
+          "/status",
+          "/ask",
+          "/recall",
+          "/synthesis",
+          "/candidates",
+          "/memory",
+          "/evidence",
+          "/evaluator",
+          "/scheduler",
+          "/hyb1",
+          "/safety",
+          "/exports"
+        ],
+        "html": "<!doctype html>\n<html>\n<head><meta charset=\"utf-8\"><title>DELTA Full Review Console</title></head>\n<body>\n<h1>DELTA Full Review Console</h1>\n<p>Localhost-only static snapshot. No hidden writes, provider calls, schedulers, training, action execution, or HYB1 activation.</p>\n<section id=\"home\"><h2>/</h2><p>Local review surface only.</p></section>\n<section id=\"status\"><h2>/status</h2><p>Local review surface only.</p></section>\n<section id=\"ask\"><h2>/ask</h2><p>Local review surface only.</p></section>\n<section id=\"recall\"><h2>/recall</h2><p>Local review surface only.</p></section>\n<section id=\"synthesis\"><h2>/synthesis</h2><p>Local review surface only.</p></section>\n<section id=\"candidates\"><h2>/candidates</h2><p>Local review surface only.</p></section>\n<section id=\"memory\"><h2>/memory</h2><p>Local review surface only.</p></section>\n<section id=\"evidence\"><h2>/evidence</h2><p>Local review surface only.</p></section>\n<section id=\"evaluator\"><h2>/evaluator</h2><p>Local review surface only.</p></section>\n<section id=\"scheduler\"><h2>/scheduler</h2><p>Local review surface only.</p></section>\n<section id=\"hyb1\"><h2>/hyb1</h2><p>Local review surface only.</p></section>\n<section id=\"safety\"><h2>/safety</h2><p>Local review surface only.</p></section>\n<section id=\"exports\"><h2>/exports</h2><p>Local review surface only.</p></section>\n</body>\n</html>\n",
+        "static_snapshot_path": "ui\\delta_full_review_console_static.html"
+      },
+      "bind_policy": {
+        "host": "127.0.0.1",
+        "localhost_only": true,
+        "external_bind_rejected": false
+      },
+      "sections": [
+        "status",
+        "ask",
+        "recall",
+        "synthesis",
+        "candidates",
+        "memory",
+        "evidence",
+        "evaluator",
+        "scheduler",
+        "hyb1",
+        "safety",
+        "exports"
+      ],
+      "decision": {
+        "page_rendered": true,
+        "server_started": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "recall_mutated": false,
+        "api_key_rendered": false,
+        "static_snapshot_written": true
+      },
+      "invariant_flags": {
+        "localhost_full_review_console_enabled": true,
+        "localhost_only": true,
+        "server_started_by_import_or_test": false,
+        "external_bind_allowed": false,
+        "hidden_write_allowed": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_MEMORY_WRITE_UX_TRIAL"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CONTROLLED_MEMORY_WRITE_UX_TRIAL"
+}

@@ -1,0 +1,3 @@
+Runtime V2.4A - Localhost Full Review Console UX.
+Create a localhost-only, static-renderable review console that unifies current safe DELTA workflows without hidden writes, provider calls, scheduler starts, recall mutation, training, action execution, API key rendering, or HYB1 activation.
+

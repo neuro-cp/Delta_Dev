@@ -6,6 +6,44 @@ file before making changes.
 
 ## 2026-07-02
 
+### Runtime V2.4A-V2.4F Localhost Full Review Console UX And Controlled UX Trials
+
+Completed Runtime V2.4A through V2.4F after the V2.3 safety checkpoint.
+The run added a localhost full review console UX, controlled memory write UX
+trial, controlled recall answer UX trial, provider-assisted unknown answer UX
+trial, evaluator-reviewed consolidation UX trial, and a V2.4 safety closure
+report.
+
+Generated reports:
+
+- `reports/runtime_v24a_localhost_full_review_console_ux.md`
+- `reports/runtime_v24b_controlled_memory_write_ux_trial.md`
+- `reports/runtime_v24c_controlled_recall_answer_ux_trial.md`
+- `reports/runtime_v24d_provider_assisted_unknown_answer_ux_trial.md`
+- `reports/runtime_v24e_evaluator_reviewed_consolidation_ux_trial.md`
+- `reports/runtime_v24f_v24_safety_closure_report.md`
+- `reports/runtime_v24a_v24f_marathon_summary.md`
+
+Local entrypoints:
+
+- `scripts/run_delta_full_console.py`
+- `scripts/delta_memory_write_ux.py`
+- `scripts/delta_recall_answer_ux.py`
+- `scripts/delta_provider_unknown_ux.py`
+- `scripts/delta_consolidation_ux.py`
+
+Final verification collected `700` runtime tests and passed `700`. Model B
+remains the default, HYB1 remains dormant/env-gated, localhost UX performs no
+hidden writes, controlled memory write UX requires exact structured approval,
+controlled recall answer UX remains candidate-context only, provider-assisted
+unknown answer UX remains gated and evidence-only, evaluator-reviewed
+consolidation UX remains advisory-only, training remains disabled, no action
+execution occurred, no autonomous memory write occurred, no recall mutation
+occurred, and no unapproved scheduler/background worker was started.
+
+Final recommendation:
+`PROCEED_TRAINING_READINESS_AUDIT_OR_FEATURE_ACTIVATION_READINESS_MATRIX`.
+
 ### Runtime V2.3A-V2.3F HYB1 Shadow, UI Write Bridge, Recall Synthesis, Provider Candidate, And Scheduler Dry-Run
 
 Completed Runtime V2.3A through V2.3F after the V2.2 safety closure.

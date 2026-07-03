@@ -1,0 +1,3 @@
+Runtime V2.4E - Evaluator-Reviewed Consolidation UX Trial.
+Display evaluator-reviewed consolidation as advisory UX only. Evaluator output cannot approve, write, delete, consolidate, train, mutate recall, execute actions, or activate HYB1.
+

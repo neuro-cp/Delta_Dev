@@ -2,22 +2,23 @@
 
 ## Current Phase
 
-Runtime V2.4: Localhost Full Review Console UX
+Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
 `docs/INVARIANTS.md`, then `docs/UPDATE.md` before continuing implementation.
 
-Runtime V2.3A through V2.3F are complete. DELTA now has HYB1 shadow trial
-simulation, localhost UI candidate write execution bridge, controlled
-recall-to-synthesis integration, provider evidence live-to-candidate trial,
-daily evaluator scheduled dry-run trial, and a V2.3 safety checkpoint.
+Runtime V2.4A through V2.4F are complete. DELTA now has a localhost full review
+console UX, controlled memory write UX trial, controlled recall answer UX trial,
+provider-assisted unknown answer UX trial, evaluator-reviewed consolidation UX
+trial, and a V2.4 safety closure checkpoint.
 
-The next recommended phase is V2.4A Localhost Full Review Console UX. Preserve
-the V2.3 safety boundary: HYB1 shadow simulation is not HYB1 promotion,
-localhost UI write execution requires exact structured approval, memory
-candidates are not truth, controlled recall is not authority, provider/evaluator
-/specialist output remains evidence-only, scheduler dry-run is not OS scheduler
-activation, and no output becomes canonical memory without explicit approval.
+The next recommended phase is either V2.5A Training Readiness Audit,
+Report-Only or V2.5B Feature Activation Readiness Matrix. Preserve the V2.4
+safety boundary: localhost UX is an operating surface, not autonomous authority;
+memory writes require exact structured approval; controlled recall is not
+authority; provider/evaluator/specialist output remains evidence-only or
+advisory-only; and training remains disabled until a separate explicit
+readiness and approval path exists.
 
 Active guardrails:
 
@@ -27,7 +28,7 @@ Active guardrails:
 - Do not treat controlled recall as authoritative memory.
 - Do not create autonomous memory writes.
 - Do not make provider, evaluator, or specialist outputs authoritative.
-- Treat `reports/runtime_v23a_v23f_marathon_summary.md` as the current V2.3
+- Treat `reports/runtime_v24a_v24f_marathon_summary.md` as the current V2.4
   checkpoint.
 
 ## Core Cognitive Cycle

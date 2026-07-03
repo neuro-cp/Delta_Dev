@@ -1,0 +1,260 @@
+{
+  "phase": "Runtime V2.4C",
+  "cases": [
+    {
+      "phase": "Runtime V2.4C",
+      "request": {
+        "request_id": "v23c-request-7dcaa3ed10befa3c",
+        "query": "What does DELTA know about HYB1?",
+        "use_recall": true
+      },
+      "local_answer": {
+        "route_id": "local-knowledge-route-dd93cd6185416789",
+        "user_message": "What does DELTA know about HYB1?",
+        "matched": true,
+        "topic_id": "hyb1_status",
+        "answer": {
+          "answer_id": "local-knowledge-answer-a6e2ae0dcf6e0422",
+          "topic_id": "hyb1_status",
+          "answer_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+          "confidence_label": "local_report_summary",
+          "source_summary": "Runtime V1.3 HYB1 dormant prototype validation and invariants",
+          "provider_required": false,
+          "memory_required": false,
+          "training_required": false,
+          "action_required": false,
+          "deterministic_local": true
+        },
+        "matched_keywords": [
+          "hyb1"
+        ],
+        "safety_status_id": "local-knowledge-router-safety-10ef4f557e12aa80",
+        "unsupported_reason": ""
+      },
+      "recall_context": {
+        "phase": "Runtime V2.2B",
+        "query": "What does DELTA know about HYB1?",
+        "source_policy": {
+          "allowed_sources": [
+            "data\\runtime_v15i\\canonical_memory_trial_records.jsonl",
+            "data\\runtime_v20c\\controlled_general_memory_records.jsonl",
+            "data\\runtime_v21b\\expanded_controlled_memory_records.jsonl",
+            "local_static_knowledge"
+          ],
+          "disallowed": [
+            "rejected",
+            "deferred",
+            "rolled_back",
+            "raw_provider_output",
+            "raw_session_text"
+          ]
+        },
+        "candidates": [
+          {
+            "candidate_id": "v15i-canonical-trial-record-f97e30a731f4638c",
+            "text": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+            "source_kind": "controlled_memory_record",
+            "source_path": "data\\runtime_v15i\\canonical_memory_trial_records.jsonl",
+            "provenance": [
+              "feedback-interaction-c7e90ca8adc975f4",
+              "feedback-signal-64cc56d12f2395d6"
+            ],
+            "advisory_only": false,
+            "ranking_score": 1,
+            "rank": 1,
+            "candidate_context_only": true,
+            "authoritative": false,
+            "truth_claim": false
+          },
+          {
+            "candidate_id": "v22b-local-4a53e44503f30126",
+            "text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+            "source_kind": "local_static_knowledge",
+            "source_path": "orchestration.runtime.v15_local_knowledge_router",
+            "provenance": [
+              "Runtime V1.3 HYB1 dormant prototype validation and invariants"
+            ],
+            "advisory_only": true,
+            "ranking_score": 1,
+            "rank": 2,
+            "candidate_context_only": true,
+            "authoritative": false,
+            "truth_claim": false
+          }
+        ],
+        "candidate_count": 2,
+        "max_candidates": 5,
+        "ranking_explanation": [],
+        "invariant_flags": {
+          "controlled_general_recall_expansion_enabled": true,
+          "candidate_context_only": true,
+          "authoritative_recall_enabled": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "provider_call_performed": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_TO_MEMORY_CANDIDATE_CONVERSION"
+      },
+      "evidence_items": [
+        {
+          "candidate_id": "v15i-canonical-trial-record-f97e30a731f4638c",
+          "text": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+          "provenance": [
+            "feedback-interaction-c7e90ca8adc975f4",
+            "feedback-signal-64cc56d12f2395d6"
+          ],
+          "candidate_context_only": true,
+          "authoritative": false,
+          "truth_claim": false
+        },
+        {
+          "candidate_id": "v22b-local-4a53e44503f30126",
+          "text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+          "provenance": [
+            "Runtime V1.3 HYB1 dormant prototype validation and invariants"
+          ],
+          "candidate_context_only": true,
+          "authoritative": false,
+          "truth_claim": false
+        }
+      ],
+      "draft": {
+        "draft_id": "v23c-draft-e78226dd32fb49b8",
+        "answer_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+        "uses_candidate_context": true,
+        "grounded": true,
+        "provider_required": false
+      },
+      "conflict_note": {
+        "has_conflict": false,
+        "note": ""
+      },
+      "decision": {
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "recall_answer_ux_trial_enabled": true,
+        "candidate_context_only": true,
+        "authoritative_recall_enabled": false,
+        "truth_claim_from_recall": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_UX_TRIAL",
+      "ux": {
+        "shows_provenance": true,
+        "shows_uncertainty": true,
+        "candidate_context_labels_visible": true
+      }
+    },
+    {
+      "phase": "Runtime V2.4C",
+      "request": {
+        "request_id": "v23c-request-433e97b69874155b",
+        "query": "unknown unlikely topic",
+        "use_recall": true
+      },
+      "local_answer": {
+        "route_id": "local-knowledge-route-080546d9f07c00bc",
+        "user_message": "unknown unlikely topic",
+        "matched": false,
+        "topic_id": "unsupported",
+        "answer": null,
+        "matched_keywords": [],
+        "safety_status_id": "local-knowledge-router-safety-b8c752d1972a02f0",
+        "unsupported_reason": "I cannot answer that from the local DELTA scaffold yet. I can answer repo-local questions about DELTA's runtime scaffold, phase history, safety boundaries, and local reports, but provider calls, active recall, memory writes, action execution, training, and HYB1 default activation remain disabled."
+      },
+      "recall_context": {
+        "phase": "Runtime V2.2B",
+        "query": "unknown unlikely topic",
+        "source_policy": {
+          "allowed_sources": [
+            "data\\runtime_v15i\\canonical_memory_trial_records.jsonl",
+            "data\\runtime_v20c\\controlled_general_memory_records.jsonl",
+            "data\\runtime_v21b\\expanded_controlled_memory_records.jsonl",
+            "local_static_knowledge"
+          ],
+          "disallowed": [
+            "rejected",
+            "deferred",
+            "rolled_back",
+            "raw_provider_output",
+            "raw_session_text"
+          ]
+        },
+        "candidates": [],
+        "candidate_count": 0,
+        "max_candidates": 5,
+        "ranking_explanation": [],
+        "invariant_flags": {
+          "controlled_general_recall_expansion_enabled": true,
+          "candidate_context_only": true,
+          "authoritative_recall_enabled": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "provider_call_performed": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_TO_MEMORY_CANDIDATE_CONVERSION"
+      },
+      "evidence_items": [],
+      "draft": {
+        "draft_id": "v23c-draft-78f751041939608f",
+        "answer_text": "I do not have sufficient governed local evidence to answer directly.",
+        "uses_candidate_context": false,
+        "grounded": true,
+        "provider_required": false
+      },
+      "conflict_note": {
+        "has_conflict": false,
+        "note": ""
+      },
+      "decision": {
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "recall_answer_ux_trial_enabled": true,
+        "candidate_context_only": true,
+        "authoritative_recall_enabled": false,
+        "truth_claim_from_recall": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_UX_TRIAL",
+      "ux": {
+        "shows_provenance": true,
+        "shows_uncertainty": true,
+        "candidate_context_labels_visible": true
+      }
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_UX_TRIAL"
+}

@@ -1,0 +1,3 @@
+Runtime V2.4D - Provider-Assisted Unknown Answer UX Trial.
+Expose gated provider-assisted unknown answering as evidence-only UX. Known local questions do not use provider; live calls require exact approval, env gates, and explicit live flag.
+

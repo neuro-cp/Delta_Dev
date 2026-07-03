@@ -1,0 +1,249 @@
+{
+  "phase": "Runtime V2.4D",
+  "cases": [
+    {
+      "phase": "Runtime V2.4D",
+      "local_answer": {
+        "route_id": "local-knowledge-route-dd93cd6185416789",
+        "user_message": "What does DELTA know about HYB1?",
+        "matched": true,
+        "topic_id": "hyb1_status",
+        "answer": {
+          "answer_id": "local-knowledge-answer-a6e2ae0dcf6e0422",
+          "topic_id": "hyb1_status",
+          "answer_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+          "confidence_label": "local_report_summary",
+          "source_summary": "Runtime V1.3 HYB1 dormant prototype validation and invariants",
+          "provider_required": false,
+          "memory_required": false,
+          "training_required": false,
+          "action_required": false,
+          "deterministic_local": true
+        },
+        "matched_keywords": [
+          "hyb1"
+        ],
+        "safety_status_id": "local-knowledge-router-safety-10ef4f557e12aa80",
+        "unsupported_reason": ""
+      },
+      "approval": {
+        "approval_present": false,
+        "matches_required_shape": false
+      },
+      "provider_trial": null,
+      "blocks": [
+        "known_local_question"
+      ],
+      "redaction": {
+        "api_key_redacted": true,
+        "api_key_rendered": false
+      },
+      "decision": {
+        "provider_call_performed": false,
+        "provider_answer_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "provider_unknown_answer_ux_trial_enabled": true,
+        "dry_run_default": true,
+        "provider_output_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_EVALUATOR_REVIEWED_CONSOLIDATION_UX_TRIAL"
+    },
+    {
+      "phase": "Runtime V2.4D",
+      "local_answer": {
+        "route_id": "local-knowledge-route-1b3c46ac6a419b3a",
+        "user_message": "unknown topic",
+        "matched": false,
+        "topic_id": "unsupported",
+        "answer": null,
+        "matched_keywords": [],
+        "safety_status_id": "local-knowledge-router-safety-67b7a6bf8e0de785",
+        "unsupported_reason": "I cannot answer that from the local DELTA scaffold yet. I can answer repo-local questions about DELTA's runtime scaffold, phase history, safety boundaries, and local reports, but provider calls, active recall, memory writes, action execution, training, and HYB1 default activation remain disabled."
+      },
+      "approval": {
+        "approval_present": false,
+        "matches_required_shape": false
+      },
+      "provider_trial": {
+        "phase": "Runtime V2.1C",
+        "request": {
+          "request_id": "v21c-request-5e56cf82676d0860",
+          "question": "unknown topic",
+          "live_provider": false
+        },
+        "approval": {
+          "header": "",
+          "line_count": 0,
+          "matches_required_shape": false
+        },
+        "gate": {
+          "gate_id": "v21c-gate-90eb85ee47f35fc3",
+          "permitted": false,
+          "blocks": [
+            "dry_run_no_live_provider"
+          ]
+        },
+        "redacted_request": {
+          "api_key_present": true,
+          "api_key_redacted": true
+        },
+        "provider_evidence_packet": null,
+        "decision": {
+          "decision_id": "v21c-decision-fdc62e0a01a46505",
+          "provider_call_performed": false,
+          "provider_answer_authoritative": false,
+          "evidence_only": true
+        },
+        "invariant_flags": {
+          "user_approved_provider_live_trial_enabled": true,
+          "dry_run_default": true,
+          "provider_response_authoritative": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULER_ACTIVATION_USER_APPROVED"
+      },
+      "blocks": [
+        "dry_run_no_live_provider"
+      ],
+      "redaction": {
+        "api_key_redacted": true,
+        "api_key_rendered": false
+      },
+      "decision": {
+        "provider_call_performed": false,
+        "provider_answer_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "provider_unknown_answer_ux_trial_enabled": true,
+        "dry_run_default": true,
+        "provider_output_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_EVALUATOR_REVIEWED_CONSOLIDATION_UX_TRIAL"
+    },
+    {
+      "phase": "Runtime V2.4D",
+      "local_answer": {
+        "route_id": "local-knowledge-route-1b3c46ac6a419b3a",
+        "user_message": "unknown topic",
+        "matched": false,
+        "topic_id": "unsupported",
+        "answer": null,
+        "matched_keywords": [],
+        "safety_status_id": "local-knowledge-router-safety-67b7a6bf8e0de785",
+        "unsupported_reason": "I cannot answer that from the local DELTA scaffold yet. I can answer repo-local questions about DELTA's runtime scaffold, phase history, safety boundaries, and local reports, but provider calls, active recall, memory writes, action execution, training, and HYB1 default activation remain disabled."
+      },
+      "approval": {
+        "approval_present": true,
+        "matches_required_shape": true
+      },
+      "provider_trial": {
+        "phase": "Runtime V2.1C",
+        "request": {
+          "request_id": "v21c-request-af5c5c6f159a6533",
+          "question": "unknown topic",
+          "live_provider": true
+        },
+        "approval": {
+          "header": "APPROVE_PROVIDER_LIVE_TRIAL",
+          "line_count": 3,
+          "approved_by": "user",
+          "trial_scope": "single_unknown_question_only",
+          "matches_required_shape": true
+        },
+        "gate": {
+          "gate_id": "v21c-gate-d3df18b61c3e2c37",
+          "permitted": true,
+          "blocks": []
+        },
+        "redacted_request": {
+          "request_id": "v18f-redacted-67b7a6bf8e0de785",
+          "endpoint": "https://api.openai.com/v1/chat/completions",
+          "model": "gpt-4.1-mini",
+          "api_key_present": true,
+          "api_key_redacted": true
+        },
+        "provider_evidence_packet": {
+          "evidence_packet_id": "v18f-packet-3cfb02c6bdd97cf5",
+          "provider_text": "{\"answer_text\": \"Mock provider evidence only.\", \"provenance\": \"mock-v24d\", \"uncertainty\": \"unverified\"}",
+          "provenance": "manual one-shot provider live trial",
+          "authoritative": false,
+          "memory_candidate": false,
+          "uncertainty": "provider evidence only"
+        },
+        "decision": {
+          "decision_id": "v21c-decision-803491b98d274070",
+          "provider_call_performed": true,
+          "provider_answer_authoritative": false,
+          "evidence_only": true
+        },
+        "invariant_flags": {
+          "user_approved_provider_live_trial_enabled": true,
+          "dry_run_default": true,
+          "provider_response_authoritative": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULER_ACTIVATION_USER_APPROVED"
+      },
+      "blocks": [],
+      "redaction": {
+        "api_key_redacted": true,
+        "api_key_rendered": false
+      },
+      "decision": {
+        "provider_call_performed": true,
+        "provider_answer_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "provider_unknown_answer_ux_trial_enabled": true,
+        "dry_run_default": true,
+        "provider_output_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_EVALUATOR_REVIEWED_CONSOLIDATION_UX_TRIAL"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_EVALUATOR_REVIEWED_CONSOLIDATION_UX_TRIAL"
+}

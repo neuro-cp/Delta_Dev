@@ -1,0 +1,3 @@
+Runtime V2.4B - Controlled Memory Write UX Trial.
+Guide exact structured user approval for one controlled memory trial candidate only. Dry-run by default; no casual, bulk, hidden, provider, evaluator, training, action, recall, or HYB1 authority.
+
