@@ -1,0 +1,21 @@
+Runtime V1.4V - Promotion / Rollback Decision Design
+
+Purpose:
+Design inert promotion/rollback decision scaffolding for HYB1 after comparison against Model B.
+
+Boundaries:
+- promotion decision design is not promotion
+- rollback decision design is not rollback execution
+- HYB1 candidate is not default runtime
+- comparison improvement is not authority
+
+Safety:
+- Model B remains default
+- HYB1 remains dormant/env-gated
+- no promotion
+- no default change
+- no rollback execution
+- no training/provider/tool/action/memory/recall/scheduler path
+
+Expected final recommendation:
+PROCEED_FINAL_V14_SAFETY_CLOSURE_REPORT

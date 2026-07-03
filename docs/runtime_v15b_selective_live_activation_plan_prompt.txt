@@ -1,0 +1,13 @@
+Runtime V1.5B - Selective Live-Activation Plan
+
+Purpose:
+Choose the first safe integration target for future trial while keeping all gates closed by default.
+
+Selected target:
+runtime_console_message_preview
+
+Boundary:
+activation plan is not activation.
+
+Expected final recommendation:
+PROCEED_SINGLE_GATE_DRY_RUN_TRIAL_DESIGN

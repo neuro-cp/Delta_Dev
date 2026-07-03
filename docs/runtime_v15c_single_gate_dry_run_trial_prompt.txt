@@ -1,0 +1,10 @@
+Runtime V1.5C - Single-Gate Dry-Run Trial Design
+
+Purpose:
+Design the single gate for runtime_console_message_preview, without opening it or executing a trial.
+
+Starter question:
+What is DELTA's current replay and consolidation path?
+
+Expected final recommendation:
+PROCEED_FIRST_LIVE_INTERACTION_PATH_CONSOLE_ONLY

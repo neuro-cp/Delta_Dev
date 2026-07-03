@@ -1,0 +1,27 @@
+Runtime V1.5A - Integration Gate Design
+
+Purpose:
+Start V1.5 with inert integration gate scaffolding. Gates define prerequisites for possible future integration, but every gate remains closed by default.
+
+Boundaries:
+- integration gate design is not live integration
+- gate exists does not mean gate open
+- eligibility is not activation
+- selective path is not default behavior change
+
+Closed targets:
+- HYB1 runtime variant
+- recall bridge
+- canonical memory store
+- structural semantic adapter
+- raw experience adapter
+- active specialist routing
+- execution authorization
+- action ledger
+- dry-run action execution
+- training dataset export
+- offline evaluation harness
+- tiny training experiment
+
+Expected final recommendation:
+PROCEED_V15B_SELECTIVE_LIVE_ACTIVATION_PLAN_STILL_OFF_BY_DEFAULT

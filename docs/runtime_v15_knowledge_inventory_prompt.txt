@@ -1,0 +1,21 @@
+Runtime V1.5 Knowledge Inventory / Self-Inspection
+
+Purpose:
+Show what DELTA currently has access to as repo-local knowledge after the V1.4/V1.5 scaffold run.
+
+Boundaries:
+- do not claim the model was trained
+- do not claim Codex changed model weights
+- do not activate memory
+- do not activate recall
+- do not activate HYB1 by default
+- do not call providers
+
+Expected answer:
+- Codex did not train model weights.
+- DELTA has repo-local architectural/self-description knowledge.
+- DELTA can answer questions about its own scaffold, phase history, safety boundaries, and local reports.
+- DELTA cannot yet answer arbitrary world questions unless provider/model integration is later added.
+- Canonical memory remains inactive.
+- Training remains inactive.
+- HYB1 remains dormant/env-gated.

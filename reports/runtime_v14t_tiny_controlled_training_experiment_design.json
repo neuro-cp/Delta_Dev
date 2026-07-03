@@ -1,0 +1,253 @@
+{
+  "phase": "Runtime V1.4T",
+  "title": "Tiny Controlled Training Experiment Design",
+  "status": "tiny-training-experiment-design-only_no-training_no-artifact_no-promotion",
+  "final_recommendation": "PROCEED_TRAINED_ARTIFACT_COMPARISON_AGAINST_MODEL_B_DESIGN",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v14_tiny_training_experiment.py",
+    "orchestration/runtime/v14_tiny_training_experiment_report.py",
+    "tests/runtime_v14/test_v14_tiny_training_experiment_design.py",
+    "reports/runtime_v14t_tiny_controlled_training_experiment_design.md",
+    "reports/runtime_v14t_tiny_controlled_training_experiment_design.json",
+    "docs/runtime_v14t_tiny_controlled_training_experiment_prompt.txt"
+  ],
+  "design_summary": "Inert tiny training experiment candidate, scope, approval gate, run plan, artifact plan, evaluation gate, rollback requirement, decision, audit, and report-entry shapes.",
+  "pipeline_summary": "TinyTrainingExperimentCandidate -> TinyTrainingExperimentScope -> TinyTrainingExperimentApprovalGate -> TinyTrainingRunPlan -> TinyTrainingArtifactPlan -> TinyTrainingEvaluationGate -> TinyTrainingRollbackRequirement -> TinyTrainingExperimentDecision",
+  "invariant_flags": {
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "training_job_execution_enabled": false,
+    "dataset_export_enabled": false,
+    "active_dataset_write_enabled": false,
+    "artifact_creation_enabled": false,
+    "artifact_promotion_enabled": false,
+    "model_default_change_enabled": false,
+    "model_b_default_changed": false,
+    "active_runtime_variant_enabled": false,
+    "offline_evaluation_run_enabled": false,
+    "provider_calls_enabled": false,
+    "specialist_routing_enabled": false,
+    "action_execution_enabled": false,
+    "tool_calls_enabled": false,
+    "canonical_write_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "autonomous_learning_enabled": false,
+    "background_learning_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "candidate": {
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "experiment_summary": "future tiny offline experiment using reviewed runtime feedback candidates",
+    "purpose": "define gating required before any tiny controlled training experiment could be considered",
+    "source_dataset_candidate_id": "training-dataset-candidate-preview",
+    "source_training_candidate_ids": [
+      "learning-candidate-preview"
+    ],
+    "source_evaluation_case_set_ids": [
+      "runtime-v14s-case-set-preview"
+    ],
+    "provenance_reference_ids": [
+      "runtime-v14r-training-dataset-design",
+      "runtime-v14s-offline-evaluation-design"
+    ],
+    "human_approval_required": true,
+    "safety_review_required": true,
+    "baseline_comparison_required": true,
+    "rollback_required": true,
+    "active": false,
+    "training_enabled": false,
+    "training_ready": false,
+    "approved": false,
+    "executed": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "scope": {
+    "scope_id": "tiny-training-scope-8103173d43d19ed6",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "allowed_dataset_scope": "reviewed candidate examples only; no active export",
+    "allowed_model_scope": "non-default offline artifact preview only",
+    "allowed_runtime_scope": "offline comparison review only",
+    "max_example_count": 12,
+    "max_training_steps": 20,
+    "offline_only": true,
+    "live_runtime_allowed": false,
+    "model_default_change_allowed": false,
+    "provider_calls_allowed": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "approval_gate": {
+    "gate_id": "tiny-training-approval-gate-755e4a8e472513b6",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "required_approval_ids": [
+      "human-training-review"
+    ],
+    "required_safety_review_ids": [
+      "training-data-safety-review"
+    ],
+    "required_dataset_decision_ids": [
+      "training-export-decision"
+    ],
+    "required_evaluation_plan_ids": [
+      "pre-eval-plan",
+      "post-eval-plan"
+    ],
+    "human_approval_present": false,
+    "dataset_export_approved": false,
+    "safety_approved": false,
+    "evaluation_approved": false,
+    "gate_satisfied": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "run_plan": {
+    "training_run_plan_id": "tiny-training-run-plan-c91ebde74fe3a9ac",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "scope_id": "tiny-training-scope-8103173d43d19ed6",
+    "approval_gate_id": "tiny-training-approval-gate-755e4a8e472513b6",
+    "training_method": "no_training_review_only",
+    "dataset_reference_preview": "training-dataset-candidate-preview",
+    "output_artifact_preview": "no artifact created; future artifact preview only",
+    "required_pre_eval_plan_ids": [
+      "pre-eval-plan"
+    ],
+    "required_post_eval_plan_ids": [
+      "post-eval-plan"
+    ],
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "job_execution_enabled": false,
+    "dataset_export_enabled": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "artifact_plan": {
+    "artifact_plan_id": "tiny-training-artifact-plan-86cd68835f9d5373",
+    "training_run_plan_id": "tiny-training-run-plan-c91ebde74fe3a9ac",
+    "artifact_type": "model_adapter_preview",
+    "artifact_reference_preview": "future adapter preview placeholder",
+    "baseline_reference": "Model B default baseline",
+    "comparison_required": true,
+    "rollback_required": true,
+    "artifact_created": false,
+    "promoted": false,
+    "active_runtime_artifact": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "evaluation_gate": {
+    "evaluation_gate_id": "tiny-training-evaluation-gate-39679dd361648967",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "required_metric_ids": [
+      "no_mutation_guard",
+      "grounding_regression_guard"
+    ],
+    "minimum_safety_status": "human_review_required",
+    "regression_blockers": [
+      "unsupported_confident_answer",
+      "default_change"
+    ],
+    "pre_training_case_set_id": "runtime-v14s-case-set-preview",
+    "post_training_case_set_id": "future-post-training-case-set-preview",
+    "baseline_target_id": "runtime-v13-model-b",
+    "pre_eval_passed": false,
+    "post_eval_passed": false,
+    "promotion_allowed": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "rollback_requirement": {
+    "rollback_requirement_id": "tiny-training-rollback-requirement-699f93755ec00961",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "rollback_strategy": "versioned artifact rollback plan required before future execution",
+    "required_artifact_versioning": "immutable baseline and candidate artifact references",
+    "required_baseline_reference": "Model B default baseline",
+    "rollback_test_required": true,
+    "rollback_ready": false,
+    "rollback_executed": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "decision": {
+    "decision_id": "tiny-training-experiment-decision-fdfcd178c079d4ce",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "outcome": "requires_human_review",
+    "rationale": "tiny training experiment remains design-only until approvals, dataset export review, offline evaluation, and rollback requirements are satisfied",
+    "invariant_status": "all active training and mutation flags remain false",
+    "applied": false,
+    "training_triggered": false,
+    "artifact_created": false,
+    "promoted": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "audit": {
+    "audit_id": "tiny-training-audit-282f911691d3c3c2",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "source_reference_ids": [
+      "runtime-v14s-offline-evaluation-report",
+      "runtime-v14r-training-dataset-report"
+    ],
+    "audit_summary": "report-only tiny controlled training experiment design audit",
+    "run_plan_id": "tiny-training-run-plan-c91ebde74fe3a9ac",
+    "approval_gate_id": "tiny-training-approval-gate-755e4a8e472513b6",
+    "evaluation_gate_id": "tiny-training-evaluation-gate-39679dd361648967",
+    "rollback_requirement_id": "tiny-training-rollback-requirement-699f93755ec00961",
+    "decision_id": "tiny-training-experiment-decision-fdfcd178c079d4ce",
+    "generated_for_review_only": true,
+    "persisted_to_active_training_registry": false,
+    "training_triggered": false,
+    "artifact_created": false,
+    "promoted": false,
+    "created_at": "2026-07-03T02:48:10.006031+00:00"
+  },
+  "report_entry": {
+    "report_entry_id": "tiny-training-report-entry-a5a883c415fd251b",
+    "experiment_candidate_id": "tiny-training-experiment-candidate-db3e6af6c240ff2f",
+    "scope_summary": "offline-only; no default or live runtime scope",
+    "approval_summary": "unsatisfied approvals by default",
+    "run_plan_summary": "no training/fine-tuning/weight update/job execution/dataset export",
+    "artifact_summary": "artifact plan only; no artifact created or promoted",
+    "evaluation_summary": "evaluation gate only; no evaluation run or promotion",
+    "rollback_summary": "rollback requirement only; no rollback execution",
+    "decision_summary": "requires human review; not applied",
+    "unresolved_gaps": [
+      "human approval missing",
+      "dataset export review missing",
+      "offline evaluation review missing",
+      "rollback verification missing"
+    ],
+    "recommended_next_review_step": "design trained artifact comparison against Model B",
+    "generated_for_review_only": true
+  },
+  "safety_boundaries": [
+    "tiny training experiment design is not training",
+    "training run proposal is not training run",
+    "artifact candidate is not promoted model",
+    "rollback plan is not rollback execution",
+    "evaluation gate is not promotion",
+    "approval requirement is not approval",
+    "tiny experiment is not default change",
+    "offline plan is not live behavior"
+  ],
+  "inactive_systems": [
+    "training",
+    "fine-tuning",
+    "model weight updates",
+    "training job execution",
+    "dataset export",
+    "active dataset writes",
+    "artifact creation",
+    "artifact promotion",
+    "offline evaluation runs",
+    "provider calls",
+    "specialist routing",
+    "action execution",
+    "tool calls",
+    "canonical writes",
+    "memory mutation",
+    "runtime recall mutation",
+    "autonomous/background learning",
+    "schedulers/workers/queues",
+    "runtime default changes"
+  ],
+  "test_status": "run py_compile and tests/runtime_v14 to verify"
+}

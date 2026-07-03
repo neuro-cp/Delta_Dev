@@ -1,0 +1,57 @@
+Runtime V1.4U - Trained Artifact Comparison Against Model B Design
+
+Current checkpoint:
+- Runtime V1.4T tiny controlled training experiment design is complete.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+- No training, fine-tuning, model weight updates, dataset export, artifact creation/promotion, provider/tool calls, memory mutation, recall mutation, schedulers, or runtime behavior changes are active.
+
+V1.4U intent:
+Design inert comparison scaffolding for Model B baseline behavior against an upgraded candidate variant or artifact reference.
+
+Current upgraded variant reference:
+- HYB1 is the repo's existing dormant/env-gated upgraded runtime prototype.
+- HYB1 is enabled only by DELTA_RUNTIME_V13_HYB1_ENABLED.
+- V1.4U references HYB1 only as an inactive candidate; it does not activate it.
+
+Invariant language:
+- comparison is not promotion
+- candidate is not default
+- scorecard is not authority
+- baseline comparison is not runtime behavior change
+- artifact reference is not active artifact
+- evaluation result is not learned behavior
+- regression detection is not rollback execution
+- promotion eligibility is not approval
+
+Objects:
+- ArtifactComparisonTarget
+- ArtifactComparisonCase
+- ArtifactComparisonRunPlan
+- ArtifactComparisonMetric
+- ArtifactComparisonResultDraft
+- ArtifactComparisonScorecard
+- ArtifactRegressionFinding
+- ArtifactSafetyComparisonReview
+- ArtifactPromotionEligibilityReview
+- ArtifactComparisonDecision
+- ArtifactComparisonReportEntry
+
+Boundaries:
+- no comparison run activation
+- no provider calls
+- no training/fine-tuning/weight updates
+- no training job execution
+- no dataset export or active dataset writes
+- no artifact creation or promotion
+- no Model B default change
+- no HYB1 activation by default
+- no specialist routing
+- no action/tool execution
+- no memory/canonical mutation
+- no runtime recall mutation
+- no autonomous/background comparison
+- no scheduler/worker/queue
+
+Expected final recommendation:
+PROCEED_PROMOTION_ROLLBACK_DECISION_DESIGN

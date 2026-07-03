@@ -1,0 +1,493 @@
+{
+  "phase": "Runtime V1.5B",
+  "title": "Selective Live-Activation Plan",
+  "status": "activation-plan-only_no-activation_all-gates-closed",
+  "final_recommendation": "PROCEED_SINGLE_GATE_DRY_RUN_TRIAL_DESIGN",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v15_selective_activation_plan.py",
+    "orchestration/runtime/v15_selective_activation_plan_report.py",
+    "tests/runtime_v15/test_v15_selective_activation_plan.py",
+    "reports/runtime_v15b_selective_live_activation_plan.md",
+    "reports/runtime_v15b_selective_live_activation_plan.json",
+    "docs/runtime_v15b_selective_live_activation_plan_prompt.txt"
+  ],
+  "targets": [
+    {
+      "target_id": "selective-target-4a4d0473fca2c18b",
+      "target_name": "runtime_console_message_preview",
+      "target_type": "runtime_console_message_preview",
+      "source_phase": "V1.4 console",
+      "risk_level": "low",
+      "selected_for_first_trial": true,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-e97ce384e04d0549",
+      "target_name": "raw_experience_adapter_preview",
+      "target_type": "raw_experience_adapter_preview",
+      "source_phase": "V1.4M",
+      "risk_level": "low",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-8e7fcf6f08d25368",
+      "target_name": "structural_semantic_adapter_preview",
+      "target_type": "structural_semantic_adapter_preview",
+      "source_phase": "V1.4L",
+      "risk_level": "low",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-282b15c23cccdade",
+      "target_name": "hyb1_runtime_variant",
+      "target_type": "hyb1_runtime_variant",
+      "source_phase": "V1.4U/V",
+      "risk_level": "medium",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-63af46f861d998ce",
+      "target_name": "recall_bridge",
+      "target_type": "recall_bridge",
+      "source_phase": "V1.4K",
+      "risk_level": "high",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-0c6b9480c114c172",
+      "target_name": "canonical_memory_store",
+      "target_type": "canonical_memory_store",
+      "source_phase": "V1.4F",
+      "risk_level": "high",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-2520ab0943016dc6",
+      "target_name": "active_specialist_routing",
+      "target_type": "active_specialist_routing",
+      "source_phase": "V1.4N",
+      "risk_level": "high",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-c947932db0569af6",
+      "target_name": "action_execution",
+      "target_type": "action_execution",
+      "source_phase": "V1.4O/Q",
+      "risk_level": "blocked",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-f1865698f7912a16",
+      "target_name": "training_dataset_export",
+      "target_type": "training_dataset_export",
+      "source_phase": "V1.4R",
+      "risk_level": "blocked",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    },
+    {
+      "target_id": "selective-target-2fc778f6bc40772a",
+      "target_name": "provider_calling",
+      "target_type": "provider_calling",
+      "source_phase": "runtime",
+      "risk_level": "blocked",
+      "selected_for_first_trial": false,
+      "activation_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:10:01.699605+00:00"
+    }
+  ],
+  "prerequisites": [
+    {
+      "prerequisite_id": "selective-prereq-d3b185527c3f0329",
+      "target_id": "selective-target-4a4d0473fca2c18b",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": true,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-cf549f3af18dae39",
+      "target_id": "selective-target-e97ce384e04d0549",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-f16b0659de6802b4",
+      "target_id": "selective-target-8e7fcf6f08d25368",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-31991d660463e566",
+      "target_id": "selective-target-282b15c23cccdade",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-5061e23ea6aa3aac",
+      "target_id": "selective-target-63af46f861d998ce",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-c759c52ba38b8ad5",
+      "target_id": "selective-target-0c6b9480c114c172",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-bc1a82a1b5cb4c8b",
+      "target_id": "selective-target-2520ab0943016dc6",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-b3c2ad6412eea386",
+      "target_id": "selective-target-c947932db0569af6",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-a243ad98b14300f2",
+      "target_id": "selective-target-f1865698f7912a16",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    },
+    {
+      "prerequisite_id": "selective-prereq-e444166529558e53",
+      "target_id": "selective-target-2fc778f6bc40772a",
+      "prerequisite_type": "manual_only_required",
+      "rationale": "first live path must remain manual/local/deterministic",
+      "satisfied": false,
+      "required_before_activation": true
+    }
+  ],
+  "risk_reviews": [
+    {
+      "risk_review_id": "selective-risk-22e19de4bf5de48d",
+      "target_id": "selective-target-4a4d0473fca2c18b",
+      "risk_level": "low",
+      "allowed_trial_scope": [
+        "manual console preview"
+      ],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [],
+      "safe_for_first_trial": true,
+      "human_review_required": false
+    },
+    {
+      "risk_review_id": "selective-risk-2d89a52430470c58",
+      "target_id": "selective-target-e97ce384e04d0549",
+      "risk_level": "low",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-dc1eacd01b2f1be0",
+      "target_id": "selective-target-8e7fcf6f08d25368",
+      "risk_level": "low",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-6f0bed3908fcec07",
+      "target_id": "selective-target-282b15c23cccdade",
+      "risk_level": "medium",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-81963649a1b0f1dd",
+      "target_id": "selective-target-63af46f861d998ce",
+      "risk_level": "high",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-e71e7abf44fc87fd",
+      "target_id": "selective-target-0c6b9480c114c172",
+      "risk_level": "high",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-d48101748b6cf32f",
+      "target_id": "selective-target-2520ab0943016dc6",
+      "risk_level": "high",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-db4cbb755b8580b6",
+      "target_id": "selective-target-c947932db0569af6",
+      "risk_level": "blocked",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-8140cafecf8d6a32",
+      "target_id": "selective-target-f1865698f7912a16",
+      "risk_level": "blocked",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    },
+    {
+      "risk_review_id": "selective-risk-c457db27c1603917",
+      "target_id": "selective-target-2fc778f6bc40772a",
+      "risk_level": "blocked",
+      "allowed_trial_scope": [],
+      "blocked_capabilities": [
+        "provider_calls",
+        "memory_writes",
+        "actions",
+        "training",
+        "schedulers"
+      ],
+      "unresolved_gaps": [
+        "not selected for first trial"
+      ],
+      "safe_for_first_trial": false,
+      "human_review_required": true
+    }
+  ],
+  "activation_plan": {
+    "activation_plan_id": "selective-plan-df5a3f11e09e2367",
+    "selected_target_id": "selective-target-4a4d0473fca2c18b",
+    "allowed_components": [
+      "manual runtime console message preview",
+      "raw experience preview",
+      "semantic adapter preview",
+      "trace/safety output",
+      "deterministic local response preview"
+    ],
+    "blocked_components": [
+      "provider_calls",
+      "memory_writes",
+      "action_execution",
+      "hyb1_default_activation",
+      "training",
+      "specialist_routing",
+      "schedulers"
+    ],
+    "manual_only": true,
+    "local_only": true,
+    "deterministic_only": true,
+    "provider_calls_allowed": false,
+    "memory_writes_allowed": false,
+    "action_execution_allowed": false,
+    "hyb1_default_allowed": false,
+    "activation_enabled": false
+  },
+  "decision": {
+    "decision_id": "selective-decision-07a521f1eee5889e",
+    "selected_target_id": "selective-target-4a4d0473fca2c18b",
+    "outcome": "selected_for_single_gate_dry_run_design",
+    "rationale": "runtime console message preview is the only first-trial candidate and remains plan-only",
+    "applied": false,
+    "gate_opened": false,
+    "activation_enabled": false
+  },
+  "audit": {
+    "audit_id": "selective-audit-7c92bc8121be6835",
+    "activation_plan_id": "selective-plan-df5a3f11e09e2367",
+    "decision_id": "selective-decision-07a521f1eee5889e",
+    "audit_summary": "activation plan only; no gate opened",
+    "generated_for_review_only": true,
+    "activation_applied": false,
+    "gate_opened": false
+  },
+  "report_entry": {
+    "report_entry_id": "selective-entry-7c92bc8121be6835",
+    "selected_target_id": "selective-target-4a4d0473fca2c18b",
+    "plan_summary": "manual/local/deterministic runtime console preview selected",
+    "risk_summary": "lowest-risk target; all mutating capabilities blocked",
+    "decision_summary": "selected_for_single_gate_dry_run_design",
+    "blocked_capability_summary": "provider_calls, memory_writes, action_execution, hyb1_default_activation, training, specialist_routing, schedulers",
+    "recommended_next_review_step": "single-gate dry-run trial design",
+    "generated_for_review_only": true
+  },
+  "invariant_flags": {
+    "selective_activation_enabled": false,
+    "activation_applied": false,
+    "integration_gate_opened": false,
+    "runtime_console_preview_selected": true,
+    "provider_calls_enabled": false,
+    "memory_mutation_enabled": false,
+    "canonical_write_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false,
+    "specialist_routing_enabled": false,
+    "action_execution_enabled": false,
+    "training_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "inactive_systems": [
+    "provider calls",
+    "memory/canonical/recall mutation",
+    "HYB1 default activation",
+    "action execution",
+    "training",
+    "schedulers"
+  ],
+  "test_status": "run py_compile and tests/runtime_v14 tests/runtime_v15 to verify"
+}

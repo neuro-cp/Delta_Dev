@@ -1,0 +1,287 @@
+{
+  "phase": "Runtime V1.5A",
+  "title": "Integration Gate Design",
+  "status": "integration-gate-design-only_all-gates-closed_no-activation",
+  "final_recommendation": "PROCEED_V15B_SELECTIVE_LIVE_ACTIVATION_PLAN_STILL_OFF_BY_DEFAULT",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v15_integration_gate.py",
+    "orchestration/runtime/v15_integration_gate_report.py",
+    "tests/runtime_v15/test_v15_integration_gate_design.py",
+    "reports/runtime_v15a_integration_gate_design.md",
+    "reports/runtime_v15a_integration_gate_design.json",
+    "docs/runtime_v15a_integration_gate_prompt.txt"
+  ],
+  "target_capabilities": [
+    {
+      "target_id": "integration-target-5ee0631b69987dbc",
+      "target_name": "HYB1 runtime variant",
+      "target_type": "hyb1_runtime_variant",
+      "source_phase": "V1.4U/V1.4V",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-c2e59077841e4ec3",
+      "target_name": "recall bridge",
+      "target_type": "recall_bridge",
+      "source_phase": "V1.4K",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-9ba6b2fa4b02b2b5",
+      "target_name": "canonical memory store",
+      "target_type": "canonical_memory_store",
+      "source_phase": "V1.4F",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-9518a0c4d66a0bef",
+      "target_name": "structural semantic adapter",
+      "target_type": "structural_semantic_adapter",
+      "source_phase": "V1.4L",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-b342b2b1b6ba63d0",
+      "target_name": "raw experience adapter",
+      "target_type": "raw_experience_adapter",
+      "source_phase": "V1.4M",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-b1636d2fd1dfd4fc",
+      "target_name": "active specialist routing",
+      "target_type": "active_specialist_routing",
+      "source_phase": "V1.4N",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-691b0de2dcd69f35",
+      "target_name": "execution authorization",
+      "target_type": "execution_authorization",
+      "source_phase": "V1.4O",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-5d711798530bacc8",
+      "target_name": "action ledger",
+      "target_type": "action_ledger",
+      "source_phase": "V1.4P",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-a1aed3f13064dd3d",
+      "target_name": "dry-run action execution",
+      "target_type": "dry_run_action_execution",
+      "source_phase": "V1.4Q",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-ec80d47f37f63675",
+      "target_name": "training dataset export",
+      "target_type": "training_dataset_export",
+      "source_phase": "V1.4R",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-18e013c5102db3e2",
+      "target_name": "offline evaluation harness",
+      "target_type": "offline_evaluation_harness",
+      "source_phase": "V1.4S",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    },
+    {
+      "target_id": "integration-target-252efdcb15008e86",
+      "target_name": "tiny training experiment",
+      "target_type": "tiny_training_experiment",
+      "source_phase": "V1.4T",
+      "target_summary": "closed by default",
+      "integration_allowed": false,
+      "gate_open": false,
+      "active": false,
+      "default_change_allowed": false,
+      "created_at": "2026-07-03T03:07:10.782005+00:00"
+    }
+  ],
+  "prerequisite": {
+    "prerequisite_id": "integration-prerequisite-998e2a67bd13e1b9",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "prerequisite_type": "human_approval_required",
+    "rationale": "HYB1 cannot be activated without explicit human approval.",
+    "required_reference_id": "runtime-v14v-promotion-rollback-report",
+    "satisfied": false,
+    "created_at": "2026-07-03T03:07:10.782005+00:00"
+  },
+  "safety_gate": {
+    "safety_gate_id": "integration-safety-gate-8c94c7f087743bdb",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "invariant_requirements": [
+      "model_b_default_changed=false",
+      "hyb1_default_activation_enabled=false"
+    ],
+    "unresolved_gaps": [
+      "human approval missing",
+      "future trial design missing"
+    ],
+    "blocked_capabilities": [
+      "default_change",
+      "runtime_activation"
+    ],
+    "gate_status": "closed_by_default",
+    "gate_open": false,
+    "activation_allowed": false,
+    "created_at": "2026-07-03T03:07:10.782005+00:00"
+  },
+  "activation_request": {
+    "request_id": "integration-request-955870eda057c7c7",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "requested_mode": "future_trial_design",
+    "requester_summary": "operator review placeholder",
+    "justification": "future trial design only",
+    "human_approval_present": false,
+    "dry_run_only": true,
+    "activation_requested": false,
+    "activation_applied": false,
+    "created_at": "2026-07-03T03:07:10.782005+00:00"
+  },
+  "decision": {
+    "decision_id": "integration-decision-95782978152e29da",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "outcome": "keep_closed",
+    "rationale": "all V1.5A gates remain closed by default",
+    "request_id": "integration-request-955870eda057c7c7",
+    "applied": false,
+    "gate_opened": false,
+    "activation_enabled": false,
+    "default_changed": false,
+    "created_at": "2026-07-03T03:07:10.782005+00:00"
+  },
+  "rollback_requirement": {
+    "rollback_requirement_id": "integration-rollback-8d519267dbcc53d8",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "rollback_strategy": "restore Model B default before any future trial",
+    "required_before_activation": true,
+    "rollback_ready": false,
+    "rollback_executed": false,
+    "created_at": "2026-07-03T03:07:10.782005+00:00"
+  },
+  "audit": {
+    "audit_id": "integration-audit-a2690b2f6a019dad",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "prerequisite_ids": [
+      "integration-prerequisite-998e2a67bd13e1b9"
+    ],
+    "audit_summary": "integration gate design only; no gate opened",
+    "decision_id": "integration-decision-95782978152e29da",
+    "safety_gate_id": "integration-safety-gate-8c94c7f087743bdb",
+    "generated_for_review_only": true,
+    "gate_opened": false,
+    "activation_enabled": false,
+    "default_changed": false,
+    "created_at": "2026-07-03T03:07:10.782005+00:00"
+  },
+  "report_entry": {
+    "report_entry_id": "integration-report-entry-4b9c1c8fa92a7437",
+    "target_id": "integration-target-5ee0631b69987dbc",
+    "prerequisite_summary": "unsatisfied by default",
+    "safety_summary": "closed by default",
+    "activation_request_summary": "dry-run future trial design request only",
+    "decision_summary": "keep_closed",
+    "rollback_summary": "rollback required before activation; not ready or executed",
+    "unresolved_gaps": [
+      "human approval",
+      "rollback validation",
+      "selective trial design"
+    ],
+    "recommended_next_review_step": "V1.5B selective live activation plan, still off by default",
+    "generated_for_review_only": true
+  },
+  "invariant_flags": {
+    "v15_integration_enabled": false,
+    "integration_gates_open": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false,
+    "recall_bridge_active": false,
+    "canonical_memory_active": false,
+    "training_enabled": false,
+    "training_dataset_export_enabled": false,
+    "provider_calls_enabled": false,
+    "specialist_routing_enabled": false,
+    "action_execution_enabled": false,
+    "dry_run_execution_active": false,
+    "tool_calls_enabled": false,
+    "canonical_write_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "inactive_systems": [
+    "integration gates",
+    "HYB1 default activation",
+    "recall bridge",
+    "canonical memory",
+    "training/export",
+    "provider/tool calls",
+    "specialist routing",
+    "action/dry-run execution",
+    "memory/canonical/recall mutation",
+    "schedulers/workers/queues"
+  ],
+  "test_status": "run py_compile and tests/runtime_v14 tests/runtime_v15 to verify"
+}

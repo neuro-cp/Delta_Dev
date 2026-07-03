@@ -1,0 +1,2229 @@
+{
+  "phase": "Runtime V1.5 Knowledge Inventory",
+  "title": "DELTA Runtime Knowledge Inventory / Self-Inspection",
+  "status": "repo-local-self-inspection-only_no-training_no-provider_no-memory-mutation",
+  "final_recommendation": "PROCEED_WITH_CONSOLE_UI_REVIEW_OR_V15E_HYB1_LIMITED_OPT_IN_TRIAL_DESIGN",
+  "inventory": {
+    "inventory_id": "knowledge-inventory-e78dcd358b42578c",
+    "repo_root": "G:\\Delta_Dev",
+    "generated_at": "2026-07-03T03:18:06.818647+00:00",
+    "items": [
+      {
+        "item_id": "inventory-item-d640725f3cbc8d0f",
+        "category": "learned_model_knowledge",
+        "name": "No Codex model training performed",
+        "summary": "Codex did not train model weights, fine-tune a model, or create a learned model artifact in this repo.",
+        "source_path": "",
+        "available_locally": false,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-80fe18646e7c8046",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "Repo-local DELTA scaffold",
+        "summary": "DELTA can inspect local runtime modules, reports, docs, tests, and deterministic console response templates.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-22ad69aaac59dbeb",
+        "category": "reports",
+        "name": "runtime_v14_architecture_reconciliation_checkpoint.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_architecture_reconciliation_checkpoint.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-ff6c5f20d8159ef9",
+        "category": "reports",
+        "name": "runtime_v14_corpus_sufficiency_audit.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_corpus_sufficiency_audit.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-aee08a646002f51e",
+        "category": "reports",
+        "name": "runtime_v14_original_delta_gap_map.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_original_delta_gap_map.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5ef7aaece8d34705",
+        "category": "reports",
+        "name": "runtime_v14_output_discipline_scaffold.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_output_discipline_scaffold.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-663bda8c0f9d1b82",
+        "category": "reports",
+        "name": "runtime_v14_roadmap_entry.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_roadmap_entry.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7bd172d50baaacc8",
+        "category": "reports",
+        "name": "runtime_v14c_architecture_decision_lock.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14c_architecture_decision_lock.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-8e0c3e6bd7e6dcb7",
+        "category": "reports",
+        "name": "runtime_v14d_episodic_feedback_capture_scaffold.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14d_episodic_feedback_capture_scaffold.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-f46e5e0ef44f859a",
+        "category": "reports",
+        "name": "runtime_v14d_feedback_capture_scaffold.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14d_feedback_capture_scaffold.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-052bf69ce104c067",
+        "category": "reports",
+        "name": "runtime_v14e_sleep_replay_consolidation_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14e_sleep_replay_consolidation_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-2bfc04e5ef6b1d5f",
+        "category": "reports",
+        "name": "runtime_v14f_live_canonical_store_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14f_live_canonical_store_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-489f03ea34b92cfb",
+        "category": "reports",
+        "name": "runtime_v14g_temporary_pruning_projection_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14g_temporary_pruning_projection_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-77fab3af4b553781",
+        "category": "reports",
+        "name": "runtime_v14h_controlled_learning_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14h_controlled_learning_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e5fc4a04233bc498",
+        "category": "reports",
+        "name": "runtime_v14i_report_only_hypothesis_arbitration_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14i_report_only_hypothesis_arbitration_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-6754e83eab196954",
+        "category": "reports",
+        "name": "runtime_v14j_dormant_specialist_merge_protocol_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14j_dormant_specialist_merge_protocol_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-b7ad0f0c29b742a0",
+        "category": "reports",
+        "name": "runtime_v14k_recall_bridge_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14k_recall_bridge_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-77ffe3fac05f96f2",
+        "category": "reports",
+        "name": "runtime_v14l_structural_semantic_adapter_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14l_structural_semantic_adapter_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c5be4a1617377f07",
+        "category": "reports",
+        "name": "runtime_v14m_raw_input_experience_adapter_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14m_raw_input_experience_adapter_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9e5721260fd62c3f",
+        "category": "reports",
+        "name": "runtime_v14n_active_specialist_routing_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14n_active_specialist_routing_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-8e123f720c1f12a1",
+        "category": "reports",
+        "name": "runtime_v14o_execution_authorization_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14o_execution_authorization_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-4d50a9df19eec1f1",
+        "category": "reports",
+        "name": "runtime_v14p_action_ledger_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14p_action_ledger_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-8d1251ac742bf8fa",
+        "category": "reports",
+        "name": "runtime_v14q_dry_run_action_execution_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14q_dry_run_action_execution_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3d1413f3269ae3c1",
+        "category": "reports",
+        "name": "runtime_v14r_training_dataset_candidate_export_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14r_training_dataset_candidate_export_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c8eb7317adde2efb",
+        "category": "reports",
+        "name": "runtime_v14s_offline_evaluation_harness_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14s_offline_evaluation_harness_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-2dc037c35f90ff36",
+        "category": "reports",
+        "name": "runtime_v14t_tiny_controlled_training_experiment_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14t_tiny_controlled_training_experiment_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-667fa9e8e9b53936",
+        "category": "reports",
+        "name": "runtime_v14u_trained_artifact_comparison_against_model_b_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14u_trained_artifact_comparison_against_model_b_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-f63a75bdf8d8f689",
+        "category": "reports",
+        "name": "runtime_v14v_promotion_rollback_decision_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14v_promotion_rollback_decision_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-27fb2522c2a8d9db",
+        "category": "reports",
+        "name": "runtime_v14w_final_safety_closure_report.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14w_final_safety_closure_report.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-11e4ff74c180e62a",
+        "category": "reports",
+        "name": "runtime_v15_knowledge_inventory.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15_knowledge_inventory.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-90d4dca4f66a56d6",
+        "category": "reports",
+        "name": "runtime_v15a_integration_gate_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15a_integration_gate_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1eefc7486ba35375",
+        "category": "reports",
+        "name": "runtime_v15b_selective_live_activation_plan.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15b_selective_live_activation_plan.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3f9a529c1a81c9d2",
+        "category": "reports",
+        "name": "runtime_v15c_single_gate_dry_run_trial_design.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15c_single_gate_dry_run_trial_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bd154bc2ee5870ba",
+        "category": "reports",
+        "name": "runtime_v15d_first_live_interaction_path.md",
+        "summary": "Runtime report artifact",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15d_first_live_interaction_path.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-a4930eeef5799160",
+        "category": "tests",
+        "name": "test_v14_action_ledger_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_action_ledger_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9bbfd3bb7c0cf21f",
+        "category": "tests",
+        "name": "test_v14_active_specialist_routing_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_active_specialist_routing_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-da6c8b3412baa40e",
+        "category": "tests",
+        "name": "test_v14_artifact_comparison_against_model_b_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_artifact_comparison_against_model_b_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1b9756b3ca4e0742",
+        "category": "tests",
+        "name": "test_v14_canonical_store_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_canonical_store_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-4382fb3763647631",
+        "category": "tests",
+        "name": "test_v14_controlled_learning_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_controlled_learning_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7c6fcac8f2a3dd1f",
+        "category": "tests",
+        "name": "test_v14_dry_run_action_execution_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_dry_run_action_execution_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d5d14029c56219f0",
+        "category": "tests",
+        "name": "test_v14_episodic_feedback_capture.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_episodic_feedback_capture.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c44e3c48698f1e61",
+        "category": "tests",
+        "name": "test_v14_execution_authorization_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_execution_authorization_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-696c201e562631cd",
+        "category": "tests",
+        "name": "test_v14_experience_adapter_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_experience_adapter_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-6b99333e990cf139",
+        "category": "tests",
+        "name": "test_v14_feedback_capture.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_feedback_capture.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7824e5b46a5e2b04",
+        "category": "tests",
+        "name": "test_v14_hypothesis_arbitration_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_hypothesis_arbitration_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-881b141696e4c3dd",
+        "category": "tests",
+        "name": "test_v14_offline_evaluation_harness_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_offline_evaluation_harness_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-465cf4cd536e309c",
+        "category": "tests",
+        "name": "test_v14_output_discipline.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_output_discipline.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-fb10e1eba04b8ea6",
+        "category": "tests",
+        "name": "test_v14_promotion_rollback_decision_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_promotion_rollback_decision_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-da9d9dd2da979855",
+        "category": "tests",
+        "name": "test_v14_pruning_projection_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_pruning_projection_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c627589dd0c572e3",
+        "category": "tests",
+        "name": "test_v14_recall_bridge_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_recall_bridge_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9d8521b52f4d6233",
+        "category": "tests",
+        "name": "test_v14_runtime_console.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_runtime_console.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-8864fb47d3e59a25",
+        "category": "tests",
+        "name": "test_v14_runtime_console_e2e.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_runtime_console_e2e.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-91aab40c9805736e",
+        "category": "tests",
+        "name": "test_v14_safe_scaffolds.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_safe_scaffolds.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-20f5bf0910c179c9",
+        "category": "tests",
+        "name": "test_v14_safety_closure_report.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_safety_closure_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3816a3df3d18cb18",
+        "category": "tests",
+        "name": "test_v14_sleep_replay_consolidation.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_sleep_replay_consolidation.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-6cd02cf69a47d322",
+        "category": "tests",
+        "name": "test_v14_specialist_merge_protocol.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_specialist_merge_protocol.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-6534d3b13164b0c0",
+        "category": "tests",
+        "name": "test_v14_structural_semantic_adapter.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_structural_semantic_adapter.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-919077d284524571",
+        "category": "tests",
+        "name": "test_v14_tiny_training_experiment_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_tiny_training_experiment_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-0e0bc0aa6e8c7d50",
+        "category": "tests",
+        "name": "test_v14_trace_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_trace_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-fb8f7055babb0a4b",
+        "category": "tests",
+        "name": "test_v14_training_dataset_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v14\\test_v14_training_dataset_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-574bdecd0edbab77",
+        "category": "tests",
+        "name": "test_v15_first_live_interaction_path.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v15\\test_v15_first_live_interaction_path.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7edbe7501c71cc0c",
+        "category": "tests",
+        "name": "test_v15_integration_gate_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v15\\test_v15_integration_gate_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-27b746051b21a9ba",
+        "category": "tests",
+        "name": "test_v15_knowledge_inventory.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v15\\test_v15_knowledge_inventory.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-fe5b44b11656cfb0",
+        "category": "tests",
+        "name": "test_v15_selective_activation_plan.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v15\\test_v15_selective_activation_plan.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-0d81946892526989",
+        "category": "tests",
+        "name": "test_v15_single_gate_trial_design.py",
+        "summary": "Runtime regression test file",
+        "source_path": "G:\\Delta_Dev\\tests\\runtime_v15\\test_v15_single_gate_trial_design.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-446a6f4058a5ed39",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "runtime_reasoning.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\runtime_reasoning.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9ffebd0d6a457538",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_action_ledger.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_action_ledger.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-0cc4529863a9c0bf",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_action_ledger_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_action_ledger_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-faca4200f83653a1",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_active_specialist_routing.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_active_specialist_routing.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5f07fefb89cbd962",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_active_specialist_routing_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_active_specialist_routing_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5dfdd4435d643e85",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_architecture_decisions.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_architecture_decisions.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5298a6dc4f2c39a9",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_artifact_comparison.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_artifact_comparison.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d6c55439e28eed5d",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_artifact_comparison_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_artifact_comparison_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bb0319825ff2865f",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_candidate_envelope.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_candidate_envelope.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9661a568e5ff3898",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_canonical_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_canonical_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-effaf9a28f8a879a",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_canonical_revision.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_canonical_revision.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-4e4de1dd76991af4",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_canonical_store.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_canonical_store.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3a1ffd663d2b5ff2",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_consolidation.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_consolidation.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-edcd10d7655e87e1",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_controlled_learning.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_controlled_learning.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5e4c61dfdb36e310",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_controlled_learning_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_controlled_learning_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-76287797c55bdae3",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_dry_run_action_execution.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_dry_run_action_execution.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-ee1e623f38592a9a",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_dry_run_action_execution_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_dry_run_action_execution_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-ea730d2a24e8a416",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_episode.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_episode.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3e1cb56529742abf",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_execution_authorization.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_execution_authorization.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-6bd818bbfa6b5c4a",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_execution_authorization_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_execution_authorization_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-0fe8a3e9487e2f6e",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_experience_adapter.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_experience_adapter.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-63eb1fd75a07bdb5",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_experience_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_experience_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-04bcd439e6617298",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_feedback.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_feedback.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-653bff0e11a5572f",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_feedback_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_feedback_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9dc165cba33fd002",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_feedback_to_pruning.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_feedback_to_pruning.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9e38b2567a5cc052",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_gap_map.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_gap_map.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-6dcb5337ca3dc8ad",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_hypothesis_arbitration.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_hypothesis_arbitration.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-a636fd8bbd176a1e",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_hypothesis_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_hypothesis_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-2ed094a1640244e5",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_lanes.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_lanes.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-fedf397fcb41faf3",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_learning_audit.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_learning_audit.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-14fbe5328e1ff376",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_offline_evaluation.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_offline_evaluation.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-767d0bcc988c9430",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_offline_evaluation_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_offline_evaluation_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9875f74a495deda0",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_output_discipline.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_output_discipline.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-99be1db81851ce63",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_promotion_rollback.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_promotion_rollback.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-2580b361f8c65afa",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_promotion_rollback_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_promotion_rollback_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-512aa269744347ba",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_pruning.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_pruning.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1e456517281ebb1a",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_pruning_projection.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_pruning_projection.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7e9ab754b6d8d14a",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_pruning_projection_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_pruning_projection_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-cb7667f56353e018",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_recall_bridge.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_recall_bridge.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-4a7498ecc7f56e8f",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_recall_bridge_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_recall_bridge_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1c9df5ff90e52632",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_replay.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_replay.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-10016093379b310e",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_replay_markers.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_replay_markers.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d991380f48583a85",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_replay_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_replay_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-52b8b108dc9f9e3b",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_runtime_console.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_runtime_console.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-2bc0a88f31912aee",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_runtime_console_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_runtime_console_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-cfbfd0cebbe6a105",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_safety_closure.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_safety_closure.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-eded121bc7add721",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_safety_closure_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_safety_closure_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e34b2545628264ba",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_semantic_adapter_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_semantic_adapter_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-721b3edb73e3c837",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_signals.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_signals.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c66257efd015d222",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_sleep_cycle.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_sleep_cycle.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-afb1acb7db87e525",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_specialist_merge.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_specialist_merge.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3278cc5a1d1b53fc",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_specialist_merge_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_specialist_merge_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bafe24a7278b1d31",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_specialist_router.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_specialist_router.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-61b720bb5da26674",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_structural_semantic_adapter.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_structural_semantic_adapter.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e5366b0c95885b28",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_tiny_training_experiment.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_tiny_training_experiment.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-35bad0dd8876b92a",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_tiny_training_experiment_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_tiny_training_experiment_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e7473c84d1adc257",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_trace.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_trace.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c428895f7c56d624",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_training_dataset.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_training_dataset.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-ce43d9e97073bbd7",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v14_training_dataset_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v14_training_dataset_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d27683cf140a674f",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_first_interaction.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_first_interaction.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d18bca5fbccf877f",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_first_interaction_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_first_interaction_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c15d64d18affe433",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_integration_gate.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_integration_gate.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-b0badbbbb0719fea",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_integration_gate_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_integration_gate_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d68429f1d02f7a17",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_knowledge_inventory.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_knowledge_inventory.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7068d9ae2db530ba",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_knowledge_inventory_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_knowledge_inventory_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3318aa95d649629b",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_selective_activation_plan.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_selective_activation_plan.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-f01003da12a7dbe6",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_selective_activation_plan_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_selective_activation_plan_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5a5e59d2be015539",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_single_gate_trial.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_single_gate_trial.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1aa89afa5639d11f",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "v15_single_gate_trial_report.py",
+        "summary": "Runtime scaffold module",
+        "source_path": "G:\\Delta_Dev\\orchestration\\runtime\\v15_single_gate_trial_report.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c7d5b63c640969c3",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "ask_delta.py",
+        "summary": "Runtime script",
+        "source_path": "G:\\Delta_Dev\\scripts\\ask_delta.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-717023ea07b91917",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "delta_knowledge_inventory.py",
+        "summary": "Runtime script",
+        "source_path": "G:\\Delta_Dev\\scripts\\delta_knowledge_inventory.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-8cb40c1ee7d52cac",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "runtime_console.py",
+        "summary": "Runtime script",
+        "source_path": "G:\\Delta_Dev\\scripts\\runtime_console.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-661af701742f5d20",
+        "category": "repo_local_scaffold_knowledge",
+        "name": "runtime_console_smoke.py",
+        "summary": "Runtime script",
+        "source_path": "G:\\Delta_Dev\\scripts\\runtime_console_smoke.py",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-fd20a2a12ebf8bfa",
+        "category": "phase_summaries",
+        "name": "v14 architecture reconciliation checkpoint",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_architecture_reconciliation_checkpoint.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-05810761528365b6",
+        "category": "phase_summaries",
+        "name": "v14 corpus sufficiency audit",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_corpus_sufficiency_audit.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1c6e2298076a8b1d",
+        "category": "phase_summaries",
+        "name": "v14 original delta gap map",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_original_delta_gap_map.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bed971ffb8a24425",
+        "category": "phase_summaries",
+        "name": "v14 output discipline scaffold",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_output_discipline_scaffold.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-455fc635727cee1c",
+        "category": "phase_summaries",
+        "name": "v14 roadmap entry",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14_roadmap_entry.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-0900f5d93b5a885e",
+        "category": "phase_summaries",
+        "name": "v14c architecture decision lock",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14c_architecture_decision_lock.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-614ca012bbed7132",
+        "category": "phase_summaries",
+        "name": "v14d episodic feedback capture scaffold",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14d_episodic_feedback_capture_scaffold.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-74529bcd7fdc06bf",
+        "category": "phase_summaries",
+        "name": "v14d feedback capture scaffold",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14d_feedback_capture_scaffold.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7505a8b1b121c8ac",
+        "category": "phase_summaries",
+        "name": "v14e sleep replay consolidation design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14e_sleep_replay_consolidation_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-f64e34e7d9170f9c",
+        "category": "phase_summaries",
+        "name": "v14f live canonical store design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14f_live_canonical_store_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c5d34a3866126513",
+        "category": "phase_summaries",
+        "name": "v14g temporary pruning projection design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14g_temporary_pruning_projection_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-ba39909f7ea7f5a5",
+        "category": "phase_summaries",
+        "name": "v14h controlled learning design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14h_controlled_learning_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-49e42c7264c28c20",
+        "category": "phase_summaries",
+        "name": "v14i report only hypothesis arbitration design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14i_report_only_hypothesis_arbitration_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d6a7fbf93c20d1c6",
+        "category": "phase_summaries",
+        "name": "v14j dormant specialist merge protocol design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14j_dormant_specialist_merge_protocol_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-52a2ecbb331dd8ab",
+        "category": "phase_summaries",
+        "name": "v14k recall bridge design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14k_recall_bridge_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7dbb8cf551114af0",
+        "category": "phase_summaries",
+        "name": "v14l structural semantic adapter design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14l_structural_semantic_adapter_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e668ce87e07b24a2",
+        "category": "phase_summaries",
+        "name": "v14m raw input experience adapter design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14m_raw_input_experience_adapter_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-3e0bd6b81e06cc74",
+        "category": "phase_summaries",
+        "name": "v14n active specialist routing design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14n_active_specialist_routing_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bb8b32a767e27965",
+        "category": "phase_summaries",
+        "name": "v14o execution authorization design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14o_execution_authorization_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1ddcc2b65251e950",
+        "category": "phase_summaries",
+        "name": "v14p action ledger design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14p_action_ledger_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d7470f340403a26e",
+        "category": "phase_summaries",
+        "name": "v14q dry run action execution design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14q_dry_run_action_execution_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d8cfe8c9d41d8e20",
+        "category": "phase_summaries",
+        "name": "v14r training dataset candidate export design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14r_training_dataset_candidate_export_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7e1e08a7082843fb",
+        "category": "phase_summaries",
+        "name": "v14s offline evaluation harness design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14s_offline_evaluation_harness_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-62e30440970c4310",
+        "category": "phase_summaries",
+        "name": "v14t tiny controlled training experiment design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14t_tiny_controlled_training_experiment_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-207cbedbdc49389c",
+        "category": "phase_summaries",
+        "name": "v14u trained artifact comparison against model b design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14u_trained_artifact_comparison_against_model_b_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-87530020243fee5d",
+        "category": "phase_summaries",
+        "name": "v14v promotion rollback decision design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14v_promotion_rollback_decision_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-399d23cfadb095bb",
+        "category": "phase_summaries",
+        "name": "v14w final safety closure report",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v14w_final_safety_closure_report.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-b38d301d583ffef1",
+        "category": "phase_summaries",
+        "name": "v15 knowledge inventory",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15_knowledge_inventory.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-828bb8e60ef82fb7",
+        "category": "phase_summaries",
+        "name": "v15a integration gate design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15a_integration_gate_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-611436f6642edc23",
+        "category": "phase_summaries",
+        "name": "v15b selective live activation plan",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15b_selective_live_activation_plan.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-29f1a12f7bc4fbb1",
+        "category": "phase_summaries",
+        "name": "v15c single gate dry run trial design",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15c_single_gate_dry_run_trial_design.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9d4eaeda30802bbf",
+        "category": "phase_summaries",
+        "name": "v15d first live interaction path",
+        "summary": "Phase summary available as repo-local report.",
+        "source_path": "G:\\Delta_Dev\\reports\\runtime_v15d_first_live_interaction_path.md",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-4e5a75b4e9b143b5",
+        "category": "runtime_console_response_templates",
+        "name": "DELTA replay/consolidation local summary",
+        "summary": "Deterministic response for questions about DELTA's replay and consolidation scaffold.",
+        "source_path": "orchestration/runtime/v15_first_interaction.py",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-43854be80be04465",
+        "category": "runtime_console_response_templates",
+        "name": "Unknown scaffold notice",
+        "summary": "Deterministic local fallback for questions outside repo-local scaffold knowledge.",
+        "source_path": "orchestration/runtime/v15_first_interaction.py",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d3aa98e1ac45c340",
+        "category": "safety_invariants",
+        "name": "action_execution_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d7d830d5ca107895",
+        "category": "safety_invariants",
+        "name": "canonical_write_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-94c49778212ccd7e",
+        "category": "safety_invariants",
+        "name": "fine_tuning_performed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c72ed57b6a159d92",
+        "category": "safety_invariants",
+        "name": "hyb1_default_activation_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bb5367b347ccf1b6",
+        "category": "safety_invariants",
+        "name": "hyb1_promoted",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-36b76a18b7cfbdba",
+        "category": "safety_invariants",
+        "name": "inventory_report_enabled",
+        "summary": "Invariant flag is True.",
+        "source_path": "",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d6ec5abc4400e620",
+        "category": "safety_invariants",
+        "name": "memory_mutation_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-22b686b2bc105429",
+        "category": "safety_invariants",
+        "name": "memory_mutation_performed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-03c8d33e402e1904",
+        "category": "safety_invariants",
+        "name": "model_b_default_changed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d75935e8e6f1e63e",
+        "category": "safety_invariants",
+        "name": "model_training_performed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-681488728c5172e9",
+        "category": "safety_invariants",
+        "name": "provider_calls_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-64cf2aa63ab42d40",
+        "category": "safety_invariants",
+        "name": "provider_calls_performed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-40811bd086e226e2",
+        "category": "safety_invariants",
+        "name": "repo_scan_enabled",
+        "summary": "Invariant flag is True.",
+        "source_path": "",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-9b6974b7e1d90ce0",
+        "category": "safety_invariants",
+        "name": "runtime_defaults_changed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-553e20fd8f1aa578",
+        "category": "safety_invariants",
+        "name": "runtime_recall_active",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-cbe10ad507026897",
+        "category": "safety_invariants",
+        "name": "runtime_recall_mutation_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d47a7c83031413a6",
+        "category": "safety_invariants",
+        "name": "scheduler_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-452a325297eb4247",
+        "category": "safety_invariants",
+        "name": "tool_calls_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-bbde5f430f553d20",
+        "category": "safety_invariants",
+        "name": "training_enabled",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c9446de5bf3da184",
+        "category": "safety_invariants",
+        "name": "weight_update_performed",
+        "summary": "Invariant flag is False.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-80ebd6dd1a8960fc",
+        "category": "active_capabilities",
+        "name": "manual runtime console message preview",
+        "summary": "Active local/non-mutating capability.",
+        "source_path": "",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-fb054b83ebccab13",
+        "category": "active_capabilities",
+        "name": "repo-local knowledge inventory",
+        "summary": "Active local/non-mutating capability.",
+        "source_path": "",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1e00c31d28b5d3df",
+        "category": "active_capabilities",
+        "name": "deterministic local response preview",
+        "summary": "Active local/non-mutating capability.",
+        "source_path": "",
+        "available_locally": true,
+        "active": true,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-b017e8c59b261d37",
+        "category": "inactive_capabilities",
+        "name": "provider calls",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-1ae99defdd74a49e",
+        "category": "inactive_capabilities",
+        "name": "HYB1 default activation",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-5de227ee68428ffe",
+        "category": "inactive_capabilities",
+        "name": "active recall bridge",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-c538116653783a87",
+        "category": "inactive_capabilities",
+        "name": "canonical memory writes",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-a3afee115d220669",
+        "category": "inactive_capabilities",
+        "name": "training",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-7bcbc9ae1520d5db",
+        "category": "inactive_capabilities",
+        "name": "specialist routing",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e86c17bf717580cb",
+        "category": "inactive_capabilities",
+        "name": "action execution",
+        "summary": "Capability remains disabled/inactive.",
+        "source_path": "",
+        "available_locally": true,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-d6957f7bec24ff89",
+        "category": "unavailable_knowledge",
+        "name": "arbitrary current world facts",
+        "summary": "Unavailable until future gated activation.",
+        "source_path": "",
+        "available_locally": false,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-aa193c6e23458d1f",
+        "category": "unavailable_knowledge",
+        "name": "canonical memory recall",
+        "summary": "Unavailable until future gated activation.",
+        "source_path": "",
+        "available_locally": false,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-21b05f6f1cc91436",
+        "category": "unavailable_knowledge",
+        "name": "trained/fine-tuned model knowledge",
+        "summary": "Unavailable until future gated activation.",
+        "source_path": "",
+        "available_locally": false,
+        "active": false,
+        "mutating": false
+      },
+      {
+        "item_id": "inventory-item-e920223d70187bb8",
+        "category": "unavailable_knowledge",
+        "name": "external provider/model answers",
+        "summary": "Unavailable until future gated activation.",
+        "source_path": "",
+        "available_locally": false,
+        "active": false,
+        "mutating": false
+      }
+    ],
+    "invariant_flags": {
+      "inventory_report_enabled": true,
+      "repo_scan_enabled": true,
+      "model_training_performed": false,
+      "fine_tuning_performed": false,
+      "weight_update_performed": false,
+      "provider_calls_enabled": false,
+      "provider_calls_performed": false,
+      "memory_mutation_enabled": false,
+      "memory_mutation_performed": false,
+      "canonical_write_enabled": false,
+      "runtime_recall_active": false,
+      "runtime_recall_mutation_enabled": false,
+      "hyb1_promoted": false,
+      "hyb1_default_activation_enabled": false,
+      "model_b_default_changed": false,
+      "training_enabled": false,
+      "action_execution_enabled": false,
+      "tool_calls_enabled": false,
+      "scheduler_enabled": false,
+      "runtime_defaults_changed": false
+    },
+    "active_capabilities": [
+      "manual runtime console message preview",
+      "raw experience preview construction",
+      "structural semantic preview construction",
+      "trace/safety/status generation",
+      "deterministic local response preview",
+      "repo-local knowledge inventory report generation"
+    ],
+    "inactive_capabilities": [
+      "provider calls",
+      "HYB1 default activation",
+      "active recall bridge",
+      "canonical memory writes",
+      "memory mutation",
+      "training/fine-tuning/weight updates",
+      "dataset export",
+      "specialist routing",
+      "action/tool execution",
+      "background schedulers/listeners/queues"
+    ],
+    "unavailable_knowledge": [
+      "arbitrary world knowledge without provider/model integration",
+      "canonical memory contents until canonical store and recall are activated",
+      "learned model updates because no training has occurred",
+      "live external facts because provider calls remain disabled",
+      "user-specific memory unless explicitly present in repo-local reports"
+    ],
+    "local_answer_scope": [
+      "DELTA scaffold and phase history from repo-local reports",
+      "safety boundaries and invariant flags",
+      "runtime console response templates",
+      "available local scripts/modules/tests",
+      "Model B/HYB1 local comparison report summaries"
+    ],
+    "learned_model_knowledge_summary": "No new learned model knowledge was created by Codex; model weights were not trained or changed.",
+    "repo_local_knowledge_summary": "Repo-local architectural/self-description knowledge is available through files, reports, tests, and deterministic response templates."
+  },
+  "summary": {
+    "inventory_id": "knowledge-inventory-e78dcd358b42578c",
+    "category_counts": {
+      "active_capabilities": 3,
+      "inactive_capabilities": 7,
+      "learned_model_knowledge": 1,
+      "phase_summaries": 32,
+      "repo_local_scaffold_knowledge": 74,
+      "reports": 32,
+      "runtime_console_response_templates": 2,
+      "safety_invariants": 20,
+      "tests": 31,
+      "unavailable_knowledge": 4
+    },
+    "active_capabilities": [
+      "manual runtime console message preview",
+      "raw experience preview construction",
+      "structural semantic preview construction",
+      "trace/safety/status generation",
+      "deterministic local response preview",
+      "repo-local knowledge inventory report generation"
+    ],
+    "inactive_capabilities": [
+      "provider calls",
+      "HYB1 default activation",
+      "active recall bridge",
+      "canonical memory writes",
+      "memory mutation",
+      "training/fine-tuning/weight updates",
+      "dataset export",
+      "specialist routing",
+      "action/tool execution",
+      "background schedulers/listeners/queues"
+    ],
+    "unavailable_knowledge": [
+      "arbitrary world knowledge without provider/model integration",
+      "canonical memory contents until canonical store and recall are activated",
+      "learned model updates because no training has occurred",
+      "live external facts because provider calls remain disabled",
+      "user-specific memory unless explicitly present in repo-local reports"
+    ],
+    "model_training_occurred": false,
+    "hyb1_promoted": false,
+    "provider_calls_occurred": false,
+    "memory_or_recall_mutation_occurred": false
+  },
+  "questions_answered": {
+    "what_does_delta_know_from_static_repo_artifacts": "Repo-local architectural/self-description knowledge is available through files, reports, tests, and deterministic response templates.",
+    "what_can_delta_answer_locally_without_provider_calls": [
+      "DELTA scaffold and phase history from repo-local reports",
+      "safety boundaries and invariant flags",
+      "runtime console response templates",
+      "available local scripts/modules/tests",
+      "Model B/HYB1 local comparison report summaries"
+    ],
+    "what_is_still_scaffold_only": [
+      "provider calls",
+      "HYB1 default activation",
+      "active recall bridge",
+      "canonical memory writes",
+      "memory mutation",
+      "training/fine-tuning/weight updates",
+      "dataset export",
+      "specialist routing",
+      "action/tool execution",
+      "background schedulers/listeners/queues"
+    ],
+    "what_is_active": [
+      "manual runtime console message preview",
+      "raw experience preview construction",
+      "structural semantic preview construction",
+      "trace/safety/status generation",
+      "deterministic local response preview",
+      "repo-local knowledge inventory report generation"
+    ],
+    "what_remains_disabled": [
+      "provider calls",
+      "HYB1 default activation",
+      "active recall bridge",
+      "canonical memory writes",
+      "memory mutation",
+      "training/fine-tuning/weight updates",
+      "dataset export",
+      "specialist routing",
+      "action/tool execution",
+      "background schedulers/listeners/queues"
+    ],
+    "was_any_model_training_performed": false,
+    "was_hyb1_promoted": false,
+    "what_knowledge_is_unavailable": [
+      "arbitrary world knowledge without provider/model integration",
+      "canonical memory contents until canonical store and recall are activated",
+      "learned model updates because no training has occurred",
+      "live external facts because provider calls remain disabled",
+      "user-specific memory unless explicitly present in repo-local reports"
+    ]
+  },
+  "test_status": "run py_compile and tests/runtime_v14 tests/runtime_v15 to verify"
+}

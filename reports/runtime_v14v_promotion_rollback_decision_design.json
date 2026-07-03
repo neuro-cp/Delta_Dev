@@ -1,0 +1,216 @@
+{
+  "phase": "Runtime V1.4V",
+  "title": "Promotion / Rollback Decision Design",
+  "status": "promotion-rollback-design-only_no-promotion_no-default-change_no-rollback-execution",
+  "final_recommendation": "PROCEED_FINAL_V14_SAFETY_CLOSURE_REPORT",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v14_promotion_rollback.py",
+    "orchestration/runtime/v14_promotion_rollback_report.py",
+    "tests/runtime_v14/test_v14_promotion_rollback_decision_design.py",
+    "reports/runtime_v14v_promotion_rollback_decision_design.md",
+    "reports/runtime_v14v_promotion_rollback_decision_design.json",
+    "docs/runtime_v14v_promotion_rollback_decision_prompt.txt"
+  ],
+  "invariant_flags": {
+    "promotion_enabled": false,
+    "promotion_decision_applied": false,
+    "artifact_promotion_enabled": false,
+    "runtime_activation_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_remains_dormant": true,
+    "model_b_default_changed": false,
+    "model_default_change_enabled": false,
+    "rollback_execution_enabled": false,
+    "runtime_default_change_enabled": false,
+    "provider_calls_enabled": false,
+    "tool_calls_enabled": false,
+    "action_execution_enabled": false,
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "dataset_export_enabled": false,
+    "artifact_creation_enabled": false,
+    "canonical_write_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "candidate": {
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "candidate_name": "HYB1",
+    "candidate_type": "hyb1_runtime_variant",
+    "baseline_reference_id": "runtime-v13-model-b",
+    "comparison_reference_ids": [
+      "runtime-v14u-artifact-comparison"
+    ],
+    "evidence_reference_ids": [
+      "runtime-v13-hyb1-validation"
+    ],
+    "safety_reference_ids": [
+      "runtime-v14u-safety-review"
+    ],
+    "rollback_reference_ids": [
+      "model-b-default-baseline"
+    ],
+    "human_review_required": true,
+    "active": false,
+    "promoted": false,
+    "default_change_allowed": false,
+    "runtime_activation_allowed": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "evidence_packet": {
+    "evidence_packet_id": "promotion-evidence-704857c5af05dd0b",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "comparison_summary": "HYB1 improved reasoning noise/drift in opt-in validation while preserving planning and grounding.",
+    "improvement_summary": "noise 7->5, reasoning drift 4->2, cases improved 2, cases regressed 0",
+    "regression_summary": "promotion still blocked pending explicit review and rollback design",
+    "safety_summary": "Model B remains default; HYB1 dormant/env-gated",
+    "uncertainty_summary": "comparison evidence is not authority",
+    "sufficient_for_review": true,
+    "sufficient_for_promotion": false,
+    "authoritative": false,
+    "generated_for_review_only": true,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "safety_gate": {
+    "safety_gate_id": "promotion-safety-gate-fdb1824268b6fc6b",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "required_reviews": [
+      "human-review",
+      "rollback-review",
+      "safety-review"
+    ],
+    "invariant_failures": [],
+    "unresolved_regressions": [
+      "promotion-review-missing"
+    ],
+    "missing_requirements": [
+      "human-review",
+      "rollback-plan-approval"
+    ],
+    "safety_status": "human_review_required",
+    "gate_satisfied": false,
+    "promotion_allowed": false,
+    "runtime_activation_allowed": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "human_review": {
+    "review_requirement_id": "promotion-human-review-ecadb29968711e81",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "required_actor": "human operator",
+    "review_reason": "HYB1 cannot trial or promote from automated scorecard evidence alone.",
+    "required_before_trial": true,
+    "required_before_promotion": true,
+    "satisfied": false,
+    "approval_present": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "rollback_plan": {
+    "rollback_plan_id": "promotion-rollback-plan-88c3559b63c71f4b",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "baseline_reference_id": "runtime-v13-model-b",
+    "rollback_strategy": "restore Model B default if any future gated trial regresses",
+    "rollback_trigger_conditions": [
+      "grounding_regression",
+      "planning_regression",
+      "safety_invariant_failure"
+    ],
+    "rollback_test_required": true,
+    "rollback_ready": false,
+    "rollback_executed": false,
+    "runtime_default_restored": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "promotion_decision": {
+    "decision_id": "promotion-decision-5d3394b3d87c713d",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "outcome": "eligible_for_future_gated_trial_design",
+    "rationale": "HYB1 has positive opt-in evidence but remains dormant until human review and rollback requirements are satisfied.",
+    "invariant_status": "promotion/default-change/runtime-activation flags remain false",
+    "applied": false,
+    "promoted": false,
+    "default_changed": false,
+    "runtime_activation_enabled": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "rollback_decision": {
+    "rollback_decision_id": "rollback-decision-f0b840d5429547af",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "rollback_plan_id": "promotion-rollback-plan-88c3559b63c71f4b",
+    "outcome": "rollback_design_only",
+    "rationale": "rollback cannot execute because HYB1 is not active.",
+    "applied": false,
+    "rollback_executed": false,
+    "default_restored": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "default_change_blocker": {
+    "blocker_id": "runtime-default-blocker-7534a4fa36ae8e0c",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "blocker_type": "candidate_still_dormant",
+    "rationale": "HYB1 remains dormant/env-gated and cannot become default in V1.4V.",
+    "required_resolution": "future explicit human promotion/rollback phase",
+    "resolved": false,
+    "blocks_default_change": true,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "audit": {
+    "audit_id": "promotion-rollback-audit-59bd407bd2b70a87",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "blocker_ids": [
+      "runtime-default-blocker-7534a4fa36ae8e0c"
+    ],
+    "audit_summary": "promotion/rollback decision design only; no activation or promotion",
+    "decision_id": "promotion-decision-5d3394b3d87c713d",
+    "rollback_decision_id": "rollback-decision-f0b840d5429547af",
+    "evidence_packet_id": "promotion-evidence-704857c5af05dd0b",
+    "safety_gate_id": "promotion-safety-gate-fdb1824268b6fc6b",
+    "generated_for_review_only": true,
+    "persisted_to_active_registry": false,
+    "promoted": false,
+    "rollback_executed": false,
+    "default_changed": false,
+    "created_at": "2026-07-03T03:02:47.135717+00:00"
+  },
+  "report_entry": {
+    "report_entry_id": "promotion-rollback-report-entry-17ab119561b05ae2",
+    "candidate_id": "promotion-candidate-faa605529a375945",
+    "evidence_summary": "noise 7->5, reasoning drift 4->2, cases improved 2, cases regressed 0",
+    "safety_summary": "safety gate unsatisfied; HYB1 remains dormant",
+    "human_review_summary": "human review required and unsatisfied",
+    "rollback_summary": "rollback plan required; not ready or executed",
+    "blocker_summary": "default change blocker unresolved",
+    "promotion_decision_summary": "eligible_for_future_gated_trial_design",
+    "rollback_decision_summary": "rollback_design_only",
+    "unresolved_gaps": [
+      "human review missing",
+      "rollback approval missing",
+      "promotion review missing"
+    ],
+    "recommended_next_review_step": "final V1.4 safety closure report",
+    "generated_for_review_only": true
+  },
+  "safety_boundaries": [
+    "promotion decision design is not promotion",
+    "rollback decision design is not rollback execution",
+    "HYB1 candidate is not default runtime",
+    "comparison improvement is not authority"
+  ],
+  "inactive_systems": [
+    "promotion",
+    "runtime activation",
+    "HYB1 default activation",
+    "Model B default changes",
+    "rollback execution",
+    "training/fine-tuning/weight updates",
+    "dataset export",
+    "artifact creation/promotion",
+    "provider/tool/action calls",
+    "memory/canonical/recall mutation",
+    "schedulers/background rollout"
+  ],
+  "test_status": "run py_compile and tests/runtime_v14 to verify"
+}

@@ -1,0 +1,23 @@
+Runtime V1.5D - First Live Interaction Path, Console-Only
+
+Purpose:
+Implement the first controlled one-shot local console path:
+manual message -> raw experience preview -> semantic preview -> trace/safety output -> deterministic response preview.
+
+Allowed:
+- runtime console gate open for this narrow path only
+- local deterministic response preview
+
+Blocked:
+- provider/tool calls
+- action execution
+- memory/canonical/recall mutation
+- HYB1 default activation
+- training/export
+- schedulers/listeners/background ingestion
+
+Script:
+.\.venv311\Scripts\python.exe scripts\ask_delta.py "What is DELTA's current replay and consolidation path?"
+
+Expected final recommendation:
+PROCEED_V15E_HYB1_LIMITED_OPT_IN_TRIAL_DESIGN

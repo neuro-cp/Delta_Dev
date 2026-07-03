@@ -1,6 +1,6 @@
 # Runtime V1.3 HYB1 Dormant Prototype Validation
 
-Generated: `2026-07-02T17:29:20`
+Generated: `2026-07-02T22:56:18`
 
 Current accepted default: Model B contextualized corpus support + citation_context reasoning usage gate
 

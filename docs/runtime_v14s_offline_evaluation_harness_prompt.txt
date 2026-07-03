@@ -1,0 +1,39 @@
+Runtime V1.4S - Offline Evaluation Harness Design
+
+Status: scaffold-only, review-only, no training, no promotion.
+
+Runtime V1.4S defines the design shape for future local offline evaluation:
+
+- EvaluationCase
+- EvaluationCaseSet
+- EvaluationTarget
+- EvaluationRunPlan
+- EvaluationMetricSpec
+- EvaluationResultDraft
+- EvaluationScorecard
+- EvaluationSafetyReview
+- EvaluationComparisonReport
+- EvaluationPromotionBlocker
+- EvaluationHarnessReportEntry
+
+Invariant language:
+
+- offline evaluation != training
+- scorecard != promotion
+- evaluation case != training example
+- candidate comparison != model replacement
+- baseline comparison != default change
+- evaluation harness != autonomous optimizer
+- report result != learned behavior
+
+This phase does not train, fine-tune, update weights, export datasets, write
+active datasets, call providers, activate specialist routing, execute actions,
+call tools, mutate memory, mutate canonical memory, mutate recall, promote
+artifacts, change Model B behavior, enable HYB1, start background evaluation, or
+change runtime defaults.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_TINY_CONTROLLED_TRAINING_EXPERIMENT_DESIGN

@@ -1,0 +1,138 @@
+{
+  "phase": "Runtime V1.5C",
+  "title": "Single-Gate Dry-Run Trial Design",
+  "status": "single-gate-design-only_no-gate-opened_no-trial-executed",
+  "final_recommendation": "PROCEED_FIRST_LIVE_INTERACTION_PATH_CONSOLE_ONLY",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v15_single_gate_trial.py",
+    "orchestration/runtime/v15_single_gate_trial_report.py",
+    "tests/runtime_v15/test_v15_single_gate_trial_design.py",
+    "reports/runtime_v15c_single_gate_dry_run_trial_design.md",
+    "reports/runtime_v15c_single_gate_dry_run_trial_design.json",
+    "docs/runtime_v15c_single_gate_dry_run_trial_prompt.txt"
+  ],
+  "target": {
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "target_name": "runtime_console_message_preview",
+    "target_type": "runtime_console_message_preview",
+    "source_activation_plan_id": "runtime-v15b-selective-plan",
+    "gate_open": false,
+    "active": false,
+    "trial_execution_enabled": false,
+    "created_at": "2026-07-03T03:11:45.358287+00:00"
+  },
+  "scope": {
+    "scope_id": "single-gate-scope-b1dde108175244d9",
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "allowed_path": [
+      "manual_message_input",
+      "raw_experience_preview",
+      "semantic_adapter_preview",
+      "trace_summary",
+      "safety_status",
+      "deterministic_response_preview"
+    ],
+    "blocked_path": [
+      "provider_calls",
+      "memory_writes",
+      "recall_mutation",
+      "canonical_writes",
+      "hyb1_default_activation",
+      "specialist_routing",
+      "action_execution",
+      "training",
+      "background_ingestion"
+    ],
+    "manual_only": true,
+    "local_only": true,
+    "deterministic_only": true
+  },
+  "input_case": {
+    "input_case_id": "single-gate-case-3725f7092b776c84",
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "message": "What is DELTA's current replay and consolidation path?",
+    "expected_intent_summary": "ask about DELTA replay and consolidation architecture",
+    "expected_review_only_status": "preview only; no memory write",
+    "expected_disabled_flags": [
+      "provider_calls",
+      "memory_mutation",
+      "action_execution",
+      "training"
+    ],
+    "training_example": false,
+    "memory_candidate": false
+  },
+  "expected_trace": {
+    "expected_trace_id": "single-gate-expected-trace-f93ffdc8bbbfdcb4",
+    "input_case_id": "single-gate-case-3725f7092b776c84",
+    "expected_experience_record": true,
+    "expected_semantic_preview": true,
+    "expected_safety_status": true,
+    "expected_response_preview": true,
+    "expected_memory_write": false,
+    "expected_provider_call": false,
+    "expected_action_execution": false,
+    "expected_training": false
+  },
+  "safety_boundary": {
+    "boundary_id": "single-gate-boundary-b1dde108175244d9",
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "provider_calls_enabled": false,
+    "memory_mutation_enabled": false,
+    "canonical_write_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "specialist_routing_enabled": false,
+    "action_execution_enabled": false,
+    "training_enabled": false,
+    "scheduler_enabled": false
+  },
+  "decision": {
+    "decision_id": "single-gate-decision-b1dde108175244d9",
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "outcome": "eligible_for_first_live_console_path",
+    "rationale": "design-only trial target may proceed to first console-only path implementation",
+    "applied": false,
+    "gate_opened": false,
+    "trial_executed": false
+  },
+  "audit": {
+    "audit_id": "single-gate-audit-97b9223f2d6826ad",
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "decision_id": "single-gate-decision-b1dde108175244d9",
+    "audit_summary": "single-gate design only; gate not opened and trial not executed",
+    "generated_for_review_only": true,
+    "gate_opened": false,
+    "trial_executed": false
+  },
+  "report_entry": {
+    "report_entry_id": "single-gate-entry-d85fa2d9af98a75c",
+    "trial_target_id": "single-gate-target-bc7d8b57016920d9",
+    "scope_summary": "manual/local/deterministic console preview path",
+    "input_case_summary": "What is DELTA's current replay and consolidation path?",
+    "expected_trace_summary": "experience, semantic, safety, and response previews expected",
+    "safety_boundary_summary": "provider/memory/action/training paths disabled",
+    "decision_summary": "eligible_for_first_live_console_path",
+    "recommended_next_review_step": "first live interaction path, console only",
+    "generated_for_review_only": true
+  },
+  "invariant_flags": {
+    "single_gate_trial_enabled": false,
+    "gate_opened": false,
+    "trial_executed": false,
+    "runtime_console_live_path_enabled": false,
+    "provider_calls_enabled": false,
+    "memory_mutation_enabled": false,
+    "canonical_write_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false,
+    "specialist_routing_enabled": false,
+    "action_execution_enabled": false,
+    "training_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "test_status": "run py_compile and tests/runtime_v14 tests/runtime_v15 to verify"
+}

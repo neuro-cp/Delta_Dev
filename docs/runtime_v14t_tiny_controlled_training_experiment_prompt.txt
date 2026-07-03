@@ -1,0 +1,55 @@
+Runtime V1.4T - Tiny Controlled Training Experiment Design
+
+Current checkpoint:
+- Runtime V1.4S offline evaluation harness design is complete.
+- Model B remains default.
+- HYB1 remains dormant/env-gated.
+- No training, fine-tuning, weight updates, dataset export, artifact creation, promotion, provider/tool calls, memory mutation, recall mutation, schedulers, or runtime behavior changes are active.
+
+V1.4T intent:
+Design inert, deterministic scaffolding for a possible future tiny offline training experiment.
+
+Invariant language:
+- training experiment design is not training
+- training run proposal is not training run
+- artifact candidate is not promoted model
+- rollback plan is not rollback execution
+- evaluation gate is not promotion
+- approval requirement is not approval
+- tiny experiment is not default change
+- offline plan is not live behavior
+
+Objects:
+- TinyTrainingExperimentCandidate
+- TinyTrainingExperimentScope
+- TinyTrainingExperimentApprovalGate
+- TinyTrainingRunPlan
+- TinyTrainingArtifactPlan
+- TinyTrainingEvaluationGate
+- TinyTrainingRollbackRequirement
+- TinyTrainingExperimentDecision
+- TinyTrainingExperimentAuditRecord
+- TinyTrainingExperimentReportEntry
+
+Boundaries:
+- no actual training
+- no fine-tuning
+- no weight update
+- no training job
+- no dataset export
+- no active dataset write
+- no artifact creation
+- no artifact promotion
+- no Model B default change
+- no HYB1 default activation
+- no offline evaluation run activation
+- no provider calls
+- no specialist routing
+- no action/tool execution
+- no memory/canonical mutation
+- no runtime recall mutation
+- no autonomous/background learning
+- no scheduler/worker/queue
+
+Expected final recommendation:
+PROCEED_TRAINED_ARTIFACT_COMPARISON_AGAINST_MODEL_B_DESIGN
