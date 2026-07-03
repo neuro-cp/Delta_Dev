@@ -1,0 +1,3 @@
+Runtime V2.1B - Controlled General Memory Trial Expansion.
+
+Expand controlled general memory trial support across multiple candidate sources while preserving exact explicit approval only, dry-run default, provenance/audit/rollback requirements, no direct provider/evaluator/specialist writes, no autonomous memory, no recall mutation, and no training.

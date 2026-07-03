@@ -1,0 +1,3 @@
+Runtime V2.1C - Provider Live Trial, User-Approved.
+
+Add a single user-approved provider live trial path that remains dry-run by default. Live requires exact approval, env gates, API key, unsupported local question, and --live-provider. Provider output remains evidence-only and non-authoritative.

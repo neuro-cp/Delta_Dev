@@ -1,0 +1,37 @@
+{
+  "phase": "Runtime V2.1E",
+  "scorecard": {
+    "scorecard_id": "v21e-hyb1-scorecard-bf267fc9e65d13f9",
+    "evidence_inputs": {
+      "v20_summary": true,
+      "v20_safety": true,
+      "v18_quality": true,
+      "promotion_readiness": false
+    },
+    "current_status": "dormant_env_gated",
+    "model_b_status": "default_unchanged",
+    "promotion_readiness_status": "report_only_no_change",
+    "blockers": [
+      "HYB1 remains dormant/env-gated",
+      "report-only re-evaluation cannot promote",
+      "future human review required before any default change"
+    ],
+    "supported_outcome": "keep_dormant"
+  },
+  "recommendation": "keep_dormant",
+  "invariant_flags": {
+    "hyb1_reevaluation_report_only_enabled": true,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false,
+    "routing_default_changed": false,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_started": false
+  },
+  "final_recommendation": "PROCEED_V21_SAFETY_CHECKPOINT_REPORT",
+  "all_safe": true
+}

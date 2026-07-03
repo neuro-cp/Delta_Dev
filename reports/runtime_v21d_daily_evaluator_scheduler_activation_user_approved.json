@@ -1,0 +1,42 @@
+{
+  "phase": "Runtime V2.1D",
+  "plan": {
+    "plan_id": "v21d-plan-1172a16c54441b8f",
+    "cadence": "daily",
+    "local_time": "03:00",
+    "dry_run": true,
+    "lockfile_policy": "refuse duplicate runs",
+    "failure_policy": "record advisory failure and stop",
+    "no_memory_mutation_policy": true,
+    "evaluator_results_advisory_only": true,
+    "os_task_registered": false
+  },
+  "disable_plan": {
+    "disable_plan_id": "v21d-disable-f9183db26c28254a",
+    "manual_disable_required": true,
+    "removes_local_artifact_only": true,
+    "os_task_disable_command_text_only": "No OS task is registered by this trial."
+  },
+  "invariant_flags": {
+    "daily_evaluator_scheduler_activation_trial_enabled": true,
+    "disabled_by_default": true,
+    "os_scheduler_task_created": false,
+    "cron_entry_created": false,
+    "background_worker_started": false,
+    "api_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_HYB1_REEVALUATION_REPORT_ONLY",
+  "decision": {
+    "permitted": false,
+    "local_artifact_created": false,
+    "os_task_registered": false,
+    "background_worker_started": false
+  },
+  "all_safe": true
+}

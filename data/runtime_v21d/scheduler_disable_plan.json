@@ -1,0 +1,6 @@
+{
+  "disable_plan_id": "v21d-disable-f9183db26c28254a",
+  "manual_disable_required": true,
+  "removes_local_artifact_only": true,
+  "os_task_disable_command_text_only": "No OS task is registered by this trial."
+}

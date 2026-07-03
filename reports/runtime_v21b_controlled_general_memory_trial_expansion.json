@@ -1,0 +1,183 @@
+{
+  "phase": "Runtime V2.1B",
+  "candidates": [
+    {
+      "candidate_id": "memory-candidate-demo",
+      "source_kind": "v20d_ui_approval_export",
+      "proposed_memory_text": "HYB1 remains dormant and Model B remains the default runtime baseline.",
+      "provenance_reference_ids": [
+        "data/runtime_v20d/approval_exports/memory-candidate-demo.approve.txt"
+      ],
+      "approved": true,
+      "rejected": false,
+      "deferred": false,
+      "rolled_back": false,
+      "ambiguity_flag": false,
+      "sarcasm_flag": false,
+      "misuse_flag": false
+    },
+    {
+      "candidate_id": "session-candidate-demo",
+      "source_kind": "v19d_session_to_candidate",
+      "proposed_memory_text": "Provider evidence remains evidence-only until converted into a reviewed memory candidate.",
+      "provenance_reference_ids": [
+        "reports/runtime_v19d_session_to_candidate_memory_proposal_flow.md"
+      ],
+      "approved": false,
+      "rejected": false,
+      "deferred": false,
+      "rolled_back": false,
+      "ambiguity_flag": false,
+      "sarcasm_flag": false,
+      "misuse_flag": false
+    },
+    {
+      "candidate_id": "ambiguous-candidate-demo",
+      "source_kind": "edited_memory_candidate",
+      "proposed_memory_text": "Maybe remember this if it seems right.",
+      "provenance_reference_ids": [
+        "manual_edit"
+      ],
+      "approved": false,
+      "rejected": false,
+      "deferred": false,
+      "rolled_back": false,
+      "ambiguity_flag": true,
+      "sarcasm_flag": false,
+      "misuse_flag": false
+    }
+  ],
+  "dry_run_decision": {
+    "phase": "Runtime V2.1B",
+    "candidate_id": "memory-candidate-demo",
+    "eligibility": {
+      "eligibility_id": "v21b-eligibility-98791a484cce5c6b",
+      "candidate_id": "memory-candidate-demo",
+      "eligible": true,
+      "blocks": [],
+      "approval": {
+        "header": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE",
+        "line_count": 4,
+        "candidate_id": "memory-candidate-demo",
+        "approved_by": "user",
+        "approval_scope": "single_memory_candidate_only",
+        "matches_required_shape": true
+      }
+    },
+    "controlled_trial_result": {
+      "phase": "Runtime V2.0C",
+      "approval": {
+        "header": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE",
+        "line_count": 4,
+        "candidate_id": "memory-candidate-demo",
+        "approved_by": "user",
+        "approval_scope": "single_memory_candidate_only",
+        "matches_required_shape": true
+      },
+      "record": {
+        "canonical_record_id": "v20c-record-6dad83b74a4ba3a3",
+        "candidate_id": "memory-candidate-demo",
+        "record_text": "HYB1 remains dormant and Model B remains the default runtime baseline.",
+        "provenance_reference_ids": [
+          "data/runtime_v20d/approval_exports/memory-candidate-demo.approve.txt"
+        ],
+        "source": "v20c_controlled_general_memory_trial",
+        "active_for_recall": false,
+        "authoritative": false,
+        "created_at": "2026-07-03T17:44:10.324623+00:00"
+      },
+      "result": {
+        "candidate_id": "memory-candidate-demo",
+        "outcome": "dry_run_approved",
+        "record_written": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "provider_call_performed": false,
+        "autonomous_write": false
+      },
+      "invariant_flags": {
+        "controlled_general_memory_trial_enabled": true,
+        "explicit_approval_required": true,
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "autonomous_write_allowed": false,
+        "recall_mutated": false,
+        "authoritative_recall_enabled": false,
+        "training_triggered": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_REVIEW_UI_WRITE_APPROVAL_BRIDGE"
+    },
+    "decision": {
+      "decision_id": "v21b-decision-4e3aa2f1f397657e",
+      "outcome": "dry_run_approved",
+      "audit_required": true,
+      "rollback_reference_required": true,
+      "one_record_per_approval": true,
+      "bulk_approval_allowed": false
+    },
+    "invariant_flags": {
+      "controlled_general_memory_expansion_enabled": true,
+      "dry_run_default": true,
+      "autonomous_write_allowed": false,
+      "provider_direct_write_allowed": false,
+      "memory_write_performed_without_explicit_approval": false,
+      "recall_mutated": false,
+      "provider_call_performed": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "scheduler_started": false,
+      "hyb1_default_activation_enabled": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_PROVIDER_LIVE_TRIAL_USER_APPROVED"
+  },
+  "blocked_decision": {
+    "phase": "Runtime V2.1B",
+    "candidate_id": "ambiguous-candidate-demo",
+    "eligibility": {
+      "eligibility_id": "v21b-eligibility-117e299697621786",
+      "candidate_id": "ambiguous-candidate-demo",
+      "eligible": false,
+      "blocks": [
+        "ambiguity_sarcasm_or_misuse_flag"
+      ],
+      "approval": {
+        "header": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE",
+        "line_count": 4,
+        "candidate_id": "ambiguous-candidate-demo",
+        "approved_by": "user",
+        "approval_scope": "single_memory_candidate_only",
+        "matches_required_shape": true
+      }
+    },
+    "controlled_trial_result": null,
+    "decision": {
+      "decision_id": "v21b-decision-7a5154112d29b3bc",
+      "outcome": "blocked",
+      "audit_required": true,
+      "rollback_reference_required": true,
+      "one_record_per_approval": true,
+      "bulk_approval_allowed": false
+    },
+    "invariant_flags": {
+      "controlled_general_memory_expansion_enabled": true,
+      "dry_run_default": true,
+      "autonomous_write_allowed": false,
+      "provider_direct_write_allowed": false,
+      "memory_write_performed_without_explicit_approval": false,
+      "recall_mutated": false,
+      "provider_call_performed": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "scheduler_started": false,
+      "hyb1_default_activation_enabled": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_PROVIDER_LIVE_TRIAL_USER_APPROVED"
+  },
+  "all_safe": true,
+  "final_recommendation": "PROCEED_PROVIDER_LIVE_TRIAL_USER_APPROVED"
+}

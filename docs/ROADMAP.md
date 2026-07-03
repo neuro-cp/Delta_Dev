@@ -2,22 +2,22 @@
 
 ## Current Phase
 
-Runtime V2.1: Localhost Review UI Or Controlled General Memory Expansion
+Runtime V2.2: Localhost UI Mutation Bridge Or Controlled Recall Expansion
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
 `docs/INVARIANTS.md`, then `docs/UPDATE.md` before continuing implementation.
 
-Runtime V2.0A through V2.0H are complete. DELTA now has consolidated local UX,
-controlled explicit-approval memory trial scaffolding, candidate-context
-controlled recall, review UI approval exports, provider evidence review
-bridging, scheduler activation design-only scaffolding, and a V2.0 safety
-checkpoint.
+Runtime V2.1A through V2.1F are complete. DELTA now has a local-only localhost
+review UI prototype, expanded controlled memory candidate handling, a
+user-approved provider live trial gate, a user-approved scheduler local-artifact
+gate, HYB1 report-only re-evaluation, and a V2.1 safety checkpoint.
 
-The next recommended phase is either V2.1A Web/localhost Review UI Prototype or
-V2.1B Controlled General Memory Trial Expansion. Preserve the V2.0 safety
-boundary: memory candidates are not truth, controlled recall is not authority,
-provider/evaluator/specialist output remains evidence-only, and scheduler
-activation requires explicit future approval.
+The next recommended phase is either V2.2A Localhost UI Mutation Bridge,
+Explicit Approval Only or V2.2B Controlled General Recall Expansion. Preserve
+the V2.1 safety boundary: localhost UI is not implicit approval, memory
+candidates are not truth, controlled recall is not authority, provider/evaluator
+/specialist output remains evidence-only, scheduler activation remains gated,
+and HYB1 re-evaluation is not HYB1 promotion.
 
 Active guardrails:
 
@@ -27,7 +27,7 @@ Active guardrails:
 - Do not treat controlled recall as authoritative memory.
 - Do not create autonomous memory writes.
 - Do not make provider, evaluator, or specialist outputs authoritative.
-- Treat `reports/runtime_v20a_v20h_marathon_summary.md` as the current V2.0
+- Treat `reports/runtime_v21a_v21f_marathon_summary.md` as the current V2.1
   checkpoint.
 
 ## Core Cognitive Cycle

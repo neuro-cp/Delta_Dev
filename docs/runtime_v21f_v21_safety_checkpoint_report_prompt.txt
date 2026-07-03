@@ -1,0 +1,3 @@
+Runtime V2.1F - V2.1 Safety Checkpoint Report.
+
+Summarize V2.1A through V2.1E, active/inactive capabilities, localhost UI, controlled memory expansion, provider live trial gate, scheduler activation gate, HYB1 report-only status, Model B status, safety invariants, and next V2.2 recommendations.

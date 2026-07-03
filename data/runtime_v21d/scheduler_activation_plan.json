@@ -1,0 +1,11 @@
+{
+  "plan_id": "v21d-plan-1172a16c54441b8f",
+  "cadence": "daily",
+  "local_time": "03:00",
+  "dry_run": true,
+  "lockfile_policy": "refuse duplicate runs",
+  "failure_policy": "record advisory failure and stop",
+  "no_memory_mutation_policy": true,
+  "evaluator_results_advisory_only": true,
+  "os_task_registered": false
+}

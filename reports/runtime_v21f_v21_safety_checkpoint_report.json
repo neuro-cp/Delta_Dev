@@ -1,0 +1,70 @@
+{
+  "phase": "Runtime V2.1F",
+  "completed_phases": [
+    "V2.1A Web / Localhost Review UI Prototype",
+    "V2.1B Controlled General Memory Trial Expansion",
+    "V2.1C Provider Live Trial, User-Approved",
+    "V2.1D Daily Evaluator Scheduler Activation, User-Approved",
+    "V2.1E HYB1 Re-evaluation, Report-Only",
+    "V2.1F V2.1 Safety Checkpoint Report"
+  ],
+  "active_capabilities": [
+    "localhost review UI rendering",
+    "structured approval export",
+    "controlled explicit-approval memory expansion",
+    "candidate-context recall inspection",
+    "provider live trial dry-run and gated one-shot path",
+    "scheduler local artifact design",
+    "HYB1 report-only re-evaluation"
+  ],
+  "inactive_capabilities": [
+    "training",
+    "fine-tuning",
+    "model weight update",
+    "HYB1 default activation",
+    "authoritative recall",
+    "unapproved scheduler/background worker",
+    "action execution",
+    "autonomous memory writes"
+  ],
+  "status": {
+    "model_b": "default_unchanged",
+    "hyb1": "dormant_env_gated_report_only",
+    "localhost_ui": "local_only_prototype",
+    "memory": "controlled_explicit_approval_only",
+    "recall": "candidate_context_only",
+    "provider": "dry_run_default_user_approved_live_path_only",
+    "scheduler": "disabled_by_default_local_artifact_gate_only",
+    "training": "not_active",
+    "action_execution": "not_active"
+  },
+  "safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "training_performed": false,
+    "action_execution_performed": false,
+    "autonomous_memory_write_performed": false,
+    "authoritative_general_recall": false,
+    "recall_mutated": false,
+    "unapproved_scheduler_started": false,
+    "provider_specialist_evaluator_authority_transfer": false
+  },
+  "updated_pipeline": [
+    "Localhost review UI prototype",
+    "Controlled memory expansion",
+    "User-approved provider live trial path",
+    "User-approved scheduler local artifact gate",
+    "HYB1 report-only re-evaluation",
+    "V2.1 safety checkpoint"
+  ],
+  "next_recommended_phases": [
+    "V2.2A Localhost UI Mutation Bridge, Explicit Approval Only",
+    "V2.2B Controlled General Recall Expansion",
+    "V2.2C Provider Evidence to Memory Candidate Conversion",
+    "V2.2D Evaluator-Assisted Memory Candidate Review",
+    "V2.2E HYB1 Opt-In Shadow Trial Design",
+    "V2.2F V2.2 Safety Closure"
+  ],
+  "final_recommendation": "PROCEED_V22_LOCALHOST_UI_MUTATION_BRIDGE_OR_CONTROLLED_RECALL_EXPANSION",
+  "all_safe": true
+}

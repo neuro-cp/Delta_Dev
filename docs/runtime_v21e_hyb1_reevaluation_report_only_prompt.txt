@@ -1,0 +1,3 @@
+Runtime V2.1E - HYB1 Re-evaluation, Report-Only.
+
+Re-evaluate HYB1 using current reports and scorecards without activating, promoting, changing routing defaults, calling providers, mutating memory/recall, training, or starting schedulers. HYB1 remains dormant/env-gated.

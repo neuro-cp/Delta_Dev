@@ -1,0 +1,45 @@
+{
+  "phase": "Runtime V2.1C",
+  "request": {
+    "request_id": "v21c-request-f2e4a451ef0ca16a",
+    "question": "What is a recent fact DELTA cannot know locally?",
+    "live_provider": false
+  },
+  "approval": {
+    "header": "",
+    "line_count": 0,
+    "matches_required_shape": false
+  },
+  "gate": {
+    "gate_id": "v21c-gate-4f34c1224a4389d0",
+    "permitted": false,
+    "blocks": [
+      "dry_run_no_live_provider"
+    ]
+  },
+  "redacted_request": {
+    "api_key_present": true,
+    "api_key_redacted": true
+  },
+  "provider_evidence_packet": null,
+  "decision": {
+    "decision_id": "v21c-decision-2a5801870e6c288a",
+    "provider_call_performed": false,
+    "provider_answer_authoritative": false,
+    "evidence_only": true
+  },
+  "invariant_flags": {
+    "user_approved_provider_live_trial_enabled": true,
+    "dry_run_default": true,
+    "provider_response_authoritative": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULER_ACTIVATION_USER_APPROVED",
+  "all_safe": true
+}

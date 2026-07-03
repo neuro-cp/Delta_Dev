@@ -6,6 +6,33 @@ file before making changes.
 
 ## 2026-07-02
 
+### Runtime V2.1A-V2.1F Localhost UI, Provider Gate, Scheduler Gate, And HYB1 Review
+
+Completed Runtime V2.1A through V2.1F after the V2.0 safety checkpoint.
+The run added a local-only localhost review UI prototype, controlled general
+memory trial expansion, a user-approved provider live trial gate, a
+user-approved daily evaluator scheduler local-artifact gate, HYB1 report-only
+re-evaluation, and a V2.1 safety checkpoint.
+
+Generated reports:
+
+- `reports/runtime_v21a_web_localhost_review_ui_prototype.md`
+- `reports/runtime_v21b_controlled_general_memory_trial_expansion.md`
+- `reports/runtime_v21c_provider_live_trial_user_approved.md`
+- `reports/runtime_v21d_daily_evaluator_scheduler_activation_user_approved.md`
+- `reports/runtime_v21e_hyb1_reevaluation_report_only.md`
+- `reports/runtime_v21f_v21_safety_checkpoint_report.md`
+- `reports/runtime_v21a_v21f_marathon_summary.md`
+
+Final verification collected `610` runtime tests and passed `610`. Model B
+remains the default, HYB1 remains dormant/env-gated, training remains disabled,
+provider output remains evidence-only, controlled memory remains explicit
+approval only, controlled recall remains candidate-context only, and scheduler
+activation remains gated local-artifact only.
+
+Final recommendation:
+`PROCEED_V22_LOCALHOST_UI_MUTATION_BRIDGE_OR_CONTROLLED_RECALL_EXPANSION`.
+
 ### Runtime V2.0A-V2.0H Local UX, Controlled Memory, Recall, And Scheduler Design
 
 Completed Runtime V2.0A through V2.0H after the V1.9 safety checkpoint.

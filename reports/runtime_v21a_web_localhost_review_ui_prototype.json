@@ -1,0 +1,26 @@
+{
+  "phase": "Runtime V2.1A",
+  "static_path": "ui\\delta_localhost_review_ui_static.html",
+  "config": {
+    "host": "127.0.0.1",
+    "port": 8765,
+    "external_binding_allowed": false,
+    "live_provider_calls_allowed": false,
+    "scheduler_calls_allowed": false,
+    "hidden_memory_writes_allowed": false
+  },
+  "invariant_flags": {
+    "localhost_review_ui_enabled": true,
+    "localhost_only": true,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "provider_call_performed": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_CONTROLLED_GENERAL_MEMORY_TRIAL_EXPANSION",
+  "all_safe": true
+}

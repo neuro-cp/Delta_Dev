@@ -1,0 +1,3 @@
+Runtime V2.1D - Daily Evaluator Scheduler Activation, User-Approved.
+
+Create a tightly gated local scheduler activation trial. It must remain disabled by default, require exact approval and env gates, create only local artifacts in tests, include disable/rollback planning, and never create OS scheduled tasks or background workers during tests.
