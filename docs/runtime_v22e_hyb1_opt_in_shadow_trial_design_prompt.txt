@@ -1,0 +1,6 @@
+Runtime V2.2E - HYB1 Opt-In Shadow Trial Design
+
+Design HYB1 shadow trial gating without activating HYB1 by default.
+
+HYB1 remains dormant and env-gated. Shadow trial readiness requires explicit approval and environment flags, but this design must not execute HYB1, promote HYB1, change Model B default, mutate memory, call providers, or alter runtime behavior.
+

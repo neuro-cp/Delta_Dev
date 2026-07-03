@@ -1,0 +1,6 @@
+Runtime V2.2B - Controlled General Recall Expansion
+
+Expand local recall only as candidate context from approved local trial records and repo-local scaffold knowledge.
+
+Recall must remain non-authoritative. It must not mutate memory, alter recall state, call providers, start schedulers, train models, activate HYB1 by default, or make truth claims. Explicit source replay must remain isolated and deterministic.
+

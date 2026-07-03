@@ -1,0 +1,6 @@
+Runtime V2.2C - Provider Evidence to Memory Candidate Conversion
+
+Convert provider, specialist, or evaluator evidence into memory candidate proposals only.
+
+Provider output is evidence, not authority. Specialist output is evidence, not authority. Evaluator output is advisory evidence, not approval. Missing provenance, unsafe evidence, or unresolved conflict must block write-readiness and require human review.
+

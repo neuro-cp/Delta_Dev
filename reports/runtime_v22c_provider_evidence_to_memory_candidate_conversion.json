@@ -1,0 +1,160 @@
+{
+  "phase": "Runtime V2.2C",
+  "cases": [
+    {
+      "phase": "Runtime V2.2C",
+      "source": {
+        "source_id": "provider-demo",
+        "source_kind": "provider",
+        "evidence_text": "Provider evidence remains evidence until reviewed.",
+        "provenance_reference": "provider-report",
+        "uncertainty": "unverified evidence",
+        "conflict_flag": false,
+        "unsafe_flag": false
+      },
+      "proposal": {
+        "memory_candidate_id": "v22c-candidate-779d3fb9f9bfb886",
+        "candidate_text": "Provider evidence remains evidence until reviewed.",
+        "source_kind": "provider",
+        "provenance_reference_ids": [
+          "provider-report"
+        ],
+        "uncertainty": "unverified evidence",
+        "human_approval_required": true,
+        "canonical_write_ready": false,
+        "approved": false,
+        "written": false,
+        "evaluator_advisory_only": false
+      },
+      "safety_review": {
+        "blocks": [],
+        "review_required": false
+      },
+      "decision": {
+        "candidate_created": true,
+        "canonical_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false
+      },
+      "invariant_flags": {
+        "provider_evidence_to_candidate_enabled": true,
+        "canonical_write_ready_default": false,
+        "approved_default": false,
+        "written_default": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_EVALUATOR_ASSISTED_MEMORY_CANDIDATE_REVIEW"
+    },
+    {
+      "phase": "Runtime V2.2C",
+      "source": {
+        "source_id": "specialist-demo",
+        "source_kind": "specialist",
+        "evidence_text": "Specialist output is advisory evidence.",
+        "provenance_reference": "specialist-report",
+        "uncertainty": "unverified evidence",
+        "conflict_flag": false,
+        "unsafe_flag": false
+      },
+      "proposal": {
+        "memory_candidate_id": "v22c-candidate-70da0867ba9afdc5",
+        "candidate_text": "Specialist output is advisory evidence.",
+        "source_kind": "specialist",
+        "provenance_reference_ids": [
+          "specialist-report"
+        ],
+        "uncertainty": "unverified evidence",
+        "human_approval_required": true,
+        "canonical_write_ready": false,
+        "approved": false,
+        "written": false,
+        "evaluator_advisory_only": false
+      },
+      "safety_review": {
+        "blocks": [],
+        "review_required": false
+      },
+      "decision": {
+        "candidate_created": true,
+        "canonical_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false
+      },
+      "invariant_flags": {
+        "provider_evidence_to_candidate_enabled": true,
+        "canonical_write_ready_default": false,
+        "approved_default": false,
+        "written_default": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_EVALUATOR_ASSISTED_MEMORY_CANDIDATE_REVIEW"
+    },
+    {
+      "phase": "Runtime V2.2C",
+      "source": {
+        "source_id": "evaluator-demo",
+        "source_kind": "evaluator",
+        "evidence_text": "Evaluator output annotates candidates only.",
+        "provenance_reference": "evaluator-report",
+        "uncertainty": "unverified evidence",
+        "conflict_flag": false,
+        "unsafe_flag": false
+      },
+      "proposal": {
+        "memory_candidate_id": "v22c-candidate-bbdb9aefefaee136",
+        "candidate_text": "Evaluator output annotates candidates only.",
+        "source_kind": "evaluator",
+        "provenance_reference_ids": [
+          "evaluator-report"
+        ],
+        "uncertainty": "unverified evidence",
+        "human_approval_required": true,
+        "canonical_write_ready": false,
+        "approved": false,
+        "written": false,
+        "evaluator_advisory_only": true
+      },
+      "safety_review": {
+        "blocks": [],
+        "review_required": true
+      },
+      "decision": {
+        "candidate_created": true,
+        "canonical_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false
+      },
+      "invariant_flags": {
+        "provider_evidence_to_candidate_enabled": true,
+        "canonical_write_ready_default": false,
+        "approved_default": false,
+        "written_default": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_EVALUATOR_ASSISTED_MEMORY_CANDIDATE_REVIEW"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_EVALUATOR_ASSISTED_MEMORY_CANDIDATE_REVIEW"
+}

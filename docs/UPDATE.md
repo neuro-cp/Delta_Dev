@@ -6,6 +6,42 @@ file before making changes.
 
 ## 2026-07-02
 
+### Runtime V2.2A-V2.2F UI Bridge, Controlled Recall, Evidence Candidates, And HYB1 Shadow Design
+
+Completed Runtime V2.2A through V2.2F after the V2.1 safety checkpoint.
+The run added a localhost UI structured mutation export bridge, controlled
+general recall expansion, provider/specialist/evaluator evidence to memory
+candidate conversion, evaluator-assisted advisory candidate review, HYB1 opt-in
+shadow trial design, and a V2.2 safety closure report.
+
+Generated reports:
+
+- `reports/runtime_v22a_localhost_ui_mutation_bridge_explicit_approval_only.md`
+- `reports/runtime_v22b_controlled_general_recall_expansion.md`
+- `reports/runtime_v22c_provider_evidence_to_memory_candidate_conversion.md`
+- `reports/runtime_v22d_evaluator_assisted_memory_candidate_review.md`
+- `reports/runtime_v22e_hyb1_opt_in_shadow_trial_design.md`
+- `reports/runtime_v22f_v22_safety_closure_report.md`
+- `reports/runtime_v22a_v22f_marathon_summary.md`
+
+Local entrypoints:
+
+- `scripts/delta_ui_bridge.py`
+- `scripts/delta_recall_expand.py`
+- `scripts/delta_provider_evidence_candidate.py`
+- `scripts/delta_evaluator_candidate_review.py`
+
+Final verification collected `642` runtime tests and passed `642`. Model B
+remains the default, HYB1 remains dormant/env-gated, controlled recall remains
+candidate-context only, localhost UI exports do not mutate memory,
+provider/specialist/evaluator outputs remain evidence-only, evaluator review is
+advisory only, training remains disabled, no action execution occurred, no
+autonomous memory write occurred, no recall mutation occurred, and no scheduler
+or background worker was started.
+
+Final recommendation:
+`PROCEED_V23_HYB1_SHADOW_SIMULATION_OR_LOCALHOST_WRITE_EXECUTION_BRIDGE`.
+
 ### Runtime V2.1A-V2.1F Localhost UI, Provider Gate, Scheduler Gate, And HYB1 Review
 
 Completed Runtime V2.1A through V2.1F after the V2.0 safety checkpoint.

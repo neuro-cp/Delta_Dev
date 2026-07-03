@@ -1,0 +1,69 @@
+{
+  "phase": "Runtime V2.2F",
+  "completed_phases": [
+    "V2.2A Localhost UI Mutation Bridge, Explicit Approval Only",
+    "V2.2B Controlled General Recall Expansion",
+    "V2.2C Provider Evidence to Memory Candidate Conversion",
+    "V2.2D Evaluator-Assisted Memory Candidate Review",
+    "V2.2E HYB1 Opt-In Shadow Trial Design",
+    "V2.2F V2.2 Safety Closure Report"
+  ],
+  "active_capabilities": [
+    "localhost UI structured export bridge",
+    "controlled recall expansion",
+    "provider evidence to candidate proposal conversion",
+    "evaluator advisory candidate review",
+    "HYB1 shadow trial design"
+  ],
+  "inactive_capabilities": [
+    "training",
+    "fine-tuning",
+    "HYB1 default activation",
+    "HYB1 promotion",
+    "authoritative recall",
+    "unapproved scheduler/background worker",
+    "action execution",
+    "autonomous memory writes"
+  ],
+  "status": {
+    "model_b": "default_unchanged",
+    "hyb1": "dormant_env_gated_shadow_design_only",
+    "memory": "candidate_and_explicit_approval_only",
+    "recall": "candidate_context_only",
+    "provider": "evidence_only_candidate_conversion_only",
+    "evaluator": "advisory_only",
+    "scheduler": "not_started",
+    "training": "not_active",
+    "action_execution": "not_active"
+  },
+  "safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_default_activation_enabled": false,
+    "training_performed": false,
+    "action_execution_performed": false,
+    "autonomous_memory_write_performed": false,
+    "authoritative_general_recall": false,
+    "recall_mutated": false,
+    "unapproved_scheduler_started": false,
+    "provider_specialist_evaluator_authority_transfer": false
+  },
+  "updated_pipeline": [
+    "Localhost UI structured export",
+    "Controlled recall expansion",
+    "Evidence-to-candidate proposal",
+    "Evaluator advisory review",
+    "HYB1 opt-in shadow design",
+    "V2.2 safety closure"
+  ],
+  "next_recommended_phases": [
+    "V2.3A HYB1 Shadow Trial Simulation, Opt-In Only",
+    "V2.3B Localhost UI Candidate Write Execution Bridge, Explicit Approval Only",
+    "V2.3C Controlled Recall-to-Synthesis Integration",
+    "V2.3D Provider Evidence Live-to-Candidate Trial, User-Approved",
+    "V2.3E Daily Evaluator Scheduled Dry-Run Trial",
+    "V2.3F V2.3 Safety Checkpoint"
+  ],
+  "final_recommendation": "PROCEED_V23_HYB1_SHADOW_SIMULATION_OR_LOCALHOST_WRITE_EXECUTION_BRIDGE",
+  "all_safe": true
+}

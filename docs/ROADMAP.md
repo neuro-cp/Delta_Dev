@@ -2,22 +2,24 @@
 
 ## Current Phase
 
-Runtime V2.2: Localhost UI Mutation Bridge Or Controlled Recall Expansion
+Runtime V2.3: HYB1 Shadow Simulation Or Localhost Write Execution Bridge
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
 `docs/INVARIANTS.md`, then `docs/UPDATE.md` before continuing implementation.
 
-Runtime V2.1A through V2.1F are complete. DELTA now has a local-only localhost
-review UI prototype, expanded controlled memory candidate handling, a
-user-approved provider live trial gate, a user-approved scheduler local-artifact
-gate, HYB1 report-only re-evaluation, and a V2.1 safety checkpoint.
+Runtime V2.2A through V2.2F are complete. DELTA now has a localhost UI
+structured mutation export bridge, controlled general recall expansion,
+provider/specialist/evaluator evidence to memory candidate conversion,
+evaluator-assisted advisory candidate review, HYB1 opt-in shadow trial design,
+and a V2.2 safety closure checkpoint.
 
-The next recommended phase is either V2.2A Localhost UI Mutation Bridge,
-Explicit Approval Only or V2.2B Controlled General Recall Expansion. Preserve
-the V2.1 safety boundary: localhost UI is not implicit approval, memory
-candidates are not truth, controlled recall is not authority, provider/evaluator
-/specialist output remains evidence-only, scheduler activation remains gated,
-and HYB1 re-evaluation is not HYB1 promotion.
+The next recommended phase is either V2.3A HYB1 Shadow Trial Simulation,
+Opt-In Only or V2.3B Localhost UI Candidate Write Execution Bridge, Explicit
+Approval Only. Preserve the V2.2 safety boundary: localhost UI export is not
+implicit approval, memory candidates are not truth, controlled recall is not
+authority, provider/evaluator/specialist output remains evidence-only, evaluator
+review remains advisory, scheduler activation remains gated, and HYB1 shadow
+design is not HYB1 promotion.
 
 Active guardrails:
 
@@ -27,7 +29,7 @@ Active guardrails:
 - Do not treat controlled recall as authoritative memory.
 - Do not create autonomous memory writes.
 - Do not make provider, evaluator, or specialist outputs authoritative.
-- Treat `reports/runtime_v21a_v21f_marathon_summary.md` as the current V2.1
+- Treat `reports/runtime_v22a_v22f_marathon_summary.md` as the current V2.2
   checkpoint.
 
 ## Core Cognitive Cycle

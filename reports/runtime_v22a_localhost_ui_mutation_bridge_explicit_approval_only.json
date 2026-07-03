@@ -1,0 +1,157 @@
+{
+  "phase": "Runtime V2.2A",
+  "cases": [
+    {
+      "phase": "Runtime V2.2A",
+      "request": {
+        "request_id": "v22a-request-871664189ff8c52a",
+        "candidate_id": "memory-candidate-demo",
+        "event_kind": "approve",
+        "dry_run": true
+      },
+      "event_text": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE\ncandidate_id=memory-candidate-demo\napproved_by=user\napproval_scope=single_memory_candidate_only\napproval_source=localhost_review_ui",
+      "parsed_event": {
+        "header": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE",
+        "line_count": 5,
+        "candidate_id": "memory-candidate-demo",
+        "approved_by": "user",
+        "approval_scope": "single_memory_candidate_only",
+        "approval_source": "localhost_review_ui",
+        "approval_valid": true,
+        "reject_valid": false,
+        "defer_valid": false,
+        "machine_readable": true
+      },
+      "decision": {
+        "decision_id": "v22a-decision-4ec1154455a54f49",
+        "event_valid": true,
+        "export_written": false,
+        "backend_memory_write_performed": false,
+        "reason": "export_only_no_backend_write"
+      },
+      "audit_record": {
+        "audit_id": "v22a-audit-4e18a990227f843e",
+        "hidden_write": false,
+        "provider_call_performed": false,
+        "recall_mutated": false
+      },
+      "invariant_flags": {
+        "localhost_ui_mutation_bridge_enabled": true,
+        "dry_run_default": true,
+        "hidden_ui_writes_allowed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_GENERAL_RECALL_EXPANSION"
+    },
+    {
+      "phase": "Runtime V2.2A",
+      "request": {
+        "request_id": "v22a-request-c33b4659ca00e552",
+        "candidate_id": "memory-candidate-demo",
+        "event_kind": "reject",
+        "dry_run": true
+      },
+      "event_text": "REJECT_MEMORY_CANDIDATE\ncandidate_id=memory-candidate-demo\nrejected_by=user\nrejection_scope=single_memory_candidate_only\nrejection_source=localhost_review_ui",
+      "parsed_event": {
+        "header": "REJECT_MEMORY_CANDIDATE",
+        "line_count": 5,
+        "candidate_id": "memory-candidate-demo",
+        "rejected_by": "user",
+        "rejection_scope": "single_memory_candidate_only",
+        "rejection_source": "localhost_review_ui",
+        "approval_valid": false,
+        "reject_valid": true,
+        "defer_valid": false,
+        "machine_readable": true
+      },
+      "decision": {
+        "decision_id": "v22a-decision-f8d0a5ae2f136aab",
+        "event_valid": true,
+        "export_written": false,
+        "backend_memory_write_performed": false,
+        "reason": "export_only_no_backend_write"
+      },
+      "audit_record": {
+        "audit_id": "v22a-audit-b319104eed3807a4",
+        "hidden_write": false,
+        "provider_call_performed": false,
+        "recall_mutated": false
+      },
+      "invariant_flags": {
+        "localhost_ui_mutation_bridge_enabled": true,
+        "dry_run_default": true,
+        "hidden_ui_writes_allowed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_GENERAL_RECALL_EXPANSION"
+    },
+    {
+      "phase": "Runtime V2.2A",
+      "request": {
+        "request_id": "v22a-request-6f75d1d1fb98c0d3",
+        "candidate_id": "memory-candidate-demo",
+        "event_kind": "defer",
+        "dry_run": true
+      },
+      "event_text": "DEFER_MEMORY_CANDIDATE\ncandidate_id=memory-candidate-demo\ndeferred_by=user\ndefer_scope=single_memory_candidate_only\ndefer_source=localhost_review_ui",
+      "parsed_event": {
+        "header": "DEFER_MEMORY_CANDIDATE",
+        "line_count": 5,
+        "candidate_id": "memory-candidate-demo",
+        "deferred_by": "user",
+        "defer_scope": "single_memory_candidate_only",
+        "defer_source": "localhost_review_ui",
+        "approval_valid": false,
+        "reject_valid": false,
+        "defer_valid": true,
+        "machine_readable": true
+      },
+      "decision": {
+        "decision_id": "v22a-decision-8391789963278adb",
+        "event_valid": true,
+        "export_written": false,
+        "backend_memory_write_performed": false,
+        "reason": "export_only_no_backend_write"
+      },
+      "audit_record": {
+        "audit_id": "v22a-audit-f3c42623b687f1d3",
+        "hidden_write": false,
+        "provider_call_performed": false,
+        "recall_mutated": false
+      },
+      "invariant_flags": {
+        "localhost_ui_mutation_bridge_enabled": true,
+        "dry_run_default": true,
+        "hidden_ui_writes_allowed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_GENERAL_RECALL_EXPANSION"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CONTROLLED_GENERAL_RECALL_EXPANSION"
+}

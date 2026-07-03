@@ -1,0 +1,105 @@
+{
+  "phase": "Runtime V2.2D",
+  "cases": [
+    {
+      "phase": "Runtime V2.2D",
+      "input": {
+        "candidate_id": "candidate-good",
+        "candidate_text": "Reviewed candidate.",
+        "provenance_reference_ids": [
+          "source"
+        ],
+        "ambiguity_flag": false,
+        "sarcasm_flag": false,
+        "malicious_signal_flag": false
+      },
+      "risk_assessment": {
+        "risk_assessment_id": "v22d-risk-d149c2b333b43738",
+        "risks": [],
+        "advisory_only": true
+      },
+      "recommendation": {
+        "recommendation_id": "v22d-recommendation-47ec1f878b69ce53",
+        "value": "promote_to_human_review",
+        "is_approval": false,
+        "is_deletion": false,
+        "advisory_only": true
+      },
+      "decision": {
+        "canonical_write_performed": false,
+        "memory_deleted": false,
+        "recall_mutated": false,
+        "training_triggered": false
+      },
+      "invariant_flags": {
+        "evaluator_candidate_review_enabled": true,
+        "dry_run_default": true,
+        "evaluator_output_authoritative": false,
+        "evaluator_can_approve": false,
+        "evaluator_can_write": false,
+        "evaluator_can_delete": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_HYB1_OPT_IN_SHADOW_TRIAL_DESIGN"
+    },
+    {
+      "phase": "Runtime V2.2D",
+      "input": {
+        "candidate_id": "candidate-ambiguous",
+        "candidate_text": "Maybe save this.",
+        "provenance_reference_ids": [
+          "source"
+        ],
+        "ambiguity_flag": true,
+        "sarcasm_flag": false,
+        "malicious_signal_flag": false
+      },
+      "risk_assessment": {
+        "risk_assessment_id": "v22d-risk-6e879d8ba782aa37",
+        "risks": [
+          "ambiguity"
+        ],
+        "advisory_only": true
+      },
+      "recommendation": {
+        "recommendation_id": "v22d-recommendation-7c5f28f0b0d6bd35",
+        "value": "ambiguity_review_required",
+        "is_approval": false,
+        "is_deletion": false,
+        "advisory_only": true
+      },
+      "decision": {
+        "canonical_write_performed": false,
+        "memory_deleted": false,
+        "recall_mutated": false,
+        "training_triggered": false
+      },
+      "invariant_flags": {
+        "evaluator_candidate_review_enabled": true,
+        "dry_run_default": true,
+        "evaluator_output_authoritative": false,
+        "evaluator_can_approve": false,
+        "evaluator_can_write": false,
+        "evaluator_can_delete": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "provider_call_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_HYB1_OPT_IN_SHADOW_TRIAL_DESIGN"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_HYB1_OPT_IN_SHADOW_TRIAL_DESIGN"
+}

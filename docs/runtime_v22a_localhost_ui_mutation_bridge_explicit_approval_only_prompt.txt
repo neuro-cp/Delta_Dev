@@ -1,0 +1,14 @@
+Runtime V2.2A - Localhost UI Mutation Bridge, Explicit Approval Only
+
+Create an explicit-approval localhost UI mutation bridge scaffold.
+
+The bridge may export approval, rejection, or defer events for one memory candidate at a time, but it must not perform a backend memory write. Approval requires exact structured text:
+
+APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE
+candidate_id=<id>
+approved_by=user
+approval_scope=single_memory_candidate_only
+approval_source=localhost_review_ui
+
+Casual approvals must not count. The bridge remains local, deterministic, export-only, and non-authoritative.
+

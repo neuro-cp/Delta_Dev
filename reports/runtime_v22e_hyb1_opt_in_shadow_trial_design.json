@@ -1,0 +1,46 @@
+{
+  "phase": "Runtime V2.2E",
+  "scope": {
+    "scope_id": "v22e-scope-0bb09d80600eec3e",
+    "shadow_comparison_only": true,
+    "output_authoritative": false,
+    "can_promote_hyb1": false
+  },
+  "opt_in_gate": {
+    "env_enabled": false,
+    "allow_execution": false,
+    "approval": {
+      "approval_present": false,
+      "matches_required_shape": false
+    },
+    "opt_in_ready": false
+  },
+  "comparison_plan": {
+    "model_b_remains_default": true,
+    "hyb1_output_comparison_only": true,
+    "hyb1_cannot_write_memory": true,
+    "hyb1_cannot_alter_routing_defaults": true
+  },
+  "decision": {
+    "design_only": true,
+    "executes_hyb1_now": false,
+    "promotes_hyb1": false,
+    "changes_default": false
+  },
+  "invariant_flags": {
+    "hyb1_shadow_trial_design_enabled": true,
+    "hyb1_shadow_execution_enabled_by_default": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false,
+    "routing_default_changed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "provider_call_performed": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_started": false
+  },
+  "final_recommendation": "PROCEED_V22_SAFETY_CLOSURE",
+  "all_safe": true
+}
