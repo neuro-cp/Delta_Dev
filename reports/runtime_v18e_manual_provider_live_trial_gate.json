@@ -1,0 +1,84 @@
+{
+  "phase": "Runtime V1.8E",
+  "request": {
+    "request_id": "v18e-request-f9750c0d566b5799",
+    "question": "What is a recent fact DELTA cannot know locally?",
+    "explicit_live_flag_required": true
+  },
+  "requirements": [
+    {
+      "requirement_id": "v18e-req-b56122ec210815ea",
+      "name": "provider_enabled",
+      "passed": false,
+      "rationale": "DELTA_UNKNOWN_PROVIDER_ENABLED must be true."
+    },
+    {
+      "requirement_id": "v18e-req-05d31370154c8bcf",
+      "name": "live_call_allowed",
+      "passed": false,
+      "rationale": "DELTA_UNKNOWN_PROVIDER_ALLOW_LIVE_CALL must be true."
+    },
+    {
+      "requirement_id": "v18e-req-92610589426ef8c0",
+      "name": "key_present",
+      "passed": true,
+      "rationale": "Unknown-provider or evaluator API key must be present."
+    },
+    {
+      "requirement_id": "v18e-req-0df3744173d89833",
+      "name": "unsupported_locally",
+      "passed": true,
+      "rationale": "Question must be unsupported by local router."
+    },
+    {
+      "requirement_id": "v18e-req-d9a301cd2226a767",
+      "name": "explicit_cli_live_flag_future_required",
+      "passed": true,
+      "rationale": "V1.8F must still require --live-provider."
+    },
+    {
+      "requirement_id": "v18e-req-c0f84f40d8fc085e",
+      "name": "evidence_only",
+      "passed": true,
+      "rationale": "Provider answer must remain evidence-only."
+    },
+    {
+      "requirement_id": "v18e-req-2ff1cfa939e0d468",
+      "name": "no_mutation",
+      "passed": true,
+      "rationale": "No memory write, recall mutation, training, or action execution allowed."
+    }
+  ],
+  "decision": {
+    "decision_id": "v18e-decision-f2e4a451ef0ca16a",
+    "status": "refused",
+    "provider_call_performed": false,
+    "provider_answer_authoritative": false
+  },
+  "audit_record": {
+    "audit_id": "v18e-audit-f9750c0d566b5799",
+    "key_present": true,
+    "key_redacted": true,
+    "safe": true
+  },
+  "report_entry": {
+    "report_entry_id": "v18e-entry-f9750c0d566b5799",
+    "decision_status": "refused",
+    "passed_requirements": 5,
+    "total_requirements": 7
+  },
+  "invariant_flags": {
+    "manual_provider_live_trial_gate_enabled": true,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_MANUAL_PROVIDER_LIVE_TRIAL_OPTIONAL_ONE_SHOT",
+  "all_safe": true
+}

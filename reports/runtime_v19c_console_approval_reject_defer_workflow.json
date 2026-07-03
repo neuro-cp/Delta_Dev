@@ -1,0 +1,70 @@
+{
+  "phase": "Runtime V1.9C",
+  "cases": [
+    {
+      "phase": "Runtime V1.9C",
+      "result": {
+        "result_id": "v19c-result-19b648fbc5cd3f6c",
+        "candidate_id": "memory-candidate-demo",
+        "action": "approve",
+        "export_text": "APPROVE_CANONICAL_MEMORY_WRITE\ncandidate_id=memory-candidate-demo\napproved_by=user\napproval_scope=single_memory_candidate_only",
+        "writes_memory": false
+      },
+      "invariant_flags": {
+        "console_review_workflow_enabled": true,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_SESSION_TO_CANDIDATE_MEMORY_PROPOSAL_FLOW"
+    },
+    {
+      "phase": "Runtime V1.9C",
+      "result": {
+        "result_id": "v19c-result-92ac0a3599f64912",
+        "candidate_id": "memory-candidate-demo",
+        "action": "reject",
+        "export_text": "REJECT_MEMORY_CANDIDATE\ncandidate_id=memory-candidate-demo\nrejected_by=user\nrejection_scope=single_memory_candidate_only",
+        "writes_memory": false
+      },
+      "invariant_flags": {
+        "console_review_workflow_enabled": true,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_SESSION_TO_CANDIDATE_MEMORY_PROPOSAL_FLOW"
+    },
+    {
+      "phase": "Runtime V1.9C",
+      "result": {
+        "result_id": "v19c-result-fd99f2ed417009aa",
+        "candidate_id": "memory-candidate-demo",
+        "action": "defer",
+        "export_text": "DEFER_MEMORY_CANDIDATE\ncandidate_id=memory-candidate-demo\ndeferred_by=user\ndefer_scope=single_memory_candidate_only",
+        "writes_memory": false
+      },
+      "invariant_flags": {
+        "console_review_workflow_enabled": true,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "provider_call_performed": false,
+        "training_triggered": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_SESSION_TO_CANDIDATE_MEMORY_PROPOSAL_FLOW"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_SESSION_TO_CANDIDATE_MEMORY_PROPOSAL_FLOW"
+}

@@ -1,0 +1,68 @@
+{
+  "phase": "Runtime V1.9A",
+  "scope": {
+    "scope_id": "v19a-scope-e3b0c44298fc1c14",
+    "design_only": true,
+    "activates_general_memory": false
+  },
+  "source_policy": {
+    "policy_id": "v19a-source-policy-e3b0c44298fc1c14",
+    "allowed_sources": [
+      "approved canonical records only"
+    ],
+    "excluded_sources": [
+      "unapproved candidates",
+      "rejected candidates",
+      "deferred candidates",
+      "rolled-back records",
+      "provider/specialist/evaluator output without candidate plus approval"
+    ]
+  },
+  "write_policy": {
+    "policy_id": "v19a-write-policy-e3b0c44298fc1c14",
+    "exact_approval_required": true,
+    "autonomous_write_allowed": false,
+    "rollback_required": true
+  },
+  "recall_policy": {
+    "policy_id": "v19a-recall-policy-e3b0c44298fc1c14",
+    "recall_candidate_context_only": true,
+    "authoritative_recall_allowed": false
+  },
+  "safety_gate": {
+    "gate_id": "v19a-gate-e3b0c44298fc1c14",
+    "no_scheduler_dependency": true,
+    "no_training_dependency": true,
+    "audit_required": true
+  },
+  "decision": {
+    "decision_id": "v19a-decision-e3b0c44298fc1c14",
+    "outcome": "design_only_not_activated",
+    "activated": false
+  },
+  "audit_plan": {
+    "audit_plan_id": "v19a-audit-e3b0c44298fc1c14",
+    "audit_required": true,
+    "rollback_required": true,
+    "provenance_required": true
+  },
+  "report_entry": {
+    "report_entry_id": "v19a-entry-e3b0c44298fc1c14",
+    "safe": true,
+    "decision": "design_only_not_activated"
+  },
+  "invariant_flags": {
+    "controlled_general_memory_recall_expansion_design_enabled": true,
+    "general_memory_active": false,
+    "authoritative_recall_active": false,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_UX_FIRST_LOCAL_DELTA_CONSOLE",
+  "all_safe": true
+}

@@ -1,0 +1,3 @@
+Runtime V1.8E - Manual Provider Live Trial Gate
+
+Gate-only phase for future manual provider live trial. It performs no provider call and only checks env gates, key presence, unsupported local question status, and safety invariants. Provider output remains evidence-only in future phases.

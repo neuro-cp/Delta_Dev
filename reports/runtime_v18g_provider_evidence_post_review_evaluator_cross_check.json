@@ -1,0 +1,54 @@
+{
+  "phase": "Runtime V1.8G",
+  "request": {
+    "request_id": "v18g-request-f9750c0d566b5799",
+    "question": "What is a recent fact DELTA cannot know locally?"
+  },
+  "cross_check_input": {
+    "input_id": "v18g-input-f9750c0d566b5799",
+    "provider_decision": "dry_run_provider_request",
+    "provider_text": "Provider trial decision: dry_run_provider_request",
+    "provenance": "dry-run provider trial"
+  },
+  "cross_check_review": {
+    "review_id": "v18g-review-f9750c0d566b5799",
+    "disposition": "advisory_review_complete",
+    "advisory_only": true,
+    "rationale": "Local cross-check only; provider evidence remains non-authoritative."
+  },
+  "decision": {
+    "decision_id": "v18g-decision-f9750c0d566b5799",
+    "outcome": "hold_as_evidence_only",
+    "provider_authority": false,
+    "evaluator_authority": false,
+    "memory_write_performed": false
+  },
+  "audit_record": {
+    "audit_id": "v18g-audit-f9750c0d566b5799",
+    "risk_flags": [
+      "provider_evidence_only"
+    ],
+    "safe": true
+  },
+  "report_entry": {
+    "report_entry_id": "v18g-entry-f9750c0d566b5799",
+    "outcome": "hold_as_evidence_only",
+    "risk_count": 1,
+    "safe": true
+  },
+  "invariant_flags": {
+    "provider_evidence_post_review_enabled": true,
+    "evaluator_call_performed": false,
+    "provider_evidence_authoritative": false,
+    "evaluator_review_authoritative": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_CONTROLLED_GENERAL_MEMORY_RECALL_EXPANSION_DESIGN",
+  "all_safe": true
+}

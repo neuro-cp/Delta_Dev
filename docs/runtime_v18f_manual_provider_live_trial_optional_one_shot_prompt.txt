@@ -1,0 +1,3 @@
+Runtime V1.8F - Manual Provider Live Trial Optional One-Shot
+
+Dry-run by default. A live provider call is possible only with explicit env gates, key presence, unsupported local question, and `--live-provider`. Automated tests use dry-run or mocked transport only. Provider response remains evidence-only.

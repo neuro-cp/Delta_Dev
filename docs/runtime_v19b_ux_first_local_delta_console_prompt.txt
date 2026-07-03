@@ -1,0 +1,3 @@
+Runtime V1.9B - UX-first Local DELTA Console
+
+Command-mode local console for current safe capabilities: ask, recall, synthesize, feedback, review, quality, readiness, provider-dry-run, session commands, status, and help. No live provider by default, no memory write, no recall mutation, no training, no action execution, no scheduler, no HYB1 activation.

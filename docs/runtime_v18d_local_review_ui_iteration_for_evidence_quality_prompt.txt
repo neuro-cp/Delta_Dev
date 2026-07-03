@@ -1,0 +1,3 @@
+Runtime V1.8D - Local Review UI Iteration for Evidence Quality
+
+Static quality review dashboard for evidence quality scorecards, promotion readiness blockers, synthesis safety, source labels, candidate/truth distinction, and safety invariants. No provider call, memory write, recall mutation, training, scheduler, HYB1 activation, or Model B change.

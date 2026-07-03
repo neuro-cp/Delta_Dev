@@ -1,0 +1,3 @@
+Runtime V1.8G - Provider Evidence Post-Review / Evaluator Cross-Check
+
+Advisory-only review for provider evidence packets. Default is local/dry-run cross-check. Provider evidence remains evidence-only, evaluator review remains advisory-only, and no promotion, memory write, recall mutation, training, action execution, HYB1 activation, or Model B change is allowed.

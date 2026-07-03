@@ -1,0 +1,119 @@
+{
+  "phase": "Runtime V1.8D",
+  "ui_input": {
+    "input_id": "v18d-input-8623917150fab739",
+    "metrics": [
+      {
+        "metric_id": "v18d-metric-184df936d41b2da8",
+        "label": "Evidence quality average",
+        "value": "1.0",
+        "source": "runtime_v18a"
+      },
+      {
+        "metric_id": "v18d-metric-b24d6d33736ecd56",
+        "label": "Ready for human review",
+        "value": "5",
+        "source": "runtime_v18b"
+      },
+      {
+        "metric_id": "v18d-metric-6973dddd3ef9cb6a",
+        "label": "Promotion blockers",
+        "value": "1",
+        "source": "runtime_v18b"
+      },
+      {
+        "metric_id": "v18d-metric-a23f3e1e3ab47f3a",
+        "label": "Synthesis cases",
+        "value": "4",
+        "source": "runtime_v17g"
+      },
+      {
+        "metric_id": "v18d-metric-2bb80d537b1da3e3",
+        "label": "Secret redaction",
+        "value": "key_redacted=true",
+        "source": "local_ui"
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "v18d-blocker-fd0dccb0d99f74da",
+        "target": "scheduler_activation_gate",
+        "blocker": "design_only",
+        "rationale": "Target remains design-only."
+      },
+      {
+        "blocker_id": "v18d-blocker-cc33d8d4a913a72e",
+        "target": "HYB1_default_activation",
+        "blocker": "blocked_by_invariant",
+        "rationale": "Target conflicts with frozen invariants."
+      }
+    ],
+    "sections": [
+      {
+        "section_id": "v18d-section-761b7ad8ad439b28",
+        "title": "Evidence Quality Summary",
+        "body": "Scorecards summarize provenance, uncertainty, source-role correctness, candidate/truth distinction, conflict handling, unsupported fallback, and mutation safety.",
+        "labels": [
+          "candidate != truth",
+          "evidence score != promotion"
+        ]
+      },
+      {
+        "section_id": "v18d-section-0e06b84496798ba8",
+        "title": "Promotion Readiness Summary",
+        "body": "Readiness states are review signals only. They do not promote capabilities or artifacts.",
+        "labels": [
+          "promotion readiness != promotion"
+        ]
+      },
+      {
+        "section_id": "v18d-section-a23f3e1e3ab47f3a",
+        "title": "Synthesis Safety Status",
+        "body": "Synthesis drafts keep local, recall, provider, specialist, and evaluator sources labeled with uncertainty and provenance.",
+        "labels": [
+          "provider answer != truth",
+          "specialist answer != authority"
+        ]
+      },
+      {
+        "section_id": "v18d-section-c6c1c9a9c8543f1e",
+        "title": "Next Manual Step",
+        "body": "Review blockers and evidence quality before any optional live provider trial. Live calls require explicit gates and a CLI live flag.",
+        "labels": [
+          "manual review required"
+        ]
+      }
+    ],
+    "safety_status": {
+      "safety_status_id": "v18d-safety-e3b0c44298fc1c14",
+      "key_redacted": true,
+      "no_provider_call": true,
+      "no_memory_write": true,
+      "no_recall_mutation": true,
+      "no_training": true,
+      "no_scheduler": true,
+      "safe": true
+    }
+  },
+  "report_entry": {
+    "report_entry_id": "v18d-entry-6e3ec3c22e919cef",
+    "output_path": "ui\\delta_quality_review_dashboard.html",
+    "metric_count": 5,
+    "blocker_count": 2,
+    "safe": true
+  },
+  "safety_flags": {
+    "quality_review_ui_enabled": true,
+    "static_ui_only": true,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "scheduler_enabled": false,
+    "background_worker_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_MANUAL_PROVIDER_LIVE_TRIAL_GATE"
+}

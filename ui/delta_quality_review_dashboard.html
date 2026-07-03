@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DELTA Quality Review Dashboard</title>
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 24px; background: #f7f8fa; color: #202124; line-height: 1.45; }
+    header, section { background: white; border: 1px solid #d9dde3; border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+    .badge { display: inline-block; border: 1px solid #c9ced6; border-radius: 999px; padding: 2px 8px; margin: 2px 4px 2px 0; font-size: 12px; }
+    code { background: #f1f3f4; padding: 1px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DELTA Quality Review Dashboard</h1>
+    <p>Static local dashboard. Evidence, readiness, provider, specialist, evaluator, and recall items remain non-authoritative.</p>
+    <span class="badge">key redacted</span><span class="badge">no provider call</span><span class="badge">no memory write</span><span class="badge">no scheduler</span>
+  </header>
+  <section><h2>Metrics</h2><ul><li><strong>Evidence quality average:</strong> 1.0 <code>runtime_v18a</code></li>
+<li><strong>Ready for human review:</strong> 5 <code>runtime_v18b</code></li>
+<li><strong>Promotion blockers:</strong> 1 <code>runtime_v18b</code></li>
+<li><strong>Synthesis cases:</strong> 4 <code>runtime_v17g</code></li>
+<li><strong>Secret redaction:</strong> key_redacted=true <code>local_ui</code></li></ul></section>
+  <section><h2>Blockers</h2><ul><li><strong>scheduler_activation_gate:</strong> design_only - Target remains design-only.</li>
+<li><strong>HYB1_default_activation:</strong> blocked_by_invariant - Target conflicts with frozen invariants.</li></ul></section>
+  <section><h2>Evidence Quality Summary</h2><span class="badge">candidate != truth</span><span class="badge">evidence score != promotion</span><p>Scorecards summarize provenance, uncertainty, source-role correctness, candidate/truth distinction, conflict handling, unsupported fallback, and mutation safety.</p></section>
+<section><h2>Promotion Readiness Summary</h2><span class="badge">promotion readiness != promotion</span><p>Readiness states are review signals only. They do not promote capabilities or artifacts.</p></section>
+<section><h2>Synthesis Safety Status</h2><span class="badge">provider answer != truth</span><span class="badge">specialist answer != authority</span><p>Synthesis drafts keep local, recall, provider, specialist, and evaluator sources labeled with uncertainty and provenance.</p></section>
+<section><h2>Next Manual Step</h2><span class="badge">manual review required</span><p>Review blockers and evidence quality before any optional live provider trial. Live calls require explicit gates and a CLI live flag.</p></section>
+</body>
+</html>

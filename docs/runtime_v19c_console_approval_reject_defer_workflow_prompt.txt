@@ -1,0 +1,3 @@
+Runtime V1.9C - Console Approval / Reject / Defer Workflow
+
+Console UX for exact approval, rejection, and defer export strings. Exports only; casual approval does not write memory. No memory write, recall mutation, provider call, training, HYB1 activation, or Model B change.

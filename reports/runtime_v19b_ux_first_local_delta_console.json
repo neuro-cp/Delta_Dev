@@ -1,0 +1,372 @@
+{
+  "phase": "Runtime V1.9B",
+  "cases": [
+    {
+      "phase": "Runtime V1.9B",
+      "command": {
+        "command_id": "v19b-command-effdaec2520bf6b7",
+        "command": "status",
+        "argument": ""
+      },
+      "result": {
+        "result_id": "v19b-result-effdaec2520bf6b7",
+        "command": "status",
+        "output": {
+          "model_b": "default_unchanged",
+          "hyb1": "dormant_env_gated",
+          "provider_live": "disabled_by_default",
+          "memory": "no_autonomous_writes",
+          "recall": "candidate_context_only",
+          "training": "disabled",
+          "scheduler": "disabled",
+          "action_execution": "disabled"
+        },
+        "safe": true
+      },
+      "invariant_flags": {
+        "local_delta_console_enabled": true,
+        "command_mode_only": true,
+        "provider_live_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONSOLE_APPROVAL_REJECT_DEFER_WORKFLOW"
+    },
+    {
+      "phase": "Runtime V1.9B",
+      "command": {
+        "command_id": "v19b-command-eee24953ad236f76",
+        "command": "ask",
+        "argument": "What is HYB1?"
+      },
+      "result": {
+        "result_id": "v19b-result-eee24953ad236f76",
+        "command": "ask",
+        "output": {
+          "route_id": "local-knowledge-route-df99542c9d4e6985",
+          "user_message": "What is HYB1?",
+          "matched": true,
+          "topic_id": "hyb1_status",
+          "answer": {
+            "answer_id": "local-knowledge-answer-a6e2ae0dcf6e0422",
+            "topic_id": "hyb1_status",
+            "answer_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+            "confidence_label": "local_report_summary",
+            "source_summary": "Runtime V1.3 HYB1 dormant prototype validation and invariants",
+            "provider_required": false,
+            "memory_required": false,
+            "training_required": false,
+            "action_required": false,
+            "deterministic_local": true
+          },
+          "matched_keywords": [
+            "hyb1"
+          ],
+          "safety_status_id": "local-knowledge-router-safety-7ac3338524ff1318",
+          "unsupported_reason": ""
+        },
+        "safe": true
+      },
+      "invariant_flags": {
+        "local_delta_console_enabled": true,
+        "command_mode_only": true,
+        "provider_live_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONSOLE_APPROVAL_REJECT_DEFER_WORKFLOW"
+    },
+    {
+      "phase": "Runtime V1.9B",
+      "command": {
+        "command_id": "v19b-command-c20dbc60c23b94c0",
+        "command": "recall",
+        "argument": "What does DELTA know about HYB1?"
+      },
+      "result": {
+        "result_id": "v19b-result-c20dbc60c23b94c0",
+        "command": "recall",
+        "output": {
+          "phase": "Runtime V1.7F",
+          "trace": {
+            "trace_id": "v17f-trace-a32a4f8a22e0efa9",
+            "request": {
+              "request_id": "v17f-request-24dca5d84541aebc",
+              "query": "What does DELTA know about HYB1?",
+              "max_candidates": 3
+            },
+            "source_snapshot": {
+              "snapshot_id": "v17f-snapshot-0ef336018a2a8639",
+              "allowed_sources": [
+                "V1.5I non-rolled-back local trial records",
+                "local static knowledge",
+                "evaluator advisory reports as advisory only",
+                "provider/specialist evidence packets as evidence only"
+              ],
+              "disallowed_sources": [
+                "raw conversation as canonical memory",
+                "unapproved memory candidates as truth",
+                "rejected records",
+                "rolled-back records",
+                "provider output as memory",
+                "evaluator output as authority"
+              ]
+            },
+            "candidates": [
+              {
+                "candidate_id": "v17f-local-4a53e44503f30126",
+                "source_kind": "local_static_knowledge",
+                "text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+                "provenance": "Runtime V1.3 HYB1 dormant prototype validation and invariants",
+                "rank": 1,
+                "candidate_context_only": true,
+                "authoritative": false,
+                "rejected_or_rolled_back": false
+              }
+            ],
+            "decision": {
+              "decision_id": "v17f-decision-b52f38f432f6b2ed",
+              "selected_count": 1,
+              "max_candidates": 3,
+              "candidate_context_only": true,
+              "memory_write_performed": false,
+              "recall_mutated": false,
+              "provider_call_performed": false
+            },
+            "safety_status": {
+              "safety_status_id": "v17f-safety-a32a4f8a22e0efa9",
+              "safe": true,
+              "reason": "candidate-context only; no mutation"
+            }
+          },
+          "report_entry": {
+            "report_entry_id": "v17f-entry-a32a4f8a22e0efa9",
+            "query": "What does DELTA know about HYB1?",
+            "candidate_count": 1,
+            "safe": true
+          },
+          "invariant_flags": {
+            "limited_general_recall_trial_enabled": true,
+            "candidate_context_only": true,
+            "general_memory_active": false,
+            "authoritative_recall_enabled": false,
+            "provider_call_performed": false,
+            "memory_write_performed": false,
+            "recall_mutated": false,
+            "training_triggered": false,
+            "scheduler_enabled": false,
+            "hyb1_default_activation_enabled": false,
+            "hyb1_promoted": false,
+            "model_b_default_changed": false
+          },
+          "final_recommendation": "PROCEED_CONTROLLED_ANSWER_SYNTHESIS"
+        },
+        "safe": true
+      },
+      "invariant_flags": {
+        "local_delta_console_enabled": true,
+        "command_mode_only": true,
+        "provider_live_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONSOLE_APPROVAL_REJECT_DEFER_WORKFLOW"
+    },
+    {
+      "phase": "Runtime V1.9B",
+      "command": {
+        "command_id": "v19b-command-cedc23e91a608ac1",
+        "command": "synthesize",
+        "argument": "What does DELTA know about memory writes?"
+      },
+      "result": {
+        "result_id": "v19b-result-cedc23e91a608ac1",
+        "command": "synthesize",
+        "output": {
+          "phase": "Runtime V1.7G",
+          "trace": {
+            "trace_id": "v17g-trace-2485887aee784f40",
+            "input": {
+              "input_id": "v17g-input-2485887aee784f40",
+              "question": "What does DELTA know about memory writes?"
+            },
+            "evidence_bundle": {
+              "bundle_id": "v17g-bundle-c9159a9d787ebe85",
+              "items": [
+                {
+                  "evidence_id": "v17g-provider-2485887aee784f40",
+                  "role": "provider_evidence_only",
+                  "text": "Provider path decision: dry_run_provider_request",
+                  "provenance": "Runtime V1.7C",
+                  "authoritative": false,
+                  "used_in_draft": true
+                },
+                {
+                  "evidence_id": "v17g-specialist-2485887aee784f40",
+                  "role": "specialist_evidence_only",
+                  "text": "Specialist path decision: dry_run_specialist_request",
+                  "provenance": "Runtime V1.7D",
+                  "authoritative": false,
+                  "used_in_draft": true
+                }
+              ]
+            },
+            "draft": {
+              "draft_id": "v17g-draft-1f2504edcb1e355e",
+              "answer_text": "I cannot answer that from local DELTA evidence yet. The next safe path is evidence acquisition or manual review, not a confident answer.",
+              "confidence_label": "unsupported_unknown",
+              "uncertainty_note": "No local authoritative evidence is available.",
+              "provenance_summary": [
+                "Runtime V1.7C",
+                "Runtime V1.7D"
+              ]
+            },
+            "safety_review": {
+              "safety_review_id": "v17g-safety-2485887aee784f40",
+              "provider_not_authority": true,
+              "recall_candidate_only": true,
+              "no_memory_write": true,
+              "no_recall_mutation": true,
+              "no_training": true,
+              "safe": true
+            },
+            "decision": {
+              "decision_id": "v17g-decision-2485887aee784f40",
+              "decision": "uncertain_synthesis",
+              "local_answer_preferred": false,
+              "conflict_present": false,
+              "unsupported": true
+            }
+          },
+          "report_entry": {
+            "report_entry_id": "v17g-entry-2485887aee784f40",
+            "question": "What does DELTA know about memory writes?",
+            "confidence_label": "unsupported_unknown",
+            "safe": true
+          },
+          "invariant_flags": {
+            "controlled_answer_synthesis_enabled": true,
+            "memory_write_performed": false,
+            "recall_mutated": false,
+            "training_triggered": false,
+            "action_execution_performed": false,
+            "provider_output_authoritative": false,
+            "specialist_output_authoritative": false,
+            "evaluator_output_authoritative": false,
+            "hyb1_default_activation_enabled": false,
+            "hyb1_promoted": false,
+            "model_b_default_changed": false
+          },
+          "final_recommendation": "PROCEED_MULTI_TURN_UNKNOWN_RESOLUTION_DEMO"
+        },
+        "safe": true
+      },
+      "invariant_flags": {
+        "local_delta_console_enabled": true,
+        "command_mode_only": true,
+        "provider_live_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONSOLE_APPROVAL_REJECT_DEFER_WORKFLOW"
+    },
+    {
+      "phase": "Runtime V1.9B",
+      "command": {
+        "command_id": "v19b-command-6f9dd79351bcb6bc",
+        "command": "provider-dry-run",
+        "argument": "What is a recent fact DELTA cannot know locally?"
+      },
+      "result": {
+        "result_id": "v19b-result-6f9dd79351bcb6bc",
+        "command": "provider-dry-run",
+        "output": {
+          "phase": "Runtime V1.8F",
+          "trace": {
+            "trace_id": "v18f-trace-b60148b047407692",
+            "request": {
+              "request_id": "v18f-request-f2e4a451ef0ca16a",
+              "question": "What is a recent fact DELTA cannot know locally?",
+              "live_provider": false
+            },
+            "redacted_request": {
+              "request_id": "v18f-redacted-f9750c0d566b5799",
+              "endpoint": "https://api.openai.com/v1/chat/completions",
+              "model": "gpt-4.1-mini",
+              "api_key_present": true,
+              "api_key_redacted": true
+            },
+            "decision": {
+              "decision_id": "v18f-decision-9ce152212381794b",
+              "decision": "dry_run_provider_request",
+              "provider_call_performed": false,
+              "provider_answer_authoritative": false
+            },
+            "evidence_packet": null
+          },
+          "report_entry": {
+            "report_entry_id": "v18f-entry-5aa7aaf49fd63057",
+            "decision": "dry_run_provider_request",
+            "provider_call_performed": false,
+            "safe": true
+          },
+          "invariant_flags": {
+            "manual_provider_live_trial_enabled": true,
+            "dry_run_default": true,
+            "memory_write_performed": false,
+            "recall_mutated": false,
+            "training_triggered": false,
+            "action_execution_performed": false,
+            "scheduler_enabled": false,
+            "provider_response_authoritative": false,
+            "hyb1_default_activation_enabled": false,
+            "hyb1_promoted": false,
+            "model_b_default_changed": false
+          },
+          "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_POST_REVIEW"
+        },
+        "safe": true
+      },
+      "invariant_flags": {
+        "local_delta_console_enabled": true,
+        "command_mode_only": true,
+        "provider_live_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONSOLE_APPROVAL_REJECT_DEFER_WORKFLOW"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CONSOLE_APPROVAL_REJECT_DEFER_WORKFLOW"
+}

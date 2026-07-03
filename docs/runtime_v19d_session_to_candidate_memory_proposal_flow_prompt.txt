@@ -1,0 +1,3 @@
+Runtime V1.9D - Session-to-Candidate Memory Proposal Flow
+
+Review-only memory candidate proposal flow from local session summaries. Human approval is required; canonical_write_ready=false, approved=false, written=false by default. Ambiguity and misuse are flagged. No provider call, training, action execution, recall mutation, or autonomous write.

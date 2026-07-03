@@ -1,0 +1,46 @@
+{
+  "phase": "Runtime V1.8F",
+  "trace": {
+    "trace_id": "v18f-trace-b60148b047407692",
+    "request": {
+      "request_id": "v18f-request-f2e4a451ef0ca16a",
+      "question": "What is a recent fact DELTA cannot know locally?",
+      "live_provider": false
+    },
+    "redacted_request": {
+      "request_id": "v18f-redacted-f9750c0d566b5799",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "model": "gpt-4.1-mini",
+      "api_key_present": true,
+      "api_key_redacted": true
+    },
+    "decision": {
+      "decision_id": "v18f-decision-9ce152212381794b",
+      "decision": "dry_run_provider_request",
+      "provider_call_performed": false,
+      "provider_answer_authoritative": false
+    },
+    "evidence_packet": null
+  },
+  "report_entry": {
+    "report_entry_id": "v18f-entry-5aa7aaf49fd63057",
+    "decision": "dry_run_provider_request",
+    "provider_call_performed": false,
+    "safe": true
+  },
+  "invariant_flags": {
+    "manual_provider_live_trial_enabled": true,
+    "dry_run_default": true,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_enabled": false,
+    "provider_response_authoritative": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_POST_REVIEW",
+  "all_safe": true
+}

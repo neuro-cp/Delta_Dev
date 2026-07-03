@@ -1,0 +1,3 @@
+Runtime V1.9A - Controlled General Memory / Recall Expansion Design
+
+Design-only expansion policy. General memory and authoritative recall remain inactive. Approved canonical records only; unapproved, rejected, deferred, and rolled-back records are excluded. Exact approval, audit, provenance, and rollback remain required.
