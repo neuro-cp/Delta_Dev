@@ -1,0 +1,69 @@
+{
+  "active_capabilities": [
+    "manual local console questions",
+    "deterministic current-state self-description",
+    "repo-local report and scaffold inspection",
+    "candidate-context recall when explicitly requested",
+    "static review console and dashboard artifacts",
+    "safety status and provenance reporting",
+    "deterministic validation/hardening reports"
+  ],
+  "completed_phases": [
+    "V2.9A",
+    "V2.9B",
+    "V2.9C",
+    "V2.9D",
+    "V2.9E",
+    "V2.9F"
+  ],
+  "disabled_capabilities": [
+    "training and fine-tuning",
+    "model weight updates",
+    "model artifact creation",
+    "provider calls and provider authority",
+    "tool calls and action execution",
+    "autonomous memory writes",
+    "canonical memory writes",
+    "authoritative recall",
+    "recall mutation",
+    "HYB1 default activation or promotion",
+    "scheduler/background worker activation"
+  ],
+  "final_recommendation": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+  "known_blockers": [
+    "No approved training execution path.",
+    "No authoritative recall path.",
+    "No HYB1 default promotion path.",
+    "No live scheduler activation path.",
+    "Natural interaction was previously behind the runtime state; V2.9 addresses that local interface gap."
+  ],
+  "phase": "Runtime V2.9F",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "safety_state": {
+    "hyb1": "dormant_env_gated_shadow_only",
+    "memory_writes": "disabled",
+    "model_b_default": "unchanged",
+    "provider_calls": "disabled",
+    "recall": "candidate_context_only",
+    "scheduler": "disabled",
+    "training": "disabled"
+  }
+}

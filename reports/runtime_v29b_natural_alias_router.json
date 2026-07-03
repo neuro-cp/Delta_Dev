@@ -1,0 +1,111 @@
+{
+  "all_samples_matched": true,
+  "final_recommendation": "PROCEED_DELTA_ANSWER_V29_INTEGRATION",
+  "mode": "natural_alias_router_deterministic_local",
+  "phase": "Runtime V2.9B",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample_routes": [
+    {
+      "answer_text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+      "matched": true,
+      "matched_alias": "what is delta",
+      "provenance": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "topic_id": "identity"
+    },
+    {
+      "answer_text": "Currently active local capabilities: manual local console questions; deterministic current-state self-description; repo-local report and scaffold inspection; candidate-context recall when explicitly requested; static review console and dashboard artifacts; safety status and provenance reporting; deterministic validation/hardening reports.",
+      "matched": true,
+      "matched_alias": "what can you do",
+      "provenance": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "topic_id": "capabilities_active"
+    },
+    {
+      "answer_text": "DELTA's architecture is organized around governed local interaction, candidate-context recall, evidence/advisory provider boundaries, approval gates, replay/consolidation scaffolds, canonical-memory design scaffolds, and validation reports. Interfaces are clients of the substrate, not hidden authority.",
+      "matched": true,
+      "matched_alias": "describe your architecture",
+      "provenance": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "topic_id": "architecture"
+    },
+    {
+      "answer_text": "The current validated runtime state is V2.8 with V2.9 local self-description integration complete.",
+      "matched": true,
+      "matched_alias": "what phase are you in",
+      "provenance": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "topic_id": "phase_state"
+    },
+    {
+      "answer_text": "No. Training, fine-tuning, model weight updates, dataset export authority, and model artifact creation remain disabled.",
+      "matched": true,
+      "matched_alias": "can you train",
+      "provenance": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "topic_id": "training_status"
+    },
+    {
+      "answer_text": "HYB1 is dormant_env_gated_shadow_only; it is not promoted and is not the default.",
+      "matched": true,
+      "matched_alias": "is hyb1 active",
+      "provenance": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "topic_id": "hyb1_status"
+    }
+  ]
+}

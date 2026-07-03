@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from orchestration.runtime.v15_first_interaction import build_first_interaction_result, format_first_interaction_cli_output  # noqa: E402
+from orchestration.runtime.v29_local_answer_engine import format_v29_cli_output, run_v29_local_answer  # noqa: E402
 
 
 def main() -> int:
@@ -23,7 +23,7 @@ def main() -> int:
 
     entry = tk.Entry(frame)
     entry.pack(fill=tk.X)
-    entry.insert(0, "What is DELTA's current replay and consolidation path?")
+    entry.insert(0, "What is DELTA?")
 
     output = scrolledtext.ScrolledText(frame, wrap=tk.WORD, height=28)
     output.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
@@ -32,9 +32,9 @@ def main() -> int:
         message = entry.get().strip()
         if not message:
             return
-        data = build_first_interaction_result(message)
+        data = run_v29_local_answer(message, use_recall=True)
         output.delete("1.0", tk.END)
-        output.insert(tk.END, format_first_interaction_cli_output(data))
+        output.insert(tk.END, format_v29_cli_output(data))
 
     button = tk.Button(frame, text="Send", command=send)
     button.pack(anchor=tk.E, pady=(10, 0))

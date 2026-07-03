@@ -1,0 +1,322 @@
+{
+  "final_recommendation": "PROCEED_DESKTOP_UI_V29_INTEGRATION",
+  "phase": "Runtime V2.9C",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample_answers": [
+    {
+      "decision": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "training_triggered": false
+      },
+      "draft": {
+        "answer_text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+        "draft_id": "v29-draft-ac544a582955e75d",
+        "grounded": true,
+        "provider_required": false,
+        "uses_candidate_context": false
+      },
+      "evidence_items": [
+        {
+          "authoritative": false,
+          "candidate_context_only": true,
+          "candidate_id": "v29-local-evidence-7b27b367cfd83be7",
+          "provenance": [
+            "docs/ARCHITECTURE.md",
+            "docs/INVARIANTS.md",
+            "docs/ROADMAP.md",
+            "docs/UPDATE.md",
+            "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+            "reports/runtime_v28_master_validation.md"
+          ],
+          "text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation."
+        }
+      ],
+      "final_recommendation": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+      "invariant_flags": {
+        "action_execution_performed": false,
+        "authoritative_recall_enabled": false,
+        "autonomous_memory_write_performed": false,
+        "background_worker_started": false,
+        "candidate_context_only": true,
+        "canonical_memory_write_performed": false,
+        "fine_tuning_performed": false,
+        "hyb1_enabled_by_default": false,
+        "hyb1_promoted": false,
+        "model_artifact_created": false,
+        "model_b_default_changed": false,
+        "model_weights_updated": false,
+        "provider_authority_granted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "secret_printed": false,
+        "training_performed": false,
+        "v29_local_answer_engine_enabled": true
+      },
+      "local_answer": {
+        "answer_text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+        "matched": true,
+        "matched_alias": "what is delta",
+        "provenance": [
+          "docs/ARCHITECTURE.md",
+          "docs/INVARIANTS.md",
+          "docs/ROADMAP.md",
+          "docs/UPDATE.md",
+          "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+          "reports/runtime_v28_master_validation.md"
+        ],
+        "topic_id": "identity"
+      },
+      "phase": "Runtime V2.9",
+      "recall_context": null,
+      "request": {
+        "query": "What is DELTA?",
+        "request_id": "v29-request-24cc7dc12bcfe40a",
+        "use_recall": false
+      }
+    },
+    {
+      "decision": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "training_triggered": false
+      },
+      "draft": {
+        "answer_text": "Currently active local capabilities: manual local console questions; deterministic current-state self-description; repo-local report and scaffold inspection; candidate-context recall when explicitly requested; static review console and dashboard artifacts; safety status and provenance reporting; deterministic validation/hardening reports.",
+        "draft_id": "v29-draft-5e80333dc0fd4b78",
+        "grounded": true,
+        "provider_required": false,
+        "uses_candidate_context": false
+      },
+      "evidence_items": [
+        {
+          "authoritative": false,
+          "candidate_context_only": true,
+          "candidate_id": "v29-local-evidence-09efac11e7f7b098",
+          "provenance": [
+            "docs/ARCHITECTURE.md",
+            "docs/INVARIANTS.md",
+            "docs/ROADMAP.md",
+            "docs/UPDATE.md",
+            "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+            "reports/runtime_v28_master_validation.md"
+          ],
+          "text": "Currently active local capabilities: manual local console questions; deterministic current-state self-description; repo-local report and scaffold inspection; candidate-context recall when explicitly requested; static review console and dashboard artifacts; safety status and provenance reporting; deterministic validation/hardening reports."
+        }
+      ],
+      "final_recommendation": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+      "invariant_flags": {
+        "action_execution_performed": false,
+        "authoritative_recall_enabled": false,
+        "autonomous_memory_write_performed": false,
+        "background_worker_started": false,
+        "candidate_context_only": true,
+        "canonical_memory_write_performed": false,
+        "fine_tuning_performed": false,
+        "hyb1_enabled_by_default": false,
+        "hyb1_promoted": false,
+        "model_artifact_created": false,
+        "model_b_default_changed": false,
+        "model_weights_updated": false,
+        "provider_authority_granted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "secret_printed": false,
+        "training_performed": false,
+        "v29_local_answer_engine_enabled": true
+      },
+      "local_answer": {
+        "answer_text": "Currently active local capabilities: manual local console questions; deterministic current-state self-description; repo-local report and scaffold inspection; candidate-context recall when explicitly requested; static review console and dashboard artifacts; safety status and provenance reporting; deterministic validation/hardening reports.",
+        "matched": true,
+        "matched_alias": "what can you do",
+        "provenance": [
+          "docs/ARCHITECTURE.md",
+          "docs/INVARIANTS.md",
+          "docs/ROADMAP.md",
+          "docs/UPDATE.md",
+          "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+          "reports/runtime_v28_master_validation.md"
+        ],
+        "topic_id": "capabilities_active"
+      },
+      "phase": "Runtime V2.9",
+      "recall_context": null,
+      "request": {
+        "query": "What can you do?",
+        "request_id": "v29-request-3c9eae9e18ff00eb",
+        "use_recall": false
+      }
+    },
+    {
+      "decision": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "training_triggered": false
+      },
+      "draft": {
+        "answer_text": "The current validated runtime state is V2.8 with V2.9 local self-description integration complete.",
+        "draft_id": "v29-draft-44b6cd3652689a8b",
+        "grounded": true,
+        "provider_required": false,
+        "uses_candidate_context": false
+      },
+      "evidence_items": [
+        {
+          "authoritative": false,
+          "candidate_context_only": true,
+          "candidate_id": "v29-local-evidence-f455e4acd1c34353",
+          "provenance": [
+            "docs/ARCHITECTURE.md",
+            "docs/INVARIANTS.md",
+            "docs/ROADMAP.md",
+            "docs/UPDATE.md",
+            "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+            "reports/runtime_v28_master_validation.md"
+          ],
+          "text": "The current validated runtime state is V2.8 with V2.9 local self-description integration complete."
+        }
+      ],
+      "final_recommendation": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+      "invariant_flags": {
+        "action_execution_performed": false,
+        "authoritative_recall_enabled": false,
+        "autonomous_memory_write_performed": false,
+        "background_worker_started": false,
+        "candidate_context_only": true,
+        "canonical_memory_write_performed": false,
+        "fine_tuning_performed": false,
+        "hyb1_enabled_by_default": false,
+        "hyb1_promoted": false,
+        "model_artifact_created": false,
+        "model_b_default_changed": false,
+        "model_weights_updated": false,
+        "provider_authority_granted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "secret_printed": false,
+        "training_performed": false,
+        "v29_local_answer_engine_enabled": true
+      },
+      "local_answer": {
+        "answer_text": "The current validated runtime state is V2.8 with V2.9 local self-description integration complete.",
+        "matched": true,
+        "matched_alias": "what phase are you in",
+        "provenance": [
+          "docs/ARCHITECTURE.md",
+          "docs/INVARIANTS.md",
+          "docs/ROADMAP.md",
+          "docs/UPDATE.md",
+          "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+          "reports/runtime_v28_master_validation.md"
+        ],
+        "topic_id": "phase_state"
+      },
+      "phase": "Runtime V2.9",
+      "recall_context": null,
+      "request": {
+        "query": "What phase are you in?",
+        "request_id": "v29-request-97e156116c5c5c60",
+        "use_recall": false
+      }
+    },
+    {
+      "decision": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "training_triggered": false
+      },
+      "draft": {
+        "answer_text": "I do not have sufficient governed local evidence to answer that directly. I can answer current repo-local questions about DELTA's architecture, capabilities, phase, safety, memory, recall, providers, HYB1, Model B, and scaffold status.",
+        "draft_id": "v29-draft-d99c5eef0c934af1",
+        "grounded": true,
+        "provider_required": false,
+        "uses_candidate_context": false
+      },
+      "evidence_items": [],
+      "final_recommendation": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+      "invariant_flags": {
+        "action_execution_performed": false,
+        "authoritative_recall_enabled": false,
+        "autonomous_memory_write_performed": false,
+        "background_worker_started": false,
+        "candidate_context_only": true,
+        "canonical_memory_write_performed": false,
+        "fine_tuning_performed": false,
+        "hyb1_enabled_by_default": false,
+        "hyb1_promoted": false,
+        "model_artifact_created": false,
+        "model_b_default_changed": false,
+        "model_weights_updated": false,
+        "provider_authority_granted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "secret_printed": false,
+        "training_performed": false,
+        "v29_local_answer_engine_enabled": true
+      },
+      "local_answer": {
+        "answer_text": null,
+        "matched": false,
+        "matched_alias": "",
+        "provenance": [
+          "docs/ARCHITECTURE.md",
+          "docs/INVARIANTS.md",
+          "docs/ROADMAP.md",
+          "docs/UPDATE.md",
+          "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+          "reports/runtime_v28_master_validation.md"
+        ],
+        "topic_id": "unsupported"
+      },
+      "phase": "Runtime V2.9",
+      "recall_context": null,
+      "request": {
+        "query": "What did I eat for breakfast yesterday?",
+        "request_id": "v29-request-9ec263465875f4d0",
+        "use_recall": false
+      }
+    }
+  ]
+}

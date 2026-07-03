@@ -808,3 +808,27 @@ ask -> unknown detection -> retrieval -> evidence -> provider advisory
 Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
+
+## Runtime V2.9 Self-Description And Natural Local Interaction Update
+
+Runtime V2.9 updates DELTA's local interaction layer so the CLI and desktop UI
+describe the current V2.8/V2.9 scaffold instead of the older V2.3/V1.5 static
+answer surface.
+
+Implemented:
+
+- current-state runtime knowledge inventory
+- natural alias router for self-description questions
+- shared V2.9 local answer engine used by `scripts/delta_answer.py`
+- desktop UI integration through the same answer engine
+- local interaction demo script
+- self-description safety checkpoint
+
+Safety boundaries remain unchanged: Model B remains default; HYB1 remains
+dormant/env-gated; no training, provider calls, action execution, autonomous
+memory writes, authoritative recall, scheduler/background workers, or model
+artifacts are enabled.
+
+Recommended next phase:
+
+`PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`

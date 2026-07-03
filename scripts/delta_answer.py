@@ -9,8 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from orchestration.runtime.v23_recall_to_synthesis_integration import run_recall_to_synthesis
 from orchestration.runtime.v23_recall_to_synthesis_integration_report import write_recall_to_synthesis_report
+from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer, write_v29_answer_report
 
 
 def main() -> int:
@@ -21,7 +21,7 @@ def main() -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--output-report", action="store_true")
     args = parser.parse_args()
-    data = write_recall_to_synthesis_report() if args.output_report else run_recall_to_synthesis(" ".join(args.query), use_recall=args.use_recall)
+    data = write_v29_answer_report() if args.output_report else run_v29_local_answer(" ".join(args.query), use_recall=args.use_recall)
     if args.json or args.show_provenance or args.output_report:
         print(json.dumps(data, indent=2))
     else:
@@ -31,4 +31,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -25,3 +25,11 @@ Safety state remains unchanged: Model B default, HYB1 dormant/env-gated
 shadow-only, no training, no model artifacts, no provider authority, no action
 execution, no autonomous memory mutation, no authoritative recall, and no
 scheduler/background workers.
+
+Runtime V2.9 is complete. `scripts/delta_answer.py` and
+`scripts/delta_runtime_ui.py` now use the shared V2.9 local answer engine for
+current-state self-description. Natural questions such as "What is DELTA?",
+"What can you do?", "Describe your architecture?", and "What phase are you in?"
+now route to deterministic repo-local answers with safety/provenance metadata.
+
+Current next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW

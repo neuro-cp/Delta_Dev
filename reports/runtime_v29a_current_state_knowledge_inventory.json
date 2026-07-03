@@ -1,0 +1,77 @@
+{
+  "action_execution_status": "disabled_dry_run_design_only",
+  "active_local_capabilities": [
+    "manual local console questions",
+    "deterministic current-state self-description",
+    "repo-local report and scaffold inspection",
+    "candidate-context recall when explicitly requested",
+    "static review console and dashboard artifacts",
+    "safety status and provenance reporting",
+    "deterministic validation/hardening reports"
+  ],
+  "current_default": "Model B",
+  "current_runtime_state": "V2.8/V2.9 scaffolded local validation state",
+  "disabled_capabilities": [
+    "training and fine-tuning",
+    "model weight updates",
+    "model artifact creation",
+    "provider calls and provider authority",
+    "tool calls and action execution",
+    "autonomous memory writes",
+    "canonical memory writes",
+    "authoritative recall",
+    "recall mutation",
+    "HYB1 default activation or promotion",
+    "scheduler/background worker activation"
+  ],
+  "hyb1_status": "dormant_env_gated_shadow_only",
+  "known_blockers": [
+    "No approved training execution path.",
+    "No authoritative recall path.",
+    "No HYB1 default promotion path.",
+    "No live scheduler activation path.",
+    "Natural interaction was previously behind the runtime state; V2.9 addresses that local interface gap."
+  ],
+  "memory_status": "candidate_context_and_review_scaffolds_only_no_autonomous_writes",
+  "phase": "Runtime V2.9",
+  "phase_summaries": {
+    "V2.4": "localhost full review console UX and controlled memory/recall/provider/evaluator UX trials",
+    "V2.5": "training readiness audit, feature activation readiness matrix, controlled export/shadow/scheduler gates",
+    "V2.6": "dataset review UI, redaction trial, training job plan, artifact registry, feature gate console",
+    "V2.7": "feature activation dry-run, UX polish, HYB1 dashboard, evaluator dashboard, full local demo, handoff",
+    "V2.8": "pipeline validation, failure injection, stress test, observability, architecture audit, documentation consolidation",
+    "V2.9": "current-state self-description and natural local interaction"
+  },
+  "provenance": [
+    "docs/ARCHITECTURE.md",
+    "docs/INVARIANTS.md",
+    "docs/ROADMAP.md",
+    "docs/UPDATE.md",
+    "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+    "reports/runtime_v28_master_validation.md"
+  ],
+  "provider_status": "disabled_unless_future_explicit_gate_provider_outputs_advisory_only",
+  "recall_status": "candidate_context_only_not_authoritative_no_mutation",
+  "recommended_next_phase": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "scheduler_status": "disabled_no_background_workers_no_os_tasks",
+  "training_status": "disabled"
+}

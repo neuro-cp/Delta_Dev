@@ -31,3 +31,15 @@ The next clean task is manual local demo review or selected cleanup review from
 the V2.8 architecture-audit recommendations. Do not start training, promote
 HYB1, enable scheduler/background workers, grant provider authority, execute
 actions, or mutate memory without a new explicit approval phase.
+
+Runtime V2.9 is complete. Reports:
+
+- `reports/runtime_v29a_current_state_knowledge_inventory.md`
+- `reports/runtime_v29b_natural_alias_router.md`
+- `reports/runtime_v29c_delta_answer_integration.md`
+- `reports/runtime_v29e_local_interaction_demo.md`
+- `reports/runtime_v29f_self_description_safety_checkpoint.md`
+- `docs/continuation_runtime_v29_self_description.md`
+
+The CLI and desktop UI now share the V2.9 local answer engine for
+self-description. Safety state remains unchanged.
