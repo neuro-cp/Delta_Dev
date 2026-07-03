@@ -809,6 +809,44 @@ Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## Runtime V3.1 Gated Learning Integration Readiness Update
+
+Runtime V3.1 adds an observe -> propose -> review -> gated integration
+readiness layer. It is not autonomous learning and does not perform live memory
+writes.
+
+Implemented:
+
+- `LearningOpportunity` detection for reviewable possible learning signals
+- `LearningProposal` objects with gated review states
+- cognitive timeline from experience through future integration/evaluation
+- contradiction aggregation into review bundles without resolution
+- static learning review console at `ui/delta_v31_learning_review_console.html`
+- deterministic learning-proposal explainability
+- gated integration readiness records: admin approval, overwatch result,
+  optional owner override, integration event id, target store, audit metadata,
+  and rollback token
+
+Important semantics:
+
+- review is not approval
+- proposal is not memory
+- admin approval is not automatic integration
+- admin approval makes a proposal eligible for gated integration
+- integration requires overwatch allow or explicit owner override
+- V3.1 performs no live integration write
+- integration is not training, fine-tuning, model update, provider authority, or
+  unrestricted memory mutation
+
+Safety boundaries remain unchanged: Model B remains default; HYB1 remains
+dormant/env-gated; no training, provider calls, action execution, autonomous
+memory writes, canonical memory mutation, authoritative recall, recall mutation,
+scheduler/background workers, or model artifacts are enabled.
+
+Recommended next phase:
+
+`PROCEED_CONTROLLED_LEARNING_REVIEW_WORKFLOW_OR_MANUAL_DEMO`
+
 ## Runtime V3.0 Natural Interaction And Guided Review UX Update
 
 Runtime V3.0 improves the local interaction surface without adding cognition or

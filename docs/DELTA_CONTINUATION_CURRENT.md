@@ -34,6 +34,20 @@ now route to deterministic repo-local answers with safety/provenance metadata.
 
 Current next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW
 
+Runtime V3.1 is complete as a gated learning integration readiness layer. DELTA
+can detect possible learning opportunities, create LearningProposal objects,
+aggregate contradiction review bundles, explain why proposals exist or remain
+blocked, and scaffold gated integration events with admin approval, overwatch
+result, owner override status, target store, audit metadata, and rollback token.
+
+This is not autonomous learning. Admin approval makes a proposal eligible for
+gated integration, not automatically integrated. Live integration writes,
+training, provider authority, canonical memory mutation, authoritative recall,
+recall mutation, scheduler/background workers, action execution, HYB1
+promotion, and Model B default changes remain disabled.
+
+Current next recommendation: PROCEED_CONTROLLED_LEARNING_REVIEW_WORKFLOW_OR_MANUAL_DEMO
+
 Runtime V3.0 is complete. It adds presentation-only natural interaction and
 explainability over the V2.9 local answer path: conversational answer modes,
 pipeline explanations, a static guided review console, manual demo scenarios,

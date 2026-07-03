@@ -1,0 +1,82 @@
+{
+  "admin_approved_example": [
+    {
+      "confidence": 0.5,
+      "conflicts": [],
+      "eligible_for_gated_integration": true,
+      "integrated": false,
+      "proposal_id": "learning-proposal-612f1e12c5f1686c",
+      "review_status": "admin_approved",
+      "risk_assessment": "review_only_no_integration",
+      "rollback_plan": "No rollback required because no integration or memory mutation occurs.",
+      "semantic_summary": "Review general_learning_request: The user asked what DELTA should learn; this becomes a reviewable opportunity only.",
+      "source_references": [
+        "learning-opportunity-dc8d3fcc18105919"
+      ],
+      "supporting_evidence": [
+        "local_manual_interaction"
+      ]
+    }
+  ],
+  "admin_approved_means_automatic_integration": false,
+  "admin_approved_means_eligible_for_gated_integration": true,
+  "final_recommendation": "PROCEED_COGNITIVE_TIMELINE",
+  "integration_performed": false,
+  "learning_performed": false,
+  "phase": "Runtime V3.1B",
+  "proposals": [
+    {
+      "confidence": 0.74,
+      "conflicts": [],
+      "eligible_for_gated_integration": false,
+      "integrated": false,
+      "proposal_id": "learning-proposal-f18dc8cfe032682b",
+      "review_status": "review",
+      "risk_assessment": "review_only_no_integration",
+      "rollback_plan": "No rollback required because no integration or memory mutation occurs.",
+      "semantic_summary": "Review repeated_correction: The interaction references correction pressure that may deserve review.",
+      "source_references": [
+        "learning-opportunity-d9ef24420ccfc611"
+      ],
+      "supporting_evidence": [
+        "local_manual_interaction"
+      ]
+    },
+    {
+      "confidence": 0.68,
+      "conflicts": [],
+      "eligible_for_gated_integration": false,
+      "integrated": false,
+      "proposal_id": "learning-proposal-98e667aec7fa2deb",
+      "review_status": "review",
+      "risk_assessment": "review_only_no_integration",
+      "rollback_plan": "No rollback required because no integration or memory mutation occurs.",
+      "semantic_summary": "Review repeated_user_preference: The interaction may contain a user preference that requires explicit review before any memory path.",
+      "source_references": [
+        "learning-opportunity-f8d1edeb4fa21887"
+      ],
+      "supporting_evidence": [
+        "local_manual_interaction"
+      ]
+    }
+  ],
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  }
+}

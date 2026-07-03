@@ -1,0 +1,71 @@
+{
+  "bundles": [
+    {
+      "average_confidence": 0.6,
+      "bundle_id": "contradiction-review-bundle-1271c020ed79c1c5",
+      "frequency": 2,
+      "observations": [
+        {
+          "claim": "favorite color is blue",
+          "confidence": 0.6,
+          "source": "local_interaction",
+          "topic": "user_preference_color"
+        },
+        {
+          "claim": "favorite color is green",
+          "confidence": 0.6,
+          "source": "local_interaction",
+          "topic": "user_preference_color"
+        }
+      ],
+      "requires_review": true,
+      "resolved": false,
+      "sources": [
+        "local_interaction"
+      ],
+      "topic": "user_preference_color"
+    },
+    {
+      "average_confidence": 0.82,
+      "bundle_id": "contradiction-review-bundle-18d594e299bbe482",
+      "frequency": 1,
+      "observations": [
+        {
+          "claim": "review precedes approval",
+          "confidence": 0.82,
+          "source": "demo_trace",
+          "topic": "workflow_order"
+        }
+      ],
+      "requires_review": true,
+      "resolved": false,
+      "sources": [
+        "demo_trace"
+      ],
+      "topic": "workflow_order"
+    }
+  ],
+  "final_recommendation": "PROCEED_LEARNING_REVIEW_CONSOLE",
+  "memory_mutation_performed": false,
+  "phase": "Runtime V3.1D",
+  "resolution_performed": false,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  }
+}

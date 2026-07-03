@@ -1,0 +1,81 @@
+{
+  "allowed_with_owner_override": {
+    "admin_approver": "admin",
+    "allowed": true,
+    "audit_record": {
+      "approval_id": "admin-approval-d004ca37e3132d3b",
+      "integration_requires_live_write_gate": true,
+      "override_id": "owner-override-282328651fc04f3f",
+      "overwatch_review_id": "overwatch-review-3ae0fa388d10e596",
+      "proposal_review_status": "admin_approved"
+    },
+    "integration_event_id": "gated-integration-event-81bdbed0fdeb3d3a",
+    "override_status": "owner_override_allowed",
+    "overwatch_result": "block",
+    "rollback_token": "rollback-token-7f08ec86da65edfc",
+    "source_proposal_id": "learning-proposal-0c0e6795a6269be2",
+    "target_store": "delta_substrate_store_trial",
+    "timestamp": "2026-07-03T23:37:33+00:00",
+    "write_performed": false
+  },
+  "approval_format": "APPROVE_LEARNING_INTEGRATION",
+  "blocked_without_override": {
+    "admin_approver": "admin",
+    "allowed": false,
+    "audit_record": {
+      "approval_id": "admin-approval-d004ca37e3132d3b",
+      "integration_requires_live_write_gate": true,
+      "override_id": "",
+      "overwatch_review_id": "overwatch-review-3ae0fa388d10e596",
+      "proposal_review_status": "admin_approved"
+    },
+    "integration_event_id": "gated-integration-event-2b23cc5840dabd08",
+    "override_status": "none",
+    "overwatch_result": "block",
+    "rollback_token": "rollback-token-d2a20854b978b6a7",
+    "source_proposal_id": "learning-proposal-0c0e6795a6269be2",
+    "target_store": "delta_substrate_store_trial",
+    "timestamp": "2026-07-03T23:37:33+00:00",
+    "write_performed": false
+  },
+  "final_recommendation": "PROCEED_RUNTIME_V31_SAFETY_CHECKPOINT",
+  "live_write_performed": false,
+  "phase": "Runtime V3.1G",
+  "proposal": {
+    "confidence": 0.74,
+    "conflicts": [],
+    "eligible_for_gated_integration": true,
+    "integrated": false,
+    "proposal_id": "learning-proposal-0c0e6795a6269be2",
+    "review_status": "admin_approved",
+    "risk_assessment": "review_only_no_integration",
+    "rollback_plan": "No rollback required because no integration or memory mutation occurs.",
+    "semantic_summary": "Review repeated_correction: The interaction references correction pressure that may deserve review.",
+    "source_references": [
+      "learning-opportunity-d9ef24420ccfc611"
+    ],
+    "supporting_evidence": [
+      "local_manual_interaction"
+    ]
+  },
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "training_performed": false
+}

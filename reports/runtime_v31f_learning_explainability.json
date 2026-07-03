@@ -1,0 +1,52 @@
+{
+  "deterministic": true,
+  "explanations": [
+    {
+      "eligible_for_gated_integration": false,
+      "integrated": false,
+      "proposal_id": "learning-proposal-f18dc8cfe032682b",
+      "review_status": "review",
+      "why_blocked": [
+        "proposal_not_integrated",
+        "admin_approval_or_gate_missing"
+      ],
+      "why_proposed": "Review repeated_correction: The interaction references correction pressure that may deserve review.",
+      "why_rejected": "not_rejected"
+    },
+    {
+      "eligible_for_gated_integration": false,
+      "integrated": false,
+      "proposal_id": "learning-proposal-98e667aec7fa2deb",
+      "review_status": "review",
+      "why_blocked": [
+        "proposal_not_integrated",
+        "admin_approval_or_gate_missing"
+      ],
+      "why_proposed": "Review repeated_user_preference: The interaction may contain a user preference that requires explicit review before any memory path.",
+      "why_rejected": "not_rejected"
+    }
+  ],
+  "final_recommendation": "PROCEED_RUNTIME_V31_TESTS",
+  "integration_performed": false,
+  "learning_performed": false,
+  "phase": "Runtime V3.1F",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  }
+}

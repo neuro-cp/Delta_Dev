@@ -1,0 +1,102 @@
+{
+  "final_recommendation": "PROCEED_STRUCTURED_LEARNING_PROPOSAL_OBJECTS",
+  "integration_performed": false,
+  "learning_performed": false,
+  "phase": "Runtime V3.1A",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "samples": [
+    {
+      "input": "What should DELTA learn from this interaction?",
+      "opportunities": [
+        {
+          "category": "general_learning_request",
+          "confidence": 0.5,
+          "eligible_for_learning": false,
+          "evidence_count": 1,
+          "id": "learning-opportunity-62ace9b0ec5dea9a",
+          "reason": "The user asked what DELTA should learn; this becomes a reviewable opportunity only.",
+          "recommended_action": "create_review_proposal",
+          "requires_review": true,
+          "source": "local_manual_interaction"
+        }
+      ]
+    },
+    {
+      "input": "I have corrected this preference five times.",
+      "opportunities": [
+        {
+          "category": "repeated_correction",
+          "confidence": 0.74,
+          "eligible_for_learning": false,
+          "evidence_count": 1,
+          "id": "learning-opportunity-d9ef24420ccfc611",
+          "reason": "The interaction references correction pressure that may deserve review.",
+          "recommended_action": "create_review_proposal",
+          "requires_review": true,
+          "source": "local_manual_interaction"
+        },
+        {
+          "category": "repeated_user_preference",
+          "confidence": 0.68,
+          "eligible_for_learning": false,
+          "evidence_count": 5,
+          "id": "learning-opportunity-f8d1edeb4fa21887",
+          "reason": "The interaction may contain a user preference that requires explicit review before any memory path.",
+          "recommended_action": "create_review_proposal",
+          "requires_review": true,
+          "source": "local_manual_interaction"
+        }
+      ]
+    },
+    {
+      "input": "This unknown remained unresolved.",
+      "opportunities": [
+        {
+          "category": "unresolved_unknown",
+          "confidence": 0.62,
+          "eligible_for_learning": false,
+          "evidence_count": 1,
+          "id": "learning-opportunity-a43a4091e1ac353e",
+          "reason": "The interaction references an unresolved unknown that may need future evidence.",
+          "recommended_action": "track_as_review_only_gap",
+          "requires_review": true,
+          "source": "local_manual_interaction"
+        }
+      ]
+    },
+    {
+      "input": "There is a contradiction between these observations.",
+      "opportunities": [
+        {
+          "category": "contradiction_cluster",
+          "confidence": 0.7,
+          "eligible_for_learning": false,
+          "evidence_count": 2,
+          "id": "learning-opportunity-7f503cd6a09411e7",
+          "reason": "The interaction indicates competing observations that should be grouped, not resolved automatically.",
+          "recommended_action": "create_contradiction_review_bundle",
+          "requires_review": true,
+          "source": "local_manual_interaction"
+        }
+      ]
+    }
+  ]
+}

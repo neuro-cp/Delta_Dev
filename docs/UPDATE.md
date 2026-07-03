@@ -3499,6 +3499,57 @@ Next recommendation:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## Runtime V3.1 Gated Learning Integration Readiness
+
+Runtime V3.1 completed the first controlled learning readiness layer. DELTA can
+now detect possible learning opportunities and represent them as reviewable
+objects, but it still does not learn autonomously or write memory.
+
+Generated reports:
+
+- `reports/runtime_v31a_learning_opportunity_detection.md`
+- `reports/runtime_v31b_structured_learning_proposals.md`
+- `reports/runtime_v31c_cognitive_timeline.md`
+- `reports/runtime_v31d_contradiction_aggregation.md`
+- `reports/runtime_v31e_learning_review_console.md`
+- `reports/runtime_v31f_learning_explainability.md`
+- `reports/runtime_v31g_gated_integration_readiness.md`
+- `reports/runtime_v31h_safety_checkpoint.md`
+
+New runtime objects:
+
+- `LearningOpportunity`
+- `LearningProposal`
+- `ContradictionReviewBundle`
+- `AdminApprovalEvent`
+- `OverwatchReviewResult`
+- `OwnerOverrideEvent`
+- `GatedIntegrationEvent`
+
+Corrected V3.1 semantics:
+
+- Admin approval does not automatically integrate anything.
+- Admin approval makes one proposal eligible for gated integration.
+- A gated integration event requires structured admin approval and overwatch
+  allow, unless the owner override gate is explicit.
+- Every gated integration event carries an event id, source proposal id, admin
+  approver, overwatch result, override status, target store, rollback token,
+  timestamp, and audit record.
+- V3.1 does not perform the live write.
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, model artifact creation, provider calls, action
+  execution, autonomous memory writes, canonical memory mutation, authoritative
+  recall, recall mutation, scheduler/background worker activation, or live
+  integration write occurred.
+
+Next recommendation:
+
+`PROCEED_CONTROLLED_LEARNING_REVIEW_WORKFLOW_OR_MANUAL_DEMO`
+
 ## Runtime V3.0 Natural Interaction, Explainability, And Guided Review UX
 
 Runtime V3.0 completed a presentation and observability pass over the V2.9 local

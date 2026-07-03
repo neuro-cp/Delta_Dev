@@ -1,0 +1,141 @@
+{
+  "approval_state": "review_only_no_integration",
+  "blocked_reason": "learning_integration_disabled",
+  "conflicts": [
+    {
+      "average_confidence": 0.6,
+      "bundle_id": "contradiction-review-bundle-1271c020ed79c1c5",
+      "frequency": 2,
+      "observations": [
+        {
+          "claim": "favorite color is blue",
+          "confidence": 0.6,
+          "source": "local_interaction",
+          "topic": "user_preference_color"
+        },
+        {
+          "claim": "favorite color is green",
+          "confidence": 0.6,
+          "source": "local_interaction",
+          "topic": "user_preference_color"
+        }
+      ],
+      "requires_review": true,
+      "resolved": false,
+      "sources": [
+        "local_interaction"
+      ],
+      "topic": "user_preference_color"
+    },
+    {
+      "average_confidence": 0.82,
+      "bundle_id": "contradiction-review-bundle-18d594e299bbe482",
+      "frequency": 1,
+      "observations": [
+        {
+          "claim": "review precedes approval",
+          "confidence": 0.82,
+          "source": "demo_trace",
+          "topic": "workflow_order"
+        }
+      ],
+      "requires_review": true,
+      "resolved": false,
+      "sources": [
+        "demo_trace"
+      ],
+      "topic": "workflow_order"
+    }
+  ],
+  "final_recommendation": "PROCEED_LEARNING_EXPLAINABILITY",
+  "learning_opportunities": [
+    {
+      "category": "repeated_correction",
+      "confidence": 0.74,
+      "eligible_for_learning": false,
+      "evidence_count": 1,
+      "id": "learning-opportunity-d9ef24420ccfc611",
+      "reason": "The interaction references correction pressure that may deserve review.",
+      "recommended_action": "create_review_proposal",
+      "requires_review": true,
+      "source": "local_manual_interaction"
+    },
+    {
+      "category": "repeated_user_preference",
+      "confidence": 0.68,
+      "eligible_for_learning": false,
+      "evidence_count": 5,
+      "id": "learning-opportunity-f8d1edeb4fa21887",
+      "reason": "The interaction may contain a user preference that requires explicit review before any memory path.",
+      "recommended_action": "create_review_proposal",
+      "requires_review": true,
+      "source": "local_manual_interaction"
+    }
+  ],
+  "phase": "Runtime V3.1E",
+  "proposal_objects": [
+    {
+      "confidence": 0.74,
+      "conflicts": [],
+      "eligible_for_gated_integration": false,
+      "integrated": false,
+      "proposal_id": "learning-proposal-f18dc8cfe032682b",
+      "review_status": "review",
+      "risk_assessment": "review_only_no_integration",
+      "rollback_plan": "No rollback required because no integration or memory mutation occurs.",
+      "semantic_summary": "Review repeated_correction: The interaction references correction pressure that may deserve review.",
+      "source_references": [
+        "learning-opportunity-d9ef24420ccfc611"
+      ],
+      "supporting_evidence": [
+        "local_manual_interaction"
+      ]
+    },
+    {
+      "confidence": 0.68,
+      "conflicts": [],
+      "eligible_for_gated_integration": false,
+      "integrated": false,
+      "proposal_id": "learning-proposal-98e667aec7fa2deb",
+      "review_status": "review",
+      "risk_assessment": "review_only_no_integration",
+      "rollback_plan": "No rollback required because no integration or memory mutation occurs.",
+      "semantic_summary": "Review repeated_user_preference: The interaction may contain a user preference that requires explicit review before any memory path.",
+      "source_references": [
+        "learning-opportunity-f8d1edeb4fa21887"
+      ],
+      "supporting_evidence": [
+        "local_manual_interaction"
+      ]
+    }
+  ],
+  "risk_level": "low_if_kept_report_only",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample_interaction": "I have corrected this preference five times.",
+  "supporting_evidence": [
+    [
+      "local_manual_interaction"
+    ],
+    [
+      "local_manual_interaction"
+    ]
+  ]
+}

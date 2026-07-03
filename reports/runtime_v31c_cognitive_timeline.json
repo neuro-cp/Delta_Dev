@@ -1,0 +1,84 @@
+{
+  "evaluation_active": false,
+  "final_recommendation": "PROCEED_CONTRADICTION_AGGREGATION",
+  "integration_active": false,
+  "phase": "Runtime V3.1C",
+  "promotion_active": false,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "stages": [
+    {
+      "description": "raw local interaction or observation",
+      "stage": "experience",
+      "status": "available"
+    },
+    {
+      "description": "structured observation preview",
+      "stage": "observation",
+      "status": "available"
+    },
+    {
+      "description": "reviewable possible learning signal",
+      "stage": "learning_opportunity",
+      "status": "available"
+    },
+    {
+      "description": "structured draft/review proposal",
+      "stage": "proposal",
+      "status": "available"
+    },
+    {
+      "description": "human/operator review state",
+      "stage": "review",
+      "status": "available"
+    },
+    {
+      "description": "approval marker that becomes eligible for gated integration",
+      "stage": "admin_approved_proposal",
+      "status": "available"
+    },
+    {
+      "description": "overwatch allow/block or explicit owner override record",
+      "stage": "overwatch_or_override_gate",
+      "status": "available"
+    },
+    {
+      "description": "audit/rollback event scaffold; no live write in V3.1",
+      "stage": "gated_integration_event",
+      "status": "available"
+    },
+    {
+      "description": "future live write only; not active",
+      "stage": "integration",
+      "status": "future_only"
+    },
+    {
+      "description": "future only; not active",
+      "stage": "evaluation",
+      "status": "future_only"
+    },
+    {
+      "description": "future only; not active",
+      "stage": "promotion",
+      "status": "future_only"
+    }
+  ],
+  "stops_at": "gated_integration_event_scaffold"
+}
