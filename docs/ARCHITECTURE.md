@@ -558,3 +558,20 @@ mutate memory, mutate recall, execute actions, start schedulers, promote HYB1,
 or change Model B defaults. Its purpose is cohesion: every cognitive operation
 should become inspectable through kernel events, runtime state, transactions,
 audit graph links, and safety checks before future substrate work begins.
+
+## Runtime ARC II Knowledge Substrate
+
+Runtime ARC II defines DELTA's internal semantic substrate. It is not document
+storage, RAG, training, or provider integration. It introduces reviewable
+knowledge objects for entities, concepts, observations, evidence, sources,
+relationships, events, claims, hypotheses, procedures, and rules.
+
+Every ARC II knowledge object carries provenance, confidence, review state,
+audit id, and rollback token. Registries and the graph builder are deterministic
+and non-authoritative. Semantic queries can inspect related concepts,
+supporting evidence, contradictions, procedures, and observations, but ARC II
+does not perform reasoning over those results.
+
+ARC II performs no live persistence, no canonical memory mutation, no recall
+mutation, no provider authority, no training, no action execution, no scheduler
+activation, and no live knowledge integration.

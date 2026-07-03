@@ -882,6 +882,38 @@ ARC II preview:
 
 `PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN`
 
+## Runtime ARC II Knowledge Substrate Update
+
+Runtime ARC II builds the internal Knowledge Substrate architecture behind the
+ARC I kernel.
+
+Completed:
+
+- V4.0 Primitive Knowledge Object Definitions
+- V4.1 Entity Registry
+- V4.2 Observation Registry
+- V4.3 Evidence Registry
+- V4.4 Relationship Registry
+- V4.5 Concept Registry
+- V4.6 Knowledge Graph Builder
+- V4.7 Semantic Query Layer
+- V4.8 Static Knowledge Browser UI
+- V4.9 Knowledge Health Metrics
+- V4.10 Kernel Integration
+- V4.11 Knowledge Transactions
+- V4.12 Versioned Knowledge Objects
+- V4.13 Knowledge Provenance Explorer
+- V4.14 Semantic Diagnostics
+- V4.15 ARC II Safety Checkpoint
+
+ARC II remains non-authoritative and review-only. It performs no live knowledge
+integration, no training, no provider authority, no scheduler activation, no
+action execution, no memory mutation, and no recall mutation.
+
+Recommended next phase:
+
+`PROCEED_ARC_III_REASONING_LAYER_DESIGN`
+
 ## Runtime V3.0 Natural Interaction And Guided Review UX Update
 
 Runtime V3.0 improves the local interaction surface without adding cognition or

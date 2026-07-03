@@ -60,6 +60,21 @@ promotion, or Model B default change occurred.
 
 Current next recommendation: PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN
 
+Runtime ARC II is complete as a Knowledge Substrate architecture scaffold. It
+defines reviewable primitive knowledge objects, registries, graph builder,
+semantic query layer, static browser, health metrics, kernel-to-substrate query
+route, knowledge transactions, versioning/rollback, provenance exploration, and
+semantic diagnostics.
+
+ARC II is not document storage, RAG, provider integration, training, or live
+knowledge integration. It creates no authoritative substrate and performs no
+live persistence. Model B remains default, HYB1 remains dormant/env-gated, and
+training, provider authority, scheduler activation, action execution, memory
+mutation, recall mutation, hidden writes, and live knowledge integration remain
+disabled.
+
+Current next recommendation: PROCEED_ARC_III_REASONING_LAYER_DESIGN
+
 Runtime V3.0 is complete. It adds presentation-only natural interaction and
 explainability over the V2.9 local answer path: conversational answer modes,
 pipeline explanations, a static guided review console, manual demo scenarios,

@@ -3594,6 +3594,70 @@ Next recommendation:
 
 `PROCEED_ARC_II_KNOWLEDGE_SUBSTRATE_DESIGN`
 
+## Runtime ARC II Knowledge Substrate Architecture
+
+Runtime ARC II completed the first internal Knowledge Substrate architecture.
+This is not document storage, RAG, training, provider integration, or live
+knowledge integration.
+
+Generated artifacts:
+
+- `reports/runtime_arc_ii_safety_checkpoint.md`
+- `reports/runtime_arc_ii_safety_checkpoint.json`
+- `ui/delta_arc_ii_knowledge_browser.html`
+- `docs/runtime_arc_ii_knowledge_substrate_architecture.md`
+- `docs/runtime_arc_ii_knowledge_object_reference.md`
+- `docs/runtime_arc_ii_knowledge_graph_diagram.md`
+- `docs/runtime_arc_ii_semantic_layer_diagram.md`
+- `docs/runtime_arc_ii_kernel_substrate_diagram.md`
+- `docs/runtime_arc_ii_transaction_lifecycle.md`
+- `docs/runtime_arc_iii_reasoning_preview.md`
+- `docs/continuation_runtime_arc_ii.md`
+
+Knowledge object types:
+
+- Entity
+- Concept
+- Observation
+- Evidence
+- Source
+- Relationship
+- Event
+- Claim
+- Hypothesis
+- Procedure
+- Rule
+
+Substrate components:
+
+- entity registry
+- observation registry
+- evidence registry
+- relationship registry
+- concept registry
+- knowledge graph builder
+- semantic query layer
+- static knowledge browser
+- health metrics
+- kernel-to-substrate query route
+- transaction objects
+- versioning and rollback support
+- provenance explorer
+- semantic diagnostics
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, weight update, provider authority, provider calls,
+  action execution, scheduler/background worker activation, autonomous memory
+  writes, canonical memory mutation, recall mutation, authoritative recall,
+  hidden writes, or live knowledge integration occurred.
+
+Next recommendation:
+
+`PROCEED_ARC_III_REASONING_LAYER_DESIGN`
+
 ## Runtime V3.0 Natural Interaction, Explainability, And Guided Review UX
 
 Runtime V3.0 completed a presentation and observability pass over the V2.9 local

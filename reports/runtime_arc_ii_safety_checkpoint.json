@@ -1,0 +1,1159 @@
+{
+  "authoritative_substrate": false,
+  "final_recommendation": "PROCEED_ARC_III_REASONING_LAYER_DESIGN",
+  "health_metrics": {
+    "confidence_distribution": {
+      "high": 4,
+      "medium": 12
+    },
+    "contradiction_count": 0,
+    "coverage": {
+      "Claim": 1,
+      "Concept": 1,
+      "Entity": 1,
+      "Event": 1,
+      "Evidence": 1,
+      "Hypothesis": 1,
+      "Observation": 1,
+      "Procedure": 1,
+      "Relationship": 6,
+      "Rule": 1,
+      "Source": 1
+    },
+    "duplicate_entities": [],
+    "graph_connectivity": {
+      "connected_node_count": 10,
+      "edge_count": 6,
+      "node_count": 16
+    },
+    "missing_provenance": [],
+    "orphan_nodes": [
+      "knowledge-object-501535dba40d94e1",
+      "knowledge-object-46dcf166aedc113e",
+      "knowledge-object-029b5a4ade98dd92",
+      "knowledge-object-26c3b353d1e23014",
+      "knowledge-object-92714d66a4e91367",
+      "knowledge-object-6b7520e78080c589"
+    ]
+  },
+  "hyb1": "dormant_env_gated",
+  "kernel_integration": {
+    "question": "knowledge query",
+    "reasoning_performed": false,
+    "route": "Kernel -> Knowledge Query -> Substrate -> Evidence Objects -> Return Graph"
+  },
+  "knowledge_graph": {
+    "deterministic": true,
+    "edges": [
+      {
+        "audit_id": "knowledge-audit-711e9c61ed8d4c7e",
+        "relationship_type": "references",
+        "source": "knowledge-object-f897279168a6f148",
+        "target": "knowledge-object-4703943e4000ae77"
+      },
+      {
+        "audit_id": "knowledge-audit-a340a243b7ebc589",
+        "relationship_type": "derived_from",
+        "source": "knowledge-object-967f3c276cb6b05d",
+        "target": "knowledge-object-6207c2419fb4e7f6"
+      },
+      {
+        "audit_id": "knowledge-audit-fac33c0f4d5b7711",
+        "relationship_type": "supports",
+        "source": "knowledge-object-dc1138a190b56d59",
+        "target": "knowledge-object-6207c2419fb4e7f6"
+      },
+      {
+        "audit_id": "knowledge-audit-4df964cf68cfb67e",
+        "relationship_type": "depends_on",
+        "source": "knowledge-object-3ce7e31a514bfdb1",
+        "target": "knowledge-object-db8afe8bc818b474"
+      },
+      {
+        "audit_id": "knowledge-audit-d80f251125db4f17",
+        "relationship_type": "part_of",
+        "source": "knowledge-object-fb00836dd5f00dfe",
+        "target": "knowledge-object-4703943e4000ae77"
+      },
+      {
+        "audit_id": "knowledge-audit-c6b5019f164dbc6f",
+        "relationship_type": "references",
+        "source": "knowledge-object-2236ef57d110f741",
+        "target": "knowledge-object-e021ff08c20d6dff"
+      }
+    ],
+    "graph_only": true,
+    "nodes": [
+      {
+        "confidence": 0.9,
+        "id": "knowledge-object-e021ff08c20d6dff",
+        "label": "DELTA local architecture docs",
+        "review_state": "review",
+        "type": "Source"
+      },
+      {
+        "confidence": 0.82,
+        "id": "knowledge-object-6207c2419fb4e7f6",
+        "label": "ARC II prompt requires provenance and rollback support",
+        "review_state": "review",
+        "type": "Evidence"
+      },
+      {
+        "confidence": 0.86,
+        "id": "knowledge-object-f897279168a6f148",
+        "label": "DELTA",
+        "review_state": "review",
+        "type": "Entity"
+      },
+      {
+        "confidence": 0.74,
+        "id": "knowledge-object-4703943e4000ae77",
+        "label": "Knowledge Substrate",
+        "review_state": "review",
+        "type": "Concept"
+      },
+      {
+        "confidence": 0.7,
+        "id": "knowledge-object-967f3c276cb6b05d",
+        "label": "Observation is not truth",
+        "review_state": "review",
+        "type": "Observation"
+      },
+      {
+        "confidence": 0.68,
+        "id": "knowledge-object-dc1138a190b56d59",
+        "label": "Evidence remains advisory until reviewed",
+        "review_state": "review",
+        "type": "Claim"
+      },
+      {
+        "confidence": 0.55,
+        "id": "knowledge-object-fb00836dd5f00dfe",
+        "label": "Kernel-routed semantic queries can inspect substrate objects",
+        "review_state": "review",
+        "type": "Hypothesis"
+      },
+      {
+        "confidence": 0.66,
+        "id": "knowledge-object-db8afe8bc818b474",
+        "label": "Review knowledge object before integration",
+        "review_state": "review",
+        "type": "Procedure"
+      },
+      {
+        "confidence": 0.95,
+        "id": "knowledge-object-3ce7e31a514bfdb1",
+        "label": "No live knowledge integration in ARC II",
+        "review_state": "review",
+        "type": "Rule"
+      },
+      {
+        "confidence": 0.7,
+        "id": "knowledge-object-2236ef57d110f741",
+        "label": "ARC II substrate design checkpoint",
+        "review_state": "review",
+        "type": "Event"
+      },
+      {
+        "confidence": 0.64,
+        "id": "knowledge-object-501535dba40d94e1",
+        "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+        "review_state": "review",
+        "type": "Relationship"
+      },
+      {
+        "confidence": 0.64,
+        "id": "knowledge-object-46dcf166aedc113e",
+        "label": "knowledge-object-967f3c276cb6b05d derived_from knowledge-object-6207c2419fb4e7f6",
+        "review_state": "review",
+        "type": "Relationship"
+      },
+      {
+        "confidence": 0.64,
+        "id": "knowledge-object-029b5a4ade98dd92",
+        "label": "knowledge-object-dc1138a190b56d59 supports knowledge-object-6207c2419fb4e7f6",
+        "review_state": "review",
+        "type": "Relationship"
+      },
+      {
+        "confidence": 0.64,
+        "id": "knowledge-object-26c3b353d1e23014",
+        "label": "knowledge-object-3ce7e31a514bfdb1 depends_on knowledge-object-db8afe8bc818b474",
+        "review_state": "review",
+        "type": "Relationship"
+      },
+      {
+        "confidence": 0.64,
+        "id": "knowledge-object-92714d66a4e91367",
+        "label": "knowledge-object-fb00836dd5f00dfe part_of knowledge-object-4703943e4000ae77",
+        "review_state": "review",
+        "type": "Relationship"
+      },
+      {
+        "confidence": 0.64,
+        "id": "knowledge-object-6b7520e78080c589",
+        "label": "knowledge-object-2236ef57d110f741 references knowledge-object-e021ff08c20d6dff",
+        "review_state": "review",
+        "type": "Relationship"
+      }
+    ]
+  },
+  "knowledge_objects": [
+    {
+      "audit_id": "knowledge-audit-75daf380caf68767",
+      "confidence": 0.9,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-e021ff08c20d6dff",
+      "label": "DELTA local architecture docs",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "docs/ARCHITECTURE.md"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-75daf380caf68767",
+      "supersedes": "",
+      "type": "Source",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-5a33077df1a92236",
+      "confidence": 0.82,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-6207c2419fb4e7f6",
+      "label": "ARC II prompt requires provenance and rollback support",
+      "parent": "",
+      "payload": {
+        "excerpt_reference": "knowledge substrate design",
+        "location": "ARC II preview",
+        "source": "knowledge-object-e021ff08c20d6dff"
+      },
+      "provenance": [
+        "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-5a33077df1a92236",
+      "supersedes": "",
+      "type": "Evidence",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-f6c7cbb3d37d83ba",
+      "confidence": 0.86,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-f897279168a6f148",
+      "label": "DELTA",
+      "parent": "",
+      "payload": {
+        "entity_kind": "system"
+      },
+      "provenance": [
+        "knowledge-object-e021ff08c20d6dff"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-f6c7cbb3d37d83ba",
+      "supersedes": "",
+      "type": "Entity",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-a57f3cb3e27ebbf8",
+      "confidence": 0.74,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-4703943e4000ae77",
+      "label": "Knowledge Substrate",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-a57f3cb3e27ebbf8",
+      "supersedes": "",
+      "type": "Concept",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-7a6b1d71d97b2e5e",
+      "confidence": 0.7,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-967f3c276cb6b05d",
+      "label": "Observation is not truth",
+      "parent": "",
+      "payload": {
+        "evidence": "knowledge-object-6207c2419fb4e7f6",
+        "source": "knowledge-object-e021ff08c20d6dff"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-7a6b1d71d97b2e5e",
+      "supersedes": "",
+      "type": "Observation",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-0de26988ce0200b1",
+      "confidence": 0.68,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-dc1138a190b56d59",
+      "label": "Evidence remains advisory until reviewed",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-0de26988ce0200b1",
+      "supersedes": "",
+      "type": "Claim",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-5e10b978beedf3a6",
+      "confidence": 0.55,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-fb00836dd5f00dfe",
+      "label": "Kernel-routed semantic queries can inspect substrate objects",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "knowledge-object-4703943e4000ae77"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-5e10b978beedf3a6",
+      "supersedes": "",
+      "type": "Hypothesis",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-c7861c2b550c669b",
+      "confidence": 0.66,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-db8afe8bc818b474",
+      "label": "Review knowledge object before integration",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-c7861c2b550c669b",
+      "supersedes": "",
+      "type": "Procedure",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-8d9301be3f398b9f",
+      "confidence": 0.95,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-3ce7e31a514bfdb1",
+      "label": "No live knowledge integration in ARC II",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-8d9301be3f398b9f",
+      "supersedes": "",
+      "type": "Rule",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-9e5ad1aa5e89cdb7",
+      "confidence": 0.7,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-2236ef57d110f741",
+      "label": "ARC II substrate design checkpoint",
+      "parent": "",
+      "payload": {},
+      "provenance": [
+        "knowledge-object-e021ff08c20d6dff"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-9e5ad1aa5e89cdb7",
+      "supersedes": "",
+      "type": "Event",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-711e9c61ed8d4c7e",
+      "confidence": 0.64,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-501535dba40d94e1",
+      "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+      "parent": "",
+      "payload": {
+        "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+        "relationship_type": "references",
+        "source_id": "knowledge-object-f897279168a6f148",
+        "target_id": "knowledge-object-4703943e4000ae77"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-711e9c61ed8d4c7e",
+      "supersedes": "",
+      "type": "Relationship",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-a340a243b7ebc589",
+      "confidence": 0.64,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-46dcf166aedc113e",
+      "label": "knowledge-object-967f3c276cb6b05d derived_from knowledge-object-6207c2419fb4e7f6",
+      "parent": "",
+      "payload": {
+        "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+        "relationship_type": "derived_from",
+        "source_id": "knowledge-object-967f3c276cb6b05d",
+        "target_id": "knowledge-object-6207c2419fb4e7f6"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-a340a243b7ebc589",
+      "supersedes": "",
+      "type": "Relationship",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-fac33c0f4d5b7711",
+      "confidence": 0.64,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-029b5a4ade98dd92",
+      "label": "knowledge-object-dc1138a190b56d59 supports knowledge-object-6207c2419fb4e7f6",
+      "parent": "",
+      "payload": {
+        "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+        "relationship_type": "supports",
+        "source_id": "knowledge-object-dc1138a190b56d59",
+        "target_id": "knowledge-object-6207c2419fb4e7f6"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-fac33c0f4d5b7711",
+      "supersedes": "",
+      "type": "Relationship",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-4df964cf68cfb67e",
+      "confidence": 0.64,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-26c3b353d1e23014",
+      "label": "knowledge-object-3ce7e31a514bfdb1 depends_on knowledge-object-db8afe8bc818b474",
+      "parent": "",
+      "payload": {
+        "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+        "relationship_type": "depends_on",
+        "source_id": "knowledge-object-3ce7e31a514bfdb1",
+        "target_id": "knowledge-object-db8afe8bc818b474"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-4df964cf68cfb67e",
+      "supersedes": "",
+      "type": "Relationship",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-d80f251125db4f17",
+      "confidence": 0.64,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-92714d66a4e91367",
+      "label": "knowledge-object-fb00836dd5f00dfe part_of knowledge-object-4703943e4000ae77",
+      "parent": "",
+      "payload": {
+        "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+        "relationship_type": "part_of",
+        "source_id": "knowledge-object-fb00836dd5f00dfe",
+        "target_id": "knowledge-object-4703943e4000ae77"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-d80f251125db4f17",
+      "supersedes": "",
+      "type": "Relationship",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    },
+    {
+      "audit_id": "knowledge-audit-c6b5019f164dbc6f",
+      "confidence": 0.64,
+      "created": "2026-07-03T23:57:01+00:00",
+      "history": [],
+      "id": "knowledge-object-6b7520e78080c589",
+      "label": "knowledge-object-2236ef57d110f741 references knowledge-object-e021ff08c20d6dff",
+      "parent": "",
+      "payload": {
+        "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+        "relationship_type": "references",
+        "source_id": "knowledge-object-2236ef57d110f741",
+        "target_id": "knowledge-object-e021ff08c20d6dff"
+      },
+      "provenance": [
+        "knowledge-object-6207c2419fb4e7f6"
+      ],
+      "review_state": "review",
+      "rollback_token": "knowledge-rollback-c6b5019f164dbc6f",
+      "supersedes": "",
+      "type": "Relationship",
+      "updated": "2026-07-03T23:57:01+00:00",
+      "version": 1
+    }
+  ],
+  "knowledge_transaction": {
+    "integrated": false,
+    "reviewed": true,
+    "rollback_token": "knowledge-rollback-a57f3cb3e27ebbf8",
+    "stage": "approved",
+    "target_object_id": "knowledge-object-4703943e4000ae77",
+    "transaction_id": "knowledge-transaction-b96370076e924b0a"
+  },
+  "live_knowledge_integration": false,
+  "live_persistence": false,
+  "model_b_default": "unchanged",
+  "phase": "Runtime ARC II V4.15",
+  "provenance_tree": {
+    "confidence": 0.74,
+    "id": "knowledge-object-4703943e4000ae77",
+    "label": "Knowledge Substrate",
+    "provenance": [
+      {
+        "confidence": 0.82,
+        "id": "knowledge-object-6207c2419fb4e7f6",
+        "label": "ARC II prompt requires provenance and rollback support",
+        "provenance": [
+          {
+            "external": true,
+            "reference": "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+          }
+        ],
+        "review_state": "review",
+        "type": "Evidence"
+      }
+    ],
+    "review_state": "review",
+    "type": "Concept"
+  },
+  "registries": {
+    "concept_registry": {
+      "allowed_types": [
+        "Concept",
+        "Claim",
+        "Hypothesis",
+        "Procedure",
+        "Rule",
+        "Event"
+      ],
+      "name": "concept_registry",
+      "objects": [
+        {
+          "audit_id": "knowledge-audit-9e5ad1aa5e89cdb7",
+          "confidence": 0.7,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-2236ef57d110f741",
+          "label": "ARC II substrate design checkpoint",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-e021ff08c20d6dff"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-9e5ad1aa5e89cdb7",
+          "supersedes": "",
+          "type": "Event",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-8d9301be3f398b9f",
+          "confidence": 0.95,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-3ce7e31a514bfdb1",
+          "label": "No live knowledge integration in ARC II",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-8d9301be3f398b9f",
+          "supersedes": "",
+          "type": "Rule",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-a57f3cb3e27ebbf8",
+          "confidence": 0.74,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-4703943e4000ae77",
+          "label": "Knowledge Substrate",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-a57f3cb3e27ebbf8",
+          "supersedes": "",
+          "type": "Concept",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-c7861c2b550c669b",
+          "confidence": 0.66,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-db8afe8bc818b474",
+          "label": "Review knowledge object before integration",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-c7861c2b550c669b",
+          "supersedes": "",
+          "type": "Procedure",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-0de26988ce0200b1",
+          "confidence": 0.68,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-dc1138a190b56d59",
+          "label": "Evidence remains advisory until reviewed",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-0de26988ce0200b1",
+          "supersedes": "",
+          "type": "Claim",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-5e10b978beedf3a6",
+          "confidence": 0.55,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-fb00836dd5f00dfe",
+          "label": "Kernel-routed semantic queries can inspect substrate objects",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-4703943e4000ae77"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-5e10b978beedf3a6",
+          "supersedes": "",
+          "type": "Hypothesis",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        }
+      ]
+    },
+    "entity_registry": {
+      "allowed_types": [
+        "Entity"
+      ],
+      "name": "entity_registry",
+      "objects": [
+        {
+          "audit_id": "knowledge-audit-f6c7cbb3d37d83ba",
+          "confidence": 0.86,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-f897279168a6f148",
+          "label": "DELTA",
+          "parent": "",
+          "payload": {
+            "entity_kind": "system"
+          },
+          "provenance": [
+            "knowledge-object-e021ff08c20d6dff"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-f6c7cbb3d37d83ba",
+          "supersedes": "",
+          "type": "Entity",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        }
+      ]
+    },
+    "evidence_registry": {
+      "allowed_types": [
+        "Evidence",
+        "Source"
+      ],
+      "name": "evidence_registry",
+      "objects": [
+        {
+          "audit_id": "knowledge-audit-5a33077df1a92236",
+          "confidence": 0.82,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-6207c2419fb4e7f6",
+          "label": "ARC II prompt requires provenance and rollback support",
+          "parent": "",
+          "payload": {
+            "excerpt_reference": "knowledge substrate design",
+            "location": "ARC II preview",
+            "source": "knowledge-object-e021ff08c20d6dff"
+          },
+          "provenance": [
+            "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-5a33077df1a92236",
+          "supersedes": "",
+          "type": "Evidence",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-75daf380caf68767",
+          "confidence": 0.9,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-e021ff08c20d6dff",
+          "label": "DELTA local architecture docs",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "docs/ARCHITECTURE.md"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-75daf380caf68767",
+          "supersedes": "",
+          "type": "Source",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        }
+      ]
+    },
+    "observation_registry": {
+      "allowed_types": [
+        "Observation"
+      ],
+      "name": "observation_registry",
+      "objects": [
+        {
+          "audit_id": "knowledge-audit-7a6b1d71d97b2e5e",
+          "confidence": 0.7,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-967f3c276cb6b05d",
+          "label": "Observation is not truth",
+          "parent": "",
+          "payload": {
+            "evidence": "knowledge-object-6207c2419fb4e7f6",
+            "source": "knowledge-object-e021ff08c20d6dff"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-7a6b1d71d97b2e5e",
+          "supersedes": "",
+          "type": "Observation",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        }
+      ]
+    },
+    "relationship_registry": {
+      "allowed_types": [
+        "Relationship"
+      ],
+      "name": "relationship_registry",
+      "objects": [
+        {
+          "audit_id": "knowledge-audit-fac33c0f4d5b7711",
+          "confidence": 0.64,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-029b5a4ade98dd92",
+          "label": "knowledge-object-dc1138a190b56d59 supports knowledge-object-6207c2419fb4e7f6",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "supports",
+            "source_id": "knowledge-object-dc1138a190b56d59",
+            "target_id": "knowledge-object-6207c2419fb4e7f6"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-fac33c0f4d5b7711",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-4df964cf68cfb67e",
+          "confidence": 0.64,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-26c3b353d1e23014",
+          "label": "knowledge-object-3ce7e31a514bfdb1 depends_on knowledge-object-db8afe8bc818b474",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "depends_on",
+            "source_id": "knowledge-object-3ce7e31a514bfdb1",
+            "target_id": "knowledge-object-db8afe8bc818b474"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-4df964cf68cfb67e",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-a340a243b7ebc589",
+          "confidence": 0.64,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-46dcf166aedc113e",
+          "label": "knowledge-object-967f3c276cb6b05d derived_from knowledge-object-6207c2419fb4e7f6",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "derived_from",
+            "source_id": "knowledge-object-967f3c276cb6b05d",
+            "target_id": "knowledge-object-6207c2419fb4e7f6"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-a340a243b7ebc589",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-711e9c61ed8d4c7e",
+          "confidence": 0.64,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-501535dba40d94e1",
+          "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "references",
+            "source_id": "knowledge-object-f897279168a6f148",
+            "target_id": "knowledge-object-4703943e4000ae77"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-711e9c61ed8d4c7e",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-c6b5019f164dbc6f",
+          "confidence": 0.64,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-6b7520e78080c589",
+          "label": "knowledge-object-2236ef57d110f741 references knowledge-object-e021ff08c20d6dff",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "references",
+            "source_id": "knowledge-object-2236ef57d110f741",
+            "target_id": "knowledge-object-e021ff08c20d6dff"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-c6b5019f164dbc6f",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-d80f251125db4f17",
+          "confidence": 0.64,
+          "created": "2026-07-03T23:57:01+00:00",
+          "history": [],
+          "id": "knowledge-object-92714d66a4e91367",
+          "label": "knowledge-object-fb00836dd5f00dfe part_of knowledge-object-4703943e4000ae77",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "part_of",
+            "source_id": "knowledge-object-fb00836dd5f00dfe",
+            "target_id": "knowledge-object-4703943e4000ae77"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-d80f251125db4f17",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-03T23:57:01+00:00",
+          "version": 1
+        }
+      ]
+    }
+  },
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "semantic_diagnostics": {
+    "broken_references": [],
+    "conflicting_confidence": [],
+    "cycles": [],
+    "duplicates": [],
+    "missing_provenance": [],
+    "mutation_performed": false,
+    "orphans": [
+      "knowledge-object-501535dba40d94e1",
+      "knowledge-object-46dcf166aedc113e",
+      "knowledge-object-029b5a4ade98dd92",
+      "knowledge-object-26c3b353d1e23014",
+      "knowledge-object-92714d66a4e91367",
+      "knowledge-object-6b7520e78080c589"
+    ]
+  },
+  "semantic_queries": {
+    "contradictions": [],
+    "observations": [
+      {
+        "audit_id": "knowledge-audit-7a6b1d71d97b2e5e",
+        "confidence": 0.7,
+        "created": "2026-07-03T23:57:01+00:00",
+        "history": [],
+        "id": "knowledge-object-967f3c276cb6b05d",
+        "label": "Observation is not truth",
+        "parent": "",
+        "payload": {
+          "evidence": "knowledge-object-6207c2419fb4e7f6",
+          "source": "knowledge-object-e021ff08c20d6dff"
+        },
+        "provenance": [
+          "knowledge-object-6207c2419fb4e7f6"
+        ],
+        "review_state": "review",
+        "rollback_token": "knowledge-rollback-7a6b1d71d97b2e5e",
+        "supersedes": "",
+        "type": "Observation",
+        "updated": "2026-07-03T23:57:01+00:00",
+        "version": 1
+      }
+    ],
+    "procedures": [
+      {
+        "audit_id": "knowledge-audit-c7861c2b550c669b",
+        "confidence": 0.66,
+        "created": "2026-07-03T23:57:01+00:00",
+        "history": [],
+        "id": "knowledge-object-db8afe8bc818b474",
+        "label": "Review knowledge object before integration",
+        "parent": "",
+        "payload": {},
+        "provenance": [
+          "knowledge-object-6207c2419fb4e7f6"
+        ],
+        "review_state": "review",
+        "rollback_token": "knowledge-rollback-c7861c2b550c669b",
+        "supersedes": "",
+        "type": "Procedure",
+        "updated": "2026-07-03T23:57:01+00:00",
+        "version": 1
+      }
+    ],
+    "related_concepts": [
+      {
+        "audit_id": "knowledge-audit-a57f3cb3e27ebbf8",
+        "confidence": 0.74,
+        "created": "2026-07-03T23:57:01+00:00",
+        "history": [],
+        "id": "knowledge-object-4703943e4000ae77",
+        "label": "Knowledge Substrate",
+        "parent": "",
+        "payload": {},
+        "provenance": [
+          "knowledge-object-6207c2419fb4e7f6"
+        ],
+        "review_state": "review",
+        "rollback_token": "knowledge-rollback-a57f3cb3e27ebbf8",
+        "supersedes": "",
+        "type": "Concept",
+        "updated": "2026-07-03T23:57:01+00:00",
+        "version": 1
+      },
+      {
+        "audit_id": "knowledge-audit-c7861c2b550c669b",
+        "confidence": 0.66,
+        "created": "2026-07-03T23:57:01+00:00",
+        "history": [],
+        "id": "knowledge-object-db8afe8bc818b474",
+        "label": "Review knowledge object before integration",
+        "parent": "",
+        "payload": {},
+        "provenance": [
+          "knowledge-object-6207c2419fb4e7f6"
+        ],
+        "review_state": "review",
+        "rollback_token": "knowledge-rollback-c7861c2b550c669b",
+        "supersedes": "",
+        "type": "Procedure",
+        "updated": "2026-07-03T23:57:01+00:00",
+        "version": 1
+      },
+      {
+        "audit_id": "knowledge-audit-8d9301be3f398b9f",
+        "confidence": 0.95,
+        "created": "2026-07-03T23:57:01+00:00",
+        "history": [],
+        "id": "knowledge-object-3ce7e31a514bfdb1",
+        "label": "No live knowledge integration in ARC II",
+        "parent": "",
+        "payload": {},
+        "provenance": [
+          "knowledge-object-6207c2419fb4e7f6"
+        ],
+        "review_state": "review",
+        "rollback_token": "knowledge-rollback-8d9301be3f398b9f",
+        "supersedes": "",
+        "type": "Rule",
+        "updated": "2026-07-03T23:57:01+00:00",
+        "version": 1
+      }
+    ],
+    "supporting_evidence": [
+      {
+        "audit_id": "knowledge-audit-5a33077df1a92236",
+        "confidence": 0.82,
+        "created": "2026-07-03T23:57:01+00:00",
+        "history": [],
+        "id": "knowledge-object-6207c2419fb4e7f6",
+        "label": "ARC II prompt requires provenance and rollback support",
+        "parent": "",
+        "payload": {
+          "excerpt_reference": "knowledge substrate design",
+          "location": "ARC II preview",
+          "source": "knowledge-object-e021ff08c20d6dff"
+        },
+        "provenance": [
+          "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+        ],
+        "review_state": "review",
+        "rollback_token": "knowledge-rollback-5a33077df1a92236",
+        "supersedes": "",
+        "type": "Evidence",
+        "updated": "2026-07-03T23:57:01+00:00",
+        "version": 1
+      }
+    ]
+  },
+  "versioned_object_example": {
+    "audit_id": "knowledge-audit-bcd8521852450551",
+    "confidence": 0.74,
+    "created": "2026-07-03T23:57:01+00:00",
+    "history": [
+      "knowledge-object-4703943e4000ae77"
+    ],
+    "id": "knowledge-object-fd8e5d4042acb0a7",
+    "label": "Knowledge Substrate v2 review draft",
+    "parent": "knowledge-object-4703943e4000ae77",
+    "payload": {},
+    "provenance": [
+      "knowledge-object-6207c2419fb4e7f6"
+    ],
+    "review_state": "review",
+    "rollback_token": "knowledge-rollback-bcd8521852450551",
+    "supersedes": "knowledge-object-4703943e4000ae77",
+    "type": "Concept",
+    "updated": "2026-07-03T23:57:01+00:00",
+    "version": 2
+  }
+}
