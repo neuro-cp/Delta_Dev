@@ -6,6 +6,44 @@ file before making changes.
 
 ## 2026-07-02
 
+### Runtime V2.3A-V2.3F HYB1 Shadow, UI Write Bridge, Recall Synthesis, Provider Candidate, And Scheduler Dry-Run
+
+Completed Runtime V2.3A through V2.3F after the V2.2 safety closure.
+The run added HYB1 shadow trial simulation, localhost UI candidate write
+execution bridge, controlled recall-to-synthesis integration, provider evidence
+live-to-candidate trial, daily evaluator scheduled dry-run trial, and a V2.3
+safety checkpoint report.
+
+Generated reports:
+
+- `reports/runtime_v23a_hyb1_shadow_trial_simulation_opt_in_only.md`
+- `reports/runtime_v23b_localhost_ui_candidate_write_execution_bridge.md`
+- `reports/runtime_v23c_controlled_recall_to_synthesis_integration.md`
+- `reports/runtime_v23d_provider_evidence_live_to_candidate_trial_user_approved.md`
+- `reports/runtime_v23e_daily_evaluator_scheduled_dry_run_trial.md`
+- `reports/runtime_v23f_v23_safety_checkpoint_report.md`
+- `reports/runtime_v23a_v23f_marathon_summary.md`
+
+Local entrypoints:
+
+- `scripts/run_hyb1_shadow_simulation.py`
+- `scripts/delta_ui_write_bridge.py`
+- `scripts/delta_answer.py`
+- `scripts/delta_provider_to_candidate.py`
+- `scripts/delta_scheduler_dry_run.py`
+
+Final verification collected `671` runtime tests and passed `671`. Model B
+remains the default, HYB1 remains dormant/env-gated, HYB1 shadow simulation is
+comparison-only, localhost UI writes require exact structured approval,
+controlled recall remains candidate-context only, provider evidence remains
+candidate-only, evaluator output remains advisory-only, scheduler dry-run
+creates no OS task, training remains disabled, no action execution occurred, no
+autonomous memory write occurred, no recall mutation occurred, and no
+unapproved scheduler/background worker was started.
+
+Final recommendation:
+`PROCEED_V24_LOCALHOST_FULL_REVIEW_CONSOLE_UX`.
+
 ### Runtime V2.2A-V2.2F UI Bridge, Controlled Recall, Evidence Candidates, And HYB1 Shadow Design
 
 Completed Runtime V2.2A through V2.2F after the V2.1 safety checkpoint.

@@ -1,0 +1,149 @@
+{
+  "phase": "Runtime V2.3B",
+  "cases": [
+    {
+      "phase": "Runtime V2.3B",
+      "request": {
+        "request_id": "v23b-request-593f7485c83b6bfe",
+        "candidate_id": "memory-candidate-demo",
+        "write": false
+      },
+      "approval": {
+        "header": "",
+        "line_count": 0,
+        "approval_valid": false,
+        "reject_valid": false,
+        "defer_valid": false,
+        "machine_readable": false
+      },
+      "blocks": [
+        "exact_localhost_approval_required",
+        "candidate_id_mismatch"
+      ],
+      "controlled_trial": null,
+      "decision": {
+        "write_attempted": false,
+        "record_written": false,
+        "dry_run": true,
+        "audit_created": false,
+        "rollback_reference_created": false,
+        "hidden_write": false,
+        "bulk_write": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false
+      },
+      "invariant_flags": {
+        "localhost_write_execution_bridge_enabled": true,
+        "dry_run_default": true,
+        "exact_approval_required": true,
+        "bulk_approval_allowed": false,
+        "hidden_write_allowed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_RECALL_TO_SYNTHESIS_INTEGRATION"
+    },
+    {
+      "phase": "Runtime V2.3B",
+      "request": {
+        "request_id": "v23b-request-593f7485c83b6bfe",
+        "candidate_id": "memory-candidate-demo",
+        "write": false
+      },
+      "approval": {
+        "header": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE",
+        "line_count": 5,
+        "candidate_id": "memory-candidate-demo",
+        "approved_by": "user",
+        "approval_scope": "single_memory_candidate_only",
+        "approval_source": "localhost_review_ui",
+        "approval_valid": true,
+        "reject_valid": false,
+        "defer_valid": false,
+        "machine_readable": true
+      },
+      "blocks": [],
+      "controlled_trial": {
+        "phase": "Runtime V2.0C",
+        "approval": {
+          "header": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE",
+          "line_count": 4,
+          "candidate_id": "memory-candidate-demo",
+          "approved_by": "user",
+          "approval_scope": "single_memory_candidate_only",
+          "matches_required_shape": true
+        },
+        "record": {
+          "canonical_record_id": "v20c-record-bbb9573bb1200587",
+          "candidate_id": "memory-candidate-demo",
+          "record_text": "Model B remains default.",
+          "provenance_reference_ids": [
+            "v23b-demo"
+          ],
+          "source": "v20c_controlled_general_memory_trial",
+          "active_for_recall": false,
+          "authoritative": false,
+          "created_at": "2026-07-03T18:05:44.087976+00:00"
+        },
+        "result": {
+          "candidate_id": "memory-candidate-demo",
+          "outcome": "dry_run_approved",
+          "record_written": false,
+          "recall_mutated": false,
+          "training_triggered": false,
+          "provider_call_performed": false,
+          "autonomous_write": false
+        },
+        "invariant_flags": {
+          "controlled_general_memory_trial_enabled": true,
+          "explicit_approval_required": true,
+          "provider_direct_write_allowed": false,
+          "evaluator_direct_write_allowed": false,
+          "autonomous_write_allowed": false,
+          "recall_mutated": false,
+          "authoritative_recall_enabled": false,
+          "training_triggered": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_REVIEW_UI_WRITE_APPROVAL_BRIDGE"
+      },
+      "decision": {
+        "write_attempted": true,
+        "record_written": false,
+        "dry_run": true,
+        "audit_created": true,
+        "rollback_reference_created": true,
+        "hidden_write": false,
+        "bulk_write": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false
+      },
+      "invariant_flags": {
+        "localhost_write_execution_bridge_enabled": true,
+        "dry_run_default": true,
+        "exact_approval_required": true,
+        "bulk_approval_allowed": false,
+        "hidden_write_allowed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_RECALL_TO_SYNTHESIS_INTEGRATION"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CONTROLLED_RECALL_TO_SYNTHESIS_INTEGRATION"
+}

@@ -1,0 +1,3 @@
+Runtime V2.3C - Controlled Recall-to-Synthesis Integration.
+Use controlled recall candidate context to support local answer synthesis with provenance and uncertainty labels. Recall remains non-authoritative, non-mutating, and not a memory write or provider call.
+

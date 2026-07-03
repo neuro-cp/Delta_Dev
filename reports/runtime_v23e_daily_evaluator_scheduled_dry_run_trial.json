@@ -1,0 +1,107 @@
+{
+  "phase": "Runtime V2.3E",
+  "cases": [
+    {
+      "phase": "Runtime V2.3E",
+      "request": {
+        "request_id": "v23e-request-62e5975c1f5b79a7",
+        "cadence": "daily",
+        "local_time": "03:00"
+      },
+      "gate": {
+        "approval": {
+          "approval_present": false,
+          "matches_required_shape": false
+        },
+        "env_enabled": false
+      },
+      "plan": {
+        "plan_id": "v23e-plan-ff25e0928330a75d",
+        "cadence": "daily",
+        "local_time": "03:00",
+        "dry_run_only": true,
+        "command": "python scripts/delta_scheduler_dry_run.py --dry-run",
+        "next_run_utc": "2026-07-04T18:05:44+00:00",
+        "lockfile_policy": "refuse duplicate dry-run artifact",
+        "disable_plan": "delete local dry-run artifact only; no OS task exists"
+      },
+      "decision": {
+        "permitted": false,
+        "local_artifact_created": false,
+        "os_task_registered": false,
+        "cron_entry_created": false,
+        "windows_task_created": false,
+        "background_worker_started": false,
+        "api_call_performed": false
+      },
+      "invariant_flags": {
+        "daily_evaluator_scheduled_dry_run_trial_enabled": true,
+        "disabled_by_default": true,
+        "os_scheduler_task_created": false,
+        "cron_entry_created": false,
+        "windows_task_created": false,
+        "background_worker_started": false,
+        "api_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_V23_SAFETY_CHECKPOINT"
+    },
+    {
+      "phase": "Runtime V2.3E",
+      "request": {
+        "request_id": "v23e-request-62e5975c1f5b79a7",
+        "cadence": "daily",
+        "local_time": "03:00"
+      },
+      "gate": {
+        "approval": {
+          "approval_present": true,
+          "matches_required_shape": true
+        },
+        "env_enabled": true
+      },
+      "plan": {
+        "plan_id": "v23e-plan-ff25e0928330a75d",
+        "cadence": "daily",
+        "local_time": "03:00",
+        "dry_run_only": true,
+        "command": "python scripts/delta_scheduler_dry_run.py --dry-run",
+        "next_run_utc": "2026-07-04T18:05:44+00:00",
+        "lockfile_policy": "refuse duplicate dry-run artifact",
+        "disable_plan": "delete local dry-run artifact only; no OS task exists"
+      },
+      "decision": {
+        "permitted": true,
+        "local_artifact_created": false,
+        "os_task_registered": false,
+        "cron_entry_created": false,
+        "windows_task_created": false,
+        "background_worker_started": false,
+        "api_call_performed": false
+      },
+      "invariant_flags": {
+        "daily_evaluator_scheduled_dry_run_trial_enabled": true,
+        "disabled_by_default": true,
+        "os_scheduler_task_created": false,
+        "cron_entry_created": false,
+        "windows_task_created": false,
+        "background_worker_started": false,
+        "api_call_performed": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_V23_SAFETY_CHECKPOINT"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_V23_SAFETY_CHECKPOINT"
+}

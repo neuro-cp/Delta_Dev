@@ -1,0 +1,3 @@
+Runtime V2.3A - HYB1 Shadow Trial Simulation, Opt-In Only.
+HYB1 shadow comparison is disabled by default, exact-approval gated, comparison-only, non-authoritative, non-promoting, and unable to write memory, train, call providers, execute actions, or change Model B default.
+

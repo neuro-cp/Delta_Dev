@@ -1,0 +1,3 @@
+Runtime V2.3D - Provider Evidence Live-to-Candidate Trial, User-Approved.
+Live provider calls remain optional and gated. Provider evidence may become a memory candidate proposal only after exact conversion approval. It is evidence, not truth, and never writes memory.
+

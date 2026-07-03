@@ -1,0 +1,3 @@
+Runtime V2.3E - Daily Evaluator Scheduled Dry-Run Trial.
+Create dry-run schedule artifacts only after exact approval and env gate. Do not register OS scheduled tasks, cron entries, Windows Task Scheduler entries, background workers, provider calls, memory writes, recall mutation, training, or action execution.
+

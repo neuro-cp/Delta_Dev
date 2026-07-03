@@ -1,0 +1,234 @@
+{
+  "phase": "Runtime V2.3D",
+  "cases": [
+    {
+      "phase": "Runtime V2.3D",
+      "request": {
+        "request_id": "v23d-request-5e56cf82676d0860",
+        "question": "unknown topic",
+        "live_provider": false
+      },
+      "provider_trial": {
+        "phase": "Runtime V2.1C",
+        "request": {
+          "request_id": "v21c-request-5e56cf82676d0860",
+          "question": "unknown topic",
+          "live_provider": false
+        },
+        "approval": {
+          "header": "",
+          "line_count": 0,
+          "matches_required_shape": false
+        },
+        "gate": {
+          "gate_id": "v21c-gate-90eb85ee47f35fc3",
+          "permitted": false,
+          "blocks": [
+            "dry_run_no_live_provider"
+          ]
+        },
+        "redacted_request": {
+          "api_key_present": true,
+          "api_key_redacted": true
+        },
+        "provider_evidence_packet": null,
+        "decision": {
+          "decision_id": "v21c-decision-fdc62e0a01a46505",
+          "provider_call_performed": false,
+          "provider_answer_authoritative": false,
+          "evidence_only": true
+        },
+        "invariant_flags": {
+          "user_approved_provider_live_trial_enabled": true,
+          "dry_run_default": true,
+          "provider_response_authoritative": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULER_ACTIVATION_USER_APPROVED"
+      },
+      "conversion_approval": {
+        "approval_present": false,
+        "matches_required_shape": false
+      },
+      "blocks": [
+        "provider_evidence_unavailable",
+        "exact_conversion_approval_required"
+      ],
+      "candidate_conversion": null,
+      "decision": {
+        "provider_call_performed": false,
+        "candidate_created": false,
+        "canonical_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "provider_live_to_candidate_trial_enabled": true,
+        "dry_run_default": true,
+        "provider_output_authoritative": false,
+        "canonical_write_ready_default": false,
+        "approved_default": false,
+        "written_default": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULED_DRY_RUN_TRIAL"
+    },
+    {
+      "phase": "Runtime V2.3D",
+      "request": {
+        "request_id": "v23d-request-af5c5c6f159a6533",
+        "question": "unknown topic",
+        "live_provider": true
+      },
+      "provider_trial": {
+        "phase": "Runtime V2.1C",
+        "request": {
+          "request_id": "v21c-request-af5c5c6f159a6533",
+          "question": "unknown topic",
+          "live_provider": true
+        },
+        "approval": {
+          "header": "APPROVE_PROVIDER_LIVE_TRIAL",
+          "line_count": 3,
+          "approved_by": "user",
+          "trial_scope": "single_unknown_question_only",
+          "matches_required_shape": true
+        },
+        "gate": {
+          "gate_id": "v21c-gate-d3df18b61c3e2c37",
+          "permitted": true,
+          "blocks": []
+        },
+        "redacted_request": {
+          "request_id": "v18f-redacted-67b7a6bf8e0de785",
+          "endpoint": "https://api.openai.com/v1/chat/completions",
+          "model": "gpt-4.1-mini",
+          "api_key_present": true,
+          "api_key_redacted": true
+        },
+        "provider_evidence_packet": {
+          "evidence_packet_id": "v18f-packet-5d37a88f51f4f767",
+          "provider_text": "{\"answer_text\": \"Mocked provider evidence says this topic requires review.\", \"provenance\": \"mocked-v23d-provider\", \"uncertainty\": \"mocked unverified evidence\"}",
+          "provenance": "manual one-shot provider live trial",
+          "authoritative": false,
+          "memory_candidate": false,
+          "uncertainty": "provider evidence only"
+        },
+        "decision": {
+          "decision_id": "v21c-decision-803491b98d274070",
+          "provider_call_performed": true,
+          "provider_answer_authoritative": false,
+          "evidence_only": true
+        },
+        "invariant_flags": {
+          "user_approved_provider_live_trial_enabled": true,
+          "dry_run_default": true,
+          "provider_response_authoritative": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULER_ACTIVATION_USER_APPROVED"
+      },
+      "conversion_approval": {
+        "approval_present": true,
+        "matches_required_shape": true
+      },
+      "blocks": [],
+      "candidate_conversion": {
+        "phase": "Runtime V2.2C",
+        "source": {
+          "source_id": "v23d-evidence-67b7a6bf8e0de785",
+          "source_kind": "provider",
+          "evidence_text": "",
+          "provenance_reference": "manual one-shot provider live trial",
+          "uncertainty": "provider evidence only",
+          "conflict_flag": false,
+          "unsafe_flag": false
+        },
+        "proposal": {
+          "memory_candidate_id": "v22c-candidate-837040549ed97379",
+          "candidate_text": "",
+          "source_kind": "provider",
+          "provenance_reference_ids": [
+            "manual one-shot provider live trial"
+          ],
+          "uncertainty": "provider evidence only",
+          "human_approval_required": true,
+          "canonical_write_ready": false,
+          "approved": false,
+          "written": false,
+          "evaluator_advisory_only": false
+        },
+        "safety_review": {
+          "blocks": [],
+          "review_required": false
+        },
+        "decision": {
+          "candidate_created": true,
+          "canonical_write_performed": false,
+          "recall_mutated": false,
+          "provider_call_performed": false
+        },
+        "invariant_flags": {
+          "provider_evidence_to_candidate_enabled": true,
+          "canonical_write_ready_default": false,
+          "approved_default": false,
+          "written_default": false,
+          "memory_write_performed": false,
+          "recall_mutated": false,
+          "provider_call_performed": false,
+          "training_triggered": false,
+          "action_execution_performed": false,
+          "scheduler_started": false,
+          "hyb1_default_activation_enabled": false,
+          "model_b_default_changed": false
+        },
+        "final_recommendation": "PROCEED_EVALUATOR_ASSISTED_MEMORY_CANDIDATE_REVIEW"
+      },
+      "decision": {
+        "provider_call_performed": true,
+        "candidate_created": true,
+        "canonical_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false
+      },
+      "invariant_flags": {
+        "provider_live_to_candidate_trial_enabled": true,
+        "dry_run_default": true,
+        "provider_output_authoritative": false,
+        "canonical_write_ready_default": false,
+        "approved_default": false,
+        "written_default": false,
+        "memory_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULED_DRY_RUN_TRIAL"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_DAILY_EVALUATOR_SCHEDULED_DRY_RUN_TRIAL"
+}

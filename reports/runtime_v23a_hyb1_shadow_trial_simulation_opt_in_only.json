@@ -1,0 +1,133 @@
+{
+  "phase": "Runtime V2.3A",
+  "cases": [
+    {
+      "phase": "Runtime V2.3A",
+      "request": {
+        "request_id": "v23a-request-10ef4f557e12aa80",
+        "prompt": "What does DELTA know about HYB1?",
+        "approval_text": ""
+      },
+      "gate": {
+        "gate_id": "v23a-gate-36faedbba91129de",
+        "approval_required": true,
+        "env_enabled": false,
+        "env_execution_allowed": false,
+        "approval": {
+          "approval_present": false,
+          "matches_required_shape": false
+        },
+        "simulation_permitted": false
+      },
+      "model_b_output": {
+        "output_id": "v23a-model-b-10ef4f557e12aa80",
+        "model": "Model B",
+        "default_runtime": true,
+        "output_text": "Model B baseline response for: What does DELTA know about HYB1?",
+        "authoritative": false
+      },
+      "hyb1_candidate_output": {
+        "output_id": "v23a-hyb1-10ef4f557e12aa80",
+        "model": "HYB1",
+        "dormant_candidate": true,
+        "comparison_only": true,
+        "output_text": "HYB1 shadow candidate response for: What does DELTA know about HYB1?",
+        "authoritative": false
+      },
+      "scorecard": {
+        "scorecard_id": "v23a-scorecard-0474958c7b38ab2d",
+        "compared": false,
+        "model_b_preserved": true,
+        "hyb1_promotion_blocked": true,
+        "memory_write_performed": false,
+        "provider_call_performed": false
+      },
+      "decision": {
+        "runs_shadow_comparison": false,
+        "changes_default": false,
+        "promotes_hyb1": false,
+        "hyb1_authority": false
+      },
+      "invariant_flags": {
+        "hyb1_shadow_simulation_enabled": true,
+        "disabled_by_default": true,
+        "model_b_default_changed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "hyb1_authoritative": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false
+      },
+      "final_recommendation": "PROCEED_LOCALHOST_WRITE_EXECUTION_BRIDGE"
+    },
+    {
+      "phase": "Runtime V2.3A",
+      "request": {
+        "request_id": "v23a-request-10ef4f557e12aa80",
+        "prompt": "What does DELTA know about HYB1?",
+        "approval_text": "APPROVE_HYB1_SHADOW_TRIAL\napproved_by=user\ntrial_scope=shadow_comparison_only"
+      },
+      "gate": {
+        "gate_id": "v23a-gate-7dcaa3ed10befa3c",
+        "approval_required": true,
+        "env_enabled": true,
+        "env_execution_allowed": true,
+        "approval": {
+          "approval_present": true,
+          "matches_required_shape": true
+        },
+        "simulation_permitted": true
+      },
+      "model_b_output": {
+        "output_id": "v23a-model-b-10ef4f557e12aa80",
+        "model": "Model B",
+        "default_runtime": true,
+        "output_text": "Model B baseline response for: What does DELTA know about HYB1?",
+        "authoritative": false
+      },
+      "hyb1_candidate_output": {
+        "output_id": "v23a-hyb1-10ef4f557e12aa80",
+        "model": "HYB1",
+        "dormant_candidate": true,
+        "comparison_only": true,
+        "output_text": "HYB1 shadow candidate response for: What does DELTA know about HYB1?",
+        "authoritative": false
+      },
+      "scorecard": {
+        "scorecard_id": "v23a-scorecard-0474958c7b38ab2d",
+        "compared": true,
+        "model_b_preserved": true,
+        "hyb1_promotion_blocked": true,
+        "memory_write_performed": false,
+        "provider_call_performed": false
+      },
+      "decision": {
+        "runs_shadow_comparison": true,
+        "changes_default": false,
+        "promotes_hyb1": false,
+        "hyb1_authority": false
+      },
+      "invariant_flags": {
+        "hyb1_shadow_simulation_enabled": true,
+        "disabled_by_default": true,
+        "model_b_default_changed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "hyb1_authoritative": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "scheduler_started": false
+      },
+      "final_recommendation": "PROCEED_LOCALHOST_WRITE_EXECUTION_BRIDGE"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_LOCALHOST_WRITE_EXECUTION_BRIDGE"
+}

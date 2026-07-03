@@ -1,0 +1,3 @@
+Runtime V2.3B - Localhost UI Candidate Write Execution Bridge.
+Allow the localhost UI bridge to invoke controlled memory trial logic only through exact structured approval events. Dry-run by default; one candidate only; no hidden writes, provider calls, training, action execution, HYB1 activation, or scheduler activation.
+
