@@ -1,0 +1,21 @@
+{
+  "phase": "Runtime V2.0E",
+  "query": "What does DELTA know about HYB1?",
+  "candidates": [],
+  "candidate_count": 0,
+  "max_candidates": 5,
+  "invariant_flags": {
+    "controlled_general_recall_trial_enabled": true,
+    "candidate_context_only": true,
+    "authoritative_recall_enabled": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "provider_call_performed": false,
+    "training_triggered": false,
+    "scheduler_started": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_LIVE_TRIAL_REVIEW_BRIDGE",
+  "all_safe": true
+}

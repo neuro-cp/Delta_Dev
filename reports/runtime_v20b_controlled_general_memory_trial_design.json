@@ -1,0 +1,133 @@
+{
+  "phase": "Runtime V2.0B",
+  "cases": [
+    {
+      "phase": "Runtime V2.0B",
+      "request": {
+        "request_id": "v20b-request-c5c67b7209d8788a",
+        "candidate_id": "candidate-approved",
+        "candidate_state": "approved",
+        "approval_text": "",
+        "source_kind": "memory_candidate"
+      },
+      "scope": {
+        "scope_id": "v20b-scope-58941b2f47c3cd21",
+        "one_record_per_approval": true,
+        "bulk_approval_allowed": false,
+        "authoritative_recall_enabled": false
+      },
+      "source_policy": {
+        "policy_id": "v20b-source-policy-be1da6257d26d394",
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "session_summary_must_be_candidate_first": true
+      },
+      "decision": {
+        "decision_id": "v20b-decision-900c40bc0de8fed9",
+        "candidate_id": "candidate-approved",
+        "eligible_for_future_trial": true,
+        "reason": "approved memory candidates only",
+        "writes_memory_now": false,
+        "activates_general_recall": false
+      },
+      "invariant_flags": {
+        "controlled_general_memory_trial_design_enabled": true,
+        "memory_write_performed": false,
+        "general_recall_activated": false,
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "training_triggered": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_GENERAL_MEMORY_TRIAL_EXPLICIT_APPROVAL_ONLY"
+    },
+    {
+      "phase": "Runtime V2.0B",
+      "request": {
+        "request_id": "v20b-request-49924de32a077157",
+        "candidate_id": "candidate-rejected",
+        "candidate_state": "rejected",
+        "approval_text": "",
+        "source_kind": "memory_candidate"
+      },
+      "scope": {
+        "scope_id": "v20b-scope-58941b2f47c3cd21",
+        "one_record_per_approval": true,
+        "bulk_approval_allowed": false,
+        "authoritative_recall_enabled": false
+      },
+      "source_policy": {
+        "policy_id": "v20b-source-policy-be1da6257d26d394",
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "session_summary_must_be_candidate_first": true
+      },
+      "decision": {
+        "decision_id": "v20b-decision-b428e022b1c203c2",
+        "candidate_id": "candidate-rejected",
+        "eligible_for_future_trial": false,
+        "reason": "excluded until explicit approved memory candidate exists",
+        "writes_memory_now": false,
+        "activates_general_recall": false
+      },
+      "invariant_flags": {
+        "controlled_general_memory_trial_design_enabled": true,
+        "memory_write_performed": false,
+        "general_recall_activated": false,
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "training_triggered": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_GENERAL_MEMORY_TRIAL_EXPLICIT_APPROVAL_ONLY"
+    },
+    {
+      "phase": "Runtime V2.0B",
+      "request": {
+        "request_id": "v20b-request-bda25ea6e909ffa9",
+        "candidate_id": "provider-output",
+        "candidate_state": "approved",
+        "approval_text": "",
+        "source_kind": "provider_output"
+      },
+      "scope": {
+        "scope_id": "v20b-scope-58941b2f47c3cd21",
+        "one_record_per_approval": true,
+        "bulk_approval_allowed": false,
+        "authoritative_recall_enabled": false
+      },
+      "source_policy": {
+        "policy_id": "v20b-source-policy-7b4807f6c2981a64",
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "session_summary_must_be_candidate_first": true
+      },
+      "decision": {
+        "decision_id": "v20b-decision-cb74ac3ad7975f32",
+        "candidate_id": "provider-output",
+        "eligible_for_future_trial": false,
+        "reason": "excluded until explicit approved memory candidate exists",
+        "writes_memory_now": false,
+        "activates_general_recall": false
+      },
+      "invariant_flags": {
+        "controlled_general_memory_trial_design_enabled": true,
+        "memory_write_performed": false,
+        "general_recall_activated": false,
+        "provider_direct_write_allowed": false,
+        "evaluator_direct_write_allowed": false,
+        "training_triggered": false,
+        "scheduler_started": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CONTROLLED_GENERAL_MEMORY_TRIAL_EXPLICIT_APPROVAL_ONLY"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CONTROLLED_GENERAL_MEMORY_TRIAL_EXPLICIT_APPROVAL_ONLY"
+}

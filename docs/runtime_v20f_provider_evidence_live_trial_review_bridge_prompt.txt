@@ -1,0 +1,3 @@
+Runtime V2.0F - Provider Evidence Live Trial Review Bridge.
+
+Bridge optional provider trial reports into evidence review as evidence-only. Do not perform live calls by default. Do not write memory or mutate recall.

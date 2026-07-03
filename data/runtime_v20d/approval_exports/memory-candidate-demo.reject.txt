@@ -1,0 +1,4 @@
+REJECT_MEMORY_CANDIDATE
+candidate_id=memory-candidate-demo
+rejected_by=user
+rejection_scope=single_memory_candidate_only

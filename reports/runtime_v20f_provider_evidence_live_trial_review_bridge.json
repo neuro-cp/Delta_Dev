@@ -1,0 +1,25 @@
+{
+  "phase": "Runtime V2.0F",
+  "provider_report_present": true,
+  "provider_evidence": {
+    "source_report": "reports\\runtime_v18f_manual_provider_live_trial_optional_one_shot.json",
+    "evidence_only": true,
+    "authoritative": false,
+    "key_redacted": true,
+    "summary": "Runtime V1.8F"
+  },
+  "quality_review_export": "ui/delta_quality_review_dashboard.html",
+  "invariant_flags": {
+    "provider_live_review_bridge_enabled": true,
+    "live_provider_call_performed": false,
+    "evaluator_cross_check_automatic": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_SCHEDULER_ACTIVATION_TRIAL_DESIGN_ONLY",
+  "all_safe": true
+}

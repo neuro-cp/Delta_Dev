@@ -1,0 +1,3 @@
+Runtime V2.0C - Controlled General Memory Trial, Explicit Approval Only.
+
+Implement local append-only trial records only when exact approval text is present and --write is requested. Default dry-run. No provider/evaluator direct write, no autonomous write, no recall mutation, no training, no scheduler.

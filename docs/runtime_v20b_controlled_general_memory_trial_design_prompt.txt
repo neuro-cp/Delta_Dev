@@ -1,0 +1,3 @@
+Runtime V2.0B - Controlled General Memory Trial Design.
+
+Design-only controlled general memory policy. Approved candidates only, explicit structured approval only, one record per approval event, no provider/evaluator direct write, no memory write, no recall activation, no training, no scheduler.

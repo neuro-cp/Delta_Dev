@@ -1,0 +1,3 @@
+Runtime V2.0D - Review UI Write Approval Bridge.
+
+Generate static local UI/export files for approve/reject/defer events. UI generation must not write memory. Approval exports must be accepted by the V2.0C parser.

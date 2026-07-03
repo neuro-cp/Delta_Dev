@@ -6,6 +6,36 @@ file before making changes.
 
 ## 2026-07-02
 
+### Runtime V2.0A-V2.0H Local UX, Controlled Memory, Recall, And Scheduler Design
+
+Completed Runtime V2.0A through V2.0H after the V1.9 safety checkpoint.
+The run added a consolidated local command entrypoint, controlled general
+memory trial design, explicit-approval-only controlled memory trial records,
+static review UI approval exports, controlled candidate-context recall,
+provider evidence review bridging, scheduler activation design-only scaffolding,
+and a V2.0 safety checkpoint.
+
+Generated reports:
+
+- `reports/runtime_v20a_local_delta_ux_consolidation.md`
+- `reports/runtime_v20b_controlled_general_memory_trial_design.md`
+- `reports/runtime_v20c_controlled_general_memory_trial_explicit_approval_only.md`
+- `reports/runtime_v20d_review_ui_write_approval_bridge.md`
+- `reports/runtime_v20e_controlled_general_recall_trial.md`
+- `reports/runtime_v20f_provider_evidence_live_trial_review_bridge.md`
+- `reports/runtime_v20g_scheduler_activation_trial_design_only.md`
+- `reports/runtime_v20h_v20_safety_checkpoint_report.md`
+- `reports/runtime_v20a_v20h_marathon_summary.md`
+
+Final verification collected `574` runtime tests and passed `574`. V2.0 JSON
+reports validated successfully. Model B remains the default, HYB1 remains
+dormant/env-gated, training remains disabled, scheduler remains inactive,
+provider outputs remain evidence-only, memory writes require exact explicit
+approval, and controlled recall remains candidate-context only.
+
+Final recommendation:
+`PROCEED_V21_WEB_LOCALHOST_REVIEW_UI_OR_CONTROLLED_GENERAL_MEMORY_EXPANSION`.
+
 ### Runtime V1.2 Real Knowledge Evaluation
 
 Runtime V1 is frozen as the fixture reference implementation. Runtime V1.2

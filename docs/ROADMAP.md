@@ -2,28 +2,33 @@
 
 ## Current Phase
 
-Runtime V1.2: Real Knowledge Evaluation
+Runtime V2.1: Localhost Review UI Or Controlled General Memory Expansion
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
 `docs/INVARIANTS.md`, then `docs/UPDATE.md` before continuing implementation.
 
-The learning architecture and Runtime V1 fixture pipeline are frozen except for
-reproducible defects. The current goal is to evaluate whether the read-only
-runtime can answer real questions from the actual Phase A candidate knowledge
-store. V1.2 produced a `PASS WITH ISSUES`: responses stayed grounded with zero
-hallucinations and no candidate-store mutation, but retrieval and attention
-quality degraded substantially on real learned knowledge compared with the
-fixture suite. The next work should inspect real-store activation failures
-before conversation support or canonical promotion.
+Runtime V2.0A through V2.0H are complete. DELTA now has consolidated local UX,
+controlled explicit-approval memory trial scaffolding, candidate-context
+controlled recall, review UI approval exports, provider evidence review
+bridging, scheduler activation design-only scaffolding, and a V2.0 safety
+checkpoint.
+
+The next recommended phase is either V2.1A Web/localhost Review UI Prototype or
+V2.1B Controlled General Memory Trial Expansion. Preserve the V2.0 safety
+boundary: memory candidates are not truth, controlled recall is not authority,
+provider/evaluator/specialist output remains evidence-only, and scheduler
+activation requires explicit future approval.
 
 Active guardrails:
 
-- Do not modify learning, validation, normalization, governance, promotion
-  scoring, provider prompts, or canonical storage for Runtime V1.2 findings.
-- Do not migrate candidate knowledge into canonical storage yet.
-- Do not begin multi-turn conversation work until the real-store runtime
-  bottleneck is understood.
-- Treat reports under `reports/runtime_v12_*` as the current runtime baseline.
+- Do not enable HYB1 by default.
+- Do not train, fine-tune, update weights, or export real training datasets.
+- Do not start schedulers, background workers, listeners, timers, or queues.
+- Do not treat controlled recall as authoritative memory.
+- Do not create autonomous memory writes.
+- Do not make provider, evaluator, or specialist outputs authoritative.
+- Treat `reports/runtime_v20a_v20h_marathon_summary.md` as the current V2.0
+  checkpoint.
 
 ## Core Cognitive Cycle
 

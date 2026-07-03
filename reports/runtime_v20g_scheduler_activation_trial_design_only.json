@@ -1,0 +1,34 @@
+{
+  "phase": "Runtime V2.0G",
+  "required_future_approval": "APPROVE_DAILY_EVALUATOR_SCHEDULE\napproved_by=user\nschedule_scope=daily_evaluator_only\nactivation_mode=manual_user_enabled",
+  "command_plan": {
+    "windows_task_scheduler": "Text-only future plan; no task is registered.",
+    "cron": "Text-only future plan; no cron entry is written.",
+    "manual_disable": "Future disable command must be explicit and audited.",
+    "lockfile_policy": "Future scheduler must refuse duplicate runs.",
+    "dry_run_policy": "Future scheduler defaults to dry-run."
+  },
+  "decision": {
+    "decision_id": "v20g-decision-fb3f522922433b9c",
+    "disabled_by_default": true,
+    "approval_required": true,
+    "windows_task_plan_text_only": true,
+    "cron_plan_text_only": true,
+    "rollback_plan_present": true,
+    "starts_scheduler_now": false
+  },
+  "invariant_flags": {
+    "scheduler_activation_trial_design_enabled": true,
+    "scheduler_started": false,
+    "windows_task_created": false,
+    "cron_created": false,
+    "background_worker_started": false,
+    "api_call_performed": false,
+    "memory_write_performed": false,
+    "training_triggered": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_V20_SAFETY_CHECKPOINT_REPORT",
+  "all_safe": true
+}

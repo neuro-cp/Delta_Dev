@@ -1,0 +1,4 @@
+APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE
+candidate_id=memory-candidate-demo
+approved_by=user
+approval_scope=single_memory_candidate_only

@@ -1,0 +1,23 @@
+{
+  "phase": "Runtime V2.0D",
+  "candidate_id": "memory-candidate-demo",
+  "ui_path": "ui\\delta_memory_review_dashboard.html",
+  "export_dir": "data\\runtime_v20d\\approval_exports",
+  "exports": {
+    "candidate_id": "memory-candidate-demo",
+    "approve": "APPROVE_CONTROLLED_GENERAL_MEMORY_WRITE\ncandidate_id=memory-candidate-demo\napproved_by=user\napproval_scope=single_memory_candidate_only",
+    "reject": "REJECT_MEMORY_CANDIDATE\ncandidate_id=memory-candidate-demo\nrejected_by=user\nrejection_scope=single_memory_candidate_only",
+    "defer": "DEFER_MEMORY_CANDIDATE\ncandidate_id=memory-candidate-demo\ndeferred_by=user\ndefer_scope=single_memory_candidate_only"
+  },
+  "invariant_flags": {
+    "review_ui_bridge_enabled": true,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "provider_call_performed": false,
+    "training_triggered": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_CONTROLLED_GENERAL_RECALL_TRIAL",
+  "all_safe": true
+}

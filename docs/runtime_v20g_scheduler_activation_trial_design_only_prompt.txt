@@ -1,0 +1,3 @@
+Runtime V2.0G - Scheduler Activation Trial Design Only.
+
+Create text-only scheduler activation plan and explicit future approval phrase. Do not create OS tasks, cron entries, background workers, timers, queues, provider calls, memory writes, training, or HYB1 activation.

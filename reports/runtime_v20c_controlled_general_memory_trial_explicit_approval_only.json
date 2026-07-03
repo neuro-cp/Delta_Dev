@@ -1,0 +1,12 @@
+{
+  "phase": "Runtime V2.0C",
+  "records_path": "data/runtime_v20c/controlled_general_memory_records.jsonl",
+  "audit_path": "data/runtime_v20c/controlled_general_memory_audit.jsonl",
+  "record_count": 0,
+  "approval_required": true,
+  "dry_run_default": true,
+  "recall_mutated": false,
+  "training_triggered": false,
+  "provider_direct_write_allowed": false,
+  "final_recommendation": "PROCEED_REVIEW_UI_WRITE_APPROVAL_BRIDGE"
+}

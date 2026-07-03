@@ -1,0 +1,3 @@
+Runtime V2.0E - Controlled General Recall Trial.
+
+Read approved local trial records as candidate context only. Recall is not truth, not authority, and not mutation. Exclude rejected, deferred, and rolled-back records.

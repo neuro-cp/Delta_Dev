@@ -1,0 +1,4 @@
+DEFER_MEMORY_CANDIDATE
+candidate_id=memory-candidate-demo
+deferred_by=user
+defer_scope=single_memory_candidate_only

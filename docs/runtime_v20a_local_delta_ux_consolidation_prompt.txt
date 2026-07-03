@@ -1,0 +1,3 @@
+Runtime V2.0A - Local DELTA UX Consolidation.
+
+Consolidate local command scripts behind scripts/delta.py without increasing authority. Preserve Model B default, HYB1 dormant/env-gated, no training, no live provider by default, no memory write, no recall mutation, no scheduler, and no action execution.
