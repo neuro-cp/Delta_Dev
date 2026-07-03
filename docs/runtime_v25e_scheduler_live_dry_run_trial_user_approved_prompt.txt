@@ -1,0 +1,3 @@
+Runtime V2.5E — Scheduler Live Dry-Run Trial (User Approved)
+
+Design a user-approved scheduler dry-run audit. No OS tasks, background workers, cron jobs, timers, provider calls, or autonomous scheduling.

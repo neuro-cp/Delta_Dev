@@ -1,0 +1,3 @@
+Runtime V2.5B — Feature Activation Readiness Matrix
+
+List controlled feature activation gates and their blockers. Do not activate any feature. Model B remains default and HYB1 remains dormant.

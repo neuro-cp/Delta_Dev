@@ -1,0 +1,3 @@
+Runtime V2.7E — Full Local Demo
+
+Document the local demo path without provider calls, memory mutation, training, or action execution.

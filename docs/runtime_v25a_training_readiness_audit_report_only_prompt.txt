@@ -1,0 +1,3 @@
+Runtime V2.5A — Training Readiness Audit (Report Only)
+
+Determine whether DELTA is ready for training without exporting data, creating model artifacts, changing weights, calling providers, or activating memory/recall. Expected result: not ready, with blockers documented.

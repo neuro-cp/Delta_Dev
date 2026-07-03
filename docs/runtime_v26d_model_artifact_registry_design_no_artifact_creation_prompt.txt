@@ -1,0 +1,3 @@
+Runtime V2.6D — Model Artifact Registry Design
+
+Design model artifact registry records without creating artifacts.

@@ -1,0 +1,19 @@
+{
+  "active_behavior_changes": [],
+  "final_recommendation": "PROCEED_HYB1_SHADOW_DASHBOARD",
+  "mode": "ux_report_only",
+  "phase": "Runtime V2.7B",
+  "safety_invariants": {
+    "memory_write_performed": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "training_performed": false
+  },
+  "surfaces": [
+    "local_console",
+    "knowledge_inventory",
+    "recall_answer_router",
+    "provider_unknown_path",
+    "memory_candidate_review"
+  ]
+}

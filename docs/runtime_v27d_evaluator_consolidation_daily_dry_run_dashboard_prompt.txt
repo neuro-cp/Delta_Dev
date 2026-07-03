@@ -1,0 +1,3 @@
+Runtime V2.7D — Evaluator/Consolidation Daily Dry-Run Dashboard
+
+Design a dashboard report only. Do not schedule background work.

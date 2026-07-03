@@ -1,0 +1,80 @@
+{
+  "phase": "Runtime V2.5B",
+  "matrix": {
+    "controlled_memory_writes": {
+      "status": "explicit_approval_required",
+      "activated": false,
+      "blockers": []
+    },
+    "controlled_recall": {
+      "status": "dry_run_only",
+      "activated": false,
+      "blockers": []
+    },
+    "provider_live_trial": {
+      "status": "ready_for_human_review",
+      "activated": false,
+      "blockers": []
+    },
+    "evaluator_live_trial": {
+      "status": "ready_for_human_review",
+      "activated": false,
+      "blockers": []
+    },
+    "scheduler_dry_run": {
+      "status": "explicit_approval_required",
+      "activated": false,
+      "blockers": []
+    },
+    "scheduler_live": {
+      "status": "blocked_by_safety",
+      "activated": false,
+      "blockers": [
+        "requires_future_safety_phase"
+      ]
+    },
+    "hyb1_shadow": {
+      "status": "explicit_approval_required",
+      "activated": false,
+      "blockers": []
+    },
+    "hyb1_promotion": {
+      "status": "blocked_by_safety",
+      "activated": false,
+      "blockers": [
+        "requires_future_safety_phase"
+      ]
+    },
+    "training_dataset_export": {
+      "status": "ready_for_human_review",
+      "activated": false,
+      "blockers": []
+    },
+    "training_job_execution": {
+      "status": "blocked_by_safety",
+      "activated": false,
+      "blockers": [
+        "requires_future_safety_phase"
+      ]
+    },
+    "action_execution": {
+      "status": "blocked_by_safety",
+      "activated": false,
+      "blockers": [
+        "requires_future_safety_phase"
+      ]
+    }
+  },
+  "invariant_flags": {
+    "feature_activation_readiness_matrix_enabled": true,
+    "readiness_only": true,
+    "feature_activated": false,
+    "training_activated": false,
+    "scheduler_started": false,
+    "hyb1_promoted": false,
+    "action_execution_performed": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_CONTROLLED_TRAINING_DATASET_EXPORT_TRIAL",
+  "all_safe": true
+}

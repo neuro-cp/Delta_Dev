@@ -1,0 +1,69 @@
+{
+  "phase": "Runtime V2.5D",
+  "cases": [
+    {
+      "phase": "Runtime V2.5D",
+      "approval": {
+        "matches_required_shape": false
+      },
+      "gate": {
+        "permitted": false,
+        "runtime_available": false,
+        "blocked_by_unavailable_runtime": false
+      },
+      "comparison": {
+        "model_b": {
+          "default_runtime": true,
+          "authoritative": false,
+          "text": "Model B fixture for What does DELTA know about HYB1?"
+        },
+        "hyb1": {
+          "comparison_only": true,
+          "authoritative": false,
+          "text": "HYB1 shadow fixture for What does DELTA know about HYB1?"
+        }
+      },
+      "decision": {
+        "changes_default": false,
+        "promotes_hyb1": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "training_performed": false
+      },
+      "final_recommendation": "PROCEED_SCHEDULER_LIVE_DRY_RUN_TRIAL"
+    },
+    {
+      "phase": "Runtime V2.5D",
+      "approval": {
+        "matches_required_shape": true
+      },
+      "gate": {
+        "permitted": true,
+        "runtime_available": false,
+        "blocked_by_unavailable_runtime": true
+      },
+      "comparison": {
+        "model_b": {
+          "default_runtime": true,
+          "authoritative": false,
+          "text": "Model B fixture for What does DELTA know about HYB1?"
+        },
+        "hyb1": {
+          "comparison_only": true,
+          "authoritative": false,
+          "text": "HYB1 shadow fixture for What does DELTA know about HYB1?"
+        }
+      },
+      "decision": {
+        "changes_default": false,
+        "promotes_hyb1": false,
+        "memory_write_performed": false,
+        "provider_call_performed": false,
+        "training_performed": false
+      },
+      "final_recommendation": "PROCEED_SCHEDULER_LIVE_DRY_RUN_TRIAL"
+    }
+  ],
+  "all_safe": true,
+  "final_recommendation": "PROCEED_SCHEDULER_LIVE_DRY_RUN_TRIAL"
+}

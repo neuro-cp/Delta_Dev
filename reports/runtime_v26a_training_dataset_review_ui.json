@@ -1,0 +1,29 @@
+{
+  "controls": [
+    "approve_for_export",
+    "reject",
+    "needs_redaction",
+    "defer"
+  ],
+  "final_recommendation": "PROCEED_DATASET_REDACTION_PII_SCRUB_TRIAL",
+  "mode": "static_review_ui_design_only",
+  "phase": "Runtime V2.6A",
+  "review_fields": [
+    "candidate_id",
+    "input",
+    "output",
+    "provenance",
+    "redaction_status",
+    "review_decision"
+  ],
+  "safety_invariants": {
+    "dataset_exported": false,
+    "memory_write_performed": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "ui_path": "ui\\delta_training_dataset_review.html"
+}

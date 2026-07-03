@@ -1,0 +1,3 @@
+Runtime V2.7F — Master Continuation Handoff
+
+Write the continuation checkpoint for the next Codex stream.

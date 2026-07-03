@@ -1,0 +1,18 @@
+{
+  "final_recommendation": "PROCEED_TRAINING_JOB_PLAN_DESIGN_NO_EXECUTION",
+  "fixtures": [
+    "Contact [REDACTED_EMAIL] about DELTA.",
+    "Card [REDACTED_NUMBER]must not enter training.",
+    "SSN [REDACTED_SSN] is forbidden."
+  ],
+  "mode": "redaction_trial_only",
+  "phase": "Runtime V2.6B",
+  "redactions_applied": 3,
+  "safety_invariants": {
+    "dataset_exported": false,
+    "memory_write_performed": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "training_performed": false
+  }
+}

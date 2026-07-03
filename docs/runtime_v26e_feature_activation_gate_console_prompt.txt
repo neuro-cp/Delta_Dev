@@ -1,0 +1,3 @@
+Runtime V2.6E — Feature Activation Gate Console
+
+Report feature gates without changing gate state.

@@ -72,7 +72,39 @@ controlled interface. Memory write UX requires exact structured approval.
 Controlled recall remains candidate-context only. Provider output remains
 evidence-only. Evaluator-reviewed consolidation remains advisory-only.
 
-## Current Recommended Next Phase
+## Runtime V2.5-V2.7 Completion Addendum
+
+Runtime V2.5A-V2.7F is now complete.
+
+Completed range:
+
+- V2.5A-F readiness, activation matrix, controlled dataset export trial,
+  HYB1 shadow comparison, scheduler dry-run, and safety checkpoint.
+- V2.6A-F dataset review UI, redaction trial, training job plan design,
+  model artifact registry design, feature gate console, and safety checkpoint.
+- V2.7A-F feature activation dry-run, UX polish, HYB1 dashboard, evaluator
+  dry-run dashboard, full local demo scaffold, and master continuation handoff.
+
+Current safety state:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, model artifact creation, provider calls, action execution,
+  autonomous memory writes, authoritative recall, recall mutation, or scheduler
+  start occurred.
+
+Continuation files:
+
+- `docs/DELTA_CONTINUATION_CURRENT.md`
+- `docs/continuation_runtime_v27_master.md`
+- `reports/runtime_v25a_v27f_extended_overage_marathon_summary.md`
+- `reports/runtime_v27f_master_continuation_handoff.md`
+
+Current recommended next phase:
+
+`PROCEED_MANUAL_LOCAL_DEMO_OR_TRAINING_READINESS_REVIEW`
+
+## Previous Recommended Next Phase
 
 Final recommendation from V2.4:
 

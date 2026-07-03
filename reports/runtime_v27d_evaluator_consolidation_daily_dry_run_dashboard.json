@@ -1,0 +1,19 @@
+{
+  "background_worker_started": false,
+  "dashboard_sections": [
+    "candidate_review",
+    "consolidation_queue",
+    "scheduler_dry_run",
+    "blocked_live_actions"
+  ],
+  "final_recommendation": "PROCEED_FULL_LOCAL_DEMO",
+  "mode": "dry_run_dashboard_only",
+  "phase": "Runtime V2.7D",
+  "safety_invariants": {
+    "memory_write_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "scheduled": false
+}

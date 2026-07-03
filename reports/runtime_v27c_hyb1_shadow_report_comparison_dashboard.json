@@ -1,0 +1,20 @@
+{
+  "dashboard_sections": [
+    "parity",
+    "enabled_validation",
+    "safety",
+    "known_limitations"
+  ],
+  "final_recommendation": "PROCEED_EVALUATOR_DAILY_DRY_RUN_DASHBOARD",
+  "hyb1_promoted": false,
+  "hyb1_state": "dormant_env_gated_shadow_only",
+  "mode": "dashboard_report_only",
+  "model_b_default": true,
+  "phase": "Runtime V2.7C",
+  "safety_invariants": {
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "provider_call_performed": false,
+    "training_performed": false
+  }
+}

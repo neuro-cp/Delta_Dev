@@ -1,0 +1,3 @@
+Runtime V2.6F — Safety Checkpoint
+
+Verify V2.6 remained scaffold-only and non-mutating.

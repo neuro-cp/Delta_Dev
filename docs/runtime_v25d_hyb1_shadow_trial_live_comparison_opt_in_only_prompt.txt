@@ -1,0 +1,3 @@
+Runtime V2.5D — HYB1 Shadow Trial Live Comparison (Opt-In Only)
+
+Design an opt-in HYB1 shadow comparison. HYB1 is never authoritative, never promoted, and never default.

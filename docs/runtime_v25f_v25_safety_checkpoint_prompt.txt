@@ -1,0 +1,3 @@
+Runtime V2.5F — V2.5 Safety Checkpoint
+
+Summarize V2.5 and verify that all new work remained gated, local, report-oriented, and non-mutating.

@@ -3431,3 +3431,37 @@ Tests run:
 - `.\.venv311\Scripts\python.exe -m py_compile orchestration\runtime\runtime_reasoning.py orchestration\runtime\__init__.py tools\runtime_v13_model_b_mbv2_hybrid_test.py tools\runtime_v13_hyb1_dormant_prototype_validation.py tests\runtime_v13\test_hyb1_dormant_prototype.py`
 - `.\.venv311\Scripts\python.exe -m pytest tests\runtime_v13\test_hyb1_dormant_prototype.py -q`
 - result: `4 passed`
+## Runtime V2.5A-V2.7F Extended Overage Marathon
+
+Runtime V2.5 through V2.7 completed as scaffold/report/dry-run work only.
+
+Completed:
+
+- V2.5A-F: training readiness audit, feature activation readiness matrix,
+  controlled dataset export trial, HYB1 shadow comparison, scheduler dry-run
+  trial, and V2.5 safety checkpoint.
+- V2.6A-F: static dataset review UI, deterministic redaction trial, training
+  job plan design, model artifact registry design, feature gate console, and
+  V2.6 safety checkpoint.
+- V2.7A-F: feature activation dry-run, integration UX polish, HYB1 dashboard,
+  evaluator daily dry-run dashboard, full local demo scaffold, and master
+  continuation handoff.
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, model artifact creation, provider calls, action
+  execution, autonomous memory writes, authoritative recall, or scheduler start
+  occurred.
+
+Reports:
+
+- `reports/runtime_v25a_v27f_extended_overage_marathon_summary.md`
+- `reports/runtime_v25a_v27f_extended_overage_marathon_summary.json`
+- `reports/runtime_v27f_master_continuation_handoff.md`
+- `reports/runtime_v27f_master_continuation_handoff.json`
+
+Next recommendation:
+
+`PROCEED_MANUAL_LOCAL_DEMO_OR_TRAINING_READINESS_REVIEW`

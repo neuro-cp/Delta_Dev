@@ -1,0 +1,95 @@
+{
+  "phase": "Runtime V2.5C",
+  "approval": {
+    "approval_present": false,
+    "matches_required_shape": false
+  },
+  "eligible_count": 2,
+  "redacted_examples": [
+    {
+      "example_id": "v25c-example-1",
+      "input": "What does DELTA know about HYB1?",
+      "output": "HYB1 remains dormant/env-gated and Model B remains default.",
+      "provenance": [
+        "runtime_v24_summary"
+      ],
+      "reviewed": true,
+      "approved": true
+    },
+    {
+      "example_id": "v25c-example-2",
+      "input": "Contact [REDACTED_EMAIL] about DELTA.",
+      "output": "Email should be redacted before export.",
+      "provenance": [
+        "redaction_fixture"
+      ],
+      "reviewed": true,
+      "approved": true
+    }
+  ],
+  "decision": {
+    "dataset_exported": false,
+    "training_performed": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "scheduler_started": false
+  },
+  "invariant_flags": {
+    "dataset_export_trial_enabled": true,
+    "dry_run_default": true,
+    "exact_approval_required": true,
+    "training_performed": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "hyb1_promoted": false
+  },
+  "final_recommendation": "PROCEED_HYB1_SHADOW_TRIAL_LIVE_COMPARISON",
+  "approved_dry_run": {
+    "phase": "Runtime V2.5C",
+    "approval": {
+      "approval_present": true,
+      "matches_required_shape": true
+    },
+    "eligible_count": 2,
+    "redacted_examples": [
+      {
+        "example_id": "v25c-example-1",
+        "input": "What does DELTA know about HYB1?",
+        "output": "HYB1 remains dormant/env-gated and Model B remains default.",
+        "provenance": [
+          "runtime_v24_summary"
+        ],
+        "reviewed": true,
+        "approved": true
+      },
+      {
+        "example_id": "v25c-example-2",
+        "input": "Contact [REDACTED_EMAIL] about DELTA.",
+        "output": "Email should be redacted before export.",
+        "provenance": [
+          "redaction_fixture"
+        ],
+        "reviewed": true,
+        "approved": true
+      }
+    ],
+    "decision": {
+      "dataset_exported": false,
+      "training_performed": false,
+      "model_artifact_created": false,
+      "provider_call_performed": false,
+      "scheduler_started": false
+    },
+    "invariant_flags": {
+      "dataset_export_trial_enabled": true,
+      "dry_run_default": true,
+      "exact_approval_required": true,
+      "training_performed": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "hyb1_promoted": false
+    },
+    "final_recommendation": "PROCEED_HYB1_SHADOW_TRIAL_LIVE_COMPARISON"
+  },
+  "all_safe": true
+}

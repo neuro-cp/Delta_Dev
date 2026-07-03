@@ -1,0 +1,19 @@
+{
+  "artifact_created": false,
+  "final_recommendation": "PROCEED_FEATURE_ACTIVATION_GATE_CONSOLE",
+  "mode": "registry_design_no_artifact_creation",
+  "phase": "Runtime V2.6D",
+  "record_fields": [
+    "artifact_id",
+    "source_dataset_hash",
+    "approval_id",
+    "created_at",
+    "rollback_reference"
+  ],
+  "registry_active": false,
+  "safety_invariants": {
+    "model_artifact_created": false,
+    "model_default_changed": false,
+    "training_performed": false
+  }
+}

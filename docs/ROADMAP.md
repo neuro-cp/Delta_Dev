@@ -744,3 +744,23 @@ Roadmap implications:
    and no planning/response coverage regression.
 5. Continue Runtime V1.3 work only if new evidence justifies it; otherwise
    checkpoint Model B and proceed to the next runtime milestone.
+## Runtime V2.5-V2.7 Completion Update
+
+Runtime V2.5-V2.7 has completed as safe scaffold/dry-run/report work.
+
+Current default:
+
+- Model B default remains unchanged.
+- HYB1 remains dormant/env-gated and shadow-only.
+- Training and model artifact creation remain inactive.
+- Provider calls, action execution, autonomous memory writes, authoritative
+  recall, and scheduler/background workers remain inactive.
+
+Recommended next phase:
+
+`PROCEED_MANUAL_LOCAL_DEMO_OR_TRAINING_READINESS_REVIEW`
+
+The next work should either manually exercise the local demo path or review
+whether the V2.5-V2.7 scaffolds satisfy the prerequisites for a future explicit
+training-readiness decision. Do not start training or promote HYB1 by default
+without a new explicit approval gate.

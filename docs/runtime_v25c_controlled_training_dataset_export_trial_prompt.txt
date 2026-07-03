@@ -1,0 +1,3 @@
+Runtime V2.5C — Controlled Training Dataset Export Trial
+
+Design a small, explicitly approved, local review dataset export. The default path is dry-run only. No training, no model artifact creation, and no provider calls.

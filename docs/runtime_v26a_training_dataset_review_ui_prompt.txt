@@ -1,0 +1,3 @@
+Runtime V2.6A — Training Dataset Review UI
+
+Create a static local review UI scaffold only. Do not export data or activate training.

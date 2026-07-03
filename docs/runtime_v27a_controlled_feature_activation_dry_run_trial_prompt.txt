@@ -1,0 +1,3 @@
+Runtime V2.7A — Controlled Feature Activation Dry-Run Trial
+
+Evaluate activation gates in dry-run only. Do not enable features.

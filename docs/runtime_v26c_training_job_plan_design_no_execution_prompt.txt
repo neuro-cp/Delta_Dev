@@ -1,0 +1,3 @@
+Runtime V2.6C — Training Job Plan Design, No Execution
+
+Design training job metadata and blockers. Do not execute training.
