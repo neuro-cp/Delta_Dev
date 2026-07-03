@@ -1,0 +1,13 @@
+Runtime V1.5F - Self-Question Test Pack
+
+Purpose:
+Create a deterministic self-question test pack that proves DELTA can answer
+repo-local architecture, safety, and status questions through scripts/ask_delta.py
+without provider calls, memory writes, training, action execution, recall
+mutation, or HYB1 activation.
+
+Core invariant:
+self-question test != training
+local answer routing != learned memory
+trace output != persistence
+unsupported answer != failure

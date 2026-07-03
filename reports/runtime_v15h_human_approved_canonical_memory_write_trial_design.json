@@ -1,0 +1,119 @@
+{
+  "phase": "Runtime V1.5H",
+  "title": "Human-Approved Canonical Memory Write Trial Design",
+  "status": "design_only_no_canonical_write_no_recall_no_training",
+  "design": {
+    "write_candidate": {
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "memory_candidate_id": "memory-candidate-hyb1-dormant-review",
+      "proposed_memory_text": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+      "provenance_reference_ids": [
+        "feedback-interaction-sample",
+        "memory-candidate-sample"
+      ],
+      "eligible_for_future_write_trial": true,
+      "active_canonical_record": false,
+      "write_enabled": false,
+      "canonical_write_executed": false
+    },
+    "approval_gate": {
+      "approval_gate_id": "canonical-write-approval-52c9ce25597e269f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "required_actor": "human_operator",
+      "explicit_approval_required": true,
+      "approval_present": false,
+      "satisfied": false
+    },
+    "safety_review": {
+      "safety_review_id": "canonical-write-safety-52c9ce25597e269f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "safety_status": "blocked_until_explicit_human_approval_and_future_write_phase",
+      "required_before_write": [
+        "explicit human approval",
+        "audit trace",
+        "rollback reference",
+        "canonical write gate opened in a future phase",
+        "recall activation separately authorized after write"
+      ],
+      "approved": false,
+      "write_safe_now": false
+    },
+    "write_plan": {
+      "write_plan_id": "canonical-write-plan-52c9ce25597e269f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "plan_summary": "Design-only plan for a future explicitly approved local canonical memory write trial.",
+      "design_only": true,
+      "write_enabled": false,
+      "canonical_write_executed": false,
+      "recall_activation_enabled": false,
+      "training_enabled": false
+    },
+    "rollback_reference": {
+      "rollback_reference_id": "canonical-rollback-ref-52c9ce25597e269f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "rollback_summary": "Rollback reference is documented but not executable in V1.5H.",
+      "rollback_executable_now": false,
+      "rollback_executed": false
+    },
+    "decision": {
+      "decision_id": "canonical-write-decision-52c9ce25597e269f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "outcome": "blocked_approval_absent",
+      "rationale": "V1.5H is design-only; approval is absent and canonical writes remain disabled.",
+      "applied": false,
+      "canonical_write_triggered": false,
+      "recall_triggered": false,
+      "training_triggered": false
+    },
+    "audit_record": {
+      "audit_id": "canonical-write-audit-fd7c294b18fd0d4f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "decision_id": "canonical-write-decision-52c9ce25597e269f",
+      "audit_summary": "Canonical memory write trial design created without write, recall mutation, rollback execution, or training.",
+      "generated_for_review_only": true,
+      "canonical_write_executed": false,
+      "memory_mutated": false,
+      "recall_mutated": false,
+      "rollback_executed": false,
+      "training_triggered": false
+    },
+    "report_entry": {
+      "report_entry_id": "canonical-write-entry-52c9ce25597e269f",
+      "write_candidate_id": "canonical-write-candidate-b1be17552bac1241",
+      "candidate_summary": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+      "approval_summary": "explicit human approval required and absent",
+      "safety_summary": "blocked_until_explicit_human_approval_and_future_write_phase",
+      "rollback_summary": "Rollback reference is documented but not executable in V1.5H.",
+      "decision_summary": "blocked_approval_absent",
+      "unresolved_gaps": [
+        "approval absent",
+        "write gate closed",
+        "recall activation closed"
+      ],
+      "recommended_next_review_step": "explicit user-approved write trial or recall bridge limited trial design",
+      "generated_for_review_only": true
+    },
+    "invariant_flags": {
+      "canonical_memory_write_trial_design_enabled": true,
+      "write_trial_report_enabled": true,
+      "write_enabled": false,
+      "canonical_write_executed": false,
+      "memory_mutation_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "recall_activation_enabled": false,
+      "rollback_executed": false,
+      "provider_calls_enabled": false,
+      "tool_calls_enabled": false,
+      "action_execution_enabled": false,
+      "training_enabled": false,
+      "dataset_export_enabled": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false,
+      "scheduler_enabled": false,
+      "runtime_defaults_changed": false
+    }
+  },
+  "design_safe": true,
+  "final_recommendation": "PROCEED_EXPLICIT_USER_APPROVED_CANONICAL_MEMORY_WRITE_TRIAL_OR_RECALL_BRIDGE_LIMITED_TRIAL_DESIGN"
+}

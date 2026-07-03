@@ -1,0 +1,58 @@
+{
+  "title": "DELTA Future Activation And Learning Plan",
+  "status": "planning_only_no_runtime_change",
+  "latest_verified_phase": "Runtime V1.5E Local Knowledge Inventory Answer Router",
+  "active_capabilities": [
+    "manual local console questions",
+    "deterministic local self-knowledge routing",
+    "raw/semantic preview traces",
+    "safety status output",
+    "repo-local report/test self-inspection"
+  ],
+  "disabled_capabilities": [
+    "provider calls",
+    "tool calls",
+    "action execution",
+    "memory writes",
+    "canonical writes",
+    "runtime recall mutation",
+    "active recall bridge",
+    "specialist routing",
+    "HYB1 default activation",
+    "training/fine-tuning/weight updates",
+    "dataset export",
+    "background schedulers/listeners/workers/timers/queues"
+  ],
+  "model_b_status": "default",
+  "hyb1_status": "dormant_env_gated_not_promoted",
+  "near_term_sequence": [
+    "V1.5E Local Knowledge Inventory Answer Router",
+    "V1.5F Self-Question Test Pack",
+    "V1.5G Feedback -> Memory Candidate Proposal",
+    "V1.5H Human-Approved Canonical Memory Write Trial",
+    "V1.5I Recall Bridge Limited Trial",
+    "V1.5J Demo Script / Showcase Report"
+  ],
+  "first_demonstrable_loop": [
+    "user asks DELTA about itself",
+    "DELTA answers from local repo knowledge",
+    "user corrects DELTA",
+    "DELTA captures correction as feedback",
+    "DELTA proposes memory candidate",
+    "user approves",
+    "DELTA writes canonical memory with audit trace in a future explicit write phase",
+    "later recall surfaces approved memory as candidate context"
+  ],
+  "risk_register": [
+    "overfitting to one user",
+    "sarcasm mistaken as confirmation",
+    "malicious confirmations",
+    "premature memory writes",
+    "HYB1 accidental promotion",
+    "provider/evaluator treated as authority",
+    "action execution before ledger/approval",
+    "background scheduler introduced too early",
+    "generic agent drift"
+  ],
+  "final_recommendation": "PROCEED_SELF_QUESTION_TEST_PACK"
+}

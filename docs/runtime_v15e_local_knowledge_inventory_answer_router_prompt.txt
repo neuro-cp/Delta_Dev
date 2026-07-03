@@ -1,0 +1,46 @@
+Runtime V1.5E - Local Knowledge Inventory Answer Router
+
+Purpose:
+Expand the first interaction console so DELTA can answer known repo-local
+questions from its own scaffold reports, phase summaries, and static knowledge
+inventory without provider calls, memory writes, training, recall mutation,
+action execution, or HYB1 activation.
+
+This is not provider integration.
+This is not active recall.
+This is not canonical memory.
+This is not training.
+This is not semantic intelligence yet.
+It is a local scaffold knowledge router.
+
+Allowed:
+- static local knowledge map
+- phase summary registry
+- simple keyword/router matching
+- deterministic answer templates
+- report inventory metadata
+- local answer confidence labels
+- unsupported-question fallback
+- unchanged trace and safety output
+
+Forbidden:
+- provider calls
+- web calls
+- tool calls
+- action execution
+- memory writes
+- canonical writes
+- runtime recall mutation
+- active recall bridge
+- HYB1 default activation
+- training/fine-tuning/weight update
+- dataset export
+- background listeners/schedulers/workers/queues
+- runtime default changes
+
+Core invariant:
+local knowledge routing != learned memory
+static report summary != active recall
+answer template != provider generation
+question match != semantic authority
+unsupported answer != failure

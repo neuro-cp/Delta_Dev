@@ -1,0 +1,344 @@
+{
+  "phase": "Runtime V1.5G",
+  "title": "Feedback -> Memory Candidate Proposal",
+  "status": "review_only_memory_candidate_proposal_no_write_no_recall_no_training",
+  "cases": [
+    {
+      "interaction": {
+        "interaction_id": "feedback-interaction-3ad1f40f5da818d3",
+        "original_question": "What is HYB1?",
+        "original_answer_summary": "HYB1 is dormant/env-gated and Model B remains default.",
+        "user_feedback": "Yeah, that is right. HYB1 reduced reasoning drift in the V1.4U snapshot.",
+        "source": "manual_console",
+        "one_shot": true,
+        "auto_ingest": false,
+        "training_example": false
+      },
+      "feedback_signal": {
+        "feedback_signal_id": "feedback-signal-a4a2961d03c81a42",
+        "interaction_id": "feedback-interaction-3ad1f40f5da818d3",
+        "signal_type": "confirmation",
+        "signal_summary": "Yeah, that is right. HYB1 reduced reasoning drift in the V1.4U snapshot.",
+        "confidence_label": "local_confirmation_signal",
+        "generated_for_review_only": true
+      },
+      "memory_candidate": {
+        "memory_candidate_id": "memory-candidate-9ebdc87b53ea63aa",
+        "feedback_signal_id": "feedback-signal-a4a2961d03c81a42",
+        "proposed_memory_text": "Review candidate from confirmation: Yeah, that is right. HYB1 reduced reasoning drift in the V1.4U snapshot.",
+        "scope": "delta_runtime_self_knowledge_review",
+        "provenance_reference_ids": [
+          "feedback-interaction-3ad1f40f5da818d3",
+          "feedback-signal-a4a2961d03c81a42"
+        ],
+        "human_approval_required": true,
+        "canonical_write_ready": false,
+        "approved": false,
+        "written": false
+      },
+      "safety_review": {
+        "review_id": "memory-candidate-review-3e6933afe1804854",
+        "memory_candidate_id": "memory-candidate-9ebdc87b53ea63aa",
+        "safety_status": "human_review_required",
+        "risk_notes": [
+          "canonical write disabled",
+          "human approval required",
+          "feedback signal is not truth"
+        ],
+        "ambiguity_notes": [],
+        "sarcasm_notes": [],
+        "required_before_write": true,
+        "approved": false
+      },
+      "approval_requirement": {
+        "requirement_id": "memory-candidate-approval-f4f9f99a5956d3c1",
+        "memory_candidate_id": "memory-candidate-9ebdc87b53ea63aa",
+        "required_actor": "human_operator",
+        "approval_reason": "Canonical memory writes require explicit human approval in a later write trial.",
+        "satisfied": false,
+        "approval_present": false
+      },
+      "decision": {
+        "decision_id": "memory-candidate-decision-e39517ab79b1adfb",
+        "memory_candidate_id": "memory-candidate-9ebdc87b53ea63aa",
+        "outcome": "eligible_for_future_human_approved_write_trial",
+        "rationale": "Signal can create candidate pressure only; human approval and future write trial are required.",
+        "applied": false,
+        "canonical_write_triggered": false,
+        "training_triggered": false
+      },
+      "audit_record": {
+        "audit_id": "memory-candidate-audit-e2d10d96fc6fa9fd",
+        "memory_candidate_id": "memory-candidate-9ebdc87b53ea63aa",
+        "feedback_signal_id": "feedback-signal-a4a2961d03c81a42",
+        "decision_id": "memory-candidate-decision-e39517ab79b1adfb",
+        "audit_summary": "Review-only memory candidate proposal; no canonical write, recall mutation, or training occurred.",
+        "generated_for_review_only": true,
+        "persisted_to_canonical_store": false,
+        "memory_written": false,
+        "training_triggered": false
+      },
+      "report_entry": {
+        "report_entry_id": "memory-candidate-entry-f4f9f99a5956d3c1",
+        "memory_candidate_id": "memory-candidate-9ebdc87b53ea63aa",
+        "feedback_summary": "confirmation: Yeah, that is right. HYB1 reduced reasoning drift in the V1.4U snapshot.",
+        "proposal_summary": "Review candidate from confirmation: Yeah, that is right. HYB1 reduced reasoning drift in the V1.4U snapshot.",
+        "safety_summary": "human_review_required",
+        "approval_summary": "human approval required and absent by default",
+        "decision_summary": "eligible_for_future_human_approved_write_trial",
+        "unresolved_gaps": [
+          "human approval absent",
+          "canonical write disabled",
+          "recall mutation disabled"
+        ],
+        "recommended_next_review_step": "V1.5H human-approved canonical memory write trial design",
+        "generated_for_review_only": true
+      },
+      "invariant_flags": {
+        "feedback_memory_candidate_enabled": true,
+        "review_only_candidate_generation_enabled": true,
+        "provider_calls_enabled": false,
+        "tool_calls_enabled": false,
+        "action_execution_enabled": false,
+        "memory_mutation_enabled": false,
+        "canonical_write_enabled": false,
+        "canonical_write_performed": false,
+        "runtime_recall_mutation_enabled": false,
+        "training_enabled": false,
+        "dataset_export_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false,
+        "scheduler_enabled": false,
+        "background_listener_enabled": false,
+        "runtime_defaults_changed": false
+      }
+    },
+    {
+      "interaction": {
+        "interaction_id": "feedback-interaction-354e6356d32da6ac",
+        "original_question": "What is HYB1?",
+        "original_answer_summary": "HYB1 is active.",
+        "user_feedback": "No, HYB1 is not active. It is dormant and env-gated.",
+        "source": "manual_console",
+        "one_shot": true,
+        "auto_ingest": false,
+        "training_example": false
+      },
+      "feedback_signal": {
+        "feedback_signal_id": "feedback-signal-a3a5f55b4dbe62b1",
+        "interaction_id": "feedback-interaction-354e6356d32da6ac",
+        "signal_type": "correction",
+        "signal_summary": "No, HYB1 is not active. It is dormant and env-gated.",
+        "confidence_label": "local_correction_signal",
+        "generated_for_review_only": true
+      },
+      "memory_candidate": {
+        "memory_candidate_id": "memory-candidate-f39e43dad9f60653",
+        "feedback_signal_id": "feedback-signal-a3a5f55b4dbe62b1",
+        "proposed_memory_text": "Review candidate from correction: No, HYB1 is not active. It is dormant and env-gated.",
+        "scope": "delta_runtime_self_knowledge_review",
+        "provenance_reference_ids": [
+          "feedback-interaction-354e6356d32da6ac",
+          "feedback-signal-a3a5f55b4dbe62b1"
+        ],
+        "human_approval_required": true,
+        "canonical_write_ready": false,
+        "approved": false,
+        "written": false
+      },
+      "safety_review": {
+        "review_id": "memory-candidate-review-f3233e70588e30f6",
+        "memory_candidate_id": "memory-candidate-f39e43dad9f60653",
+        "safety_status": "human_review_required",
+        "risk_notes": [
+          "canonical write disabled",
+          "human approval required",
+          "feedback signal is not truth"
+        ],
+        "ambiguity_notes": [],
+        "sarcasm_notes": [],
+        "required_before_write": true,
+        "approved": false
+      },
+      "approval_requirement": {
+        "requirement_id": "memory-candidate-approval-d1cf709e6b054c16",
+        "memory_candidate_id": "memory-candidate-f39e43dad9f60653",
+        "required_actor": "human_operator",
+        "approval_reason": "Canonical memory writes require explicit human approval in a later write trial.",
+        "satisfied": false,
+        "approval_present": false
+      },
+      "decision": {
+        "decision_id": "memory-candidate-decision-0f55090dc487d21b",
+        "memory_candidate_id": "memory-candidate-f39e43dad9f60653",
+        "outcome": "eligible_for_future_human_approved_write_trial",
+        "rationale": "Signal can create candidate pressure only; human approval and future write trial are required.",
+        "applied": false,
+        "canonical_write_triggered": false,
+        "training_triggered": false
+      },
+      "audit_record": {
+        "audit_id": "memory-candidate-audit-17048d284d549d17",
+        "memory_candidate_id": "memory-candidate-f39e43dad9f60653",
+        "feedback_signal_id": "feedback-signal-a3a5f55b4dbe62b1",
+        "decision_id": "memory-candidate-decision-0f55090dc487d21b",
+        "audit_summary": "Review-only memory candidate proposal; no canonical write, recall mutation, or training occurred.",
+        "generated_for_review_only": true,
+        "persisted_to_canonical_store": false,
+        "memory_written": false,
+        "training_triggered": false
+      },
+      "report_entry": {
+        "report_entry_id": "memory-candidate-entry-d1cf709e6b054c16",
+        "memory_candidate_id": "memory-candidate-f39e43dad9f60653",
+        "feedback_summary": "correction: No, HYB1 is not active. It is dormant and env-gated.",
+        "proposal_summary": "Review candidate from correction: No, HYB1 is not active. It is dormant and env-gated.",
+        "safety_summary": "human_review_required",
+        "approval_summary": "human approval required and absent by default",
+        "decision_summary": "eligible_for_future_human_approved_write_trial",
+        "unresolved_gaps": [
+          "human approval absent",
+          "canonical write disabled",
+          "recall mutation disabled"
+        ],
+        "recommended_next_review_step": "V1.5H human-approved canonical memory write trial design",
+        "generated_for_review_only": true
+      },
+      "invariant_flags": {
+        "feedback_memory_candidate_enabled": true,
+        "review_only_candidate_generation_enabled": true,
+        "provider_calls_enabled": false,
+        "tool_calls_enabled": false,
+        "action_execution_enabled": false,
+        "memory_mutation_enabled": false,
+        "canonical_write_enabled": false,
+        "canonical_write_performed": false,
+        "runtime_recall_mutation_enabled": false,
+        "training_enabled": false,
+        "dataset_export_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false,
+        "scheduler_enabled": false,
+        "background_listener_enabled": false,
+        "runtime_defaults_changed": false
+      }
+    },
+    {
+      "interaction": {
+        "interaction_id": "feedback-interaction-bd5dc356c61aa366",
+        "original_question": "What is HYB1?",
+        "original_answer_summary": "HYB1 is dormant/env-gated and Model B remains default.",
+        "user_feedback": "Yeah sure, whatever.",
+        "source": "manual_console",
+        "one_shot": true,
+        "auto_ingest": false,
+        "training_example": false
+      },
+      "feedback_signal": {
+        "feedback_signal_id": "feedback-signal-07765e6ad7acc073",
+        "interaction_id": "feedback-interaction-bd5dc356c61aa366",
+        "signal_type": "sarcasm_possible",
+        "signal_summary": "Yeah sure, whatever.",
+        "confidence_label": "low_sarcasm_possible",
+        "generated_for_review_only": true
+      },
+      "memory_candidate": {
+        "memory_candidate_id": "memory-candidate-27948b0f8a80ae2d",
+        "feedback_signal_id": "feedback-signal-07765e6ad7acc073",
+        "proposed_memory_text": "No memory candidate should be written from ambiguous, sarcastic, rejected, or unknown feedback without review.",
+        "scope": "delta_runtime_self_knowledge_review",
+        "provenance_reference_ids": [
+          "feedback-interaction-bd5dc356c61aa366",
+          "feedback-signal-07765e6ad7acc073"
+        ],
+        "human_approval_required": true,
+        "canonical_write_ready": false,
+        "approved": false,
+        "written": false
+      },
+      "safety_review": {
+        "review_id": "memory-candidate-review-bdf55e1536a3b5f8",
+        "memory_candidate_id": "memory-candidate-27948b0f8a80ae2d",
+        "safety_status": "sarcasm_review_required",
+        "risk_notes": [
+          "canonical write disabled",
+          "human approval required",
+          "feedback signal is not truth"
+        ],
+        "ambiguity_notes": [
+          "sarcasm possible; do not treat as confirmation"
+        ],
+        "sarcasm_notes": [
+          "feedback contains casual/sarcastic pattern"
+        ],
+        "required_before_write": true,
+        "approved": false
+      },
+      "approval_requirement": {
+        "requirement_id": "memory-candidate-approval-71261a7db76dc1bc",
+        "memory_candidate_id": "memory-candidate-27948b0f8a80ae2d",
+        "required_actor": "human_operator",
+        "approval_reason": "Canonical memory writes require explicit human approval in a later write trial.",
+        "satisfied": false,
+        "approval_present": false
+      },
+      "decision": {
+        "decision_id": "memory-candidate-decision-c96fd4d656ca26d5",
+        "memory_candidate_id": "memory-candidate-27948b0f8a80ae2d",
+        "outcome": "requires_human_review",
+        "rationale": "Ambiguity/sarcasm risk blocks write readiness.",
+        "applied": false,
+        "canonical_write_triggered": false,
+        "training_triggered": false
+      },
+      "audit_record": {
+        "audit_id": "memory-candidate-audit-fe9c8fdb499b3fde",
+        "memory_candidate_id": "memory-candidate-27948b0f8a80ae2d",
+        "feedback_signal_id": "feedback-signal-07765e6ad7acc073",
+        "decision_id": "memory-candidate-decision-c96fd4d656ca26d5",
+        "audit_summary": "Review-only memory candidate proposal; no canonical write, recall mutation, or training occurred.",
+        "generated_for_review_only": true,
+        "persisted_to_canonical_store": false,
+        "memory_written": false,
+        "training_triggered": false
+      },
+      "report_entry": {
+        "report_entry_id": "memory-candidate-entry-71261a7db76dc1bc",
+        "memory_candidate_id": "memory-candidate-27948b0f8a80ae2d",
+        "feedback_summary": "sarcasm_possible: Yeah sure, whatever.",
+        "proposal_summary": "No memory candidate should be written from ambiguous, sarcastic, rejected, or unknown feedback without review.",
+        "safety_summary": "sarcasm_review_required",
+        "approval_summary": "human approval required and absent by default",
+        "decision_summary": "requires_human_review",
+        "unresolved_gaps": [
+          "human approval absent",
+          "canonical write disabled",
+          "recall mutation disabled"
+        ],
+        "recommended_next_review_step": "V1.5H human-approved canonical memory write trial design",
+        "generated_for_review_only": true
+      },
+      "invariant_flags": {
+        "feedback_memory_candidate_enabled": true,
+        "review_only_candidate_generation_enabled": true,
+        "provider_calls_enabled": false,
+        "tool_calls_enabled": false,
+        "action_execution_enabled": false,
+        "memory_mutation_enabled": false,
+        "canonical_write_enabled": false,
+        "canonical_write_performed": false,
+        "runtime_recall_mutation_enabled": false,
+        "training_enabled": false,
+        "dataset_export_enabled": false,
+        "hyb1_default_activation_enabled": false,
+        "model_b_default_changed": false,
+        "scheduler_enabled": false,
+        "background_listener_enabled": false,
+        "runtime_defaults_changed": false
+      }
+    }
+  ],
+  "case_count": 3,
+  "all_cases_safe": true,
+  "final_recommendation": "PROCEED_HUMAN_APPROVED_CANONICAL_MEMORY_WRITE_TRIAL_DESIGN"
+}

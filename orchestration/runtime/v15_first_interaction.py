@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from enum import Enum
 
 from orchestration.runtime.v14_runtime_console import RuntimeConsolePreview, build_runtime_console_preview
+from orchestration.runtime.v15_local_knowledge_router import route_local_knowledge_answer
 
 
 STARTER_DELTA_QUESTION = "What is DELTA's current replay and consolidation path?"
@@ -34,6 +35,7 @@ RUNTIME_V15D_INVARIANT_FLAGS: dict[str, bool] = {
 
 class FirstInteractionResponseMode(str, Enum):
     LOCAL_ARCHITECTURE_SUMMARY = "local_architecture_summary"
+    LOCAL_KNOWLEDGE_ROUTED = "local_knowledge_routed"
     LOCAL_UNKNOWN_SCAFFOLD_NOTICE = "local_unknown_scaffold_notice"
 
 
@@ -183,16 +185,16 @@ def create_first_interaction_safety_status(request: FirstInteractionRequest) -> 
 
 
 def create_first_interaction_response_preview(request: FirstInteractionRequest, console_preview: RuntimeConsolePreview) -> FirstInteractionResponsePreview:
-    lowered = request.user_message.lower()
-    if "replay" in lowered and "consolidation" in lowered and "delta" in lowered:
-        mode = FirstInteractionResponseMode.LOCAL_ARCHITECTURE_SUMMARY
-        response = (
-            "DELTA's current replay and consolidation path is: manual/raw message -> experience boundary/record -> "
-            "episodic feedback capture -> replay markers/batches -> replay review -> consolidation candidate -> "
-            "consolidation decision -> sleep-cycle plan -> canonical memory draft/record design. Canonical writes remain disabled."
+    route = route_local_knowledge_answer(request.user_message)
+    if route.matched and route.answer:
+        mode = (
+            FirstInteractionResponseMode.LOCAL_ARCHITECTURE_SUMMARY
+            if route.topic_id == "replay_consolidation_path"
+            else FirstInteractionResponseMode.LOCAL_KNOWLEDGE_ROUTED
         )
-        evidence = "local V1.4 scaffold summary: experience adapter, feedback capture, replay, consolidation, sleep-cycle, canonical design"
-        uncertainty = "This is a deterministic local scaffold summary, not provider reasoning."
+        response = route.answer.answer_text
+        evidence = f"{route.answer.confidence_label.value}: {route.answer.source_summary}"
+        uncertainty = "This is a deterministic local scaffold summary, not provider reasoning or active recall."
     else:
         mode = FirstInteractionResponseMode.LOCAL_UNKNOWN_SCAFFOLD_NOTICE
         response = (

@@ -1,0 +1,17 @@
+Runtime V1.5H - Human-Approved Canonical Memory Write Trial Design
+
+Purpose:
+Design the first human-approved canonical memory write trial, but do not execute
+a canonical memory write in this marathon.
+
+This is design-only.
+No active memory write.
+No recall activation.
+No training.
+No provider/tool calls.
+No action execution.
+
+Core invariant:
+approval requirement != approval
+design-only write trial != active memory write
+memory candidate != canonical memory

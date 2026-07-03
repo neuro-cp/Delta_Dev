@@ -1,0 +1,14 @@
+Runtime V1.5G - Feedback -> Memory Candidate Proposal
+
+Purpose:
+Allow DELTA to capture user correction/confirmation from a manual console
+interaction and produce a review-only memory candidate proposal.
+
+This phase does not write canonical memory, activate recall, call providers,
+execute tools/actions, train, export datasets, or promote HYB1.
+
+Core invariant:
+feedback capture != memory write
+memory candidate != canonical memory
+user correction != automatic truth
+positive confirmation != automatic promotion
