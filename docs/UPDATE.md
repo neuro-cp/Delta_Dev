@@ -3499,6 +3499,45 @@ Next recommendation:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## Runtime V3.0 Natural Interaction, Explainability, And Guided Review UX
+
+Runtime V3.0 completed a presentation and observability pass over the V2.9 local
+answer path. It did not add new cognition or activate dormant features.
+
+Generated reports:
+
+- `reports/runtime_v30a_conversational_answer_polish.md`
+- `reports/runtime_v30b_pipeline_explanation_engine.md`
+- `reports/runtime_v30c_guided_review_console.md`
+- `reports/runtime_v30d_manual_demo_scenario_pack.md`
+- `reports/runtime_v30e_selected_cleanup_review.md`
+- `reports/runtime_v30f_safety_checkpoint.md`
+
+Local UX additions:
+
+- `scripts/delta_answer.py` supports concise, detailed, explain, and
+  safety-summary presentation modes.
+- `scripts/delta_runtime_ui.py` uses the same V3.0 presentation/explanation
+  path over the V2.9 local answer engine.
+- `ui/delta_v30_guided_review_console.html` provides a static guided review
+  console with Ask DELTA, Answer, Provenance, Pipeline Trace, Safety Gates,
+  Disabled Capabilities, and Next Recommended Action sections.
+- `scripts/delta_v30_demo_scenarios.py` generates deterministic manual demo
+  scenarios.
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, model artifact creation, provider calls, action
+  execution, autonomous memory writes, authoritative recall, recall mutation,
+  scheduler/background worker activation, or runtime behavior mutation
+  occurred.
+
+Next recommendation:
+
+`PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
+
 ## Runtime V2.9 Current-State Self-Description And Natural Local Interaction
 
 Runtime V2.9 completed the local interaction correction exposed by manual V2.8

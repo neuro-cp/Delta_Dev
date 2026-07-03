@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DELTA V3.0 Guided Review Console</title>
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1d2433; }
+    main { max-width: 1080px; margin: 0 auto; padding: 32px; }
+    section { background: white; border: 1px solid #d9e1ef; border-radius: 8px; padding: 18px; margin: 14px 0; }
+    h1 { margin-top: 0; }
+    h2 { font-size: 18px; margin-top: 0; }
+    textarea { width: 100%; min-height: 76px; border: 1px solid #aebbd0; border-radius: 6px; padding: 10px; }
+    pre { white-space: pre-wrap; background: #101828; color: #eef4ff; padding: 14px; border-radius: 6px; }
+    .pill { display: inline-block; padding: 4px 8px; border-radius: 999px; background: #e7f0ff; color: #174ea6; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>DELTA Guided Review Console <span class="pill">Runtime V3.0C</span></h1>
+    <section>
+      <h2>Ask DELTA</h2>
+      <textarea readonly>What is DELTA?</textarea>
+    </section>
+    <section>
+      <h2>Answer</h2>
+      <pre>DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.
+
+Why this answer is local:
+- matched: True
+- topic: identity
+- evidence items: 1
+- provider required: False
+
+Provenance:
+- docs/ARCHITECTURE.md
+- docs/INVARIANTS.md
+- docs/ROADMAP.md
+- docs/UPDATE.md
+- reports/runtime_v25a_v27f_extended_overage_marathon_summary.md
+- reports/runtime_v28_master_validation.md</pre>
+    </section>
+    <section>
+      <h2>Provenance</h2>
+      <ul><li>docs/ARCHITECTURE.md</li><li>docs/INVARIANTS.md</li><li>docs/ROADMAP.md</li><li>docs/UPDATE.md</li><li>reports/runtime_v25a_v27f_extended_overage_marathon_summary.md</li><li>reports/runtime_v28_master_validation.md</li></ul>
+    </section>
+    <section>
+      <h2>Pipeline Trace</h2>
+      <pre>Pipeline explanation
+
+Input: What is DELTA?
+Route matched: True (identity)
+Matched alias: what is delta
+Recall used: False (authoritative: False)
+Evidence items: 1
+Mutation status: none
+
+Safety gates:
+- provider_call_performed: False
+- memory_write_performed: False
+- recall_mutated: False
+- training_triggered: False
+- action_execution_performed: False
+- scheduler_started: False
+- hyb1_promoted: False
+- model_b_default_changed: False
+
+Final synthesis: DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.</pre>
+    </section>
+    <section>
+      <h2>Safety Gates</h2>
+      <ul><li><strong>provider_call_performed</strong>: False</li><li><strong>memory_write_performed</strong>: False</li><li><strong>recall_mutated</strong>: False</li><li><strong>training_triggered</strong>: False</li><li><strong>action_execution_performed</strong>: False</li><li><strong>scheduler_started</strong>: False</li><li><strong>hyb1_promoted</strong>: False</li><li><strong>model_b_default_changed</strong>: False</li></ul>
+    </section>
+    <section>
+      <h2>Disabled Capabilities</h2>
+      <ul><li>training and fine-tuning</li><li>model weight updates</li><li>model artifact creation</li><li>provider calls and provider authority</li><li>tool calls and action execution</li><li>autonomous memory writes</li><li>canonical memory writes</li><li>authoritative recall</li><li>recall mutation</li><li>HYB1 default activation or promotion</li><li>scheduler/background worker activation</li></ul>
+    </section>
+    <section>
+      <h2>Next Recommended Action</h2>
+      <p>PROCEED_MANUAL_DEMO_SCENARIO_PACK</p>
+    </section>
+  </main>
+</body>
+</html>

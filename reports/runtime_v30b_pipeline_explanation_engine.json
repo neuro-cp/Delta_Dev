@@ -1,0 +1,169 @@
+{
+  "final_recommendation": "PROCEED_GUIDED_REVIEW_CONSOLE_UX",
+  "phase": "Runtime V3.0B",
+  "runtime_behavior_changed": false,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample": {
+    "answer_data": {
+      "decision": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "training_triggered": false
+      },
+      "draft": {
+        "answer_text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+        "draft_id": "v29-draft-ac544a582955e75d",
+        "grounded": true,
+        "provider_required": false,
+        "uses_candidate_context": false
+      },
+      "evidence_items": [
+        {
+          "authoritative": false,
+          "candidate_context_only": true,
+          "candidate_id": "v29-local-evidence-7b27b367cfd83be7",
+          "provenance": [
+            "docs/ARCHITECTURE.md",
+            "docs/INVARIANTS.md",
+            "docs/ROADMAP.md",
+            "docs/UPDATE.md",
+            "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+            "reports/runtime_v28_master_validation.md"
+          ],
+          "text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation."
+        }
+      ],
+      "final_recommendation": "PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW",
+      "invariant_flags": {
+        "action_execution_performed": false,
+        "authoritative_recall_enabled": false,
+        "autonomous_memory_write_performed": false,
+        "background_worker_started": false,
+        "candidate_context_only": true,
+        "canonical_memory_write_performed": false,
+        "fine_tuning_performed": false,
+        "hyb1_enabled_by_default": false,
+        "hyb1_promoted": false,
+        "model_artifact_created": false,
+        "model_b_default_changed": false,
+        "model_weights_updated": false,
+        "provider_authority_granted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "secret_printed": false,
+        "training_performed": false,
+        "v29_local_answer_engine_enabled": true
+      },
+      "local_answer": {
+        "answer_text": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+        "matched": true,
+        "matched_alias": "what is delta",
+        "provenance": [
+          "docs/ARCHITECTURE.md",
+          "docs/INVARIANTS.md",
+          "docs/ROADMAP.md",
+          "docs/UPDATE.md",
+          "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+          "reports/runtime_v28_master_validation.md"
+        ],
+        "topic_id": "identity"
+      },
+      "phase": "Runtime V2.9",
+      "recall_context": null,
+      "request": {
+        "query": "What is DELTA?",
+        "request_id": "v29-request-24cc7dc12bcfe40a",
+        "use_recall": false
+      }
+    },
+    "final_recommendation": "PROCEED_GUIDED_REVIEW_CONSOLE_UX",
+    "phase": "Runtime V3.0B",
+    "pipeline_explanation": {
+      "evidence_used": [
+        {
+          "authoritative": false,
+          "candidate_context_only": true,
+          "candidate_id": "v29-local-evidence-7b27b367cfd83be7",
+          "provenance": [
+            "docs/ARCHITECTURE.md",
+            "docs/INVARIANTS.md",
+            "docs/ROADMAP.md",
+            "docs/UPDATE.md",
+            "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+            "reports/runtime_v28_master_validation.md"
+          ]
+        }
+      ],
+      "final_synthesis": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+      "input": "What is DELTA?",
+      "inventory_source": [
+        "docs/ARCHITECTURE.md",
+        "docs/INVARIANTS.md",
+        "docs/ROADMAP.md",
+        "docs/UPDATE.md",
+        "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+        "reports/runtime_v28_master_validation.md"
+      ],
+      "matched_alias": "what is delta",
+      "matched_topic": "identity",
+      "mutation_status": "none",
+      "recall_authoritative": false,
+      "recall_used": false,
+      "route_matched": true,
+      "safety_gates_checked": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "scheduler_started": false,
+        "training_triggered": false
+      }
+    },
+    "rendered_explanation": "Pipeline explanation\n\nInput: What is DELTA?\nRoute matched: True (identity)\nMatched alias: what is delta\nRecall used: False (authoritative: False)\nEvidence items: 1\nMutation status: none\n\nSafety gates:\n- provider_call_performed: False\n- memory_write_performed: False\n- recall_mutated: False\n- training_triggered: False\n- action_execution_performed: False\n- scheduler_started: False\n- hyb1_promoted: False\n- model_b_default_changed: False\n\nFinal synthesis: DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+    "safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    }
+  }
+}

@@ -33,3 +33,15 @@ current-state self-description. Natural questions such as "What is DELTA?",
 now route to deterministic repo-local answers with safety/provenance metadata.
 
 Current next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW
+
+Runtime V3.0 is complete. It adds presentation-only natural interaction and
+explainability over the V2.9 local answer path: conversational answer modes,
+pipeline explanations, a static guided review console, manual demo scenarios,
+selected cleanup review, and safety checkpoint/continuation documentation.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated
+shadow-only, no training, no provider calls, no memory writes, no authoritative
+recall, no recall mutation, no scheduler/background workers, and no action
+execution.
+
+Current next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW

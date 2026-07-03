@@ -10,7 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from orchestration.runtime.v29_local_answer_engine import format_v29_cli_output, run_v29_local_answer  # noqa: E402
+from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer  # noqa: E402
+from orchestration.runtime.v30_conversational_answer_formatter import format_conversational_answer  # noqa: E402
+from orchestration.runtime.v30_pipeline_explainer import build_pipeline_explanation  # noqa: E402
 
 
 def main() -> int:
@@ -32,9 +34,14 @@ def main() -> int:
         message = entry.get().strip()
         if not message:
             return
-        data = run_v29_local_answer(message, use_recall=True)
+        if "explain how" in message.lower() or "pipeline" in message.lower():
+            data = build_pipeline_explanation(message, use_recall=True)
+            rendered = data["rendered_explanation"]
+        else:
+            data = run_v29_local_answer(message, use_recall=True)
+            rendered = format_conversational_answer(data, mode="detailed")
         output.delete("1.0", tk.END)
-        output.insert(tk.END, format_v29_cli_output(data))
+        output.insert(tk.END, rendered)
 
     button = tk.Button(frame, text="Send", command=send)
     button.pack(anchor=tk.E, pady=(10, 0))

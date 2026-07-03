@@ -1,0 +1,36 @@
+{
+  "final_recommendation": "PROCEED_PIPELINE_EXPLANATION_ENGINE",
+  "phase": "Runtime V3.0A",
+  "runtime_behavior_changed": false,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "samples": {
+    "concise": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+    "detailed": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.\n\nWhy this answer is local:\n- matched: True\n- topic: identity\n- evidence items: 1\n- provider required: False\n\nProvenance:\n- docs/ARCHITECTURE.md\n- docs/INVARIANTS.md\n- docs/ROADMAP.md\n- docs/UPDATE.md\n- reports/runtime_v25a_v27f_extended_overage_marathon_summary.md\n- reports/runtime_v28_master_validation.md",
+    "explain": "I answered through the deterministic local path.\n\nInput: What is DELTA?\nMatched route: identity\nRecall used: False\nEvidence items used: 1\nSafety checks: provider calls, memory writes, recall mutation, training, action execution, HYB1 promotion, and Model B changes all remained disabled.\nFinal synthesis: DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+    "safety-summary": "Safety summary:\n- provider_call_performed: False\n- memory_write_performed: False\n- recall_mutated: False\n- training_triggered: False\n- action_execution_performed: False\n- hyb1_promoted: False\n- model_b_default_changed: False"
+  },
+  "supported_modes": [
+    "concise",
+    "detailed",
+    "explain",
+    "safety-summary"
+  ]
+}

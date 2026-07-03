@@ -1,0 +1,57 @@
+{
+  "answer": "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.\n\nWhy this answer is local:\n- matched: True\n- topic: identity\n- evidence items: 1\n- provider required: False\n\nProvenance:\n- docs/ARCHITECTURE.md\n- docs/INVARIANTS.md\n- docs/ROADMAP.md\n- docs/UPDATE.md\n- reports/runtime_v25a_v27f_extended_overage_marathon_summary.md\n- reports/runtime_v28_master_validation.md",
+  "disabled_capabilities": [
+    "training and fine-tuning",
+    "model weight updates",
+    "model artifact creation",
+    "provider calls and provider authority",
+    "tool calls and action execution",
+    "autonomous memory writes",
+    "canonical memory writes",
+    "authoritative recall",
+    "recall mutation",
+    "HYB1 default activation or promotion",
+    "scheduler/background worker activation"
+  ],
+  "next_recommended_action": "PROCEED_MANUAL_DEMO_SCENARIO_PACK",
+  "phase": "Runtime V3.0C",
+  "pipeline_trace": "Pipeline explanation\n\nInput: What is DELTA?\nRoute matched: True (identity)\nMatched alias: what is delta\nRecall used: False (authoritative: False)\nEvidence items: 1\nMutation status: none\n\nSafety gates:\n- provider_call_performed: False\n- memory_write_performed: False\n- recall_mutated: False\n- training_triggered: False\n- action_execution_performed: False\n- scheduler_started: False\n- hyb1_promoted: False\n- model_b_default_changed: False\n\nFinal synthesis: DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
+  "provenance": [
+    "docs/ARCHITECTURE.md",
+    "docs/INVARIANTS.md",
+    "docs/ROADMAP.md",
+    "docs/UPDATE.md",
+    "reports/runtime_v25a_v27f_extended_overage_marathon_summary.md",
+    "reports/runtime_v28_master_validation.md"
+  ],
+  "query": "What is DELTA?",
+  "safety_gates": {
+    "action_execution_performed": false,
+    "hyb1_promoted": false,
+    "memory_write_performed": false,
+    "model_b_default_changed": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "training_triggered": false
+  },
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  }
+}

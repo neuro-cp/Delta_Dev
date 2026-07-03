@@ -809,6 +809,30 @@ Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## Runtime V3.0 Natural Interaction And Guided Review UX Update
+
+Runtime V3.0 improves the local interaction surface without adding cognition or
+activating dormant features.
+
+Implemented:
+
+- conversational answer formatting with concise, detailed, explain, and
+  safety-summary modes
+- deterministic pipeline explanations for local answers
+- static guided review console at `ui/delta_v30_guided_review_console.html`
+- manual demo scenario pack
+- selected cleanup review based on the V2.8 architecture audit
+- V3.0 safety checkpoint and continuation handoff
+
+Safety boundaries remain unchanged: Model B remains default; HYB1 remains
+dormant/env-gated; no training, provider calls, action execution, autonomous
+memory writes, authoritative recall, recall mutation, scheduler/background
+workers, or model artifacts are enabled.
+
+Recommended next phase:
+
+`PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
+
 ## Runtime V2.9 Self-Description And Natural Local Interaction Update
 
 Runtime V2.9 updates DELTA's local interaction layer so the CLI and desktop UI

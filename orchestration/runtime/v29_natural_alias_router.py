@@ -104,7 +104,7 @@ def _alias_map() -> dict[str, tuple[str, ...]]:
         "replay_consolidation": ("replay path", "consolidation path", "replay and consolidation", "approval path", "what is your pipeline", "pipeline"),
         "phase_state": ("what phase are you in", "runtime version", "current checkpoint", "latest validated phase"),
         "training_status": ("are you allowed to train", "can you train", "training status", "fine tune", "model weights"),
-        "memory_status": ("can you write memory", "memory status", "canonical memory", "write memory"),
+        "memory_status": ("can you write memory", "memory status", "canonical memory", "write memory", "can you remember", "remember my", "remember that"),
         "provider_status": ("can you call providers", "provider calls", "provider authority"),
         "action_status": ("can you execute actions", "execute actions", "action execution"),
         "hyb1_status": ("is hyb1 active", "what is hyb1", "hyb1"),
