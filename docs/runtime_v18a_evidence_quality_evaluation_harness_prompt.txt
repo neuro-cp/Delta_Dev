@@ -1,0 +1,3 @@
+Runtime V1.8A - Evidence Quality Evaluation Harness
+
+Report-only evaluation harness for provenance, uncertainty, source role correctness, candidate/truth distinction, conflict handling, unsupported fallback behavior, and mutation safety. It does not promote, write memory, call providers, train, activate HYB1, or change Model B.

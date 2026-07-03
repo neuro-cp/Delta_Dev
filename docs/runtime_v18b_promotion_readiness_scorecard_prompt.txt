@@ -1,0 +1,3 @@
+Runtime V1.8B - Promotion Readiness Scorecard
+
+Report-only readiness scorecard for future capability gates. It can classify a capability as ready for human review, design-only, or blocked, but it must not promote anything, mutate memory, activate scheduler/provider/HYB1, train, or change Model B.

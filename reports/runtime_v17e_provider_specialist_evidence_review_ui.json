@@ -1,0 +1,115 @@
+{
+  "phase": "Runtime V1.7E",
+  "ui_input": {
+    "title": "DELTA Evidence Review Dashboard",
+    "items": [
+      {
+        "item_id": "v17e-local-d830b0f6cb6bd9a2",
+        "title": "Local Answer Evidence",
+        "source_label": "local_answer",
+        "body": "Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it.",
+        "provenance": "orchestration.runtime.v15_local_knowledge_router",
+        "confidence_label": "repo-local deterministic",
+        "safety_status": "local_non_mutating",
+        "live_call_occurred": false,
+        "key_redacted": true,
+        "recommended_next_action": "usable_as_local_scaffold_answer",
+        "authoritative": false
+      },
+      {
+        "item_id": "v17e-recall-report-839c18e17b8ece15",
+        "title": "Recall Candidate Evidence",
+        "source_label": "recall_candidate_context",
+        "body": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+        "provenance": "v15i-canonical-trial-record-f97e30a731f4638c",
+        "confidence_label": "candidate-context only",
+        "safety_status": "candidate_context_only",
+        "live_call_occurred": false,
+        "key_redacted": true,
+        "recommended_next_action": "inspect_as_candidate_context",
+        "authoritative": false
+      },
+      {
+        "item_id": "v17e-recall-report-2d993e7982c0f900",
+        "title": "Recall Candidate Evidence",
+        "source_label": "recall_candidate_context",
+        "body": "Model B remains default and HYB1 remains dormant/env-gated.",
+        "provenance": "static-local-router",
+        "confidence_label": "candidate-context only",
+        "safety_status": "candidate_context_only",
+        "live_call_occurred": false,
+        "key_redacted": true,
+        "recommended_next_action": "inspect_as_candidate_context",
+        "authoritative": false
+      },
+      {
+        "item_id": "v17e-provider-056530e973d79226",
+        "title": "Provider-Assisted Unknown Evidence Packet",
+        "source_label": "provider_evidence_packet",
+        "body": "Dry-run provider request for model gpt-4.1-mini; no provider response was treated as truth.",
+        "provenance": "Runtime V1.7C dry-run provider request",
+        "confidence_label": "evidence-only dry-run",
+        "safety_status": "evidence_only_not_authority",
+        "live_call_occurred": false,
+        "key_redacted": true,
+        "recommended_next_action": "manual_review_before_any_live_call",
+        "authoritative": false
+      },
+      {
+        "item_id": "v17e-specialist-9e87dd7d9930ace5",
+        "title": "Specialist Evidence Packet",
+        "source_label": "specialist_evidence_packet",
+        "body": "Dry-run specialist request for domain general; specialist output is evidence only.",
+        "provenance": "Runtime V1.7D dry-run specialist request",
+        "confidence_label": "specialist evidence only",
+        "safety_status": "evidence_only_not_authority",
+        "live_call_occurred": false,
+        "key_redacted": true,
+        "recommended_next_action": "manual_review_before_specialist_merge",
+        "authoritative": false
+      },
+      {
+        "item_id": "v17e-evaluator-7e92705ae44e98ec",
+        "title": "Evaluator Advisory Review",
+        "source_label": "evaluator_advisory_review",
+        "body": "Disposition: not_run; risk: none; rationale: No evaluator response was requested or available.",
+        "provenance": "reports\\runtime_v16c_daily_external_consolidation_evaluator_api_trial.json",
+        "confidence_label": "advisory only",
+        "safety_status": "advisory_only_not_authority",
+        "live_call_occurred": false,
+        "key_redacted": true,
+        "recommended_next_action": "advisory_review_only",
+        "authoritative": false
+      }
+    ]
+  },
+  "export": {
+    "export_id": "v17e-export-394bfc51d1f34192",
+    "path": "ui\\delta_evidence_review_dashboard.html",
+    "html_preview_safe": true,
+    "item_count": 6
+  },
+  "report_entry": {
+    "report_entry_id": "v17e-report-07c5eb2d2200f61a",
+    "item_count": 6,
+    "output_path": "ui\\delta_evidence_review_dashboard.html",
+    "all_items_non_authoritative": true,
+    "no_live_calls": true
+  },
+  "safety_flags": {
+    "provider_evidence_review_ui_enabled": true,
+    "static_ui_only": true,
+    "provider_call_performed": false,
+    "specialist_call_performed": false,
+    "evaluator_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "scheduler_enabled": false,
+    "background_worker_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_LIMITED_GENERAL_RECALL_TRIAL"
+}

@@ -1,0 +1,115 @@
+{
+  "phase": "Runtime V1.7H",
+  "turns": [
+    {
+      "turn": 1,
+      "kind": "local_known_question",
+      "question": "What is HYB1?",
+      "matched": true,
+      "answer": {
+        "answer_id": "local-knowledge-answer-a6e2ae0dcf6e0422",
+        "topic_id": "hyb1_status",
+        "answer_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true.",
+        "confidence_label": "local_report_summary",
+        "source_summary": "Runtime V1.3 HYB1 dormant prototype validation and invariants",
+        "provider_required": false,
+        "memory_required": false,
+        "training_required": false,
+        "action_required": false,
+        "deterministic_local": true
+      }
+    },
+    {
+      "turn": 2,
+      "kind": "local_unknown_question",
+      "question": "What is the safest live pruning policy for a new city dataset?",
+      "matched": false,
+      "fallback": "I cannot answer that from the local DELTA scaffold yet. I can answer repo-local questions about DELTA's runtime scaffold, phase history, safety boundaries, and local reports, but provider calls, active recall, memory writes, action execution, training, and HYB1 default activation remain disabled."
+    },
+    {
+      "turn": 3,
+      "kind": "provider_assisted_request_dry_run",
+      "decision": {
+        "decision_id": "v17c-decision-b8861b75bebb2684",
+        "decision": "dry_run_provider_request",
+        "provider_call_performed": false,
+        "provider_answer_authoritative": false,
+        "memory_write_performed": false,
+        "recall_mutated": false
+      },
+      "provider_request": {
+        "question": "What is the safest live pruning policy for a new city dataset?",
+        "model": "gpt-4.1-mini",
+        "endpoint": "https://api.openai.com/v1/chat/completions",
+        "api_key_present": true,
+        "api_key_redacted": true,
+        "authoritative": false
+      }
+    },
+    {
+      "turn": 4,
+      "kind": "user_correction",
+      "resolution_event": {
+        "resolution_event_id": "v17h-resolution-0d3c7642cb11bd4a",
+        "user_correction": "Treat live pruning as a future projection-only candidate until explicit review exists.",
+        "correction_authoritative": false,
+        "requires_future_review": true
+      }
+    },
+    {
+      "turn": 5,
+      "kind": "memory_candidate_pressure",
+      "memory_candidate_proposal": {
+        "memory_candidate_id": "v17h-memory-candidate-b9105aef201322bc",
+        "candidate_text": "Treat live pruning as a future projection-only candidate until explicit review exists.",
+        "created_from_user_correction": true,
+        "canonical_write_performed": false,
+        "requires_explicit_approval": true
+      }
+    },
+    {
+      "turn": 6,
+      "kind": "answer_synthesis_draft",
+      "draft": {
+        "draft_id": "v17g-draft-9cdcab1c02bafb4f",
+        "answer_text": "I cannot answer that from local DELTA evidence yet. The next safe path is evidence acquisition or manual review, not a confident answer.",
+        "confidence_label": "unsupported_unknown",
+        "uncertainty_note": "No local authoritative evidence is available.",
+        "provenance_summary": [
+          "Runtime V1.7C",
+          "Runtime V1.7D"
+        ]
+      },
+      "safety_review": {
+        "safety_review_id": "v17g-safety-a3fda99c53e7dfd7",
+        "provider_not_authority": true,
+        "recall_candidate_only": true,
+        "no_memory_write": true,
+        "no_recall_mutation": true,
+        "no_training": true,
+        "safe": true
+      }
+    }
+  ],
+  "safety_summary": {
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "hyb1_default_activation_enabled": false
+  },
+  "invariant_flags": {
+    "multi_turn_unknown_resolution_demo_enabled": true,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "scheduler_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_EVIDENCE_QUALITY_EVALUATION_HARNESS"
+}

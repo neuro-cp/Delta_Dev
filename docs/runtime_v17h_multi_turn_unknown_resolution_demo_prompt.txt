@@ -1,0 +1,3 @@
+Runtime V1.7H - Multi-Turn Unknown Resolution Demo
+
+Local deterministic demo only. Shows local known handling, local unknown handling, provider dry-run request, user correction, resolution event, memory candidate pressure, and answer synthesis. No provider call by default, no memory write, no recall mutation, no training, no action execution, no HYB1 activation, no scheduler.

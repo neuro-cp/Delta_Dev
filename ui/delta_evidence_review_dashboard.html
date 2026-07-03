@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DELTA Evidence Review Dashboard</title>
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 24px; background: #f7f8fa; color: #202124; line-height: 1.45; }
+    header, section { background: white; border: 1px solid #d9dde3; border-radius: 8px; padding: 16px; margin-bottom: 14px; }
+    .badge { display: inline-block; border: 1px solid #c9ced6; border-radius: 999px; padding: 2px 8px; margin: 2px 4px 2px 0; font-size: 12px; }
+    code { background: #f1f3f4; padding: 1px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DELTA Evidence Review Dashboard</h1>
+    <p>Static evidence review only. Provider, specialist, evaluator, and recall entries are not authority and do not write memory.</p>
+  </header>
+  <section>
+  <h2>Local Answer Evidence</h2>
+  <span class="badge">local_answer</span>
+  <span class="badge">local_non_mutating</span>
+  <span class="badge">Evidence only / not authority</span>
+  <p>Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it.</p>
+  <p><strong>Provenance:</strong> <code>orchestration.runtime.v15_local_knowledge_router</code></p>
+  <p><strong>Confidence:</strong> repo-local deterministic</p>
+  <p><strong>Live call occurred:</strong> <code>false</code>; <strong>key redacted:</strong> <code>true</code></p>
+  <p><strong>Next action:</strong> <code>usable_as_local_scaffold_answer</code></p>
+</section>
+<section>
+  <h2>Recall Candidate Evidence</h2>
+  <span class="badge">recall_candidate_context</span>
+  <span class="badge">candidate_context_only</span>
+  <span class="badge">Evidence only / not authority</span>
+  <p>HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.</p>
+  <p><strong>Provenance:</strong> <code>v15i-canonical-trial-record-f97e30a731f4638c</code></p>
+  <p><strong>Confidence:</strong> candidate-context only</p>
+  <p><strong>Live call occurred:</strong> <code>false</code>; <strong>key redacted:</strong> <code>true</code></p>
+  <p><strong>Next action:</strong> <code>inspect_as_candidate_context</code></p>
+</section>
+<section>
+  <h2>Recall Candidate Evidence</h2>
+  <span class="badge">recall_candidate_context</span>
+  <span class="badge">candidate_context_only</span>
+  <span class="badge">Evidence only / not authority</span>
+  <p>Model B remains default and HYB1 remains dormant/env-gated.</p>
+  <p><strong>Provenance:</strong> <code>static-local-router</code></p>
+  <p><strong>Confidence:</strong> candidate-context only</p>
+  <p><strong>Live call occurred:</strong> <code>false</code>; <strong>key redacted:</strong> <code>true</code></p>
+  <p><strong>Next action:</strong> <code>inspect_as_candidate_context</code></p>
+</section>
+<section>
+  <h2>Provider-Assisted Unknown Evidence Packet</h2>
+  <span class="badge">provider_evidence_packet</span>
+  <span class="badge">evidence_only_not_authority</span>
+  <span class="badge">Evidence only / not authority</span>
+  <p>Dry-run provider request for model gpt-4.1-mini; no provider response was treated as truth.</p>
+  <p><strong>Provenance:</strong> <code>Runtime V1.7C dry-run provider request</code></p>
+  <p><strong>Confidence:</strong> evidence-only dry-run</p>
+  <p><strong>Live call occurred:</strong> <code>false</code>; <strong>key redacted:</strong> <code>true</code></p>
+  <p><strong>Next action:</strong> <code>manual_review_before_any_live_call</code></p>
+</section>
+<section>
+  <h2>Specialist Evidence Packet</h2>
+  <span class="badge">specialist_evidence_packet</span>
+  <span class="badge">evidence_only_not_authority</span>
+  <span class="badge">Evidence only / not authority</span>
+  <p>Dry-run specialist request for domain general; specialist output is evidence only.</p>
+  <p><strong>Provenance:</strong> <code>Runtime V1.7D dry-run specialist request</code></p>
+  <p><strong>Confidence:</strong> specialist evidence only</p>
+  <p><strong>Live call occurred:</strong> <code>false</code>; <strong>key redacted:</strong> <code>true</code></p>
+  <p><strong>Next action:</strong> <code>manual_review_before_specialist_merge</code></p>
+</section>
+<section>
+  <h2>Evaluator Advisory Review</h2>
+  <span class="badge">evaluator_advisory_review</span>
+  <span class="badge">advisory_only_not_authority</span>
+  <span class="badge">Evidence only / not authority</span>
+  <p>Disposition: not_run; risk: none; rationale: No evaluator response was requested or available.</p>
+  <p><strong>Provenance:</strong> <code>reports\runtime_v16c_daily_external_consolidation_evaluator_api_trial.json</code></p>
+  <p><strong>Confidence:</strong> advisory only</p>
+  <p><strong>Live call occurred:</strong> <code>false</code>; <strong>key redacted:</strong> <code>true</code></p>
+  <p><strong>Next action:</strong> <code>advisory_review_only</code></p>
+</section>
+</body>
+</html>

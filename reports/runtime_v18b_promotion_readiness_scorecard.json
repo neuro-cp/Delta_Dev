@@ -1,0 +1,301 @@
+{
+  "phase": "Runtime V1.8B",
+  "scorecards": [
+    {
+      "scorecard_id": "v18b-scorecard-edcca471267be30d",
+      "target": {
+        "target_id": "v18b-target-0b5038e79db09063",
+        "name": "limited_general_recall",
+        "evidence_count": 3,
+        "safety_blocked": false,
+        "design_only": false,
+        "invariant_blocked": false
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-d24a640e853b6fdc",
+          "name": "evidence_present",
+          "passed": true,
+          "rationale": "Evidence count: 3"
+        },
+        {
+          "metric_id": "v18b-metric-2bf58fa9ce5880d3",
+          "name": "safety_not_blocked",
+          "passed": true,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-e3d9836c6876d72b",
+          "name": "invariant_not_blocked",
+          "passed": true,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [],
+      "decision": {
+        "decision_id": "v18b-decision-280271de62ce4a99",
+        "outcome": "ready_for_human_review",
+        "promoted": false
+      }
+    },
+    {
+      "scorecard_id": "v18b-scorecard-dd6efa839ad1256d",
+      "target": {
+        "target_id": "v18b-target-47823b4861b49238",
+        "name": "controlled_provider_assisted_unknown_answering",
+        "evidence_count": 2,
+        "safety_blocked": false,
+        "design_only": false,
+        "invariant_blocked": false
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-ba4b6273a6238a7d",
+          "name": "evidence_present",
+          "passed": true,
+          "rationale": "Evidence count: 2"
+        },
+        {
+          "metric_id": "v18b-metric-b6b481cf0fc6fcf5",
+          "name": "safety_not_blocked",
+          "passed": true,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-a5523bbb63ee223d",
+          "name": "invariant_not_blocked",
+          "passed": true,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [],
+      "decision": {
+        "decision_id": "v18b-decision-26019ad989c71fae",
+        "outcome": "ready_for_human_review",
+        "promoted": false
+      }
+    },
+    {
+      "scorecard_id": "v18b-scorecard-e3d534f02b15e834",
+      "target": {
+        "target_id": "v18b-target-ace72b3572c18de8",
+        "name": "specialist_evidence_acquisition",
+        "evidence_count": 1,
+        "safety_blocked": false,
+        "design_only": false,
+        "invariant_blocked": false
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-3e0d0e82eb2cac55",
+          "name": "evidence_present",
+          "passed": true,
+          "rationale": "Evidence count: 1"
+        },
+        {
+          "metric_id": "v18b-metric-136077b0b11a07a9",
+          "name": "safety_not_blocked",
+          "passed": true,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-dbaf738b9251ab5d",
+          "name": "invariant_not_blocked",
+          "passed": true,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [],
+      "decision": {
+        "decision_id": "v18b-decision-d1d61df55fbd10f0",
+        "outcome": "ready_for_human_review",
+        "promoted": false
+      }
+    },
+    {
+      "scorecard_id": "v18b-scorecard-5d1d6fd0a41f8575",
+      "target": {
+        "target_id": "v18b-target-94e9181a5d7a8c08",
+        "name": "daily_evaluator_manual_run",
+        "evidence_count": 1,
+        "safety_blocked": false,
+        "design_only": false,
+        "invariant_blocked": false
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-133f70cc12c29e27",
+          "name": "evidence_present",
+          "passed": true,
+          "rationale": "Evidence count: 1"
+        },
+        {
+          "metric_id": "v18b-metric-87349d438cd2f7da",
+          "name": "safety_not_blocked",
+          "passed": true,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-c52519e5e902f6b2",
+          "name": "invariant_not_blocked",
+          "passed": true,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [],
+      "decision": {
+        "decision_id": "v18b-decision-7f7897599c98a162",
+        "outcome": "ready_for_human_review",
+        "promoted": false
+      }
+    },
+    {
+      "scorecard_id": "v18b-scorecard-cbc0700b74c43eb5",
+      "target": {
+        "target_id": "v18b-target-96e6d3ff3d2ad66e",
+        "name": "review_ui_export_flow",
+        "evidence_count": 3,
+        "safety_blocked": false,
+        "design_only": false,
+        "invariant_blocked": false
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-64a20641b4bb3187",
+          "name": "evidence_present",
+          "passed": true,
+          "rationale": "Evidence count: 3"
+        },
+        {
+          "metric_id": "v18b-metric-3b0c02211e4816dc",
+          "name": "safety_not_blocked",
+          "passed": true,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-dda373977a28aa8b",
+          "name": "invariant_not_blocked",
+          "passed": true,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [],
+      "decision": {
+        "decision_id": "v18b-decision-8ee6530e93dac973",
+        "outcome": "ready_for_human_review",
+        "promoted": false
+      }
+    },
+    {
+      "scorecard_id": "v18b-scorecard-e15e214bfe6ac1bd",
+      "target": {
+        "target_id": "v18b-target-a02ba163f3a02db2",
+        "name": "scheduler_activation_gate",
+        "evidence_count": 1,
+        "safety_blocked": true,
+        "design_only": true,
+        "invariant_blocked": false
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-3909b429ee63ac0a",
+          "name": "evidence_present",
+          "passed": true,
+          "rationale": "Evidence count: 1"
+        },
+        {
+          "metric_id": "v18b-metric-931eda3b221a7572",
+          "name": "safety_not_blocked",
+          "passed": false,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-2450cacabfa8a6e9",
+          "name": "invariant_not_blocked",
+          "passed": true,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [
+        {
+          "blocker_id": "v18b-blocker-0017fe21533045c3",
+          "kind": "design_only",
+          "rationale": "Target remains design-only."
+        }
+      ],
+      "decision": {
+        "decision_id": "v18b-decision-e2678283bb6ea8db",
+        "outcome": "design_only",
+        "promoted": false
+      }
+    },
+    {
+      "scorecard_id": "v18b-scorecard-d917807450b8eb1a",
+      "target": {
+        "target_id": "v18b-target-3db7222ff27c29ca",
+        "name": "HYB1_default_activation",
+        "evidence_count": 0,
+        "safety_blocked": true,
+        "design_only": false,
+        "invariant_blocked": true
+      },
+      "metrics": [
+        {
+          "metric_id": "v18b-metric-b444426a7178267a",
+          "name": "evidence_present",
+          "passed": false,
+          "rationale": "Evidence count: 0"
+        },
+        {
+          "metric_id": "v18b-metric-f0a4fab5d3d3d63e",
+          "name": "safety_not_blocked",
+          "passed": false,
+          "rationale": "Safety gate must not be blocked."
+        },
+        {
+          "metric_id": "v18b-metric-e0d3e3e7d0770cdd",
+          "name": "invariant_not_blocked",
+          "passed": false,
+          "rationale": "Runtime invariants must remain satisfied."
+        }
+      ],
+      "blockers": [
+        {
+          "blocker_id": "v18b-blocker-e0d3e3e7d0770cdd",
+          "kind": "blocked_by_invariant",
+          "rationale": "Target conflicts with frozen invariants."
+        }
+      ],
+      "decision": {
+        "decision_id": "v18b-decision-108dd8967a178cf9",
+        "outcome": "blocked_by_invariant",
+        "promoted": false
+      }
+    }
+  ],
+  "audit_record": {
+    "audit_id": "v18b-audit-7902699be42c8a8e",
+    "target_count": 7,
+    "promotions_performed": false,
+    "safe": true
+  },
+  "report_entry": {
+    "report_entry_id": "v18b-entry-e830207eea5a7853",
+    "ready_for_human_review_count": 5,
+    "blocked_count": 1,
+    "design_only_count": 1
+  },
+  "invariant_flags": {
+    "promotion_readiness_scorecard_enabled": true,
+    "promotion_performed": false,
+    "memory_mutation_performed": false,
+    "provider_default_changed": false,
+    "scheduler_activated": false,
+    "training_triggered": false,
+    "hyb1_promoted": false,
+    "hyb1_default_activation_enabled": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_V17_V18_SAFETY_CLOSURE_REPORT",
+  "all_safe": true
+}

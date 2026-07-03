@@ -1,0 +1,3 @@
+Runtime V1.7G - Controlled Answer Synthesis
+
+Controlled synthesis combines local repo answers, candidate-context recall, provider evidence, specialist evidence, and evaluator advisory information with provenance and uncertainty. Synthesis is not truth, not memory writing, not training, not promotion, and not action execution.

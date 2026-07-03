@@ -1,0 +1,3 @@
+Runtime V1.7E - Provider / Specialist Evidence Review UI
+
+Static review UI only. Provider, specialist, evaluator, and recall outputs are displayed as evidence-only or advisory-only. No provider call, specialist call, memory write, recall mutation, training, scheduler, HYB1 promotion, or Model B default change is allowed.

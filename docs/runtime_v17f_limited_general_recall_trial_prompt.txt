@@ -1,0 +1,3 @@
+Runtime V1.7F - Limited General Recall Trial
+
+Controlled local recall trial. Recall remains candidate-context only and selects at most three records. No general memory activation, authoritative recall, provider call, memory write, recall mutation, training, scheduler, HYB1 promotion, or Model B default change is allowed.

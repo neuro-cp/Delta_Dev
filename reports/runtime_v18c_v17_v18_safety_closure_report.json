@@ -1,0 +1,139 @@
+{
+  "phase": "Runtime V1.8C",
+  "completed_phases": [
+    {
+      "phase": "V1.7E",
+      "name": "Provider / Specialist Evidence Review UI",
+      "status": "complete"
+    },
+    {
+      "phase": "V1.7F",
+      "name": "Limited General Recall Trial",
+      "status": "complete"
+    },
+    {
+      "phase": "V1.7G",
+      "name": "Controlled Answer Synthesis",
+      "status": "complete"
+    },
+    {
+      "phase": "V1.7H",
+      "name": "Multi-Turn Unknown Resolution Demo",
+      "status": "complete"
+    },
+    {
+      "phase": "V1.8A",
+      "name": "Evidence Quality Evaluation Harness",
+      "status": "complete"
+    },
+    {
+      "phase": "V1.8B",
+      "name": "Promotion Readiness Scorecard",
+      "status": "complete"
+    }
+  ],
+  "capability_status": {
+    "model_b": "default_unchanged",
+    "hyb1": "dormant_env_gated",
+    "memory": "candidate_context_and_explicit_trial_only",
+    "recall": "limited_candidate_context_only",
+    "provider": "dry_run_or_explicit_live_gate_evidence_only",
+    "specialist": "dry_run_or_explicit_live_gate_evidence_only",
+    "evaluator": "manual_or_gated_advisory_only",
+    "scheduler": "not_active",
+    "training": "not_active",
+    "action_execution": "not_active"
+  },
+  "active_capabilities": [
+    "static evidence review UI generation",
+    "limited candidate-context recall trial",
+    "controlled answer synthesis",
+    "multi-turn unknown resolution demo",
+    "evidence quality scorecards",
+    "promotion readiness review"
+  ],
+  "inactive_capabilities": [
+    "training",
+    "fine-tuning",
+    "model weight update",
+    "autonomous memory writes",
+    "authoritative general recall",
+    "scheduler/background worker",
+    "action execution",
+    "HYB1 default activation"
+  ],
+  "evidence_quality_summary": "V1.8A generated deterministic evidence quality scorecards for provenance, uncertainty, source roles, candidate/truth separation, conflict handling, unsupported fallback, and mutation safety.",
+  "promotion_readiness_summary": "V1.8B generated readiness classifications only; no promotion occurred.",
+  "known_limitations": [
+    "Recall remains candidate-context only.",
+    "Provider and specialist outputs remain evidence-only and require explicit live gates for real calls.",
+    "Memory writes still require exact explicit approval.",
+    "Promotion readiness is not promotion."
+  ],
+  "pipeline_view": [
+    "RAW INPUT / EXPERIENCE ADAPTER DESIGN",
+    "EPISODIC CAPTURE SCAFFOLD",
+    "STRUCTURAL SEMANTIC ADAPTER DESIGN",
+    "SEMANTIC SIGNAL TAGGING SCHEMA",
+    "CANDIDATE ENVELOPE SCHEMA",
+    "ANSWER TRACE / EVIDENCE TRACE",
+    "FEEDBACK CAPTURE",
+    "REPLAY MARKERS",
+    "REPLAY BATCHING",
+    "REPLAY REVIEW",
+    "CONSOLIDATION CANDIDATE",
+    "CONSOLIDATION DECISION",
+    "SLEEP-CYCLE PLAN",
+    "CANONICAL MEMORY DRAFT / RECORD DESIGN",
+    "CANONICAL STORE DECISION / PLAN",
+    "CANONICAL REVISION / ROLLBACK DESIGN",
+    "TEMPORARY PRUNING PROJECTION DESIGN",
+    "CONTROLLED LEARNING DESIGN",
+    "REPORT-ONLY HYPOTHESIS ARBITRATION",
+    "SPECIALIST RESULT MERGE PROTOCOL",
+    "RECALL BRIDGE DESIGN",
+    "ACTIVE SPECIALIST ROUTING DESIGN, GATED OFF BY DEFAULT",
+    "EXECUTION AUTHORIZATION DESIGN",
+    "ACTION LEDGER DESIGN",
+    "DRY-RUN ACTION EXECUTION DESIGN",
+    "MINIMAL RUNTIME UI / MESSAGE CONSOLE",
+    "MANUAL END-TO-END MESSAGE TESTING",
+    "TRAINING DATASET CANDIDATE / EXPORT DESIGN",
+    "OFFLINE EVALUATION HARNESS",
+    "TINY CONTROLLED TRAINING EXPERIMENT DESIGN",
+    "EXPLICIT SCHEDULER ACTIVATION GATE",
+    "DAILY EVALUATOR MANUAL-RUN HARDENING",
+    "REVIEW UI APPROVAL / REJECTION EXPORT FLOW",
+    "MEMORY CANDIDATE EDIT / REJECT / DEFER LOOP",
+    "ROLLBACK TRIAL FOR CANONICAL MEMORY RECORD",
+    "LIMITED GENERAL RECALL ROUTER DESIGN",
+    "LOCAL MULTI-TURN SESSION STATE",
+    "CONTROLLED PROVIDER-ASSISTED UNKNOWN ANSWER PATH",
+    "SPECIALIST / SLM EVIDENCE ACQUISITION TRIAL",
+    "PROVIDER / SPECIALIST EVIDENCE REVIEW UI",
+    "LIMITED GENERAL RECALL TRIAL",
+    "CONTROLLED ANSWER SYNTHESIS",
+    "MULTI-TURN UNKNOWN RESOLUTION DEMO",
+    "EVIDENCE QUALITY EVALUATION HARNESS",
+    "PROMOTION READINESS SCORECARD"
+  ],
+  "next_recommended_phases": [
+    "V1.8D Local Review UI Iteration for Evidence Quality",
+    "V1.8E Manual Provider Live Trial, if explicitly requested",
+    "V1.8F Scheduler Activation Trial, if explicitly requested",
+    "V1.9A Controlled General Memory / Recall Expansion",
+    "V1.9B UX-first Local DELTA Console"
+  ],
+  "safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "training_performed": false,
+    "action_execution_performed": false,
+    "autonomous_memory_write_performed": false,
+    "general_memory_activation": false,
+    "authoritative_general_recall": false,
+    "scheduler_started": false,
+    "provider_specialist_evaluator_authority_transfer": false
+  },
+  "final_recommendation": "PROCEED_LOCAL_REVIEW_UI_ITERATION_OR_MANUAL_PROVIDER_LIVE_TRIAL"
+}
