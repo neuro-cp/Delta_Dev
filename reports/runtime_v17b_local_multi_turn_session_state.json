@@ -1,0 +1,88 @@
+{
+  "phase": "Runtime V1.7B",
+  "first": {
+    "phase": "Runtime V1.7B",
+    "session": {
+      "session_id": "v17b-report-session",
+      "turns": [
+        {
+          "turn_id": "v17b-turn-a33daeec617d9885",
+          "user_message": "What is Model B?",
+          "response_text": "Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it."
+        }
+      ],
+      "non_canonical": true,
+      "ephemeral": true
+    },
+    "context_window": {
+      "turn_count": 1,
+      "summary": "What is Model B?"
+    },
+    "safety_status": {
+      "non_canonical": true,
+      "canonical_write_performed": false,
+      "recall_mutated": false,
+      "provider_call_performed": false
+    },
+    "invariant_flags": {
+      "local_session_state_enabled": true,
+      "ephemeral_non_canonical": true,
+      "canonical_write_performed": false,
+      "memory_write_performed": false,
+      "recall_mutated": false,
+      "provider_call_performed": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_CONTROLLED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_PATH"
+  },
+  "second": {
+    "phase": "Runtime V1.7B",
+    "session": {
+      "session_id": "v17b-report-session",
+      "turns": [
+        {
+          "turn_id": "v17b-turn-a33daeec617d9885",
+          "user_message": "What is Model B?",
+          "response_text": "Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it."
+        },
+        {
+          "turn_id": "v17b-turn-a6ce93d06e5ec2f8",
+          "user_message": "Is HYB1 active?",
+          "response_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true."
+        }
+      ],
+      "non_canonical": true,
+      "ephemeral": true
+    },
+    "context_window": {
+      "turn_count": 2,
+      "summary": "What is Model B? | Is HYB1 active?"
+    },
+    "safety_status": {
+      "non_canonical": true,
+      "canonical_write_performed": false,
+      "recall_mutated": false,
+      "provider_call_performed": false
+    },
+    "invariant_flags": {
+      "local_session_state_enabled": true,
+      "ephemeral_non_canonical": true,
+      "canonical_write_performed": false,
+      "memory_write_performed": false,
+      "recall_mutated": false,
+      "provider_call_performed": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_CONTROLLED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_PATH"
+  },
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CONTROLLED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_PATH"
+}

@@ -1,0 +1,9 @@
+Runtime V1.7C - Controlled Provider-Assisted Unknown Answer Path
+
+Purpose:
+Create a controlled manual provider-assisted path for unknown questions.
+
+Known local questions stay local. Unknown questions dry-run provider requests by default. Live provider calls require env gates and CLI flag. Provider responses are evidence packets only and never truth, memory, training, action, recall mutation, HYB1 activation, or Model B change.
+
+Final recommendation:
+PROCEED_SPECIALIST_SLM_EVIDENCE_ACQUISITION_TRIAL

@@ -1,0 +1,9 @@
+Runtime V1.6G - Daily Evaluator Manual-Run Hardening
+
+Purpose:
+Harden the manual one-shot evaluator run before any scheduler can exist.
+
+Dry-run remains default. Live requires explicit flag and env gates. The run is advisory only and does not schedule, train, write memory, mutate recall, execute actions, activate HYB1, or change Model B.
+
+Final recommendation:
+PROCEED_REVIEW_UI_APPROVAL_REJECTION_EXPORT_FLOW

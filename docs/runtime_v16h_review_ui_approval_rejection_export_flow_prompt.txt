@@ -1,0 +1,9 @@
+Runtime V1.6H - Review UI Approval / Rejection Export Flow
+
+Purpose:
+Generate structured text-only approval, rejection, and defer exports for local review.
+
+This phase does not execute writes, infer casual approval, call providers, mutate recall, train, execute actions, activate HYB1, or change Model B.
+
+Final recommendation:
+PROCEED_MEMORY_CANDIDATE_EDIT_REJECT_DEFER_LOOP

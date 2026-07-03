@@ -1,0 +1,9 @@
+Runtime V1.7A - Limited General Recall Router Design
+
+Purpose:
+Design a limited general recall router over approved local sources while remaining candidate-context only.
+
+Disallowed: provider output as authority, unapproved/rejected/rolled-back records as truth, memory writes, recall mutation, training, HYB1 activation, and Model B changes.
+
+Final recommendation:
+PROCEED_LOCAL_MULTI_TURN_SESSION_STATE

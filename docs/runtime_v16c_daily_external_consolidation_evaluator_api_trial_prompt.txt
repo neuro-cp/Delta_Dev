@@ -1,0 +1,16 @@
+Runtime V1.6C - Daily External Consolidation Evaluator API Trial
+
+Purpose:
+Run a manual one-shot external evaluator API trial if and only if `.env.local` explicitly permits a live evaluator call.
+
+Boundaries:
+- Manual one-shot only.
+- No scheduler, background worker, listener, timer, or queue.
+- Evaluator result is not authority.
+- Evaluator result is not canonical memory.
+- Evaluator result is not training data.
+- No memory writes, canonical writes, recall mutation, training, action execution, autonomous approval, or HYB1 promotion.
+- Gracefully skip when evaluator env is not explicitly enabled.
+
+Final recommendation:
+PROCEED_LOCAL_REVIEW_UI_OR_SCHEDULED_EVALUATOR_DESIGN

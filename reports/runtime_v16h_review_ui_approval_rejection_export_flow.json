@@ -1,0 +1,55 @@
+{
+  "phase": "Runtime V1.6H",
+  "request": {
+    "request_id": "v16h-export-request-fed53ee6b0ddd474",
+    "candidate_id": "candidate-1"
+  },
+  "exports": [
+    {
+      "export_id": "v16h-export-f00f6ba80ac294a9",
+      "kind": "approval",
+      "candidate_id": "candidate-1",
+      "export_text": "APPROVE_CANONICAL_MEMORY_WRITE\ncandidate_id=candidate-1\napproved_by=user\napproval_scope=single_memory_candidate_only",
+      "executed": false,
+      "mutating": false
+    },
+    {
+      "export_id": "v16h-export-edf156a091786866",
+      "kind": "rejection",
+      "candidate_id": "candidate-1",
+      "export_text": "REJECT_MEMORY_CANDIDATE\ncandidate_id=candidate-1\nrejected_by=user\nrejection_scope=single_memory_candidate_only",
+      "executed": false,
+      "mutating": false
+    },
+    {
+      "export_id": "v16h-export-15687b60c1584731",
+      "kind": "defer",
+      "candidate_id": "candidate-1",
+      "export_text": "DEFER_MEMORY_CANDIDATE\ncandidate_id=candidate-1\ndeferred_by=user\ndefer_scope=single_memory_candidate_only",
+      "executed": false,
+      "mutating": false
+    }
+  ],
+  "safety_status": {
+    "safety_status_id": "v16h-export-safety-fed53ee6b0ddd474",
+    "mutating": false,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false
+  },
+  "invariant_flags": {
+    "review_ui_export_enabled": true,
+    "memory_write_performed": false,
+    "canonical_write_performed": false,
+    "recall_mutated": false,
+    "provider_call_performed": false,
+    "training_triggered": false,
+    "action_execution_performed": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_MEMORY_CANDIDATE_EDIT_REJECT_DEFER_LOOP",
+  "export_safe": true
+}

@@ -1,0 +1,16 @@
+Runtime V1.6E - Scheduled Daily Evaluator Design
+
+Purpose:
+Design the future daily evaluator schedule without activating an actual scheduler.
+
+Boundaries:
+- No scheduler.
+- No Windows scheduled task.
+- No cron entry.
+- No background worker, timer, listener, or queue.
+- No evaluator API call during design.
+- No memory writes, canonical writes, recall mutation, action execution, training, or HYB1 promotion.
+- Manual run command is text only.
+
+Final recommendation:
+PROCEED_EXPLICIT_SCHEDULER_ACTIVATION_OR_LOCAL_REVIEW_UI_ITERATION

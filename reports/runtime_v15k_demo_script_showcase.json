@@ -1,0 +1,451 @@
+{
+  "phase": "Runtime V1.5K",
+  "title": "Demo Script / Showcase Report",
+  "status": "deterministic_local_showcase_no_mutation",
+  "local_answer": {
+    "request": {
+      "request_id": "first-interaction-request-d73fc0631202954c",
+      "user_message": "What is DELTA's current replay and consolidation path?",
+      "source": "manual_console",
+      "one_shot": true,
+      "auto_ingest": false,
+      "training_example": false,
+      "memory_write_requested": false,
+      "provider_call_requested": false,
+      "action_execution_requested": false,
+      "created_at": "2026-07-03T04:31:27.567124+00:00"
+    },
+    "gate_status": {
+      "gate_status_id": "first-interaction-gate-0cdf8e55ac33dd88",
+      "runtime_console_gate_open": true,
+      "allowed_components": [
+        "manual console message",
+        "raw experience preview",
+        "semantic preview",
+        "trace/safety output",
+        "deterministic response preview"
+      ],
+      "blocked_components": [
+        "provider calls",
+        "tool calls",
+        "memory writes",
+        "canonical writes",
+        "recall mutation",
+        "HYB1 default activation",
+        "specialist routing",
+        "action execution",
+        "training",
+        "dataset export",
+        "schedulers"
+      ],
+      "model_b_default_preserved": true,
+      "hyb1_default_activation_enabled": false,
+      "provider_calls_enabled": false,
+      "memory_writes_enabled": false,
+      "action_execution_enabled": false,
+      "training_enabled": false
+    },
+    "console_preview": {
+      "preview_id": "runtime-console-preview-38a3abdbd6bd43b9",
+      "console_input": {
+        "console_input_id": "runtime-console-input-d944aa88b465ff57",
+        "user_message": "What is DELTA's current replay and consolidation path?",
+        "source_reference": "manual-v15-first-interaction",
+        "lane_scope": [
+          "manual_inspection"
+        ],
+        "created_at": "2026-07-03T04:31:27.567124+00:00"
+      },
+      "input_summary": {
+        "message_length": 54,
+        "source_reference": "manual-v15-first-interaction",
+        "lane_scope": [
+          "manual_inspection"
+        ]
+      },
+      "experience_record_summary": {
+        "record_id": "experience-record-81145bbd7824e777",
+        "eligible_for_semantic_adapter": true,
+        "memory": false,
+        "canonical": false,
+        "learned": false,
+        "active": false
+      },
+      "semantic_frame_summary": {
+        "frame_id": "semantic-frame-1cccb528854213c9",
+        "frame_type": "question",
+        "normalized_summary": "What is DELTA's current replay and consolidation path?",
+        "canonical": false,
+        "learned": false,
+        "active": false
+      },
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-e09da1452a82b45b",
+        "raw_input_id": "raw-experience-cff2e001fab6b112",
+        "experience_record_id": "experience-record-81145bbd7824e777",
+        "normalization_decision_id": "experience-decision-925534e449949d5d",
+        "structural_unit_id": "structural-input-91eb25c983f39807",
+        "semantic_frame_id": "semantic-frame-1cccb528854213c9",
+        "semantic_signal_id": "semantic-signal-9f3ed6fbecb5ad67",
+        "semantic_decision_id": "semantic-adapter-decision-77b5029978e79346",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-21e071de8cc4781e",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "placeholder_response": "Runtime console preview only. No provider, memory, training, recall, or execution path was used."
+    },
+    "safety_status": {
+      "safety_status_id": "first-interaction-safety-0cdf8e55ac33dd88",
+      "request_id": "first-interaction-request-d73fc0631202954c",
+      "provider_calls_enabled": false,
+      "tool_calls_enabled": false,
+      "memory_mutation_enabled": false,
+      "canonical_write_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "hyb1_default_activation_enabled": false,
+      "specialist_routing_enabled": false,
+      "action_execution_enabled": false,
+      "training_enabled": false,
+      "scheduler_enabled": false,
+      "side_effects_created": false
+    },
+    "response_preview": {
+      "response_preview_id": "first-interaction-response-173714f89d903e6b",
+      "request_id": "first-interaction-request-d73fc0631202954c",
+      "response_text": "DELTA's current replay and consolidation path is: manual/raw message -> experience boundary/record -> episodic feedback capture -> replay markers/batches -> replay review -> consolidation candidate -> consolidation decision -> sleep-cycle plan -> canonical memory draft/record design. Canonical writes remain disabled.",
+      "response_mode": "local_architecture_summary",
+      "uncertainty_note": "This is a deterministic local scaffold summary, not provider reasoning or active recall.",
+      "evidence_summary": "local_report_summary: V1.4D/V1.4E/V1.4F scaffold reports and V1.5D first interaction template",
+      "deterministic_local": true,
+      "provider_generated": false,
+      "model_default_changed": false
+    },
+    "trace": {
+      "trace_id": "first-interaction-trace-7d9f090b3f2aaa65",
+      "request_id": "first-interaction-request-d73fc0631202954c",
+      "experience_preview_id": "experience-record-81145bbd7824e777",
+      "semantic_preview_id": "semantic-frame-1cccb528854213c9",
+      "safety_status_id": "first-interaction-safety-0cdf8e55ac33dd88",
+      "response_preview_id": "first-interaction-response-173714f89d903e6b",
+      "generated_for_manual_interaction": true,
+      "persisted_to_memory": false,
+      "persisted_to_canonical_store": false,
+      "provider_called": false,
+      "action_executed": false,
+      "training_triggered": false
+    },
+    "result": {
+      "result_id": "first-interaction-result-32da5712cb260188",
+      "request_id": "first-interaction-request-d73fc0631202954c",
+      "trace_id": "first-interaction-trace-7d9f090b3f2aaa65",
+      "response_preview_id": "first-interaction-response-173714f89d903e6b",
+      "safety_status_id": "first-interaction-safety-0cdf8e55ac33dd88",
+      "completed": true,
+      "manual_only": true,
+      "local_only": true,
+      "deterministic_only": true,
+      "provider_called": false,
+      "action_executed": false,
+      "memory_mutated": false,
+      "training_triggered": false,
+      "side_effects_created": false
+    },
+    "report_entry": {
+      "report_entry_id": "first-interaction-entry-32bc599a85848411",
+      "result_id": "first-interaction-result-32da5712cb260188",
+      "request_summary": "What is DELTA's current replay and consolidation path?",
+      "gate_summary": "only runtime console gate open",
+      "trace_summary": "experience and semantic preview generated without persistence",
+      "response_summary": "local_architecture_summary",
+      "safety_summary": "provider/tool/action/memory/training paths disabled",
+      "unresolved_gaps": [
+        "retrieval not active",
+        "provider reasoning not active",
+        "memory writes disabled"
+      ],
+      "recommended_next_review_step": "V1.5E HYB1 limited opt-in trial design",
+      "generated_for_review_only": true
+    },
+    "invariant_flags": {
+      "first_live_console_interaction_enabled": true,
+      "runtime_console_gate_open": true,
+      "only_runtime_console_gate_open": true,
+      "provider_calls_enabled": false,
+      "tool_calls_enabled": false,
+      "memory_mutation_enabled": false,
+      "canonical_write_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "hyb1_default_activation_enabled": false,
+      "model_b_default_changed": false,
+      "specialist_routing_enabled": false,
+      "action_execution_enabled": false,
+      "dry_run_action_execution_enabled": false,
+      "training_enabled": false,
+      "dataset_export_enabled": false,
+      "scheduler_enabled": false,
+      "background_ingestion_enabled": false,
+      "runtime_defaults_changed": false
+    }
+  },
+  "feedback_case": {
+    "interaction": {
+      "interaction_id": "feedback-interaction-6881ce2abac71bca",
+      "original_question": "What is HYB1?",
+      "original_answer_summary": "HYB1 is active.",
+      "user_feedback": "No, HYB1 is dormant and environment-gated. Model B remains default.",
+      "source": "manual_console",
+      "one_shot": true,
+      "auto_ingest": false,
+      "training_example": false
+    },
+    "feedback_signal": {
+      "feedback_signal_id": "feedback-signal-8e6537b4a2321576",
+      "interaction_id": "feedback-interaction-6881ce2abac71bca",
+      "signal_type": "correction",
+      "signal_summary": "No, HYB1 is dormant and environment-gated. Model B remains default.",
+      "confidence_label": "local_correction_signal",
+      "generated_for_review_only": true
+    },
+    "memory_candidate": {
+      "memory_candidate_id": "memory-candidate-24ab2bf25b90d309",
+      "feedback_signal_id": "feedback-signal-8e6537b4a2321576",
+      "proposed_memory_text": "Review candidate from correction: No, HYB1 is dormant and environment-gated. Model B remains default.",
+      "scope": "delta_runtime_self_knowledge_review",
+      "provenance_reference_ids": [
+        "feedback-interaction-6881ce2abac71bca",
+        "feedback-signal-8e6537b4a2321576"
+      ],
+      "human_approval_required": true,
+      "canonical_write_ready": false,
+      "approved": false,
+      "written": false
+    },
+    "safety_review": {
+      "review_id": "memory-candidate-review-1bc94a9c0f551901",
+      "memory_candidate_id": "memory-candidate-24ab2bf25b90d309",
+      "safety_status": "human_review_required",
+      "risk_notes": [
+        "canonical write disabled",
+        "human approval required",
+        "feedback signal is not truth"
+      ],
+      "ambiguity_notes": [],
+      "sarcasm_notes": [],
+      "required_before_write": true,
+      "approved": false
+    },
+    "approval_requirement": {
+      "requirement_id": "memory-candidate-approval-d8c35d544f63cba2",
+      "memory_candidate_id": "memory-candidate-24ab2bf25b90d309",
+      "required_actor": "human_operator",
+      "approval_reason": "Canonical memory writes require explicit human approval in a later write trial.",
+      "satisfied": false,
+      "approval_present": false
+    },
+    "decision": {
+      "decision_id": "memory-candidate-decision-4d4e9ffb04878fe1",
+      "memory_candidate_id": "memory-candidate-24ab2bf25b90d309",
+      "outcome": "eligible_for_future_human_approved_write_trial",
+      "rationale": "Signal can create candidate pressure only; human approval and future write trial are required.",
+      "applied": false,
+      "canonical_write_triggered": false,
+      "training_triggered": false
+    },
+    "audit_record": {
+      "audit_id": "memory-candidate-audit-6bc43f8d8034490e",
+      "memory_candidate_id": "memory-candidate-24ab2bf25b90d309",
+      "feedback_signal_id": "feedback-signal-8e6537b4a2321576",
+      "decision_id": "memory-candidate-decision-4d4e9ffb04878fe1",
+      "audit_summary": "Review-only memory candidate proposal; no canonical write, recall mutation, or training occurred.",
+      "generated_for_review_only": true,
+      "persisted_to_canonical_store": false,
+      "memory_written": false,
+      "training_triggered": false
+    },
+    "report_entry": {
+      "report_entry_id": "memory-candidate-entry-d8c35d544f63cba2",
+      "memory_candidate_id": "memory-candidate-24ab2bf25b90d309",
+      "feedback_summary": "correction: No, HYB1 is dormant and environment-gated. Model B remains default.",
+      "proposal_summary": "Review candidate from correction: No, HYB1 is dormant and environment-gated. Model B remains default.",
+      "safety_summary": "human_review_required",
+      "approval_summary": "human approval required and absent by default",
+      "decision_summary": "eligible_for_future_human_approved_write_trial",
+      "unresolved_gaps": [
+        "human approval absent",
+        "canonical write disabled",
+        "recall mutation disabled"
+      ],
+      "recommended_next_review_step": "V1.5H human-approved canonical memory write trial design",
+      "generated_for_review_only": true
+    },
+    "invariant_flags": {
+      "feedback_memory_candidate_enabled": true,
+      "review_only_candidate_generation_enabled": true,
+      "provider_calls_enabled": false,
+      "tool_calls_enabled": false,
+      "action_execution_enabled": false,
+      "memory_mutation_enabled": false,
+      "canonical_write_enabled": false,
+      "canonical_write_performed": false,
+      "runtime_recall_mutation_enabled": false,
+      "training_enabled": false,
+      "dataset_export_enabled": false,
+      "hyb1_default_activation_enabled": false,
+      "model_b_default_changed": false,
+      "scheduler_enabled": false,
+      "background_listener_enabled": false,
+      "runtime_defaults_changed": false
+    }
+  },
+  "recall_payload": {
+    "query": "What is the status of HYB1 and Model B?",
+    "candidate_context": {
+      "context_id": "v15j-recall-context-4eb7bd0980fa1c2c",
+      "canonical_record_id": "v15i-canonical-trial-record-f97e30a731f4638c",
+      "memory_candidate_id": "memory-candidate-190c09d70ee06bfa",
+      "record_text": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+      "lane": "delta_runtime_self_knowledge",
+      "provenance_reference_ids": [
+        "feedback-interaction-c7e90ca8adc975f4",
+        "feedback-signal-64cc56d12f2395d6"
+      ],
+      "audit_reference_id": "v15i-canonical-trial-audit-d8d18f24abdd5a95",
+      "rollback_reference_id": "v15i-canonical-trial-rollback-59f26aedb2f01b49",
+      "candidate_context_only": true,
+      "authoritative_answer": false,
+      "truth_claim": false,
+      "active_for_recall": false
+    },
+    "result": {
+      "result_id": "v15j-recall-result-2cf8ed75e156bddc",
+      "outcome": "candidate_context_available",
+      "query": "What is the status of HYB1 and Model B?",
+      "context_id": "v15j-recall-context-4eb7bd0980fa1c2c",
+      "response": "Candidate context only: HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline. This is not an authoritative answer and does not activate general recall.",
+      "candidate_context_returned": true,
+      "authoritative_answer": false,
+      "truth_claim": false,
+      "recall_mutated": false,
+      "provider_calls_performed": false,
+      "tool_calls_performed": false,
+      "action_execution_performed": false,
+      "training_triggered": false,
+      "hyb1_default_activation_enabled": false,
+      "model_b_default_changed": false
+    },
+    "invariant_flags": {
+      "limited_trial_enabled": true,
+      "candidate_context_only": true,
+      "general_memory_enabled": false,
+      "general_recall_enabled": false,
+      "active_canonical_memory_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "provider_calls_enabled": false,
+      "tool_calls_enabled": false,
+      "action_execution_enabled": false,
+      "training_enabled": false,
+      "fine_tuning_enabled": false,
+      "weight_update_enabled": false,
+      "dataset_export_enabled": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false,
+      "scheduler_enabled": false,
+      "background_listener_enabled": false,
+      "runtime_defaults_changed": false
+    }
+  },
+  "showcase_steps": [
+    {
+      "step_id": "v15k-showcase-step-0418104a461267c2",
+      "step_name": "local_answer",
+      "summary": "local_architecture_summary",
+      "status": "safe",
+      "provider_calls_performed": false,
+      "tool_calls_performed": false,
+      "action_execution_performed": false,
+      "memory_write_performed": false,
+      "canonical_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false
+    },
+    {
+      "step_id": "v15k-showcase-step-227abc25450c7e59",
+      "step_name": "feedback_candidate_preview",
+      "summary": "Review candidate from correction: No, HYB1 is dormant and environment-gated. Model B remains default.",
+      "status": "safe",
+      "provider_calls_performed": false,
+      "tool_calls_performed": false,
+      "action_execution_performed": false,
+      "memory_write_performed": false,
+      "canonical_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false
+    },
+    {
+      "step_id": "v15k-showcase-step-0b5038e79db09063",
+      "step_name": "limited_recall_candidate_context",
+      "summary": "candidate_context_available",
+      "status": "safe",
+      "provider_calls_performed": false,
+      "tool_calls_performed": false,
+      "action_execution_performed": false,
+      "memory_write_performed": false,
+      "canonical_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false
+    }
+  ],
+  "all_steps_safe": true,
+  "invariant_flags": {
+    "demo_showcase_enabled": true,
+    "report_only": true,
+    "provider_calls_enabled": false,
+    "tool_calls_enabled": false,
+    "action_execution_enabled": false,
+    "memory_write_enabled": false,
+    "canonical_write_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "general_recall_enabled": false,
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "dataset_export_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false,
+    "scheduler_enabled": false,
+    "background_listener_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "final_recommendation": "PROCEED_VALIDATED_EXPERIENCE_LEARNING_LOOP",
+  "showcase_safe": true
+}

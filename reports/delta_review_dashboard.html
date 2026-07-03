@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>DELTA Local Review Dashboard</title>
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; margin: 24px; line-height: 1.45; color: #202124; background: #f7f8fa; }
+    header, section { background: #fff; border: 1px solid #d9dde3; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    h1, h2, h3 { margin-top: 0; }
+    code, pre { background: #f1f3f4; padding: 2px 4px; border-radius: 4px; }
+    pre { padding: 12px; overflow: auto; }
+    .badge { display: inline-block; border: 1px solid #c9ced6; border-radius: 999px; padding: 2px 8px; margin-right: 6px; font-size: 12px; }
+    .item { border-top: 1px solid #eceff3; padding-top: 12px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>DELTA Local Review Dashboard</h1>
+    <p>V1.6 local review dashboard over candidate-only records and advisory reports.</p>
+    <span class="badge">Model B remains the default runtime baseline.</span>
+    <span class="badge">HYB1 remains dormant/env-gated and is not promoted.</span>
+  </header>
+  <section>
+    <h2>Safety Boundaries</h2>
+    <p>This static file does not run a server, call providers, write memory, mutate recall, train, execute actions, or promote HYB1.</p>
+    <p>API key present: <code>True</code>; key is redacted and never rendered.</p>
+  </section>
+  <section>
+    <h2>Approval Format</h2>
+    <p>Copy this exact structure into the explicit write path only after review. Casual approval must not count.</p>
+    <pre>APPROVE_CANONICAL_MEMORY_WRITE
+candidate_id=&lt;candidate_id&gt;
+approved_by=user
+approval_scope=single_memory_candidate_only</pre>
+  </section>
+  <section>
+    <h2>Review Items</h2>
+
+<div class="item">
+  <h3>Pending Memory Candidate</h3>
+  <p><strong>Kind:</strong> <code>memory_candidate</code></p>
+  <p><strong>Source:</strong> <code>reports/runtime_v16a_validated_experience_learning_loop.json</code></p>
+  <p>No memory candidate should be written from ambiguous, sarcastic, rejected, or unknown feedback without review.</p>
+  <p><span class="badge">Not authority</span><span class="badge">Candidate only</span><span class="badge">No mutation</span></p>
+  <pre>APPROVE_CANONICAL_MEMORY_WRITE
+candidate_id=memory-candidate-6377a70ef496f3b5
+approved_by=user
+approval_scope=single_memory_candidate_only</pre>
+</div>
+
+
+<div class="item">
+  <h3>Existing Canonical Trial Record</h3>
+  <p><strong>Kind:</strong> <code>canonical_trial_record</code></p>
+  <p><strong>Source:</strong> <code>data\runtime_v15i\canonical_memory_trial_records.jsonl</code></p>
+  <p>HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.</p>
+  <p><span class="badge">Not authority</span><span class="badge">Candidate only</span><span class="badge">No mutation</span></p>
+  <pre>APPROVE_CANONICAL_MEMORY_WRITE
+candidate_id=memory-candidate-190c09d70ee06bfa
+approved_by=user
+approval_scope=single_memory_candidate_only</pre>
+</div>
+
+
+<div class="item">
+  <h3>Recall Candidate Context</h3>
+  <p><strong>Kind:</strong> <code>recall_context</code></p>
+  <p><strong>Source:</strong> <code>reports/runtime_v15j_recall_bridge_limited_trial.json</code></p>
+  <p>HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.</p>
+  <p><span class="badge">Not authority</span><span class="badge">Candidate only</span><span class="badge">No mutation</span></p>
+  <pre>Recall context is candidate-only and should not be approved from this dashboard.</pre>
+</div>
+
+
+<div class="item">
+  <h3>Evaluator Advisory Review</h3>
+  <p><strong>Kind:</strong> <code>evaluator_review</code></p>
+  <p><strong>Source:</strong> <code>reports/runtime_v16c_daily_external_consolidation_evaluator_api_trial.json</code></p>
+  <p>Disposition: not_run; risk: none; rationale: No evaluator response was requested or available.</p>
+  <p><span class="badge">Not authority</span><span class="badge">Candidate only</span><span class="badge">No mutation</span></p>
+  <pre>Evaluator review is advisory only and cannot approve canonical memory.</pre>
+</div>
+
+  </section>
+</body>
+</html>

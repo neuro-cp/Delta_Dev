@@ -1,0 +1,22 @@
+Runtime V1.5K - Demo Script / Showcase Report
+
+Purpose:
+Create a deterministic local showcase that demonstrates the safe V1.5 path without enabling new behavior.
+
+Showcase steps:
+- Local deterministic answer routing.
+- Feedback-to-memory-candidate preview.
+- Limited recall candidate-context trial.
+
+Boundaries:
+- No provider calls.
+- No tool calls.
+- No action execution.
+- No memory writes or canonical writes.
+- No recall mutation.
+- No training, fine-tuning, weight update, or dataset export.
+- HYB1 remains dormant/env-gated.
+- Model B remains default.
+
+Final recommendation:
+PROCEED_VALIDATED_EXPERIENCE_LEARNING_LOOP

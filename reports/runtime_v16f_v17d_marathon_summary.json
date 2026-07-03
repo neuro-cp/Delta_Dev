@@ -1,0 +1,123 @@
+{
+  "phase": "Runtime V1.6F through Runtime V1.7D",
+  "status": "complete",
+  "branch": "codex/delta-cognitive-core",
+  "current_default_runtime": {
+    "model_b_default": "unchanged",
+    "hyb1": "dormant_env_gated_only"
+  },
+  "phases_completed": [
+    {
+      "phase": "Runtime V1.6F",
+      "name": "Explicit Scheduler Activation Gate",
+      "status": "verified",
+      "tests_collected": 405,
+      "tests_passed": 405,
+      "final_recommendation": "PROCEED_DAILY_EVALUATOR_MANUAL_RUN_HARDENING"
+    },
+    {
+      "phase": "Runtime V1.6G",
+      "name": "Daily Evaluator Manual-Run Hardening",
+      "status": "verified",
+      "tests_collected": 410,
+      "tests_passed": 410,
+      "final_recommendation": "PROCEED_REVIEW_UI_APPROVAL_REJECTION_EXPORT_FLOW"
+    },
+    {
+      "phase": "Runtime V1.6H",
+      "name": "Review UI Approval/Rejection Export Flow",
+      "status": "verified",
+      "tests_collected": 414,
+      "tests_passed": 414,
+      "final_recommendation": "PROCEED_MEMORY_CANDIDATE_EDIT_REJECT_DEFER_LOOP"
+    },
+    {
+      "phase": "Runtime V1.6I",
+      "name": "Memory Candidate Edit/Reject/Defer Loop",
+      "status": "verified",
+      "tests_collected": 419,
+      "tests_passed": 419,
+      "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+    },
+    {
+      "phase": "Runtime V1.6J",
+      "name": "Canonical Memory Rollback Trial",
+      "status": "verified",
+      "tests_collected": 423,
+      "tests_passed": 423,
+      "final_recommendation": "PROCEED_LIMITED_GENERAL_RECALL_ROUTER_DESIGN"
+    },
+    {
+      "phase": "Runtime V1.7A",
+      "name": "Limited General Recall Router Design",
+      "status": "verified",
+      "tests_collected": 427,
+      "tests_passed": 427,
+      "final_recommendation": "PROCEED_LOCAL_MULTI_TURN_SESSION_STATE"
+    },
+    {
+      "phase": "Runtime V1.7B",
+      "name": "Local Multi-Turn Session State",
+      "status": "verified",
+      "tests_collected": 431,
+      "tests_passed": 431,
+      "final_recommendation": "PROCEED_CONTROLLED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_PATH"
+    },
+    {
+      "phase": "Runtime V1.7C",
+      "name": "Controlled Provider-Assisted Unknown Answer Path",
+      "status": "verified",
+      "tests_collected": 436,
+      "tests_passed": 436,
+      "final_recommendation": "PROCEED_SPECIALIST_SLM_EVIDENCE_ACQUISITION_TRIAL"
+    },
+    {
+      "phase": "Runtime V1.7D",
+      "name": "Specialist / SLM Evidence Acquisition Trial",
+      "status": "verified",
+      "tests_collected": 441,
+      "tests_passed": 441,
+      "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_REVIEW_UI_OR_LIMITED_GENERAL_RECALL_TRIAL"
+    }
+  ],
+  "verification": {
+    "py_compile": "passed after each phase",
+    "final_collect_only": "441 tests collected",
+    "final_pytest": "441 passed",
+    "v17d_report_generated": true
+  },
+  "safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_default_activation_enabled": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_changed": false,
+    "canonical_memory_autonomous_write_performed": false,
+    "general_recall_activated": false,
+    "runtime_recall_mutated": false,
+    "action_execution_performed": false,
+    "tool_calls_performed_by_delta_runtime": false,
+    "scheduler_background_timer_or_queue_enabled": false,
+    "provider_calls_performed_during_this_marathon": false,
+    "specialist_results_authoritative": false,
+    "secrets_printed": false,
+    "env_local_committed": false
+  },
+  "environment_files": {
+    ".env.local": "ignored and not printed",
+    ".env.local.example": "placeholder-only runtime gate documentation"
+  },
+  "current_capability_state": {
+    "scheduler_gate": "decision-only; no scheduler installed",
+    "daily_evaluator_manual_run": "dry-run default; live requires explicit gates",
+    "review_ui_exports": "approval/rejection/defer text generation only",
+    "memory_candidate_review_loop": "non-mutating review decisions only",
+    "canonical_rollback_trial": "dry-run default; exact approval required for marker-only rollback trial",
+    "limited_recall_router": "candidate-context only; no general recall activation",
+    "local_session_state": "ephemeral local session state only",
+    "unknown_provider_path": "dry-run default; live provider requires explicit gates",
+    "specialist_evidence_trial": "dry-run default; live specialist requires explicit gates; evidence-only"
+  },
+  "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_REVIEW_UI_OR_LIMITED_GENERAL_RECALL_TRIAL"
+}

@@ -1,0 +1,20 @@
+Runtime V1.6D - Local Review UI
+
+Purpose:
+Generate a static local review dashboard for inspecting memory candidates, canonical trial records, recall candidate context, evaluator advisory reviews, safety flags, and rollback/audit metadata.
+
+Boundaries:
+- Static HTML only.
+- No server.
+- No network calls.
+- No provider calls.
+- No action execution.
+- No memory writes or canonical writes.
+- No recall mutation.
+- No training.
+- No scheduler/background process.
+- Approval text is displayed only and must remain strict.
+- Evaluator review is advisory only.
+
+Final recommendation:
+PROCEED_SCHEDULED_DAILY_EVALUATOR_DESIGN

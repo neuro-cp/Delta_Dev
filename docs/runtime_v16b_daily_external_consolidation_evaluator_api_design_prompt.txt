@@ -1,0 +1,17 @@
+Runtime V1.6B - Daily External Consolidation Evaluator API Design
+
+Purpose:
+Design an external consolidation evaluator API boundary for future one-shot review.
+
+Boundaries:
+- Design only.
+- No provider calls in V1.6B.
+- No automatic daily scheduler.
+- No background worker, listener, timer, or queue.
+- Evaluator review is not authority.
+- Evaluator review is not canonical memory.
+- Evaluator review is not training data.
+- No memory writes, canonical writes, recall mutation, training, action execution, or HYB1 activation.
+
+Final recommendation:
+PROCEED_DAILY_EXTERNAL_CONSOLIDATION_EVALUATOR_API_TRIAL

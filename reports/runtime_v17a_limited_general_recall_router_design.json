@@ -1,0 +1,63 @@
+{
+  "phase": "Runtime V1.7A",
+  "request": {
+    "request_id": "v17a-recall-request-207259bd73603171",
+    "query": "What is the status of HYB1 and Model B?"
+  },
+  "source_policy": {
+    "policy_id": "v17a-policy-65f7c55f93aa2568",
+    "allowed_sources": [
+      "V1.5I canonical trial records",
+      "static repo-local knowledge",
+      "evaluator advisory reports"
+    ],
+    "disallowed_sources": [
+      "raw conversation as memory",
+      "unapproved candidates as truth",
+      "rejected or rolled-back records",
+      "provider output as authority"
+    ],
+    "candidate_context_only": true
+  },
+  "candidates": [
+    {
+      "candidate_id": "v17a-candidate-c5fecb58d3043aa8",
+      "source_kind": "v15i_trial_record",
+      "text": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+      "source_reference": "v15i-canonical-trial-record-f97e30a731f4638c",
+      "advisory_only": true,
+      "authoritative": false,
+      "candidate_context_only": true
+    },
+    {
+      "candidate_id": "v17a-static-af30308345d78914",
+      "source_kind": "static_repo_local",
+      "text": "Model B remains default and HYB1 remains dormant/env-gated.",
+      "source_reference": "static-local-router",
+      "advisory_only": true,
+      "authoritative": false,
+      "candidate_context_only": true
+    }
+  ],
+  "safety_review": {
+    "candidate_context_only": true,
+    "provider_output_authority": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false
+  },
+  "invariant_flags": {
+    "limited_general_recall_router_design_enabled": true,
+    "general_recall_active": false,
+    "candidate_context_only": true,
+    "provider_call_performed": false,
+    "memory_write_performed": false,
+    "recall_mutated": false,
+    "training_triggered": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_LOCAL_MULTI_TURN_SESSION_STATE",
+  "router_safe": true
+}

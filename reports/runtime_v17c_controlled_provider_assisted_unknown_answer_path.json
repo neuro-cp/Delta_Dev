@@ -1,0 +1,85 @@
+{
+  "phase": "Runtime V1.7C",
+  "known": {
+    "phase": "Runtime V1.7C",
+    "request": {
+      "request_id": "v17c-unknown-request-039124d9476571e0",
+      "question": "What is Model B?",
+      "live_provider": false
+    },
+    "route_or_provider_request": {
+      "answer_id": "local-knowledge-answer-9e0822dca5f1fe39",
+      "topic_id": "model_b_status",
+      "answer_text": "Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it.",
+      "confidence_label": "local_report_summary",
+      "source_summary": "Runtime V1.3 Model B/HYB1 reports",
+      "provider_required": false,
+      "memory_required": false,
+      "training_required": false,
+      "action_required": false,
+      "deterministic_local": true
+    },
+    "evidence_packet": null,
+    "decision": {
+      "decision_id": "v17c-decision-8faf0e8489919d0d",
+      "decision": "local_known",
+      "provider_call_performed": false,
+      "provider_answer_authoritative": false,
+      "memory_write_performed": false,
+      "recall_mutated": false
+    },
+    "invariant_flags": {
+      "provider_assisted_unknown_path_enabled": true,
+      "dry_run_default": true,
+      "memory_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "provider_response_authoritative": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_SPECIALIST_SLM_EVIDENCE_ACQUISITION_TRIAL"
+  },
+  "unknown": {
+    "phase": "Runtime V1.7C",
+    "request": {
+      "request_id": "v17c-unknown-request-f2e4a451ef0ca16a",
+      "question": "What is a recent fact DELTA cannot know locally?",
+      "live_provider": false
+    },
+    "route_or_provider_request": {
+      "question": "What is a recent fact DELTA cannot know locally?",
+      "model": "gpt-4.1-mini",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "api_key_present": true,
+      "api_key_redacted": true,
+      "authoritative": false
+    },
+    "evidence_packet": null,
+    "decision": {
+      "decision_id": "v17c-decision-33b4f914235b5f56",
+      "decision": "dry_run_provider_request",
+      "provider_call_performed": false,
+      "provider_answer_authoritative": false,
+      "memory_write_performed": false,
+      "recall_mutated": false
+    },
+    "invariant_flags": {
+      "provider_assisted_unknown_path_enabled": true,
+      "dry_run_default": true,
+      "memory_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "provider_response_authoritative": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_SPECIALIST_SLM_EVIDENCE_ACQUISITION_TRIAL"
+  },
+  "all_safe": true,
+  "final_recommendation": "PROCEED_SPECIALIST_SLM_EVIDENCE_ACQUISITION_TRIAL"
+}

@@ -1,0 +1,9 @@
+Runtime V1.7B - Local Multi-Turn Session State
+
+Purpose:
+Create local ephemeral multi-turn session context without canonical memory or recall mutation.
+
+Session state is stored under data/runtime_v17b/session_state, marked non-canonical, and can be cleared. No provider calls, training, action execution, HYB1 activation, or Model B change.
+
+Final recommendation:
+PROCEED_CONTROLLED_PROVIDER_ASSISTED_UNKNOWN_ANSWER_PATH

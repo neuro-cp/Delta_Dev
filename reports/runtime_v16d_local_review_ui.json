@@ -1,0 +1,85 @@
+{
+  "phase": "Runtime V1.6D",
+  "title": "Local Review UI",
+  "checkpoint_summary": "V1.6 local review dashboard over candidate-only records and advisory reports.",
+  "model_b_status": "Model B remains the default runtime baseline.",
+  "hyb1_status": "HYB1 remains dormant/env-gated and is not promoted.",
+  "items": [
+    {
+      "item_id": "v16d-review-item-d1da8ebcc4ed8334",
+      "kind": "memory_candidate",
+      "title": "Pending Memory Candidate",
+      "body": "No memory candidate should be written from ambiguous, sarcastic, rejected, or unknown feedback without review.",
+      "source_path": "reports/runtime_v16a_validated_experience_learning_loop.json",
+      "candidate_id": "memory-candidate-6377a70ef496f3b5",
+      "approval_text": "APPROVE_CANONICAL_MEMORY_WRITE\ncandidate_id=memory-candidate-6377a70ef496f3b5\napproved_by=user\napproval_scope=single_memory_candidate_only",
+      "not_authority": true,
+      "candidate_only": true,
+      "mutating": false
+    },
+    {
+      "item_id": "v16d-review-item-66adb705b6ec0ed8",
+      "kind": "canonical_trial_record",
+      "title": "Existing Canonical Trial Record",
+      "body": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+      "source_path": "data\\runtime_v15i\\canonical_memory_trial_records.jsonl",
+      "candidate_id": "memory-candidate-190c09d70ee06bfa",
+      "approval_text": "APPROVE_CANONICAL_MEMORY_WRITE\ncandidate_id=memory-candidate-190c09d70ee06bfa\napproved_by=user\napproval_scope=single_memory_candidate_only",
+      "not_authority": true,
+      "candidate_only": true,
+      "mutating": false
+    },
+    {
+      "item_id": "v16d-review-item-89c09bc8144af1da",
+      "kind": "recall_context",
+      "title": "Recall Candidate Context",
+      "body": "HYB1 remains dormant and environment-gated; Model B remains the default runtime baseline.",
+      "source_path": "reports/runtime_v15j_recall_bridge_limited_trial.json",
+      "candidate_id": "memory-candidate-190c09d70ee06bfa",
+      "approval_text": "Recall context is candidate-only and should not be approved from this dashboard.",
+      "not_authority": true,
+      "candidate_only": true,
+      "mutating": false
+    },
+    {
+      "item_id": "v16d-review-item-99b0b63a78426893",
+      "kind": "evaluator_review",
+      "title": "Evaluator Advisory Review",
+      "body": "Disposition: not_run; risk: none; rationale: No evaluator response was requested or available.",
+      "source_path": "reports/runtime_v16c_daily_external_consolidation_evaluator_api_trial.json",
+      "candidate_id": "",
+      "approval_text": "Evaluator review is advisory only and cannot approve canonical memory.",
+      "not_authority": true,
+      "candidate_only": true,
+      "mutating": false
+    }
+  ],
+  "approval_template": "APPROVE_CANONICAL_MEMORY_WRITE\ncandidate_id=<candidate_id>\napproved_by=user\napproval_scope=single_memory_candidate_only",
+  "safety_flags": {
+    "static_review_ui_enabled": true,
+    "server_enabled": false,
+    "network_calls_enabled": false,
+    "provider_calls_enabled": false,
+    "tool_calls_enabled": false,
+    "action_execution_enabled": false,
+    "memory_write_enabled": false,
+    "canonical_write_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "training_enabled": false,
+    "scheduler_enabled": false,
+    "background_worker_enabled": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "env_summary": {
+    "provider": "openai",
+    "model": "gpt-4.1-mini",
+    "api_key_present": true,
+    "api_key_redacted": true,
+    "live_call_permitted": true
+  },
+  "dashboard_path": "reports\\delta_review_dashboard.html",
+  "final_recommendation": "PROCEED_SCHEDULED_DAILY_EVALUATOR_DESIGN",
+  "ui_safe": true
+}

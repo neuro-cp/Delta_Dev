@@ -1,0 +1,18 @@
+Runtime V1.6A - Validated Experience Learning Loop
+
+Purpose:
+Create a validated experience learning-loop scaffold that can turn a safe local interaction plus explicit feedback into a review-only candidate.
+
+Boundaries:
+- No training, fine-tuning, weight updates, or dataset export.
+- No provider calls.
+- No tool calls.
+- No action execution.
+- No memory writes or canonical writes.
+- No recall mutation and no general recall.
+- No autonomous approval.
+- HYB1 remains dormant/env-gated.
+- Model B remains default.
+
+Final recommendation:
+PROCEED_DAILY_EXTERNAL_CONSOLIDATION_EVALUATOR_API_DESIGN

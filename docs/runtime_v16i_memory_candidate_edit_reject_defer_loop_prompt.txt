@@ -1,0 +1,9 @@
+Runtime V1.6I - Memory Candidate Edit / Reject / Defer Loop
+
+Purpose:
+Add non-mutating review decisions for memory candidates: edit proposal, reject, defer, needs more evidence, and ready for explicit approval.
+
+No decision writes canonical memory, mutates recall, calls providers, trains, executes actions, activates HYB1, or changes Model B.
+
+Final recommendation:
+PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL

@@ -1,0 +1,42 @@
+{
+  "phase": "Runtime V1.6J",
+  "request": {
+    "request_id": "v16j-rollback-request-004cf50fad25e938",
+    "canonical_record_id": "record-1",
+    "approval_text": "",
+    "dry_run": true
+  },
+  "decision": {
+    "decision_id": "v16j-rollback-decision-b4e4d09f9fac5499",
+    "canonical_record_id": "record-1",
+    "decision": "dry_run_only",
+    "marker_written": false,
+    "source_record_deleted": false,
+    "broad_mutation": false
+  },
+  "audit": {
+    "audit_id": "v16j-rollback-audit-15db7d5b53ef7197",
+    "canonical_record_id": "record-1",
+    "rollback_marker_path": "data\\runtime_v16j\\canonical_trial_rollback_markers.jsonl",
+    "original_record_preserved": true,
+    "provider_calls_performed": false,
+    "training_triggered": false,
+    "recall_mutated": false
+  },
+  "invariant_flags": {
+    "canonical_trial_rollback_enabled": true,
+    "dry_run_default": true,
+    "broad_delete_enabled": false,
+    "source_record_deleted": false,
+    "provider_call_performed": false,
+    "tool_call_performed": false,
+    "action_execution_performed": false,
+    "training_triggered": false,
+    "recall_mutated": false,
+    "hyb1_default_activation_enabled": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false
+  },
+  "final_recommendation": "PROCEED_LIMITED_GENERAL_RECALL_ROUTER_DESIGN",
+  "rollback_safe": true
+}

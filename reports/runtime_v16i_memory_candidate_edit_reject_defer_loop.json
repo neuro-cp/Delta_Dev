@@ -1,0 +1,224 @@
+{
+  "phase": "Runtime V1.6I",
+  "title": "Memory Candidate Edit / Reject / Defer Loop",
+  "cases": {
+    "edit": {
+      "phase": "Runtime V1.6I",
+      "request": {
+        "request_id": "v16i-review-request-5f4c579ddbc75110",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "candidate_text": "No memory candidate should be written without review.",
+        "reviewer_note": ""
+      },
+      "edit_proposal": {
+        "proposal_id": "v16i-edit-ef8e5f1843284c44",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "edited_text": "Memory candidates from ambiguous feedback require human review before any canonical write.",
+        "applied": false,
+        "canonical_write_ready": false
+      },
+      "decision": {
+        "decision_id": "v16i-decision-19e6051ec2f93dd6",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "decision": "edit_proposed",
+        "rationale": "Edited candidate proposal created for review only.",
+        "applied": false,
+        "approved": false,
+        "canonical_write_performed": false
+      },
+      "audit": {
+        "audit_id": "v16i-audit-19e6051ec2f93dd6",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "no_provider_call": true,
+        "no_memory_write": true,
+        "no_recall_mutation": true,
+        "no_training": true,
+        "source_record_preserved": true
+      },
+      "invariant_flags": {
+        "memory_candidate_review_loop_enabled": true,
+        "canonical_write_performed": false,
+        "memory_write_performed": false,
+        "source_deleted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+    },
+    "reject": {
+      "phase": "Runtime V1.6I",
+      "request": {
+        "request_id": "v16i-review-request-5f4c579ddbc75110",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "candidate_text": "No memory candidate should be written without review.",
+        "reviewer_note": ""
+      },
+      "edit_proposal": null,
+      "decision": {
+        "decision_id": "v16i-decision-2abea13262e915f3",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "decision": "rejected_for_review",
+        "rationale": "Candidate rejected as review decision only.",
+        "applied": false,
+        "approved": false,
+        "canonical_write_performed": false
+      },
+      "audit": {
+        "audit_id": "v16i-audit-2abea13262e915f3",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "no_provider_call": true,
+        "no_memory_write": true,
+        "no_recall_mutation": true,
+        "no_training": true,
+        "source_record_preserved": true
+      },
+      "invariant_flags": {
+        "memory_candidate_review_loop_enabled": true,
+        "canonical_write_performed": false,
+        "memory_write_performed": false,
+        "source_deleted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+    },
+    "defer": {
+      "phase": "Runtime V1.6I",
+      "request": {
+        "request_id": "v16i-review-request-5f4c579ddbc75110",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "candidate_text": "No memory candidate should be written without review.",
+        "reviewer_note": ""
+      },
+      "edit_proposal": null,
+      "decision": {
+        "decision_id": "v16i-decision-76daee2d9139fe28",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "decision": "deferred",
+        "rationale": "Candidate deferred as review decision only.",
+        "applied": false,
+        "approved": false,
+        "canonical_write_performed": false
+      },
+      "audit": {
+        "audit_id": "v16i-audit-76daee2d9139fe28",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "no_provider_call": true,
+        "no_memory_write": true,
+        "no_recall_mutation": true,
+        "no_training": true,
+        "source_record_preserved": true
+      },
+      "invariant_flags": {
+        "memory_candidate_review_loop_enabled": true,
+        "canonical_write_performed": false,
+        "memory_write_performed": false,
+        "source_deleted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+    },
+    "more_evidence": {
+      "phase": "Runtime V1.6I",
+      "request": {
+        "request_id": "v16i-review-request-5f4c579ddbc75110",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "candidate_text": "No memory candidate should be written without review.",
+        "reviewer_note": ""
+      },
+      "edit_proposal": null,
+      "decision": {
+        "decision_id": "v16i-decision-317ee190210de341",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "decision": "needs_more_evidence",
+        "rationale": "More evidence requested; no provider call performed.",
+        "applied": false,
+        "approved": false,
+        "canonical_write_performed": false
+      },
+      "audit": {
+        "audit_id": "v16i-audit-317ee190210de341",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "no_provider_call": true,
+        "no_memory_write": true,
+        "no_recall_mutation": true,
+        "no_training": true,
+        "source_record_preserved": true
+      },
+      "invariant_flags": {
+        "memory_candidate_review_loop_enabled": true,
+        "canonical_write_performed": false,
+        "memory_write_performed": false,
+        "source_deleted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+    },
+    "ready": {
+      "phase": "Runtime V1.6I",
+      "request": {
+        "request_id": "v16i-review-request-5f4c579ddbc75110",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "candidate_text": "No memory candidate should be written without review.",
+        "reviewer_note": ""
+      },
+      "edit_proposal": null,
+      "decision": {
+        "decision_id": "v16i-decision-8000c9dc845e545a",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "decision": "ready_for_explicit_approval",
+        "rationale": "Ready for strict explicit approval text; not approved yet.",
+        "applied": false,
+        "approved": false,
+        "canonical_write_performed": false
+      },
+      "audit": {
+        "audit_id": "v16i-audit-8000c9dc845e545a",
+        "candidate_id": "memory-candidate-60ee56fb323e53de",
+        "no_provider_call": true,
+        "no_memory_write": true,
+        "no_recall_mutation": true,
+        "no_training": true,
+        "source_record_preserved": true
+      },
+      "invariant_flags": {
+        "memory_candidate_review_loop_enabled": true,
+        "canonical_write_performed": false,
+        "memory_write_performed": false,
+        "source_deleted": false,
+        "provider_call_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false,
+        "action_execution_performed": false,
+        "hyb1_default_activation_enabled": false,
+        "hyb1_promoted": false,
+        "model_b_default_changed": false
+      },
+      "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+    }
+  },
+  "all_safe": true,
+  "final_recommendation": "PROCEED_CANONICAL_MEMORY_ROLLBACK_TRIAL"
+}

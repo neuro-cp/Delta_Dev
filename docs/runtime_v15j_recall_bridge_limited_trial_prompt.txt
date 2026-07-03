@@ -1,0 +1,19 @@
+Runtime V1.5J - Recall Bridge Limited Trial
+
+Purpose:
+Create a narrow, local, read-only recall bridge trial that can surface one V1.5I canonical trial record as candidate context only.
+
+Boundaries:
+- Recall candidate is not truth.
+- Retrieved memory is not an authoritative answer.
+- General recall remains inactive.
+- No provider calls.
+- No tool calls.
+- No action execution.
+- No training, fine-tuning, weight update, or dataset export.
+- HYB1 remains dormant/env-gated.
+- Model B remains default.
+- No memory mutation and no recall mutation.
+
+Final recommendation:
+PROCEED_DEMO_SCRIPT_SHOWCASE_REPORT

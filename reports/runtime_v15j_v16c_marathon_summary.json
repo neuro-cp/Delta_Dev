@@ -1,0 +1,118 @@
+{
+  "phase_range": "Runtime V1.5J through V1.6C",
+  "status": "completed_and_verified",
+  "branch": "codex/delta-cognitive-core",
+  "test_summary": {
+    "collected": 381,
+    "passed": 381,
+    "command": ".\\.venv311\\Scripts\\python.exe -m pytest tests\\runtime_v14 tests\\runtime_v15 tests\\runtime_v16 -q -ra"
+  },
+  "phases": [
+    {
+      "phase": "Runtime V1.5J",
+      "name": "Recall Bridge Limited Trial",
+      "status": "completed",
+      "report": "reports/runtime_v15j_recall_bridge_limited_trial.md",
+      "summary": "One V1.5I canonical trial record can be surfaced as candidate context only.",
+      "safety": {
+        "general_recall_enabled": false,
+        "recall_mutated": false,
+        "authoritative_answer": false,
+        "truth_claim": false,
+        "provider_calls_performed": false,
+        "training_triggered": false
+      },
+      "final_recommendation": "PROCEED_DEMO_SCRIPT_SHOWCASE_REPORT"
+    },
+    {
+      "phase": "Runtime V1.5K",
+      "name": "Demo Script / Showcase Report",
+      "status": "completed",
+      "report": "reports/runtime_v15k_demo_script_showcase.md",
+      "summary": "Local answer routing, feedback candidate preview, and limited recall candidate context are demonstrated without mutation.",
+      "safety": {
+        "provider_calls_performed": false,
+        "tool_calls_performed": false,
+        "action_execution_performed": false,
+        "memory_write_performed": false,
+        "canonical_write_performed": false,
+        "recall_mutated": false,
+        "training_triggered": false
+      },
+      "final_recommendation": "PROCEED_VALIDATED_EXPERIENCE_LEARNING_LOOP"
+    },
+    {
+      "phase": "Runtime V1.6A",
+      "name": "Validated Experience Learning Loop",
+      "status": "completed",
+      "report": "reports/runtime_v16a_validated_experience_learning_loop.md",
+      "summary": "Safe local interaction plus feedback can produce an inert review-only memory candidate.",
+      "safety": {
+        "training_performed": false,
+        "canonical_write_performed": false,
+        "provider_calls_performed": false,
+        "recall_mutated": false,
+        "candidate_applied": false
+      },
+      "final_recommendation": "PROCEED_DAILY_EXTERNAL_CONSOLIDATION_EVALUATOR_API_DESIGN"
+    },
+    {
+      "phase": "Runtime V1.6B",
+      "name": "Daily External Consolidation Evaluator API Design",
+      "status": "completed",
+      "report": "reports/runtime_v16b_daily_external_consolidation_evaluator_api_design.md",
+      "summary": "External evaluator request and policy envelopes exist; V1.6B performs no provider call even when env permits one.",
+      "safety": {
+        "provider_calls_performed": false,
+        "live_call_allowed_in_phase": false,
+        "automatic_daily_run_enabled": false,
+        "scheduler_enabled": false,
+        "evaluator_authoritative": false,
+        "canonical_write_performed": false,
+        "training_triggered": false
+      },
+      "final_recommendation": "PROCEED_DAILY_EXTERNAL_CONSOLIDATION_EVALUATOR_API_TRIAL"
+    },
+    {
+      "phase": "Runtime V1.6C",
+      "name": "Daily External Consolidation Evaluator API Trial",
+      "status": "completed",
+      "report": "reports/runtime_v16c_daily_external_consolidation_evaluator_api_trial.md",
+      "summary": "A manual one-shot evaluator API trial completed because .env.local explicitly permitted a live call.",
+      "safety": {
+        "provider_call_performed": true,
+        "manual_one_shot_only": true,
+        "automatic_daily_run_enabled": false,
+        "scheduler_enabled": false,
+        "evaluator_result_authoritative": false,
+        "canonical_write_performed": false,
+        "training_triggered": false,
+        "memory_mutated": false,
+        "recall_mutated": false,
+        "action_execution_performed": false
+      },
+      "final_recommendation": "PROCEED_LOCAL_REVIEW_UI_OR_SCHEDULED_EVALUATOR_DESIGN"
+    }
+  ],
+  "environment": {
+    "env_local_created_if_absent": true,
+    "env_local_ignored": true,
+    "env_local_example_created": true,
+    "api_key_published": false
+  },
+  "global_safety_state": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_default_activation_enabled": false,
+    "training_or_fine_tuning_performed": false,
+    "weight_update_performed": false,
+    "dataset_export_performed": false,
+    "canonical_memory_write_performed_after_v15i": false,
+    "general_memory_enabled": false,
+    "general_recall_enabled": false,
+    "runtime_recall_mutated": false,
+    "action_execution_performed": false,
+    "scheduler_or_background_worker_started": false
+  },
+  "final_recommendation": "PROCEED_LOCAL_REVIEW_UI_OR_SCHEDULED_EVALUATOR_DESIGN"
+}

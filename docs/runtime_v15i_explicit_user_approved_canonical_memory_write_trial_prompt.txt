@@ -1,0 +1,29 @@
+Runtime V1.5I - Explicit User-Approved Canonical Memory Write Trial
+
+Purpose:
+Execute one narrow local canonical memory write trial only when explicit user
+approval is present.
+
+Only this approval structure counts:
+
+APPROVE_CANONICAL_MEMORY_WRITE
+candidate_id=<candidate_id>
+approved_by=user
+approval_scope=single_memory_candidate_only
+
+Anything else is insufficient approval, including:
+
+- yes
+- yeah
+- that's right
+- save it
+- remember that
+- looks good
+- go ahead
+
+The approval applies to one candidate only. No bulk approval, implied approval,
+autonomous approval, provider approval, assistant self-approval, or casual
+confirmation may trigger a write.
+
+The trial writes one local deterministic canonical trial record, audit metadata,
+and rollback reference. Recall remains inactive until a future phase opens it.

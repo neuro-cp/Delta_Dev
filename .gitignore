@@ -6,6 +6,8 @@ __pycache__/
 .venv311/
 venv/
 .env
+.env.local
+.env.*.local
 .DS_Store
 .idea/
 .vscode/

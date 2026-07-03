@@ -1,0 +1,9 @@
+Runtime V1.6J - Rollback Trial for Canonical Memory Record
+
+Purpose:
+Create a controlled rollback trial for a V1.5I canonical trial record.
+
+Dry-run is default. Exact approval may write a rollback marker only; original records are preserved. No broad deletion, provider/tool/action call, training, recall mutation, HYB1 activation, or Model B change occurs.
+
+Final recommendation:
+PROCEED_LIMITED_GENERAL_RECALL_ROUTER_DESIGN

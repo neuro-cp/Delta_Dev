@@ -1,0 +1,91 @@
+{
+  "phase": "Runtime V1.7D",
+  "known": {
+    "phase": "Runtime V1.7D",
+    "request": {
+      "request_id": "v17d-specialist-request-b389a6f26d89206e",
+      "question": "What is Model B?",
+      "specialist_domain": "general",
+      "live_specialist": false
+    },
+    "route_or_provider_contract": {
+      "answer_id": "local-knowledge-answer-9e0822dca5f1fe39",
+      "topic_id": "model_b_status",
+      "answer_text": "Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it.",
+      "confidence_label": "local_report_summary",
+      "source_summary": "Runtime V1.3 Model B/HYB1 reports",
+      "provider_required": false,
+      "memory_required": false,
+      "training_required": false,
+      "action_required": false,
+      "deterministic_local": true
+    },
+    "evidence_packet": null,
+    "decision": {
+      "decision_id": "v17d-decision-a957570f2b46ecac",
+      "decision": "local_known_no_specialist",
+      "provider_call_performed": false,
+      "specialist_result_authoritative": false,
+      "memory_write_performed": false,
+      "recall_mutated": false
+    },
+    "invariant_flags": {
+      "specialist_evidence_trial_enabled": true,
+      "dry_run_default": true,
+      "memory_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "scheduler_enabled": false,
+      "specialist_result_authoritative": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_REVIEW_UI_OR_LIMITED_GENERAL_RECALL_TRIAL"
+  },
+  "unknown": {
+    "phase": "Runtime V1.7D",
+    "request": {
+      "request_id": "v17d-specialist-request-319306190bfb2732",
+      "question": "Analyze this specialized unknown question.",
+      "specialist_domain": "analysis",
+      "live_specialist": false
+    },
+    "route_or_provider_contract": {
+      "question": "Analyze this specialized unknown question.",
+      "specialist_domain": "analysis",
+      "provider": "openai",
+      "model": "gpt-4.1-mini",
+      "endpoint": "https://api.openai.com/v1/chat/completions",
+      "api_key_present": true,
+      "api_key_redacted": true,
+      "authoritative": false
+    },
+    "evidence_packet": null,
+    "decision": {
+      "decision_id": "v17d-decision-13c4f7dad619275a",
+      "decision": "dry_run_specialist_request",
+      "provider_call_performed": false,
+      "specialist_result_authoritative": false,
+      "memory_write_performed": false,
+      "recall_mutated": false
+    },
+    "invariant_flags": {
+      "specialist_evidence_trial_enabled": true,
+      "dry_run_default": true,
+      "memory_write_performed": false,
+      "recall_mutated": false,
+      "training_triggered": false,
+      "action_execution_performed": false,
+      "scheduler_enabled": false,
+      "specialist_result_authoritative": false,
+      "hyb1_default_activation_enabled": false,
+      "hyb1_promoted": false,
+      "model_b_default_changed": false
+    },
+    "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_REVIEW_UI_OR_LIMITED_GENERAL_RECALL_TRIAL"
+  },
+  "all_safe": true,
+  "final_recommendation": "PROCEED_PROVIDER_EVIDENCE_REVIEW_UI_OR_LIMITED_GENERAL_RECALL_TRIAL"
+}

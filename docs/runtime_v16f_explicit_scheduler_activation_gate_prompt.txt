@@ -1,0 +1,9 @@
+Runtime V1.6F - Explicit Scheduler Activation Gate
+
+Purpose:
+Create an explicit gate proving a daily evaluator scheduler cannot run unless all future gates are satisfied.
+
+This phase does not start a scheduler, register OS tasks, create cron entries, call APIs, write memory, mutate recall, train, execute actions, activate HYB1, or change Model B.
+
+Final recommendation:
+PROCEED_DAILY_EVALUATOR_MANUAL_RUN_HARDENING

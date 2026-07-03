@@ -1,0 +1,9 @@
+Runtime V1.7D - Specialist / SLM Evidence Acquisition Trial
+
+Purpose:
+Create a gated specialist evidence acquisition trial for unknown/specialized questions.
+
+Specialist results are evidence-only, not authority, memory, promotion, training, action execution, HYB1 activation, or Model B changes. Live specialist calls require explicit env gates and CLI flag.
+
+Final recommendation:
+PROCEED_PROVIDER_EVIDENCE_REVIEW_UI_OR_LIMITED_GENERAL_RECALL_TRIAL

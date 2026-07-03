@@ -1,0 +1,17 @@
+{
+  "session_id": "v17b-report-session",
+  "turns": [
+    {
+      "turn_id": "v17b-turn-a33daeec617d9885",
+      "user_message": "What is Model B?",
+      "response_text": "Model B remains the accepted default runtime: contextualized corpus support plus the citation_context reasoning usage gate. HYB1 did not replace it."
+    },
+    {
+      "turn_id": "v17b-turn-a6ce93d06e5ec2f8",
+      "user_message": "Is HYB1 active?",
+      "response_text": "HYB1 is a dormant, environment-gated Runtime V1.3 prototype. It is not the default, was not promoted, and only becomes opt-in with DELTA_RUNTIME_V13_HYB1_ENABLED=true."
+    }
+  ],
+  "non_canonical": true,
+  "ephemeral": true
+}
