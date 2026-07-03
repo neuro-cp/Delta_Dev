@@ -1,0 +1,35 @@
+Runtime V1.4Q - Dry-Run Action Execution Design
+
+Status: scaffold-only, simulation-only, non-mutating, no real execution.
+
+Runtime V1.4Q defines the design shape for future dry-run action execution:
+
+- DryRunAction
+- DryRunExecutionInput
+- DryRunExecutionStep
+- DryRunExecutionResult
+- ExecutionSideEffectBoundary
+- DryRunExecutionTrace
+- DryRunRollbackPlan
+- DryRunExecutionReportEntry
+
+Invariant language:
+
+- dry-run execution != action execution
+- simulated result != side effect
+- execution trace != external mutation
+- rollback plan != applied rollback
+- side-effect boundary != side effect
+- ledger reference != active ledger write
+- dry-run eligibility != execution permission
+
+This phase does not enable real action execution, tool calls, provider calls,
+file/network/database side effects, active ledger persistence, autonomous
+approval, rollback execution, memory mutation, recall mutation, training,
+schedulers, queues, timers, or runtime behavior changes.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_MINIMAL_RUNTIME_UI_MESSAGE_CONSOLE

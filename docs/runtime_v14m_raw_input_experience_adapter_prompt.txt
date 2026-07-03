@@ -1,0 +1,15 @@
+Runtime V1.4M - Raw Input / Experience Adapter Design
+
+Purpose:
+Design inert bounded raw input and experience adapter scaffolding.
+
+Invariant language:
+- raw input != memory
+- experience record != learned state
+- boundary != ingestion daemon
+- user message != automatic training example
+- normalization != semantic truth
+- adapter trace != runtime mutation
+
+Expected recommendation:
+PROCEED_ACTIVE_SPECIALIST_ROUTING_DESIGN_GATED

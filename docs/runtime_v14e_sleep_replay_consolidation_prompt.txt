@@ -1,0 +1,53 @@
+Runtime V1.4E - Sleep / Replay Consolidation Design Scaffold
+
+Implement the next inert DELTA scaffold after Runtime V1.4D.
+
+Current checkpoint:
+- Runtime V1.3 is complete.
+- Model B remains default.
+- HYB1 is dormant/env-gated only.
+- Runtime V1.4D landed episodic feedback capture:
+  AnswerTrace / observation -> EpisodeTrace -> FeedbackCaptureRecord -> ReplayReviewMarker -> PruningReviewProposal.
+- Training, live pruning, canonical mutation, provider calls, specialist routing, execution gate, recall bridge, and routing influence are disabled.
+
+Goal:
+Create scaffold-only sleep/replay/consolidation design objects:
+
+EpisodeTrace + FeedbackCaptureRecord + ReplayReviewMarker + PruningReviewProposal
+  -> ReplayBatch
+  -> ReplayReviewResult
+  -> ConsolidationCandidate
+  -> ConsolidationDecision
+  -> SleepCyclePlan
+
+Core rule:
+Replay evaluates whether something deserves future consolidation.
+Replay does not consolidate directly.
+
+Hard boundaries:
+No training.
+No active replay loop.
+No scheduler, cron, daemon, background worker, or timers.
+No canonical writes or promotion.
+No live memory mutation.
+No live pruning, canonical pruning, or concept deletion.
+No provider calls.
+No specialist routing activation.
+No execution gate activation.
+No recall bridge.
+No routing influence.
+No benchmark fixture changes.
+No provider prompt changes.
+No Model B or HYB1 default changes.
+
+Required implementation:
+- orchestration/runtime/v14_replay.py
+- orchestration/runtime/v14_consolidation.py
+- orchestration/runtime/v14_sleep_cycle.py
+- orchestration/runtime/v14_replay_report.py
+- tests/runtime_v14/test_v14_sleep_replay_consolidation.py
+- reports/runtime_v14e_sleep_replay_consolidation_design.md
+- reports/runtime_v14e_sleep_replay_consolidation_design.json
+
+Expected final recommendation:
+PROCEED_LIVE_CANONICAL_STORE_DESIGN only if compile/tests pass and no active replay/canonical write path is added.

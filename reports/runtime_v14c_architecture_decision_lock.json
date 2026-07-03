@@ -1,0 +1,78 @@
+{
+  "report": "runtime_v14c_architecture_decision_lock",
+  "generated": "2026-07-02",
+  "final_recommendation": "PROCEED_FEEDBACK_CAPTURE_SCAFFOLD",
+  "current_state": {
+    "runtime_v13_complete": true,
+    "model_b_default": true,
+    "hyb1_dormant_env_gated_only": true,
+    "hyb1_flag": "DELTA_RUNTIME_V13_HYB1_ENABLED=true",
+    "v14a_safe_scaffold_complete": true,
+    "v14b_output_discipline_scaffold_complete": true
+  },
+  "safety_boundaries_preserved": {
+    "training": false,
+    "live_pruning": false,
+    "canonical_mutation": false,
+    "model_b_default_changed": false,
+    "hyb1_default_enabled": false,
+    "specialist_provider_calls": false,
+    "benchmark_fixtures_changed": false,
+    "provider_prompts_changed": false,
+    "live_routing": false,
+    "action_execution": false
+  },
+  "decision_summary": {
+    "sleep_replay_consolidation": {
+      "status": "accepted",
+      "implementation": "scheduled/batch replay-consolidation, not literal sleep"
+    },
+    "live_pruning_projection": {
+      "status": "accepted",
+      "implementation": "temporary runtime/session projection only"
+    },
+    "canonical_pruning": {
+      "status": "deferred",
+      "implementation": "wait for repeated evidence, provenance, rollback, or human approval"
+    },
+    "live_canonical_store": {
+      "status": "deferred",
+      "implementation": "schema shaped by output traces first"
+    },
+    "specialist_routing": {
+      "status": "deferred",
+      "implementation": "dormant route objects only; no provider calls"
+    },
+    "controlled_training": {
+      "status": "deferred",
+      "implementation": "wait for traces, feedback, replay, canonical store, and rollback"
+    },
+    "dmsa_multistream_assessment": {
+      "status": "accepted",
+      "implementation": "report-only multi-check validators/scorecards first"
+    },
+    "autonomous_knowledge_acquisition": {
+      "status": "deferred",
+      "implementation": "wait for pruning, source credibility, replay, and canonical store"
+    }
+  },
+  "trace_design": {
+    "objects": [
+      "EvidenceUseTrace",
+      "AnswerTrace",
+      "FeedbackEventDraft",
+      "ReplayCandidateMarker"
+    ],
+    "non_mutating": true,
+    "purpose": "Create auditable runtime answer traces for future feedback, replay, pruning, and controlled learning."
+  },
+  "recommended_next_phase": "Runtime V1.4D - Feedback Capture Scaffold",
+  "continuation_checkpoint": {
+    "runtime_v13_complete": true,
+    "model_b_default_remains_active": true,
+    "hyb1_dormant_only": true,
+    "v14c_architecture_decision_lock_complete": true,
+    "v14c_output_trace_design_complete": true,
+    "next_step": "PROCEED_FEEDBACK_CAPTURE_SCAFFOLD"
+  }
+}

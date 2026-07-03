@@ -1,0 +1,40 @@
+Runtime V1.4J - Dormant Specialist Result Merge Protocol
+
+Current checkpoint:
+- Runtime V1.4I Report-Only Hypothesis Arbitration is complete and verified.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+- No training, canonical writes, pruning, provider calls, active specialist routing, recall mutation, or action execution.
+
+Purpose:
+Design how specialist evidence results would be merged into DELTA's evidence system without authority transfer and without provider calls.
+
+Required objects:
+- SpecialistEvidencePacket
+- SpecialistResultClaim
+- SpecialistEvidenceLink
+- SpecialistMergeInput
+- SpecialistMergeConflict
+- SpecialistMergeScorecard
+- SpecialistMergeDecision
+- SpecialistMergeReport
+- SpecialistMergePlan
+
+Invariant language:
+- specialist result != truth
+- merge != authority
+- evidence packet != canonical memory
+- dormant merge != provider call
+
+Hard boundaries:
+- No provider calls.
+- No active specialist routing.
+- No authority transfer.
+- No canonical writes.
+- No memory mutation.
+- No recall mutation.
+- No training.
+- No action execution.
+
+Expected recommendation:
+PROCEED_RECALL_BRIDGE_DESIGN

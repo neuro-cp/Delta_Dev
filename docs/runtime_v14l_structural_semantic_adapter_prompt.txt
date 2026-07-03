@@ -1,0 +1,21 @@
+Runtime V1.4L - Structural Semantic Adapter Design
+
+Current checkpoint:
+- Runtime V1.4K Recall Bridge Design is complete and verified.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+
+Purpose:
+Design inert structural semantic adapter scaffolding for converting bounded structured input units into semantic frames, roles, signals, lane/scope metadata, and traceable interpretation units.
+
+Invariant language:
+- semantic frame != memory
+- adapter output != learned belief
+- normalization != canonicalization
+- signal tagging != truth assignment
+- semantic role != authority
+- lane assignment != global concept judgment
+- adapter trace != runtime mutation
+
+Expected recommendation:
+PROCEED_RAW_INPUT_EXPERIENCE_ADAPTER_DESIGN

@@ -1,0 +1,176 @@
+{
+  "phase": "Runtime V1.4O",
+  "title": "Execution Authorization Design Scaffold",
+  "status": "design_scaffold_only",
+  "final_recommendation": "PROCEED_ACTION_LEDGER_DESIGN",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "invariant_flags": {
+    "execution_authorization_enabled": false,
+    "action_execution_enabled": false,
+    "dry_run_execution_enabled": false,
+    "side_effects_enabled": false,
+    "tool_calls_enabled": false,
+    "provider_calls_enabled": false,
+    "autonomous_approval_enabled": false,
+    "human_approval_required_for_risky_actions": true,
+    "action_ledger_required_before_execution": true,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "training_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "intent": {
+    "intent_id": "action-intent-1ce7e6b31f2f0bfa",
+    "intent_kind": "call_tool",
+    "description": "future runtime might ask to call a specialist or tool",
+    "target_reference": "future-tool-placeholder",
+    "requested_mode": "review_only",
+    "lane_scope": [
+      "execution",
+      "safety"
+    ],
+    "source_trace_ids": [
+      "specialist-routing-trace-demo"
+    ],
+    "active": false,
+    "executable": false,
+    "side_effects_allowed": false,
+    "tool_calls_allowed": false,
+    "provider_calls_allowed": false,
+    "created_at": "2026-07-03T00:03:30.930824+00:00",
+    "notes": ""
+  },
+  "risk_assessment": {
+    "assessment_id": "execution-risk-assessment-d4f2f8b119d9903a",
+    "intent_id": "action-intent-1ce7e6b31f2f0bfa",
+    "risk_level": "high",
+    "risk_factors": [
+      "tool_side_effects"
+    ],
+    "reversible": false,
+    "side_effect_potential": true,
+    "requires_action_ledger": true,
+    "created_at": "2026-07-03T00:03:30.930824+00:00"
+  },
+  "authorization_request": {
+    "request_id": "execution-authorization-request-a6dc079bc59dbbbb",
+    "intent_id": "action-intent-1ce7e6b31f2f0bfa",
+    "assessment_id": "execution-risk-assessment-d4f2f8b119d9903a",
+    "requested_mode": "review_only",
+    "human_approval_present": false,
+    "autonomous_approval_allowed": false,
+    "action_ledger_reference": "",
+    "created_at": "2026-07-03T00:03:30.930824+00:00"
+  },
+  "approval_requirement": {
+    "requirement_id": "execution-approval-requirement-dd1b0bf5fc2e9f0e",
+    "request_id": "execution-authorization-request-a6dc079bc59dbbbb",
+    "approval_type": "admin_required",
+    "rationale": "high-risk side effects would require elevated approval",
+    "satisfied": false,
+    "human_approval_required": true,
+    "admin_approval_required": true,
+    "action_ledger_required": true,
+    "created_at": "2026-07-03T00:03:30.930824+00:00"
+  },
+  "decision": {
+    "decision_id": "execution-authorization-decision-d69bf636cc9bc1fe",
+    "request_id": "execution-authorization-request-a6dc079bc59dbbbb",
+    "requirement_id": "execution-approval-requirement-dd1b0bf5fc2e9f0e",
+    "outcome": "review_only",
+    "rationale": "review-only authorization record; no execution may occur",
+    "applied": false,
+    "execution_authorized": false,
+    "action_executed": false,
+    "dry_run_executed": false,
+    "side_effects_performed": false,
+    "tool_called": false,
+    "provider_called": false,
+    "memory_mutated": false,
+    "invariant_flags": {
+      "execution_authorization_enabled": false,
+      "action_execution_enabled": false,
+      "dry_run_execution_enabled": false,
+      "side_effects_enabled": false,
+      "tool_calls_enabled": false,
+      "provider_calls_enabled": false,
+      "autonomous_approval_enabled": false,
+      "human_approval_required_for_risky_actions": true,
+      "action_ledger_required_before_execution": true,
+      "memory_mutation_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "training_enabled": false,
+      "scheduler_enabled": false,
+      "runtime_defaults_changed": false
+    },
+    "created_at": "2026-07-03T00:03:30.930824+00:00"
+  },
+  "dry_run_plan": {
+    "dry_run_plan_id": "execution-dry-run-plan-70b22412eaffb7a5",
+    "intent_id": "action-intent-1ce7e6b31f2f0bfa",
+    "decision_id": "execution-authorization-decision-d69bf636cc9bc1fe",
+    "planned_steps": [
+      "record intended action",
+      "assess risk",
+      "require action ledger before any future execution"
+    ],
+    "dry_run_enabled": false,
+    "real_execution_enabled": false,
+    "side_effects_enabled": false,
+    "requires_action_ledger": true,
+    "created_at": "2026-07-03T00:03:30.930824+00:00"
+  },
+  "trace": {
+    "trace_id": "execution-authorization-trace-b36493f1dde58523",
+    "intent_id": "action-intent-1ce7e6b31f2f0bfa",
+    "assessment_id": "execution-risk-assessment-d4f2f8b119d9903a",
+    "request_id": "execution-authorization-request-a6dc079bc59dbbbb",
+    "requirement_id": "execution-approval-requirement-dd1b0bf5fc2e9f0e",
+    "decision_id": "execution-authorization-decision-d69bf636cc9bc1fe",
+    "dry_run_plan_id": "execution-dry-run-plan-70b22412eaffb7a5",
+    "generated_for_review_only": true,
+    "applied": false,
+    "execution_authorized": false,
+    "action_executed": false,
+    "side_effects_performed": false,
+    "created_at": "2026-07-03T00:03:30.930824+00:00"
+  },
+  "report_entry": {
+    "report_entry_id": "execution-authorization-report-entry-6907c037efe594f4",
+    "trace_id": "execution-authorization-trace-b36493f1dde58523",
+    "intent_summary": "call_tool: future runtime might ask to call a specialist or tool",
+    "risk_summary": "high: tool_side_effects",
+    "approval_summary": "admin_required: high-risk side effects would require elevated approval",
+    "decision_summary": "review_only: review-only authorization record; no execution may occur",
+    "unresolved_gaps": [
+      "action ledger is not implemented",
+      "human approval surface is not implemented",
+      "no execution engine exists"
+    ],
+    "recommended_next_review_step": "design action ledger before execution can be considered",
+    "generated_for_review_only": true
+  },
+  "safety_boundaries": [
+    "execution authorization is not enabled",
+    "actions are not executable",
+    "dry-run execution is not enabled",
+    "tool/provider/network/file/database side effects are not possible",
+    "autonomous approval is not allowed",
+    "future execution requires an action ledger first",
+    "no memory, recall, training, scheduler, or runtime default changes are made"
+  ],
+  "inactive_systems": [
+    "action execution",
+    "dry-run execution",
+    "tool calls",
+    "provider calls",
+    "side effects",
+    "autonomous approval",
+    "action ledger execution",
+    "memory mutation",
+    "runtime recall mutation",
+    "training",
+    "schedulers"
+  ]
+}

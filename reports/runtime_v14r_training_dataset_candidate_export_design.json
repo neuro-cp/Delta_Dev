@@ -1,0 +1,249 @@
+{
+  "phase": "Runtime V1.4R",
+  "title": "Training Dataset Candidate / Export Design",
+  "status": "dataset_design_only_no_export_no_training",
+  "final_recommendation": "PROCEED_OFFLINE_EVALUATION_HARNESS_DESIGN",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v14_training_dataset.py",
+    "orchestration/runtime/v14_training_dataset_report.py",
+    "tests/runtime_v14/test_v14_training_dataset_design.py",
+    "reports/runtime_v14r_training_dataset_candidate_export_design.md",
+    "reports/runtime_v14r_training_dataset_candidate_export_design.json",
+    "docs/runtime_v14r_training_dataset_candidate_export_prompt.txt"
+  ],
+  "design_summary": "Inert training candidate, draft, dataset candidate, safety review, approval requirement, export decision, export plan, audit record, and report entry shapes.",
+  "pipeline_summary": "RuntimeConsolePreview -> TrainingCandidateSource -> TrainingExampleDraft -> TrainingDatasetCandidate -> TrainingDataSafetyReview -> TrainingExportDecision -> TrainingExportPlan",
+  "invariant_flags": {
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "training_dataset_export_enabled": false,
+    "dataset_write_enabled": false,
+    "active_dataset_enabled": false,
+    "automatic_training_allowed": false,
+    "user_message_auto_training_enabled": false,
+    "autonomous_learning_enabled": false,
+    "background_learning_enabled": false,
+    "canonical_write_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "provider_calls_enabled": false,
+    "specialist_routing_enabled": false,
+    "action_execution_enabled": false,
+    "tool_calls_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "source": {
+    "source_id": "training-candidate-source-c6dfaf3dd7b4c649",
+    "source_type": "runtime_console_preview",
+    "source_reference_id": "runtime-console-preview-fa4cbd01268f5085",
+    "source_summary": "manual console preview considered for future training review",
+    "provenance_reference_ids": [
+      "runtime-console-trace-d5a39945a0c2ec41"
+    ],
+    "user_visible": true,
+    "contains_user_message": true,
+    "human_approval_required": true,
+    "active": false,
+    "training_enabled": false,
+    "automatic_training_allowed": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "draft": {
+    "draft_id": "training-example-draft-910e049d4139051f",
+    "source_id": "training-candidate-source-c6dfaf3dd7b4c649",
+    "input_preview": "Use this as training data.",
+    "target_preview": "Runtime console preview only. No provider, memory, training, recall, or execution path was used.",
+    "instruction_preview": "Review whether this trace is appropriate for future offline evaluation.",
+    "rationale": "example draft only; not training data",
+    "provenance_reference_ids": [
+      "runtime-console-trace-d5a39945a0c2ec41"
+    ],
+    "safety_notes": [
+      "human approval required"
+    ],
+    "privacy_notes": [
+      "contains user-visible message"
+    ],
+    "lane_scope": [
+      "manual_inspection"
+    ],
+    "active": false,
+    "approved": false,
+    "training_ready": false,
+    "exported": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "dataset_candidate": {
+    "dataset_candidate_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "draft_ids": [
+      "training-example-draft-910e049d4139051f"
+    ],
+    "dataset_purpose": "future offline evaluation review",
+    "dataset_scope": "manual runtime console preview traces",
+    "evidence_summary": "single review-only preview trace",
+    "exclusion_notes": [
+      "not exported",
+      "not training-ready"
+    ],
+    "required_reviews": [
+      "human_review",
+      "privacy_review",
+      "safety_review"
+    ],
+    "active": false,
+    "approved": false,
+    "export_ready": false,
+    "exported": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "safety_review": {
+    "review_id": "training-data-safety-review-c7c3c812162698c4",
+    "target_reference_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "safety_status": "human_review_required",
+    "privacy_status": "privacy_review_required",
+    "provenance_status": "safe_for_future_review",
+    "risk_notes": [
+      "user-visible message requires privacy and human review"
+    ],
+    "required_before_export": true,
+    "blocked_by_invariant": false,
+    "approved": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "approval_requirement": {
+    "requirement_id": "training-data-approval-fe442df8ed5ba0d8",
+    "target_reference_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "approval_type": "privacy_review_required",
+    "required_actor": "human_reviewer",
+    "approval_reason": "user-visible message cannot become training material without review",
+    "satisfied": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "export_decision": {
+    "decision_id": "training-export-decision-379e7b58c0a279d9",
+    "dataset_candidate_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "draft_id": "training-example-draft-910e049d4139051f",
+    "outcome": "requires_privacy_review",
+    "rationale": "privacy review is required before any future export review",
+    "invariant_flags": {
+      "training_enabled": false,
+      "fine_tuning_enabled": false,
+      "weight_update_enabled": false,
+      "training_dataset_export_enabled": false,
+      "dataset_write_enabled": false,
+      "active_dataset_enabled": false,
+      "automatic_training_allowed": false,
+      "user_message_auto_training_enabled": false,
+      "autonomous_learning_enabled": false,
+      "background_learning_enabled": false,
+      "canonical_write_enabled": false,
+      "memory_mutation_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "provider_calls_enabled": false,
+      "specialist_routing_enabled": false,
+      "action_execution_enabled": false,
+      "tool_calls_enabled": false,
+      "scheduler_enabled": false,
+      "runtime_defaults_changed": false
+    },
+    "applied": false,
+    "approved": false,
+    "exported": false,
+    "training_triggered": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "export_plan": {
+    "export_plan_id": "training-export-plan-82cddcd1babd476d",
+    "dataset_candidate_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "output_format": "jsonl_preview",
+    "output_location_preview": "reports/future_training_dataset_preview.jsonl",
+    "required_approval_ids": [
+      "training-data-approval-fe442df8ed5ba0d8"
+    ],
+    "required_review_ids": [
+      "training-data-safety-review-c7c3c812162698c4"
+    ],
+    "export_steps": [
+      "review source provenance",
+      "review privacy",
+      "review safety",
+      "do not export in V1.4R"
+    ],
+    "export_enabled": false,
+    "dataset_write_enabled": false,
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "audit_record": {
+    "audit_id": "training-dataset-audit-537f46c93f9577c2",
+    "dataset_candidate_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "draft_ids": [
+      "training-example-draft-910e049d4139051f"
+    ],
+    "decision_id": "training-export-decision-379e7b58c0a279d9",
+    "source_reference_ids": [
+      "training-candidate-source-c6dfaf3dd7b4c649"
+    ],
+    "review_reference_ids": [
+      "training-data-safety-review-c7c3c812162698c4"
+    ],
+    "approval_requirement_ids": [
+      "training-data-approval-fe442df8ed5ba0d8"
+    ],
+    "audit_summary": "training dataset candidate/export design is review-only",
+    "generated_for_review_only": true,
+    "persisted_to_active_dataset": false,
+    "exported": false,
+    "training_triggered": false,
+    "created_at": "2026-07-03T02:35:41.335488+00:00"
+  },
+  "report_entry": {
+    "report_entry_id": "training-dataset-report-entry-7b5fa5cb0bdd5d9f",
+    "dataset_candidate_id": "training-dataset-candidate-428d500c5e3e80a1",
+    "draft_summary": "1 draft(s), none approved/training-ready/exported",
+    "review_summary": "human_review_required/privacy_review_required/safe_for_future_review",
+    "approval_summary": "privacy_review_required: satisfied=False",
+    "export_decision_summary": "requires_privacy_review: privacy review is required before any future export review",
+    "audit_summary": "training dataset candidate/export design is review-only",
+    "unresolved_gaps": [
+      "offline evaluation harness is not implemented",
+      "training dataset export is not enabled",
+      "human approval workflow is not implemented"
+    ],
+    "recommended_next_review_step": "design offline evaluation harness",
+    "generated_for_review_only": true
+  },
+  "safety_boundaries": [
+    "training candidate is not training data",
+    "training example draft is not dataset export",
+    "export decision is not export execution",
+    "dataset plan is not fine-tune",
+    "review eligibility is not approval",
+    "human approval requirement is not approval",
+    "user message is not automatic training example",
+    "trace reuse is not model update"
+  ],
+  "inactive_systems": [
+    "training",
+    "fine-tuning",
+    "model weight updates",
+    "training dataset export",
+    "active dataset writes",
+    "automatic training from user messages",
+    "background learning",
+    "canonical writes",
+    "memory mutation",
+    "runtime recall mutation",
+    "provider calls",
+    "specialist routing",
+    "action execution",
+    "tool calls",
+    "schedulers/background workers/timers/queues"
+  ],
+  "test_status": "run py_compile and tests/runtime_v14 to verify"
+}

@@ -1,0 +1,38 @@
+Minimal Runtime UI / Message Console
+
+Status: manual, local, deterministic, review-only.
+
+This phase adds a small CLI/script console because the repo does not currently
+contain a frontend package/app/pages/components structure.
+
+The console can preview:
+
+- RuntimeConsoleInput
+- RawExperienceInput
+- ExperienceRecord
+- StructuralInputUnit
+- SemanticFrame
+- SemanticSignal
+- RuntimeConsoleTraceSummary
+- RuntimeConsoleSafetyStatus
+
+Invariant language:
+
+- message console != autonomous agent
+- user message != automatic training example
+- runtime preview != runtime mutation
+- trace display != memory write
+- disabled capability flag != capability activation
+- UI button / CLI command != execution authority
+- manual inspection != background ingestion
+
+This phase does not add provider calls, specialist routing, training,
+fine-tuning, canonical writes, memory mutation, recall mutation, action
+execution, tool calls, file/network/database side effects, background
+listeners, schedulers, automatic ingestion, or runtime default changes.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_MANUAL_END_TO_END_MESSAGE_TESTING

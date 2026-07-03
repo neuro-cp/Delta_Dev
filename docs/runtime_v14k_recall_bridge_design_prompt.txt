@@ -1,0 +1,46 @@
+Runtime V1.4K - Recall Bridge Design
+
+Current checkpoint:
+- Runtime V1.4J Dormant Specialist Result Merge Protocol is complete and verified.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+- No training, canonical writes, pruning, provider calls, active specialist routing, recall mutation, or action execution.
+
+Purpose:
+Design an inert, deterministic, non-mutating recall bridge scaffold between canonical-memory design artifacts and the existing activation/attention/evidence-gating system.
+
+Required objects:
+- RecallBridgeSource
+- RecallBridgeQuery
+- RecallBridgeCandidate
+- RecallBridgeEligibilityDecision
+- RecallBridgeSafetyReview
+- RecallBridgeTrace
+- RecallBridgePlan
+- RecallBridgeReportEntry
+
+Invariant language:
+- bridge design != live recall
+- candidate != retrieved memory
+- eligibility != activation
+- recall trace != recall mutation
+- canonical record shape != active memory source
+- recall plan != runtime behavior change
+
+Hard boundaries:
+- Do not activate recall bridge.
+- Do not connect canonical memory to live recall.
+- Do not retrieve canonical memory into runtime answer context.
+- Do not alter activation behavior.
+- Do not alter attention behavior.
+- Do not alter evidence selection.
+- Do not alter answer generation.
+- Do not mutate runtime recall.
+- Do not mutate canonical memory.
+- Do not train.
+- Do not call providers.
+- Do not activate specialist routing.
+- Do not execute actions.
+
+Expected recommendation:
+PROCEED_STRUCTURAL_SEMANTIC_ADAPTER_DESIGN

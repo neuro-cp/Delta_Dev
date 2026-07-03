@@ -1,0 +1,42 @@
+Runtime V1.4F - Live Canonical Store Design Scaffold
+
+Current checkpoint:
+- Runtime V1.4E is complete and verified.
+- V1.4E added ReplayBatch, ReplayReviewResult, ConsolidationCandidate, ConsolidationDecision, and SleepCyclePlan.
+- Current V1.4 tests before this phase: 94 passed.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+
+Goal:
+Design the canonical memory store layer as an inert, local, deterministic,
+non-mutating scaffold. Define how future approved consolidation candidates could
+become canonical memory records, but do not promote, write, mutate, or activate
+canonical memory.
+
+Required outputs:
+- CanonicalMemoryDraft
+- CanonicalMemoryRecord
+- CanonicalStoreDecision
+- CanonicalStorePlan
+- CanonicalRevisionRecord
+- CanonicalRollbackPlan
+
+Hard boundaries:
+- No canonical writes.
+- No promotion of consolidation candidates.
+- No runtime recall bridge.
+- No activation/attention integration.
+- No training.
+- No live pruning or canonical pruning.
+- No provider calls.
+- No specialist routing activation.
+- No execution gate activation.
+- No schedulers, workers, timers, daemons, or background jobs.
+- No benchmark fixture changes.
+- No provider prompt changes.
+- No Model B default change.
+- No HYB1 default enablement.
+
+Expected final recommendation:
+PROCEED_TEMPORARY_PRUNING_PROJECTION_DESIGN only if compile/tests pass and
+V1.4F remains non-mutating.

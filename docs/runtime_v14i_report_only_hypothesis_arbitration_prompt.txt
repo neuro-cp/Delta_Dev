@@ -1,0 +1,37 @@
+Runtime V1.4I - Report-Only Hypothesis Arbitration Design
+
+Current checkpoint:
+- Runtime V1.4H is complete and verified.
+- Current V1.4 suite before this phase: 128 passed.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+
+Core invariant:
+- arbitration != authority
+- ranking != truth
+- winner != canonical memory
+- comparison != mutation
+- hypothesis != learned belief
+- report-only != runtime behavior change
+
+Goal:
+Design an inert, deterministic, evidence-bound hypothesis arbitration scaffold
+for comparing competing interpretations, corrections, memory candidates,
+consolidation candidates, learning candidates, or specialist-evidence
+candidates. Do not assign truth, promote hypotheses, write canonical memory,
+train, mutate recall, call providers, route specialists, or execute actions.
+
+Required objects:
+- HypothesisClaim
+- HypothesisEvidenceLink
+- HypothesisConflict
+- HypothesisArbitrationInput
+- HypothesisScorecard
+- HypothesisArbitrationDecision
+- HypothesisArbitrationReport
+- HypothesisArbitrationPlan
+- HypothesisReviewEscalation
+
+Expected final recommendation:
+PROCEED_DORMANT_SPECIALIST_MERGE_PROTOCOL_DESIGN only if compile/tests pass and
+V1.4I remains report-only, non-authoritative, and non-mutating.

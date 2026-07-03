@@ -1,0 +1,73 @@
+{
+  "current_default": {
+    "canonical_pruning": "disabled",
+    "hyb1": "dormant/env-gated only",
+    "runtime_recall_mutation": "disabled",
+    "runtime_v13_default": "Model B contextualized corpus support + citation_context reasoning usage gate",
+    "training": "disabled"
+  },
+  "files_added": [
+    "orchestration/runtime/v14_pruning_projection.py",
+    "orchestration/runtime/v14_pruning_projection_report.py",
+    "tests/runtime_v14/test_v14_pruning_projection_design.py",
+    "docs/runtime_v14g_temporary_pruning_projection_prompt.txt"
+  ],
+  "final_recommendation": "PROCEED_CONTROLLED_LEARNING_DESIGN",
+  "inactive_systems": {
+    "activation_attention_integration": false,
+    "actual_pruning": false,
+    "canonical_memory_mutation": false,
+    "canonical_pruning": false,
+    "concept_deletion": false,
+    "execution_gate_activation": false,
+    "live_memory_mutation": false,
+    "provider_calls": false,
+    "runtime_recall_mutation": false,
+    "scheduler_or_daemon": false,
+    "specialist_routing_activation": false,
+    "training": false
+  },
+  "phase": "Runtime V1.4G",
+  "pipeline": [
+    "PruningReviewProposal / FeedbackCaptureRecord",
+    "PruningProjectionScope",
+    "PruningProjectionSignal",
+    "PruningProjectionRequest",
+    "PruningProjectionReviewResult",
+    "PruningProjectionDecision",
+    "TemporaryPruningProjection",
+    "PruningProjectionPlan",
+    "PruningProjectionRollbackPlan"
+  ],
+  "principles": [
+    "projection != pruning",
+    "proposal != mutation",
+    "temporary != canonical",
+    "lane-scoped != global concept judgment"
+  ],
+  "safety_boundaries": {
+    "activation_integration_enabled": false,
+    "active_replay_enabled": false,
+    "active_store_enabled": false,
+    "attention_integration_enabled": false,
+    "canonical_pruning_enabled": false,
+    "canonical_write_enabled": false,
+    "execution_enabled": false,
+    "global_concept_deletion_enabled": false,
+    "live_memory_mutation_enabled": false,
+    "live_routing_enabled": false,
+    "projection_application_enabled": false,
+    "provider_calls_enabled": false,
+    "pruning_enabled": false,
+    "runtime_defaults_changed": false,
+    "runtime_recall_mutation_enabled": false,
+    "scheduler_enabled": false,
+    "training_enabled": false
+  },
+  "summary": "V1.4G defines an inert temporary pruning projection layer. It can represent lane-scoped projection scopes, signals, requests, review results, decisions, inactive temporary projection records, design-only plans, and rollback plans. It does not prune, mutate memory, alter recall, or change runtime behavior.",
+  "title": "Temporary Pruning Projection Design",
+  "verification": {
+    "py_compile": "passed for V1.4G modules and tests",
+    "tests": "passed: tests/runtime_v14"
+  }
+}

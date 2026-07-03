@@ -1,0 +1,47 @@
+Runtime V1.4G - Temporary Pruning Projection Design
+
+Current checkpoint:
+- Runtime V1.4F is complete and verified.
+- Current V1.4 suite before this phase: 102 passed.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+
+Core invariant:
+- projection != pruning
+- proposal != mutation
+- temporary != canonical
+- lane-scoped != global concept judgment
+
+Goal:
+Design a reversible, lane-scoped, session/projection-layer proposal scaffold
+for temporary dampening, quarantine, exclusion, review, or replay escalation
+recommendations. Do not actually prune, delete, mutate, demote, or alter
+canonical memory or runtime recall.
+
+Required objects:
+- PruningProjectionScope
+- PruningProjectionSignal
+- PruningProjectionRequest
+- PruningProjectionDecision
+- TemporaryPruningProjection
+- PruningProjectionPlan
+- PruningProjectionReviewResult
+- PruningProjectionRollbackPlan
+
+Hard boundaries:
+- No actual pruning.
+- No canonical pruning.
+- No concept deletion.
+- No canonical memory mutation.
+- No live memory mutation.
+- No runtime recall mutation.
+- No activation or attention integration.
+- No training.
+- No provider calls.
+- No schedulers, workers, timers, daemons, background jobs, or active queues.
+- No Model B default change.
+- No HYB1 default enablement.
+
+Expected final recommendation:
+PROCEED_CONTROLLED_LEARNING_DESIGN only if compile/tests pass and V1.4G remains
+scaffold-only and non-mutating.

@@ -1,0 +1,117 @@
+{
+  "report": "runtime_v14d_episodic_feedback_capture_scaffold",
+  "final_recommendation": "PROCEED_SLEEP_REPLAY_CONSOLIDATION_DESIGN",
+  "current_state": {
+    "runtime_v13_complete": true,
+    "model_b_default": true,
+    "hyb1_dormant_env_gated_only": true,
+    "v14a_safe_scaffold_complete": true,
+    "v14b_output_discipline_scaffold_complete": true,
+    "v14c_trace_design_complete": true
+  },
+  "modules_added": [
+    "orchestration/runtime/v14_episode.py",
+    "orchestration/runtime/v14_feedback.py",
+    "orchestration/runtime/v14_replay_markers.py",
+    "orchestration/runtime/v14_feedback_to_pruning.py",
+    "orchestration/runtime/v14_feedback_report.py"
+  ],
+  "original_delta_path_trace": {
+    "source": "reports/original_delta_runtime_path_trace.md",
+    "old_engine_runtime_adopted_directly": false,
+    "conceptual_path_adopted": "observation -> episodic boundary -> episode trace -> episode replay",
+    "future_deferred_path": "offline hypothesis trace / hypothesis runner",
+    "deferred": [
+      "execution gate activation",
+      "recall runtime bridge",
+      "routing influence",
+      "live pruning",
+      "controlled training",
+      "canonical mutation"
+    ]
+  },
+  "safety_boundaries": {
+    "training_enabled": false,
+    "live_pruning_enabled": false,
+    "canonical_mutation_enabled": false,
+    "provider_calls_enabled": false,
+    "live_specialist_routing_enabled": false,
+    "model_b_default_changed": false,
+    "hyb1_default_enabled": false,
+    "action_execution_enabled": false
+  },
+  "feedback_flow": [
+    "AnswerTrace",
+    "EpisodeTrace",
+    "FeedbackCaptureRecord",
+    "FeedbackEventDraft",
+    "ReplayReviewMarker",
+    "PruningReviewProposal"
+  ],
+  "feedback_dispositions": [
+    "record_only",
+    "eligible_for_replay",
+    "requires_human_review",
+    "pruning_review_candidate",
+    "benchmark_only_do_not_train",
+    "ignore_no_action"
+  ],
+  "feedback_sources": [
+    "user_explicit",
+    "user_implicit",
+    "model_self_check",
+    "evaluator_report",
+    "specialist_draft",
+    "benchmark_report",
+    "human_review",
+    "unknown"
+  ],
+  "feedback_polarities": [
+    "confirms",
+    "corrects",
+    "rejects",
+    "asks_for_more_evidence",
+    "flags_uncertainty",
+    "flags_safety_risk",
+    "flags_noise",
+    "neutral",
+    "unknown"
+  ],
+  "feedback_severities": [
+    "low",
+    "medium",
+    "high",
+    "critical",
+    "unknown"
+  ],
+  "feedback_targets": [
+    "final_answer",
+    "evidence_use",
+    "reasoning_lane",
+    "planning_lane",
+    "response_lane",
+    "specialist_route",
+    "uncertainty_mode",
+    "concept_usage",
+    "episode_boundary",
+    "unknown"
+  ],
+  "replay_marker_statuses": [
+    "proposed",
+    "queued",
+    "rejected",
+    "requires_human_review",
+    "benchmark_only_do_not_train"
+  ],
+  "inactive": [
+    "training",
+    "live pruning",
+    "canonical mutation",
+    "canonical pruning",
+    "provider calls",
+    "live specialist routing",
+    "active sleep/replay consolidation",
+    "autonomous acquisition"
+  ],
+  "next_phase": "Runtime V1.4E - Sleep/Replay Consolidation Design"
+}

@@ -1,0 +1,38 @@
+Runtime V1.4R - Training Dataset Candidate / Export Design
+
+Status: scaffold-only, review-only, no export, no training.
+
+Runtime V1.4R defines the design shape for future training dataset candidate
+and export review:
+
+- TrainingCandidateSource
+- TrainingExampleDraft
+- TrainingDatasetCandidate
+- TrainingDataSafetyReview
+- TrainingDataApprovalRequirement
+- TrainingExportDecision
+- TrainingExportPlan
+- TrainingDatasetAuditRecord
+- TrainingDatasetReportEntry
+
+Invariant language:
+
+- training candidate != training data
+- training example draft != dataset export
+- export decision != export execution
+- dataset plan != fine-tune
+- review eligibility != approval
+- human approval requirement != approval
+- user message != automatic training example
+- trace reuse != model update
+
+This phase does not train, fine-tune, update weights, export datasets, write
+active dataset files, mutate memory, mutate canonical memory, mutate recall,
+call providers, activate specialist routing, execute actions, call tools, start
+background learning, or change runtime defaults.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_OFFLINE_EVALUATION_HARNESS_DESIGN

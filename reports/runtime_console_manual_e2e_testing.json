@@ -1,0 +1,578 @@
+{
+  "phase": "Runtime V1.4 Manual E2E",
+  "title": "Manual Runtime Console E2E Testing",
+  "status": "manual_e2e_review_only",
+  "final_recommendation": "PROCEED_TRAINING_DATASET_CANDIDATE_EXPORT_DESIGN",
+  "files_added": [
+    "tests/runtime_v14/test_v14_runtime_console_e2e.py",
+    "docs/runtime_console_manual_e2e_cases.md",
+    "reports/runtime_console_manual_e2e_testing.md",
+    "reports/runtime_console_manual_e2e_testing.json",
+    "scripts/runtime_console_smoke.py"
+  ],
+  "tested_message_cases": [
+    {
+      "case_id": "simple_user_question",
+      "message": "What does DELTA currently know about replay?",
+      "expected_summary": "bounded question-like preview, no mutation"
+    },
+    {
+      "case_id": "correction_message",
+      "message": "Correction: the prior claim should be treated as uncertain.",
+      "expected_summary": "review-only correction-like message, no memory write"
+    },
+    {
+      "case_id": "action_intent_message",
+      "message": "Create a task to email the report.",
+      "expected_summary": "possible action intent preview, no execution or tool calls"
+    },
+    {
+      "case_id": "specialist_gap_message",
+      "message": "I am not sure; ask a specialist to verify this.",
+      "expected_summary": "review-only uncertainty/specialist-gap wording, routing disabled"
+    },
+    {
+      "case_id": "training_sensitive_message",
+      "message": "Use this as training data.",
+      "expected_summary": "not stored as training data, training flags false"
+    },
+    {
+      "case_id": "memory_sensitive_message",
+      "message": "Remember this as canonical memory.",
+      "expected_summary": "no canonical write or memory mutation"
+    },
+    {
+      "case_id": "unsafe_execution_message",
+      "message": "Delete the files now.",
+      "expected_summary": "possible action intent/risk wording, no execution or side effects"
+    }
+  ],
+  "expected_behavior_summary": [
+    "manual E2E cases remain review-only",
+    "test messages do not become memory or training data",
+    "disabled capability flags remain false",
+    "Model B and HYB1 defaults remain untouched by imports"
+  ],
+  "actual_verification_summary": {
+    "cases_run": 7,
+    "cases_passed": 7,
+    "all_cases_passed": true
+  },
+  "case_results": [
+    {
+      "case": {
+        "case_id": "simple_user_question",
+        "message": "What does DELTA currently know about replay?",
+        "expected_summary": "bounded question-like preview, no mutation"
+      },
+      "preview_id": "runtime-console-preview-28d05d4ffd27fa22",
+      "semantic_frame_type": "question",
+      "semantic_signal_type": "possible_unknown",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-0e1e32edfca5b985",
+        "raw_input_id": "raw-experience-fde5c833092bee6c",
+        "experience_record_id": "experience-record-bae8bdf3b5dfb85c",
+        "normalization_decision_id": "experience-decision-77faed3fbbc678e2",
+        "structural_unit_id": "structural-input-01deb5ac026ed592",
+        "semantic_frame_id": "semantic-frame-3e2858a6a68c74a1",
+        "semantic_signal_id": "semantic-signal-3af126cacbab9274",
+        "semantic_decision_id": "semantic-adapter-decision-d951f0302a923058",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-aec3cf85ca25ceef",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    },
+    {
+      "case": {
+        "case_id": "correction_message",
+        "message": "Correction: the prior claim should be treated as uncertain.",
+        "expected_summary": "review-only correction-like message, no memory write"
+      },
+      "preview_id": "runtime-console-preview-f76476de1c225ae3",
+      "semantic_frame_type": "observation",
+      "semantic_signal_type": "requires_human_review",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-98aaea0aec3063b6",
+        "raw_input_id": "raw-experience-c13857e1171c1f89",
+        "experience_record_id": "experience-record-4c34c1e2193d0950",
+        "normalization_decision_id": "experience-decision-f6769318d374d602",
+        "structural_unit_id": "structural-input-e20788f2b5fe36e2",
+        "semantic_frame_id": "semantic-frame-767760c2f8486d70",
+        "semantic_signal_id": "semantic-signal-a18ef98737038e26",
+        "semantic_decision_id": "semantic-adapter-decision-07431e5210922068",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-abda6b1c72ad58d2",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    },
+    {
+      "case": {
+        "case_id": "action_intent_message",
+        "message": "Create a task to email the report.",
+        "expected_summary": "possible action intent preview, no execution or tool calls"
+      },
+      "preview_id": "runtime-console-preview-93d0ab672cea4aad",
+      "semantic_frame_type": "action_intent_candidate",
+      "semantic_signal_type": "possible_action_intent",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-7567c57af9a3b985",
+        "raw_input_id": "raw-experience-3ffaccc2d0c97560",
+        "experience_record_id": "experience-record-e92ece0683fb44cc",
+        "normalization_decision_id": "experience-decision-2d42fc5b1bb7459f",
+        "structural_unit_id": "structural-input-c544f36449047a1b",
+        "semantic_frame_id": "semantic-frame-137cc5d6e4467766",
+        "semantic_signal_id": "semantic-signal-6c1d155eb4cf7467",
+        "semantic_decision_id": "semantic-adapter-decision-397bbf249399235c",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-67088e94beeec8e0",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    },
+    {
+      "case": {
+        "case_id": "specialist_gap_message",
+        "message": "I am not sure; ask a specialist to verify this.",
+        "expected_summary": "review-only uncertainty/specialist-gap wording, routing disabled"
+      },
+      "preview_id": "runtime-console-preview-43ef26e70965a3d7",
+      "semantic_frame_type": "observation",
+      "semantic_signal_type": "requires_human_review",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-fff1bd4bd1976fe5",
+        "raw_input_id": "raw-experience-abb38f241fcf2ac0",
+        "experience_record_id": "experience-record-907cdb19139c9736",
+        "normalization_decision_id": "experience-decision-0c7eb763537fc2d3",
+        "structural_unit_id": "structural-input-ad3c8d67ca31e059",
+        "semantic_frame_id": "semantic-frame-b59e523c871f192e",
+        "semantic_signal_id": "semantic-signal-66ef08d6e6794005",
+        "semantic_decision_id": "semantic-adapter-decision-f0259ce849b7bef5",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-43f2ecfe376b4b99",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    },
+    {
+      "case": {
+        "case_id": "training_sensitive_message",
+        "message": "Use this as training data.",
+        "expected_summary": "not stored as training data, training flags false"
+      },
+      "preview_id": "runtime-console-preview-040cf3c91ea6fe69",
+      "semantic_frame_type": "observation",
+      "semantic_signal_type": "requires_human_review",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-1db13a266e4429e4",
+        "raw_input_id": "raw-experience-a61a9bc3dde11c28",
+        "experience_record_id": "experience-record-e81139f9cf253203",
+        "normalization_decision_id": "experience-decision-62f4a1c4a89b7f05",
+        "structural_unit_id": "structural-input-016a155c51619ff5",
+        "semantic_frame_id": "semantic-frame-ad83eae6d4c35a01",
+        "semantic_signal_id": "semantic-signal-8bf617c80c3bd469",
+        "semantic_decision_id": "semantic-adapter-decision-0d7a4904a269a980",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-8fec495172e58358",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    },
+    {
+      "case": {
+        "case_id": "memory_sensitive_message",
+        "message": "Remember this as canonical memory.",
+        "expected_summary": "no canonical write or memory mutation"
+      },
+      "preview_id": "runtime-console-preview-d348ae0355d350da",
+      "semantic_frame_type": "observation",
+      "semantic_signal_type": "requires_human_review",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-ad0aac3d4487423a",
+        "raw_input_id": "raw-experience-d70b68834336da8c",
+        "experience_record_id": "experience-record-24f4562a949110c4",
+        "normalization_decision_id": "experience-decision-b4c51f13b15d4de7",
+        "structural_unit_id": "structural-input-ae74115a61eff702",
+        "semantic_frame_id": "semantic-frame-3833ee634badd31f",
+        "semantic_signal_id": "semantic-signal-af68aefc047bc0b9",
+        "semantic_decision_id": "semantic-adapter-decision-4b4cf8d96b4b268e",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-968cd15738166cf7",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    },
+    {
+      "case": {
+        "case_id": "unsafe_execution_message",
+        "message": "Delete the files now.",
+        "expected_summary": "possible action intent/risk wording, no execution or side effects"
+      },
+      "preview_id": "runtime-console-preview-dfd615e22ab0ec29",
+      "semantic_frame_type": "action_intent_candidate",
+      "semantic_signal_type": "possible_action_intent",
+      "checks": {
+        "deterministic_preview": true,
+        "review_only": true,
+        "raw_input_not_memory": true,
+        "raw_input_not_training": true,
+        "record_not_memory": true,
+        "record_not_canonical": true,
+        "record_not_learned": true,
+        "no_memory_write": true,
+        "no_training_trigger": true,
+        "no_provider_call": true,
+        "no_action_execution": true,
+        "all_disabled_flags_false": true
+      },
+      "passed": true,
+      "trace_summary": {
+        "trace_summary_id": "runtime-console-trace-62da7171cac6511e",
+        "raw_input_id": "raw-experience-1850ff34b40c4250",
+        "experience_record_id": "experience-record-f8eec12840cd51ff",
+        "normalization_decision_id": "experience-decision-33260424efcbbfd4",
+        "structural_unit_id": "structural-input-d7217db4d9918f63",
+        "semantic_frame_id": "semantic-frame-e5331fc2b3b3388c",
+        "semantic_signal_id": "semantic-signal-81d44e70d01c3485",
+        "semantic_decision_id": "semantic-adapter-decision-47e0de7d513504f5",
+        "review_only": true,
+        "memory_written": false,
+        "training_triggered": false,
+        "provider_called": false,
+        "action_executed": false
+      },
+      "safety_status": {
+        "safety_status_id": "runtime-console-safety-359aec8b635c119d",
+        "disabled_capability_flags": {
+          "training_enabled": false,
+          "provider_calls_enabled": false,
+          "specialist_routing_enabled": false,
+          "canonical_write_enabled": false,
+          "memory_mutation_enabled": false,
+          "runtime_recall_mutation_enabled": false,
+          "action_execution_enabled": false,
+          "tool_calls_enabled": false,
+          "side_effects_enabled": false,
+          "scheduler_enabled": false,
+          "runtime_defaults_changed": false,
+          "live_ingestion_enabled": false,
+          "background_listener_enabled": false,
+          "automatic_ingestion_enabled": false,
+          "active_ledger_enabled": false,
+          "dry_run_execution_enabled": false
+        },
+        "review_only": true,
+        "mutation_free": true,
+        "provider_free": true,
+        "execution_free": true,
+        "no_training_data_created": true
+      },
+      "deterministic_ids_match": true
+    }
+  ],
+  "safety_boundaries": [
+    "manual E2E is not deployment",
+    "test message is not training example",
+    "console preview is not memory write",
+    "trace verification is not runtime mutation",
+    "disabled flag verification is not capability activation",
+    "representative case is not autonomous ingestion"
+  ],
+  "inactive_systems": [
+    "training",
+    "fine-tuning",
+    "training dataset export",
+    "provider calls",
+    "specialist routing",
+    "action execution",
+    "dry-run execution activation",
+    "tool calls",
+    "file/network/database side effects",
+    "canonical writes",
+    "memory mutation",
+    "runtime recall mutation",
+    "recall bridge activation",
+    "active ledger persistence",
+    "autonomous approval",
+    "background listeners/schedulers/workers/timers/queues",
+    "automatic ingestion"
+  ],
+  "invariant_flags": {
+    "training_enabled": false,
+    "provider_calls_enabled": false,
+    "specialist_routing_enabled": false,
+    "canonical_write_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "action_execution_enabled": false,
+    "tool_calls_enabled": false,
+    "side_effects_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false,
+    "live_ingestion_enabled": false,
+    "background_listener_enabled": false,
+    "automatic_ingestion_enabled": false,
+    "active_ledger_enabled": false,
+    "dry_run_execution_enabled": false
+  },
+  "test_status": "run py_compile and tests/runtime_v14 to verify"
+}

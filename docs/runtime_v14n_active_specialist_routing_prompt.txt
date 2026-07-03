@@ -1,0 +1,23 @@
+Runtime V1.4N - Active Specialist Routing Design
+
+Status: scaffold-only, gated-off, non-mutating.
+
+Runtime V1.4N defines the design shape for future active specialist routing:
+
+- SpecialistRoutingRequest
+- SpecialistRoutingGate
+- SpecialistProviderContract
+- SpecialistRoutingDecision
+- SpecialistRoutingTrace
+- SpecialistRoutingPlan
+- SpecialistRoutingReportEntry
+
+This phase does not enable routing, provider calls, network use, authority transfer,
+merge integration, canonical writes, memory mutation, recall mutation, training,
+schedulers, execution, or runtime behavior changes.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_EXECUTION_AUTHORIZATION_DESIGN

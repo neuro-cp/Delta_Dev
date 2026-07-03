@@ -1,0 +1,32 @@
+Runtime V1.4P - Action Ledger Design
+
+Status: scaffold-only, non-mutating, no execution.
+
+Runtime V1.4P defines the design shape for a future append-only action ledger:
+
+- ActionLedgerEntry
+- ActionLedgerPlan
+- ActionAuditTrace
+- ActionRollbackReference
+- ActionLedgerDecision
+- ActionLedgerReportEntry
+
+Invariant language:
+
+- ledger design != action execution
+- audit entry != side effect
+- rollback reference != rollback execution
+- record shape != active tool control
+- append-only plan != active persistence
+- ledger eligibility != execution permission
+
+This phase does not enable active ledger persistence, action execution, dry-run
+execution, tool calls, provider calls, file/network/database side effects,
+autonomous approval, rollback execution, memory mutation, recall mutation,
+training, schedulers, queues, timers, or runtime behavior changes.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_DRY_RUN_ACTION_EXECUTION_DESIGN

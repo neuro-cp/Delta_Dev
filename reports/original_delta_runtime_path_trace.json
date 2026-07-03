@@ -1,0 +1,76 @@
+{
+  "report": "original_delta_runtime_path_trace",
+  "generated": "2026-07-02",
+  "source_root": "G:\\Delta_DevV0",
+  "start_point": "G:\\Delta_DevV0\\engine\\runtime.py",
+  "summary": "Trace runtime.py outward; adopt boundary/trace/replay ideas, not the original BrainRuntime core.",
+  "paths": [
+    {
+      "name": "execution_gate_path",
+      "files": [
+        "engine/execution/execution_gate.py",
+        "engine/execution/execution_state.py",
+        "engine/execution/execution_target.py",
+        "memory/recall_runtime_bridge/recall_runtime_adapter.py",
+        "memory/recall_runtime_bridge/recall_runtime_result.py",
+        "memory/recall_runtime_bridge/recall_runtime_policy.py"
+      ],
+      "finding": "ExecutionGate and ExecutionState are conceptually useful; recall runtime bridge is risky because it applies influence packets and old policy enables recall execution.",
+      "recommendation": "Defer active use; translate into future dormant authorization packet/AEM gate scaffold."
+    },
+    {
+      "name": "observation_episodic_replay_path",
+      "files": [
+        "engine/observation/observation_runtime_hook.py",
+        "engine/observation/observation_engine.py",
+        "engine/observation/observation_event.py",
+        "memory/episodic/episode_trace.py",
+        "memory/episodic/episode_tracker.py",
+        "memory/episodic/episode_runtime_hook.py",
+        "memory/episodic/episode_structure.py",
+        "memory/episodic/episode_replay.py",
+        "memory/episodic_boundary/boundary_adapter.py"
+      ],
+      "finding": "Best adoption path. Read-only hooks, immutable events, append-only trace, passive tracker, and offline replay align with current V1.4D feedback/replay direction.",
+      "recommendation": "Use as source material for Runtime V1.4E sleep/replay consolidation design."
+    },
+    {
+      "name": "attention_working_memory_snapshot_path",
+      "files": [
+        "memory/attention/attention_runtime_hook.py",
+        "memory/working_memory/working_memory_runtime_hook.py"
+      ],
+      "finding": "Read-only snapshot hooks are useful report-only diagnostics but should not change current activation/attention behavior.",
+      "recommendation": "Adapt later as answer-trace enrichment or diagnostics."
+    },
+    {
+      "name": "hypothesis_path",
+      "files": [
+        "engine/routing/hypothesis_registry.py",
+        "engine/routing/hypothesis_router.py",
+        "engine/routing/hypothesis_generator.py",
+        "engine/routing/hypothesis_pressure.py",
+        "engine/routing/routing_influence.py",
+        "engine/cognition/hypothesis/hypothesis.py",
+        "engine/cognition/hypothesis/hypothesis_competition.py",
+        "engine/cognition/hypothesis/hypothesis_grounding.py",
+        "engine/cognition/hypothesis/hypothesis_stabilization.py",
+        "engine/cognition/hypothesis/hypothesis_registry.py",
+        "engine/cognition/hypothesis/offline/hypothesis_trace.py",
+        "engine/cognition/hypothesis/offline/hypothesis_runner.py"
+      ],
+      "finding": "Offline hypothesis trace/runner pattern is useful; runtime routing influence should remain deferred.",
+      "recommendation": "Adapt as report-only hypothesis arbitration later, not as runtime routing."
+    }
+  ],
+  "opinion": "Original DELTA can save time if used as source material. Do not copy engine/runtime.py. The best reusable material is the episodic trace/replay path and offline hypothesis trace tooling.",
+  "recommended_next_phase": "Runtime V1.4E - Sleep/Replay Consolidation Design",
+  "defer": [
+    "execution gate activation",
+    "recall runtime bridge",
+    "routing influence",
+    "live pruning",
+    "controlled training",
+    "canonical mutation"
+  ]
+}

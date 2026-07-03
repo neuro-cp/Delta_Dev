@@ -1,0 +1,35 @@
+Runtime V1.4H - Controlled Learning Design
+
+Current checkpoint:
+- Runtime V1.4G is complete and verified.
+- Current V1.4 suite before this phase: 116 passed.
+- Model B remains default.
+- HYB1 remains dormant/env-gated only.
+
+Core invariant:
+- learning_design != learning
+- eligibility != promotion
+- review != training
+- candidate != canonical mutation
+- offline hypothesis != live behavior change
+- rollback plan != applied rollback
+
+Goal:
+Design a governed, rollback-aware, evidence-bound controlled-learning scaffold.
+Do not train, fine-tune, update model weights, export training datasets, mutate
+canonical memory, mutate live memory, change runtime recall, call providers, run
+specialist routing, or schedule autonomous learning.
+
+Required objects:
+- LearningEligibilitySignal
+- LearningEvidencePacket
+- LearningCandidate
+- LearningSafetyReview
+- ControlledLearningDecision
+- ControlledLearningPlan
+- LearningRollbackPlan
+- LearningAuditRecord
+
+Expected final recommendation:
+PROCEED_REPORT_ONLY_HYPOTHESIS_ARBITRATION_DESIGN only if compile/tests pass and
+V1.4H remains scaffold-only, evidence-bound, rollback-aware, and non-mutating.

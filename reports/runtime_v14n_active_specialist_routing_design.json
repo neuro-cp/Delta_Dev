@@ -1,0 +1,194 @@
+{
+  "phase": "Runtime V1.4N",
+  "title": "Active Specialist Routing Design Scaffold",
+  "status": "design_scaffold_only",
+  "final_recommendation": "PROCEED_EXECUTION_AUTHORIZATION_DESIGN",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "invariant_flags": {
+    "specialist_routing_enabled": false,
+    "provider_calls_enabled": false,
+    "network_enabled": false,
+    "human_approval_gate_enabled": false,
+    "merge_protocol_integration_enabled": false,
+    "canonical_write_enabled": false,
+    "active_store_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "training_enabled": false,
+    "fine_tuning_enabled": false,
+    "weight_update_enabled": false,
+    "scheduler_enabled": false,
+    "execution_enabled": false,
+    "runtime_defaults_changed": false
+  },
+  "request": {
+    "request_id": "specialist-routing-request-55589aaf183b391f",
+    "request_kind": "evidence_gap",
+    "question": "What evidence is missing before routing to a specialist?",
+    "evidence_gap": "future specialist routing requires an approval and authority boundary",
+    "lane_scope": [
+      "reasoning",
+      "safety"
+    ],
+    "source_trace_ids": [
+      "answer-trace-demo"
+    ],
+    "preferred_specialist": "evidence_specialist",
+    "routing_enabled": false,
+    "provider_calls_enabled": false,
+    "network_enabled": false,
+    "active": false,
+    "created_at": "2026-07-03T00:03:30.882764+00:00",
+    "notes": ""
+  },
+  "gate": {
+    "gate_id": "specialist-routing-gate-10e4846bb0b8a2f9",
+    "request_id": "specialist-routing-request-55589aaf183b391f",
+    "routing_enabled": false,
+    "provider_calls_enabled": false,
+    "network_enabled": false,
+    "human_approval_required": true,
+    "human_approval_present": false,
+    "merge_protocol_integration_enabled": false,
+    "rationale": "active specialist routing is gated off by default",
+    "created_at": "2026-07-03T00:03:30.882764+00:00"
+  },
+  "contract": {
+    "contract_id": "specialist-provider-contract-aedd18f51a35e793",
+    "specialist_type": "evidence_specialist",
+    "provider_name": "future_provider_placeholder",
+    "allowed_input_kinds": [
+      "evidence_gap"
+    ],
+    "allowed_output_contract": "bounded evidence packet draft only",
+    "active": false,
+    "provider_calls_enabled": false,
+    "network_enabled": false,
+    "authority_granted": false,
+    "may_write_memory": false,
+    "may_mutate_runtime": false,
+    "may_execute_actions": false,
+    "created_at": "2026-07-03T00:03:30.882764+00:00"
+  },
+  "decision": {
+    "decision_id": "specialist-routing-decision-946be1ad1176d09a",
+    "request_id": "specialist-routing-request-55589aaf183b391f",
+    "gate_id": "specialist-routing-gate-10e4846bb0b8a2f9",
+    "contract_id": "specialist-provider-contract-aedd18f51a35e793",
+    "outcome": "gated_off",
+    "rationale": "specialist routing is design-only and gated off",
+    "selected_specialist": "evidence_specialist",
+    "applied": false,
+    "provider_called": false,
+    "routing_executed": false,
+    "network_used": false,
+    "memory_written": false,
+    "canonical_written": false,
+    "merge_protocol_invoked": false,
+    "invariant_flags": {
+      "specialist_routing_enabled": false,
+      "provider_calls_enabled": false,
+      "network_enabled": false,
+      "human_approval_gate_enabled": false,
+      "merge_protocol_integration_enabled": false,
+      "canonical_write_enabled": false,
+      "active_store_enabled": false,
+      "memory_mutation_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "training_enabled": false,
+      "fine_tuning_enabled": false,
+      "weight_update_enabled": false,
+      "scheduler_enabled": false,
+      "execution_enabled": false,
+      "runtime_defaults_changed": false
+    },
+    "created_at": "2026-07-03T00:03:30.882764+00:00"
+  },
+  "trace": {
+    "trace_id": "specialist-routing-trace-fffd9e6c4d29280e",
+    "request_id": "specialist-routing-request-55589aaf183b391f",
+    "gate_id": "specialist-routing-gate-10e4846bb0b8a2f9",
+    "contract_id": "specialist-provider-contract-aedd18f51a35e793",
+    "decision_id": "specialist-routing-decision-946be1ad1176d09a",
+    "source_trace_ids": [
+      "answer-trace-demo"
+    ],
+    "generated_for_review_only": true,
+    "applied": false,
+    "provider_called": false,
+    "memory_written": false,
+    "created_at": "2026-07-03T00:03:30.882764+00:00"
+  },
+  "plan": {
+    "plan_id": "specialist-routing-plan-9c255525cffc0413",
+    "request_ids": [
+      "specialist-routing-request-55589aaf183b391f"
+    ],
+    "decision_ids": [
+      "specialist-routing-decision-946be1ad1176d09a"
+    ],
+    "trace_ids": [
+      "specialist-routing-trace-fffd9e6c4d29280e"
+    ],
+    "routing_enabled": false,
+    "provider_calls_enabled": false,
+    "network_enabled": false,
+    "human_approval_gate_enabled": false,
+    "merge_protocol_integration_enabled": false,
+    "memory_mutation_enabled": false,
+    "execution_enabled": false,
+    "invariant_flags": {
+      "specialist_routing_enabled": false,
+      "provider_calls_enabled": false,
+      "network_enabled": false,
+      "human_approval_gate_enabled": false,
+      "merge_protocol_integration_enabled": false,
+      "canonical_write_enabled": false,
+      "active_store_enabled": false,
+      "memory_mutation_enabled": false,
+      "runtime_recall_mutation_enabled": false,
+      "training_enabled": false,
+      "fine_tuning_enabled": false,
+      "weight_update_enabled": false,
+      "scheduler_enabled": false,
+      "execution_enabled": false,
+      "runtime_defaults_changed": false
+    },
+    "created_at": "2026-07-03T00:03:30.882764+00:00"
+  },
+  "report_entry": {
+    "report_entry_id": "specialist-routing-report-entry-0443979aa1570de1",
+    "trace_id": "specialist-routing-trace-fffd9e6c4d29280e",
+    "request_summary": "evidence_gap: future specialist routing requires an approval and authority boundary",
+    "gate_summary": "routing/provider/network disabled",
+    "contract_summary": "evidence_specialist contract inactive",
+    "decision_summary": "gated_off: specialist routing is design-only and gated off",
+    "unresolved_gaps": [
+      "human approval UI is not implemented",
+      "provider contract execution is not implemented",
+      "merge protocol integration remains dormant"
+    ],
+    "recommended_next_review_step": "design action authorization before enabling routing",
+    "generated_for_review_only": true
+  },
+  "safety_boundaries": [
+    "specialist routing is not enabled",
+    "provider calls are not enabled",
+    "network access is not used by the scaffold",
+    "specialist output is not authority",
+    "merge protocol integration remains dormant",
+    "no memory, canonical, recall, training, scheduler, or execution mutation is permitted"
+  ],
+  "inactive_systems": [
+    "live routing",
+    "provider calls",
+    "network calls",
+    "human approval workflow",
+    "specialist merge invocation",
+    "canonical writes",
+    "memory mutation",
+    "runtime recall mutation",
+    "training",
+    "execution"
+  ]
+}

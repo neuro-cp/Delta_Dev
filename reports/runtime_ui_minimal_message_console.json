@@ -1,0 +1,153 @@
+{
+  "phase": "Runtime V1.4R",
+  "title": "Minimal Runtime UI / Message Console",
+  "status": "manual_review_only_no_provider_no_mutation_no_execution",
+  "final_recommendation": "PROCEED_MANUAL_END_TO_END_MESSAGE_TESTING",
+  "implementation_choice": "CLI/script console",
+  "current_default": "Model B remains default; HYB1 remains dormant/env-gated",
+  "files_added": [
+    "orchestration/runtime/v14_runtime_console.py",
+    "orchestration/runtime/v14_runtime_console_report.py",
+    "scripts/runtime_console.py",
+    "tests/runtime_v14/test_v14_runtime_console.py",
+    "reports/runtime_ui_minimal_message_console.md",
+    "reports/runtime_ui_minimal_message_console.json",
+    "docs/runtime_ui_minimal_message_console_prompt.txt"
+  ],
+  "design_summary": "Manual local console preview creates review-only RawExperienceInput, ExperienceRecord, StructuralInputUnit, SemanticFrame, SemanticSignal, trace summary, and disabled capability status.",
+  "pipeline_preview_summary": "manual user message -> raw experience preview -> bounded experience record -> structural semantic preview -> trace summary -> safety flag display",
+  "disabled_capability_flags": {
+    "training_enabled": false,
+    "provider_calls_enabled": false,
+    "specialist_routing_enabled": false,
+    "canonical_write_enabled": false,
+    "memory_mutation_enabled": false,
+    "runtime_recall_mutation_enabled": false,
+    "action_execution_enabled": false,
+    "tool_calls_enabled": false,
+    "side_effects_enabled": false,
+    "scheduler_enabled": false,
+    "runtime_defaults_changed": false,
+    "live_ingestion_enabled": false,
+    "background_listener_enabled": false,
+    "automatic_ingestion_enabled": false,
+    "active_ledger_enabled": false,
+    "dry_run_execution_enabled": false
+  },
+  "preview": {
+    "preview_id": "runtime-console-preview-fac913345a504321",
+    "console_input": {
+      "console_input_id": "runtime-console-input-0ba5da2e87a6efbc",
+      "user_message": "Please preview how DELTA would inspect this message without learning or executing anything.",
+      "source_reference": "manual-console-report-demo",
+      "lane_scope": [
+        "manual_inspection"
+      ],
+      "created_at": "2026-07-03T02:26:45.375524+00:00"
+    },
+    "input_summary": {
+      "message_length": 91,
+      "source_reference": "manual-console-report-demo",
+      "lane_scope": [
+        "manual_inspection"
+      ]
+    },
+    "experience_record_summary": {
+      "record_id": "experience-record-420b23b2dad78e27",
+      "eligible_for_semantic_adapter": true,
+      "memory": false,
+      "canonical": false,
+      "learned": false,
+      "active": false
+    },
+    "semantic_frame_summary": {
+      "frame_id": "semantic-frame-19ecbcffd12f2dc1",
+      "frame_type": "action_intent_candidate",
+      "normalized_summary": "Please preview how DELTA would inspect this message without learning or executing anything.",
+      "canonical": false,
+      "learned": false,
+      "active": false
+    },
+    "trace_summary": {
+      "trace_summary_id": "runtime-console-trace-221780325ad0cf12",
+      "raw_input_id": "raw-experience-43a52979cea13908",
+      "experience_record_id": "experience-record-420b23b2dad78e27",
+      "normalization_decision_id": "experience-decision-d09e912066b114b7",
+      "structural_unit_id": "structural-input-6777f2facbcb7d20",
+      "semantic_frame_id": "semantic-frame-19ecbcffd12f2dc1",
+      "semantic_signal_id": "semantic-signal-38848d575e7bc5cf",
+      "semantic_decision_id": "semantic-adapter-decision-9d494dd214e05daf",
+      "review_only": true,
+      "memory_written": false,
+      "training_triggered": false,
+      "provider_called": false,
+      "action_executed": false
+    },
+    "safety_status": {
+      "safety_status_id": "runtime-console-safety-2271bb0193a94be8",
+      "disabled_capability_flags": {
+        "training_enabled": false,
+        "provider_calls_enabled": false,
+        "specialist_routing_enabled": false,
+        "canonical_write_enabled": false,
+        "memory_mutation_enabled": false,
+        "runtime_recall_mutation_enabled": false,
+        "action_execution_enabled": false,
+        "tool_calls_enabled": false,
+        "side_effects_enabled": false,
+        "scheduler_enabled": false,
+        "runtime_defaults_changed": false,
+        "live_ingestion_enabled": false,
+        "background_listener_enabled": false,
+        "automatic_ingestion_enabled": false,
+        "active_ledger_enabled": false,
+        "dry_run_execution_enabled": false
+      },
+      "review_only": true,
+      "mutation_free": true,
+      "provider_free": true,
+      "execution_free": true,
+      "no_training_data_created": true
+    },
+    "placeholder_response": "Runtime console preview only. No provider, memory, training, recall, or execution path was used."
+  },
+  "plan": {
+    "plan_id": "runtime-console-plan-6c27b01bd4273724",
+    "preview_ids": [
+      "runtime-console-preview-fac913345a504321"
+    ],
+    "manual_only": true,
+    "review_only": true,
+    "provider_calls_enabled": false,
+    "memory_mutation_enabled": false,
+    "training_enabled": false,
+    "action_execution_enabled": false,
+    "scheduler_enabled": false
+  },
+  "safety_boundaries": [
+    "message console is not autonomous agent",
+    "user message is not automatic training example",
+    "runtime preview is not runtime mutation",
+    "trace display is not memory write",
+    "disabled capability flag is not capability activation",
+    "UI or CLI command is not execution authority",
+    "manual inspection is not background ingestion"
+  ],
+  "inactive_systems": [
+    "provider calls",
+    "specialist routing",
+    "training",
+    "fine-tuning",
+    "canonical writes",
+    "memory mutation",
+    "runtime recall mutation",
+    "recall bridge activation",
+    "action execution",
+    "tool calls",
+    "file/network/database side effects",
+    "background listeners",
+    "schedulers/daemons/workers/timers/queues",
+    "automatic ingestion"
+  ],
+  "test_status": "run py_compile and tests/runtime_v14 to verify"
+}

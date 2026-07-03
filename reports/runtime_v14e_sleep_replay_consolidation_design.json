@@ -1,0 +1,63 @@
+{
+  "core_rule": "Replay evaluates future consolidation eligibility; replay does not consolidate directly.",
+  "current_default": {
+    "canonical_mutation": "disabled",
+    "hyb1": "dormant/env-gated only",
+    "runtime_v13_default": "Model B contextualized corpus support + citation_context reasoning usage gate",
+    "training": "disabled"
+  },
+  "files_added": [
+    "orchestration/runtime/v14_replay.py",
+    "orchestration/runtime/v14_consolidation.py",
+    "orchestration/runtime/v14_sleep_cycle.py",
+    "orchestration/runtime/v14_replay_report.py",
+    "tests/runtime_v14/test_v14_sleep_replay_consolidation.py",
+    "docs/runtime_v14e_sleep_replay_consolidation_prompt.txt"
+  ],
+  "final_recommendation": "PROCEED_LIVE_CANONICAL_STORE_DESIGN",
+  "inactive_systems": {
+    "active_replay_loop": false,
+    "canonical_writes": false,
+    "execution_gate_activation": false,
+    "live_pruning": false,
+    "provider_calls": false,
+    "recall_bridge": false,
+    "routing_influence": false,
+    "scheduler_or_daemon": false,
+    "specialist_routing_activation": false,
+    "training": false
+  },
+  "old_runtime_path": {
+    "old_engine_runtime_adopted_directly": false,
+    "preserved_conceptual_path": "observation -> episode -> replay review -> consolidation candidate -> decision"
+  },
+  "phase": "Runtime V1.4E",
+  "pipeline": [
+    "EpisodeTrace",
+    "FeedbackCaptureRecord",
+    "ReplayReviewMarker",
+    "PruningReviewProposal",
+    "ReplayBatch",
+    "ReplayReviewResult",
+    "ConsolidationCandidate",
+    "ConsolidationDecision",
+    "SleepCyclePlan"
+  ],
+  "safety_boundaries": {
+    "active_replay_enabled": false,
+    "canonical_write_enabled": false,
+    "execution_enabled": false,
+    "live_routing_enabled": false,
+    "provider_calls_enabled": false,
+    "pruning_enabled": false,
+    "runtime_defaults_changed": false,
+    "scheduler_enabled": false,
+    "training_enabled": false
+  },
+  "summary": "V1.4E adds inert replay batch, replay review, consolidation candidate, consolidation decision, and sleep-cycle plan records. Replay can now evaluate whether an episode or feedback signal deserves future consolidation, but it does not consolidate directly.",
+  "title": "Sleep / Replay Consolidation Design Scaffold",
+  "verification": {
+    "py_compile": "passed for V1.4E modules and tests",
+    "tests": "passed: tests/runtime_v14"
+  }
+}

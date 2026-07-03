@@ -1,0 +1,68 @@
+{
+  "files_added": [
+    "orchestration/runtime/v14_experience_adapter.py",
+    "orchestration/runtime/v14_experience_report.py",
+    "tests/runtime_v14/test_v14_experience_adapter_design.py",
+    "docs/runtime_v14m_raw_input_experience_adapter_prompt.txt"
+  ],
+  "final_recommendation": "PROCEED_ACTIVE_SPECIALIST_ROUTING_DESIGN_GATED",
+  "inactive_systems": {
+    "background_listener": false,
+    "candidate_envelope_write": false,
+    "canonical_memory_mutation": false,
+    "execution": false,
+    "hidden_telemetry_capture": false,
+    "live_ingestion": false,
+    "provider_calls": false,
+    "runtime_recall_mutation": false,
+    "scheduler_or_daemon": false,
+    "semantic_adapter_live_integration": false,
+    "specialist_routing": false,
+    "training": false
+  },
+  "phase": "Runtime V1.4M",
+  "pipeline": [
+    "RawExperienceInput",
+    "ExperienceSourceMetadata",
+    "ExperienceBoundary",
+    "ExperienceRecord",
+    "ExperienceNormalizationDecision",
+    "ExperienceAdapterTrace",
+    "ExperienceAdapterPlan",
+    "ExperienceAdapterReportEntry"
+  ],
+  "principles": [
+    "raw input != memory",
+    "experience record != learned state",
+    "boundary != ingestion daemon",
+    "user message != automatic training example",
+    "normalization != semantic truth",
+    "adapter trace != runtime mutation"
+  ],
+  "safety_boundaries": {
+    "active_store_enabled": false,
+    "automatic_ingestion_enabled": false,
+    "background_listener_enabled": false,
+    "candidate_envelope_write_enabled": false,
+    "canonical_write_enabled": false,
+    "execution_enabled": false,
+    "experience_adapter_enabled": false,
+    "fine_tuning_enabled": false,
+    "live_ingestion_enabled": false,
+    "memory_mutation_enabled": false,
+    "provider_calls_enabled": false,
+    "runtime_defaults_changed": false,
+    "runtime_recall_mutation_enabled": false,
+    "scheduler_enabled": false,
+    "semantic_adapter_integration_enabled": false,
+    "specialist_routing_enabled": false,
+    "training_enabled": false,
+    "weight_update_enabled": false
+  },
+  "summary": "V1.4M defines inert raw input and bounded experience-record scaffolding. It adds no live ingestion, listeners, memory writes, training, provider calls, or runtime behavior changes.",
+  "title": "Raw Input / Experience Adapter Design",
+  "verification": {
+    "py_compile": "passed for V1.4M modules and tests",
+    "tests": "passed: tests/runtime_v14"
+  }
+}

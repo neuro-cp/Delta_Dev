@@ -1,0 +1,27 @@
+Runtime V1.4O - Execution Authorization Design
+
+Status: scaffold-only, gated-off, non-mutating.
+
+Runtime V1.4O defines the design shape for future execution authorization:
+
+- ActionIntent
+- ExecutionRiskAssessment
+- ExecutionAuthorizationRequest
+- ExecutionApprovalRequirement
+- ExecutionAuthorizationDecision
+- ExecutionDryRunPlan
+- ExecutionAuthorizationTrace
+- ExecutionAuthorizationReportEntry
+
+This phase does not enable action execution, dry-run execution, tool calls,
+provider calls, file/network/database side effects, autonomous approval,
+memory mutation, recall mutation, training, schedulers, or runtime behavior
+changes.
+
+Every future executable action must pass through an action ledger first.
+
+Model B remains the default runtime.
+HYB1 remains dormant/env-gated only.
+
+Next recommended phase:
+PROCEED_ACTION_LEDGER_DESIGN
