@@ -14,4 +14,20 @@ Memory mutation: not_performed
 
 Action execution: not_performed
 
-Next recommendation: PROCEED_MANUAL_LOCAL_DEMO_OR_TRAINING_READINESS_REVIEW
+Next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW
+
+Runtime V2.8 is complete. Reports:
+
+- `reports/runtime_v28a_pipeline_validation.md`
+- `reports/runtime_v28b_failure_injection.md`
+- `reports/runtime_v28c_stress_test.md`
+- `reports/runtime_v28d_observability_dashboard.md`
+- `reports/runtime_v28e_architecture_audit.md`
+- `reports/runtime_v28f_test_expansion.md`
+- `reports/runtime_v28g_documentation_consolidation.md`
+- `reports/runtime_v28_master_validation.md`
+
+The next clean task is manual local demo review or selected cleanup review from
+the V2.8 architecture-audit recommendations. Do not start training, promote
+HYB1, enable scheduler/background workers, grant provider authority, execute
+actions, or mutate memory without a new explicit approval phase.

@@ -1,0 +1,48 @@
+{
+  "final_recommendation": "PROCEED_OBSERVABILITY",
+  "fixture_sizes": {
+    "evaluations": 80,
+    "memories": 250,
+    "recalls": 120
+  },
+  "metrics": {
+    "average_evaluation_score": 0.9,
+    "evaluation_queue_size": 80,
+    "evidence_ranking_stable": true,
+    "latency_ms": 0.1239,
+    "memory_ranking_stable": true,
+    "recall_queue_size": 120,
+    "selection_quality": 1.0
+  },
+  "mode": "large_fixture_stress_test_no_optimization",
+  "phase": "Runtime V2.8C",
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample_recall": [
+    "memory-0000",
+    "memory-0007",
+    "memory-0014",
+    "memory-0021",
+    "memory-0028",
+    "memory-0035",
+    "memory-0042",
+    "memory-0049",
+    "memory-0056",
+    "memory-0063"
+  ]
+}

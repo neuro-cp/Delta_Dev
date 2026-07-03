@@ -764,3 +764,47 @@ The next work should either manually exercise the local demo path or review
 whether the V2.5-V2.7 scaffolds satisfy the prerequisites for a future explicit
 training-readiness decision. Do not start training or promote HYB1 by default
 without a new explicit approval gate.
+
+## Runtime V2.8 Validation And Hardening Update
+
+Runtime V2.8 completed deterministic validation and hardening around the
+existing local runtime scaffold.
+
+Runtime capability matrix:
+
+| Capability | V2.8 State |
+| --- | --- |
+| Full local pipeline validation | fixture-only validation |
+| Failure injection | deterministic/stable |
+| Stress testing | fixture-only, no optimization |
+| Observability | diagnostic dashboards only |
+| Architecture audit | recommendations only |
+| Training | disabled |
+| HYB1 | dormant/env-gated shadow-only |
+| Scheduler | disabled |
+| Provider authority | disabled |
+
+Safety matrix:
+
+| Safety Boundary | State |
+| --- | --- |
+| Model B default | unchanged |
+| HYB1 promotion | not performed |
+| Training/fine-tuning/model updates | not performed |
+| Model artifacts | not created |
+| Provider calls/authority | not performed/granted |
+| Action execution | not performed |
+| Scheduler/background workers | not started |
+| Autonomous memory writes | not performed |
+| Authoritative recall | not enabled |
+
+Pipeline diagram:
+
+```text
+ask -> unknown detection -> retrieval -> evidence -> provider advisory
+-> evaluator -> candidate memory -> approval gate -> recall -> synthesis
+```
+
+Recommended next phase:
+
+`PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`

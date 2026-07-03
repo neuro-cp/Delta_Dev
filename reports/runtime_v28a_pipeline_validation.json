@@ -1,0 +1,76 @@
+{
+  "final_recommendation": "PROCEED_FAILURE_INJECTION",
+  "mode": "full_pipeline_validation_fixture_only",
+  "phase": "Runtime V2.8A",
+  "pipeline_passed": true,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "scenario": "ask_to_synthesis_without_live_authority",
+  "stages": [
+    {
+      "passed": true,
+      "result": "fixture_question_received",
+      "stage": "ask"
+    },
+    {
+      "passed": true,
+      "result": "bounded_unknown_detected",
+      "stage": "unknown_detection"
+    },
+    {
+      "passed": true,
+      "result": "repo_local_candidate_context",
+      "stage": "retrieval"
+    },
+    {
+      "passed": true,
+      "result": "deterministic_evidence_packet",
+      "stage": "evidence"
+    },
+    {
+      "passed": true,
+      "result": "mock_provider_advisory_only",
+      "stage": "provider_advisory"
+    },
+    {
+      "passed": true,
+      "result": "mock_evaluator_advisory_only",
+      "stage": "evaluator"
+    },
+    {
+      "passed": true,
+      "result": "candidate_proposal_only",
+      "stage": "candidate_memory"
+    },
+    {
+      "passed": true,
+      "result": "exact_approval_required_not_present",
+      "stage": "approval_gate"
+    },
+    {
+      "passed": true,
+      "result": "candidate_context_only",
+      "stage": "recall"
+    },
+    {
+      "passed": true,
+      "result": "grounded_local_response",
+      "stage": "synthesis"
+    }
+  ]
+}

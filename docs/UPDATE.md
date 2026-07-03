@@ -3465,3 +3465,36 @@ Reports:
 Next recommendation:
 
 `PROCEED_MANUAL_LOCAL_DEMO_OR_TRAINING_READINESS_REVIEW`
+
+## Runtime V2.8 Validation And Hardening Marathon
+
+Runtime V2.8 completed deterministic validation and hardening over the current
+local runtime scaffold.
+
+Generated reports:
+
+- `reports/runtime_v28a_pipeline_validation.md`
+- `reports/runtime_v28b_failure_injection.md`
+- `reports/runtime_v28c_stress_test.md`
+- `reports/runtime_v28d_observability_dashboard.md`
+- `reports/runtime_v28e_architecture_audit.md`
+- `reports/runtime_v28f_test_expansion.md`
+- `reports/runtime_v28g_documentation_consolidation.md`
+- `reports/runtime_v28_master_validation.md`
+
+The V2.8 validation layer exercised a full fixture-only path from ask through
+synthesis, injected deterministic failures, ran fixture stress checks, added
+diagnostic dashboard reports, generated architecture cleanup recommendations,
+expanded regression tests, and consolidated documentation.
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, model weight update, model artifact creation,
+  provider authority, action execution, autonomous memory write, authoritative
+  recall, or scheduler/background worker occurred.
+
+Next recommendation:
+
+`PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`

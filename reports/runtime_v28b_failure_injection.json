@@ -1,0 +1,97 @@
+{
+  "all_stable": true,
+  "final_recommendation": "PROCEED_STRESS_TEST",
+  "mode": "deterministic_failure_injection",
+  "phase": "Runtime V2.8B",
+  "results": [
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "missing_memory",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "conflicting_memory",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "provider_unavailable",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "malformed_provider_response",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "evaluator_disagreement",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "empty_evidence",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "stale_candidate",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "denied_approval",
+      "side_effects": false,
+      "stable": true
+    },
+    {
+      "fallback": "abstain_or_review_required",
+      "memory_mutation_performed": false,
+      "provider_call_performed": false,
+      "scenario": "cancelled_export",
+      "side_effects": false,
+      "stable": true
+    }
+  ],
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  }
+}

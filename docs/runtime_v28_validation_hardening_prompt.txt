@@ -1,0 +1,5 @@
+Runtime V2.8 — Validation and Hardening Marathon
+
+Validate the existing local runtime scaffold with deterministic reports and
+tests only. Do not train, create model artifacts, promote HYB1, call providers,
+execute actions, start schedulers, or mutate memory/recall.

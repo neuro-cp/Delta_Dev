@@ -308,6 +308,34 @@ Implemented early:
 - explicit decision records for proposed plans
 - agency proposals that answer what Delta should do next without execution
 
+## Runtime V2.8 Validation Surface
+
+Runtime V2.8 adds a validation and hardening layer over the current local
+runtime scaffold. It is not a new authority path.
+
+The validated local pipeline is:
+
+```text
+ask
+-> unknown detection
+-> retrieval
+-> evidence
+-> provider advisory
+-> evaluator
+-> candidate memory
+-> approval gate
+-> recall
+-> synthesis
+```
+
+Runtime V2.8 also adds deterministic failure injection, fixture-only stress
+testing, observability dashboards, architecture-audit recommendations, and
+expanded regression coverage. All V2.8 work remains report/test oriented.
+
+V2.8 does not enable training, model artifact creation, provider authority,
+HYB1 promotion, scheduler/background workers, action execution, autonomous
+memory mutation, or authoritative recall.
+
 Incomplete:
 
 - applied goal evolution from learning/reflection
