@@ -3582,6 +3582,47 @@ Next recommendation:
 
 `PROCEED_RC1_MANUAL_SCENARIO_VALIDATION`
 
+## DELTA RC1 Adversarial End-To-End Runtime Validation
+
+Completed adversarial validation over 30 required RC1 runtime scenarios.
+
+Validation scope included:
+
+- factual question path
+- large document and scientific corpus fixtures
+- financial, medical, legal, programming, and mixed-domain corpora
+- incomplete, false, missing-provenance, and timestamp-conflicting evidence
+- corrupted graphs, circular references, duplicate entities, renames, merges,
+  and splits
+- rollback, replay, version comparison, executive planning, specialist
+  disagreement, investigation gaps, counterfactuals, long conversation memory
+  simulation, large semantic corpus, and complete end-to-end cognitive cycle
+
+Result:
+
+- scenarios: 30
+- passed: 30
+- failed: 0
+- runtime maturity estimate: 97%
+- final recommendation: `PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES`
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated.
+- No training, fine-tuning, model update, provider authority, provider call,
+  autonomous browsing, autonomous execution, scheduler/background worker,
+  hidden write, memory mutation, or knowledge mutation occurred.
+
+Remaining limitations are bounded and explicit:
+
+- live document adapters are disabled and unvalidated
+- domain-specific expertise requires curated fixtures or explicitly gated
+  providers
+- specialist disagreement remains advisory/dormant
+- graph repair is report-only
+- executive planning remains non-executing
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI is complete as a planning-only executive cognition layer. DELTA

@@ -766,3 +766,27 @@ workers, mutate memory, mutate knowledge, perform hidden writes, promote HYB1,
 or change Model B defaults.
 
 Current architecture posture: RC1 manual scenario validation ready.
+
+## RC1 Adversarial Validation Boundary
+
+DELTA now includes an adversarial RC1 validation harness covering 30 required
+runtime scenarios, including contradictory documents, domain-specific corpora,
+missing provenance, corrupted graphs, circular references, duplicate entities,
+rollback after simulated integration, specialist disagreement, incomplete
+evidence, and a complete end-to-end cognitive cycle.
+
+The validation result is not permission to enable live capabilities. It means
+the deterministic RC1 fixture/runtime surfaces remained kernel-observable,
+audited, non-mutating, and rollback-aware under adversarial pressure.
+
+Current boundary:
+
+- Live document adapters remain disabled.
+- Providers remain disabled.
+- Training remains disabled.
+- Memory and knowledge mutation remain disabled.
+- Specialist routing remains dormant/advisory.
+- Executive planning remains non-executing.
+
+Current posture: adversarial validation passed; proceed to manual human RC1
+scenario validation before enabling any live capability.

@@ -1,5 +1,5 @@
 {
-  "ambiguous_call_count": 4905,
+  "ambiguous_call_count": 4908,
   "ambiguous_calls_sample": [
     {
       "call": "arc_safety_invariants",
@@ -8,7 +8,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_07_investigation"
     },
     {
@@ -48,7 +48,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_08_specialists"
     },
     {
@@ -88,7 +88,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_09_external_evidence"
     },
     {
@@ -128,7 +128,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_10_tool_provider_runtime"
     },
     {
@@ -168,7 +168,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_11_controlled_integration"
     },
     {
@@ -208,7 +208,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_12_evaluation_regression"
     },
     {
@@ -248,7 +248,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_13_sleep_replay"
     },
     {
@@ -288,7 +288,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_14_domain_packs"
     },
     {
@@ -328,7 +328,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_15_executive_operations"
     },
     {
@@ -368,7 +368,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_16_cognitive_os"
     },
     {
@@ -408,7 +408,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_17_world_model"
     },
     {
@@ -448,7 +448,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_18_multitime_memory"
     },
     {
@@ -488,7 +488,7 @@
     },
     {
       "call": "as_dict",
-      "candidate_count": 1319,
+      "candidate_count": 1321,
       "source": "orchestration.runtime.arc_19_self_model"
     },
     {
@@ -502,7 +502,7 @@
       "source": "orchestration.runtime.arc_19_self_model"
     }
   ],
-  "edge_count": 2392,
+  "edge_count": 2400,
   "edges": [
     {
       "call": "all",

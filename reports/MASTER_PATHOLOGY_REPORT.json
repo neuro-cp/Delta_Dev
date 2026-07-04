@@ -1,19 +1,25 @@
 {
   "architectural_debt_count": 25,
-  "call_edge_count": 2392,
+  "call_edge_count": 2400,
   "dead_system_count": 353,
-  "dependency_edge_count": 989,
-  "disconnected_system_count": 33,
+  "dependency_edge_count": 997,
+  "disconnected_system_count": 32,
   "duplicate_system_count": 38,
-  "final_recommendation": "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION",
+  "final_recommendation": "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
   "overall_runtime_maturity_estimate": {
-    "activation_readiness": "rc1_manual_validation_ready",
+    "activation_readiness": "adversarial_validation_passed_no_live_capabilities",
     "architecture_completeness": "high",
-    "estimated_percent": 95,
+    "estimated_percent": 97,
     "runtime_coherence": "medium",
     "safety_maturity": "high"
   },
   "phase": "DELTA RC1 Runtime Coherence Review",
+  "rc1_adversarial_validation": {
+    "failed_count": 0,
+    "final_recommendation": "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
+    "present": true,
+    "scenario_count": 30
+  },
   "rc1_document_audit_slice": {
     "final_recommendation": "PROCEED_KERNEL_ROUTING_ENFORCEMENT",
     "finding_count": 4,
@@ -60,14 +66,14 @@
     "Review whether this should split into model, builder, reporter, and test fixture helpers."
   ],
   "recommended_roadmap_reorder": [
-    "1. Manual RC1 scenario validation over the registered vertical slices.",
+    "1. Manual human RC1 validation over adversarial scenario outputs.",
     "2. Activation-readiness review for the smallest coherent vertical slice.",
     "3. Live adapter readiness review without enabling live ingestion.",
     "4. Kernel envelope adoption inside subsystem-to-subsystem calls.",
     "5. Real document adapter readiness review without live upload activation.",
     "6. Consolidate duplicated scaffold lifecycle helpers."
   ],
-  "runtime_module_count": 619,
+  "runtime_module_count": 620,
   "safety": {
     "autonomous_browsing_performed": false,
     "background_worker_started": false,
@@ -654,6 +660,7 @@
     }
   ],
   "top_25_architectural_strengths": [
+    "RC1 adversarial validation covers 30 required scenarios with no high-impact runtime failures.",
     "Central RC1 artifact registry maps report producers, consumers, validators, auditors, and activation status.",
     "Unified proposal/review/approval/integration state machine now normalizes review lifecycles and stops at integrated_disabled.",
     "Read-only substrate query adapter now gives reasoning one deterministic query surface over ARC II and RC1 artifacts.",
@@ -677,8 +684,7 @@
     "No hidden writes are required for report generation.",
     "Validation surfaces are deterministic.",
     "Knowledge and reasoning are conceptually separated.",
-    "Executive planning remains non-executing.",
-    "Learning proposals remain distinct from integration."
+    "Executive planning remains non-executing."
   ],
   "top_25_architectural_weaknesses": [
     "Many modules are still architecture leaves with no workflow consumer.",

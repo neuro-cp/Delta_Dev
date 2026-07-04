@@ -4,13 +4,13 @@
 DELTA RC1 Runtime Coherence Review
 
 ## Runtime Module Count
-619
+620
 
 ## Dependency Edge Count
-989
+997
 
 ## Call Edge Count
-2392
+2400
 
 ## Architectural Debt Count
 25
@@ -22,7 +22,7 @@ DELTA RC1 Runtime Coherence Review
 353
 
 ## Disconnected System Count
-33
+32
 
 ## Unused System Count
 81
@@ -127,6 +127,7 @@ DELTA RC1 Runtime Coherence Review
 - The next risk is incoherence from abundance, not missing vocabulary.
 
 ## Top 25 Architectural Strengths
+- RC1 adversarial validation covers 30 required scenarios with no high-impact runtime failures.
 - Central RC1 artifact registry maps report producers, consumers, validators, auditors, and activation status.
 - Unified proposal/review/approval/integration state machine now normalizes review lifecycles and stops at integrated_disabled.
 - Read-only substrate query adapter now gives reasoning one deterministic query surface over ARC II and RC1 artifacts.
@@ -151,7 +152,6 @@ DELTA RC1 Runtime Coherence Review
 - Validation surfaces are deterministic.
 - Knowledge and reasoning are conceptually separated.
 - Executive planning remains non-executing.
-- Learning proposals remain distinct from integration.
 
 ## Top 100 Improvement Opportunities
 - Add missing middleware: Kernel -> Knowledge
@@ -256,7 +256,7 @@ DELTA RC1 Runtime Coherence Review
 - Connect or archive completion_e_kernel_validation_reports
 
 ## Recommended Roadmap Reorder
-- 1. Manual RC1 scenario validation over the registered vertical slices.
+- 1. Manual human RC1 validation over adversarial scenario outputs.
 - 2. Activation-readiness review for the smallest coherent vertical slice.
 - 3. Live adapter readiness review without enabling live ingestion.
 - 4. Kernel envelope adoption inside subsystem-to-subsystem calls.
@@ -332,12 +332,22 @@ DELTA RC1 Runtime Coherence Review
 }
 ```
 
+## Rc1 Adversarial Validation
+```json
+{
+  "failed_count": 0,
+  "final_recommendation": "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
+  "present": true,
+  "scenario_count": 30
+}
+```
+
 ## Overall Runtime Maturity Estimate
 ```json
 {
-  "activation_readiness": "rc1_manual_validation_ready",
+  "activation_readiness": "adversarial_validation_passed_no_live_capabilities",
   "architecture_completeness": "high",
-  "estimated_percent": 95,
+  "estimated_percent": 97,
   "runtime_coherence": "medium",
   "safety_maturity": "high"
 }
@@ -363,4 +373,4 @@ DELTA RC1 Runtime Coherence Review
 ```
 
 ## Final Recommendation
-PROCEED_RC1_MANUAL_SCENARIO_VALIDATION
+PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES

@@ -1,10 +1,10 @@
 # Runtime Pathology Call Graph
 
 ## Edge Count
-2392
+2400
 
 ## Ambiguous Call Count
-4905
+4908
 
 ## Edges
 - {'source': 'orchestration.runtime.arc_07_investigation', 'target': 'orchestration.runtime.arc_ii_knowledge_substrate', 'call': 'all'}
@@ -110,7 +110,7 @@
 
 ## Ambiguous Calls Sample
 - {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -118,7 +118,7 @@
 - {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_07_investigation', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -126,7 +126,7 @@
 - {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_08_specialists', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -134,7 +134,7 @@
 - {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_09_external_evidence', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -142,7 +142,7 @@
 - {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -150,7 +150,7 @@
 - {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_11_controlled_integration', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -158,7 +158,7 @@
 - {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -166,7 +166,7 @@
 - {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_13_sleep_replay', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -174,7 +174,7 @@
 - {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_14_domain_packs', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -182,7 +182,7 @@
 - {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_15_executive_operations', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -190,7 +190,7 @@
 - {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_16_cognitive_os', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -198,7 +198,7 @@
 - {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_17_world_model', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'build_primitives', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'demo_scenario', 'candidate_count': 19}
@@ -206,6 +206,6 @@
 - {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'validate_arc', 'candidate_count': 19}
 - {'source': 'orchestration.runtime.arc_18_multitime_memory', 'call': 'write_report', 'candidate_count': 350}
 - {'source': 'orchestration.runtime.arc_19_self_model', 'call': 'arc_safety_invariants', 'candidate_count': 19}
-- {'source': 'orchestration.runtime.arc_19_self_model', 'call': 'as_dict', 'candidate_count': 1319}
+- {'source': 'orchestration.runtime.arc_19_self_model', 'call': 'as_dict', 'candidate_count': 1321}
 - {'source': 'orchestration.runtime.arc_19_self_model', 'call': 'audit_summary', 'candidate_count': 349}
 - {'source': 'orchestration.runtime.arc_19_self_model', 'call': 'build_primitives', 'candidate_count': 19}

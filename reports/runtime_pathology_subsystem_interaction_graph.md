@@ -7,7 +7,7 @@
   "kernel": 46,
   "knowledge": 86,
   "learning": 64,
-  "other": 236,
+  "other": 237,
   "reasoning": 65,
   "runtime": 48
 }
@@ -30,11 +30,11 @@
 - {'source': 'learning', 'target': 'other', 'count': 77}
 - {'source': 'learning', 'target': 'runtime', 'count': 1}
 - {'source': 'other', 'target': 'executive', 'count': 1}
-- {'source': 'other', 'target': 'kernel', 'count': 3}
+- {'source': 'other', 'target': 'kernel', 'count': 4}
 - {'source': 'other', 'target': 'knowledge', 'count': 22}
-- {'source': 'other', 'target': 'learning', 'count': 9}
+- {'source': 'other', 'target': 'learning', 'count': 11}
 - {'source': 'other', 'target': 'reasoning', 'count': 1}
-- {'source': 'other', 'target': 'runtime', 'count': 4}
+- {'source': 'other', 'target': 'runtime', 'count': 6}
 - {'source': 'reasoning', 'target': 'other', 'count': 124}
 - {'source': 'runtime', 'target': 'executive', 'count': 1}
 - {'source': 'runtime', 'target': 'knowledge', 'count': 3}

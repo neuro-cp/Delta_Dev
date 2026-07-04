@@ -89,6 +89,35 @@ workers, no hidden writes, no memory mutation, and no knowledge mutation.
 
 Current next recommendation: PROCEED_RC1_MANUAL_SCENARIO_VALIDATION
 
+RC1 adversarial end-to-end runtime validation is complete.
+
+Current validation result:
+
+- adversarial scenarios: 30
+- passed: 30
+- failed: 0
+- runtime maturity estimate: 97%
+- final recommendation: PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES
+
+Reports:
+
+- `reports/RC1_ADVERSARIAL_VALIDATION_REPORT.md`
+- `reports/RC1_ADVERSARIAL_VALIDATION_REPORT.json`
+- `reports/RC1_READINESS_REPORT.md`
+- `reports/RC1_READINESS_REPORT.json`
+- `reports/MASTER_RUNTIME_REVIEW.md`
+- `reports/MASTER_RUNTIME_REVIEW.json`
+- `reports/MASTER_PATHOLOGY_REPORT.md`
+- `reports/MASTER_PATHOLOGY_REPORT.json`
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no fine-tuning, no model updates, no provider authority, no provider
+calls, no autonomous browsing, no autonomous execution, no scheduler/background
+workers, no hidden writes, no memory mutation, and no knowledge mutation.
+
+Current next recommendation:
+PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES
+
 Runtime ARC VI is complete as a planning-only executive cognition layer. DELTA
 can create ExecutiveGoal objects, decompose goals into tasks, select candidate
 capabilities, estimate resources, build deliberation plans, construct transient

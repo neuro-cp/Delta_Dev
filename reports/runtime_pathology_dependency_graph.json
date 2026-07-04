@@ -1,5 +1,5 @@
 {
-  "edge_count": 989,
+  "edge_count": 997,
   "edges": [
     {
       "source": "orchestration.runtime.arc_07_investigation",
@@ -3537,6 +3537,46 @@
       "type": "imports"
     },
     {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.rc1_document_audit_slice",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.rc1_kernel_answer_envelope",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.rc1_runtime_artifact_registry",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.rc1_substrate_query_adapter",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.rc1_unified_review_state_machine",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.rc1_vertical_integration",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.v29_local_answer_engine",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_adversarial_validation",
+      "target": "orchestration.runtime.v31_learning_opportunity",
+      "type": "imports"
+    },
+    {
       "source": "orchestration.runtime.rc1_document_audit_slice",
       "target": "orchestration.runtime.v31_learning_opportunity",
       "type": "imports"
@@ -4950,7 +4990,6 @@
   "isolated_modules": [
     "orchestration.runtime.cognitive_runtime",
     "orchestration.runtime.post_arc_xxv_exhaustive_runner",
-    "orchestration.runtime.rc1_runtime_artifact_registry",
     "orchestration.runtime.v14_architecture_decisions",
     "orchestration.runtime.v14_gap_map",
     "orchestration.runtime.v14_output_discipline",
@@ -4987,6 +5026,7 @@
     "orchestration.runtime.e2e_semantic_consolidation_cycle",
     "orchestration.runtime.post_arc_xxv_deepening_runner",
     "orchestration.runtime.post_arc_xxv_runtime_completion_runner",
+    "orchestration.runtime.rc1_runtime_artifact_registry",
     "orchestration.runtime.runtime_reasoning",
     "orchestration.runtime.v14_action_ledger",
     "orchestration.runtime.v14_active_specialist_routing",
@@ -5039,7 +5079,7 @@
     "orchestration.runtime.v32_cognitive_kernel",
     "orchestration.runtime.v34_cognitive_state"
   ],
-  "node_count": 619,
+  "node_count": 620,
   "root_modules": [
     "orchestration.runtime.arc_09_external_evidence",
     "orchestration.runtime.arc_10_tool_provider_runtime",
@@ -5394,10 +5434,7 @@
     "orchestration.runtime.deepening_d_project_summaries",
     "orchestration.runtime.deepening_d_resource_estimation",
     "orchestration.runtime.deepening_d_tasks",
-    "orchestration.runtime.rc1_kernel_answer_envelope",
-    "orchestration.runtime.rc1_substrate_query_adapter",
-    "orchestration.runtime.rc1_unified_review_state_machine",
-    "orchestration.runtime.rc1_vertical_integration",
+    "orchestration.runtime.rc1_adversarial_validation",
     "orchestration.runtime.runtime_evaluation",
     "orchestration.runtime.v14_action_ledger_report",
     "orchestration.runtime.v14_active_specialist_routing_report",

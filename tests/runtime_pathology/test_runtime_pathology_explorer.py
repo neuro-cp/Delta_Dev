@@ -22,5 +22,6 @@ def test_pathology_explorer_is_deterministic_and_report_only():
         "PROCEED_UNIFIED_PROPOSAL_REVIEW_STATE_MACHINE",
         "PROCEED_CENTRAL_RUNTIME_ARTIFACT_REGISTRY",
         "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION",
+        "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
     }
     assert first["overall_runtime_maturity_estimate"]["estimated_percent"] >= 68

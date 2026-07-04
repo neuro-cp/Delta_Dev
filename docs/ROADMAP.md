@@ -854,6 +854,26 @@ Next roadmap item:
 Do not resume broad module generation before manual scenario validation over
 the registered RC1 vertical slices.
 
+## RC1 Adversarial End-To-End Validation
+
+DELTA completed adversarial validation across 30 runtime scenarios with no
+high-impact runtime failures in the deterministic RC1 surfaces.
+
+Result:
+
+- scenario count: 30
+- passed: 30
+- failed: 0
+- runtime maturity estimate: 97%
+
+Next roadmap item:
+
+`PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES`
+
+Do not enable providers, training, live document ingestion, live memory
+mutation, live knowledge mutation, scheduler/background workers, autonomous
+execution, or HYB1 promotion before manual human RC1 validation.
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

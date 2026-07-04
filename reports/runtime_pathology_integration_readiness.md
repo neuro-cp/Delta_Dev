@@ -4,7 +4,7 @@
 I uploaded 10 scientific papers. What have we learned? What contradicts? What needs more evidence? What would change if approved?
 
 ## Overall Status
-rc1_fixture_verticals_registered_and_review_ready
+rc1_adversarial_validation_ready_no_live_capabilities
 
 ## Steps
 - Upload 10 papers
@@ -16,4 +16,4 @@ rc1_fixture_verticals_registered_and_review_ready
 - Audit and rollback
 
 ## Recommended First Vertical
-manual RC1 scenario validation before further architecture
+manual human RC1 validation; do not enable live capabilities yet
