@@ -4163,3 +4163,43 @@ Safety state remains unchanged:
 Next recommendation:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
+
+## RC1 Activation Readiness Map
+
+Completed a low-data RC1 activation readiness planning pass after adversarial
+validation. This pass did not enable live capabilities. It produced a
+capability-by-capability activation matrix, an activation wave plan, a first
+activation candidate design, and a deterministic no-live-capabilities manual
+validation script.
+
+Generated artifacts:
+
+- `orchestration/runtime/rc1_activation_readiness.py`
+- `scripts/delta_rc1_manual_validation.py`
+- `tests/runtime_rc1/test_rc1_activation_readiness.py`
+- `tests/runtime_rc1/test_rc1_manual_validation.py`
+- `reports/runtime_rc1_activation_readiness_matrix.md`
+- `reports/runtime_rc1_activation_readiness_matrix.json`
+- `reports/runtime_rc1_activation_wave_plan.md`
+- `reports/runtime_rc1_activation_wave_plan.json`
+- `reports/runtime_rc1_first_activation_candidate.md`
+- `reports/runtime_rc1_first_activation_candidate.json`
+- `docs/continuation_rc1_activation_readiness.md`
+
+Local answer routing now handles RC1 activation questions such as:
+
+- "What is the next safe activation?"
+- "What remains disabled?"
+- "What does RC1 readiness mean?"
+- "What is the activation wave plan?"
+- "Can DELTA learn yet?"
+- "What is the safest first live capability?"
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no fine-tuning, no model updates, no provider authority, no provider
+calls, no autonomous browsing, no action execution, no scheduler/background
+worker, no memory mutation, no knowledge mutation, and no hidden writes.
+
+Next recommendation:
+
+`PROCEED_WAVE_0_MANUAL_RC1_VALIDATION`

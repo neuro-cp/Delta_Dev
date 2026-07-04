@@ -109,6 +109,16 @@ def _alias_map() -> dict[str, tuple[str, ...]]:
         "action_status": ("can you execute actions", "execute actions", "action execution"),
         "hyb1_status": ("is hyb1 active", "what is hyb1", "hyb1"),
         "model_b_status": ("is model b still default", "what is model b", "model b"),
+        "rc1_readiness": ("what does rc1 readiness mean", "rc1 readiness", "what is rc1 readiness"),
+        "next_safe_activation": ("what is the next safe activation", "next safe activation", "what should be activated first"),
+        "activation_wave_plan": ("what is the activation wave plan", "activation wave plan", "activation waves"),
+        "can_learn_yet": ("can delta learn yet", "can you learn yet", "can delta learn"),
+        "safest_first_live_capability": (
+            "what is the safest first live capability",
+            "safest first live capability",
+            "first live-ish capability",
+            "first live capability",
+        ),
     }
 
 
@@ -145,6 +155,36 @@ def _answer_for(topic_id: str, inventory: dict[str, object]) -> str:
         return f"HYB1 is {inventory['hyb1_status']}; it is not promoted and is not the default."
     if topic_id == "model_b_status":
         return "Model B remains the accepted default runtime baseline."
+    if topic_id == "rc1_readiness":
+        return (
+            "RC1 readiness means the deterministic runtime surfaces passed adversarial validation and are ready for "
+            "manual human scenario validation. It does not authorize live providers, training, memory mutation, "
+            "knowledge mutation, schedulers, action execution, or HYB1 promotion."
+        )
+    if topic_id == "next_safe_activation":
+        return (
+            "The next safe activation is Wave 0 manual RC1 validation with no live capabilities. The first later "
+            "live-ish candidate is fixture-only corpus ingestion into noncanonical semantic records, but it remains "
+            "disabled until the manual checks pass."
+        )
+    if topic_id == "activation_wave_plan":
+        return (
+            "The RC1 activation wave plan is: Wave 0 manual validation; Wave 1 fixture corpus ingestion and semantic "
+            "records; Wave 2 read-only retrieval and grounded synthesis; Wave 3 approval-gated simulated substrate "
+            "writes; Wave 4 rollback/evaluation validation; Wave 5 gated provider evidence; Wave 6 controlled live "
+            "corpus pilot; Wave 7 limited learning/consolidation pilot."
+        )
+    if topic_id == "can_learn_yet":
+        return (
+            "No. DELTA can simulate replay, consolidation, review, and readiness paths, but live learning, training, "
+            "canonical memory mutation, and autonomous consolidation remain disabled."
+        )
+    if topic_id == "safest_first_live_capability":
+        return (
+            "The safest first live-ish capability is fixture-only corpus ingestion into noncanonical semantic records. "
+            "It should run only after Wave 0 manual validation, with an allowlisted fixture folder, noncanonical output, "
+            "provenance hashes, no provider calls, and rollback by deleting the run workspace."
+        )
     return route_v29_alias("").answer_text
 
 

@@ -39,3 +39,19 @@ def test_v29_cli_formatter_reports_safety_status():
     assert "Runtime V2.9" in text
     assert "provider_call_performed: False" in text
     assert "model_b_default_changed: False" in text
+
+
+def test_v29_answer_engine_answers_rc1_activation_questions():
+    readiness = run_v29_local_answer("What does RC1 readiness mean?")
+    activation = run_v29_local_answer("What is the next safe activation?")
+    waves = run_v29_local_answer("What is the activation wave plan?")
+    learning = run_v29_local_answer("Can DELTA learn yet?")
+
+    assert readiness["local_answer"]["topic_id"] == "rc1_readiness"
+    assert "does not authorize live providers" in readiness["draft"]["answer_text"]
+    assert activation["local_answer"]["topic_id"] == "next_safe_activation"
+    assert "Wave 0 manual RC1 validation" in activation["draft"]["answer_text"]
+    assert waves["local_answer"]["topic_id"] == "activation_wave_plan"
+    assert "Wave 7 limited learning/consolidation pilot" in waves["draft"]["answer_text"]
+    assert learning["local_answer"]["topic_id"] == "can_learn_yet"
+    assert "remain disabled" in learning["draft"]["answer_text"]

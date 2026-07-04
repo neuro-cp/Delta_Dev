@@ -1,0 +1,367 @@
+{
+  "final_recommendation": "PROCEED_WAVE_0_MANUAL_RC1_VALIDATION",
+  "phase": "RC1 Activation Wave Plan",
+  "safety": {
+    "autonomous_browsing_performed": false,
+    "autonomous_execution_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "waves": [
+    {
+      "capabilities": [
+        "evaluation/regression loop",
+        "grounded answer synthesis",
+        "read-only substrate retrieval"
+      ],
+      "entry_criteria": [
+        "RC1 adversarial validation passed",
+        "worktree clean or intentional changes only"
+      ],
+      "exit_criteria": [
+        "manual script passes",
+        "operator reviews readiness and safety outputs"
+      ],
+      "hard_blockers": [
+        "any provider call",
+        "any memory/knowledge mutation",
+        "any scheduler start"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_rc1_manual_validation.py",
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_answer.py What does RC1 readiness mean?"
+      ],
+      "name": "manual RC1 validation only",
+      "purpose": "Confirm the deterministic RC1 surfaces behave as claimed before enabling any live-ish capability.",
+      "required_tests": [
+        "tests/runtime_rc1/test_rc1_manual_validation.py",
+        "existing RC1 adversarial tests"
+      ],
+      "rollback_procedure": "No rollback needed; discard generated manual validation output if desired.",
+      "safety_gates": [
+        "no-live-capabilities",
+        "read-only reports",
+        "manual invocation"
+      ],
+      "stop_conditions": [
+        "manual validation exits nonzero",
+        "safety flag changes",
+        "unexpected file/network/provider activity"
+      ],
+      "wave": 0
+    },
+    {
+      "capabilities": [
+        "live document adapter",
+        "semantic record persistence"
+      ],
+      "entry_criteria": [
+        "Wave 0 passed",
+        "fixture folder allowlisted",
+        "noncanonical output folder selected"
+      ],
+      "exit_criteria": [
+        "fixture manifest generated",
+        "semantic records validate",
+        "no canonical writes"
+      ],
+      "hard_blockers": [
+        "input outside allowlist",
+        "secret-like content detected",
+        "canonical target requested"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_rc1_fixture_ingest.py --dry-run <fixture_dir>"
+      ],
+      "name": "fixture corpus ingestion and semantic records",
+      "purpose": "Exercise parser and semantic-record shape on local fixtures only.",
+      "required_tests": [
+        "document parser fixture tests",
+        "semantic schema tests",
+        "secret scan"
+      ],
+      "rollback_procedure": "Delete the noncanonical fixture output folder by run id.",
+      "safety_gates": [
+        "fixture-only",
+        "noncanonical namespace",
+        "no provider calls"
+      ],
+      "stop_conditions": [
+        "schema validation failure",
+        "unexpected persistence target",
+        "provenance missing"
+      ],
+      "wave": 1
+    },
+    {
+      "capabilities": [
+        "read-only substrate retrieval",
+        "grounded answer synthesis"
+      ],
+      "entry_criteria": [
+        "Wave 1 passed",
+        "fixture records validated"
+      ],
+      "exit_criteria": [
+        "answers cite fixture record ids",
+        "unsupported questions abstain",
+        "recall remains unmutated"
+      ],
+      "hard_blockers": [
+        "unsupported confident answer",
+        "recall mutation",
+        "provider fallback"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_rc1_query_fixture.py What did the fixture say?"
+      ],
+      "name": "read-only retrieval and grounded synthesis",
+      "purpose": "Query noncanonical fixture records and synthesize grounded answers without mutating recall.",
+      "required_tests": [
+        "query adapter tests",
+        "grounding tests",
+        "unknown-answer tests"
+      ],
+      "rollback_procedure": "Discard response/report outputs only.",
+      "safety_gates": [
+        "read-only",
+        "candidate-context only",
+        "uncertainty required"
+      ],
+      "stop_conditions": [
+        "hallucinated evidence",
+        "missing uncertainty",
+        "mutation flag changes"
+      ],
+      "wave": 2
+    },
+    {
+      "capabilities": [
+        "approval-gated substrate write"
+      ],
+      "entry_criteria": [
+        "Wave 2 passed",
+        "single candidate selected",
+        "exact approval phrase present"
+      ],
+      "exit_criteria": [
+        "one trial record written",
+        "audit metadata exists",
+        "rollback token exists"
+      ],
+      "hard_blockers": [
+        "casual approval accepted",
+        "bulk write",
+        "canonical target"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_controlled_memory_write.py --candidate <id>"
+      ],
+      "name": "approval-gated simulated substrate writes",
+      "purpose": "Allow a single explicitly approved simulated write into a noncanonical trial store.",
+      "required_tests": [
+        "approval parser tests",
+        "trial write tests",
+        "rollback reference tests"
+      ],
+      "rollback_procedure": "Use rollback token to mark trial record inactive or delete trial workspace.",
+      "safety_gates": [
+        "admin-gated",
+        "overwatch-gated unless owner override",
+        "single candidate only"
+      ],
+      "stop_conditions": [
+        "approval ambiguity",
+        "overwatch block without owner override",
+        "missing rollback token"
+      ],
+      "wave": 3
+    },
+    {
+      "capabilities": [
+        "rollback execution",
+        "evaluation/regression loop",
+        "graph repair"
+      ],
+      "entry_criteria": [
+        "Wave 3 passed",
+        "rollback token present",
+        "pre-rollback audit complete"
+      ],
+      "exit_criteria": [
+        "rollback simulation passes",
+        "post-rollback evaluation passes",
+        "no destructive action"
+      ],
+      "hard_blockers": [
+        "rollback target mismatch",
+        "unapproved destructive operation",
+        "regression failure"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_rollback_simulation.py --token <rollback_token>"
+      ],
+      "name": "rollback and evaluation validation",
+      "purpose": "Prove trial writes can be reversed and evaluated without side effects.",
+      "required_tests": [
+        "rollback authorization tests",
+        "evaluation regression tests",
+        "graph repair report tests"
+      ],
+      "rollback_procedure": "Restore prior trial store state or discard trial workspace.",
+      "safety_gates": [
+        "admin-gated rollback",
+        "report-only graph repair",
+        "manual evaluation"
+      ],
+      "stop_conditions": [
+        "rollback changes canonical store",
+        "evaluation starts scheduler",
+        "audit incomplete"
+      ],
+      "wave": 4
+    },
+    {
+      "capabilities": [
+        "provider-assisted evidence",
+        "specialist deliberation"
+      ],
+      "entry_criteria": [
+        "Wave 4 passed",
+        "API/key gate explicit",
+        "cost cap",
+        "overwatch enabled"
+      ],
+      "exit_criteria": [
+        "provider result stored as evidence candidate only",
+        "no authority transfer",
+        "cost logged"
+      ],
+      "hard_blockers": [
+        "provider answer treated as truth",
+        "provider called without approval",
+        "secret printed"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_provider_to_candidate.py --approved --dry-run"
+      ],
+      "name": "provider-assisted evidence, gated",
+      "purpose": "Use providers only as explicit evidence acquisition, never authority.",
+      "required_tests": [
+        "provider gate tests",
+        "mock/live parity tests",
+        "secret scan"
+      ],
+      "rollback_procedure": "Discard provider evidence candidate; no canonical rollback before integration.",
+      "safety_gates": [
+        "overwatch-gated",
+        "evidence-only",
+        "cost-capped"
+      ],
+      "stop_conditions": [
+        "provider call without approval",
+        "authority flag true",
+        "secret leakage"
+      ],
+      "wave": 5
+    },
+    {
+      "capabilities": [
+        "real corpus ingestion",
+        "semantic record persistence",
+        "read-only substrate retrieval"
+      ],
+      "entry_criteria": [
+        "Wave 5 optional or skipped",
+        "local corpus allowlist",
+        "operator approval"
+      ],
+      "exit_criteria": [
+        "bounded corpus manifest",
+        "semantic outputs validated",
+        "manual review complete"
+      ],
+      "hard_blockers": [
+        "unbounded corpus",
+        "secret content",
+        "canonical write"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_live_corpus_pilot.py --dry-run --input <allowlisted_dir>"
+      ],
+      "name": "controlled live corpus pilot",
+      "purpose": "Run a small allowlisted local corpus through ingestion, retrieval, and review.",
+      "required_tests": [
+        "corpus pilot tests",
+        "manifest validation",
+        "storage cap tests"
+      ],
+      "rollback_procedure": "Delete pilot workspace by run id.",
+      "safety_gates": [
+        "admin-gated",
+        "noncanonical",
+        "rollback-by-workspace-delete"
+      ],
+      "stop_conditions": [
+        "storage cap exceeded",
+        "provenance missing",
+        "mutation outside workspace"
+      ],
+      "wave": 6
+    },
+    {
+      "capabilities": [
+        "replay batch persistence",
+        "consolidation candidate persistence",
+        "sleep/replay consolidation"
+      ],
+      "entry_criteria": [
+        "Wave 6 passed",
+        "manual replay batch selected",
+        "review path ready"
+      ],
+      "exit_criteria": [
+        "candidates are reviewable",
+        "decisions stay noncanonical",
+        "no scheduler"
+      ],
+      "hard_blockers": [
+        "autonomous consolidation",
+        "canonical write",
+        "scheduler activation"
+      ],
+      "manual_smoke_commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\delta_sleep_replay_plan.py --manual-batch <batch_id>"
+      ],
+      "name": "limited learning/consolidation pilot",
+      "purpose": "Run manual replay/consolidation over pilot records without autonomous learning.",
+      "required_tests": [
+        "replay tests",
+        "consolidation candidate tests",
+        "no canonical write tests"
+      ],
+      "rollback_procedure": "Discard replay/consolidation workspace by run id.",
+      "safety_gates": [
+        "manual-only",
+        "dry-run",
+        "review-required"
+      ],
+      "stop_conditions": [
+        "batch duplication",
+        "silent integration",
+        "mutation flag changes"
+      ],
+      "wave": 7
+    }
+  ]
+}

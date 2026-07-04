@@ -874,6 +874,41 @@ Do not enable providers, training, live document ingestion, live memory
 mutation, live knowledge mutation, scheduler/background workers, autonomous
 execution, or HYB1 promotion before manual human RC1 validation.
 
+## RC1 Activation Readiness Planning
+
+DELTA now has a report-only activation readiness matrix and wave plan. The
+readiness map keeps RC1 in no-live-capabilities mode and defines the activation
+sequence that must be manually validated before any live-ish feature is
+enabled.
+
+Generated reports:
+
+- `reports/runtime_rc1_activation_readiness_matrix.md`
+- `reports/runtime_rc1_activation_readiness_matrix.json`
+- `reports/runtime_rc1_activation_wave_plan.md`
+- `reports/runtime_rc1_activation_wave_plan.json`
+- `reports/runtime_rc1_first_activation_candidate.md`
+- `reports/runtime_rc1_first_activation_candidate.json`
+
+Activation waves:
+
+1. Wave 0 manual RC1 validation only.
+2. Wave 1 fixture corpus ingestion and semantic records.
+3. Wave 2 read-only retrieval and grounded synthesis.
+4. Wave 3 approval-gated simulated substrate writes.
+5. Wave 4 rollback and evaluation validation.
+6. Wave 5 provider-assisted evidence, gated.
+7. Wave 6 controlled live corpus pilot.
+8. Wave 7 limited learning/consolidation pilot.
+
+First activation candidate after Wave 0:
+
+`fixture-only corpus ingestion into noncanonical semantic records`
+
+Recommended next roadmap item:
+
+`PROCEED_WAVE_0_MANUAL_RC1_VALIDATION`
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

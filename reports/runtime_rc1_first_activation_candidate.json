@@ -1,0 +1,54 @@
+{
+  "approval_requirements": [
+    "manual operator command invocation",
+    "allowlisted input folder",
+    "noncanonical output folder",
+    "no bulk canonical approval"
+  ],
+  "candidate": "fixture-only corpus ingestion into noncanonical semantic records",
+  "do_not_activate_in_this_run": true,
+  "exact_command_design": ".\\.venv311\\Scripts\\python.exe scripts\\delta_rc1_fixture_ingest.py --dry-run --input fixtures\\rc1_corpus --output .tmp\\rc1_activation\\semantic_records",
+  "final_recommendation": "PROCEED_WAVE_0_MANUAL_RC1_VALIDATION_FIRST",
+  "input_folder": "fixtures/rc1_corpus",
+  "manual_acceptance_criteria": [
+    "operator can inspect manifest",
+    "each semantic record points to a fixture source",
+    "unsupported or malformed documents are skipped with warnings",
+    "no generated record is treated as canonical knowledge"
+  ],
+  "output_folder": ".tmp/rc1_activation/semantic_records/<run_id>",
+  "phase": "RC1 First Activation Candidate",
+  "rollback_strategy": "Delete the noncanonical run output folder and preserve its manifest in reports if needed.",
+  "safety": {
+    "autonomous_browsing_performed": false,
+    "autonomous_execution_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "safety_flags": [
+    "fixture_only=true",
+    "canonical_write_enabled=false",
+    "provider_calls_enabled=false",
+    "training_enabled=false",
+    "scheduler_enabled=false",
+    "memory_mutation_enabled=false"
+  ],
+  "tests_required_before_activation": [
+    "parser handles malformed fixture without crash",
+    "semantic records include provenance and source hash",
+    "output path is noncanonical",
+    "no provider/training/scheduler/memory/knowledge mutation flags change",
+    "secret scan passes on generated records"
+  ],
+  "why_safest": "It exercises the live-document-adapter bottleneck with local fixtures only, writes only to a noncanonical run workspace, requires no providers, and can be rolled back by deleting the run folder."
+}

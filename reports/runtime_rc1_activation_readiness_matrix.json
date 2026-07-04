@@ -1,0 +1,428 @@
+{
+  "capabilities": [
+    {
+      "activation_order": 1,
+      "audit_requirement": "append adapter trace with source hash, parser version, and no-write proof",
+      "capability": "live document adapter",
+      "current_status": "disabled; adversarial validation flagged live_document_adapter_disabled_fixture_only",
+      "recommended_first_activation_state": "fixture_only",
+      "required_fixtures": [
+        "small text fixture folder",
+        "contradictory document fixture",
+        "missing provenance fixture"
+      ],
+      "required_gates": [
+        "manual RC1 validation",
+        "fixture parser parity",
+        "no persistence by default"
+      ],
+      "required_tests": [
+        "document adapter fixture tests",
+        "malformed document tests",
+        "provenance-required tests"
+      ],
+      "rollback_requirement": "delete generated fixture outputs; no canonical rollback needed before persistence",
+      "safety_risks": [
+        "unbounded input size",
+        "provenance loss",
+        "accidental persistence"
+      ]
+    },
+    {
+      "activation_order": 6,
+      "audit_requirement": "manifest, hashes, skipped files, parser warnings, and zero canonical writes",
+      "capability": "real corpus ingestion",
+      "current_status": "disabled; no live ingestion path is authorized",
+      "recommended_first_activation_state": "admin_gated",
+      "required_fixtures": [
+        "approved local corpus fixture",
+        "oversized corpus fixture",
+        "unsupported file fixture"
+      ],
+      "required_gates": [
+        "admin approval",
+        "input folder allowlist",
+        "dry-run manifest",
+        "size cap"
+      ],
+      "required_tests": [
+        "ingestion dry-run tests",
+        "corpus manifest validation",
+        "secret redaction tests"
+      ],
+      "rollback_requirement": "delete noncanonical ingestion workspace by run id",
+      "safety_risks": [
+        "secret exposure",
+        "unbounded storage growth",
+        "provider-like authority from raw text"
+      ]
+    },
+    {
+      "activation_order": 2,
+      "audit_requirement": "record provenance, source hash, schema version, and noncanonical status",
+      "capability": "semantic record persistence",
+      "current_status": "disabled outside simulated E2E harness",
+      "recommended_first_activation_state": "dry_run",
+      "required_fixtures": [
+        "Project Atlas semantic fixture",
+        "duplicate semantic fixture"
+      ],
+      "required_gates": [
+        "fixture-only semantic output folder",
+        "schema validation",
+        "noncanonical namespace"
+      ],
+      "required_tests": [
+        "semantic schema tests",
+        "duplicate record tests",
+        "noncanonical path tests"
+      ],
+      "rollback_requirement": "remove semantic output folder by run id",
+      "safety_risks": [
+        "mistaking records for truth",
+        "schema drift",
+        "duplicate semantic amplification"
+      ]
+    },
+    {
+      "activation_order": 3,
+      "audit_requirement": "batch id, source records, deterministic ordering, and scheduler-disabled proof",
+      "capability": "replay batch persistence",
+      "current_status": "disabled; replay is scaffolded and simulated",
+      "recommended_first_activation_state": "dry_run",
+      "required_fixtures": [
+        "small semantic record set",
+        "empty replay fixture"
+      ],
+      "required_gates": [
+        "semantic record dry-run complete",
+        "batch manifest",
+        "no scheduler"
+      ],
+      "required_tests": [
+        "replay batch schema tests",
+        "idempotence tests",
+        "no scheduler tests"
+      ],
+      "rollback_requirement": "delete replay batch workspace by run id",
+      "safety_risks": [
+        "background worker creep",
+        "duplicate batch creation",
+        "ordering mistakes"
+      ]
+    },
+    {
+      "activation_order": 4,
+      "audit_requirement": "candidate provenance, review state, supporting and opposing evidence",
+      "capability": "consolidation candidate persistence",
+      "current_status": "disabled; candidates are report-only/simulated",
+      "recommended_first_activation_state": "dry_run",
+      "required_fixtures": [
+        "candidate fixture from replay batch",
+        "contradictory candidate fixture"
+      ],
+      "required_gates": [
+        "replay batch dry-run complete",
+        "review state starts pending",
+        "no integration"
+      ],
+      "required_tests": [
+        "candidate schema tests",
+        "review-state tests",
+        "no write-to-canonical tests"
+      ],
+      "rollback_requirement": "delete candidate workspace by run id",
+      "safety_risks": [
+        "candidate treated as knowledge",
+        "review bypass",
+        "premature confidence"
+      ]
+    },
+    {
+      "activation_order": 8,
+      "audit_requirement": "admin approval event, overwatch result, target store, rollback token",
+      "capability": "approval-gated substrate write",
+      "current_status": "disabled; previous trials require exact structured approval and remain local",
+      "recommended_first_activation_state": "owner_override_only",
+      "required_fixtures": [
+        "single candidate fixture",
+        "approval denial fixture"
+      ],
+      "required_gates": [
+        "exact approval phrase",
+        "overwatch allow or owner override",
+        "rollback token"
+      ],
+      "required_tests": [
+        "approval parser tests",
+        "overwatch-block tests",
+        "rollback reference tests"
+      ],
+      "rollback_requirement": "rollback token must remove or mark inactive the trial record",
+      "safety_risks": [
+        "casual approval inference",
+        "bulk approval",
+        "irreversible write"
+      ]
+    },
+    {
+      "activation_order": 5,
+      "audit_requirement": "query packet with source object ids and missing evidence list",
+      "capability": "read-only substrate retrieval",
+      "current_status": "available as deterministic RC1 query adapter over fixtures",
+      "recommended_first_activation_state": "read_only",
+      "required_fixtures": [
+        "ARC II sample substrate",
+        "RC1 document audit slice",
+        "E2E consolidated fixture"
+      ],
+      "required_gates": [
+        "read-only adapter",
+        "no recall mutation",
+        "grounding required"
+      ],
+      "required_tests": [
+        "query adapter tests",
+        "no mutation tests",
+        "unsupported query tests"
+      ],
+      "rollback_requirement": "not applicable; read-only outputs can be discarded",
+      "safety_risks": [
+        "overstating fixture coverage",
+        "using missing evidence as proof"
+      ]
+    },
+    {
+      "activation_order": 5,
+      "audit_requirement": "answer envelope with evidence ids, uncertainty, and safety flags",
+      "capability": "grounded answer synthesis",
+      "current_status": "available locally for deterministic repo/self-description and fixture answers",
+      "recommended_first_activation_state": "read_only",
+      "required_fixtures": [
+        "Project Atlas answer fixture",
+        "unsupported local question fixture"
+      ],
+      "required_gates": [
+        "evidence packet",
+        "uncertainty note",
+        "no provider fallback unless gated"
+      ],
+      "required_tests": [
+        "grounding tests",
+        "unknown-answer tests",
+        "no provider-call tests"
+      ],
+      "rollback_requirement": "not applicable; response-only",
+      "safety_risks": [
+        "confident unsupported answer",
+        "fixture answer mistaken for world answer"
+      ]
+    },
+    {
+      "activation_order": 10,
+      "audit_requirement": "provider, model, prompt hash, response hash, token/cost, evidence-only state",
+      "capability": "provider-assisted evidence",
+      "current_status": "disabled; provider authority and calls remain off",
+      "recommended_first_activation_state": "overwatch_gated",
+      "required_fixtures": [
+        "mock provider fixture",
+        "blocked provider fixture"
+      ],
+      "required_gates": [
+        "explicit admin gate",
+        "cost limit",
+        "evidence-only status",
+        "overwatch review"
+      ],
+      "required_tests": [
+        "provider gate tests",
+        "mock-provider tests",
+        "no authority tests"
+      ],
+      "rollback_requirement": "discard provider evidence candidate; no knowledge rollback before integration",
+      "safety_risks": [
+        "provider treated as truth",
+        "cost runaway",
+        "secret leakage"
+      ]
+    },
+    {
+      "activation_order": 11,
+      "audit_requirement": "specialist role, claim, evidence, disagreement, advisory-only marker",
+      "capability": "specialist deliberation",
+      "current_status": "dormant/advisory; specialists remain non-authoritative",
+      "recommended_first_activation_state": "overwatch_gated",
+      "required_fixtures": [
+        "conflicting specialist fixture",
+        "empty specialist fixture"
+      ],
+      "required_gates": [
+        "specialist outputs advisory only",
+        "disagreement capture",
+        "no routing authority"
+      ],
+      "required_tests": [
+        "specialist disagreement tests",
+        "advisory-only tests"
+      ],
+      "rollback_requirement": "discard advisory bundle by run id",
+      "safety_risks": [
+        "authority transfer",
+        "consensus mistaken for truth"
+      ]
+    },
+    {
+      "activation_order": 9,
+      "audit_requirement": "damage report, proposed repair diff, risk score, rollback reference",
+      "capability": "graph repair",
+      "current_status": "report-only; adversarial validation flagged graph_repair_is_report_only",
+      "recommended_first_activation_state": "dry_run",
+      "required_fixtures": [
+        "corrupted graph fixture",
+        "circular graph fixture"
+      ],
+      "required_gates": [
+        "repair preview only",
+        "human review",
+        "rollback plan before mutation"
+      ],
+      "required_tests": [
+        "corrupt graph report tests",
+        "circular graph tests",
+        "no mutation tests"
+      ],
+      "rollback_requirement": "restore previous graph snapshot or discard repair preview",
+      "safety_risks": [
+        "silent edge deletion",
+        "relationship rewrite",
+        "repair-as-truth"
+      ]
+    },
+    {
+      "activation_order": 7,
+      "audit_requirement": "goal, constraints, plan alternatives, risks, review state",
+      "capability": "executive planning",
+      "current_status": "non-executing; adversarial validation bounded this pathology",
+      "recommended_first_activation_state": "read_only",
+      "required_fixtures": [
+        "resource allocation fixture",
+        "conflicting goal fixture"
+      ],
+      "required_gates": [
+        "planning-only flag",
+        "no action binding",
+        "review before execution"
+      ],
+      "required_tests": [
+        "planning-only tests",
+        "no execution tests",
+        "constraint tests"
+      ],
+      "rollback_requirement": "discard transient plan; no external side effects",
+      "safety_risks": [
+        "plan mistaken for action",
+        "unsafe recommendation under uncertainty"
+      ]
+    },
+    {
+      "activation_order": 9,
+      "audit_requirement": "rollback token, target, approver, before/after status",
+      "capability": "rollback execution",
+      "current_status": "disabled; rollback references exist but do not execute",
+      "recommended_first_activation_state": "admin_gated",
+      "required_fixtures": [
+        "single trial write fixture",
+        "rollback-denied fixture"
+      ],
+      "required_gates": [
+        "trial write exists",
+        "exact rollback approval",
+        "pre/post audit"
+      ],
+      "required_tests": [
+        "rollback simulation tests",
+        "rollback authorization tests"
+      ],
+      "rollback_requirement": "rollback itself must create a compensating audit record",
+      "safety_risks": [
+        "wrong target rollback",
+        "unreviewed destructive action"
+      ]
+    },
+    {
+      "activation_order": 0,
+      "audit_requirement": "test count, JSON validation, safety flags, scenario deltas",
+      "capability": "evaluation/regression loop",
+      "current_status": "manual test/report loop active; schedulers disabled",
+      "recommended_first_activation_state": "read_only",
+      "required_fixtures": [
+        "RC1 manual scenario pack",
+        "adversarial scenario pack"
+      ],
+      "required_gates": [
+        "manual invocation",
+        "fixed fixtures",
+        "no scheduler"
+      ],
+      "required_tests": [
+        "regression harness tests",
+        "no scheduler tests",
+        "JSON validation"
+      ],
+      "rollback_requirement": "discard report outputs or compare against previous run",
+      "safety_risks": [
+        "metrics treated as authority",
+        "background execution creep"
+      ]
+    },
+    {
+      "activation_order": 3,
+      "audit_requirement": "batch id, review result, consolidation decision, no-write proof",
+      "capability": "sleep/replay consolidation",
+      "current_status": "design/scaffold only; no scheduled consolidation",
+      "recommended_first_activation_state": "dry_run",
+      "required_fixtures": [
+        "small replay batch fixture",
+        "conflicting replay fixture"
+      ],
+      "required_gates": [
+        "manual batch",
+        "review-only consolidation",
+        "no scheduler",
+        "no canonical write"
+      ],
+      "required_tests": [
+        "sleep plan tests",
+        "manual replay tests",
+        "no mutation tests"
+      ],
+      "rollback_requirement": "discard sleep-cycle plan and noncanonical batch workspace",
+      "safety_risks": [
+        "scheduler activation",
+        "autonomous learning",
+        "silent consolidation"
+      ]
+    }
+  ],
+  "current_checkpoint": "3c0a05a",
+  "final_recommendation": "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
+  "phase": "RC1 Activation Readiness Matrix",
+  "recommended_first_activation_candidate": "fixture-only corpus ingestion into noncanonical semantic records",
+  "runtime_maturity_estimate": 97,
+  "safety": {
+    "autonomous_browsing_performed": false,
+    "autonomous_execution_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  }
+}

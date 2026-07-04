@@ -298,3 +298,30 @@ recall, no recall mutation, no scheduler/background workers, and no action
 execution.
 
 Current next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW
+
+RC1 activation readiness planning is complete as report-only guidance.
+
+Current maturity estimate: 97%.
+
+Latest reports:
+
+- `reports/runtime_rc1_activation_readiness_matrix.md/json`
+- `reports/runtime_rc1_activation_wave_plan.md/json`
+- `reports/runtime_rc1_first_activation_candidate.md/json`
+
+Manual validation entrypoint:
+
+- `scripts/delta_rc1_manual_validation.py`
+
+Local answer routing now supports RC1 activation-readiness questions.
+
+First activation candidate after Wave 0:
+
+- fixture-only corpus ingestion into noncanonical semantic records
+
+This candidate remains disabled. Do not implement or activate live ingestion
+until Wave 0 manual validation passes and fixture-only parser/provenance,
+noncanonical output, no-mutation, rollback, and secret-scan tests exist.
+
+Current next recommendation:
+PROCEED_WAVE_0_MANUAL_RC1_VALIDATION

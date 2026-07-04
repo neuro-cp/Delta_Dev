@@ -790,3 +790,27 @@ Current boundary:
 
 Current posture: adversarial validation passed; proceed to manual human RC1
 scenario validation before enabling any live capability.
+
+## RC1 Activation Readiness Map
+
+The RC1 activation-readiness map translates adversarial validation into a
+sequenced activation plan. It does not enable live capabilities.
+
+Current recommendation: Wave 0 manual RC1 validation only. The first later
+live-ish candidate is fixture-only corpus ingestion into noncanonical semantic
+records, but it remains disabled until manual validation, fixture provenance,
+noncanonical output, no-mutation tests, and rollback-by-workspace deletion are
+verified.
+
+Activation semantics:
+
+- disabled means no operator or runtime path may use the capability.
+- fixture-only means local fixtures only, no live corpus, no provider call.
+- read-only means query/inspection only, no recall or knowledge mutation.
+- dry-run means outputs may be generated only into noncanonical workspaces.
+- admin-gated and overwatch-gated require explicit future approval paths.
+
+Safety boundary: no training, provider authority, autonomous browsing, action
+execution, scheduler/background worker, memory mutation, knowledge mutation,
+hidden write, HYB1 promotion, or Model B default change is allowed by RC1
+readiness planning.
