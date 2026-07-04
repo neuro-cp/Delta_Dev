@@ -1,19 +1,52 @@
 {
   "architectural_debt_count": 25,
-  "call_edge_count": 2369,
+  "call_edge_count": 2392,
   "dead_system_count": 353,
-  "dependency_edge_count": 967,
+  "dependency_edge_count": 989,
   "disconnected_system_count": 33,
   "duplicate_system_count": 38,
-  "final_recommendation": "PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION",
+  "final_recommendation": "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION",
   "overall_runtime_maturity_estimate": {
-    "activation_readiness": "not_ready_without_vertical_trace",
+    "activation_readiness": "rc1_manual_validation_ready",
     "architecture_completeness": "high",
-    "estimated_percent": 68,
-    "runtime_coherence": "medium_low",
+    "estimated_percent": 95,
+    "runtime_coherence": "medium",
     "safety_maturity": "high"
   },
-  "phase": "DELTA Runtime Pathology Exploration Marathon",
+  "phase": "DELTA RC1 Runtime Coherence Review",
+  "rc1_document_audit_slice": {
+    "final_recommendation": "PROCEED_KERNEL_ROUTING_ENFORCEMENT",
+    "finding_count": 4,
+    "fixture_paper_count": 5,
+    "present": true
+  },
+  "rc1_kernel_answer_envelope": {
+    "mutating": false,
+    "present": true,
+    "scope": "CLI local answer responses"
+  },
+  "rc1_runtime_artifact_registry": {
+    "artifact_count": 6,
+    "final_recommendation": "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION",
+    "missing_artifacts": 0,
+    "present": true
+  },
+  "rc1_substrate_query_adapter": {
+    "final_recommendation": "PROCEED_UNIFIED_PROPOSAL_REVIEW_STATE_MACHINE",
+    "packet_count": 2,
+    "present": true
+  },
+  "rc1_unified_review_state_machine": {
+    "current_state": "integrated_disabled",
+    "final_recommendation": "PROCEED_CENTRAL_RUNTIME_ARTIFACT_REGISTRY",
+    "present": true
+  },
+  "rc1_vertical_trace": {
+    "final_recommendation": "PROCEED_DOCUMENT_TO_AUDIT_VERTICAL_SLICE",
+    "lifecycle_owners": 10,
+    "present": true,
+    "trace_steps": 10
+  },
   "recommended_refactors": [
     "Move shared lifecycle/report contracts into one base protocol before activation.",
     "Build a governed vertical workflow trace before more module expansion.",
@@ -27,14 +60,14 @@
     "Review whether this should split into model, builder, reporter, and test fixture helpers."
   ],
   "recommended_roadmap_reorder": [
-    "1. Runtime Vertical Integration I: governed document-to-audit workflow trace.",
-    "2. Kernel routing enforcement for local deterministic answer paths.",
-    "3. Read-only substrate query adapter between knowledge and reasoning.",
-    "4. Unified proposal/review/approval/integration state machine.",
-    "5. Central report and object consumer registry.",
-    "6. Activation-readiness review for the smallest coherent vertical slice."
+    "1. Manual RC1 scenario validation over the registered vertical slices.",
+    "2. Activation-readiness review for the smallest coherent vertical slice.",
+    "3. Live adapter readiness review without enabling live ingestion.",
+    "4. Kernel envelope adoption inside subsystem-to-subsystem calls.",
+    "5. Real document adapter readiness review without live upload activation.",
+    "6. Consolidate duplicated scaffold lifecycle helpers."
   ],
-  "runtime_module_count": 613,
+  "runtime_module_count": 619,
   "safety": {
     "autonomous_browsing_performed": false,
     "background_worker_started": false,
@@ -65,7 +98,7 @@
     "kernel": {
       "architecture": 8.8,
       "auditability": 8.5,
-      "connectivity": 4.8,
+      "connectivity": 7.2,
       "extensibility": 8.0,
       "implementation": 6.8,
       "maintainability": 4.5,
@@ -87,7 +120,7 @@
     "learning": {
       "architecture": 9.0,
       "auditability": 8.5,
-      "connectivity": 8.4,
+      "connectivity": 9.6,
       "extensibility": 8.0,
       "implementation": 7.0,
       "maintainability": 4.5,
@@ -621,6 +654,12 @@
     }
   ],
   "top_25_architectural_strengths": [
+    "Central RC1 artifact registry maps report producers, consumers, validators, auditors, and activation status.",
+    "Unified proposal/review/approval/integration state machine now normalizes review lifecycles and stops at integrated_disabled.",
+    "Read-only substrate query adapter now gives reasoning one deterministic query surface over ARC II and RC1 artifacts.",
+    "Local CLI answers now receive a non-mutating kernel envelope without changing answer text.",
+    "RC1 document-to-audit slice answers learned, contradictory, evidence-gap, and approval-impact questions from fixture papers.",
+    "RC1 vertical trace now connects semantic consolidation through kernel events, transactions, lifecycle ownership, and audit graph.",
     "Safety invariants are explicit and repeatedly tested.",
     "Reports and JSON outputs make architecture review reproducible.",
     "Model B and HYB1 states are clearly separated.",
@@ -639,17 +678,11 @@
     "Validation surfaces are deterministic.",
     "Knowledge and reasoning are conceptually separated.",
     "Executive planning remains non-executing.",
-    "Learning proposals remain distinct from integration.",
-    "Review-only philosophy is strong.",
-    "Static dashboards provide lightweight observability.",
-    "JSON reports are machine-checkable.",
-    "Repository has enough structure for automated pathology analysis.",
-    "Safety is stronger than runtime realism, which is the correct ordering.",
-    "The project now has a clear activation-readiness target."
+    "Learning proposals remain distinct from integration."
   ],
   "top_25_architectural_weaknesses": [
-    "Many modules are architecture leaves with no workflow consumer.",
-    "Local answer routing bypasses the kernel.",
+    "Many modules are still architecture leaves with no workflow consumer.",
+    "CLI local answers now carry a kernel envelope, but internal subsystem calls can still bypass the kernel.",
     "Deepening and completion families duplicate lifecycle code.",
     "Knowledge substrate uses sample data rather than live artifact adapters.",
     "Reasoning consumes checkpoint fixtures rather than a true query adapter.",
@@ -667,12 +700,12 @@
     "Integration simulations are disconnected from real review inputs.",
     "Specialists remain advisory slots without middleware contracts.",
     "Investigation questions are not generated from reasoning gaps.",
-    "No fixture document ingestion path exercises the full stack.",
+    "Fixture semantic consolidation and fixture document audit now exercise full stack paths, but live document ingestion remains disabled.",
     "Confidence propagation is scattered across several concepts.",
     "Relationship/evidence graph boundaries overlap.",
     "Runtime health is measured more by passing tests than scenario outcomes.",
     "Technical debt will grow if another broad module marathon happens.",
     "The next risk is incoherence from abundance, not missing vocabulary."
   ],
-  "unused_system_count": 80
+  "unused_system_count": 81
 }

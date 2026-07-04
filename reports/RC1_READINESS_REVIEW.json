@@ -1,0 +1,800 @@
+{
+  "architecture_improvements": [
+    "E2E semantic consolidation cycle is now represented as a kernel-routed vertical workflow.",
+    "Every E2E runtime object has explicit creator, owner, validator, consumer, auditor, rollback owner, and explainer.",
+    "Dynamic pipeline routing recognizes semantic consolidation and vertical runtime trace requests.",
+    "Kernel events and non-mutating transactions now wrap every E2E stage.",
+    "Audit graph links the full scenario from experience ingestion to RC1 readiness review."
+  ],
+  "audit_graph": {
+    "edges": [
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-2aefa622e6cee1d3",
+        "target": "rc1-audit-node-2e64ad53cb9f691b"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-2e64ad53cb9f691b",
+        "target": "rc1-audit-node-5151b923ecc7a243"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-5151b923ecc7a243",
+        "target": "rc1-audit-node-1f799e463e69b9dd"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-1f799e463e69b9dd",
+        "target": "rc1-audit-node-7f2dde1506061cc4"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-7f2dde1506061cc4",
+        "target": "rc1-audit-node-dba72b0de51e91c5"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-dba72b0de51e91c5",
+        "target": "rc1-audit-node-5412a00efa123cb1"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-5412a00efa123cb1",
+        "target": "rc1-audit-node-857c6a7af4c22bc6"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-857c6a7af4c22bc6",
+        "target": "rc1-audit-node-5ebba6efcdce5eba"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-5ebba6efcdce5eba",
+        "target": "rc1-audit-node-636217a4b9f94cb4"
+      }
+    ],
+    "graph_id": "rc1-audit-graph-927f20ef869788c5",
+    "graph_only": true,
+    "nodes": [
+      {
+        "label": "ExperienceManager: experience_records",
+        "node_id": "rc1-audit-node-2aefa622e6cee1d3",
+        "node_type": "experience_ingestion"
+      },
+      {
+        "label": "EvidenceManager: semantic_records",
+        "node_id": "rc1-audit-node-2e64ad53cb9f691b",
+        "node_type": "semantic_record_build"
+      },
+      {
+        "label": "RecallManager: replay_batch",
+        "node_id": "rc1-audit-node-5151b923ecc7a243",
+        "node_type": "replay_batch_build"
+      },
+      {
+        "label": "LearningManager: consolidation_candidates",
+        "node_id": "rc1-audit-node-1f799e463e69b9dd",
+        "node_type": "consolidation_candidate_build"
+      },
+      {
+        "label": "ReviewManager: simulated_consolidated_knowledge",
+        "node_id": "rc1-audit-node-7f2dde1506061cc4",
+        "node_type": "approval_gated_simulation"
+      },
+      {
+        "label": "ReasoningManager: dynamic_pipeline",
+        "node_id": "rc1-audit-node-dba72b0de51e91c5",
+        "node_type": "inquiry_routing"
+      },
+      {
+        "label": "RecallManager: retrieved_evidence",
+        "node_id": "rc1-audit-node-5412a00efa123cb1",
+        "node_type": "semantic_retrieval"
+      },
+      {
+        "label": "ReasoningManager: grounded_answer",
+        "node_id": "rc1-audit-node-857c6a7af4c22bc6",
+        "node_type": "grounded_synthesis"
+      },
+      {
+        "label": "ReviewManager: cycle_audit",
+        "node_id": "rc1-audit-node-5ebba6efcdce5eba",
+        "node_type": "audit_review"
+      },
+      {
+        "label": "SafetyManager: rc1_readiness_review",
+        "node_id": "rc1-audit-node-636217a4b9f94cb4",
+        "node_type": "safety_checkpoint"
+      }
+    ]
+  },
+  "dynamic_pipeline": {
+    "mutation_allowed": false,
+    "provider_required": false,
+    "request": "Why did Project Atlas fail, what fixed it, and what remains uncertain?",
+    "steps": [
+      {
+        "active": true,
+        "capability": "self_description",
+        "handler": "ReasoningManager",
+        "mutating": false,
+        "step_id": "pipeline-step-1"
+      },
+      {
+        "active": true,
+        "capability": "semantic_consolidation_cycle",
+        "handler": "IntegrationManager",
+        "mutating": false,
+        "step_id": "pipeline-step-2"
+      },
+      {
+        "active": true,
+        "capability": "vertical_runtime_trace",
+        "handler": "IntegrationManager",
+        "mutating": false,
+        "step_id": "pipeline-step-3"
+      },
+      {
+        "active": true,
+        "capability": "audit_graph_review",
+        "handler": "ReviewManager",
+        "mutating": false,
+        "step_id": "pipeline-step-4"
+      }
+    ]
+  },
+  "e2e_cycle": {
+    "audit": {
+      "consolidated_record_ids": [
+        "knowledge-34873b2b78d7",
+        "knowledge-ea5d94e60b7e",
+        "knowledge-ce0fb4c59595",
+        "knowledge-ce326ac2adfa"
+      ],
+      "consolidation_candidate_ids": [
+        "candidate-8d4ec0087b29",
+        "candidate-f67e998e0a35",
+        "candidate-f080fd7cc76e",
+        "candidate-f47032615970"
+      ],
+      "cycle_id": "cycle-fb75fb8d132f",
+      "experience_count": 8,
+      "final_recommendation": "PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION",
+      "inquiry_id": "inquiry-e53f4167f0f7",
+      "replay_batch_id": "replay-batch-961879f1adb0",
+      "retrieved_evidence_ids": [
+        "evidence-72d9b7799d65",
+        "evidence-de4b72cc9dc3",
+        "evidence-7c2db533effa",
+        "evidence-be4479c87e32"
+      ],
+      "safety_flags": {
+        "approval_required": true,
+        "autonomous_learning_performed": false,
+        "canonical_memory_mutated": false,
+        "fine_tuning_performed": false,
+        "hyb1": "dormant_env_gated",
+        "live_knowledge_mutated": false,
+        "model_b_default": "unchanged",
+        "model_training_performed": false,
+        "provider_call_performed": false,
+        "rollback_available": true,
+        "substrate_write_simulated": true,
+        "weight_update_performed": false
+      },
+      "semantic_count": 8
+    },
+    "consolidation_candidates": [
+      {
+        "candidate_id": "candidate-8d4ec0087b29",
+        "provenance": [
+          "experience-b18fbf44950e",
+          "experience-7d1fc5d77f09"
+        ],
+        "semantic_ids": [
+          "semantic-b18fbf44950e",
+          "semantic-7d1fc5d77f09"
+        ],
+        "synthesized_claim": "Atlas routing depends on Module A and Registry B."
+      },
+      {
+        "candidate_id": "candidate-f67e998e0a35",
+        "provenance": [
+          "experience-22c2d6bead88",
+          "experience-3ac2c4120bc7"
+        ],
+        "semantic_ids": [
+          "semantic-22c2d6bead88",
+          "semantic-3ac2c4120bc7"
+        ],
+        "synthesized_claim": "Atlas likely failed because Registry B rejected entries missing provenance."
+      },
+      {
+        "candidate_id": "candidate-f080fd7cc76e",
+        "provenance": [
+          "experience-cb0d992b4185"
+        ],
+        "semantic_ids": [
+          "semantic-cb0d992b4185"
+        ],
+        "synthesized_claim": "Adding provenance restored successful routing."
+      },
+      {
+        "candidate_id": "candidate-f47032615970",
+        "provenance": [
+          "experience-551b82de793b",
+          "experience-3ba1d1eb60e8",
+          "experience-8d918a62dcd7"
+        ],
+        "semantic_ids": [
+          "semantic-551b82de793b",
+          "semantic-3ba1d1eb60e8",
+          "semantic-8d918a62dcd7"
+        ],
+        "synthesized_claim": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run."
+      }
+    ],
+    "experiences": [
+      {
+        "content": "Project Atlas uses Module A for routing.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-b18fbf44950e",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Module A depends on Registry B.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-7d1fc5d77f09",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Registry B rejects entries without provenance.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-22c2d6bead88",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Atlas failed when provenance was missing.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-3ac2c4120bc7",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Adding provenance restored successful routing.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-cb0d992b4185",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Registry B is not responsible for execution.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-551b82de793b",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Execution is handled by Worker C.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-3ba1d1eb60e8",
+        "source": "synthetic_fixture"
+      },
+      {
+        "content": "Worker C was not tested in the failed run.",
+        "persisted_to_live_memory": false,
+        "record_id": "experience-8d918a62dcd7",
+        "source": "synthetic_fixture"
+      }
+    ],
+    "grounded_answer": {
+      "answer": "Given the simulated semantic/consolidated records available, Atlas likely failed because Registry B rejected entries missing provenance. Adding provenance restored successful routing. What remains uncertain is execution through Worker C, because Worker C was not tested in the failed run. This answer is synthesized only from the harness records; no model-weight training, provider call, or live memory write was performed.",
+      "answer_id": "answer-49213dcaec54",
+      "inquiry_id": "inquiry-e53f4167f0f7",
+      "known_claims": [
+        "Atlas likely failed because Registry B rejected entries missing provenance.",
+        "Adding provenance restored successful routing."
+      ],
+      "supporting_evidence_ids": [
+        "evidence-72d9b7799d65",
+        "evidence-de4b72cc9dc3",
+        "evidence-7c2db533effa",
+        "evidence-be4479c87e32"
+      ],
+      "uncertainty": [
+        "Execution through Worker C remains uncertain because Worker C was not tested in the failed run.",
+        "The available records do not prove whether Worker C would succeed after routing was restored."
+      ],
+      "unsupported_claims_refused": [
+        "Atlas failed because Worker C executed incorrectly.",
+        "Registry B performed execution."
+      ]
+    },
+    "inquiry": {
+      "inquiry_id": "inquiry-e53f4167f0f7",
+      "question": "Why did Project Atlas fail, what fixed it, and what remains uncertain?"
+    },
+    "phase": "Runtime E2E Semantic Consolidation Cycle",
+    "replay_batch": {
+      "batch_id": "replay-batch-961879f1adb0",
+      "purpose": "closed_loop_semantic_consolidation_fixture",
+      "semantic_ids": [
+        "semantic-b18fbf44950e",
+        "semantic-7d1fc5d77f09",
+        "semantic-22c2d6bead88",
+        "semantic-3ac2c4120bc7",
+        "semantic-cb0d992b4185",
+        "semantic-551b82de793b",
+        "semantic-3ba1d1eb60e8",
+        "semantic-8d918a62dcd7"
+      ]
+    },
+    "retrieved_evidence": [
+      {
+        "claim": "Atlas routing depends on Module A and Registry B.",
+        "evidence_id": "evidence-72d9b7799d65",
+        "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+        "semantic_id": "knowledge-34873b2b78d7"
+      },
+      {
+        "claim": "Atlas likely failed because Registry B rejected entries missing provenance.",
+        "evidence_id": "evidence-de4b72cc9dc3",
+        "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+        "semantic_id": "knowledge-ea5d94e60b7e"
+      },
+      {
+        "claim": "Adding provenance restored successful routing.",
+        "evidence_id": "evidence-7c2db533effa",
+        "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+        "semantic_id": "knowledge-ce0fb4c59595"
+      },
+      {
+        "claim": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run.",
+        "evidence_id": "evidence-be4479c87e32",
+        "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+        "semantic_id": "knowledge-ce326ac2adfa"
+      }
+    ],
+    "semantic_records": [
+      {
+        "experience_id": "experience-b18fbf44950e",
+        "proposition": "Project Atlas uses Module A for routing.",
+        "provenance": [
+          "experience-b18fbf44950e"
+        ],
+        "semantic_id": "semantic-b18fbf44950e",
+        "subjects": [
+          "project_atlas",
+          "module_a",
+          "routing"
+        ]
+      },
+      {
+        "experience_id": "experience-7d1fc5d77f09",
+        "proposition": "Module A depends on Registry B.",
+        "provenance": [
+          "experience-7d1fc5d77f09"
+        ],
+        "semantic_id": "semantic-7d1fc5d77f09",
+        "subjects": [
+          "module_a",
+          "registry_b"
+        ]
+      },
+      {
+        "experience_id": "experience-22c2d6bead88",
+        "proposition": "Registry B rejects entries without provenance.",
+        "provenance": [
+          "experience-22c2d6bead88"
+        ],
+        "semantic_id": "semantic-22c2d6bead88",
+        "subjects": [
+          "registry_b",
+          "provenance",
+          "rejection"
+        ]
+      },
+      {
+        "experience_id": "experience-3ac2c4120bc7",
+        "proposition": "Atlas failed when provenance was missing.",
+        "provenance": [
+          "experience-3ac2c4120bc7"
+        ],
+        "semantic_id": "semantic-3ac2c4120bc7",
+        "subjects": [
+          "project_atlas",
+          "provenance",
+          "failure"
+        ]
+      },
+      {
+        "experience_id": "experience-cb0d992b4185",
+        "proposition": "Adding provenance restored successful routing.",
+        "provenance": [
+          "experience-cb0d992b4185"
+        ],
+        "semantic_id": "semantic-cb0d992b4185",
+        "subjects": [
+          "provenance",
+          "routing",
+          "restoration"
+        ]
+      },
+      {
+        "experience_id": "experience-551b82de793b",
+        "proposition": "Registry B is not responsible for execution.",
+        "provenance": [
+          "experience-551b82de793b"
+        ],
+        "semantic_id": "semantic-551b82de793b",
+        "subjects": [
+          "registry_b",
+          "execution",
+          "responsibility"
+        ]
+      },
+      {
+        "experience_id": "experience-3ba1d1eb60e8",
+        "proposition": "Execution is handled by Worker C.",
+        "provenance": [
+          "experience-3ba1d1eb60e8"
+        ],
+        "semantic_id": "semantic-3ba1d1eb60e8",
+        "subjects": [
+          "execution",
+          "worker_c"
+        ]
+      },
+      {
+        "experience_id": "experience-8d918a62dcd7",
+        "proposition": "Worker C was not tested in the failed run.",
+        "provenance": [
+          "experience-8d918a62dcd7"
+        ],
+        "semantic_id": "semantic-8d918a62dcd7",
+        "subjects": [
+          "worker_c",
+          "failed_run",
+          "uncertainty"
+        ]
+      }
+    ],
+    "simulated_consolidated_knowledge": [
+      {
+        "candidate_id": "candidate-8d4ec0087b29",
+        "claim": "Atlas routing depends on Module A and Registry B.",
+        "knowledge_id": "knowledge-34873b2b78d7",
+        "simulated_only": true,
+        "supporting_semantic_ids": [
+          "semantic-b18fbf44950e",
+          "semantic-7d1fc5d77f09"
+        ]
+      },
+      {
+        "candidate_id": "candidate-f67e998e0a35",
+        "claim": "Atlas likely failed because Registry B rejected entries missing provenance.",
+        "knowledge_id": "knowledge-ea5d94e60b7e",
+        "simulated_only": true,
+        "supporting_semantic_ids": [
+          "semantic-22c2d6bead88",
+          "semantic-3ac2c4120bc7"
+        ]
+      },
+      {
+        "candidate_id": "candidate-f080fd7cc76e",
+        "claim": "Adding provenance restored successful routing.",
+        "knowledge_id": "knowledge-ce0fb4c59595",
+        "simulated_only": true,
+        "supporting_semantic_ids": [
+          "semantic-cb0d992b4185"
+        ]
+      },
+      {
+        "candidate_id": "candidate-f47032615970",
+        "claim": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run.",
+        "knowledge_id": "knowledge-ce326ac2adfa",
+        "simulated_only": true,
+        "supporting_semantic_ids": [
+          "semantic-551b82de793b",
+          "semantic-3ba1d1eb60e8",
+          "semantic-8d918a62dcd7"
+        ]
+      }
+    ]
+  },
+  "final_recommendation": "PROCEED_DOCUMENT_TO_AUDIT_VERTICAL_SLICE",
+  "kernel": {
+    "action_execution_performed": false,
+    "kernel_role": "orchestration_only",
+    "managers": [
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "ExperienceManager",
+        "responsibility": "experience capture and boundary review"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "EvidenceManager",
+        "responsibility": "evidence provenance and support inspection"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "RecallManager",
+        "responsibility": "candidate-context recall coordination"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "ReasoningManager",
+        "responsibility": "local deterministic reasoning/explanation coordination"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "LearningManager",
+        "responsibility": "learning opportunity and proposal scaffolds"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "ReviewManager",
+        "responsibility": "human/admin review state coordination"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "IntegrationManager",
+        "responsibility": "gated integration event scaffolds and rollback handles"
+      },
+      {
+        "authority": "orchestration_only",
+        "mutating": false,
+        "name": "SafetyManager",
+        "responsibility": "invariant checks and stop conditions"
+      }
+    ],
+    "memory_mutation_performed": false,
+    "phase": "Runtime V3.2",
+    "provider_call_performed": false,
+    "training_performed": false
+  },
+  "lifecycle_owners": [
+    {
+      "auditor": "ReviewManager",
+      "consumer": "EvidenceManager",
+      "creator": "ExperienceManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EExperienceRecord",
+      "owner": "ExperienceManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "RecallManager",
+      "creator": "EvidenceManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2ESemanticRecord",
+      "owner": "EvidenceManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "LearningManager",
+      "creator": "RecallManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EReplayBatch",
+      "owner": "RecallManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "IntegrationManager",
+      "creator": "LearningManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EConsolidationCandidate",
+      "owner": "LearningManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "ReviewManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "IntegrationManager",
+      "creator": "ReviewManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EConsolidationDecision",
+      "owner": "ReviewManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "RecallManager",
+      "creator": "IntegrationManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EConsolidatedKnowledgeRecord",
+      "owner": "IntegrationManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "RecallManager",
+      "creator": "ExperienceManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EInquiry",
+      "owner": "ReasoningManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "ReasoningManager",
+      "creator": "RecallManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2ERetrievedEvidence",
+      "owner": "RecallManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "EvidenceManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "ReviewManager",
+      "creator": "ReasoningManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2EGroundedAnswer",
+      "owner": "ReasoningManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    },
+    {
+      "auditor": "ReviewManager",
+      "consumer": "SafetyManager",
+      "creator": "ReviewManager",
+      "explains": "ReasoningManager",
+      "object_name": "E2ECycleAudit",
+      "owner": "ReviewManager",
+      "rollback_owner": "IntegrationManager",
+      "validator": "SafetyManager"
+    }
+  ],
+  "phase": "DELTA RC1 Vertical Integration Coherence Pass",
+  "remaining_weaknesses": [
+    "The trace still uses fixture records rather than real document adapters.",
+    "The kernel route is deterministic and report-only, not yet the sole execution path for all local answers.",
+    "Substrate query adapters are still simulated through the E2E harness.",
+    "Integration remains simulated and does not write canonical knowledge."
+  ],
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "scenario": "Project Atlas closed-loop semantic consolidation through kernel trace",
+  "scorecard": {
+    "answer_grounded_in_consolidated_records": true,
+    "audit_graph_linked": true,
+    "estimated_runtime_maturity": 76,
+    "kernel_routed": true,
+    "lifecycle_ownership_complete": true,
+    "prohibited_capabilities_inactive": true,
+    "transaction_wrapped": true,
+    "unsupported_uncertainty_identified": true
+  },
+  "trace_steps": [
+    {
+      "event_id": "kernel-event-e3ee33bf7e32f413",
+      "input_artifact": "fixture_corpus",
+      "manager": "ExperienceManager",
+      "mutating": false,
+      "output_artifact": "experience_records",
+      "stage": "experience_ingestion",
+      "step_id": "rc1-trace-step-01",
+      "transaction_id": "cognitive-transaction-1bfa08a1395d64e6"
+    },
+    {
+      "event_id": "kernel-event-1111d99fa053a73e",
+      "input_artifact": "experience_records",
+      "manager": "EvidenceManager",
+      "mutating": false,
+      "output_artifact": "semantic_records",
+      "stage": "semantic_record_build",
+      "step_id": "rc1-trace-step-02",
+      "transaction_id": "cognitive-transaction-e7eba937908c7701"
+    },
+    {
+      "event_id": "kernel-event-b181857f33fd8437",
+      "input_artifact": "semantic_records",
+      "manager": "RecallManager",
+      "mutating": false,
+      "output_artifact": "replay_batch",
+      "stage": "replay_batch_build",
+      "step_id": "rc1-trace-step-03",
+      "transaction_id": "cognitive-transaction-791f366eff1eaa06"
+    },
+    {
+      "event_id": "kernel-event-710a6e39f3237a2b",
+      "input_artifact": "replay_batch",
+      "manager": "LearningManager",
+      "mutating": false,
+      "output_artifact": "consolidation_candidates",
+      "stage": "consolidation_candidate_build",
+      "step_id": "rc1-trace-step-04",
+      "transaction_id": "cognitive-transaction-5b11d6252ad9ef49"
+    },
+    {
+      "event_id": "kernel-event-d3e208675b5dbc6e",
+      "input_artifact": "consolidation_candidates",
+      "manager": "ReviewManager",
+      "mutating": false,
+      "output_artifact": "simulated_consolidated_knowledge",
+      "stage": "approval_gated_simulation",
+      "step_id": "rc1-trace-step-05",
+      "transaction_id": "cognitive-transaction-7c8ea7618f408db9"
+    },
+    {
+      "event_id": "kernel-event-9c6c7ec2fded79b8",
+      "input_artifact": "inquiry",
+      "manager": "ReasoningManager",
+      "mutating": false,
+      "output_artifact": "dynamic_pipeline",
+      "stage": "inquiry_routing",
+      "step_id": "rc1-trace-step-06",
+      "transaction_id": "cognitive-transaction-3b46e5afe549c77a"
+    },
+    {
+      "event_id": "kernel-event-cd414fc94e267e61",
+      "input_artifact": "simulated_consolidated_knowledge",
+      "manager": "RecallManager",
+      "mutating": false,
+      "output_artifact": "retrieved_evidence",
+      "stage": "semantic_retrieval",
+      "step_id": "rc1-trace-step-07",
+      "transaction_id": "cognitive-transaction-bc0d6b2c12c4c4f3"
+    },
+    {
+      "event_id": "kernel-event-b038d55b803c3b57",
+      "input_artifact": "retrieved_evidence",
+      "manager": "ReasoningManager",
+      "mutating": false,
+      "output_artifact": "grounded_answer",
+      "stage": "grounded_synthesis",
+      "step_id": "rc1-trace-step-08",
+      "transaction_id": "cognitive-transaction-2cb8dc969239cd39"
+    },
+    {
+      "event_id": "kernel-event-7bb8d18123ab66f5",
+      "input_artifact": "grounded_answer",
+      "manager": "ReviewManager",
+      "mutating": false,
+      "output_artifact": "cycle_audit",
+      "stage": "audit_review",
+      "step_id": "rc1-trace-step-09",
+      "transaction_id": "cognitive-transaction-18ef644541ca2d73"
+    },
+    {
+      "event_id": "kernel-event-dc559f7c5180b1ea",
+      "input_artifact": "cycle_audit",
+      "manager": "SafetyManager",
+      "mutating": false,
+      "output_artifact": "rc1_readiness_review",
+      "stage": "safety_checkpoint",
+      "step_id": "rc1-trace-step-10",
+      "transaction_id": "cognitive-transaction-100fa396eb667e2f"
+    }
+  ]
+}

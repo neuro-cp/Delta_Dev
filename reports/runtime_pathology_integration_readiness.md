@@ -4,7 +4,7 @@
 I uploaded 10 scientific papers. What have we learned? What contradicts? What needs more evidence? What would change if approved?
 
 ## Overall Status
-not_ready_for_live_vertical_execution
+rc1_fixture_verticals_registered_and_review_ready
 
 ## Steps
 - Upload 10 papers
@@ -16,4 +16,4 @@ not_ready_for_live_vertical_execution
 - Audit and rollback
 
 ## Recommended First Vertical
-report-only document-to-audit workflow trace with fixture papers
+manual RC1 scenario validation before further architecture

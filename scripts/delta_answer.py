@@ -17,6 +17,7 @@ from orchestration.runtime.v30_conversational_answer_formatter import (
 from orchestration.runtime.v30_pipeline_explainer import build_pipeline_explanation
 from orchestration.runtime.v31_local_learning_answer import is_v31_learning_question, run_v31_learning_answer
 from orchestration.runtime.v39_local_kernel_answer import is_kernel_question, run_kernel_answer
+from orchestration.runtime.rc1_kernel_answer_envelope import wrap_local_answer_with_kernel_envelope
 from orchestration.runtime.arc_ii_local_answer import is_arc_ii_question, run_arc_ii_answer
 from orchestration.runtime.arc_iii_local_answer import is_arc_iii_question, run_arc_iii_answer
 from orchestration.runtime.arc_iv_local_answer import is_arc_iv_question, run_arc_iv_answer
@@ -69,6 +70,8 @@ def main() -> int:
         data = build_pipeline_explanation(query, use_recall=args.use_recall)
     else:
         data = run_v29_local_answer(query, use_recall=args.use_recall)
+    if not args.output_report:
+        data = wrap_local_answer_with_kernel_envelope(query, data)
     if args.json or args.show_provenance or args.output_report:
         print(json.dumps(data, indent=2))
     elif data.get("phase") == "Post-ARC XXV Runtime Architecture Completion":

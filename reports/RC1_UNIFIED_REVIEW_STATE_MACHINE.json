@@ -1,0 +1,104 @@
+{
+  "estimated_runtime_maturity": 93,
+  "final_recommendation": "PROCEED_CENTRAL_RUNTIME_ARTIFACT_REGISTRY",
+  "lifecycle": {
+    "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+    "current_state": "integrated_disabled",
+    "integrated": false,
+    "lifecycle_id": "unified-review-lifecycle-a8c6c8ab850a92f3",
+    "mutation_performed": false,
+    "proposal_id": "learning-proposal-0c0e6795a6269be2",
+    "rollback_token": "unified-rollback-fec9746d9566394d",
+    "states": [
+      "draft",
+      "review",
+      "admin_approved",
+      "overwatch_allowed",
+      "overwatch_blocked",
+      "owner_override_allowed",
+      "simulation_ready",
+      "ready_to_integrate",
+      "integrated_disabled",
+      "rolled_back_available"
+    ],
+    "transitions": [
+      {
+        "allowed": true,
+        "live_write_performed": false,
+        "reason": "proposal_created_for_human_review",
+        "source_state": "draft",
+        "target_state": "review",
+        "transition_id": "unified-transition-100c3128c3a98b39"
+      },
+      {
+        "allowed": true,
+        "live_write_performed": false,
+        "reason": "explicit_admin_review_state_present",
+        "source_state": "review",
+        "target_state": "admin_approved",
+        "transition_id": "unified-transition-5ba5e0f3caf6440a"
+      },
+      {
+        "allowed": true,
+        "live_write_performed": false,
+        "reason": "local_overwatch_simulation_allows_review_continuation",
+        "source_state": "admin_approved",
+        "target_state": "overwatch_allowed",
+        "transition_id": "unified-transition-1c914bb57a8947df"
+      },
+      {
+        "allowed": true,
+        "live_write_performed": false,
+        "reason": "knowledge_evolution_candidate_built",
+        "source_state": "overwatch_allowed",
+        "target_state": "simulation_ready",
+        "transition_id": "unified-transition-03dab502d6522f2c"
+      },
+      {
+        "allowed": true,
+        "live_write_performed": false,
+        "reason": "impact_and_rollback_are_available",
+        "source_state": "simulation_ready",
+        "target_state": "ready_to_integrate",
+        "transition_id": "unified-transition-797312eaf9df20c0"
+      },
+      {
+        "allowed": false,
+        "live_write_performed": false,
+        "reason": "live_integration_gate_remains_closed",
+        "source_state": "ready_to_integrate",
+        "target_state": "integrated_disabled",
+        "transition_id": "unified-transition-97dc0feefa7b3438"
+      },
+      {
+        "allowed": true,
+        "live_write_performed": false,
+        "reason": "rollback_reference_remains_available",
+        "source_state": "integrated_disabled",
+        "target_state": "rolled_back_available",
+        "transition_id": "unified-transition-6c89a57ee35339de"
+      }
+    ]
+  },
+  "normalized_states": [
+    "draft",
+    "review",
+    "admin_approved",
+    "overwatch_allowed",
+    "overwatch_blocked",
+    "owner_override_allowed",
+    "simulation_ready",
+    "ready_to_integrate",
+    "integrated_disabled",
+    "rolled_back_available"
+  ],
+  "phase": "RC1 Unified Proposal Review State Machine",
+  "safety": {
+    "integration_write_performed": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false,
+    "rollback_available": true,
+    "training_performed": false
+  }
+}

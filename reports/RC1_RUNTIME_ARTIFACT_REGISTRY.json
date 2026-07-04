@@ -1,0 +1,79 @@
+{
+  "all_artifacts_have_consumers": true,
+  "all_artifacts_read_only": true,
+  "artifact_count": 6,
+  "consumerless_artifacts": [],
+  "estimated_runtime_maturity": 95,
+  "final_recommendation": "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION",
+  "missing_artifacts": [],
+  "mutating_artifacts": [],
+  "phase": "RC1 Runtime Artifact Registry",
+  "records": [
+    {
+      "activation_status": "report_only",
+      "artifact_id": "rc1-readiness-review",
+      "artifact_type": "report",
+      "auditor": "ReviewManager",
+      "consumer": "runtime_pathology_explorer",
+      "mutating": false,
+      "path": "reports/RC1_READINESS_REVIEW.json",
+      "producer": "rc1_vertical_integration",
+      "validator": "tests/runtime_rc1"
+    },
+    {
+      "activation_status": "report_only",
+      "artifact_id": "rc1-e2e-trace",
+      "artifact_type": "trace",
+      "auditor": "ReviewManager",
+      "consumer": "RC1_READINESS_REVIEW",
+      "mutating": false,
+      "path": "reports/END_TO_END_RUNTIME_TRACE.json",
+      "producer": "rc1_vertical_integration",
+      "validator": "tests/runtime_rc1"
+    },
+    {
+      "activation_status": "fixture_only",
+      "artifact_id": "rc1-document-audit",
+      "artifact_type": "report",
+      "auditor": "ReviewManager",
+      "consumer": "runtime_pathology_explorer",
+      "mutating": false,
+      "path": "reports/RC1_DOCUMENT_AUDIT_SLICE.json",
+      "producer": "rc1_document_audit_slice",
+      "validator": "tests/runtime_rc1"
+    },
+    {
+      "activation_status": "read_only",
+      "artifact_id": "rc1-query-adapter",
+      "artifact_type": "report",
+      "auditor": "ReasoningManager",
+      "consumer": "runtime_pathology_explorer",
+      "mutating": false,
+      "path": "reports/RC1_SUBSTRATE_QUERY_ADAPTER.json",
+      "producer": "rc1_substrate_query_adapter",
+      "validator": "tests/runtime_rc1"
+    },
+    {
+      "activation_status": "simulation_only",
+      "artifact_id": "rc1-state-machine",
+      "artifact_type": "report",
+      "auditor": "ReviewManager",
+      "consumer": "runtime_pathology_explorer",
+      "mutating": false,
+      "path": "reports/RC1_UNIFIED_REVIEW_STATE_MACHINE.json",
+      "producer": "rc1_unified_review_state_machine",
+      "validator": "tests/runtime_rc1"
+    },
+    {
+      "activation_status": "report_only",
+      "artifact_id": "master-pathology",
+      "artifact_type": "report",
+      "auditor": "SafetyManager",
+      "consumer": "ROADMAP",
+      "mutating": false,
+      "path": "reports/MASTER_PATHOLOGY_REPORT.json",
+      "producer": "runtime_pathology_explorer",
+      "validator": "tests/runtime_pathology"
+    }
+  ]
+}

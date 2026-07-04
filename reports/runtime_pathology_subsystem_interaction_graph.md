@@ -4,12 +4,12 @@
 ```json
 {
   "executive": 74,
-  "kernel": 45,
+  "kernel": 46,
   "knowledge": 86,
-  "learning": 63,
-  "other": 233,
+  "learning": 64,
+  "other": 236,
   "reasoning": 65,
-  "runtime": 47
+  "runtime": 48
 }
 ```
 
@@ -21,16 +21,18 @@
 - {'source': 'executive', 'target': 'reasoning', 'count': 1}
 - {'source': 'executive', 'target': 'runtime', 'count': 1}
 - {'source': 'kernel', 'target': 'knowledge', 'count': 1}
-- {'source': 'kernel', 'target': 'learning', 'count': 3}
+- {'source': 'kernel', 'target': 'learning', 'count': 4}
 - {'source': 'kernel', 'target': 'other', 'count': 72}
 - {'source': 'knowledge', 'target': 'learning', 'count': 4}
 - {'source': 'knowledge', 'target': 'other', 'count': 127}
+- {'source': 'learning', 'target': 'kernel', 'count': 6}
 - {'source': 'learning', 'target': 'knowledge', 'count': 9}
-- {'source': 'learning', 'target': 'other', 'count': 76}
+- {'source': 'learning', 'target': 'other', 'count': 77}
 - {'source': 'learning', 'target': 'runtime', 'count': 1}
 - {'source': 'other', 'target': 'executive', 'count': 1}
-- {'source': 'other', 'target': 'knowledge', 'count': 20}
-- {'source': 'other', 'target': 'learning', 'count': 5}
+- {'source': 'other', 'target': 'kernel', 'count': 3}
+- {'source': 'other', 'target': 'knowledge', 'count': 22}
+- {'source': 'other', 'target': 'learning', 'count': 9}
 - {'source': 'other', 'target': 'reasoning', 'count': 1}
 - {'source': 'other', 'target': 'runtime', 'count': 4}
 - {'source': 'reasoning', 'target': 'other', 'count': 124}

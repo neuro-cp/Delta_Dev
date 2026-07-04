@@ -1,0 +1,207 @@
+{
+  "audit_graph": {
+    "edges": [
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-2aefa622e6cee1d3",
+        "target": "rc1-audit-node-2e64ad53cb9f691b"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-2e64ad53cb9f691b",
+        "target": "rc1-audit-node-5151b923ecc7a243"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-5151b923ecc7a243",
+        "target": "rc1-audit-node-1f799e463e69b9dd"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-1f799e463e69b9dd",
+        "target": "rc1-audit-node-7f2dde1506061cc4"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-7f2dde1506061cc4",
+        "target": "rc1-audit-node-dba72b0de51e91c5"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-dba72b0de51e91c5",
+        "target": "rc1-audit-node-5412a00efa123cb1"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-5412a00efa123cb1",
+        "target": "rc1-audit-node-857c6a7af4c22bc6"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-857c6a7af4c22bc6",
+        "target": "rc1-audit-node-5ebba6efcdce5eba"
+      },
+      {
+        "relation": "feeds",
+        "source": "rc1-audit-node-5ebba6efcdce5eba",
+        "target": "rc1-audit-node-636217a4b9f94cb4"
+      }
+    ],
+    "graph_id": "rc1-audit-graph-927f20ef869788c5",
+    "graph_only": true,
+    "nodes": [
+      {
+        "label": "ExperienceManager: experience_records",
+        "node_id": "rc1-audit-node-2aefa622e6cee1d3",
+        "node_type": "experience_ingestion"
+      },
+      {
+        "label": "EvidenceManager: semantic_records",
+        "node_id": "rc1-audit-node-2e64ad53cb9f691b",
+        "node_type": "semantic_record_build"
+      },
+      {
+        "label": "RecallManager: replay_batch",
+        "node_id": "rc1-audit-node-5151b923ecc7a243",
+        "node_type": "replay_batch_build"
+      },
+      {
+        "label": "LearningManager: consolidation_candidates",
+        "node_id": "rc1-audit-node-1f799e463e69b9dd",
+        "node_type": "consolidation_candidate_build"
+      },
+      {
+        "label": "ReviewManager: simulated_consolidated_knowledge",
+        "node_id": "rc1-audit-node-7f2dde1506061cc4",
+        "node_type": "approval_gated_simulation"
+      },
+      {
+        "label": "ReasoningManager: dynamic_pipeline",
+        "node_id": "rc1-audit-node-dba72b0de51e91c5",
+        "node_type": "inquiry_routing"
+      },
+      {
+        "label": "RecallManager: retrieved_evidence",
+        "node_id": "rc1-audit-node-5412a00efa123cb1",
+        "node_type": "semantic_retrieval"
+      },
+      {
+        "label": "ReasoningManager: grounded_answer",
+        "node_id": "rc1-audit-node-857c6a7af4c22bc6",
+        "node_type": "grounded_synthesis"
+      },
+      {
+        "label": "ReviewManager: cycle_audit",
+        "node_id": "rc1-audit-node-5ebba6efcdce5eba",
+        "node_type": "audit_review"
+      },
+      {
+        "label": "SafetyManager: rc1_readiness_review",
+        "node_id": "rc1-audit-node-636217a4b9f94cb4",
+        "node_type": "safety_checkpoint"
+      }
+    ]
+  },
+  "trace_steps": [
+    {
+      "event_id": "kernel-event-e3ee33bf7e32f413",
+      "input_artifact": "fixture_corpus",
+      "manager": "ExperienceManager",
+      "mutating": false,
+      "output_artifact": "experience_records",
+      "stage": "experience_ingestion",
+      "step_id": "rc1-trace-step-01",
+      "transaction_id": "cognitive-transaction-1bfa08a1395d64e6"
+    },
+    {
+      "event_id": "kernel-event-1111d99fa053a73e",
+      "input_artifact": "experience_records",
+      "manager": "EvidenceManager",
+      "mutating": false,
+      "output_artifact": "semantic_records",
+      "stage": "semantic_record_build",
+      "step_id": "rc1-trace-step-02",
+      "transaction_id": "cognitive-transaction-e7eba937908c7701"
+    },
+    {
+      "event_id": "kernel-event-b181857f33fd8437",
+      "input_artifact": "semantic_records",
+      "manager": "RecallManager",
+      "mutating": false,
+      "output_artifact": "replay_batch",
+      "stage": "replay_batch_build",
+      "step_id": "rc1-trace-step-03",
+      "transaction_id": "cognitive-transaction-791f366eff1eaa06"
+    },
+    {
+      "event_id": "kernel-event-710a6e39f3237a2b",
+      "input_artifact": "replay_batch",
+      "manager": "LearningManager",
+      "mutating": false,
+      "output_artifact": "consolidation_candidates",
+      "stage": "consolidation_candidate_build",
+      "step_id": "rc1-trace-step-04",
+      "transaction_id": "cognitive-transaction-5b11d6252ad9ef49"
+    },
+    {
+      "event_id": "kernel-event-d3e208675b5dbc6e",
+      "input_artifact": "consolidation_candidates",
+      "manager": "ReviewManager",
+      "mutating": false,
+      "output_artifact": "simulated_consolidated_knowledge",
+      "stage": "approval_gated_simulation",
+      "step_id": "rc1-trace-step-05",
+      "transaction_id": "cognitive-transaction-7c8ea7618f408db9"
+    },
+    {
+      "event_id": "kernel-event-9c6c7ec2fded79b8",
+      "input_artifact": "inquiry",
+      "manager": "ReasoningManager",
+      "mutating": false,
+      "output_artifact": "dynamic_pipeline",
+      "stage": "inquiry_routing",
+      "step_id": "rc1-trace-step-06",
+      "transaction_id": "cognitive-transaction-3b46e5afe549c77a"
+    },
+    {
+      "event_id": "kernel-event-cd414fc94e267e61",
+      "input_artifact": "simulated_consolidated_knowledge",
+      "manager": "RecallManager",
+      "mutating": false,
+      "output_artifact": "retrieved_evidence",
+      "stage": "semantic_retrieval",
+      "step_id": "rc1-trace-step-07",
+      "transaction_id": "cognitive-transaction-bc0d6b2c12c4c4f3"
+    },
+    {
+      "event_id": "kernel-event-b038d55b803c3b57",
+      "input_artifact": "retrieved_evidence",
+      "manager": "ReasoningManager",
+      "mutating": false,
+      "output_artifact": "grounded_answer",
+      "stage": "grounded_synthesis",
+      "step_id": "rc1-trace-step-08",
+      "transaction_id": "cognitive-transaction-2cb8dc969239cd39"
+    },
+    {
+      "event_id": "kernel-event-7bb8d18123ab66f5",
+      "input_artifact": "grounded_answer",
+      "manager": "ReviewManager",
+      "mutating": false,
+      "output_artifact": "cycle_audit",
+      "stage": "audit_review",
+      "step_id": "rc1-trace-step-09",
+      "transaction_id": "cognitive-transaction-18ef644541ca2d73"
+    },
+    {
+      "event_id": "kernel-event-dc559f7c5180b1ea",
+      "input_artifact": "cycle_audit",
+      "manager": "SafetyManager",
+      "mutating": false,
+      "output_artifact": "rc1_readiness_review",
+      "stage": "safety_checkpoint",
+      "step_id": "rc1-trace-step-10",
+      "transaction_id": "cognitive-transaction-100fa396eb667e2f"
+    }
+  ]
+}

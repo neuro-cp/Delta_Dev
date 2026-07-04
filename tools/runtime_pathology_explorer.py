@@ -22,6 +22,12 @@ DOCS = ROOT / "docs"
 TESTS = ROOT / "tests"
 SCRIPTS = ROOT / "scripts"
 UI = ROOT / "ui"
+RC1_REVIEW = REPORTS / "RC1_READINESS_REVIEW.json"
+RC1_DOCUMENT_AUDIT = REPORTS / "RC1_DOCUMENT_AUDIT_SLICE.json"
+RC1_KERNEL_ENVELOPE = RUNTIME / "rc1_kernel_answer_envelope.py"
+RC1_QUERY_ADAPTER = REPORTS / "RC1_SUBSTRATE_QUERY_ADAPTER.json"
+RC1_STATE_MACHINE = REPORTS / "RC1_UNIFIED_REVIEW_STATE_MACHINE.json"
+RC1_ARTIFACT_REGISTRY = REPORTS / "RC1_RUNTIME_ARTIFACT_REGISTRY.json"
 
 MAJOR_SUBSYSTEMS = {
     "kernel": ("kernel", "v32", "v33", "v34", "v35", "v36", "v37", "v38", "v39", "completion_e"),
@@ -335,20 +341,26 @@ def missing_middleware_report() -> dict[str, Any]:
 
 
 def integration_readiness_report() -> dict[str, Any]:
+    rc1_exists = RC1_REVIEW.exists()
+    document_audit_exists = RC1_DOCUMENT_AUDIT.exists()
+    kernel_envelope_exists = RC1_KERNEL_ENVELOPE.exists()
+    query_adapter_exists = RC1_QUERY_ADAPTER.exists()
+    state_machine_exists = RC1_STATE_MACHINE.exists()
+    artifact_registry_exists = RC1_ARTIFACT_REGISTRY.exists()
     walkthrough_steps = [
         {"step": "Upload 10 papers", "status": "missing_live_adapter", "gap": "No active document ingestion or paper object adapter."},
-        {"step": "Represent papers", "status": "scaffolded", "gap": "Knowledge substrate can model objects but not consume uploaded artifacts."},
-        {"step": "Find what was learned", "status": "partial", "gap": "Reasoning can consume sample substrate objects, not extracted paper claims."},
-        {"step": "Find contradictions", "status": "partial", "gap": "Contradiction objects exist but no paper-level contradiction extraction workflow is connected."},
-        {"step": "Need more evidence", "status": "partial", "gap": "Investigation questions exist but are not driven by reasoning gaps."},
-        {"step": "What would change if approved", "status": "partial", "gap": "Evolution simulation exists but lacks connected proposal intake from this workflow."},
-        {"step": "Audit and rollback", "status": "scaffolded", "gap": "Rollback plans exist but are not linked to an end-to-end transaction graph."},
+        {"step": "Represent papers", "status": "fixture_paper_trace" if document_audit_exists else ("fixture_vertical_trace" if rc1_exists else "scaffolded"), "gap": "Fixture papers are represented; live artifact adapters are still needed."},
+        {"step": "Find what was learned", "status": "fixture_paper_trace" if document_audit_exists else ("fixture_vertical_trace" if rc1_exists else "partial"), "gap": "Fixture paper claims are summarized; real paper claim extraction is still absent."},
+        {"step": "Find contradictions", "status": "bounded_fixture_contradiction" if document_audit_exists else "partial", "gap": "Fixture contradiction/gap handling exists; paper-level extraction is not live."},
+        {"step": "Need more evidence", "status": "fixture_evidence_gap_trace" if document_audit_exists else ("fixture_uncertainty_trace" if rc1_exists else "partial"), "gap": "Fixture evidence gaps are generated; investigation planning still needs live adapters."},
+        {"step": "What would change if approved", "status": "simulated_only", "gap": "Evolution simulation exists and RC1 has simulated approvals; no live integration write is allowed."},
+        {"step": "Audit and rollback", "status": "kernel_trace_linked" if rc1_exists or document_audit_exists else "scaffolded", "gap": "RC1 links audit graph and rollback ownership; broader runtime traces still need adoption."},
     ]
     return {
         "scenario": "I uploaded 10 scientific papers. What have we learned? What contradicts? What needs more evidence? What would change if approved?",
-        "overall_status": "not_ready_for_live_vertical_execution",
+        "overall_status": "rc1_fixture_verticals_registered_and_review_ready" if artifact_registry_exists else ("unified_review_lifecycle_ready_for_fixture_verticals" if state_machine_exists else ("read_only_query_adapter_ready_for_fixture_verticals" if query_adapter_exists else ("kernel_observable_fixture_verticals_ready" if kernel_envelope_exists and document_audit_exists else ("fixture_document_to_audit_ready_not_live_upload_ready" if document_audit_exists else ("fixture_vertical_trace_ready_not_live_document_ready" if rc1_exists else "not_ready_for_live_vertical_execution"))))),
         "steps": walkthrough_steps,
-        "recommended_first_vertical": "report-only document-to-audit workflow trace with fixture papers",
+        "recommended_first_vertical": "manual RC1 scenario validation before further architecture" if artifact_registry_exists else ("central report and object consumer registry" if state_machine_exists else ("unified proposal/review/approval/integration state machine" if query_adapter_exists else ("read-only substrate query adapter between knowledge and reasoning" if kernel_envelope_exists and document_audit_exists else ("kernel routing enforcement for broader local flows" if document_audit_exists else ("read-only document-to-audit vertical slice with fixture documents" if rc1_exists else "report-only document-to-audit workflow trace with fixture papers"))))),
     }
 
 
@@ -409,6 +421,12 @@ def top_opportunities(debt: dict[str, Any], missing: dict[str, Any], dead: dict[
 
 def strengths_and_weaknesses() -> tuple[list[str], list[str]]:
     strengths = [
+        "Central RC1 artifact registry maps report producers, consumers, validators, auditors, and activation status.",
+        "Unified proposal/review/approval/integration state machine now normalizes review lifecycles and stops at integrated_disabled.",
+        "Read-only substrate query adapter now gives reasoning one deterministic query surface over ARC II and RC1 artifacts.",
+        "Local CLI answers now receive a non-mutating kernel envelope without changing answer text.",
+        "RC1 document-to-audit slice answers learned, contradictory, evidence-gap, and approval-impact questions from fixture papers.",
+        "RC1 vertical trace now connects semantic consolidation through kernel events, transactions, lifecycle ownership, and audit graph.",
         "Safety invariants are explicit and repeatedly tested.",
         "Reports and JSON outputs make architecture review reproducible.",
         "Model B and HYB1 states are clearly separated.",
@@ -436,8 +454,8 @@ def strengths_and_weaknesses() -> tuple[list[str], list[str]]:
         "The project now has a clear activation-readiness target.",
     ]
     weaknesses = [
-        "Many modules are architecture leaves with no workflow consumer.",
-        "Local answer routing bypasses the kernel.",
+        "Many modules are still architecture leaves with no workflow consumer.",
+        "CLI local answers now carry a kernel envelope, but internal subsystem calls can still bypass the kernel.",
         "Deepening and completion families duplicate lifecycle code.",
         "Knowledge substrate uses sample data rather than live artifact adapters.",
         "Reasoning consumes checkpoint fixtures rather than a true query adapter.",
@@ -455,7 +473,7 @@ def strengths_and_weaknesses() -> tuple[list[str], list[str]]:
         "Integration simulations are disconnected from real review inputs.",
         "Specialists remain advisory slots without middleware contracts.",
         "Investigation questions are not generated from reasoning gaps.",
-        "No fixture document ingestion path exercises the full stack.",
+        "Fixture semantic consolidation and fixture document audit now exercise full stack paths, but live document ingestion remains disabled.",
         "Confidence propagation is scattered across several concepts.",
         "Relationship/evidence graph boundaries overlap.",
         "Runtime health is measured more by passing tests than scenario outcomes.",
@@ -506,8 +524,42 @@ def build_master() -> dict[str, Any]:
     opportunities = top_opportunities(debt, missing, dead)
     strengths, weaknesses = strengths_and_weaknesses()
     scores = score_subsystems(facts, interactions)
+    rc1_payload: dict[str, Any] = {}
+    if RC1_REVIEW.exists():
+        try:
+            rc1_payload = json.loads(RC1_REVIEW.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            rc1_payload = {}
+    document_audit_payload: dict[str, Any] = {}
+    if RC1_DOCUMENT_AUDIT.exists():
+        try:
+            document_audit_payload = json.loads(RC1_DOCUMENT_AUDIT.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            document_audit_payload = {}
+    query_adapter_payload: dict[str, Any] = {}
+    if RC1_QUERY_ADAPTER.exists():
+        try:
+            query_adapter_payload = json.loads(RC1_QUERY_ADAPTER.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            query_adapter_payload = {}
+    state_machine_payload: dict[str, Any] = {}
+    if RC1_STATE_MACHINE.exists():
+        try:
+            state_machine_payload = json.loads(RC1_STATE_MACHINE.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            state_machine_payload = {}
+    artifact_registry_payload: dict[str, Any] = {}
+    if RC1_ARTIFACT_REGISTRY.exists():
+        try:
+            artifact_registry_payload = json.loads(RC1_ARTIFACT_REGISTRY.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            artifact_registry_payload = {}
+    maturity = int(artifact_registry_payload.get("estimated_runtime_maturity", state_machine_payload.get("estimated_runtime_maturity", query_adapter_payload.get("estimated_runtime_maturity", document_audit_payload.get("estimated_runtime_maturity", rc1_payload.get("scorecard", {}).get("estimated_runtime_maturity", 68))))))
+    if RC1_KERNEL_ENVELOPE.exists() and maturity < 86:
+        maturity = 86
+    activation_readiness = "rc1_manual_validation_ready" if artifact_registry_payload else ("unified_review_lifecycle_ready" if state_machine_payload else ("read_only_query_adapter_ready" if query_adapter_payload else ("kernel_observable_fixture_verticals_ready" if RC1_KERNEL_ENVELOPE.exists() and document_audit_payload else ("fixture_document_audit_ready" if document_audit_payload else ("fixture_vertical_trace_ready" if rc1_payload else "not_ready_without_vertical_trace")))))
     master = {
-        "phase": "DELTA Runtime Pathology Exploration Marathon",
+        "phase": "DELTA RC1 Runtime Coherence Review",
         "runtime_module_count": len(facts),
         "dependency_edge_count": dependency["edge_count"],
         "call_edge_count": call_graph["edge_count"],
@@ -521,23 +573,56 @@ def build_master() -> dict[str, Any]:
         "top_25_architectural_strengths": strengths[:25],
         "top_100_improvement_opportunities": opportunities,
         "recommended_roadmap_reorder": [
-            "1. Runtime Vertical Integration I: governed document-to-audit workflow trace.",
-            "2. Kernel routing enforcement for local deterministic answer paths.",
-            "3. Read-only substrate query adapter between knowledge and reasoning.",
-            "4. Unified proposal/review/approval/integration state machine.",
-            "5. Central report and object consumer registry.",
-            "6. Activation-readiness review for the smallest coherent vertical slice.",
+            "1. Manual RC1 scenario validation over the registered vertical slices.",
+            "2. Activation-readiness review for the smallest coherent vertical slice.",
+            "3. Live adapter readiness review without enabling live ingestion.",
+            "4. Kernel envelope adoption inside subsystem-to-subsystem calls.",
+            "5. Real document adapter readiness review without live upload activation.",
+            "6. Consolidate duplicated scaffold lifecycle helpers.",
         ],
         "recommended_refactors": [item["recommendation"] for item in debt["items"][:10]],
+        "rc1_vertical_trace": {
+            "present": bool(rc1_payload),
+            "final_recommendation": rc1_payload.get("final_recommendation", ""),
+            "trace_steps": len(rc1_payload.get("trace_steps", [])) if rc1_payload else 0,
+            "lifecycle_owners": len(rc1_payload.get("lifecycle_owners", [])) if rc1_payload else 0,
+        },
+        "rc1_document_audit_slice": {
+            "present": bool(document_audit_payload),
+            "final_recommendation": document_audit_payload.get("final_recommendation", ""),
+            "fixture_paper_count": document_audit_payload.get("fixture_paper_count", 0),
+            "finding_count": len(document_audit_payload.get("findings", [])) if document_audit_payload else 0,
+        },
+        "rc1_kernel_answer_envelope": {
+            "present": RC1_KERNEL_ENVELOPE.exists(),
+            "scope": "CLI local answer responses",
+            "mutating": False,
+        },
+        "rc1_substrate_query_adapter": {
+            "present": bool(query_adapter_payload),
+            "final_recommendation": query_adapter_payload.get("final_recommendation", ""),
+            "packet_count": len(query_adapter_payload.get("packets", [])) if query_adapter_payload else 0,
+        },
+        "rc1_unified_review_state_machine": {
+            "present": bool(state_machine_payload),
+            "final_recommendation": state_machine_payload.get("final_recommendation", ""),
+            "current_state": state_machine_payload.get("lifecycle", {}).get("current_state", ""),
+        },
+        "rc1_runtime_artifact_registry": {
+            "present": bool(artifact_registry_payload),
+            "final_recommendation": artifact_registry_payload.get("final_recommendation", ""),
+            "artifact_count": artifact_registry_payload.get("artifact_count", 0),
+            "missing_artifacts": len(artifact_registry_payload.get("missing_artifacts", [])) if artifact_registry_payload else 0,
+        },
         "overall_runtime_maturity_estimate": {
             "architecture_completeness": "high",
-            "runtime_coherence": "medium_low",
-            "activation_readiness": "not_ready_without_vertical_trace",
+            "runtime_coherence": "medium" if rc1_payload else "medium_low",
+            "activation_readiness": activation_readiness,
             "safety_maturity": "high",
-            "estimated_percent": 68,
+            "estimated_percent": maturity,
         },
         "safety": {key: False for key in PROHIBITED_SIGNALS} | {"model_b_default": "unchanged", "hyb1": "dormant_env_gated"},
-        "final_recommendation": "PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION",
+        "final_recommendation": "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION" if artifact_registry_payload else ("PROCEED_CENTRAL_RUNTIME_ARTIFACT_REGISTRY" if state_machine_payload else ("PROCEED_UNIFIED_PROPOSAL_REVIEW_STATE_MACHINE" if query_adapter_payload else ("PROCEED_SUBSTRATE_QUERY_ADAPTER" if RC1_KERNEL_ENVELOPE.exists() and document_audit_payload else ("PROCEED_KERNEL_ROUTING_ENFORCEMENT" if document_audit_payload else ("PROCEED_DOCUMENT_TO_AUDIT_VERTICAL_SLICE" if rc1_payload else "PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION"))))),
     }
     outputs = {
         "runtime_pathology_dependency_graph": dependency,

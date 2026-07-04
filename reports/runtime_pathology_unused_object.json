@@ -1,11 +1,17 @@
 {
-  "class_total": 1518,
-  "likely_unused_class_count": 80,
+  "class_total": 1532,
+  "likely_unused_class_count": 81,
   "likely_unused_classes": [
     {
-      "class": "E2ECycleAudit",
-      "module": "orchestration.runtime.e2e_semantic_consolidation_cycle",
-      "path": "orchestration/runtime/e2e_semantic_consolidation_cycle.py",
+      "class": "KernelAnswerEnvelope",
+      "module": "orchestration.runtime.rc1_kernel_answer_envelope",
+      "path": "orchestration/runtime/rc1_kernel_answer_envelope.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "RuntimeCoherenceScorecard",
+      "module": "orchestration.runtime.rc1_vertical_integration",
+      "path": "orchestration/runtime/rc1_vertical_integration.py",
       "reason": "class appears only at definition/as_dict level"
     },
     {

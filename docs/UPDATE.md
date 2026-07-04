@@ -3543,6 +3543,45 @@ Next recommendation:
 
 `PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION`
 
+## DELTA RC1 Runtime Coherence Marathon
+
+Completed the first RC1 coherence pass. The pass targeted runtime cooperation
+instead of adding broad architecture.
+
+Major improvements:
+
+- Added kernel-routed RC1 vertical integration trace.
+- Added fixture document-to-audit vertical slice for the scientific-paper style
+  scenario.
+- Added non-mutating kernel envelopes around local CLI answers.
+- Added read-only substrate query adapter over ARC II and RC1 artifacts.
+- Added unified proposal/review/approval/integration state machine.
+- Added central RC1 runtime artifact registry.
+- Refreshed master pathology and master runtime reviews.
+
+Validation:
+
+- `py_compile`: passed.
+- Tests collected: 1595.
+- Tests passed: 1595.
+- JSON reports validated: 638.
+- Invalid JSON reports: 0.
+- Strict secret scan: clean.
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated.
+- No training, fine-tuning, weight update, provider authority, provider call,
+  autonomous browsing, action execution, scheduler/background worker, hidden
+  write, memory mutation, knowledge mutation, or HYB1 promotion occurred.
+
+Current runtime maturity estimate: 95%.
+
+Next recommendation:
+
+`PROCEED_RC1_MANUAL_SCENARIO_VALIDATION`
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI is complete as a planning-only executive cognition layer. DELTA

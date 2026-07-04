@@ -36,7 +36,7 @@
       "target": "knowledge"
     },
     {
-      "count": 3,
+      "count": 4,
       "source": "kernel",
       "target": "learning"
     },
@@ -56,12 +56,17 @@
       "target": "other"
     },
     {
+      "count": 6,
+      "source": "learning",
+      "target": "kernel"
+    },
+    {
       "count": 9,
       "source": "learning",
       "target": "knowledge"
     },
     {
-      "count": 76,
+      "count": 77,
       "source": "learning",
       "target": "other"
     },
@@ -76,12 +81,17 @@
       "target": "executive"
     },
     {
-      "count": 20,
+      "count": 3,
+      "source": "other",
+      "target": "kernel"
+    },
+    {
+      "count": 22,
       "source": "other",
       "target": "knowledge"
     },
     {
-      "count": 5,
+      "count": 9,
       "source": "other",
       "target": "learning"
     },
@@ -123,11 +133,11 @@
   ],
   "subsystem_counts": {
     "executive": 74,
-    "kernel": 45,
+    "kernel": 46,
     "knowledge": 86,
-    "learning": 63,
-    "other": 233,
+    "learning": 64,
+    "other": 236,
     "reasoning": 65,
-    "runtime": 47
+    "runtime": 48
   }
 }

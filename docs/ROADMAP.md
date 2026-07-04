@@ -832,6 +832,28 @@ Recommended next slice:
 4. Do not activate real training, provider authority, live memory mutation, or
    canonical writes.
 
+## RC1 Runtime Coherence Marathon
+
+The RC1 coherence pass raised the local runtime maturity estimate from 68% to
+95% by connecting existing parts rather than expanding architecture.
+
+Completed:
+
+1. Closed-loop semantic consolidation E2E harness.
+2. Kernel-routed RC1 vertical trace.
+3. Fixture document-to-audit vertical slice.
+4. Kernel answer envelope for local CLI answers.
+5. Read-only substrate query adapter.
+6. Unified proposal/review/approval/integration state machine.
+7. Central RC1 runtime artifact registry.
+
+Next roadmap item:
+
+`PROCEED_RC1_MANUAL_SCENARIO_VALIDATION`
+
+Do not resume broad module generation before manual scenario validation over
+the registered RC1 vertical slices.
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

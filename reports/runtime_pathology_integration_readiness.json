@@ -1,6 +1,6 @@
 {
-  "overall_status": "not_ready_for_live_vertical_execution",
-  "recommended_first_vertical": "report-only document-to-audit workflow trace with fixture papers",
+  "overall_status": "rc1_fixture_verticals_registered_and_review_ready",
+  "recommended_first_vertical": "manual RC1 scenario validation before further architecture",
   "scenario": "I uploaded 10 scientific papers. What have we learned? What contradicts? What needs more evidence? What would change if approved?",
   "steps": [
     {
@@ -9,33 +9,33 @@
       "step": "Upload 10 papers"
     },
     {
-      "gap": "Knowledge substrate can model objects but not consume uploaded artifacts.",
-      "status": "scaffolded",
+      "gap": "Fixture papers are represented; live artifact adapters are still needed.",
+      "status": "fixture_paper_trace",
       "step": "Represent papers"
     },
     {
-      "gap": "Reasoning can consume sample substrate objects, not extracted paper claims.",
-      "status": "partial",
+      "gap": "Fixture paper claims are summarized; real paper claim extraction is still absent.",
+      "status": "fixture_paper_trace",
       "step": "Find what was learned"
     },
     {
-      "gap": "Contradiction objects exist but no paper-level contradiction extraction workflow is connected.",
-      "status": "partial",
+      "gap": "Fixture contradiction/gap handling exists; paper-level extraction is not live.",
+      "status": "bounded_fixture_contradiction",
       "step": "Find contradictions"
     },
     {
-      "gap": "Investigation questions exist but are not driven by reasoning gaps.",
-      "status": "partial",
+      "gap": "Fixture evidence gaps are generated; investigation planning still needs live adapters.",
+      "status": "fixture_evidence_gap_trace",
       "step": "Need more evidence"
     },
     {
-      "gap": "Evolution simulation exists but lacks connected proposal intake from this workflow.",
-      "status": "partial",
+      "gap": "Evolution simulation exists and RC1 has simulated approvals; no live integration write is allowed.",
+      "status": "simulated_only",
       "step": "What would change if approved"
     },
     {
-      "gap": "Rollback plans exist but are not linked to an end-to-end transaction graph.",
-      "status": "scaffolded",
+      "gap": "RC1 links audit graph and rollback ownership; broader runtime traces still need adoption.",
+      "status": "kernel_trace_linked",
       "step": "Audit and rollback"
     }
   ]

@@ -42,6 +42,9 @@ def default_capability_records() -> tuple[CapabilityRecord, ...]:
     return (
         CapabilityRecord("self_description", "ReasoningManager", True),
         CapabilityRecord("pipeline_explanation", "ReasoningManager", True),
+        CapabilityRecord("semantic_consolidation_cycle", "IntegrationManager", True),
+        CapabilityRecord("vertical_runtime_trace", "IntegrationManager", True),
+        CapabilityRecord("audit_graph_review", "ReviewManager", True),
         CapabilityRecord("learning_opportunity_detection", "LearningManager", True),
         CapabilityRecord("learning_review", "ReviewManager", True),
         CapabilityRecord("gated_integration_scaffold", "IntegrationManager", True),

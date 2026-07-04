@@ -1,0 +1,261 @@
+{
+  "estimated_runtime_maturity": 90,
+  "final_recommendation": "PROCEED_UNIFIED_PROPOSAL_REVIEW_STATE_MACHINE",
+  "packets": [
+    {
+      "missing_evidence": [],
+      "mutating": false,
+      "packet_id": "reasoning-evidence-packet-eaf17ccb3e0e5459",
+      "query": {
+        "query_id": "substrate-query-dab421022bd5fb26",
+        "question": "Why did Project Atlas fail and what remains uncertain about Worker C?",
+        "read_only": true,
+        "terms": [
+          "why",
+          "did",
+          "project",
+          "atlas",
+          "fail",
+          "and",
+          "what",
+          "remains",
+          "uncertain",
+          "about",
+          "worker"
+        ]
+      },
+      "results": [
+        {
+          "confidence": 0.82,
+          "evidence_role": "Evidence",
+          "object_id": "knowledge-object-6207c2419fb4e7f6",
+          "provenance": [
+            "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+          ],
+          "result_id": "substrate-result-62f9d575db8ce32b",
+          "source": "arc_ii_checkpoint",
+          "text": "ARC II prompt requires provenance and rollback support"
+        },
+        {
+          "confidence": 0.68,
+          "evidence_role": "Claim",
+          "object_id": "knowledge-object-dc1138a190b56d59",
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "result_id": "substrate-result-2a8af68b7e436fa7",
+          "source": "arc_ii_checkpoint",
+          "text": "Evidence remains advisory until reviewed"
+        },
+        {
+          "confidence": 0.82,
+          "evidence_role": "simulated_consolidated_claim",
+          "object_id": "knowledge-34873b2b78d7",
+          "provenance": [
+            "semantic-b18fbf44950e",
+            "semantic-7d1fc5d77f09"
+          ],
+          "result_id": "substrate-result-ba5ef06f1e8c3058",
+          "source": "e2e_simulated_consolidated_knowledge",
+          "text": "Atlas routing depends on Module A and Registry B."
+        },
+        {
+          "confidence": 0.82,
+          "evidence_role": "simulated_consolidated_claim",
+          "object_id": "knowledge-ea5d94e60b7e",
+          "provenance": [
+            "semantic-22c2d6bead88",
+            "semantic-3ac2c4120bc7"
+          ],
+          "result_id": "substrate-result-23858e3476eab865",
+          "source": "e2e_simulated_consolidated_knowledge",
+          "text": "Atlas likely failed because Registry B rejected entries missing provenance."
+        },
+        {
+          "confidence": 0.82,
+          "evidence_role": "simulated_consolidated_claim",
+          "object_id": "knowledge-ce326ac2adfa",
+          "provenance": [
+            "semantic-551b82de793b",
+            "semantic-3ba1d1eb60e8",
+            "semantic-8d918a62dcd7"
+          ],
+          "result_id": "substrate-result-b98c823a8b87dc5b",
+          "source": "e2e_simulated_consolidated_knowledge",
+          "text": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run."
+        },
+        {
+          "confidence": 0.86,
+          "evidence_role": "learned",
+          "object_id": "audit-finding-3f68d82d8583a29c",
+          "provenance": [
+            "paper-claim-0b78ddd7a2ab5de7",
+            "paper-claim-cbc0eb1fb5dacb4a"
+          ],
+          "result_id": "substrate-result-f5ee52045bb8182d",
+          "source": "rc1_document_audit_slice",
+          "text": "Atlas routing failure is best explained by missing provenance causing Registry B rejection."
+        },
+        {
+          "confidence": 0.86,
+          "evidence_role": "learned",
+          "object_id": "audit-finding-150eff5aa2dc79ac",
+          "provenance": [
+            "paper-claim-918ae295bf6bf56e"
+          ],
+          "result_id": "substrate-result-37e8eeb3e7f2ed14",
+          "source": "rc1_document_audit_slice",
+          "text": "Adding provenance restored Registry B acceptance and Atlas routing."
+        },
+        {
+          "confidence": 0.78,
+          "evidence_role": "bounded_contradiction",
+          "object_id": "audit-finding-75462ad08808045d",
+          "provenance": [
+            "paper-claim-d825dc088a5975a6",
+            "paper-claim-b499f56545da0728"
+          ],
+          "result_id": "substrate-result-687843cd163cdb1a",
+          "source": "rc1_document_audit_slice",
+          "text": "Worker C has positive unrelated benchmark evidence, but that does not contradict the Atlas uncertainty because the failed configuration was not tested."
+        },
+        {
+          "confidence": 0.78,
+          "evidence_role": "evidence_gap",
+          "object_id": "audit-finding-a5ad6c1a400d556d",
+          "provenance": [
+            "paper-claim-d825dc088a5975a6"
+          ],
+          "result_id": "substrate-result-ec6b4ba35cb74510",
+          "source": "rc1_document_audit_slice",
+          "text": "More evidence is needed on Worker C execution in the restored Atlas configuration."
+        }
+      ],
+      "sufficient_for_grounded_answer": true
+    },
+    {
+      "missing_evidence": [],
+      "mutating": false,
+      "packet_id": "reasoning-evidence-packet-1e77d2a5b5bbce50",
+      "query": {
+        "query_id": "substrate-query-37b7c0c888b2c9af",
+        "question": "What did the document audit learn about provenance?",
+        "read_only": true,
+        "terms": [
+          "what",
+          "did",
+          "the",
+          "document",
+          "audit",
+          "learn",
+          "about",
+          "provenance"
+        ]
+      },
+      "results": [
+        {
+          "confidence": 0.82,
+          "evidence_role": "Evidence",
+          "object_id": "knowledge-object-6207c2419fb4e7f6",
+          "provenance": [
+            "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+          ],
+          "result_id": "substrate-result-62f9d575db8ce32b",
+          "source": "arc_ii_checkpoint",
+          "text": "ARC II prompt requires provenance and rollback support"
+        },
+        {
+          "confidence": 0.82,
+          "evidence_role": "simulated_consolidated_claim",
+          "object_id": "knowledge-ea5d94e60b7e",
+          "provenance": [
+            "semantic-22c2d6bead88",
+            "semantic-3ac2c4120bc7"
+          ],
+          "result_id": "substrate-result-23858e3476eab865",
+          "source": "e2e_simulated_consolidated_knowledge",
+          "text": "Atlas likely failed because Registry B rejected entries missing provenance."
+        },
+        {
+          "confidence": 0.82,
+          "evidence_role": "simulated_consolidated_claim",
+          "object_id": "knowledge-ce0fb4c59595",
+          "provenance": [
+            "semantic-cb0d992b4185"
+          ],
+          "result_id": "substrate-result-8d99e62b5627de51",
+          "source": "e2e_simulated_consolidated_knowledge",
+          "text": "Adding provenance restored successful routing."
+        },
+        {
+          "confidence": 0.82,
+          "evidence_role": "simulated_consolidated_claim",
+          "object_id": "knowledge-ce326ac2adfa",
+          "provenance": [
+            "semantic-551b82de793b",
+            "semantic-3ba1d1eb60e8",
+            "semantic-8d918a62dcd7"
+          ],
+          "result_id": "substrate-result-b98c823a8b87dc5b",
+          "source": "e2e_simulated_consolidated_knowledge",
+          "text": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run."
+        },
+        {
+          "confidence": 0.86,
+          "evidence_role": "learned",
+          "object_id": "audit-finding-3f68d82d8583a29c",
+          "provenance": [
+            "paper-claim-0b78ddd7a2ab5de7",
+            "paper-claim-cbc0eb1fb5dacb4a"
+          ],
+          "result_id": "substrate-result-f5ee52045bb8182d",
+          "source": "rc1_document_audit_slice",
+          "text": "Atlas routing failure is best explained by missing provenance causing Registry B rejection."
+        },
+        {
+          "confidence": 0.86,
+          "evidence_role": "learned",
+          "object_id": "audit-finding-150eff5aa2dc79ac",
+          "provenance": [
+            "paper-claim-918ae295bf6bf56e"
+          ],
+          "result_id": "substrate-result-37e8eeb3e7f2ed14",
+          "source": "rc1_document_audit_slice",
+          "text": "Adding provenance restored Registry B acceptance and Atlas routing."
+        },
+        {
+          "confidence": 0.78,
+          "evidence_role": "bounded_contradiction",
+          "object_id": "audit-finding-75462ad08808045d",
+          "provenance": [
+            "paper-claim-d825dc088a5975a6",
+            "paper-claim-b499f56545da0728"
+          ],
+          "result_id": "substrate-result-687843cd163cdb1a",
+          "source": "rc1_document_audit_slice",
+          "text": "Worker C has positive unrelated benchmark evidence, but that does not contradict the Atlas uncertainty because the failed configuration was not tested."
+        },
+        {
+          "confidence": 0.78,
+          "evidence_role": "evidence_gap",
+          "object_id": "audit-finding-a5ad6c1a400d556d",
+          "provenance": [
+            "paper-claim-d825dc088a5975a6"
+          ],
+          "result_id": "substrate-result-ec6b4ba35cb74510",
+          "source": "rc1_document_audit_slice",
+          "text": "More evidence is needed on Worker C execution in the restored Atlas configuration."
+        }
+      ],
+      "sufficient_for_grounded_answer": true
+    }
+  ],
+  "phase": "RC1 Read-Only Substrate Query Adapter",
+  "safety": {
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false,
+    "read_only": true,
+    "training_performed": false
+  }
+}

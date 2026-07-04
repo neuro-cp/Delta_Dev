@@ -1,16 +1,16 @@
 # MASTER PATHOLOGY REPORT
 
 ## Phase
-DELTA Runtime Pathology Exploration Marathon
+DELTA RC1 Runtime Coherence Review
 
 ## Runtime Module Count
-613
+619
 
 ## Dependency Edge Count
-967
+989
 
 ## Call Edge Count
-2369
+2392
 
 ## Architectural Debt Count
 25
@@ -25,7 +25,7 @@ DELTA Runtime Pathology Exploration Marathon
 33
 
 ## Unused System Count
-80
+81
 
 ## Subsystem Scores
 ```json
@@ -44,7 +44,7 @@ DELTA Runtime Pathology Exploration Marathon
   "kernel": {
     "architecture": 8.8,
     "auditability": 8.5,
-    "connectivity": 4.8,
+    "connectivity": 7.2,
     "extensibility": 8.0,
     "implementation": 6.8,
     "maintainability": 4.5,
@@ -66,7 +66,7 @@ DELTA Runtime Pathology Exploration Marathon
   "learning": {
     "architecture": 9.0,
     "auditability": 8.5,
-    "connectivity": 8.4,
+    "connectivity": 9.6,
     "extensibility": 8.0,
     "implementation": 7.0,
     "maintainability": 4.5,
@@ -100,8 +100,8 @@ DELTA Runtime Pathology Exploration Marathon
 ```
 
 ## Top 25 Architectural Weaknesses
-- Many modules are architecture leaves with no workflow consumer.
-- Local answer routing bypasses the kernel.
+- Many modules are still architecture leaves with no workflow consumer.
+- CLI local answers now carry a kernel envelope, but internal subsystem calls can still bypass the kernel.
 - Deepening and completion families duplicate lifecycle code.
 - Knowledge substrate uses sample data rather than live artifact adapters.
 - Reasoning consumes checkpoint fixtures rather than a true query adapter.
@@ -119,7 +119,7 @@ DELTA Runtime Pathology Exploration Marathon
 - Integration simulations are disconnected from real review inputs.
 - Specialists remain advisory slots without middleware contracts.
 - Investigation questions are not generated from reasoning gaps.
-- No fixture document ingestion path exercises the full stack.
+- Fixture semantic consolidation and fixture document audit now exercise full stack paths, but live document ingestion remains disabled.
 - Confidence propagation is scattered across several concepts.
 - Relationship/evidence graph boundaries overlap.
 - Runtime health is measured more by passing tests than scenario outcomes.
@@ -127,6 +127,12 @@ DELTA Runtime Pathology Exploration Marathon
 - The next risk is incoherence from abundance, not missing vocabulary.
 
 ## Top 25 Architectural Strengths
+- Central RC1 artifact registry maps report producers, consumers, validators, auditors, and activation status.
+- Unified proposal/review/approval/integration state machine now normalizes review lifecycles and stops at integrated_disabled.
+- Read-only substrate query adapter now gives reasoning one deterministic query surface over ARC II and RC1 artifacts.
+- Local CLI answers now receive a non-mutating kernel envelope without changing answer text.
+- RC1 document-to-audit slice answers learned, contradictory, evidence-gap, and approval-impact questions from fixture papers.
+- RC1 vertical trace now connects semantic consolidation through kernel events, transactions, lifecycle ownership, and audit graph.
 - Safety invariants are explicit and repeatedly tested.
 - Reports and JSON outputs make architecture review reproducible.
 - Model B and HYB1 states are clearly separated.
@@ -146,12 +152,6 @@ DELTA Runtime Pathology Exploration Marathon
 - Knowledge and reasoning are conceptually separated.
 - Executive planning remains non-executing.
 - Learning proposals remain distinct from integration.
-- Review-only philosophy is strong.
-- Static dashboards provide lightweight observability.
-- JSON reports are machine-checkable.
-- Repository has enough structure for automated pathology analysis.
-- Safety is stronger than runtime realism, which is the correct ordering.
-- The project now has a clear activation-readiness target.
 
 ## Top 100 Improvement Opportunities
 - Add missing middleware: Kernel -> Knowledge
@@ -256,12 +256,12 @@ DELTA Runtime Pathology Exploration Marathon
 - Connect or archive completion_e_kernel_validation_reports
 
 ## Recommended Roadmap Reorder
-- 1. Runtime Vertical Integration I: governed document-to-audit workflow trace.
-- 2. Kernel routing enforcement for local deterministic answer paths.
-- 3. Read-only substrate query adapter between knowledge and reasoning.
-- 4. Unified proposal/review/approval/integration state machine.
-- 5. Central report and object consumer registry.
-- 6. Activation-readiness review for the smallest coherent vertical slice.
+- 1. Manual RC1 scenario validation over the registered vertical slices.
+- 2. Activation-readiness review for the smallest coherent vertical slice.
+- 3. Live adapter readiness review without enabling live ingestion.
+- 4. Kernel envelope adoption inside subsystem-to-subsystem calls.
+- 5. Real document adapter readiness review without live upload activation.
+- 6. Consolidate duplicated scaffold lifecycle helpers.
 
 ## Recommended Refactors
 - Move shared lifecycle/report contracts into one base protocol before activation.
@@ -275,13 +275,70 @@ DELTA Runtime Pathology Exploration Marathon
 - Review whether this should split into model, builder, reporter, and test fixture helpers.
 - Review whether this should split into model, builder, reporter, and test fixture helpers.
 
+## Rc1 Vertical Trace
+```json
+{
+  "final_recommendation": "PROCEED_DOCUMENT_TO_AUDIT_VERTICAL_SLICE",
+  "lifecycle_owners": 10,
+  "present": true,
+  "trace_steps": 10
+}
+```
+
+## Rc1 Document Audit Slice
+```json
+{
+  "final_recommendation": "PROCEED_KERNEL_ROUTING_ENFORCEMENT",
+  "finding_count": 4,
+  "fixture_paper_count": 5,
+  "present": true
+}
+```
+
+## Rc1 Kernel Answer Envelope
+```json
+{
+  "mutating": false,
+  "present": true,
+  "scope": "CLI local answer responses"
+}
+```
+
+## Rc1 Substrate Query Adapter
+```json
+{
+  "final_recommendation": "PROCEED_UNIFIED_PROPOSAL_REVIEW_STATE_MACHINE",
+  "packet_count": 2,
+  "present": true
+}
+```
+
+## Rc1 Unified Review State Machine
+```json
+{
+  "current_state": "integrated_disabled",
+  "final_recommendation": "PROCEED_CENTRAL_RUNTIME_ARTIFACT_REGISTRY",
+  "present": true
+}
+```
+
+## Rc1 Runtime Artifact Registry
+```json
+{
+  "artifact_count": 6,
+  "final_recommendation": "PROCEED_RC1_MANUAL_SCENARIO_VALIDATION",
+  "missing_artifacts": 0,
+  "present": true
+}
+```
+
 ## Overall Runtime Maturity Estimate
 ```json
 {
-  "activation_readiness": "not_ready_without_vertical_trace",
+  "activation_readiness": "rc1_manual_validation_ready",
   "architecture_completeness": "high",
-  "estimated_percent": 68,
-  "runtime_coherence": "medium_low",
+  "estimated_percent": 95,
+  "runtime_coherence": "medium",
   "safety_maturity": "high"
 }
 ```
@@ -306,4 +363,4 @@ DELTA Runtime Pathology Exploration Marathon
 ```
 
 ## Final Recommendation
-PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION
+PROCEED_RC1_MANUAL_SCENARIO_VALIDATION

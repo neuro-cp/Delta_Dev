@@ -1,0 +1,374 @@
+{
+  "answer": {
+    "answer_id": "document-audit-answer-f6feb665b3b9b3e1",
+    "approval_impacts": [
+      "If approved, the simulated substrate would add a reviewed Atlas provenance-failure explanation.",
+      "If approved, Worker C would remain marked as an evidence gap rather than a proven cause.",
+      "No canonical memory write would occur in this RC1 fixture slice."
+    ],
+    "contradictions": [
+      "Worker C has positive unrelated benchmark evidence, but that does not contradict the Atlas uncertainty because the failed configuration was not tested."
+    ],
+    "evidence_gaps": [
+      "Worker C has positive unrelated benchmark evidence, but that does not contradict the Atlas uncertainty because the failed configuration was not tested.",
+      "More evidence is needed on Worker C execution in the restored Atlas configuration."
+    ],
+    "learned": [
+      "Atlas routing failure is best explained by missing provenance causing Registry B rejection.",
+      "Adding provenance restored Registry B acceptance and Atlas routing."
+    ],
+    "unsupported_refusals": [
+      "Do not claim Worker C caused the Atlas failure.",
+      "Do not claim Worker C is validated for the restored Atlas configuration.",
+      "Do not claim these fixture papers were uploaded live."
+    ]
+  },
+  "audit_graph": {
+    "edges": [
+      {
+        "relation": "informs",
+        "source": "document-audit-node-7e0b1906bc32cfd8",
+        "target": "document-audit-node-9d0e8b6e8c7463fd"
+      },
+      {
+        "relation": "informs",
+        "source": "document-audit-node-9d0e8b6e8c7463fd",
+        "target": "document-audit-node-a88e0bf37da7bb72"
+      },
+      {
+        "relation": "informs",
+        "source": "document-audit-node-a88e0bf37da7bb72",
+        "target": "document-audit-node-307514de8ac65970"
+      }
+    ],
+    "graph_id": "document-audit-graph-f6feb665b3b9b3e1",
+    "graph_only": true,
+    "nodes": [
+      {
+        "label": "Atlas routing failure is best explained by missing provenance causing Registry B rejection.",
+        "node_id": "document-audit-node-7e0b1906bc32cfd8",
+        "node_type": "learned"
+      },
+      {
+        "label": "Adding provenance restored Registry B acceptance and Atlas routing.",
+        "node_id": "document-audit-node-9d0e8b6e8c7463fd",
+        "node_type": "learned"
+      },
+      {
+        "label": "Worker C has positive unrelated benchmark evidence, but that does not contradict the Atlas uncertainty because the failed configuration was not tested.",
+        "node_id": "document-audit-node-a88e0bf37da7bb72",
+        "node_type": "bounded_contradiction"
+      },
+      {
+        "label": "More evidence is needed on Worker C execution in the restored Atlas configuration.",
+        "node_id": "document-audit-node-307514de8ac65970",
+        "node_type": "evidence_gap"
+      }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "paper-claim-0b78ddd7a2ab5de7",
+      "confidence": 0.86,
+      "normalized_claim": "Atlas routing failed when Registry B received records without provenance.",
+      "paper_id": "fixture-paper-9fa9c1a72182f9e9",
+      "topic": "atlas_failure"
+    },
+    {
+      "claim_id": "paper-claim-918ae295bf6bf56e",
+      "confidence": 0.84,
+      "normalized_claim": "Adding provenance restored Registry B acceptance and Atlas routing.",
+      "paper_id": "fixture-paper-46feb410edc90ae8",
+      "topic": "atlas_recovery"
+    },
+    {
+      "claim_id": "paper-claim-cbc0eb1fb5dacb4a",
+      "confidence": 0.8,
+      "normalized_claim": "Registry B validates provenance but does not perform execution.",
+      "paper_id": "fixture-paper-e80c9070a45d0970",
+      "topic": "responsibility_boundary"
+    },
+    {
+      "claim_id": "paper-claim-d825dc088a5975a6",
+      "confidence": 0.78,
+      "normalized_claim": "Worker C performs execution after routing but was not tested in the failed Atlas run.",
+      "paper_id": "fixture-paper-0166bb7a3d7d1308",
+      "topic": "worker_c_uncertainty"
+    },
+    {
+      "claim_id": "paper-claim-b499f56545da0728",
+      "confidence": 0.42,
+      "normalized_claim": "Worker C improved throughput in an unrelated benchmark, but the benchmark did not test the failed Atlas configuration.",
+      "paper_id": "fixture-paper-4b7ea7389208cb57",
+      "topic": "worker_c_context"
+    }
+  ],
+  "estimated_runtime_maturity": 82,
+  "final_recommendation": "PROCEED_KERNEL_ROUTING_ENFORCEMENT",
+  "findings": [
+    {
+      "finding_id": "audit-finding-3f68d82d8583a29c",
+      "finding_type": "learned",
+      "needs_more_evidence": false,
+      "summary": "Atlas routing failure is best explained by missing provenance causing Registry B rejection.",
+      "supporting_claim_ids": [
+        "paper-claim-0b78ddd7a2ab5de7",
+        "paper-claim-cbc0eb1fb5dacb4a"
+      ]
+    },
+    {
+      "finding_id": "audit-finding-150eff5aa2dc79ac",
+      "finding_type": "learned",
+      "needs_more_evidence": false,
+      "summary": "Adding provenance restored Registry B acceptance and Atlas routing.",
+      "supporting_claim_ids": [
+        "paper-claim-918ae295bf6bf56e"
+      ]
+    },
+    {
+      "finding_id": "audit-finding-75462ad08808045d",
+      "finding_type": "bounded_contradiction",
+      "needs_more_evidence": true,
+      "summary": "Worker C has positive unrelated benchmark evidence, but that does not contradict the Atlas uncertainty because the failed configuration was not tested.",
+      "supporting_claim_ids": [
+        "paper-claim-d825dc088a5975a6",
+        "paper-claim-b499f56545da0728"
+      ]
+    },
+    {
+      "finding_id": "audit-finding-a5ad6c1a400d556d",
+      "finding_type": "evidence_gap",
+      "needs_more_evidence": true,
+      "summary": "More evidence is needed on Worker C execution in the restored Atlas configuration.",
+      "supporting_claim_ids": [
+        "paper-claim-d825dc088a5975a6"
+      ]
+    }
+  ],
+  "fixture_paper_count": 5,
+  "kernel_events": [
+    {
+      "event_id": "kernel-event-bf11d43b73ddea73",
+      "event_type": "rc1.document.fixture_papers_loaded",
+      "mutating": false,
+      "payload": {
+        "stage": "fixture_papers_loaded"
+      },
+      "source": "CognitiveKernel",
+      "target": "ReviewManager"
+    },
+    {
+      "event_id": "kernel-event-d1b28bd3b9c41308",
+      "event_type": "rc1.document.claims_extracted",
+      "mutating": false,
+      "payload": {
+        "stage": "claims_extracted"
+      },
+      "source": "CognitiveKernel",
+      "target": "ReviewManager"
+    },
+    {
+      "event_id": "kernel-event-5a1f031b42742ed0",
+      "event_type": "rc1.document.findings_built",
+      "mutating": false,
+      "payload": {
+        "stage": "findings_built"
+      },
+      "source": "CognitiveKernel",
+      "target": "ReviewManager"
+    },
+    {
+      "event_id": "kernel-event-467b38d20f81b58d",
+      "event_type": "rc1.document.audit_graph_linked",
+      "mutating": false,
+      "payload": {
+        "stage": "audit_graph_linked"
+      },
+      "source": "CognitiveKernel",
+      "target": "ReviewManager"
+    },
+    {
+      "event_id": "kernel-event-4107f61f7449e41a",
+      "event_type": "rc1.document.answer_synthesized",
+      "mutating": false,
+      "payload": {
+        "stage": "answer_synthesized"
+      },
+      "source": "CognitiveKernel",
+      "target": "ReviewManager"
+    },
+    {
+      "event_id": "kernel-event-5ee477f8f45910ec",
+      "event_type": "rc1.document.safety_reviewed",
+      "mutating": false,
+      "payload": {
+        "stage": "safety_reviewed"
+      },
+      "source": "CognitiveKernel",
+      "target": "ReviewManager"
+    }
+  ],
+  "papers": [
+    {
+      "claim": "Atlas routing failed when Registry B received records without provenance.",
+      "evidence_role": "failure_evidence",
+      "paper_id": "fixture-paper-9fa9c1a72182f9e9",
+      "provenance": "fixture://paper/1",
+      "title": "Atlas Routing Provenance Study"
+    },
+    {
+      "claim": "Adding provenance restored Registry B acceptance and Atlas routing.",
+      "evidence_role": "recovery_evidence",
+      "paper_id": "fixture-paper-46feb410edc90ae8",
+      "provenance": "fixture://paper/2",
+      "title": "Registry B Acceptance Notes"
+    },
+    {
+      "claim": "Registry B validates provenance but does not perform execution.",
+      "evidence_role": "boundary_evidence",
+      "paper_id": "fixture-paper-e80c9070a45d0970",
+      "provenance": "fixture://paper/3",
+      "title": "Registry Responsibility Boundary"
+    },
+    {
+      "claim": "Worker C performs execution after routing but was not tested in the failed Atlas run.",
+      "evidence_role": "uncertainty_evidence",
+      "paper_id": "fixture-paper-0166bb7a3d7d1308",
+      "provenance": "fixture://paper/4",
+      "title": "Worker C Execution Report"
+    },
+    {
+      "claim": "Worker C improved throughput in an unrelated benchmark, but the benchmark did not test the failed Atlas configuration.",
+      "evidence_role": "weak_support",
+      "paper_id": "fixture-paper-4b7ea7389208cb57",
+      "provenance": "fixture://paper/5",
+      "title": "Worker C Benchmark"
+    }
+  ],
+  "phase": "RC1 Document-To-Audit Vertical Slice",
+  "safety": {
+    "document_upload_performed": false,
+    "fine_tuning_performed": false,
+    "fixture_only": true,
+    "hyb1": "dormant_env_gated",
+    "integration_write_performed": false,
+    "knowledge_mutation_performed": false,
+    "live_document_ingestion_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "provider_call_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "scenario": "I uploaded 10 scientific papers. What have we learned? What contradicts? What needs more evidence? What would change if approved?",
+  "transactions": [
+    {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "rc1_document_fixture_papers_loaded",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-584a68fadf12e682",
+      "validated": true
+    },
+    {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "rc1_document_claims_extracted",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-1e55671642576f6b",
+      "validated": true
+    },
+    {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "rc1_document_findings_built",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-4f79d30fa71f9653",
+      "validated": true
+    },
+    {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "rc1_document_audit_graph_linked",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-3c1fcb26f8c65c6c",
+      "validated": true
+    },
+    {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "rc1_document_answer_synthesized",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-66e020a2470fa21e",
+      "validated": true
+    },
+    {
+      "committed": false,
+      "executed": false,
+      "mutation_performed": false,
+      "operation": "rc1_document_safety_reviewed",
+      "reviewed": true,
+      "rolled_back": true,
+      "stages": [
+        "begin",
+        "validate",
+        "execute",
+        "review",
+        "commit",
+        "rollback"
+      ],
+      "transaction_id": "cognitive-transaction-921709d344005081",
+      "validated": true
+    }
+  ]
+}

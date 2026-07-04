@@ -742,3 +742,27 @@ Architectural boundary:
 
 This harness should be used as the reference shape for future vertical
 integration passes.
+
+## RC1 Runtime Coherence Layer
+
+The RC1 coherence pass shifts DELTA from broad scaffold expansion to vertical
+runtime cooperation.
+
+Implemented coherence surfaces:
+
+- Kernel-routed semantic consolidation vertical trace.
+- Fixture document-to-audit vertical slice.
+- Kernel answer envelope for local CLI answers.
+- Read-only substrate query adapter between ARC II/RC1 artifacts and reasoning.
+- Unified proposal/review/approval/integration state machine that stops at
+  `integrated_disabled`.
+- Central RC1 runtime artifact registry with producer, consumer, validator,
+  auditor, and activation-status metadata.
+
+All RC1 coherence surfaces remain deterministic, report-only or fixture-only,
+and non-mutating. They do not train, fine-tune, update weights, call providers,
+grant provider authority, execute actions, start schedulers or background
+workers, mutate memory, mutate knowledge, perform hidden writes, promote HYB1,
+or change Model B defaults.
+
+Current architecture posture: RC1 manual scenario validation ready.

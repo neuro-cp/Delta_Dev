@@ -43,6 +43,8 @@ def build_dynamic_pipeline(request: str, registry: CognitiveCapabilityRegistry |
         capabilities.append("pipeline_explanation")
     if "learn" in normalized or "corrected" in normalized or "proposal" in normalized:
         capabilities.extend(["learning_opportunity_detection", "learning_review", "gated_integration_scaffold"])
+    if "atlas" in normalized or "semantic" in normalized or "consolidation" in normalized or "corpus" in normalized:
+        capabilities.extend(["semantic_consolidation_cycle", "vertical_runtime_trace", "audit_graph_review"])
     steps = []
     for index, capability in enumerate(dict.fromkeys(capabilities)):
         record = registry.resolve(capability)

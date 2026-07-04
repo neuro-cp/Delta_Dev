@@ -1,5 +1,5 @@
 {
-  "edge_count": 967,
+  "edge_count": 989,
   "edges": [
     {
       "source": "orchestration.runtime.arc_07_investigation",
@@ -3537,6 +3537,116 @@
       "type": "imports"
     },
     {
+      "source": "orchestration.runtime.rc1_document_audit_slice",
+      "target": "orchestration.runtime.v31_learning_opportunity",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_document_audit_slice",
+      "target": "orchestration.runtime.v33_runtime_message_bus",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_document_audit_slice",
+      "target": "orchestration.runtime.v35_transaction_engine",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_document_audit_slice",
+      "target": "orchestration.runtime.v36_unified_audit_graph",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_kernel_answer_envelope",
+      "target": "orchestration.runtime.v31_learning_opportunity",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_kernel_answer_envelope",
+      "target": "orchestration.runtime.v35_transaction_engine",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_kernel_answer_envelope",
+      "target": "orchestration.runtime.v38_dynamic_pipeline_builder",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_substrate_query_adapter",
+      "target": "orchestration.runtime.arc_ii_knowledge_substrate",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_substrate_query_adapter",
+      "target": "orchestration.runtime.e2e_semantic_consolidation_cycle",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_substrate_query_adapter",
+      "target": "orchestration.runtime.rc1_document_audit_slice",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_substrate_query_adapter",
+      "target": "orchestration.runtime.v31_learning_opportunity",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_unified_review_state_machine",
+      "target": "orchestration.runtime.arc_iv_knowledge_evolution",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_unified_review_state_machine",
+      "target": "orchestration.runtime.v31_learning_opportunity",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_unified_review_state_machine",
+      "target": "orchestration.runtime.v31_learning_proposal",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.e2e_semantic_consolidation_cycle",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v31_learning_opportunity",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v32_cognitive_kernel",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v33_runtime_message_bus",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v35_transaction_engine",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v36_unified_audit_graph",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v37_capability_registry",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_vertical_integration",
+      "target": "orchestration.runtime.v38_dynamic_pipeline_builder",
+      "type": "imports"
+    },
+    {
       "source": "orchestration.runtime.response_generation",
       "target": "orchestration.runtime.runtime_planning",
       "type": "imports"
@@ -4839,8 +4949,8 @@
   ],
   "isolated_modules": [
     "orchestration.runtime.cognitive_runtime",
-    "orchestration.runtime.e2e_semantic_consolidation_cycle",
     "orchestration.runtime.post_arc_xxv_exhaustive_runner",
+    "orchestration.runtime.rc1_runtime_artifact_registry",
     "orchestration.runtime.v14_architecture_decisions",
     "orchestration.runtime.v14_gap_map",
     "orchestration.runtime.v14_output_discipline",
@@ -4874,6 +4984,7 @@
   ],
   "leaf_modules": [
     "orchestration.runtime.candidate_knowledge_retrieval",
+    "orchestration.runtime.e2e_semantic_consolidation_cycle",
     "orchestration.runtime.post_arc_xxv_deepening_runner",
     "orchestration.runtime.post_arc_xxv_runtime_completion_runner",
     "orchestration.runtime.runtime_reasoning",
@@ -4928,7 +5039,7 @@
     "orchestration.runtime.v32_cognitive_kernel",
     "orchestration.runtime.v34_cognitive_state"
   ],
-  "node_count": 613,
+  "node_count": 619,
   "root_modules": [
     "orchestration.runtime.arc_09_external_evidence",
     "orchestration.runtime.arc_10_tool_provider_runtime",
@@ -5283,6 +5394,10 @@
     "orchestration.runtime.deepening_d_project_summaries",
     "orchestration.runtime.deepening_d_resource_estimation",
     "orchestration.runtime.deepening_d_tasks",
+    "orchestration.runtime.rc1_kernel_answer_envelope",
+    "orchestration.runtime.rc1_substrate_query_adapter",
+    "orchestration.runtime.rc1_unified_review_state_machine",
+    "orchestration.runtime.rc1_vertical_integration",
     "orchestration.runtime.runtime_evaluation",
     "orchestration.runtime.v14_action_ledger_report",
     "orchestration.runtime.v14_active_specialist_routing_report",

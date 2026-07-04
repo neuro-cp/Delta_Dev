@@ -1,10 +1,10 @@
 # Runtime Pathology Dependency Graph
 
 ## Node Count
-613
+619
 
 ## Edge Count
-967
+989
 
 ## Edges
 - {'source': 'orchestration.runtime.arc_07_investigation', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
@@ -110,8 +110,8 @@
 
 ## Isolated Modules
 - orchestration.runtime.cognitive_runtime
-- orchestration.runtime.e2e_semantic_consolidation_cycle
 - orchestration.runtime.post_arc_xxv_exhaustive_runner
+- orchestration.runtime.rc1_runtime_artifact_registry
 - orchestration.runtime.v14_architecture_decisions
 - orchestration.runtime.v14_gap_map
 - orchestration.runtime.v14_output_discipline
@@ -247,6 +247,7 @@
 
 ## Leaf Modules
 - orchestration.runtime.candidate_knowledge_retrieval
+- orchestration.runtime.e2e_semantic_consolidation_cycle
 - orchestration.runtime.post_arc_xxv_deepening_runner
 - orchestration.runtime.post_arc_xxv_runtime_completion_runner
 - orchestration.runtime.runtime_reasoning
