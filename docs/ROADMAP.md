@@ -809,6 +809,37 @@ Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
+
+Runtime ARC VI introduces a planning-only executive layer.
+
+Completed:
+
+- V8.0 ExecutiveGoal object
+- V8.1 goal decomposition
+- V8.2 capability planner
+- V8.3 resource planner
+- V8.4 deliberation planner
+- V8.5 transient decision graph
+- V8.6 constraint engine
+- V8.7 escalation framework
+- V8.8 multi-goal scheduler simulation only
+- V8.9 executive reflection
+- V8.10 static executive dashboard
+- V8.11 executive audit
+- V8.12 deterministic executive explanations
+- V8.13 planning-only executive transaction lifecycle
+- V8.14 manual smoke hooks
+- V8.15 safety checkpoint
+
+ARC VI performs no execution, no provider calls, no provider authority, no
+training, no memory mutation, no knowledge mutation, no scheduler activation,
+no hidden writes, and no HYB1 promotion.
+
+Recommended next phase:
+
+`PROCEED_ARC_VII_EXECUTION_AUTHORITY_AND_ACTION_SANDBOX_DESIGN`
+
 ## Runtime V3.1 Gated Learning Integration Readiness Update
 
 Runtime V3.1 adds an observe -> propose -> review -> gated integration

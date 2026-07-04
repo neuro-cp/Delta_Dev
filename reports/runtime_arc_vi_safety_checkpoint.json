@@ -1,0 +1,459 @@
+{
+  "action_execution_performed": false,
+  "autonomous_execution_performed": false,
+  "capability_plan": {
+    "handlers": {
+      "knowledge": "KnowledgeSubstrate",
+      "reasoning": "ReasoningManager",
+      "review": "ReviewManager"
+    },
+    "knowledge_required": true,
+    "learning_required": false,
+    "provider_eligibility": "disabled_without_future_explicit_gate",
+    "reasoning_required": true,
+    "review_required": true,
+    "task_count": 4
+  },
+  "constraint_engine": {
+    "blockers": [
+      "provider_authority_disabled",
+      "autonomous_execution_disabled",
+      "scheduler_disabled",
+      "memory_mutation_disabled"
+    ],
+    "confidence": "requires_evidence_chain",
+    "knowledge": "requires_substrate_query",
+    "policy": "satisfied_if_planning_only",
+    "resource": "bounded",
+    "review_requirements": [
+      "admin_review",
+      "safety_review"
+    ],
+    "safety": "blocked_for_execution",
+    "time": "no_deadline"
+  },
+  "deliberation_plan": {
+    "planner_only": true,
+    "strategy": [
+      "simple_lookup",
+      "graph_traversal",
+      "multi_hop_reasoning",
+      "hypothesis_generation",
+      "reflection",
+      "review"
+    ]
+  },
+  "escalation_framework": {
+    "automatic_bypass": false,
+    "blockers": [
+      "provider_authority_disabled",
+      "autonomous_execution_disabled",
+      "scheduler_disabled",
+      "memory_mutation_disabled"
+    ],
+    "decision": "request_review",
+    "options": [
+      "continue_planning",
+      "pause",
+      "request_review",
+      "request_more_evidence",
+      "request_owner_approval",
+      "request_overwatch"
+    ]
+  },
+  "executive_audit": {
+    "constraint_checks": {
+      "blockers": [
+        "provider_authority_disabled",
+        "autonomous_execution_disabled",
+        "scheduler_disabled",
+        "memory_mutation_disabled"
+      ],
+      "confidence": "requires_evidence_chain",
+      "knowledge": "requires_substrate_query",
+      "policy": "satisfied_if_planning_only",
+      "resource": "bounded",
+      "review_requirements": [
+        "admin_review",
+        "safety_review"
+      ],
+      "safety": "blocked_for_execution",
+      "time": "no_deadline"
+    },
+    "decision_graph": {
+      "edges": [
+        {
+          "relation": "decomposes_to",
+          "source": "executive-goal-72d76f4fe903597c",
+          "target": "executive-task-1bef0d189bc8503b"
+        },
+        {
+          "relation": "decomposes_to",
+          "source": "executive-goal-72d76f4fe903597c",
+          "target": "executive-task-b08ce2919089be50"
+        },
+        {
+          "relation": "decomposes_to",
+          "source": "executive-goal-72d76f4fe903597c",
+          "target": "executive-task-866e1dbf3146392f"
+        },
+        {
+          "relation": "decomposes_to",
+          "source": "executive-goal-72d76f4fe903597c",
+          "target": "executive-task-3abcab159f4c9a7a"
+        }
+      ],
+      "graph_id": "executive-decision-graph-2ca1c5183855ab0f",
+      "nodes": [
+        {
+          "label": "Understand topic X",
+          "node_id": "executive-goal-72d76f4fe903597c",
+          "node_type": "goal",
+          "risk": "bounded_if_not_executed"
+        },
+        {
+          "label": "Define the topic boundary",
+          "node_id": "executive-task-1bef0d189bc8503b",
+          "node_type": "task",
+          "risk": "low"
+        },
+        {
+          "label": "Identify required evidence",
+          "node_id": "executive-task-b08ce2919089be50",
+          "node_type": "task",
+          "risk": "low"
+        },
+        {
+          "label": "Plan reasoning strategy",
+          "node_id": "executive-task-866e1dbf3146392f",
+          "node_type": "task",
+          "risk": "low"
+        },
+        {
+          "label": "Prepare review package",
+          "node_id": "executive-task-3abcab159f4c9a7a",
+          "node_type": "task",
+          "risk": "low"
+        },
+        {
+          "label": "execution blocked without approval",
+          "node_id": "executive-risk-2ca1c5183855ab0f",
+          "node_type": "risk",
+          "risk": "medium"
+        }
+      ],
+      "transient": true
+    },
+    "execution_performed": false,
+    "goal_creation": {
+      "constraints": [
+        "no_provider_authority",
+        "no_execution",
+        "no_memory_mutation",
+        "review_required"
+      ],
+      "deadline": "none",
+      "dependencies": [
+        "knowledge_query",
+        "reasoning_trace",
+        "review_gate"
+      ],
+      "description": "Create a safe, evidence-aware plan to understand topic X.",
+      "execution_performed": false,
+      "goal_id": "executive-goal-72d76f4fe903597c",
+      "owner": "admin",
+      "priority": 5,
+      "requested_by": "user",
+      "risk": "bounded_if_not_executed",
+      "status": "planning_only",
+      "title": "Understand topic X"
+    },
+    "planning": [
+      {
+        "dependencies": [],
+        "objective": "scope_topic",
+        "status": "planned_only",
+        "subtasks": [
+          "identify terms",
+          "list unknowns"
+        ],
+        "task": "Define the topic boundary",
+        "task_id": "executive-task-1bef0d189bc8503b"
+      },
+      {
+        "dependencies": [
+          "executive-task-1bef0d189bc8503b"
+        ],
+        "objective": "gather_evidence",
+        "status": "planned_only",
+        "subtasks": [
+          "query substrate",
+          "list provenance"
+        ],
+        "task": "Identify required evidence",
+        "task_id": "executive-task-b08ce2919089be50"
+      },
+      {
+        "dependencies": [
+          "executive-task-b08ce2919089be50"
+        ],
+        "objective": "reason_over_evidence",
+        "status": "planned_only",
+        "subtasks": [
+          "build reasoning context",
+          "reflect on assumptions"
+        ],
+        "task": "Plan reasoning strategy",
+        "task_id": "executive-task-866e1dbf3146392f"
+      },
+      {
+        "dependencies": [
+          "executive-task-866e1dbf3146392f"
+        ],
+        "objective": "review_result",
+        "status": "planned_only",
+        "subtasks": [
+          "summarize blockers",
+          "request admin review"
+        ],
+        "task": "Prepare review package",
+        "task_id": "executive-task-3abcab159f4c9a7a"
+      }
+    ],
+    "reflection": {
+      "alternative_decomposition": "split review from reasoning if risk increases",
+      "better_strategy": "keep planning bounded and evidence-first",
+      "blockers": [
+        "provider_authority_disabled",
+        "autonomous_execution_disabled",
+        "scheduler_disabled",
+        "memory_mutation_disabled"
+      ],
+      "less_risky_strategy": "defer execution until explicit approval path exists",
+      "lower_cost_strategy": "use local substrate before providers",
+      "missing_evidence": [
+        "topic-specific evidence"
+      ]
+    },
+    "resource_analysis": {
+      "estimated_review_load": 4,
+      "expected_confidence": "bounded_by_evidence_quality",
+      "expected_evidence": "provenance-bearing substrate objects",
+      "knowledge_scope": "bounded_substrate_query",
+      "reasoning_complexity": "moderate"
+    }
+  },
+  "executive_decision_graph": {
+    "edges": [
+      {
+        "relation": "decomposes_to",
+        "source": "executive-goal-72d76f4fe903597c",
+        "target": "executive-task-1bef0d189bc8503b"
+      },
+      {
+        "relation": "decomposes_to",
+        "source": "executive-goal-72d76f4fe903597c",
+        "target": "executive-task-b08ce2919089be50"
+      },
+      {
+        "relation": "decomposes_to",
+        "source": "executive-goal-72d76f4fe903597c",
+        "target": "executive-task-866e1dbf3146392f"
+      },
+      {
+        "relation": "decomposes_to",
+        "source": "executive-goal-72d76f4fe903597c",
+        "target": "executive-task-3abcab159f4c9a7a"
+      }
+    ],
+    "graph_id": "executive-decision-graph-2ca1c5183855ab0f",
+    "nodes": [
+      {
+        "label": "Understand topic X",
+        "node_id": "executive-goal-72d76f4fe903597c",
+        "node_type": "goal",
+        "risk": "bounded_if_not_executed"
+      },
+      {
+        "label": "Define the topic boundary",
+        "node_id": "executive-task-1bef0d189bc8503b",
+        "node_type": "task",
+        "risk": "low"
+      },
+      {
+        "label": "Identify required evidence",
+        "node_id": "executive-task-b08ce2919089be50",
+        "node_type": "task",
+        "risk": "low"
+      },
+      {
+        "label": "Plan reasoning strategy",
+        "node_id": "executive-task-866e1dbf3146392f",
+        "node_type": "task",
+        "risk": "low"
+      },
+      {
+        "label": "Prepare review package",
+        "node_id": "executive-task-3abcab159f4c9a7a",
+        "node_type": "task",
+        "risk": "low"
+      },
+      {
+        "label": "execution blocked without approval",
+        "node_id": "executive-risk-2ca1c5183855ab0f",
+        "node_type": "risk",
+        "risk": "medium"
+      }
+    ],
+    "transient": true
+  },
+  "executive_goal": {
+    "constraints": [
+      "no_provider_authority",
+      "no_execution",
+      "no_memory_mutation",
+      "review_required"
+    ],
+    "deadline": "none",
+    "dependencies": [
+      "knowledge_query",
+      "reasoning_trace",
+      "review_gate"
+    ],
+    "description": "Create a safe, evidence-aware plan to understand topic X.",
+    "execution_performed": false,
+    "goal_id": "executive-goal-72d76f4fe903597c",
+    "owner": "admin",
+    "priority": 5,
+    "requested_by": "user",
+    "risk": "bounded_if_not_executed",
+    "status": "planning_only",
+    "title": "Understand topic X"
+  },
+  "executive_reflection": {
+    "alternative_decomposition": "split review from reasoning if risk increases",
+    "better_strategy": "keep planning bounded and evidence-first",
+    "blockers": [
+      "provider_authority_disabled",
+      "autonomous_execution_disabled",
+      "scheduler_disabled",
+      "memory_mutation_disabled"
+    ],
+    "less_risky_strategy": "defer execution until explicit approval path exists",
+    "lower_cost_strategy": "use local substrate before providers",
+    "missing_evidence": [
+      "topic-specific evidence"
+    ]
+  },
+  "executive_transaction": {
+    "completed_planning_only": true,
+    "persistent_execution": false,
+    "stages": [
+      "begin",
+      "plan",
+      "validate",
+      "review",
+      "approved",
+      "completed_planning_only",
+      "destroy"
+    ],
+    "transaction_id": "executive-transaction-2ca1c5183855ab0f"
+  },
+  "final_recommendation": "PROCEED_ARC_VII_EXECUTION_AUTHORITY_AND_ACTION_SANDBOX_DESIGN",
+  "goal_decomposition": [
+    {
+      "dependencies": [],
+      "objective": "scope_topic",
+      "status": "planned_only",
+      "subtasks": [
+        "identify terms",
+        "list unknowns"
+      ],
+      "task": "Define the topic boundary",
+      "task_id": "executive-task-1bef0d189bc8503b"
+    },
+    {
+      "dependencies": [
+        "executive-task-1bef0d189bc8503b"
+      ],
+      "objective": "gather_evidence",
+      "status": "planned_only",
+      "subtasks": [
+        "query substrate",
+        "list provenance"
+      ],
+      "task": "Identify required evidence",
+      "task_id": "executive-task-b08ce2919089be50"
+    },
+    {
+      "dependencies": [
+        "executive-task-b08ce2919089be50"
+      ],
+      "objective": "reason_over_evidence",
+      "status": "planned_only",
+      "subtasks": [
+        "build reasoning context",
+        "reflect on assumptions"
+      ],
+      "task": "Plan reasoning strategy",
+      "task_id": "executive-task-866e1dbf3146392f"
+    },
+    {
+      "dependencies": [
+        "executive-task-866e1dbf3146392f"
+      ],
+      "objective": "review_result",
+      "status": "planned_only",
+      "subtasks": [
+        "summarize blockers",
+        "request admin review"
+      ],
+      "task": "Prepare review package",
+      "task_id": "executive-task-3abcab159f4c9a7a"
+    }
+  ],
+  "hidden_write_performed": false,
+  "hyb1": "dormant_env_gated",
+  "knowledge_mutation_performed": false,
+  "memory_mutation_performed": false,
+  "model_b_default": "unchanged",
+  "multi_goal_scheduler_simulation": {
+    "background_workers_started": false,
+    "ordered_goals": [
+      "executive-goal-72d76f4fe903597c"
+    ],
+    "os_scheduler_started": false,
+    "resource_conflicts": [],
+    "simulation_only": true
+  },
+  "phase": "Runtime ARC VI V8.15",
+  "provider_authority_granted": false,
+  "resource_plan": {
+    "estimated_review_load": 4,
+    "expected_confidence": "bounded_by_evidence_quality",
+    "expected_evidence": "provenance-bearing substrate objects",
+    "knowledge_scope": "bounded_substrate_query",
+    "reasoning_complexity": "moderate"
+  },
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "scheduler_started": false,
+  "training_performed": false
+}

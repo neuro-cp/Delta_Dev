@@ -602,3 +602,18 @@ ARC IV stops at `ready_to_integrate`. It does not perform live integration,
 training, provider authority, scheduler activation, action execution, hidden
 writes, autonomous memory, or knowledge mutation. Every future mutation must be
 explicit, reviewed, rollback-capable, and fully audited.
+
+## Runtime ARC VI Executive Cognition
+
+Runtime ARC VI adds an executive cognition layer for goal-oriented
+orchestration. The executive layer creates planning-only `ExecutiveGoal`
+objects, decomposes them into tasks, selects candidate capabilities, estimates
+resources, builds deliberation plans, checks constraints, requests escalation,
+simulates multi-goal ordering, reflects on plans, and produces executive audit
+records.
+
+The executive layer coordinates cognition; it does not perform cognition as an
+authority source. It does not reason directly, execute actions, call providers,
+start schedulers, train models, mutate memory, mutate knowledge, promote HYB1,
+or change Model B defaults. ARC VI's decision graphs and transactions are
+transient planning artifacts.

@@ -34,6 +34,20 @@ now route to deterministic repo-local answers with safety/provenance metadata.
 
 Current next recommendation: PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW
 
+Runtime ARC VI is complete as a planning-only executive cognition layer. DELTA
+can create ExecutiveGoal objects, decompose goals into tasks, select candidate
+capabilities, estimate resources, build deliberation plans, construct transient
+decision graphs, evaluate constraints, request review/escalation, simulate
+multi-goal ordering without starting schedulers, reflect on plans, produce
+executive audits, explain decisions, and answer manual executive smoke prompts.
+
+ARC VI does not execute plans, call providers, grant provider authority, start
+schedulers, train models, mutate memory, mutate knowledge, perform hidden
+writes, promote HYB1, or change Model B defaults.
+
+Current next recommendation:
+PROCEED_ARC_VII_EXECUTION_AUTHORITY_AND_ACTION_SANDBOX_DESIGN
+
 Runtime V3.1 is complete as a gated learning integration readiness layer. DELTA
 can detect possible learning opportunities, create LearningProposal objects,
 aggregate contradiction review bundles, explain why proposals exist or remain

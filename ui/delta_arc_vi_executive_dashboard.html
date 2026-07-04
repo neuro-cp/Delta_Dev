@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>DELTA ARC VI Executive Dashboard</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}</style></head>
+<body>
+<h1>DELTA ARC VI Executive Dashboard</h1>
+<section><h2>Goal</h2><pre>{
+  "goal_id": "executive-goal-72d76f4fe903597c",
+  "title": "Understand topic X",
+  "description": "Create a safe, evidence-aware plan to understand topic X.",
+  "priority": 5,
+  "owner": "admin",
+  "requested_by": "user",
+  "deadline": "none",
+  "constraints": [
+    "no_provider_authority",
+    "no_execution",
+    "no_memory_mutation",
+    "review_required"
+  ],
+  "status": "planning_only",
+  "risk": "bounded_if_not_executed",
+  "dependencies": [
+    "knowledge_query",
+    "reasoning_trace",
+    "review_gate"
+  ],
+  "execution_performed": false
+}</pre></section>
+<section><h2>Plans</h2><ul><li>Define the topic boundary (planned_only)</li><li>Identify required evidence (planned_only)</li><li>Plan reasoning strategy (planned_only)</li><li>Prepare review package (planned_only)</li></ul></section>
+<section><h2>Constraints</h2><ul><li>provider_authority_disabled</li><li>autonomous_execution_disabled</li><li>scheduler_disabled</li><li>memory_mutation_disabled</li></ul></section>
+<section><h2>Decision Graph</h2><pre>{
+  "graph_id": "executive-decision-graph-2ca1c5183855ab0f",
+  "nodes": [
+    {
+      "node_id": "executive-goal-72d76f4fe903597c",
+      "node_type": "goal",
+      "label": "Understand topic X",
+      "risk": "bounded_if_not_executed"
+    },
+    {
+      "node_id": "executive-task-1bef0d189bc8503b",
+      "node_type": "task",
+      "label": "Define the topic boundary",
+      "risk": "low"
+    },
+    {
+      "node_id": "executive-task-b08ce2919089be50",
+      "node_type": "task",
+      "label": "Identify required evidence",
+      "risk": "low"
+    },
+    {
+      "node_id": "executive-task-866e1dbf3146392f",
+      "node_type": "task",
+      "label": "Plan reasoning strategy",
+      "risk": "low"
+    },
+    {
+      "node_id": "executive-task-3abcab159f4c9a7a",
+      "node_type": "task",
+      "label": "Prepare review package",
+      "risk": "low"
+    },
+    {
+      "node_id": "executive-risk-2ca1c5183855ab0f",
+      "node_type": "risk",
+      "label": "execution blocked without approval",
+      "risk": "medium"
+    }
+  ],
+  "edges": [
+    {
+      "source": "executive-goal-72d76f4fe903597c",
+      "target": "executive-task-1bef0d189bc8503b",
+      "relation": "decomposes_to"
+    },
+    {
+      "source": "executive-goal-72d76f4fe903597c",
+      "target": "executive-task-b08ce2919089be50",
+      "relation": "decomposes_to"
+    },
+    {
+      "source": "executive-goal-72d76f4fe903597c",
+      "target": "executive-task-866e1dbf3146392f",
+      "relation": "decomposes_to"
+    },
+    {
+      "source": "executive-goal-72d76f4fe903597c",
+      "target": "executive-task-3abcab159f4c9a7a",
+      "relation": "decomposes_to"
+    }
+  ],
+  "transient": true
+}</pre></section>
+<section><h2>Resource Estimates</h2><pre>{
+  "reasoning_complexity": "moderate",
+  "knowledge_scope": "bounded_substrate_query",
+  "expected_evidence": "provenance-bearing substrate objects",
+  "estimated_review_load": 4,
+  "expected_confidence": "bounded_by_evidence_quality"
+}</pre></section>
+<section><h2>Review State</h2><pre>{
+  "decision": "request_review",
+  "options": [
+    "continue_planning",
+    "pause",
+    "request_review",
+    "request_more_evidence",
+    "request_owner_approval",
+    "request_overwatch"
+  ],
+  "automatic_bypass": false,
+  "blockers": [
+    "provider_authority_disabled",
+    "autonomous_execution_disabled",
+    "scheduler_disabled",
+    "memory_mutation_disabled"
+  ]
+}</pre></section>
+</body></html>
