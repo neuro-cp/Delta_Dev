@@ -632,3 +632,37 @@ These layers are not authority layers. They do not browse, execute, train, call
 providers, mutate memory, mutate knowledge, start schedulers, promote HYB1, or
 change Model B defaults. They give future work a shared shape while preserving
 the current safety boundary.
+
+## Post-ARC XXV Exhaustive Runtime Modules
+
+The compressed ARC VII-XXV scaffold has been expanded into dedicated,
+testable runtime modules:
+
+- `arc_07_investigation`
+- `arc_08_specialists`
+- `arc_09_external_evidence`
+- `arc_10_tool_provider_runtime`
+- `arc_11_controlled_integration`
+- `arc_12_evaluation_regression`
+- `arc_13_sleep_replay`
+- `arc_14_domain_packs`
+- `arc_15_executive_operations`
+- `arc_16_cognitive_os`
+- `arc_17_world_model`
+- `arc_18_multitime_memory`
+- `arc_19_self_model`
+- `arc_20_adaptive_executive`
+- `arc_21_multi_runtime_collaboration`
+- `arc_22_distributed_knowledge_fabric`
+- `arc_23_scientific_discovery`
+- `arc_24_cognitive_simulation`
+- `arc_25_continuous_runtime`
+
+Each module has typed primitive objects, builder functions, validation,
+safety-invariant reporting, audit summaries, demo payloads, report generation,
+and static dashboard artifacts. The local answer path distinguishes scaffolded,
+implemented-module, simulated-only, gated-future, and prohibited capabilities.
+
+The expansion remains non-authoritative: no live provider authority, autonomous
+browsing, tool execution, scheduler activation, training, memory mutation,
+knowledge mutation, or HYB1 promotion is enabled.

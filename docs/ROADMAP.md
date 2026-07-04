@@ -875,6 +875,31 @@ Recommended next phase:
 
 `PROCEED_POST_ARC_XXV_MASTER_REVIEW`
 
+## Post-ARC XXV Exhaustive Runtime Module Expansion
+
+ARC VII through ARC XXV have been expanded from compressed definitions into
+dedicated runtime modules with tests, reports, docs, and dashboards.
+
+Completed:
+
+- dedicated modules `orchestration/runtime/arc_07_*.py` through
+  `orchestration/runtime/arc_25_*.py`
+- common exhaustive safety helpers
+- per-ARC tests under `tests/runtime_arc_07` through `tests/runtime_arc_25`
+- per-ARC reports `reports/runtime_arc_07_*.md/json` through
+  `reports/runtime_arc_25_*.md/json`
+- per-ARC docs `docs/runtime_arc_07_*.md` through
+  `docs/runtime_arc_25_*.md`
+- per-ARC dashboards `ui/delta_arc_07_*.html` through
+  `ui/delta_arc_25_*.html`
+- master review `reports/runtime_post_arc_xxv_exhaustive_master_review.md/json`
+
+All work remains simulated-only and reviewable. No live authority was enabled.
+
+Recommended next phase:
+
+`PROCEED_EXHAUSTIVE_RUNTIME_REVIEW_AND_SELECTIVE_ACTIVATION_PLANNING`
+
 ## Runtime V3.1 Gated Learning Integration Readiness Update
 
 Runtime V3.1 adds an observe -> propose -> review -> gated integration

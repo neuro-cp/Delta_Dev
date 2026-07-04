@@ -66,6 +66,22 @@ hidden writes, HYB1 promotion, or secret printing occurred.
 Current next recommendation:
 PROCEED_POST_ARC_XXV_MASTER_REVIEW
 
+Post-ARC XXV exhaustive expansion is complete. ARC VII through ARC XXV now each
+have a dedicated runtime module, typed primitives, builder functions,
+validation, safety-invariant functions, audit summaries, demo scenarios, report
+payloads, tests, docs, reports, and static dashboards.
+
+The old compressed scaffold remains as compatibility context, but future work
+should prefer the dedicated modules under `orchestration/runtime/arc_07_*.py`
+through `orchestration/runtime/arc_25_*.py`.
+
+The expansion remains simulated-only and reviewable. No training, provider
+authority, autonomous browsing, tool execution, scheduler activation, memory
+mutation, knowledge mutation, hidden write, or HYB1 promotion occurred.
+
+Current next recommendation:
+PROCEED_EXHAUSTIVE_RUNTIME_REVIEW_AND_SELECTIVE_ACTIVATION_PLANNING
+
 Runtime V3.1 is complete as a gated learning integration readiness layer. DELTA
 can detect possible learning opportunities, create LearningProposal objects,
 aggregate contradiction review bundles, explain why proposals exist or remain

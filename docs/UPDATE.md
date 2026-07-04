@@ -3563,6 +3563,42 @@ Next recommendation:
 
 `PROCEED_POST_ARC_XXV_MASTER_REVIEW`
 
+## Post-ARC XXV Exhaustive Runtime Module Expansion
+
+ARC VII through ARC XXV were expanded from compressed master scaffold
+definitions into dedicated, testable runtime modules.
+
+Generated artifacts:
+
+- `orchestration/runtime/arc_exhaustive_common.py`
+- `orchestration/runtime/arc_07_investigation.py` through
+  `orchestration/runtime/arc_25_continuous_runtime.py`
+- `orchestration/runtime/post_arc_xxv_exhaustive_runner.py`
+- `tests/runtime_arc_07/` through `tests/runtime_arc_25/`
+- `tests/runtime_post_arc_xxv/`
+- `docs/runtime_arc_07_*.md` through `docs/runtime_arc_25_*.md`
+- `reports/runtime_arc_07_*.md/json` through
+  `reports/runtime_arc_25_*.md/json`
+- `ui/delta_arc_07_*.html` through `ui/delta_arc_25_*.html`
+- `docs/continuation_post_arc_xxv_exhaustive.md`
+- `reports/runtime_post_arc_xxv_exhaustive_master_review.md/json`
+
+The local answer path now routes ARC VII and ARC VIII demo questions through
+the dedicated exhaustive modules instead of the compressed compatibility
+scaffold.
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated.
+- No training, fine-tuning, model updates, provider authority, autonomous
+  browsing, tool execution, scheduler activation, memory mutation, knowledge
+  mutation, hidden writes, or HYB1 promotion occurred.
+
+Next recommendation:
+
+`PROCEED_EXHAUSTIVE_RUNTIME_REVIEW_AND_SELECTIVE_ACTIVATION_PLANNING`
+
 ## Runtime V3.1 Gated Learning Integration Readiness
 
 Runtime V3.1 completed the first controlled learning readiness layer. DELTA can

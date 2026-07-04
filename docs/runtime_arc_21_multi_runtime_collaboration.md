@@ -1,0 +1,32 @@
+# Runtime ARC 21 Governed Multi-Runtime Collaboration
+
+This document describes the exhaustive, dedicated runtime module:
+
+`orchestration/runtime/arc_21_multi_runtime_collaboration.py`
+
+Implemented primitives:
+
+- `RuntimeRegistry`
+- `RuntimeIdentity`
+- `SharedEvidenceProtocol`
+- `SharedKnowledgeProtocol`
+- `CollaborationPlanner`
+- `RuntimeNegotiation`
+- `ConsensusProtocol`
+- `CollaborationAudit`
+
+The module provides object construction, validation, safety invariants, audit
+summary, demo scenario, report payload, local answer hook, report generation,
+and static dashboard generation.
+
+Safety boundary:
+
+- no training
+- no provider calls or provider authority
+- no autonomous browsing
+- no tool execution
+- no scheduler/background worker
+- no memory mutation
+- no knowledge mutation
+- no HYB1 promotion
+- Model B remains unchanged
