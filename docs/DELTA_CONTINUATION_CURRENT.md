@@ -48,6 +48,24 @@ writes, promote HYB1, or change Model B defaults.
 Current next recommendation:
 PROCEED_ARC_VII_EXECUTION_AUTHORITY_AND_ACTION_SANDBOX_DESIGN
 
+Runtime ARC VII through ARC XXV are complete as deterministic review-only
+cognitive runtime architecture scaffolds. DELTA now has scaffold definitions
+for collaborative investigation, advisory specialists, governed evidence
+acquisition, controlled tool/provider interfaces, integration previews,
+evaluation/regression, replay/consolidation, domain packs, executive
+operations, cognitive OS design, persistent world model, multi-time memory,
+self model, adaptive executive, multi-runtime collaboration, distributed
+knowledge fabric, scientific discovery, cognitive simulation, and a unified
+continuous adaptive cognitive runtime.
+
+These scaffolds do not activate authority. No training, fine-tuning, model
+updates, provider authority, autonomous browsing, autonomous execution,
+scheduler activation, action execution, memory mutation, knowledge mutation,
+hidden writes, HYB1 promotion, or secret printing occurred.
+
+Current next recommendation:
+PROCEED_POST_ARC_XXV_MASTER_REVIEW
+
 Runtime V3.1 is complete as a gated learning integration readiness layer. DELTA
 can detect possible learning opportunities, create LearningProposal objects,
 aggregate contradiction review bundles, explain why proposals exist or remain

@@ -840,6 +840,41 @@ Recommended next phase:
 
 `PROCEED_ARC_VII_EXECUTION_AUTHORITY_AND_ACTION_SANDBOX_DESIGN`
 
+## Runtime ARC VII-XXV Cognitive Runtime Architecture Marathon
+
+Runtime ARC VII through ARC XXV are scaffolded as deterministic, review-only
+cognitive runtime architecture layers.
+
+Completed:
+
+- ARC VII Collaborative Cognitive Investigation
+- ARC VIII Cognitive Specialization and Multi-Perspective Deliberation
+- ARC IX Governed External Evidence Acquisition
+- ARC X Controlled Tool and Provider Runtime
+- ARC XI Controlled Knowledge Integration Pilot
+- ARC XII Evaluation, Regression, and Cognitive Validation
+- ARC XIII Sleep Cycle, Replay, and Long-Term Consolidation
+- ARC XIV Domain Knowledge Packs
+- ARC XV Executive Runtime Operations
+- ARC XVI Cognitive Operating System
+- ARC XVII Persistent World Model
+- ARC XVIII Multi-Time Memory Architecture
+- ARC XIX Self Model and Runtime Awareness
+- ARC XX Adaptive Executive
+- ARC XXI Governed Multi-Runtime Collaboration
+- ARC XXII Distributed Knowledge Fabric
+- ARC XXIII Scientific Discovery Framework
+- ARC XXIV Cognitive Simulation Engine
+- ARC XXV Continuous Adaptive Cognitive Runtime
+
+All layers are scaffold-only. No training, provider authority, autonomous
+browsing, autonomous execution, scheduler activation, action execution, memory
+mutation, knowledge mutation, hidden writes, or HYB1 promotion occurred.
+
+Recommended next phase:
+
+`PROCEED_POST_ARC_XXV_MASTER_REVIEW`
+
 ## Runtime V3.1 Gated Learning Integration Readiness Update
 
 Runtime V3.1 adds an observe -> propose -> review -> gated integration

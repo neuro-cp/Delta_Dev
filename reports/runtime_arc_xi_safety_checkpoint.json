@@ -1,0 +1,77 @@
+{
+  "action_execution_performed": false,
+  "arc": "ARC XI",
+  "autonomous_browsing_performed": false,
+  "autonomous_execution_performed": false,
+  "dashboard": "ui/delta_arc_xi_dashboard.html",
+  "final_recommendation": "PROCEED_ARC_XII_EVALUATION_REGRESSION_AND_COGNITIVE_VALIDATION",
+  "fine_tuning_performed": false,
+  "hidden_write_performed": false,
+  "hyb1": "dormant_env_gated",
+  "hyb1_promoted": false,
+  "knowledge_mutation_performed": false,
+  "memory_mutation_performed": false,
+  "model_b_default": "unchanged",
+  "model_updates_performed": false,
+  "objects": [
+    "IntegrationPlanner",
+    "IntegrationValidator",
+    "KnowledgeDiffEngine",
+    "IntegrationPreview",
+    "IntegrationApprovalPipeline",
+    "IntegrationCommitTransaction",
+    "RollbackExecutor",
+    "VersionGraphUpdater",
+    "IntegrationAudit",
+    "KnowledgeHealthRecalculation",
+    "IntegrationDashboard",
+    "IntegrationSimulationReplay",
+    "RegressionComparison",
+    "ManualIntegrationDemo"
+  ],
+  "phase": "Runtime ARC XI",
+  "provider_authority_granted": false,
+  "purpose": "Design the first real governed substrate integration pathway with approval, overwatch, and rollback.",
+  "rules": [
+    "approval_required",
+    "overwatch_required",
+    "rollback_mandatory",
+    "no_model_training"
+  ],
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample_objects": {
+    "integration_preview": {
+      "candidate": "candidate_only",
+      "committed": false,
+      "preview_id": "integration-preview-f1d3a4dfcf87410c",
+      "required_approvals": [
+        "admin",
+        "overwatch"
+      ],
+      "rollback_required": true
+    }
+  },
+  "scheduler_started": false,
+  "secret_printed": false,
+  "status": "architecture_scaffold_only",
+  "title": "Controlled Knowledge Integration Pilot",
+  "training_performed": false
+}

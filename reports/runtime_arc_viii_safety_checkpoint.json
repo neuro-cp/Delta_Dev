@@ -1,0 +1,378 @@
+{
+  "action_execution_performed": false,
+  "arc": "ARC VIII",
+  "autonomous_browsing_performed": false,
+  "autonomous_execution_performed": false,
+  "confidence_fusion": {
+    "confidence_spread": "visible",
+    "independent_confidence": "bounded",
+    "shared_confidence": "bounded"
+  },
+  "conflict_framework": {
+    "review_recommendations": [
+      "request_review"
+    ],
+    "unresolved_disagreements": []
+  },
+  "consensus": {
+    "agreement": "all selected specialists agree the result is advisory and evidence-bounded",
+    "authority_granted": false,
+    "confidence_overlap": "bounded",
+    "disagreement": "none resolved authoritatively",
+    "missing_evidence": [
+      "external corroboration",
+      "domain-specific sources"
+    ],
+    "voting_used": false
+  },
+  "deliberation_graph": {
+    "edges": [
+      {
+        "relation": "advises",
+        "source": "specialist-ee8250fb76e094b3",
+        "target": "consensus"
+      },
+      {
+        "relation": "advises",
+        "source": "specialist-08e4e1c34e288c71",
+        "target": "consensus"
+      },
+      {
+        "relation": "advises",
+        "source": "specialist-2c6ef0f0d0e4cc6e",
+        "target": "consensus"
+      },
+      {
+        "relation": "advises",
+        "source": "specialist-ea3bd73e2b506e00",
+        "target": "consensus"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "specialist-ee8250fb76e094b3",
+        "label": "Evidence Specialist",
+        "type": "specialist"
+      },
+      {
+        "id": "specialist-08e4e1c34e288c71",
+        "label": "Logic Specialist",
+        "type": "specialist"
+      },
+      {
+        "id": "specialist-2c6ef0f0d0e4cc6e",
+        "label": "Risk Specialist",
+        "type": "specialist"
+      },
+      {
+        "id": "specialist-ea3bd73e2b506e00",
+        "label": "Meta-Reasoning Specialist",
+        "type": "specialist"
+      }
+    ],
+    "transient": true
+  },
+  "final_recommendation": "PROCEED_ARC_IX_GOVERNED_EXTERNAL_EVIDENCE_ACQUISITION",
+  "fine_tuning_performed": false,
+  "hidden_write_performed": false,
+  "hyb1": "dormant_env_gated",
+  "hyb1_promoted": false,
+  "knowledge_mutation_performed": false,
+  "memory_mutation_performed": false,
+  "meta_reasoning": {
+    "strongest_path": "evidence_bounded_advisory_path",
+    "weaker_evidence": "external evidence unavailable"
+  },
+  "model_b_default": "unchanged",
+  "model_updates_performed": false,
+  "performance_metrics": {
+    "agreement": "bounded",
+    "learning": false,
+    "participation": 4,
+    "ranking_promotion": false
+  },
+  "phase": "Runtime ARC VIII V10.15",
+  "provider_authority_granted": false,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "scheduler_started": false,
+  "secret_printed": false,
+  "selected_specialists": [
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Evidence Specialist",
+      "purpose": "Inspect support, provenance, and missing evidence.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-ee8250fb76e094b3",
+      "status": "advisory_only",
+      "supported_domains": [
+        "evidence",
+        "citations"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Logic Specialist",
+      "purpose": "Inspect inference structure and assumptions.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-08e4e1c34e288c71",
+      "status": "advisory_only",
+      "supported_domains": [
+        "reasoning",
+        "logic"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Risk Specialist",
+      "purpose": "Inspect safety, uncertainty, and failure modes.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-2c6ef0f0d0e4cc6e",
+      "status": "advisory_only",
+      "supported_domains": [
+        "risk",
+        "safety"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Meta-Reasoning Specialist",
+      "purpose": "Inspect reasoning quality and perspective coverage.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-ea3bd73e2b506e00",
+      "status": "advisory_only",
+      "supported_domains": [
+        "meta",
+        "reflection"
+      ]
+    }
+  ],
+  "specialist_authority_granted": false,
+  "specialist_deliberations": [
+    {
+      "authoritative": false,
+      "confidence": "bounded",
+      "limitations": [
+        "no provider authority",
+        "no durable knowledge mutation",
+        "human review required"
+      ],
+      "reasoning": "Evidence Specialist provides an advisory perspective on Analyze topic X..",
+      "specialist_id": "specialist-ee8250fb76e094b3",
+      "support": [
+        "local scaffold context"
+      ]
+    },
+    {
+      "authoritative": false,
+      "confidence": "bounded",
+      "limitations": [
+        "no provider authority",
+        "no durable knowledge mutation",
+        "human review required"
+      ],
+      "reasoning": "Logic Specialist provides an advisory perspective on Analyze topic X..",
+      "specialist_id": "specialist-08e4e1c34e288c71",
+      "support": [
+        "local scaffold context"
+      ]
+    },
+    {
+      "authoritative": false,
+      "confidence": "bounded",
+      "limitations": [
+        "no provider authority",
+        "no durable knowledge mutation",
+        "human review required"
+      ],
+      "reasoning": "Risk Specialist provides an advisory perspective on Analyze topic X..",
+      "specialist_id": "specialist-2c6ef0f0d0e4cc6e",
+      "support": [
+        "local scaffold context"
+      ]
+    },
+    {
+      "authoritative": false,
+      "confidence": "bounded",
+      "limitations": [
+        "no provider authority",
+        "no durable knowledge mutation",
+        "human review required"
+      ],
+      "reasoning": "Meta-Reasoning Specialist provides an advisory perspective on Analyze topic X..",
+      "specialist_id": "specialist-ea3bd73e2b506e00",
+      "support": [
+        "local scaffold context"
+      ]
+    }
+  ],
+  "specialist_reflection": {
+    "alternative_approaches": [
+      "domain review"
+    ],
+    "missing_evidence": [
+      "external corroboration"
+    ]
+  },
+  "specialist_registry": [
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Evidence Specialist",
+      "purpose": "Inspect support, provenance, and missing evidence.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-ee8250fb76e094b3",
+      "status": "advisory_only",
+      "supported_domains": [
+        "evidence",
+        "citations"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Logic Specialist",
+      "purpose": "Inspect inference structure and assumptions.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-08e4e1c34e288c71",
+      "status": "advisory_only",
+      "supported_domains": [
+        "reasoning",
+        "logic"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Planning Specialist",
+      "purpose": "Inspect plans, dependencies, and sequencing.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-423614833cbdcee4",
+      "status": "advisory_only",
+      "supported_domains": [
+        "planning",
+        "workflow"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Risk Specialist",
+      "purpose": "Inspect safety, uncertainty, and failure modes.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-2c6ef0f0d0e4cc6e",
+      "status": "advisory_only",
+      "supported_domains": [
+        "risk",
+        "safety"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Scientific Specialist",
+      "purpose": "Inspect hypothesis and validation shape.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-8592edc04aed3012",
+      "status": "advisory_only",
+      "supported_domains": [
+        "science",
+        "method"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Historical Specialist",
+      "purpose": "Inspect temporal and historical context.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-f5dbf9fe930c4f49",
+      "status": "advisory_only",
+      "supported_domains": [
+        "history",
+        "timeline"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Systems Specialist",
+      "purpose": "Inspect interacting system components.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-f338f4c08c4eb9a6",
+      "status": "advisory_only",
+      "supported_domains": [
+        "systems",
+        "architecture"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Contradiction Specialist",
+      "purpose": "Inspect conflicts and counterevidence.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-456cf73c569be56c",
+      "status": "advisory_only",
+      "supported_domains": [
+        "conflict",
+        "contradiction"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Procedural Specialist",
+      "purpose": "Inspect steps and procedural constraints.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-b68549c51ae21ce4",
+      "status": "advisory_only",
+      "supported_domains": [
+        "procedure",
+        "operations"
+      ]
+    },
+    {
+      "activation_policy": "executive_selected_only",
+      "confidence_profile": "conservative",
+      "name": "Meta-Reasoning Specialist",
+      "purpose": "Inspect reasoning quality and perspective coverage.",
+      "reasoning_style": "advisory_analysis",
+      "specialist_id": "specialist-ea3bd73e2b506e00",
+      "status": "advisory_only",
+      "supported_domains": [
+        "meta",
+        "reflection"
+      ]
+    }
+  ],
+  "specialist_transactions": {
+    "consensus": true,
+    "destroy_after_request": true,
+    "reasoning": true,
+    "reflection": true,
+    "selection": true
+  },
+  "training_performed": false
+}

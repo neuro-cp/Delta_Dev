@@ -617,3 +617,18 @@ authority source. It does not reason directly, execute actions, call providers,
 start schedulers, train models, mutate memory, mutate knowledge, promote HYB1,
 or change Model B defaults. ARC VI's decision graphs and transactions are
 transient planning artifacts.
+
+## Runtime ARC VII-XXV Cognitive Runtime Scaffolds
+
+Runtime ARC VII through ARC XXV add deterministic architecture scaffolds for
+collaborative investigation, advisory specialists, governed evidence
+acquisition, controlled tool/provider interfaces, integration previews,
+evaluation, replay, domain packs, executive operations, cognitive OS design,
+world modeling, multi-time memory, self-modeling, adaptive executive planning,
+multi-runtime collaboration, distributed knowledge fabric, scientific
+discovery, cognitive simulation, and a unified continuous adaptive runtime.
+
+These layers are not authority layers. They do not browse, execute, train, call
+providers, mutate memory, mutate knowledge, start schedulers, promote HYB1, or
+change Model B defaults. They give future work a shared shape while preserving
+the current safety boundary.

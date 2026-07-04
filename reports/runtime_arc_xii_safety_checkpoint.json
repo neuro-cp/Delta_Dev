@@ -1,0 +1,72 @@
+{
+  "action_execution_performed": false,
+  "arc": "ARC XII",
+  "autonomous_browsing_performed": false,
+  "autonomous_execution_performed": false,
+  "dashboard": "ui/delta_arc_xii_dashboard.html",
+  "final_recommendation": "PROCEED_ARC_XIII_SLEEP_CYCLE_REPLAY_AND_LONG_TERM_CONSOLIDATION",
+  "fine_tuning_performed": false,
+  "hidden_write_performed": false,
+  "hyb1": "dormant_env_gated",
+  "hyb1_promoted": false,
+  "knowledge_mutation_performed": false,
+  "memory_mutation_performed": false,
+  "model_b_default": "unchanged",
+  "model_updates_performed": false,
+  "objects": [
+    "CognitiveBenchmarkSuite",
+    "BeforeAfterReasoningComparison",
+    "KnowledgeRegressionEngine",
+    "ConfidenceCalibration",
+    "ReasoningQualityMetrics",
+    "KnowledgeCoverageMetrics",
+    "HallucinationRiskAnalysis",
+    "DriftDetection",
+    "EvaluationHistory",
+    "EvaluationDashboard",
+    "AutomaticRollbackRecommendation",
+    "CognitiveHealthScore",
+    "ValidationReplay",
+    "ManualEvaluationDemo"
+  ],
+  "phase": "Runtime ARC XII",
+  "provider_authority_granted": false,
+  "purpose": "Evaluate substrate quality after controlled integrations without mutating knowledge.",
+  "rules": [
+    "recommendations_only",
+    "no_autonomous_rollback",
+    "evaluation_never_mutates_knowledge"
+  ],
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "sample_objects": {
+    "benchmark_suite": {
+      "autonomous_rollback": false,
+      "mutates_knowledge": false,
+      "purpose": "regression and cognitive validation",
+      "suite_id": "benchmark-suite-4a9d5ba5b99d6cf0"
+    }
+  },
+  "scheduler_started": false,
+  "secret_printed": false,
+  "status": "architecture_scaffold_only",
+  "title": "Evaluation, Regression & Cognitive Validation",
+  "training_performed": false
+}

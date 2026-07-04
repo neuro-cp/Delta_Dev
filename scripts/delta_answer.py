@@ -21,6 +21,12 @@ from orchestration.runtime.arc_ii_local_answer import is_arc_ii_question, run_ar
 from orchestration.runtime.arc_iii_local_answer import is_arc_iii_question, run_arc_iii_answer
 from orchestration.runtime.arc_iv_local_answer import is_arc_iv_question, run_arc_iv_answer
 from orchestration.runtime.arc_vi_local_answer import is_arc_vi_question, run_arc_vi_answer
+from orchestration.runtime.arc_vii_xxv_local_answer import (
+    is_arc_vii_question,
+    is_arc_viii_question,
+    run_arc_vii_answer,
+    run_arc_viii_answer,
+)
 
 
 def main() -> int:
@@ -35,6 +41,10 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_arc_viii_question(query):
+        data = run_arc_viii_answer(query)
+    elif is_arc_vii_question(query):
+        data = run_arc_vii_answer(query)
     elif is_arc_vi_question(query):
         data = run_arc_vi_answer(query)
     elif is_arc_iv_question(query):
@@ -53,6 +63,10 @@ def main() -> int:
         data = run_v29_local_answer(query, use_recall=args.use_recall)
     if args.json or args.show_provenance or args.output_report:
         print(json.dumps(data, indent=2))
+    elif data.get("phase") == "Runtime ARC VIII":
+        print(data["answer_text"])
+    elif data.get("phase") == "Runtime ARC VII":
+        print(data["answer_text"])
     elif data.get("phase") == "Runtime ARC VI":
         print(data["answer_text"])
     elif data.get("phase") == "Runtime ARC IV":

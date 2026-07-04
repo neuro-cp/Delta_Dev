@@ -1,0 +1,265 @@
+{
+  "action_execution_performed": false,
+  "arc": "ARC VII",
+  "autonomous_browsing_performed": false,
+  "autonomous_execution_performed": false,
+  "evidence_collection_plan": {
+    "desired_evidence": [
+      "independent corroboration",
+      "confidence calibration material"
+    ],
+    "evidence_quality": "must be reviewable and cited",
+    "expected_provenance": "source id, timestamp, retrieval approval, reviewer",
+    "live_collection_performed": false,
+    "optional_evidence": [
+      "historical context",
+      "edge cases"
+    ],
+    "required_evidence": [
+      "provenance-bearing source",
+      "direct support",
+      "contradiction check"
+    ]
+  },
+  "final_recommendation": "PROCEED_ARC_VIII_COGNITIVE_SPECIALIZATION_AND_MULTI_PERSPECTIVE_DELIBERATION",
+  "findings": [
+    {
+      "confidence": "low_to_moderate",
+      "durable_knowledge": false,
+      "evidence_references": [
+        "local_runtime_checkpoint"
+      ],
+      "finding_id": "finding-9b49e862c95e69d0",
+      "limitations": [
+        "no live external evidence",
+        "human review required"
+      ],
+      "review_state": "review_required",
+      "statement": "Current findings about topic X are preliminary because evidence collection is disabled.",
+      "support": [
+        "local scaffold state"
+      ]
+    }
+  ],
+  "fine_tuning_performed": false,
+  "hidden_write_performed": false,
+  "hyb1": "dormant_env_gated",
+  "hyb1_promoted": false,
+  "investigation": {
+    "constraints": [
+      "no_autonomous_browsing",
+      "no_provider_authority",
+      "no_knowledge_mutation",
+      "review_required"
+    ],
+    "id": "investigation-72d76f4fe903597c",
+    "initiator": "user",
+    "priority": 5,
+    "purpose": "Define a reviewable investigation plan for topic X.",
+    "review_state": "review_required",
+    "scope": "bounded_local_review",
+    "status": "planned_only",
+    "title": "Investigate topic X"
+  },
+  "investigation_graph": {
+    "edges": [
+      {
+        "relation": "asks",
+        "source": "investigation-72d76f4fe903597c",
+        "target": "research-question-2604df8d926ce1c0"
+      },
+      {
+        "relation": "produces_preliminary_finding",
+        "source": "research-question-2604df8d926ce1c0",
+        "target": "finding-9b49e862c95e69d0"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "investigation-72d76f4fe903597c",
+        "label": "Investigate topic X",
+        "type": "problem"
+      },
+      {
+        "id": "research-question-2604df8d926ce1c0",
+        "label": "What must be established to understand topic X safely?",
+        "type": "question"
+      },
+      {
+        "id": "finding-9b49e862c95e69d0",
+        "label": "Current findings about topic X are preliminary because evidence collection is disabled.",
+        "type": "finding"
+      }
+    ],
+    "transient": true
+  },
+  "investigation_plan": [
+    {
+      "live_collection": false,
+      "phase": "review_existing_knowledge",
+      "status": "planned_only"
+    },
+    {
+      "live_collection": false,
+      "phase": "collect_missing_evidence_plan",
+      "status": "planned_only"
+    },
+    {
+      "live_collection": false,
+      "phase": "evaluate_contradictions",
+      "status": "planned_only"
+    },
+    {
+      "live_collection": false,
+      "phase": "generate_hypotheses",
+      "status": "planned_only"
+    },
+    {
+      "live_collection": false,
+      "phase": "request_review",
+      "status": "planned_only"
+    },
+    {
+      "live_collection": false,
+      "phase": "summarize",
+      "status": "planned_only"
+    }
+  ],
+  "knowledge_gap_analysis": {
+    "confidence_improvements": [
+      "approved evidence acquisition",
+      "contradiction review",
+      "human review"
+    ],
+    "known": [
+      "DELTA can create a local investigation scaffold.",
+      "External acquisition is disabled by default."
+    ],
+    "missing_evidence": [
+      "primary source evidence",
+      "conflicting evidence",
+      "provenance-bearing citations"
+    ],
+    "uncertain": [
+      "Topic-specific evidence about topic X has not been collected.",
+      "Confidence cannot exceed available evidence."
+    ],
+    "unsupported": [
+      "No live external evidence has been fetched."
+    ]
+  },
+  "knowledge_mutation_performed": false,
+  "memory_mutation_performed": false,
+  "model_b_default": "unchanged",
+  "model_updates_performed": false,
+  "multi_investigation_management": {
+    "background_scheduling": false,
+    "parallel_supported": true,
+    "shared_evidence": "references_only",
+    "shared_findings": "review_only"
+  },
+  "phase": "Runtime ARC VII V9.15",
+  "problem_definition": {
+    "assumptions": [
+      "The user wants a reviewable plan rather than autonomous research."
+    ],
+    "constraints": [
+      "no_autonomous_browsing",
+      "no_provider_authority",
+      "findings_not_authoritative"
+    ],
+    "known_facts": [
+      "DELTA can create a local investigation scaffold.",
+      "External acquisition is disabled by default."
+    ],
+    "problem_statement": "Determine what is known, unknown, and review-required about topic X.",
+    "success_criteria": [
+      "clear problem definition",
+      "explicit gaps",
+      "evidence plan",
+      "reviewable findings"
+    ],
+    "unknowns": [
+      "Topic-specific evidence about topic X has not been collected.",
+      "Confidence cannot exceed available evidence."
+    ]
+  },
+  "provider_authority_granted": false,
+  "recommendations": [
+    "collect_more_evidence",
+    "request_review",
+    "defer_conclusion",
+    "confidence_insufficient",
+    "proceed_to_reasoning_after_review"
+  ],
+  "reflection": {
+    "alternative_explanations": [
+      "insufficient evidence",
+      "benchmark mismatch",
+      "domain ambiguity"
+    ],
+    "bias": "may over-weight available local scaffold knowledge",
+    "missing_perspectives": [
+      "external evidence",
+      "contradictory sources",
+      "domain specialist review"
+    ],
+    "remaining_uncertainty": [
+      "Topic-specific evidence about topic X has not been collected.",
+      "Confidence cannot exceed available evidence."
+    ]
+  },
+  "research_questions": [
+    {
+      "dependencies": [
+        "problem_definition",
+        "knowledge_gap_analysis"
+      ],
+      "evidence_requirements": [
+        "local substrate review",
+        "approved external evidence plan",
+        "provenance"
+      ],
+      "primary_question": "What must be established to understand topic X safely?",
+      "question_id": "research-question-2604df8d926ce1c0",
+      "subquestions": [
+        "What is already known?",
+        "What evidence is missing?",
+        "What contradictions must be checked?"
+      ]
+    }
+  ],
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "scheduler_started": false,
+  "secret_printed": false,
+  "training_performed": false,
+  "transaction": {
+    "durable_knowledge_mutation": false,
+    "lifecycle": [
+      "created",
+      "planned",
+      "reviewed",
+      "completed",
+      "archived"
+    ],
+    "transaction_id": "investigation-transaction-c0ff7a7afc42f96d"
+  }
+}

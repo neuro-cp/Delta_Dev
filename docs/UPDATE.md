@@ -3530,6 +3530,39 @@ Next recommendation:
 
 `PROCEED_ARC_VII_EXECUTION_AUTHORITY_AND_ACTION_SANDBOX_DESIGN`
 
+## Runtime ARC VII-XXV Cognitive Runtime Architecture Marathon
+
+ARC VII through ARC XXV are complete as deterministic review-only architecture
+scaffolds. The work adds structured investigation, advisory specialists,
+governed evidence acquisition design, controlled tool/provider runtime design,
+integration preview, evaluation/regression, replay/consolidation planning,
+domain packs, executive operations, cognitive OS design, world model, multi-time
+memory, self model, adaptive executive, multi-runtime collaboration, distributed
+fabric, scientific discovery, simulation, and unified runtime scaffolds.
+
+Generated artifacts:
+
+- `orchestration/runtime/arc_vii_xxv_scaffolds.py`
+- `orchestration/runtime/arc_vii_xxv_local_answer.py`
+- `tests/runtime_arc_vii_xxv/test_arc_vii_xxv_scaffolds.py`
+- `reports/runtime_arc_vii_xxv_master_safety_checkpoint.md`
+- `reports/runtime_arc_vii_xxv_master_safety_checkpoint.json`
+- per-ARC safety checkpoint reports for ARC VII through ARC XXV
+- per-ARC static dashboards for ARC VII through ARC XXV
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated.
+- No training, fine-tuning, model updates, provider authority, autonomous
+  browsing, autonomous execution, scheduler activation, action execution,
+  memory mutation, knowledge mutation, hidden writes, or secret printing
+  occurred.
+
+Next recommendation:
+
+`PROCEED_POST_ARC_XXV_MASTER_REVIEW`
+
 ## Runtime V3.1 Gated Learning Integration Readiness
 
 Runtime V3.1 completed the first controlled learning readiness layer. DELTA can
