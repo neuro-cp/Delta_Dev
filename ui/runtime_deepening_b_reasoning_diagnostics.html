@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>deepening-b-reasoning_diagnostics</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch B Reasoning Diagnostics</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-98db6dec28d7fe7b",
+    "name": "state_model",
+    "purpose": "Reasoning Diagnostics state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-82f01ff9d09dcfbc",
+    "name": "validation_contract",
+    "purpose": "Reasoning Diagnostics validation contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-07199aade0da8f9a",
+    "name": "audit_surface",
+    "purpose": "Reasoning Diagnostics audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-2b93a167dbee2b50",
+    "name": "summary_surface",
+    "purpose": "Reasoning Diagnostics summary surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-52379b9343f632bd",
+    "name": "demo_surface",
+    "purpose": "Reasoning Diagnostics demo surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-84405ecae2f83df8",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-98db6dec28d7fe7b",
+      "label": "state_model",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-82f01ff9d09dcfbc",
+      "label": "validation_contract",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-07199aade0da8f9a",
+      "label": "audit_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-2b93a167dbee2b50",
+      "label": "summary_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-52379b9343f632bd",
+      "label": "demo_surface",
+      "type": "deepening_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-98db6dec28d7fe7b",
+      "target": "post-arc-xxv-82f01ff9d09dcfbc",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-82f01ff9d09dcfbc",
+      "target": "post-arc-xxv-07199aade0da8f9a",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-07199aade0da8f9a",
+      "target": "post-arc-xxv-2b93a167dbee2b50",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-2b93a167dbee2b50",
+      "target": "post-arc-xxv-52379b9343f632bd",
+      "relation": "feeds_review"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "review_only"
+  },
+  "serialized_only": true
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

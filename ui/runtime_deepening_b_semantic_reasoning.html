@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>deepening-b-semantic_reasoning</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch B Semantic Reasoning</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-0a281983b346c690",
+    "name": "state_model",
+    "purpose": "Semantic Reasoning state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-f272c02a32c95563",
+    "name": "validation_contract",
+    "purpose": "Semantic Reasoning validation contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-2ffa408e9633184f",
+    "name": "audit_surface",
+    "purpose": "Semantic Reasoning audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-a1fad8bde5c80fcf",
+    "name": "summary_surface",
+    "purpose": "Semantic Reasoning summary surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-9d263756be81caf4",
+    "name": "demo_surface",
+    "purpose": "Semantic Reasoning demo surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-e5e89389de04c45c",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-0a281983b346c690",
+      "label": "state_model",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-f272c02a32c95563",
+      "label": "validation_contract",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-2ffa408e9633184f",
+      "label": "audit_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-a1fad8bde5c80fcf",
+      "label": "summary_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-9d263756be81caf4",
+      "label": "demo_surface",
+      "type": "deepening_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-0a281983b346c690",
+      "target": "post-arc-xxv-f272c02a32c95563",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-f272c02a32c95563",
+      "target": "post-arc-xxv-2ffa408e9633184f",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-2ffa408e9633184f",
+      "target": "post-arc-xxv-a1fad8bde5c80fcf",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-a1fad8bde5c80fcf",
+      "target": "post-arc-xxv-9d263756be81caf4",
+      "relation": "feeds_review"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "review_only"
+  },
+  "serialized_only": true
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>deepening-d-executive_rollback_planning</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch D Executive Rollback Planning</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-af9cc1dcf0acd300",
+    "name": "state_model",
+    "purpose": "Executive Rollback Planning state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-f37a91933ab6039d",
+    "name": "validation_contract",
+    "purpose": "Executive Rollback Planning validation contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-9e7f096cc1e3a3b9",
+    "name": "audit_surface",
+    "purpose": "Executive Rollback Planning audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-65c815366e65119e",
+    "name": "summary_surface",
+    "purpose": "Executive Rollback Planning summary surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-961956066a00f80c",
+    "name": "demo_surface",
+    "purpose": "Executive Rollback Planning demo surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-652df99297084ad8",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-af9cc1dcf0acd300",
+      "label": "state_model",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-f37a91933ab6039d",
+      "label": "validation_contract",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-9e7f096cc1e3a3b9",
+      "label": "audit_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-65c815366e65119e",
+      "label": "summary_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-961956066a00f80c",
+      "label": "demo_surface",
+      "type": "deepening_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-af9cc1dcf0acd300",
+      "target": "post-arc-xxv-f37a91933ab6039d",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-f37a91933ab6039d",
+      "target": "post-arc-xxv-9e7f096cc1e3a3b9",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-9e7f096cc1e3a3b9",
+      "target": "post-arc-xxv-65c815366e65119e",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-65c815366e65119e",
+      "target": "post-arc-xxv-961956066a00f80c",
+      "relation": "feeds_review"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "review_only"
+  },
+  "serialized_only": true
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

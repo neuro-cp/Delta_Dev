@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>deepening-d-goal_decomposition</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch D Goal Decomposition</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-e55c0deda1309bda",
+    "name": "state_model",
+    "purpose": "Goal Decomposition state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-b16905a0e8129313",
+    "name": "validation_contract",
+    "purpose": "Goal Decomposition validation contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-a7ae9cd52759a590",
+    "name": "audit_surface",
+    "purpose": "Goal Decomposition audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-aa75243c1d27bee4",
+    "name": "summary_surface",
+    "purpose": "Goal Decomposition summary surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-c6be591c17ec2e67",
+    "name": "demo_surface",
+    "purpose": "Goal Decomposition demo surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-e3b7943bc45f03e1",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-e55c0deda1309bda",
+      "label": "state_model",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-b16905a0e8129313",
+      "label": "validation_contract",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-a7ae9cd52759a590",
+      "label": "audit_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-aa75243c1d27bee4",
+      "label": "summary_surface",
+      "type": "deepening_object"
+    },
+    {
+      "id": "post-arc-xxv-c6be591c17ec2e67",
+      "label": "demo_surface",
+      "type": "deepening_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-e55c0deda1309bda",
+      "target": "post-arc-xxv-b16905a0e8129313",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-b16905a0e8129313",
+      "target": "post-arc-xxv-a7ae9cd52759a590",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-a7ae9cd52759a590",
+      "target": "post-arc-xxv-aa75243c1d27bee4",
+      "relation": "feeds_review"
+    },
+    {
+      "source": "post-arc-xxv-aa75243c1d27bee4",
+      "target": "post-arc-xxv-c6be591c17ec2e67",
+      "relation": "feeds_review"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "review_only"
+  },
+  "serialized_only": true
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

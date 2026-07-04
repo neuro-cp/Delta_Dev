@@ -1,0 +1,227 @@
+{
+  "audit": {
+    "audit_id": "post-arc-xxv-087e630e14bae810",
+    "authority": "advisory_only",
+    "module_id": "deepening-a-registry_validation",
+    "review_state": "review_required",
+    "safety_verified": true,
+    "status": "implemented_module_simulated_only"
+  },
+  "batch": "A",
+  "batch_label": "Batch A",
+  "batch_title": "Runtime Hardening",
+  "capability_state": "gated_future_capability",
+  "demo": {
+    "demo_id": "post-arc-xxv-d3486c02b7ae5cd1",
+    "live_behavior_activated": false,
+    "prompt": "Demonstrate Registry Validation.",
+    "simulated_only": true,
+    "steps": [
+      "state_model",
+      "validation_contract",
+      "audit_surface",
+      "summary_surface",
+      "demo_surface"
+    ]
+  },
+  "graph_export_metadata": {
+    "edges": [
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-52e466d73866691a",
+        "target": "post-arc-xxv-f1cf03c26f4cf4bf"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-f1cf03c26f4cf4bf",
+        "target": "post-arc-xxv-540207a62aa3f8cb"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-540207a62aa3f8cb",
+        "target": "post-arc-xxv-39b7b75dccde4b0c"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-39b7b75dccde4b0c",
+        "target": "post-arc-xxv-392c8829171df8b2"
+      }
+    ],
+    "graph_id": "post-arc-xxv-194ac532b8ad54ae",
+    "nodes": [
+      {
+        "id": "post-arc-xxv-52e466d73866691a",
+        "label": "state_model",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-f1cf03c26f4cf4bf",
+        "label": "validation_contract",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-540207a62aa3f8cb",
+        "label": "audit_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-39b7b75dccde4b0c",
+        "label": "summary_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-392c8829171df8b2",
+        "label": "demo_surface",
+        "type": "deepening_object"
+      }
+    ],
+    "serialized_only": true,
+    "visualization_hints": {
+      "authority": "none",
+      "layout": "left_to_right",
+      "style": "review_only"
+    }
+  },
+  "module_id": "deepening-a-registry_validation",
+  "module_slug": "registry_validation",
+  "objects": [
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "state_model",
+      "object_id": "post-arc-xxv-52e466d73866691a",
+      "provider_call_performed": false,
+      "purpose": "Registry Validation state model",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "validation_contract",
+      "object_id": "post-arc-xxv-f1cf03c26f4cf4bf",
+      "provider_call_performed": false,
+      "purpose": "Registry Validation validation contract",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "audit_surface",
+      "object_id": "post-arc-xxv-540207a62aa3f8cb",
+      "provider_call_performed": false,
+      "purpose": "Registry Validation audit surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "summary_surface",
+      "object_id": "post-arc-xxv-39b7b75dccde4b0c",
+      "provider_call_performed": false,
+      "purpose": "Registry Validation summary surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "demo_surface",
+      "object_id": "post-arc-xxv-392c8829171df8b2",
+      "provider_call_performed": false,
+      "purpose": "Registry Validation demo surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    }
+  ],
+  "prohibited_capabilities": [
+    "training",
+    "provider_authority",
+    "autonomous_browsing",
+    "tool_execution",
+    "scheduler",
+    "memory_mutation",
+    "knowledge_mutation",
+    "hyb1_promotion"
+  ],
+  "purpose": "Deepen Registry Validation within Runtime Hardening without activating authority.",
+  "recommendation": "REVIEW_DEEPENED_MODULE_BEFORE_ACTIVATION",
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "runtime_safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    },
+    "scheduler_started": false,
+    "secret_printed": false,
+    "tool_execution_performed": false,
+    "training_performed": false
+  },
+  "status": "implemented_module_simulated_only",
+  "summary": {
+    "activation": "gated_future_capability",
+    "authority": "advisory_only",
+    "batch": "A",
+    "batch_title": "Runtime Hardening",
+    "module_id": "deepening-a-registry_validation",
+    "object_count": 5,
+    "status": "implemented_module_simulated_only",
+    "title": "Registry Validation"
+  },
+  "title": "Registry Validation",
+  "validation": {
+    "execution_performed": false,
+    "graph_export_available": true,
+    "json_export_available": true,
+    "mutation_performed": false,
+    "object_count": 5,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "valid": true
+  }
+}

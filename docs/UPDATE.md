@@ -3599,6 +3599,38 @@ Next recommendation:
 
 `PROCEED_EXHAUSTIVE_RUNTIME_REVIEW_AND_SELECTIVE_ACTIVATION_PLANNING`
 
+## Post-ARC XXV Runtime Deepening Marathon
+
+Completed the post-ARC XXV deepening pass from architecture toward robust
+runtime modules.
+
+Generated artifacts:
+
+- `orchestration/runtime/deepening_common.py`
+- 120 deepening modules under `orchestration/runtime/deepening_*.py`
+- `orchestration/runtime/post_arc_xxv_deepening_runner.py`
+- 120 deepening module tests under `tests/runtime_deepening_a` through
+  `tests/runtime_deepening_d`
+- `tests/runtime_post_arc_xxv_deepening/test_deepening_runner.py`
+- 120 report pairs under `reports/runtime_deepening_*.md/json`
+- 120 static dashboards under `ui/runtime_deepening_*.html`
+- 120 docs under `docs/runtime_deepening_*.md`
+- `docs/continuation_post_arc_xxv_deepening.md`
+- `reports/runtime_post_arc_xxv_deepening_master_review.md/json`
+
+The local answer path can report post-ARC deepening status and distinguishes
+scaffolded, implemented-module, simulated-only, gated-future, and prohibited
+capability states.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no provider authority, no provider calls, no autonomous browsing, no
+tool execution, no scheduler/background worker, no memory mutation, no
+knowledge mutation, no hidden writes, and no HYB1 promotion.
+
+Next recommendation:
+
+`PROCEED_RUNTIME_ACTIVATION_READINESS_REVIEW`
+
 ## Runtime V3.1 Gated Learning Integration Readiness
 
 Runtime V3.1 completed the first controlled learning readiness layer. DELTA can

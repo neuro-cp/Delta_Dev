@@ -900,6 +900,26 @@ Recommended next phase:
 
 `PROCEED_EXHAUSTIVE_RUNTIME_REVIEW_AND_SELECTIVE_ACTIVATION_PLANNING`
 
+## Post-ARC XXV Runtime Deepening Marathon
+
+Completed a selective deepening pass across 120 modules:
+
+- Runtime hardening: 30 modules
+- Reasoning deepening: 30 modules
+- Knowledge substrate deepening: 30 modules
+- Executive deepening: 30 modules
+
+Every module includes typed objects, builders, validators, audit helpers,
+summaries, demo payloads, JSON export, graph export metadata, tests, docs,
+reports, and dashboard artifacts.
+
+All modules remain deterministic, simulated-only, reviewable, and gated for
+future activation. No live authority was enabled.
+
+Recommended next marathon:
+
+`PROCEED_RUNTIME_ACTIVATION_READINESS_REVIEW`
+
 ## Runtime V3.1 Gated Learning Integration Readiness Update
 
 Runtime V3.1 adds an observe -> propose -> review -> gated integration

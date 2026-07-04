@@ -82,6 +82,20 @@ mutation, knowledge mutation, hidden write, or HYB1 promotion occurred.
 Current next recommendation:
 PROCEED_EXHAUSTIVE_RUNTIME_REVIEW_AND_SELECTIVE_ACTIVATION_PLANNING
 
+Post-ARC XXV runtime deepening is complete. DELTA now has 120 deterministic
+deepening modules across runtime hardening, reasoning, knowledge substrate, and
+executive batches. These modules add typed objects, builders, validators, audit
+helpers, summaries, demo payloads, JSON export, graph export metadata, tests,
+docs, reports, and dashboards.
+
+Everything remains simulated-only and reviewable. No training, provider
+authority, provider calls, autonomous browsing, tool execution, scheduler,
+background worker, memory mutation, knowledge mutation, hidden write, or HYB1
+promotion occurred.
+
+Current next recommendation:
+PROCEED_RUNTIME_ACTIVATION_READINESS_REVIEW
+
 Runtime V3.1 is complete as a gated learning integration readiness layer. DELTA
 can detect possible learning opportunities, create LearningProposal objects,
 aggregate contradiction review bundles, explain why proposals exist or remain

@@ -5,6 +5,7 @@ from __future__ import annotations
 from orchestration.runtime.arc_07_investigation import report_payload as investigation_payload
 from orchestration.runtime.arc_08_specialists import report_payload as specialists_payload
 from orchestration.runtime.arc_exhaustive_common import exhaustive_safety_flags
+from orchestration.runtime.post_arc_xxv_deepening_runner import DEEPENING_MODULES, write_all_deepening_reports
 
 
 def is_arc_vii_question(query: str) -> bool:
@@ -84,3 +85,49 @@ def run_arc_viii_answer(query: str) -> dict[str, object]:
         answer = "Analyzed the topic through advisory specialist scaffolds. No specialist authority, execution, or mutation occurred."
         payload = {"specialist_deliberation": data["objects"]}
     return {"phase": "Runtime ARC VIII", "query": query, "answer_text": answer, **payload, "safety": exhaustive_safety_flags()}
+
+
+def is_post_arc_deepening_question(query: str) -> bool:
+    normalized = " ".join(str(query).lower().split())
+    return any(
+        trigger in normalized
+        for trigger in (
+            "post-arc deepening",
+            "runtime deepening",
+            "deepening status",
+            "what modules were deepened",
+            "selective deepening",
+            "robust runtime",
+        )
+    )
+
+
+def run_post_arc_deepening_answer(query: str) -> dict[str, object]:
+    summary = write_all_deepening_reports()
+    return {
+        "phase": "Post-ARC XXV Runtime Deepening",
+        "query": query,
+        "answer_text": (
+            "Post-ARC XXV deepening is implemented as deterministic, review-only modules. "
+            f"{len(DEEPENING_MODULES)} modules are available across runtime hardening, reasoning, knowledge substrate, and executive batches."
+        ),
+        "module_count": len(DEEPENING_MODULES),
+        "summary": summary,
+        "capability_states": {
+            "scaffolded": True,
+            "implemented_module": True,
+            "simulated_only": True,
+            "gated_future_capability": True,
+            "prohibited_capability": (
+                "training",
+                "provider_authority",
+                "autonomous_browsing",
+                "tool_execution",
+                "scheduler",
+                "memory_mutation",
+                "knowledge_mutation",
+                "hyb1_promotion",
+            ),
+        },
+        "safety": exhaustive_safety_flags(),
+    }

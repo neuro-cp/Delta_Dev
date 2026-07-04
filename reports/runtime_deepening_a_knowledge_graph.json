@@ -1,0 +1,227 @@
+{
+  "audit": {
+    "audit_id": "post-arc-xxv-016f936eb4f246f3",
+    "authority": "advisory_only",
+    "module_id": "deepening-a-knowledge_graph",
+    "review_state": "review_required",
+    "safety_verified": true,
+    "status": "implemented_module_simulated_only"
+  },
+  "batch": "A",
+  "batch_label": "Batch A",
+  "batch_title": "Runtime Hardening",
+  "capability_state": "gated_future_capability",
+  "demo": {
+    "demo_id": "post-arc-xxv-2d29309a5d1cd8c0",
+    "live_behavior_activated": false,
+    "prompt": "Demonstrate Knowledge Graph.",
+    "simulated_only": true,
+    "steps": [
+      "state_model",
+      "validation_contract",
+      "audit_surface",
+      "summary_surface",
+      "demo_surface"
+    ]
+  },
+  "graph_export_metadata": {
+    "edges": [
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-7384796a6fa92351",
+        "target": "post-arc-xxv-7b831577031fad88"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-7b831577031fad88",
+        "target": "post-arc-xxv-d95a118969c8459e"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-d95a118969c8459e",
+        "target": "post-arc-xxv-b4e33d10170a5c83"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-b4e33d10170a5c83",
+        "target": "post-arc-xxv-61bb274f2c7f435a"
+      }
+    ],
+    "graph_id": "post-arc-xxv-7e9627fe40d35d3f",
+    "nodes": [
+      {
+        "id": "post-arc-xxv-7384796a6fa92351",
+        "label": "state_model",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-7b831577031fad88",
+        "label": "validation_contract",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-d95a118969c8459e",
+        "label": "audit_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-b4e33d10170a5c83",
+        "label": "summary_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-61bb274f2c7f435a",
+        "label": "demo_surface",
+        "type": "deepening_object"
+      }
+    ],
+    "serialized_only": true,
+    "visualization_hints": {
+      "authority": "none",
+      "layout": "left_to_right",
+      "style": "review_only"
+    }
+  },
+  "module_id": "deepening-a-knowledge_graph",
+  "module_slug": "knowledge_graph",
+  "objects": [
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "state_model",
+      "object_id": "post-arc-xxv-7384796a6fa92351",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph state model",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "validation_contract",
+      "object_id": "post-arc-xxv-7b831577031fad88",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph validation contract",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "audit_surface",
+      "object_id": "post-arc-xxv-d95a118969c8459e",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph audit surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "summary_surface",
+      "object_id": "post-arc-xxv-b4e33d10170a5c83",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph summary surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "demo_surface",
+      "object_id": "post-arc-xxv-61bb274f2c7f435a",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph demo surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    }
+  ],
+  "prohibited_capabilities": [
+    "training",
+    "provider_authority",
+    "autonomous_browsing",
+    "tool_execution",
+    "scheduler",
+    "memory_mutation",
+    "knowledge_mutation",
+    "hyb1_promotion"
+  ],
+  "purpose": "Deepen Knowledge Graph within Runtime Hardening without activating authority.",
+  "recommendation": "REVIEW_DEEPENED_MODULE_BEFORE_ACTIVATION",
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "runtime_safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    },
+    "scheduler_started": false,
+    "secret_printed": false,
+    "tool_execution_performed": false,
+    "training_performed": false
+  },
+  "status": "implemented_module_simulated_only",
+  "summary": {
+    "activation": "gated_future_capability",
+    "authority": "advisory_only",
+    "batch": "A",
+    "batch_title": "Runtime Hardening",
+    "module_id": "deepening-a-knowledge_graph",
+    "object_count": 5,
+    "status": "implemented_module_simulated_only",
+    "title": "Knowledge Graph"
+  },
+  "title": "Knowledge Graph",
+  "validation": {
+    "execution_performed": false,
+    "graph_export_available": true,
+    "json_export_available": true,
+    "mutation_performed": false,
+    "object_count": 5,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "valid": true
+  }
+}

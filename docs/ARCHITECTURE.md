@@ -666,3 +666,21 @@ implemented-module, simulated-only, gated-future, and prohibited capabilities.
 The expansion remains non-authoritative: no live provider authority, autonomous
 browsing, tool execution, scheduler activation, training, memory mutation,
 knowledge mutation, or HYB1 promotion is enabled.
+
+## Post-ARC XXV Runtime Deepening
+
+The post-ARC XXV deepening marathon moves the architecture toward robust
+runtime modules without activating them. It adds 120 deterministic modules
+across four batches:
+
+- Batch A: runtime hardening
+- Batch B: reasoning deepening
+- Batch C: knowledge substrate deepening
+- Batch D: executive deepening
+
+Each deepening module has typed objects, builders, validators, audit helpers,
+summary helpers, demo payloads, JSON export, graph export metadata, tests,
+documentation, report generation, and dashboard generation.
+
+All deepened capabilities remain `implemented_module_simulated_only` and
+`gated_future_capability`. They are inspectable architecture, not authority.

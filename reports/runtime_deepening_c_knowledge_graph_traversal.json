@@ -1,0 +1,227 @@
+{
+  "audit": {
+    "audit_id": "post-arc-xxv-91f24d0f10287ab7",
+    "authority": "advisory_only",
+    "module_id": "deepening-c-knowledge_graph_traversal",
+    "review_state": "review_required",
+    "safety_verified": true,
+    "status": "implemented_module_simulated_only"
+  },
+  "batch": "C",
+  "batch_label": "Batch C",
+  "batch_title": "Knowledge Substrate Deepening",
+  "capability_state": "gated_future_capability",
+  "demo": {
+    "demo_id": "post-arc-xxv-8c4f7e7fbddf43f0",
+    "live_behavior_activated": false,
+    "prompt": "Demonstrate Knowledge Graph Traversal.",
+    "simulated_only": true,
+    "steps": [
+      "state_model",
+      "validation_contract",
+      "audit_surface",
+      "summary_surface",
+      "demo_surface"
+    ]
+  },
+  "graph_export_metadata": {
+    "edges": [
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-296ee11618074777",
+        "target": "post-arc-xxv-663f3a9169e33aa6"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-663f3a9169e33aa6",
+        "target": "post-arc-xxv-d8dab6c8da34a929"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-d8dab6c8da34a929",
+        "target": "post-arc-xxv-7a855b13b10b16b2"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-7a855b13b10b16b2",
+        "target": "post-arc-xxv-996681c6eabf75dd"
+      }
+    ],
+    "graph_id": "post-arc-xxv-c2d0daa42b3a7cc5",
+    "nodes": [
+      {
+        "id": "post-arc-xxv-296ee11618074777",
+        "label": "state_model",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-663f3a9169e33aa6",
+        "label": "validation_contract",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-d8dab6c8da34a929",
+        "label": "audit_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-7a855b13b10b16b2",
+        "label": "summary_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-996681c6eabf75dd",
+        "label": "demo_surface",
+        "type": "deepening_object"
+      }
+    ],
+    "serialized_only": true,
+    "visualization_hints": {
+      "authority": "none",
+      "layout": "left_to_right",
+      "style": "review_only"
+    }
+  },
+  "module_id": "deepening-c-knowledge_graph_traversal",
+  "module_slug": "knowledge_graph_traversal",
+  "objects": [
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "state_model",
+      "object_id": "post-arc-xxv-296ee11618074777",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph Traversal state model",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "validation_contract",
+      "object_id": "post-arc-xxv-663f3a9169e33aa6",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph Traversal validation contract",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "audit_surface",
+      "object_id": "post-arc-xxv-d8dab6c8da34a929",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph Traversal audit surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "summary_surface",
+      "object_id": "post-arc-xxv-7a855b13b10b16b2",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph Traversal summary surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "demo_surface",
+      "object_id": "post-arc-xxv-996681c6eabf75dd",
+      "provider_call_performed": false,
+      "purpose": "Knowledge Graph Traversal demo surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    }
+  ],
+  "prohibited_capabilities": [
+    "training",
+    "provider_authority",
+    "autonomous_browsing",
+    "tool_execution",
+    "scheduler",
+    "memory_mutation",
+    "knowledge_mutation",
+    "hyb1_promotion"
+  ],
+  "purpose": "Deepen Knowledge Graph Traversal within Knowledge Substrate Deepening without activating authority.",
+  "recommendation": "REVIEW_DEEPENED_MODULE_BEFORE_ACTIVATION",
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "runtime_safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    },
+    "scheduler_started": false,
+    "secret_printed": false,
+    "tool_execution_performed": false,
+    "training_performed": false
+  },
+  "status": "implemented_module_simulated_only",
+  "summary": {
+    "activation": "gated_future_capability",
+    "authority": "advisory_only",
+    "batch": "C",
+    "batch_title": "Knowledge Substrate Deepening",
+    "module_id": "deepening-c-knowledge_graph_traversal",
+    "object_count": 5,
+    "status": "implemented_module_simulated_only",
+    "title": "Knowledge Graph Traversal"
+  },
+  "title": "Knowledge Graph Traversal",
+  "validation": {
+    "execution_performed": false,
+    "graph_export_available": true,
+    "json_export_available": true,
+    "mutation_performed": false,
+    "object_count": 5,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "valid": true
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "audit": {
+    "audit_id": "post-arc-xxv-0f2d4edca8f03073",
+    "authority": "advisory_only",
+    "module_id": "deepening-d-executive_audit",
+    "review_state": "review_required",
+    "safety_verified": true,
+    "status": "implemented_module_simulated_only"
+  },
+  "batch": "D",
+  "batch_label": "Batch D",
+  "batch_title": "Executive Deepening",
+  "capability_state": "gated_future_capability",
+  "demo": {
+    "demo_id": "post-arc-xxv-2fb61b68142bad82",
+    "live_behavior_activated": false,
+    "prompt": "Demonstrate Executive Audit.",
+    "simulated_only": true,
+    "steps": [
+      "state_model",
+      "validation_contract",
+      "audit_surface",
+      "summary_surface",
+      "demo_surface"
+    ]
+  },
+  "graph_export_metadata": {
+    "edges": [
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-5fff9958c613d801",
+        "target": "post-arc-xxv-4e3d6adb2eb1975d"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-4e3d6adb2eb1975d",
+        "target": "post-arc-xxv-dedd598e6366f097"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-dedd598e6366f097",
+        "target": "post-arc-xxv-86f4b4352621c921"
+      },
+      {
+        "relation": "feeds_review",
+        "source": "post-arc-xxv-86f4b4352621c921",
+        "target": "post-arc-xxv-45acc84a75fd06fb"
+      }
+    ],
+    "graph_id": "post-arc-xxv-27670ff50c53491a",
+    "nodes": [
+      {
+        "id": "post-arc-xxv-5fff9958c613d801",
+        "label": "state_model",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-4e3d6adb2eb1975d",
+        "label": "validation_contract",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-dedd598e6366f097",
+        "label": "audit_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-86f4b4352621c921",
+        "label": "summary_surface",
+        "type": "deepening_object"
+      },
+      {
+        "id": "post-arc-xxv-45acc84a75fd06fb",
+        "label": "demo_surface",
+        "type": "deepening_object"
+      }
+    ],
+    "serialized_only": true,
+    "visualization_hints": {
+      "authority": "none",
+      "layout": "left_to_right",
+      "style": "review_only"
+    }
+  },
+  "module_id": "deepening-d-executive_audit",
+  "module_slug": "executive_audit",
+  "objects": [
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "state_model",
+      "object_id": "post-arc-xxv-5fff9958c613d801",
+      "provider_call_performed": false,
+      "purpose": "Executive Audit state model",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "validation_contract",
+      "object_id": "post-arc-xxv-4e3d6adb2eb1975d",
+      "provider_call_performed": false,
+      "purpose": "Executive Audit validation contract",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "audit_surface",
+      "object_id": "post-arc-xxv-dedd598e6366f097",
+      "provider_call_performed": false,
+      "purpose": "Executive Audit audit surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "summary_surface",
+      "object_id": "post-arc-xxv-86f4b4352621c921",
+      "provider_call_performed": false,
+      "purpose": "Executive Audit summary surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "demo_surface",
+      "object_id": "post-arc-xxv-45acc84a75fd06fb",
+      "provider_call_performed": false,
+      "purpose": "Executive Audit demo surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    }
+  ],
+  "prohibited_capabilities": [
+    "training",
+    "provider_authority",
+    "autonomous_browsing",
+    "tool_execution",
+    "scheduler",
+    "memory_mutation",
+    "knowledge_mutation",
+    "hyb1_promotion"
+  ],
+  "purpose": "Deepen Executive Audit within Executive Deepening without activating authority.",
+  "recommendation": "REVIEW_DEEPENED_MODULE_BEFORE_ACTIVATION",
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "runtime_safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    },
+    "scheduler_started": false,
+    "secret_printed": false,
+    "tool_execution_performed": false,
+    "training_performed": false
+  },
+  "status": "implemented_module_simulated_only",
+  "summary": {
+    "activation": "gated_future_capability",
+    "authority": "advisory_only",
+    "batch": "D",
+    "batch_title": "Executive Deepening",
+    "module_id": "deepening-d-executive_audit",
+    "object_count": 5,
+    "status": "implemented_module_simulated_only",
+    "title": "Executive Audit"
+  },
+  "title": "Executive Audit",
+  "validation": {
+    "execution_performed": false,
+    "graph_export_available": true,
+    "json_export_available": true,
+    "mutation_performed": false,
+    "object_count": 5,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "valid": true
+  }
+}
