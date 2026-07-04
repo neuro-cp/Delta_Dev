@@ -1,12 +1,13 @@
 # Runtime Pathology Unused Object
 
 ## Class Total
-1508
+1518
 
 ## Likely Unused Class Count
-79
+80
 
 ## Likely Unused Classes
+- orchestration.runtime.e2e_semantic_consolidation_cycle
 - orchestration.runtime.v15_canonical_memory_write_trial
 - orchestration.runtime.v15_canonical_memory_write_trial
 - orchestration.runtime.v15_canonical_memory_write_trial

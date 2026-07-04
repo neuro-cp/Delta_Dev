@@ -4839,6 +4839,7 @@
   ],
   "isolated_modules": [
     "orchestration.runtime.cognitive_runtime",
+    "orchestration.runtime.e2e_semantic_consolidation_cycle",
     "orchestration.runtime.post_arc_xxv_exhaustive_runner",
     "orchestration.runtime.v14_architecture_decisions",
     "orchestration.runtime.v14_gap_map",
@@ -4927,7 +4928,7 @@
     "orchestration.runtime.v32_cognitive_kernel",
     "orchestration.runtime.v34_cognitive_state"
   ],
-  "node_count": 612,
+  "node_count": 613,
   "root_modules": [
     "orchestration.runtime.arc_09_external_evidence",
     "orchestration.runtime.arc_10_tool_provider_runtime",

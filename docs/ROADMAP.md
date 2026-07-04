@@ -809,6 +809,29 @@ Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## Runtime E2E Semantic Consolidation Cycle
+
+DELTA now has a deterministic closed-loop harness that exercises one complete
+cognitive lifecycle under laboratory conditions:
+
+Experience -> semantic record -> replay -> consolidation candidate -> gated
+simulated consolidation -> retrieval -> grounded answer with uncertainty.
+
+This is the reference pattern for future vertical integration work. The next
+roadmap item remains vertical integration pathology reduction, using the E2E
+harness to connect existing subsystems before adding more architecture.
+
+Recommended next slice:
+
+1. Route the E2E cycle through a kernel transaction envelope in report-only
+   mode.
+2. Replace the fixture-only semantic conversion with a read-only adapter over
+   existing local artifacts.
+3. Keep consolidation simulated until approval, rollback, and audit contracts
+   are proven across a richer vertical workflow.
+4. Do not activate real training, provider authority, live memory mutation, or
+   canonical writes.
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

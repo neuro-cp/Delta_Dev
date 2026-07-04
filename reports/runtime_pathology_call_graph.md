@@ -4,7 +4,7 @@
 2369
 
 ## Ambiguous Call Count
-4887
+4888
 
 ## Edges
 - {'source': 'orchestration.runtime.arc_07_investigation', 'target': 'orchestration.runtime.arc_ii_knowledge_substrate', 'call': 'all'}

@@ -1,5 +1,5 @@
 {
-  "ambiguous_call_count": 4887,
+  "ambiguous_call_count": 4888,
   "ambiguous_calls_sample": [
     {
       "call": "arc_safety_invariants",

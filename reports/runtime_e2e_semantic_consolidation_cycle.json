@@ -1,0 +1,356 @@
+{
+  "audit": {
+    "consolidated_record_ids": [
+      "knowledge-34873b2b78d7",
+      "knowledge-ea5d94e60b7e",
+      "knowledge-ce0fb4c59595",
+      "knowledge-ce326ac2adfa"
+    ],
+    "consolidation_candidate_ids": [
+      "candidate-8d4ec0087b29",
+      "candidate-f67e998e0a35",
+      "candidate-f080fd7cc76e",
+      "candidate-f47032615970"
+    ],
+    "cycle_id": "cycle-fb75fb8d132f",
+    "experience_count": 8,
+    "final_recommendation": "PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION",
+    "inquiry_id": "inquiry-e53f4167f0f7",
+    "replay_batch_id": "replay-batch-961879f1adb0",
+    "retrieved_evidence_ids": [
+      "evidence-72d9b7799d65",
+      "evidence-de4b72cc9dc3",
+      "evidence-7c2db533effa",
+      "evidence-be4479c87e32"
+    ],
+    "safety_flags": {
+      "approval_required": true,
+      "autonomous_learning_performed": false,
+      "canonical_memory_mutated": false,
+      "fine_tuning_performed": false,
+      "hyb1": "dormant_env_gated",
+      "live_knowledge_mutated": false,
+      "model_b_default": "unchanged",
+      "model_training_performed": false,
+      "provider_call_performed": false,
+      "rollback_available": true,
+      "substrate_write_simulated": true,
+      "weight_update_performed": false
+    },
+    "semantic_count": 8
+  },
+  "consolidation_candidates": [
+    {
+      "candidate_id": "candidate-8d4ec0087b29",
+      "provenance": [
+        "experience-b18fbf44950e",
+        "experience-7d1fc5d77f09"
+      ],
+      "semantic_ids": [
+        "semantic-b18fbf44950e",
+        "semantic-7d1fc5d77f09"
+      ],
+      "synthesized_claim": "Atlas routing depends on Module A and Registry B."
+    },
+    {
+      "candidate_id": "candidate-f67e998e0a35",
+      "provenance": [
+        "experience-22c2d6bead88",
+        "experience-3ac2c4120bc7"
+      ],
+      "semantic_ids": [
+        "semantic-22c2d6bead88",
+        "semantic-3ac2c4120bc7"
+      ],
+      "synthesized_claim": "Atlas likely failed because Registry B rejected entries missing provenance."
+    },
+    {
+      "candidate_id": "candidate-f080fd7cc76e",
+      "provenance": [
+        "experience-cb0d992b4185"
+      ],
+      "semantic_ids": [
+        "semantic-cb0d992b4185"
+      ],
+      "synthesized_claim": "Adding provenance restored successful routing."
+    },
+    {
+      "candidate_id": "candidate-f47032615970",
+      "provenance": [
+        "experience-551b82de793b",
+        "experience-3ba1d1eb60e8",
+        "experience-8d918a62dcd7"
+      ],
+      "semantic_ids": [
+        "semantic-551b82de793b",
+        "semantic-3ba1d1eb60e8",
+        "semantic-8d918a62dcd7"
+      ],
+      "synthesized_claim": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run."
+    }
+  ],
+  "experiences": [
+    {
+      "content": "Project Atlas uses Module A for routing.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-b18fbf44950e",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Module A depends on Registry B.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-7d1fc5d77f09",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Registry B rejects entries without provenance.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-22c2d6bead88",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Atlas failed when provenance was missing.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-3ac2c4120bc7",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Adding provenance restored successful routing.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-cb0d992b4185",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Registry B is not responsible for execution.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-551b82de793b",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Execution is handled by Worker C.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-3ba1d1eb60e8",
+      "source": "synthetic_fixture"
+    },
+    {
+      "content": "Worker C was not tested in the failed run.",
+      "persisted_to_live_memory": false,
+      "record_id": "experience-8d918a62dcd7",
+      "source": "synthetic_fixture"
+    }
+  ],
+  "grounded_answer": {
+    "answer": "Given the simulated semantic/consolidated records available, Atlas likely failed because Registry B rejected entries missing provenance. Adding provenance restored successful routing. What remains uncertain is execution through Worker C, because Worker C was not tested in the failed run. This answer is synthesized only from the harness records; no model-weight training, provider call, or live memory write was performed.",
+    "answer_id": "answer-49213dcaec54",
+    "inquiry_id": "inquiry-e53f4167f0f7",
+    "known_claims": [
+      "Atlas likely failed because Registry B rejected entries missing provenance.",
+      "Adding provenance restored successful routing."
+    ],
+    "supporting_evidence_ids": [
+      "evidence-72d9b7799d65",
+      "evidence-de4b72cc9dc3",
+      "evidence-7c2db533effa",
+      "evidence-be4479c87e32"
+    ],
+    "uncertainty": [
+      "Execution through Worker C remains uncertain because Worker C was not tested in the failed run.",
+      "The available records do not prove whether Worker C would succeed after routing was restored."
+    ],
+    "unsupported_claims_refused": [
+      "Atlas failed because Worker C executed incorrectly.",
+      "Registry B performed execution."
+    ]
+  },
+  "inquiry": {
+    "inquiry_id": "inquiry-e53f4167f0f7",
+    "question": "Why did Project Atlas fail, what fixed it, and what remains uncertain?"
+  },
+  "phase": "Runtime E2E Semantic Consolidation Cycle",
+  "replay_batch": {
+    "batch_id": "replay-batch-961879f1adb0",
+    "purpose": "closed_loop_semantic_consolidation_fixture",
+    "semantic_ids": [
+      "semantic-b18fbf44950e",
+      "semantic-7d1fc5d77f09",
+      "semantic-22c2d6bead88",
+      "semantic-3ac2c4120bc7",
+      "semantic-cb0d992b4185",
+      "semantic-551b82de793b",
+      "semantic-3ba1d1eb60e8",
+      "semantic-8d918a62dcd7"
+    ]
+  },
+  "retrieved_evidence": [
+    {
+      "claim": "Atlas routing depends on Module A and Registry B.",
+      "evidence_id": "evidence-72d9b7799d65",
+      "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+      "semantic_id": "knowledge-34873b2b78d7"
+    },
+    {
+      "claim": "Atlas likely failed because Registry B rejected entries missing provenance.",
+      "evidence_id": "evidence-de4b72cc9dc3",
+      "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+      "semantic_id": "knowledge-ea5d94e60b7e"
+    },
+    {
+      "claim": "Adding provenance restored successful routing.",
+      "evidence_id": "evidence-7c2db533effa",
+      "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+      "semantic_id": "knowledge-ce0fb4c59595"
+    },
+    {
+      "claim": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run.",
+      "evidence_id": "evidence-be4479c87e32",
+      "relevance_reason": "matches_atlas_failure_fix_or_uncertainty_intent",
+      "semantic_id": "knowledge-ce326ac2adfa"
+    }
+  ],
+  "semantic_records": [
+    {
+      "experience_id": "experience-b18fbf44950e",
+      "proposition": "Project Atlas uses Module A for routing.",
+      "provenance": [
+        "experience-b18fbf44950e"
+      ],
+      "semantic_id": "semantic-b18fbf44950e",
+      "subjects": [
+        "project_atlas",
+        "module_a",
+        "routing"
+      ]
+    },
+    {
+      "experience_id": "experience-7d1fc5d77f09",
+      "proposition": "Module A depends on Registry B.",
+      "provenance": [
+        "experience-7d1fc5d77f09"
+      ],
+      "semantic_id": "semantic-7d1fc5d77f09",
+      "subjects": [
+        "module_a",
+        "registry_b"
+      ]
+    },
+    {
+      "experience_id": "experience-22c2d6bead88",
+      "proposition": "Registry B rejects entries without provenance.",
+      "provenance": [
+        "experience-22c2d6bead88"
+      ],
+      "semantic_id": "semantic-22c2d6bead88",
+      "subjects": [
+        "registry_b",
+        "provenance",
+        "rejection"
+      ]
+    },
+    {
+      "experience_id": "experience-3ac2c4120bc7",
+      "proposition": "Atlas failed when provenance was missing.",
+      "provenance": [
+        "experience-3ac2c4120bc7"
+      ],
+      "semantic_id": "semantic-3ac2c4120bc7",
+      "subjects": [
+        "project_atlas",
+        "provenance",
+        "failure"
+      ]
+    },
+    {
+      "experience_id": "experience-cb0d992b4185",
+      "proposition": "Adding provenance restored successful routing.",
+      "provenance": [
+        "experience-cb0d992b4185"
+      ],
+      "semantic_id": "semantic-cb0d992b4185",
+      "subjects": [
+        "provenance",
+        "routing",
+        "restoration"
+      ]
+    },
+    {
+      "experience_id": "experience-551b82de793b",
+      "proposition": "Registry B is not responsible for execution.",
+      "provenance": [
+        "experience-551b82de793b"
+      ],
+      "semantic_id": "semantic-551b82de793b",
+      "subjects": [
+        "registry_b",
+        "execution",
+        "responsibility"
+      ]
+    },
+    {
+      "experience_id": "experience-3ba1d1eb60e8",
+      "proposition": "Execution is handled by Worker C.",
+      "provenance": [
+        "experience-3ba1d1eb60e8"
+      ],
+      "semantic_id": "semantic-3ba1d1eb60e8",
+      "subjects": [
+        "execution",
+        "worker_c"
+      ]
+    },
+    {
+      "experience_id": "experience-8d918a62dcd7",
+      "proposition": "Worker C was not tested in the failed run.",
+      "provenance": [
+        "experience-8d918a62dcd7"
+      ],
+      "semantic_id": "semantic-8d918a62dcd7",
+      "subjects": [
+        "worker_c",
+        "failed_run",
+        "uncertainty"
+      ]
+    }
+  ],
+  "simulated_consolidated_knowledge": [
+    {
+      "candidate_id": "candidate-8d4ec0087b29",
+      "claim": "Atlas routing depends on Module A and Registry B.",
+      "knowledge_id": "knowledge-34873b2b78d7",
+      "simulated_only": true,
+      "supporting_semantic_ids": [
+        "semantic-b18fbf44950e",
+        "semantic-7d1fc5d77f09"
+      ]
+    },
+    {
+      "candidate_id": "candidate-f67e998e0a35",
+      "claim": "Atlas likely failed because Registry B rejected entries missing provenance.",
+      "knowledge_id": "knowledge-ea5d94e60b7e",
+      "simulated_only": true,
+      "supporting_semantic_ids": [
+        "semantic-22c2d6bead88",
+        "semantic-3ac2c4120bc7"
+      ]
+    },
+    {
+      "candidate_id": "candidate-f080fd7cc76e",
+      "claim": "Adding provenance restored successful routing.",
+      "knowledge_id": "knowledge-ce0fb4c59595",
+      "simulated_only": true,
+      "supporting_semantic_ids": [
+        "semantic-cb0d992b4185"
+      ]
+    },
+    {
+      "candidate_id": "candidate-f47032615970",
+      "claim": "Execution through Worker C remains uncertain because Worker C was not tested in the failed run.",
+      "knowledge_id": "knowledge-ce326ac2adfa",
+      "simulated_only": true,
+      "supporting_semantic_ids": [
+        "semantic-551b82de793b",
+        "semantic-3ba1d1eb60e8",
+        "semantic-8d918a62dcd7"
+      ]
+    }
+  ]
+}

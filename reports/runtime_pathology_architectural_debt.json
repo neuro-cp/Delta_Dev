@@ -195,11 +195,11 @@
     },
     {
       "category": "maintainability",
-      "evidence": "orchestration/runtime/v14_gap_map.py has 446 lines.",
+      "evidence": "orchestration/runtime/e2e_semantic_consolidation_cycle.py has 496 lines.",
       "id": "DEBT-025",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
-      "title": "Large module requires role review: orchestration.runtime.v14_gap_map"
+      "title": "Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle"
     }
   ]
 }

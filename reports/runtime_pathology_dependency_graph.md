@@ -1,7 +1,7 @@
 # Runtime Pathology Dependency Graph
 
 ## Node Count
-612
+613
 
 ## Edge Count
 967
@@ -110,6 +110,7 @@
 
 ## Isolated Modules
 - orchestration.runtime.cognitive_runtime
+- orchestration.runtime.e2e_semantic_consolidation_cycle
 - orchestration.runtime.post_arc_xxv_exhaustive_runner
 - orchestration.runtime.v14_architecture_decisions
 - orchestration.runtime.v14_gap_map

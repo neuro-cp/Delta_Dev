@@ -28,4 +28,4 @@
 - Large module requires role review: orchestration.runtime.v14_active_specialist_routing
 - Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner
 - Large module requires role review: orchestration.runtime.v14_action_ledger
-- Large module requires role review: orchestration.runtime.v14_gap_map
+- Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle

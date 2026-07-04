@@ -4,7 +4,7 @@
 DELTA Runtime Pathology Exploration Marathon
 
 ## Runtime Module Count
-612
+613
 
 ## Dependency Edge Count
 967
@@ -22,10 +22,10 @@ DELTA Runtime Pathology Exploration Marathon
 353
 
 ## Disconnected System Count
-32
+33
 
 ## Unused System Count
-79
+80
 
 ## Subsystem Scores
 ```json
@@ -178,6 +178,7 @@ DELTA Runtime Pathology Exploration Marathon
 - Replace module-count progress metrics with vertical scenario scorecards
 - Add missing middleware: Reasoning -> Specialists
 - Large module requires role review: orchestration.runtime.arc_vii_xxv_scaffolds
+- Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle
 - Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner
 - Large module requires role review: orchestration.runtime.runtime_evaluation
 - Large module requires role review: orchestration.runtime.runtime_reasoning
@@ -187,7 +188,6 @@ DELTA Runtime Pathology Exploration Marathon
 - Large module requires role review: orchestration.runtime.v14_controlled_learning
 - Large module requires role review: orchestration.runtime.v14_dry_run_action_execution
 - Large module requires role review: orchestration.runtime.v14_execution_authorization
-- Large module requires role review: orchestration.runtime.v14_gap_map
 - Large module requires role review: orchestration.runtime.v14_hypothesis_arbitration
 - Large module requires role review: orchestration.runtime.v14_offline_evaluation
 - Large module requires role review: orchestration.runtime.v14_promotion_rollback

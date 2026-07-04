@@ -3,7 +3,7 @@
   "call_edge_count": 2369,
   "dead_system_count": 353,
   "dependency_edge_count": 967,
-  "disconnected_system_count": 32,
+  "disconnected_system_count": 33,
   "duplicate_system_count": 38,
   "final_recommendation": "PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION",
   "overall_runtime_maturity_estimate": {
@@ -34,7 +34,7 @@
     "5. Central report and object consumer registry.",
     "6. Activation-readiness review for the smallest coherent vertical slice."
   ],
-  "runtime_module_count": 612,
+  "runtime_module_count": 613,
   "safety": {
     "autonomous_browsing_performed": false,
     "background_worker_started": false,
@@ -242,6 +242,11 @@
     {
       "category": "maintainability",
       "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner"
     },
     {
@@ -283,11 +288,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_execution_authorization"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_gap_map"
     },
     {
       "category": "maintainability",
@@ -674,5 +674,5 @@
     "Technical debt will grow if another broad module marathon happens.",
     "The next risk is incoherence from abundance, not missing vocabulary."
   ],
-  "unused_system_count": 79
+  "unused_system_count": 80
 }

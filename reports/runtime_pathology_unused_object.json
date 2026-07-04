@@ -1,7 +1,13 @@
 {
-  "class_total": 1508,
-  "likely_unused_class_count": 79,
+  "class_total": 1518,
+  "likely_unused_class_count": 80,
   "likely_unused_classes": [
+    {
+      "class": "E2ECycleAudit",
+      "module": "orchestration.runtime.e2e_semantic_consolidation_cycle",
+      "path": "orchestration/runtime/e2e_semantic_consolidation_cycle.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
     {
       "class": "CanonicalMemoryWriteCandidate",
       "module": "orchestration.runtime.v15_canonical_memory_write_trial",

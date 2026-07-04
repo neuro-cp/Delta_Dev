@@ -123,6 +123,11 @@
     {
       "category": "maintainability",
       "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner"
     },
     {
@@ -164,11 +169,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_execution_authorization"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_gap_map"
     },
     {
       "category": "maintainability",

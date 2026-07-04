@@ -719,3 +719,26 @@ contracts, and duplicate lifecycle consolidation over additional broad
 scaffold generation. A module is not architecture-complete merely because it is
 typed, tested, reportable, and safe. It must also have a clear creator,
 consumer, validator, auditor, and place in an end-to-end cognitive workflow.
+
+## Closed-Loop Semantic Consolidation Harness
+
+DELTA now includes a deterministic E2E semantic consolidation harness. Its
+purpose is to validate a whole cognitive cycle without enabling live training or
+memory mutation.
+
+The harness treats simulated consolidation as a laboratory substrate:
+
+`ExperienceRecord -> SemanticRecord -> ReplayBatch -> ConsolidationCandidate ->
+ConsolidationDecision -> SimulatedConsolidatedKnowledge -> Inquiry ->
+SemanticRetrieval -> EvidenceAssembly -> GroundedSynthesis ->
+AnswerWithUncertainty`.
+
+Architectural boundary:
+
+- Training cycle simulation is not model training.
+- Simulated substrate writes are not canonical memory writes.
+- Harness approval is not autonomous learning approval.
+- Retrieval from simulated consolidated records is not live recall mutation.
+
+This harness should be used as the reference shape for future vertical
+integration passes.
