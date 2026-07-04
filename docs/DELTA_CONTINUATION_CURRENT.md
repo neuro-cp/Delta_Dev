@@ -75,6 +75,20 @@ disabled.
 
 Current next recommendation: PROCEED_ARC_III_REASONING_LAYER_DESIGN
 
+Runtime ARC III is complete as a transient deterministic reasoning layer. DELTA
+can build reasoning contexts from ARC II substrate objects, construct
+session-only reasoning graphs, generate non-promoted hypotheses, build cited
+evidence chains, present contradictions without choosing silently, propagate
+confidence conservatively, rank alternative paths, inspect counterfactuals,
+deliberate under goals, generate explanation trees, run reflection, evaluate
+self-consistency, and close reasoning transactions.
+
+Reasoning remains temporary. Knowledge remains unchanged. No memory mutation,
+knowledge mutation, provider authority, training, scheduler activation, action
+execution, HYB1 promotion, hypothesis promotion, or live integration occurred.
+
+Current next recommendation: PROCEED_ARC_IV_DELIBERATIVE_RESPONSE_SYNTHESIS_DESIGN
+
 Runtime V3.0 is complete. It adds presentation-only natural interaction and
 explainability over the V2.9 local answer path: conversational answer modes,
 pipeline explanations, a static guided review console, manual demo scenarios,

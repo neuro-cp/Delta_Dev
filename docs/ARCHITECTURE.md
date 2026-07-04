@@ -575,3 +575,16 @@ does not perform reasoning over those results.
 ARC II performs no live persistence, no canonical memory mutation, no recall
 mutation, no provider authority, no training, no action execution, no scheduler
 activation, and no live knowledge integration.
+
+## Runtime ARC III Reasoning Layer
+
+Runtime ARC III introduces deterministic, transient reasoning over the ARC II
+Knowledge Substrate. It builds reasoning contexts, session-only reasoning
+graphs, hypotheses, evidence chains, contradiction presentations, confidence
+propagation, alternative paths, counterfactual branches, goal-constrained
+deliberation, explanation trees, reflection passes, self-consistency checks, and
+reasoning transactions.
+
+Reasoning is temporary. Knowledge is durable. Hypotheses are not facts. ARC III
+never mutates the substrate, promotes hypotheses, writes memory, calls
+providers, starts schedulers, trains models, or executes actions.

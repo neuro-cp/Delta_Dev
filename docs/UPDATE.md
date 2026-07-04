@@ -3658,6 +3658,56 @@ Next recommendation:
 
 `PROCEED_ARC_III_REASONING_LAYER_DESIGN`
 
+## Runtime ARC III Reasoning Engine And Deliberative Cognition
+
+Runtime ARC III completed the first transient deterministic reasoning layer over
+the ARC II Knowledge Substrate.
+
+Generated artifacts:
+
+- `reports/runtime_arc_iii_safety_checkpoint.md`
+- `reports/runtime_arc_iii_safety_checkpoint.json`
+- `ui/delta_arc_iii_reasoning_trace_explorer.html`
+- `docs/runtime_arc_iii_reasoning_architecture.md`
+- `docs/runtime_arc_iii_reasoning_graph.md`
+- `docs/runtime_arc_iii_hypothesis_engine.md`
+- `docs/runtime_arc_iii_confidence_engine.md`
+- `docs/runtime_arc_iii_reflection_layer.md`
+- `docs/runtime_arc_iii_counterfactual_layer.md`
+- `docs/runtime_arc_iii_explanation_layer.md`
+- `docs/runtime_arc_iv_deliberative_response_preview.md`
+- `docs/continuation_runtime_arc_iii.md`
+
+Reasoning components:
+
+- reasoning context builder
+- session-only reasoning graph
+- hypothesis engine
+- evidence chain builder
+- contradiction presentation framework
+- confidence propagation
+- alternative reasoning paths
+- counterfactual inspection
+- goal-constrained deliberation
+- explanation tree
+- reasoning trace explorer
+- reflection pass
+- self-consistency evaluation
+- reasoning transaction
+
+Safety state remains unchanged:
+
+- Model B remains default.
+- HYB1 remains dormant/env-gated and shadow-only.
+- No training, fine-tuning, model update, provider authority, provider calls,
+  memory mutation, knowledge mutation, authoritative recall, scheduler
+  activation, action execution, autonomous learning, hypothesis promotion, or
+  live knowledge integration occurred.
+
+Next recommendation:
+
+`PROCEED_ARC_IV_DELIBERATIVE_RESPONSE_SYNTHESIS_DESIGN`
+
 ## Runtime V3.0 Natural Interaction, Explainability, And Guided Review UX
 
 Runtime V3.0 completed a presentation and observability pass over the V2.9 local

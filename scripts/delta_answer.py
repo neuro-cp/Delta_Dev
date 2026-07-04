@@ -18,6 +18,7 @@ from orchestration.runtime.v30_pipeline_explainer import build_pipeline_explanat
 from orchestration.runtime.v31_local_learning_answer import is_v31_learning_question, run_v31_learning_answer
 from orchestration.runtime.v39_local_kernel_answer import is_kernel_question, run_kernel_answer
 from orchestration.runtime.arc_ii_local_answer import is_arc_ii_question, run_arc_ii_answer
+from orchestration.runtime.arc_iii_local_answer import is_arc_iii_question, run_arc_iii_answer
 
 
 def main() -> int:
@@ -32,6 +33,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_arc_iii_question(query):
+        data = run_arc_iii_answer(query)
     elif is_arc_ii_question(query):
         data = run_arc_ii_answer(query)
     elif is_kernel_question(query):
@@ -44,6 +47,8 @@ def main() -> int:
         data = run_v29_local_answer(query, use_recall=args.use_recall)
     if args.json or args.show_provenance or args.output_report:
         print(json.dumps(data, indent=2))
+    elif data.get("phase") == "Runtime ARC III":
+        print(data["answer_text"])
     elif data.get("phase") == "Runtime ARC II":
         print(data["answer_text"])
     elif data.get("phase") == "Runtime ARC I V3.9":

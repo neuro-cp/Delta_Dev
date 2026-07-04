@@ -914,6 +914,37 @@ Recommended next phase:
 
 `PROCEED_ARC_III_REASONING_LAYER_DESIGN`
 
+## Runtime ARC III Reasoning Engine And Deliberative Cognition Update
+
+Runtime ARC III adds transient deterministic reasoning over the ARC II Knowledge
+Substrate.
+
+Completed:
+
+- V5.0 Reasoning Context Builder
+- V5.1 Reasoning Graph
+- V5.2 Hypothesis Engine
+- V5.3 Evidence Chain Builder
+- V5.4 Contradiction Resolution Framework
+- V5.5 Confidence Propagation
+- V5.6 Alternative Reasoning Paths
+- V5.7 Counterfactual Engine
+- V5.8 Goal-Constrained Deliberation
+- V5.9 Explanation Tree
+- V5.10 Reasoning Trace Explorer
+- V5.11 Reflection Pass
+- V5.12 Self-Consistency Evaluation
+- V5.13 Reasoning Transaction
+- V5.14 ARC III Manual Demo hooks
+- V5.15 ARC III Safety Checkpoint
+
+ARC III remains transient and non-mutating. Hypotheses are not facts; reasoning
+graphs are session-only and destroyed after request completion.
+
+Recommended next phase:
+
+`PROCEED_ARC_IV_DELIBERATIVE_RESPONSE_SYNTHESIS_DESIGN`
+
 ## Runtime V3.0 Natural Interaction And Guided Review UX Update
 
 Runtime V3.0 improves the local interaction surface without adding cognition or

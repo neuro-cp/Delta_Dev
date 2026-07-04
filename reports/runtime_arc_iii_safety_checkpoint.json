@@ -1,0 +1,652 @@
+{
+  "final_recommendation": "PROCEED_ARC_IV_DELIBERATIVE_RESPONSE_SYNTHESIS_DESIGN",
+  "hyb1": "dormant_env_gated",
+  "knowledge_durable": true,
+  "model_b_default": "unchanged",
+  "phase": "Runtime ARC III V5.15",
+  "reasoning": {
+    "action_execution_performed": false,
+    "alternative_paths": [
+      {
+        "confidence": 0.64,
+        "coverage": 0.7,
+        "hypothesis_id": "hypothesis-db58217b18a09dd0",
+        "path_id": "reasoning-path-8eff74cf32a715e1",
+        "risk": 0.36,
+        "support": 1
+      },
+      {
+        "confidence": 0.512,
+        "coverage": 0.8,
+        "hypothesis_id": "hypothesis-3e0a31d68bcea049",
+        "path_id": "reasoning-path-d2b4a4562e26c35a",
+        "risk": 0.488,
+        "support": 1
+      }
+    ],
+    "contradiction_framework": {
+      "conflicting_evidence": [],
+      "conflicts_found": 0,
+      "presentation_rule": "present_all_sides_never_silently_choose",
+      "resolved": false
+    },
+    "counterfactual": {
+      "affected_context": "reasoning-context-5f92216504dd6dba",
+      "effect": "confidence would drop and additional evidence would be required",
+      "mutation_performed": false,
+      "question": "What if 'The substrate supports a cautious explanation when evidence, observation, relationship, and concept nodes align.' were false?"
+    },
+    "derived_confidence": 0.64,
+    "evidence_chain": {
+      "chain_id": "evidence-chain-5e5bd028d9c5bedc",
+      "every_edge_cited": true,
+      "question": "Why is this true?",
+      "steps": [
+        {
+          "citation": "request",
+          "label": "Why is this true?",
+          "type": "Question"
+        },
+        {
+          "citation": "knowledge-object-967f3c276cb6b05d",
+          "label": "Observation is not truth",
+          "type": "Observation"
+        },
+        {
+          "citation": "knowledge-object-6207c2419fb4e7f6",
+          "label": "ARC II prompt requires provenance and rollback support",
+          "type": "Evidence"
+        },
+        {
+          "citation": "knowledge-object-501535dba40d94e1",
+          "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+          "type": "Relationship"
+        },
+        {
+          "citation": "knowledge-object-4703943e4000ae77",
+          "label": "Knowledge Substrate",
+          "type": "Concept"
+        },
+        {
+          "citation": "hypothesis-db58217b18a09dd0",
+          "label": "The substrate supports a cautious explanation when evidence, observation, relationship, and concept nodes align.",
+          "type": "Hypothesis"
+        }
+      ]
+    },
+    "explanation_tree": {
+      "because": [
+        {
+          "citation": "request",
+          "label": "Why is this true?",
+          "step": "Question"
+        },
+        {
+          "citation": "knowledge-object-967f3c276cb6b05d",
+          "label": "Observation is not truth",
+          "step": "Observation"
+        },
+        {
+          "citation": "knowledge-object-6207c2419fb4e7f6",
+          "label": "ARC II prompt requires provenance and rollback support",
+          "step": "Evidence"
+        },
+        {
+          "citation": "knowledge-object-501535dba40d94e1",
+          "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+          "step": "Relationship"
+        },
+        {
+          "citation": "knowledge-object-4703943e4000ae77",
+          "label": "Knowledge Substrate",
+          "step": "Concept"
+        },
+        {
+          "citation": "hypothesis-db58217b18a09dd0",
+          "label": "The substrate supports a cautious explanation when evidence, observation, relationship, and concept nodes align.",
+          "step": "Hypothesis"
+        }
+      ],
+      "confidence": 0.64,
+      "question": "Why is this true?",
+      "selected_explanation": "The substrate supports a cautious explanation when evidence, observation, relationship, and concept nodes align."
+    },
+    "goal_deliberation": {
+      "goals": [
+        "accuracy",
+        "minimal_assumptions",
+        "evidence_coverage",
+        "risk"
+      ],
+      "selected_path": {
+        "confidence": 0.64,
+        "coverage": 0.7,
+        "hypothesis_id": "hypothesis-db58217b18a09dd0",
+        "path_id": "reasoning-path-8eff74cf32a715e1",
+        "risk": 0.36,
+        "support": 1
+      },
+      "selection_rule": "highest confidence and coverage with lowest risk"
+    },
+    "hypotheses": [
+      {
+        "alternative_interpretations": [
+          "The evidence may be advisory rather than conclusive.",
+          "The concept may require more reviewed observations."
+        ],
+        "confidence": 0.64,
+        "explanation": "The substrate supports a cautious explanation when evidence, observation, relationship, and concept nodes align.",
+        "hypothesis_id": "hypothesis-db58217b18a09dd0",
+        "missing_information": [
+          "independent validation",
+          "contradiction review"
+        ],
+        "promoted": false,
+        "supporting_observations": [
+          "knowledge-object-967f3c276cb6b05d"
+        ]
+      },
+      {
+        "alternative_interpretations": [
+          "The observation may be incomplete."
+        ],
+        "confidence": 0.512,
+        "explanation": "A weaker interpretation is possible if the advisory evidence does not fully support the concept.",
+        "hypothesis_id": "hypothesis-3e0a31d68bcea049",
+        "missing_information": [
+          "additional evidence"
+        ],
+        "promoted": false,
+        "supporting_observations": [
+          "knowledge-object-967f3c276cb6b05d"
+        ]
+      }
+    ],
+    "hypotheses_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "phase": "Runtime ARC III",
+    "provider_call_performed": false,
+    "question": "Why is this true?",
+    "reasoning_context": {
+      "concepts": [
+        {
+          "audit_id": "knowledge-audit-a57f3cb3e27ebbf8",
+          "confidence": 0.74,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-4703943e4000ae77",
+          "label": "Knowledge Substrate",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-a57f3cb3e27ebbf8",
+          "supersedes": "",
+          "type": "Concept",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-0de26988ce0200b1",
+          "confidence": 0.68,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-dc1138a190b56d59",
+          "label": "Evidence remains advisory until reviewed",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-0de26988ce0200b1",
+          "supersedes": "",
+          "type": "Claim",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-5e10b978beedf3a6",
+          "confidence": 0.55,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-fb00836dd5f00dfe",
+          "label": "Kernel-routed semantic queries can inspect substrate objects",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-4703943e4000ae77"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-5e10b978beedf3a6",
+          "supersedes": "",
+          "type": "Hypothesis",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-8d9301be3f398b9f",
+          "confidence": 0.95,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-3ce7e31a514bfdb1",
+          "label": "No live knowledge integration in ARC II",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-8d9301be3f398b9f",
+          "supersedes": "",
+          "type": "Rule",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        }
+      ],
+      "context_id": "reasoning-context-5f92216504dd6dba",
+      "entities": [
+        {
+          "audit_id": "knowledge-audit-f6c7cbb3d37d83ba",
+          "confidence": 0.86,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-f897279168a6f148",
+          "label": "DELTA",
+          "parent": "",
+          "payload": {
+            "entity_kind": "system"
+          },
+          "provenance": [
+            "knowledge-object-e021ff08c20d6dff"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-f6c7cbb3d37d83ba",
+          "supersedes": "",
+          "type": "Entity",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        }
+      ],
+      "evidence": [
+        {
+          "audit_id": "knowledge-audit-5a33077df1a92236",
+          "confidence": 0.82,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-6207c2419fb4e7f6",
+          "label": "ARC II prompt requires provenance and rollback support",
+          "parent": "",
+          "payload": {
+            "excerpt_reference": "knowledge substrate design",
+            "location": "ARC II preview",
+            "source": "knowledge-object-e021ff08c20d6dff"
+          },
+          "provenance": [
+            "docs/runtime_arc_ii_knowledge_substrate_preview.md"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-5a33077df1a92236",
+          "supersedes": "",
+          "type": "Evidence",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-75daf380caf68767",
+          "confidence": 0.9,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-e021ff08c20d6dff",
+          "label": "DELTA local architecture docs",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "docs/ARCHITECTURE.md"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-75daf380caf68767",
+          "supersedes": "",
+          "type": "Source",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        }
+      ],
+      "observations": [
+        {
+          "audit_id": "knowledge-audit-7a6b1d71d97b2e5e",
+          "confidence": 0.7,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-967f3c276cb6b05d",
+          "label": "Observation is not truth",
+          "parent": "",
+          "payload": {
+            "evidence": "knowledge-object-6207c2419fb4e7f6",
+            "source": "knowledge-object-e021ff08c20d6dff"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-7a6b1d71d97b2e5e",
+          "supersedes": "",
+          "type": "Observation",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        }
+      ],
+      "procedures": [
+        {
+          "audit_id": "knowledge-audit-c7861c2b550c669b",
+          "confidence": 0.66,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-db8afe8bc818b474",
+          "label": "Review knowledge object before integration",
+          "parent": "",
+          "payload": {},
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-c7861c2b550c669b",
+          "supersedes": "",
+          "type": "Procedure",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        }
+      ],
+      "question": "Why is this true?",
+      "relationships": [
+        {
+          "audit_id": "knowledge-audit-711e9c61ed8d4c7e",
+          "confidence": 0.64,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-501535dba40d94e1",
+          "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "references",
+            "source_id": "knowledge-object-f897279168a6f148",
+            "target_id": "knowledge-object-4703943e4000ae77"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-711e9c61ed8d4c7e",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-a340a243b7ebc589",
+          "confidence": 0.64,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-46dcf166aedc113e",
+          "label": "knowledge-object-967f3c276cb6b05d derived_from knowledge-object-6207c2419fb4e7f6",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "derived_from",
+            "source_id": "knowledge-object-967f3c276cb6b05d",
+            "target_id": "knowledge-object-6207c2419fb4e7f6"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-a340a243b7ebc589",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-fac33c0f4d5b7711",
+          "confidence": 0.64,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-029b5a4ade98dd92",
+          "label": "knowledge-object-dc1138a190b56d59 supports knowledge-object-6207c2419fb4e7f6",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "supports",
+            "source_id": "knowledge-object-dc1138a190b56d59",
+            "target_id": "knowledge-object-6207c2419fb4e7f6"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-fac33c0f4d5b7711",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-4df964cf68cfb67e",
+          "confidence": 0.64,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-26c3b353d1e23014",
+          "label": "knowledge-object-3ce7e31a514bfdb1 depends_on knowledge-object-db8afe8bc818b474",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "depends_on",
+            "source_id": "knowledge-object-3ce7e31a514bfdb1",
+            "target_id": "knowledge-object-db8afe8bc818b474"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-4df964cf68cfb67e",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-d80f251125db4f17",
+          "confidence": 0.64,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-92714d66a4e91367",
+          "label": "knowledge-object-fb00836dd5f00dfe part_of knowledge-object-4703943e4000ae77",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "part_of",
+            "source_id": "knowledge-object-fb00836dd5f00dfe",
+            "target_id": "knowledge-object-4703943e4000ae77"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-d80f251125db4f17",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        },
+        {
+          "audit_id": "knowledge-audit-c6b5019f164dbc6f",
+          "confidence": 0.64,
+          "created": "2026-07-04T00:02:28+00:00",
+          "history": [],
+          "id": "knowledge-object-6b7520e78080c589",
+          "label": "knowledge-object-2236ef57d110f741 references knowledge-object-e021ff08c20d6dff",
+          "parent": "",
+          "payload": {
+            "evidence_id": "knowledge-object-6207c2419fb4e7f6",
+            "relationship_type": "references",
+            "source_id": "knowledge-object-2236ef57d110f741",
+            "target_id": "knowledge-object-e021ff08c20d6dff"
+          },
+          "provenance": [
+            "knowledge-object-6207c2419fb4e7f6"
+          ],
+          "review_state": "review",
+          "rollback_token": "knowledge-rollback-c6b5019f164dbc6f",
+          "supersedes": "",
+          "type": "Relationship",
+          "updated": "2026-07-04T00:02:28+00:00",
+          "version": 1
+        }
+      ],
+      "substrate_mutated": false
+    },
+    "reasoning_graph": {
+      "destroyed_after_request": true,
+      "edges": [
+        {
+          "citation": "knowledge-object-967f3c276cb6b05d",
+          "confidence": 0.7,
+          "relation": "cites",
+          "source": "reasoning-question-5f92216504dd6dba",
+          "target": "reasoning-node-7a6b1d71d97b2e5e"
+        },
+        {
+          "citation": "knowledge-object-6207c2419fb4e7f6",
+          "confidence": 0.7,
+          "relation": "cites",
+          "source": "reasoning-node-7a6b1d71d97b2e5e",
+          "target": "reasoning-node-5a33077df1a92236"
+        },
+        {
+          "citation": "knowledge-object-501535dba40d94e1",
+          "confidence": 0.64,
+          "relation": "cites",
+          "source": "reasoning-node-5a33077df1a92236",
+          "target": "reasoning-node-711e9c61ed8d4c7e"
+        },
+        {
+          "citation": "knowledge-object-4703943e4000ae77",
+          "confidence": 0.64,
+          "relation": "cites",
+          "source": "reasoning-node-711e9c61ed8d4c7e",
+          "target": "reasoning-node-a57f3cb3e27ebbf8"
+        }
+      ],
+      "graph_id": "reasoning-graph-3b614262fbd80bc1",
+      "nodes": [
+        {
+          "confidence": 1.0,
+          "label": "Why is this true?",
+          "node_id": "reasoning-question-5f92216504dd6dba",
+          "node_type": "Question",
+          "source_object_id": ""
+        },
+        {
+          "confidence": 0.7,
+          "label": "Observation is not truth",
+          "node_id": "reasoning-node-7a6b1d71d97b2e5e",
+          "node_type": "Observation",
+          "source_object_id": "knowledge-object-967f3c276cb6b05d"
+        },
+        {
+          "confidence": 0.82,
+          "label": "ARC II prompt requires provenance and rollback support",
+          "node_id": "reasoning-node-5a33077df1a92236",
+          "node_type": "Evidence",
+          "source_object_id": "knowledge-object-6207c2419fb4e7f6"
+        },
+        {
+          "confidence": 0.64,
+          "label": "knowledge-object-f897279168a6f148 references knowledge-object-4703943e4000ae77",
+          "node_id": "reasoning-node-711e9c61ed8d4c7e",
+          "node_type": "Relationship",
+          "source_object_id": "knowledge-object-501535dba40d94e1"
+        },
+        {
+          "confidence": 0.74,
+          "label": "Knowledge Substrate",
+          "node_id": "reasoning-node-a57f3cb3e27ebbf8",
+          "node_type": "Concept",
+          "source_object_id": "knowledge-object-4703943e4000ae77"
+        }
+      ],
+      "session_only": true
+    },
+    "reasoning_transaction": {
+      "completed": true,
+      "destroyed": true,
+      "persisted": false,
+      "stages": [
+        "begin",
+        "build",
+        "reflect",
+        "validate",
+        "complete",
+        "destroy"
+      ],
+      "transaction_id": "reasoning-transaction-5f92216504dd6dba"
+    },
+    "reflection_pass": {
+      "alternative_explanations_needed": true,
+      "contradictions": [],
+      "missing_evidence": [
+        "independent validation"
+      ],
+      "weak_assumptions": [
+        "advisory evidence may not be conclusive"
+      ]
+    },
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "reasoning_graph_destroyed_after_request": true,
+  "reasoning_transient": true,
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "self_consistency": {
+    "divergence": false,
+    "first_selected": {
+      "confidence": 0.64,
+      "coverage": 0.7,
+      "hypothesis_id": "hypothesis-db58217b18a09dd0",
+      "path_id": "reasoning-path-8eff74cf32a715e1",
+      "risk": 0.36,
+      "support": 1
+    },
+    "rerun_performed": true,
+    "second_selected": {
+      "confidence": 0.64,
+      "coverage": 0.7,
+      "hypothesis_id": "hypothesis-db58217b18a09dd0",
+      "path_id": "reasoning-path-8eff74cf32a715e1",
+      "risk": 0.36,
+      "support": 1
+    }
+  }
+}
