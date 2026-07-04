@@ -89,6 +89,19 @@ execution, HYB1 promotion, hypothesis promotion, or live integration occurred.
 
 Current next recommendation: PROCEED_ARC_IV_DELIBERATIVE_RESPONSE_SYNTHESIS_DESIGN
 
+Runtime ARC IV is complete as a simulation-only knowledge evolution and
+controlled learning layer. DELTA can stage KnowledgeIntegrationCandidate
+objects, build version graphs, simulate integration, estimate impact, bundle
+conflicts, record multi-reviewer workflows, evaluate health, create controlled
+transactions, generate rollback plans, produce evolution timelines, compute
+diffs, and estimate future evaluation effects.
+
+ARC IV stops at `ready_to_integrate`. No live integration write, knowledge
+mutation, memory mutation, provider authority, training, scheduler activation,
+action execution, hidden write, or HYB1 promotion occurred.
+
+Current next recommendation: PROCEED_ARC_V_MEMORY_ACTIVATION_AND_RECALL_GOVERNANCE_DESIGN
+
 Runtime V3.0 is complete. It adds presentation-only natural interaction and
 explainability over the V2.9 local answer path: conversational answer modes,
 pipeline explanations, a static guided review console, manual demo scenarios,

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>DELTA ARC IV Evolution Console</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}</style></head>
+<body>
+<h1>DELTA ARC IV Evolution Console</h1>
+<section><h2>Candidate</h2><pre>{
+  "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+  "source_proposal_id": "learning-proposal-0c0e6795a6269be2",
+  "affected_entities": [
+    "knowledge-object-f897279168a6f148"
+  ],
+  "affected_concepts": [
+    "knowledge-object-2236ef57d110f741"
+  ],
+  "affected_relationships": [
+    "knowledge-object-029b5a4ade98dd92"
+  ],
+  "confidence_delta": 0.03,
+  "knowledge_impact": "would add reviewed candidate context if future integration were allowed",
+  "rollback_impact": "single candidate rollback would restore prior substrate graph",
+  "conflicts": [
+    "requires_overwatch_review"
+  ],
+  "write_performed": false
+}</pre></section>
+<section><h2>Simulation</h2><pre>{
+  "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+  "graph_changes": {
+    "new_candidate_node": 1,
+    "new_edges": 2
+  },
+  "confidence_changes": {
+    "delta": 0.03,
+    "bounded": true
+  },
+  "relationship_changes": {
+    "would_reference": [
+      "knowledge-object-029b5a4ade98dd92"
+    ]
+  },
+  "concept_changes": {
+    "would_affect": [
+      "knowledge-object-2236ef57d110f741"
+    ]
+  },
+  "write_performed": false
+}</pre></section>
+<section><h2>Impact</h2><pre>{
+  "affected_observations": [
+    "knowledge-object-967f3c276cb6b05d"
+  ],
+  "affected_entities": [
+    "knowledge-object-f897279168a6f148"
+  ],
+  "affected_procedures": [
+    "review_knowledge_object_before_integration"
+  ],
+  "affected_reasoning_paths": [
+    "reasoning-path-8eff74cf32a715e1",
+    "reasoning-path-d2b4a4562e26c35a"
+  ],
+  "affected_confidence": 0.03,
+  "report_only": true
+}</pre></section>
+<section><h2>Health</h2><pre>{
+  "consistency": "stable_in_simulation",
+  "coverage": {
+    "Source": 1,
+    "Evidence": 1,
+    "Entity": 1,
+    "Concept": 1,
+    "Observation": 1,
+    "Claim": 1,
+    "Hypothesis": 1,
+    "Procedure": 1,
+    "Rule": 1,
+    "Event": 1,
+    "Relationship": 6
+  },
+  "duplication": 0,
+  "fragmentation": 6,
+  "contradictions": 0,
+  "confidence_decay": "not_applied",
+  "candidate_confidence_delta": 0.03
+}</pre></section>
+<section><h2>Rollback</h2><pre>{
+  "rollback_id": "rollback-plan-fec9746d9566394d",
+  "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+  "dependency_list": [
+    "knowledge-object-f897279168a6f148",
+    "knowledge-object-2236ef57d110f741",
+    "knowledge-object-029b5a4ade98dd92"
+  ],
+  "restoration_plan": [
+    "remove_candidate_version_node",
+    "remove_candidate_edges",
+    "restore_prior_confidence_snapshot"
+  ],
+  "rollback_available": true
+}</pre></section>
+<section><h2>Approval Chain</h2><ul><li>technical_review: review</li><li>evidence_review: review</li><li>overwatch: block_until_external_or_local_review</li><li>owner: not_invoked</li></ul></section>
+<section><h2>Evolution Timeline</h2><ul><li>experience</li><li>reasoning</li><li>proposal</li><li>review</li><li>simulation</li><li>integration_candidate</li><li>rollback</li></ul></section>
+</body></html>

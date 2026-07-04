@@ -1,0 +1,277 @@
+{
+  "contradiction_workflow": {
+    "auto_resolved": false,
+    "bundle_created": true,
+    "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+    "conflicts": [
+      "requires_overwatch_review"
+    ],
+    "recommendation": "review_conflicts_never_auto_resolve",
+    "review_required": true
+  },
+  "controlled_transaction": {
+    "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+    "current_stage": "ready_to_integrate",
+    "integrated": false,
+    "ready_to_integrate": true,
+    "stages": [
+      "draft",
+      "review",
+      "approved",
+      "overwatch_allowed",
+      "owner_override",
+      "simulation_complete",
+      "ready_to_integrate"
+    ],
+    "transaction_id": "controlled-integration-transaction-fec9746d9566394d",
+    "write_performed": false
+  },
+  "evaluation_framework": {
+    "confidence": {
+      "delta": 0.03
+    },
+    "consistency": "unchanged_in_simulation",
+    "coverage_improvement": 1,
+    "evaluation_only": true,
+    "expected_regressions": [
+      "overconfidence_if_integrated_without_review"
+    ],
+    "reasoning_improvement": "possible_if_candidate_survives_review"
+  },
+  "evolution_timeline": [
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "experience"
+    },
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "reasoning"
+    },
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "proposal"
+    },
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "review"
+    },
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "simulation"
+    },
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "integration_candidate"
+    },
+    {
+      "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+      "performed_live_write": false,
+      "stage": "rollback"
+    }
+  ],
+  "final_recommendation": "PROCEED_ARC_V_MEMORY_ACTIVATION_AND_RECALL_GOVERNANCE_DESIGN",
+  "hyb1": "dormant_env_gated",
+  "impact_analysis": {
+    "affected_confidence": 0.03,
+    "affected_entities": [
+      "knowledge-object-f897279168a6f148"
+    ],
+    "affected_observations": [
+      "knowledge-object-967f3c276cb6b05d"
+    ],
+    "affected_procedures": [
+      "review_knowledge_object_before_integration"
+    ],
+    "affected_reasoning_paths": [
+      "reasoning-path-8eff74cf32a715e1",
+      "reasoning-path-d2b4a4562e26c35a"
+    ],
+    "report_only": true
+  },
+  "integration_candidate": {
+    "affected_concepts": [
+      "knowledge-object-2236ef57d110f741"
+    ],
+    "affected_entities": [
+      "knowledge-object-f897279168a6f148"
+    ],
+    "affected_relationships": [
+      "knowledge-object-029b5a4ade98dd92"
+    ],
+    "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+    "confidence_delta": 0.03,
+    "conflicts": [
+      "requires_overwatch_review"
+    ],
+    "knowledge_impact": "would add reviewed candidate context if future integration were allowed",
+    "rollback_impact": "single candidate rollback would restore prior substrate graph",
+    "source_proposal_id": "learning-proposal-0c0e6795a6269be2",
+    "write_performed": false
+  },
+  "integration_simulation": {
+    "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+    "concept_changes": {
+      "would_affect": [
+        "knowledge-object-2236ef57d110f741"
+      ]
+    },
+    "confidence_changes": {
+      "bounded": true,
+      "delta": 0.03
+    },
+    "graph_changes": {
+      "new_candidate_node": 1,
+      "new_edges": 2
+    },
+    "relationship_changes": {
+      "would_reference": [
+        "knowledge-object-029b5a4ade98dd92"
+      ]
+    },
+    "write_performed": false
+  },
+  "integration_write_performed": false,
+  "knowledge_diff": {
+    "changed_confidence": {
+      "knowledge-object-2236ef57d110f741": 0.03
+    },
+    "diff_only": true,
+    "new_concepts": [
+      "knowledge-object-2236ef57d110f741"
+    ],
+    "new_entities": [],
+    "new_relationships": [
+      "knowledge-object-029b5a4ade98dd92"
+    ],
+    "removed_relationships": []
+  },
+  "knowledge_health": {
+    "candidate_confidence_delta": 0.03,
+    "confidence_decay": "not_applied",
+    "consistency": "stable_in_simulation",
+    "contradictions": 0,
+    "coverage": {
+      "Claim": 1,
+      "Concept": 1,
+      "Entity": 1,
+      "Event": 1,
+      "Evidence": 1,
+      "Hypothesis": 1,
+      "Observation": 1,
+      "Procedure": 1,
+      "Relationship": 6,
+      "Rule": 1,
+      "Source": 1
+    },
+    "duplication": 0,
+    "fragmentation": 6
+  },
+  "live_knowledge_mutation": false,
+  "model_b_default": "unchanged",
+  "multi_reviewer_workflow": [
+    {
+      "authority": "review_only",
+      "decision": "review",
+      "rationale": "check substrate shape",
+      "reviewer_id": "reviewer-53df82ae22add15f",
+      "reviewer_role": "technical_review"
+    },
+    {
+      "authority": "review_only",
+      "decision": "review",
+      "rationale": "check provenance and support",
+      "reviewer_id": "reviewer-54a41a84b8c7e8b2",
+      "reviewer_role": "evidence_review"
+    },
+    {
+      "authority": "review_only",
+      "decision": "block_until_external_or_local_review",
+      "rationale": "safety gate",
+      "reviewer_id": "reviewer-a357c9872b57f436",
+      "reviewer_role": "overwatch"
+    },
+    {
+      "authority": "review_only",
+      "decision": "not_invoked",
+      "rationale": "override optional",
+      "reviewer_id": "reviewer-ea915828dbac6b19",
+      "reviewer_role": "owner"
+    }
+  ],
+  "phase": "Runtime ARC IV V6.15",
+  "proposal_evaluation": {
+    "eligible_for_candidate": true,
+    "integration_performed": false,
+    "proposal_id": "learning-proposal-0c0e6795a6269be2",
+    "review_status": "admin_approved"
+  },
+  "rollback_plan": {
+    "candidate_id": "knowledge-integration-candidate-51028c78dbf23ae3",
+    "dependency_list": [
+      "knowledge-object-f897279168a6f148",
+      "knowledge-object-2236ef57d110f741",
+      "knowledge-object-029b5a4ade98dd92"
+    ],
+    "restoration_plan": [
+      "remove_candidate_version_node",
+      "remove_candidate_edges",
+      "restore_prior_confidence_snapshot"
+    ],
+    "rollback_available": true,
+    "rollback_id": "rollback-plan-fec9746d9566394d"
+  },
+  "safety_invariants": {
+    "action_execution_performed": false,
+    "authoritative_recall_enabled": false,
+    "autonomous_memory_write_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_enabled_by_default": false,
+    "hyb1_promoted": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_weights_updated": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "recall_mutated": false,
+    "scheduler_started": false,
+    "secret_printed": false,
+    "training_performed": false
+  },
+  "simulation_only": true,
+  "version_graph": {
+    "edges": [
+      {
+        "child": "version-node-fec9746d9566394d",
+        "parent": "knowledge-object-2236ef57d110f741",
+        "relation": "candidate_version"
+      }
+    ],
+    "live_write_performed": false,
+    "nodes": [
+      {
+        "branch": "main",
+        "node_id": "knowledge-object-2236ef57d110f741",
+        "parent": "",
+        "rollback_target": "knowledge-object-2236ef57d110f741",
+        "superseded": false,
+        "version": 1
+      },
+      {
+        "branch": "candidate",
+        "node_id": "version-node-fec9746d9566394d",
+        "parent": "knowledge-object-2236ef57d110f741",
+        "rollback_target": "knowledge-object-2236ef57d110f741",
+        "superseded": false,
+        "version": 2
+      }
+    ]
+  }
+}

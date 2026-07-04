@@ -588,3 +588,17 @@ reasoning transactions.
 Reasoning is temporary. Knowledge is durable. Hypotheses are not facts. ARC III
 never mutates the substrate, promotes hypotheses, writes memory, calls
 providers, starts schedulers, trains models, or executes actions.
+
+## Runtime ARC IV Knowledge Evolution
+
+Runtime ARC IV determines whether reasoning should influence future knowledge.
+It introduces simulation-only knowledge evolution through explicit governance:
+integration candidates, version graphs, simulations, impact analysis,
+contradiction workflows, multi-reviewer records, knowledge health metrics,
+controlled integration transactions, rollback plans, evolution timelines,
+diffs, and evaluation estimates.
+
+ARC IV stops at `ready_to_integrate`. It does not perform live integration,
+training, provider authority, scheduler activation, action execution, hidden
+writes, autonomous memory, or knowledge mutation. Every future mutation must be
+explicit, reviewed, rollback-capable, and fully audited.

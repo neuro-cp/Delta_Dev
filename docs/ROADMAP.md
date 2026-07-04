@@ -945,6 +945,38 @@ Recommended next phase:
 
 `PROCEED_ARC_IV_DELIBERATIVE_RESPONSE_SYNTHESIS_DESIGN`
 
+## Runtime ARC IV Knowledge Evolution And Controlled Learning Update
+
+Runtime ARC IV introduces simulation-only knowledge evolution through explicit
+governance.
+
+Completed:
+
+- V6.0 Knowledge Evolution Engine
+- V6.1 Integration Candidate Builder
+- V6.2 Knowledge Version Graph
+- V6.3 Integration Simulator
+- V6.4 Impact Analysis
+- V6.5 Contradiction Resolution Workflow
+- V6.6 Multi-Reviewer Workflow
+- V6.7 Knowledge Health Engine
+- V6.8 Controlled Integration Transaction
+- V6.9 Rollback Framework
+- V6.10 Evolution Timeline
+- V6.11 Knowledge Diff Engine
+- V6.12 Evolution Console
+- V6.13 Evaluation Framework
+- V6.14 Manual Demo hooks
+- V6.15 ARC IV Safety Checkpoint
+
+ARC IV stops at `ready_to_integrate`. It performs no live integration writes,
+knowledge mutation, training, provider authority, scheduler activation, action
+execution, hidden memory, or HYB1 promotion.
+
+Recommended next phase:
+
+`PROCEED_ARC_V_MEMORY_ACTIVATION_AND_RECALL_GOVERNANCE_DESIGN`
+
 ## Runtime V3.0 Natural Interaction And Guided Review UX Update
 
 Runtime V3.0 improves the local interaction surface without adding cognition or
