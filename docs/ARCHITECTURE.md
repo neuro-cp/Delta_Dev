@@ -684,3 +684,26 @@ documentation, report generation, and dashboard generation.
 
 All deepened capabilities remain `implemented_module_simulated_only` and
 `gated_future_capability`. They are inspectable architecture, not authority.
+
+## Post-ARC XXV Runtime Architecture Completion
+
+The second post-ARC XXV overnight marathon completes the inert runtime
+architecture surface across six additional batches:
+
+- Batch E: kernel runtime integration
+- Batch F: knowledge graph expansion
+- Batch G: reasoning architecture expansion
+- Batch H: knowledge evolution expansion
+- Batch I: executive intelligence expansion
+- Batch J: runtime infrastructure completion
+
+These 210 completion modules deepen routing, lifecycle, dependency graphs,
+diagnostics, serialization, graph metadata, metrics, audit surfaces, replay,
+comparison, compatibility, and report generation across the existing runtime.
+
+This is still architecture, not activation. Completion modules remain
+`implemented_module_simulated_only`, `advisory_only`, and
+`gated_future_capability`. They do not train, fine-tune, update models, call
+providers, grant provider authority, browse autonomously, execute tools, start
+schedulers or background workers, mutate memory, mutate knowledge, perform
+hidden writes, promote HYB1, or change Model B defaults.

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>completion-e-kernel-event-prioritization</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch E Kernel Event Prioritization</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-2cfcbe178016f38e",
+    "name": "state_model",
+    "purpose": "Kernel Event Prioritization state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-12d26b2b504f3d77",
+    "name": "interface_contract",
+    "purpose": "Kernel Event Prioritization interface contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-20246f1500ceb66a",
+    "name": "diagnostic_surface",
+    "purpose": "Kernel Event Prioritization diagnostic surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-6ee1c4148e50a018",
+    "name": "metrics_surface",
+    "purpose": "Kernel Event Prioritization metrics surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-33ec5b8a74bf179e",
+    "name": "audit_surface",
+    "purpose": "Kernel Event Prioritization audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-1ada66e1bb5b8104",
+    "name": "serialization_surface",
+    "purpose": "Kernel Event Prioritization serialization surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-0cbfb44f64ebe030",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-2cfcbe178016f38e",
+      "label": "state_model",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-12d26b2b504f3d77",
+      "label": "interface_contract",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-20246f1500ceb66a",
+      "label": "diagnostic_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-6ee1c4148e50a018",
+      "label": "metrics_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-33ec5b8a74bf179e",
+      "label": "audit_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-1ada66e1bb5b8104",
+      "label": "serialization_surface",
+      "type": "completion_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-2cfcbe178016f38e",
+      "target": "post-arc-xxv-12d26b2b504f3d77",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-12d26b2b504f3d77",
+      "target": "post-arc-xxv-20246f1500ceb66a",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-20246f1500ceb66a",
+      "target": "post-arc-xxv-6ee1c4148e50a018",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-6ee1c4148e50a018",
+      "target": "post-arc-xxv-33ec5b8a74bf179e",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-33ec5b8a74bf179e",
+      "target": "post-arc-xxv-1ada66e1bb5b8104",
+      "relation": "feeds_audit"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "completion_review_only"
+  },
+  "serialized_only": true,
+  "completion_layer": "runtime_completion"
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

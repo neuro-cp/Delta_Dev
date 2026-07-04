@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>completion-f-graph-partitioning</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch F Graph Partitioning</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-2496d9a87b96b66d",
+    "name": "state_model",
+    "purpose": "Graph Partitioning state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-6ce628c8c444941c",
+    "name": "interface_contract",
+    "purpose": "Graph Partitioning interface contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-13613000d7b7a7e2",
+    "name": "diagnostic_surface",
+    "purpose": "Graph Partitioning diagnostic surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-ce2bcb153e8912fe",
+    "name": "metrics_surface",
+    "purpose": "Graph Partitioning metrics surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-14408b03148d6573",
+    "name": "audit_surface",
+    "purpose": "Graph Partitioning audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-feffb9298fe6748a",
+    "name": "serialization_surface",
+    "purpose": "Graph Partitioning serialization surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-350789b5d3f02e1a",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-2496d9a87b96b66d",
+      "label": "state_model",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-6ce628c8c444941c",
+      "label": "interface_contract",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-13613000d7b7a7e2",
+      "label": "diagnostic_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-ce2bcb153e8912fe",
+      "label": "metrics_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-14408b03148d6573",
+      "label": "audit_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-feffb9298fe6748a",
+      "label": "serialization_surface",
+      "type": "completion_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-2496d9a87b96b66d",
+      "target": "post-arc-xxv-6ce628c8c444941c",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-6ce628c8c444941c",
+      "target": "post-arc-xxv-13613000d7b7a7e2",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-13613000d7b7a7e2",
+      "target": "post-arc-xxv-ce2bcb153e8912fe",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-ce2bcb153e8912fe",
+      "target": "post-arc-xxv-14408b03148d6573",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-14408b03148d6573",
+      "target": "post-arc-xxv-feffb9298fe6748a",
+      "relation": "feeds_audit"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "completion_review_only"
+  },
+  "serialized_only": true,
+  "completion_layer": "runtime_completion"
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>completion-i-executive-validation</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch I Executive Validation</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-b53063dda885e7c7",
+    "name": "state_model",
+    "purpose": "Executive Validation state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-99ec6df8666f1ed6",
+    "name": "interface_contract",
+    "purpose": "Executive Validation interface contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-ccc59a90f7cbabad",
+    "name": "diagnostic_surface",
+    "purpose": "Executive Validation diagnostic surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-50d20ac96d0d1507",
+    "name": "metrics_surface",
+    "purpose": "Executive Validation metrics surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-287cfc24455d0de7",
+    "name": "audit_surface",
+    "purpose": "Executive Validation audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-c22ed542b3144b6b",
+    "name": "serialization_surface",
+    "purpose": "Executive Validation serialization surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-d2ee01e49f26928d",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-b53063dda885e7c7",
+      "label": "state_model",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-99ec6df8666f1ed6",
+      "label": "interface_contract",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-ccc59a90f7cbabad",
+      "label": "diagnostic_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-50d20ac96d0d1507",
+      "label": "metrics_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-287cfc24455d0de7",
+      "label": "audit_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-c22ed542b3144b6b",
+      "label": "serialization_surface",
+      "type": "completion_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-b53063dda885e7c7",
+      "target": "post-arc-xxv-99ec6df8666f1ed6",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-99ec6df8666f1ed6",
+      "target": "post-arc-xxv-ccc59a90f7cbabad",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-ccc59a90f7cbabad",
+      "target": "post-arc-xxv-50d20ac96d0d1507",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-50d20ac96d0d1507",
+      "target": "post-arc-xxv-287cfc24455d0de7",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-287cfc24455d0de7",
+      "target": "post-arc-xxv-c22ed542b3144b6b",
+      "relation": "feeds_audit"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "completion_review_only"
+  },
+  "serialized_only": true,
+  "completion_layer": "runtime_completion"
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

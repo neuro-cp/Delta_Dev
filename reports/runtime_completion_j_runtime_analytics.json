@@ -1,0 +1,297 @@
+{
+  "audit": {
+    "audit_id": "post-arc-xxv-3365ace545e650b3",
+    "authority": "advisory_only",
+    "module_id": "completion-j-runtime-analytics",
+    "review_state": "review_required",
+    "safety_verified": true,
+    "status": "implemented_module_simulated_only"
+  },
+  "batch": "J",
+  "batch_label": "Batch J",
+  "batch_title": "Runtime Infrastructure Completion",
+  "capability_state": "gated_future_capability",
+  "demo": {
+    "demo_id": "post-arc-xxv-4950f54ed8c44d78",
+    "live_behavior_activated": false,
+    "prompt": "Demonstrate Runtime Analytics.",
+    "simulated_only": true,
+    "steps": [
+      "state_model",
+      "interface_contract",
+      "diagnostic_surface",
+      "metrics_surface",
+      "audit_surface",
+      "serialization_surface"
+    ]
+  },
+  "diagnostics": {
+    "blocked_capabilities": [
+      "training",
+      "fine_tuning",
+      "model_update",
+      "provider_authority",
+      "provider_call",
+      "autonomous_browsing",
+      "tool_execution",
+      "scheduler",
+      "background_worker",
+      "memory_mutation",
+      "knowledge_mutation",
+      "hidden_write",
+      "hyb1_promotion"
+    ],
+    "connected_to_kernel": true,
+    "deterministic": true,
+    "reviewable": true,
+    "simulated_only": true
+  },
+  "graph_export_metadata": {
+    "completion_layer": "runtime_completion",
+    "edges": [
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-3bcbb7eaf8b3b17e",
+        "target": "post-arc-xxv-9deb89953b013d78"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-9deb89953b013d78",
+        "target": "post-arc-xxv-4f18950e682d8508"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-4f18950e682d8508",
+        "target": "post-arc-xxv-6139350d2f40a01a"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-6139350d2f40a01a",
+        "target": "post-arc-xxv-455127d8bbec9034"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-455127d8bbec9034",
+        "target": "post-arc-xxv-7d1ed9258b85ce34"
+      }
+    ],
+    "graph_id": "post-arc-xxv-b31d4b8c99ad1ced",
+    "nodes": [
+      {
+        "id": "post-arc-xxv-3bcbb7eaf8b3b17e",
+        "label": "state_model",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-9deb89953b013d78",
+        "label": "interface_contract",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-4f18950e682d8508",
+        "label": "diagnostic_surface",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-6139350d2f40a01a",
+        "label": "metrics_surface",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-455127d8bbec9034",
+        "label": "audit_surface",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-7d1ed9258b85ce34",
+        "label": "serialization_surface",
+        "type": "completion_object"
+      }
+    ],
+    "serialized_only": true,
+    "visualization_hints": {
+      "authority": "none",
+      "layout": "left_to_right",
+      "style": "completion_review_only"
+    }
+  },
+  "metrics": {
+    "activation_score": 0,
+    "authority_score": 0,
+    "edge_count": 5,
+    "object_count": 6,
+    "review_surfaces": [
+      "diagnostic_surface",
+      "metrics_surface",
+      "audit_surface",
+      "serialization_surface"
+    ]
+  },
+  "module_id": "completion-j-runtime-analytics",
+  "module_slug": "runtime_analytics",
+  "objects": [
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "state_model",
+      "object_id": "post-arc-xxv-3bcbb7eaf8b3b17e",
+      "provider_call_performed": false,
+      "purpose": "Runtime Analytics state model",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "interface_contract",
+      "object_id": "post-arc-xxv-9deb89953b013d78",
+      "provider_call_performed": false,
+      "purpose": "Runtime Analytics interface contract",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "diagnostic_surface",
+      "object_id": "post-arc-xxv-4f18950e682d8508",
+      "provider_call_performed": false,
+      "purpose": "Runtime Analytics diagnostic surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "metrics_surface",
+      "object_id": "post-arc-xxv-6139350d2f40a01a",
+      "provider_call_performed": false,
+      "purpose": "Runtime Analytics metrics surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "audit_surface",
+      "object_id": "post-arc-xxv-455127d8bbec9034",
+      "provider_call_performed": false,
+      "purpose": "Runtime Analytics audit surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "serialization_surface",
+      "object_id": "post-arc-xxv-7d1ed9258b85ce34",
+      "provider_call_performed": false,
+      "purpose": "Runtime Analytics serialization surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    }
+  ],
+  "prohibited_capabilities": [
+    "training",
+    "fine_tuning",
+    "model_update",
+    "provider_authority",
+    "provider_call",
+    "autonomous_browsing",
+    "tool_execution",
+    "scheduler",
+    "background_worker",
+    "memory_mutation",
+    "knowledge_mutation",
+    "hidden_write",
+    "hyb1_promotion"
+  ],
+  "purpose": "Complete and connect Runtime Analytics within Runtime Infrastructure Completion without activating authority.",
+  "recommendation": "REVIEW_COMPLETION_MODULE_BEFORE_ACTIVATION",
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "runtime_safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    },
+    "scheduler_started": false,
+    "secret_printed": false,
+    "tool_execution_performed": false,
+    "training_performed": false
+  },
+  "status": "implemented_module_simulated_only",
+  "summary": {
+    "activation": "gated_future_capability",
+    "authority": "advisory_only",
+    "batch": "J",
+    "batch_title": "Runtime Infrastructure Completion",
+    "completion_layer": "runtime_architecture_completion",
+    "module_id": "completion-j-runtime-analytics",
+    "object_count": 6,
+    "status": "implemented_module_simulated_only",
+    "title": "Runtime Analytics"
+  },
+  "title": "Runtime Analytics",
+  "validation": {
+    "execution_performed": false,
+    "graph_export_available": true,
+    "json_export_available": true,
+    "mutation_performed": false,
+    "object_count": 6,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "valid": true
+  }
+}

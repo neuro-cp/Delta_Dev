@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>completion-g-reasoning-templates</title>
+<style>body{font-family:Segoe UI,Arial,sans-serif;margin:32px;background:#f8fafc;color:#182230}section{background:white;border:1px solid #d8e0ec;border-radius:8px;padding:18px;margin:14px 0}pre{white-space:pre-wrap}</style></head>
+<body>
+<h1>Batch G Reasoning Templates</h1>
+<section><h2>Objects</h2><pre>[
+  {
+    "object_id": "post-arc-xxv-d6583f89081d652a",
+    "name": "state_model",
+    "purpose": "Reasoning Templates state model",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-2a4eceb2a3a94781",
+    "name": "interface_contract",
+    "purpose": "Reasoning Templates interface contract",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-2fa175eaec7bd32c",
+    "name": "diagnostic_surface",
+    "purpose": "Reasoning Templates diagnostic surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-77723c9cc1e7a03d",
+    "name": "metrics_surface",
+    "purpose": "Reasoning Templates metrics surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-9b57bc64682466f9",
+    "name": "audit_surface",
+    "purpose": "Reasoning Templates audit surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  },
+  {
+    "object_id": "post-arc-xxv-238d6910f9abfd7e",
+    "name": "serialization_surface",
+    "purpose": "Reasoning Templates serialization surface",
+    "lifecycle_state": "implemented_simulated_only",
+    "connection_surface": "kernel_orchestration_review",
+    "review_state": "review_required",
+    "authority": "advisory_only",
+    "mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "execution_performed": false,
+    "training_performed": false
+  }
+]</pre></section>
+<section><h2>Graph Metadata</h2><pre>{
+  "graph_id": "post-arc-xxv-84b728c52d0c3a1e",
+  "nodes": [
+    {
+      "id": "post-arc-xxv-d6583f89081d652a",
+      "label": "state_model",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-2a4eceb2a3a94781",
+      "label": "interface_contract",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-2fa175eaec7bd32c",
+      "label": "diagnostic_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-77723c9cc1e7a03d",
+      "label": "metrics_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-9b57bc64682466f9",
+      "label": "audit_surface",
+      "type": "completion_object"
+    },
+    {
+      "id": "post-arc-xxv-238d6910f9abfd7e",
+      "label": "serialization_surface",
+      "type": "completion_object"
+    }
+  ],
+  "edges": [
+    {
+      "source": "post-arc-xxv-d6583f89081d652a",
+      "target": "post-arc-xxv-2a4eceb2a3a94781",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-2a4eceb2a3a94781",
+      "target": "post-arc-xxv-2fa175eaec7bd32c",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-2fa175eaec7bd32c",
+      "target": "post-arc-xxv-77723c9cc1e7a03d",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-77723c9cc1e7a03d",
+      "target": "post-arc-xxv-9b57bc64682466f9",
+      "relation": "feeds_audit"
+    },
+    {
+      "source": "post-arc-xxv-9b57bc64682466f9",
+      "target": "post-arc-xxv-238d6910f9abfd7e",
+      "relation": "feeds_audit"
+    }
+  ],
+  "visualization_hints": {
+    "layout": "left_to_right",
+    "authority": "none",
+    "style": "completion_review_only"
+  },
+  "serialized_only": true,
+  "completion_layer": "runtime_completion"
+}</pre></section>
+<section><h2>Safety</h2><pre>{
+  "model_b_default": "unchanged",
+  "hyb1": "dormant_env_gated",
+  "training_performed": false,
+  "fine_tuning_performed": false,
+  "model_update_performed": false,
+  "provider_authority_granted": false,
+  "provider_call_performed": false,
+  "autonomous_browsing_performed": false,
+  "tool_execution_performed": false,
+  "action_execution_performed": false,
+  "scheduler_started": false,
+  "background_worker_started": false,
+  "memory_mutation_performed": false,
+  "knowledge_mutation_performed": false,
+  "hidden_write_performed": false,
+  "hyb1_promoted": false,
+  "secret_printed": false,
+  "runtime_safety_invariants": {
+    "model_b_default_changed": false,
+    "hyb1_promoted": false,
+    "hyb1_enabled_by_default": false,
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "model_weights_updated": false,
+    "model_artifact_created": false,
+    "provider_call_performed": false,
+    "provider_authority_granted": false,
+    "action_execution_performed": false,
+    "scheduler_started": false,
+    "background_worker_started": false,
+    "autonomous_memory_write_performed": false,
+    "canonical_memory_write_performed": false,
+    "recall_mutated": false,
+    "authoritative_recall_enabled": false,
+    "secret_printed": false
+  }
+}</pre></section>
+</body></html>

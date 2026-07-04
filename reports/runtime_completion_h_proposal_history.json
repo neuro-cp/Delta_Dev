@@ -1,0 +1,297 @@
+{
+  "audit": {
+    "audit_id": "post-arc-xxv-a8fe71deebbb0ef3",
+    "authority": "advisory_only",
+    "module_id": "completion-h-proposal-history",
+    "review_state": "review_required",
+    "safety_verified": true,
+    "status": "implemented_module_simulated_only"
+  },
+  "batch": "H",
+  "batch_label": "Batch H",
+  "batch_title": "Knowledge Evolution Expansion",
+  "capability_state": "gated_future_capability",
+  "demo": {
+    "demo_id": "post-arc-xxv-bf5753dea70eadf7",
+    "live_behavior_activated": false,
+    "prompt": "Demonstrate Proposal History.",
+    "simulated_only": true,
+    "steps": [
+      "state_model",
+      "interface_contract",
+      "diagnostic_surface",
+      "metrics_surface",
+      "audit_surface",
+      "serialization_surface"
+    ]
+  },
+  "diagnostics": {
+    "blocked_capabilities": [
+      "training",
+      "fine_tuning",
+      "model_update",
+      "provider_authority",
+      "provider_call",
+      "autonomous_browsing",
+      "tool_execution",
+      "scheduler",
+      "background_worker",
+      "memory_mutation",
+      "knowledge_mutation",
+      "hidden_write",
+      "hyb1_promotion"
+    ],
+    "connected_to_kernel": true,
+    "deterministic": true,
+    "reviewable": true,
+    "simulated_only": true
+  },
+  "graph_export_metadata": {
+    "completion_layer": "runtime_completion",
+    "edges": [
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-2c18dc8867b2608f",
+        "target": "post-arc-xxv-75fdea7181a0f635"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-75fdea7181a0f635",
+        "target": "post-arc-xxv-ea7e7b37537f5db9"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-ea7e7b37537f5db9",
+        "target": "post-arc-xxv-a6f2f0382ec49b7d"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-a6f2f0382ec49b7d",
+        "target": "post-arc-xxv-0ca529ba6c3d7849"
+      },
+      {
+        "relation": "feeds_audit",
+        "source": "post-arc-xxv-0ca529ba6c3d7849",
+        "target": "post-arc-xxv-a498b94807f90cd6"
+      }
+    ],
+    "graph_id": "post-arc-xxv-e5ada790fe628079",
+    "nodes": [
+      {
+        "id": "post-arc-xxv-2c18dc8867b2608f",
+        "label": "state_model",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-75fdea7181a0f635",
+        "label": "interface_contract",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-ea7e7b37537f5db9",
+        "label": "diagnostic_surface",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-a6f2f0382ec49b7d",
+        "label": "metrics_surface",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-0ca529ba6c3d7849",
+        "label": "audit_surface",
+        "type": "completion_object"
+      },
+      {
+        "id": "post-arc-xxv-a498b94807f90cd6",
+        "label": "serialization_surface",
+        "type": "completion_object"
+      }
+    ],
+    "serialized_only": true,
+    "visualization_hints": {
+      "authority": "none",
+      "layout": "left_to_right",
+      "style": "completion_review_only"
+    }
+  },
+  "metrics": {
+    "activation_score": 0,
+    "authority_score": 0,
+    "edge_count": 5,
+    "object_count": 6,
+    "review_surfaces": [
+      "diagnostic_surface",
+      "metrics_surface",
+      "audit_surface",
+      "serialization_surface"
+    ]
+  },
+  "module_id": "completion-h-proposal-history",
+  "module_slug": "proposal_history",
+  "objects": [
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "state_model",
+      "object_id": "post-arc-xxv-2c18dc8867b2608f",
+      "provider_call_performed": false,
+      "purpose": "Proposal History state model",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "interface_contract",
+      "object_id": "post-arc-xxv-75fdea7181a0f635",
+      "provider_call_performed": false,
+      "purpose": "Proposal History interface contract",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "diagnostic_surface",
+      "object_id": "post-arc-xxv-ea7e7b37537f5db9",
+      "provider_call_performed": false,
+      "purpose": "Proposal History diagnostic surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "metrics_surface",
+      "object_id": "post-arc-xxv-a6f2f0382ec49b7d",
+      "provider_call_performed": false,
+      "purpose": "Proposal History metrics surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "audit_surface",
+      "object_id": "post-arc-xxv-0ca529ba6c3d7849",
+      "provider_call_performed": false,
+      "purpose": "Proposal History audit surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    {
+      "authority": "advisory_only",
+      "connection_surface": "kernel_orchestration_review",
+      "execution_performed": false,
+      "lifecycle_state": "implemented_simulated_only",
+      "mutation_performed": false,
+      "name": "serialization_surface",
+      "object_id": "post-arc-xxv-a498b94807f90cd6",
+      "provider_call_performed": false,
+      "purpose": "Proposal History serialization surface",
+      "review_state": "review_required",
+      "scheduler_started": false,
+      "training_performed": false
+    }
+  ],
+  "prohibited_capabilities": [
+    "training",
+    "fine_tuning",
+    "model_update",
+    "provider_authority",
+    "provider_call",
+    "autonomous_browsing",
+    "tool_execution",
+    "scheduler",
+    "background_worker",
+    "memory_mutation",
+    "knowledge_mutation",
+    "hidden_write",
+    "hyb1_promotion"
+  ],
+  "purpose": "Complete and connect Proposal History within Knowledge Evolution Expansion without activating authority.",
+  "recommendation": "REVIEW_COMPLETION_MODULE_BEFORE_ACTIVATION",
+  "safety": {
+    "action_execution_performed": false,
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "runtime_safety_invariants": {
+      "action_execution_performed": false,
+      "authoritative_recall_enabled": false,
+      "autonomous_memory_write_performed": false,
+      "background_worker_started": false,
+      "canonical_memory_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_enabled_by_default": false,
+      "hyb1_promoted": false,
+      "model_artifact_created": false,
+      "model_b_default_changed": false,
+      "model_weights_updated": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "recall_mutated": false,
+      "scheduler_started": false,
+      "secret_printed": false,
+      "training_performed": false
+    },
+    "scheduler_started": false,
+    "secret_printed": false,
+    "tool_execution_performed": false,
+    "training_performed": false
+  },
+  "status": "implemented_module_simulated_only",
+  "summary": {
+    "activation": "gated_future_capability",
+    "authority": "advisory_only",
+    "batch": "H",
+    "batch_title": "Knowledge Evolution Expansion",
+    "completion_layer": "runtime_architecture_completion",
+    "module_id": "completion-h-proposal-history",
+    "object_count": 6,
+    "status": "implemented_module_simulated_only",
+    "title": "Proposal History"
+  },
+  "title": "Proposal History",
+  "validation": {
+    "execution_performed": false,
+    "graph_export_available": true,
+    "json_export_available": true,
+    "mutation_performed": false,
+    "object_count": 6,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "valid": true
+  }
+}

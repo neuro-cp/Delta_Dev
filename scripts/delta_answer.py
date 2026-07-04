@@ -25,9 +25,11 @@ from orchestration.runtime.arc_vii_xxv_local_answer import (
     is_arc_vii_question,
     is_arc_viii_question,
     is_post_arc_deepening_question,
+    is_runtime_completion_question,
     run_arc_vii_answer,
     run_arc_viii_answer,
     run_post_arc_deepening_answer,
+    run_runtime_completion_answer,
 )
 
 
@@ -43,6 +45,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_runtime_completion_question(query):
+        data = run_runtime_completion_answer(query)
     elif is_post_arc_deepening_question(query):
         data = run_post_arc_deepening_answer(query)
     elif is_arc_viii_question(query):
@@ -67,6 +71,8 @@ def main() -> int:
         data = run_v29_local_answer(query, use_recall=args.use_recall)
     if args.json or args.show_provenance or args.output_report:
         print(json.dumps(data, indent=2))
+    elif data.get("phase") == "Post-ARC XXV Runtime Architecture Completion":
+        print(data["answer_text"])
     elif data.get("phase") == "Post-ARC XXV Runtime Deepening":
         print(data["answer_text"])
     elif data.get("phase") == "Runtime ARC VIII":

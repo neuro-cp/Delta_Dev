@@ -6,6 +6,7 @@ from orchestration.runtime.arc_07_investigation import report_payload as investi
 from orchestration.runtime.arc_08_specialists import report_payload as specialists_payload
 from orchestration.runtime.arc_exhaustive_common import exhaustive_safety_flags
 from orchestration.runtime.post_arc_xxv_deepening_runner import DEEPENING_MODULES, write_all_deepening_reports
+from orchestration.runtime.post_arc_xxv_runtime_completion_runner import COMPLETION_MODULES, write_all_completion_reports
 
 
 def is_arc_vii_question(query: str) -> bool:
@@ -102,6 +103,21 @@ def is_post_arc_deepening_question(query: str) -> bool:
     )
 
 
+def is_runtime_completion_question(query: str) -> bool:
+    normalized = " ".join(str(query).lower().split())
+    return any(
+        trigger in normalized
+        for trigger in (
+            "runtime completion",
+            "architecture completion",
+            "completion marathon",
+            "kernel runtime integration",
+            "runtime infrastructure completion",
+            "post-arc completion",
+        )
+    )
+
+
 def run_post_arc_deepening_answer(query: str) -> dict[str, object]:
     summary = write_all_deepening_reports()
     return {
@@ -130,4 +146,38 @@ def run_post_arc_deepening_answer(query: str) -> dict[str, object]:
             ),
         },
         "safety": exhaustive_safety_flags(),
+    }
+
+
+def run_runtime_completion_answer(query: str) -> dict[str, object]:
+    summary = write_all_completion_reports()
+    return {
+        "phase": "Post-ARC XXV Runtime Architecture Completion",
+        "query": query,
+        "answer_text": (
+            "Post-ARC XXV runtime architecture completion is implemented as deterministic, review-only modules. "
+            f"{len(COMPLETION_MODULES)} modules are available across kernel runtime integration, knowledge graph expansion, "
+            "reasoning architecture, knowledge evolution, executive intelligence, and runtime infrastructure batches."
+        ),
+        "module_count": len(COMPLETION_MODULES),
+        "summary": summary,
+        "capability_states": {
+            "scaffolded": True,
+            "implemented_module": True,
+            "simulated_only": True,
+            "gated_future_capability": True,
+            "prohibited_capability": False,
+        },
+        "safety": exhaustive_safety_flags(),
+        "disabled": {
+            "training": True,
+            "provider_authority": True,
+            "provider_calls": True,
+            "autonomous_browsing": True,
+            "tool_execution": True,
+            "scheduler": True,
+            "memory_mutation": True,
+            "knowledge_mutation": True,
+            "hyb1_promotion": True,
+        },
     }
