@@ -1,0 +1,88 @@
+# Runtime Pathology Unused Object
+
+## Class Total
+1508
+
+## Likely Unused Class Count
+79
+
+## Likely Unused Classes
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_feedback_memory_candidate
+- orchestration.runtime.v15_first_interaction
+- orchestration.runtime.v15_first_interaction
+- orchestration.runtime.v15_first_interaction
+- orchestration.runtime.v16_canonical_memory_rollback_trial
+- orchestration.runtime.v16_canonical_memory_rollback_trial
+- orchestration.runtime.v16_canonical_memory_rollback_trial
+- orchestration.runtime.v16_daily_evaluator_manual_run_hardening
+- orchestration.runtime.v16_daily_evaluator_manual_run_hardening
+- orchestration.runtime.v16_memory_candidate_review_loop
+- orchestration.runtime.v16_review_ui_export_flow
+- orchestration.runtime.v16_review_ui_export_flow
+- orchestration.runtime.v16_scheduler_activation_gate
+- orchestration.runtime.v16_scheduler_activation_gate
+- orchestration.runtime.v17_controlled_answer_synthesis
+- orchestration.runtime.v17_controlled_answer_synthesis
+- orchestration.runtime.v17_limited_general_recall_router
+- orchestration.runtime.v17_limited_general_recall_router
+- orchestration.runtime.v17_limited_general_recall_trial
+- orchestration.runtime.v17_limited_general_recall_trial
+- orchestration.runtime.v17_provider_evidence_review_ui
+- orchestration.runtime.v17_provider_evidence_review_ui
+- orchestration.runtime.v18_evidence_quality_evaluation
+- orchestration.runtime.v18_evidence_quality_evaluation
+- orchestration.runtime.v18_manual_provider_live_trial
+- orchestration.runtime.v18_manual_provider_live_trial
+- orchestration.runtime.v18_manual_provider_live_trial_gate
+- orchestration.runtime.v18_manual_provider_live_trial_gate
+- orchestration.runtime.v18_manual_provider_live_trial_gate
+- orchestration.runtime.v18_manual_provider_live_trial_gate
+- orchestration.runtime.v18_promotion_readiness_scorecard
+- orchestration.runtime.v18_promotion_readiness_scorecard
+- orchestration.runtime.v18_provider_evidence_post_review
+- orchestration.runtime.v18_provider_evidence_post_review
+- orchestration.runtime.v18_provider_evidence_post_review
+- orchestration.runtime.v18_provider_evidence_post_review
+- orchestration.runtime.v18_provider_evidence_post_review
+- orchestration.runtime.v18_review_ui_evidence_quality_iteration
+- orchestration.runtime.v19_console_review_workflow
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_local_delta_console
+- orchestration.runtime.v19_local_delta_console
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v20_controlled_general_memory_trial_design
+- orchestration.runtime.v20_controlled_general_memory_trial_design
+- orchestration.runtime.v20_controlled_general_memory_trial_design
+- orchestration.runtime.v20_controlled_general_memory_trial_design
+- orchestration.runtime.v20_local_ux_consolidation
+- orchestration.runtime.v20_scheduler_activation_trial_design
+- orchestration.runtime.v21_daily_evaluator_scheduler_activation
+- orchestration.runtime.v21_localhost_review_ui
+- orchestration.runtime.v22_hyb1_opt_in_shadow_trial_design
+- orchestration.runtime.v22_localhost_ui_mutation_bridge
+- orchestration.runtime.v22_localhost_ui_mutation_bridge
+- orchestration.runtime.v23_daily_evaluator_scheduled_dry_run_trial
+- orchestration.runtime.v23_hyb1_shadow_trial_simulation
+- orchestration.runtime.v23_localhost_write_execution_bridge
+- orchestration.runtime.v23_provider_live_to_candidate_trial
+- orchestration.runtime.v23_recall_to_synthesis_integration
+- orchestration.runtime.v24_localhost_full_review_console

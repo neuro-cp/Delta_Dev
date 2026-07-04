@@ -1,0 +1,42 @@
+{
+  "overall_status": "not_ready_for_live_vertical_execution",
+  "recommended_first_vertical": "report-only document-to-audit workflow trace with fixture papers",
+  "scenario": "I uploaded 10 scientific papers. What have we learned? What contradicts? What needs more evidence? What would change if approved?",
+  "steps": [
+    {
+      "gap": "No active document ingestion or paper object adapter.",
+      "status": "missing_live_adapter",
+      "step": "Upload 10 papers"
+    },
+    {
+      "gap": "Knowledge substrate can model objects but not consume uploaded artifacts.",
+      "status": "scaffolded",
+      "step": "Represent papers"
+    },
+    {
+      "gap": "Reasoning can consume sample substrate objects, not extracted paper claims.",
+      "status": "partial",
+      "step": "Find what was learned"
+    },
+    {
+      "gap": "Contradiction objects exist but no paper-level contradiction extraction workflow is connected.",
+      "status": "partial",
+      "step": "Find contradictions"
+    },
+    {
+      "gap": "Investigation questions exist but are not driven by reasoning gaps.",
+      "status": "partial",
+      "step": "Need more evidence"
+    },
+    {
+      "gap": "Evolution simulation exists but lacks connected proposal intake from this workflow.",
+      "status": "partial",
+      "step": "What would change if approved"
+    },
+    {
+      "gap": "Rollback plans exist but are not linked to an end-to-end transaction graph.",
+      "status": "scaffolded",
+      "step": "Audit and rollback"
+    }
+  ]
+}

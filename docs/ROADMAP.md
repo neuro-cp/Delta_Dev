@@ -944,6 +944,35 @@ Recommended next marathon:
 
 `PROCEED_RUNTIME_ACTIVATION_READINESS_REVIEW`
 
+## Runtime Pathology Exploration
+
+Completed a static pathology review of the runtime architecture after the
+post-ARC XXV completion pass. The review found that DELTA's primary bottleneck
+has shifted from missing architecture to insufficient vertical coherence.
+
+Pathology summary:
+
+- Many modules are safe, typed, tested, and reportable, but remain workflow
+  leaves.
+- Kernel, knowledge, reasoning, executive, learning, review, and answer layers
+  do not yet operate through one universal trace.
+- Duplicate lifecycle/report/validation structures should be consolidated
+  before activation.
+- The next meaningful work should prove that existing components cooperate on a
+  realistic scenario.
+
+Recommended roadmap reorder:
+
+1. `Runtime Vertical Integration I`: governed document-to-audit workflow trace.
+2. Kernel routing enforcement for deterministic local answer paths.
+3. Read-only substrate query adapter between knowledge and reasoning.
+4. Unified proposal/review/approval/integration state machine.
+5. Central report and object consumer registry.
+6. Activation-readiness review for the smallest coherent vertical slice.
+
+Do not resume broad module generation until this pathology reduction pass
+shows a specific missing layer.
+
 ## Runtime V3.1 Gated Learning Integration Readiness Update
 
 Runtime V3.1 adds an observe -> propose -> review -> gated integration

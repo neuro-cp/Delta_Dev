@@ -1,0 +1,1806 @@
+{
+  "dead_like_module_count": 353,
+  "dead_like_modules": [
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_09_external_evidence",
+      "path": "orchestration/runtime/arc_09_external_evidence.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_10_tool_provider_runtime",
+      "path": "orchestration/runtime/arc_10_tool_provider_runtime.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_11_controlled_integration",
+      "path": "orchestration/runtime/arc_11_controlled_integration.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_12_evaluation_regression",
+      "path": "orchestration/runtime/arc_12_evaluation_regression.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_13_sleep_replay",
+      "path": "orchestration/runtime/arc_13_sleep_replay.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_14_domain_packs",
+      "path": "orchestration/runtime/arc_14_domain_packs.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_15_executive_operations",
+      "path": "orchestration/runtime/arc_15_executive_operations.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_16_cognitive_os",
+      "path": "orchestration/runtime/arc_16_cognitive_os.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_17_world_model",
+      "path": "orchestration/runtime/arc_17_world_model.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_18_multitime_memory",
+      "path": "orchestration/runtime/arc_18_multitime_memory.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_19_self_model",
+      "path": "orchestration/runtime/arc_19_self_model.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_20_adaptive_executive",
+      "path": "orchestration/runtime/arc_20_adaptive_executive.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_21_multi_runtime_collaboration",
+      "path": "orchestration/runtime/arc_21_multi_runtime_collaboration.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_22_distributed_knowledge_fabric",
+      "path": "orchestration/runtime/arc_22_distributed_knowledge_fabric.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_23_scientific_discovery",
+      "path": "orchestration/runtime/arc_23_scientific_discovery.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_24_cognitive_simulation",
+      "path": "orchestration/runtime/arc_24_cognitive_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_25_continuous_runtime",
+      "path": "orchestration/runtime/arc_25_continuous_runtime.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_ii_local_answer",
+      "path": "orchestration/runtime/arc_ii_local_answer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_iii_local_answer",
+      "path": "orchestration/runtime/arc_iii_local_answer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_iv_local_answer",
+      "path": "orchestration/runtime/arc_iv_local_answer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_vi_local_answer",
+      "path": "orchestration/runtime/arc_vi_local_answer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_vii_xxv_local_answer",
+      "path": "orchestration/runtime/arc_vii_xxv_local_answer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "arc_exhaustive",
+      "module": "orchestration.runtime.arc_vii_xxv_scaffolds",
+      "path": "orchestration/runtime/arc_vii_xxv_scaffolds.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_audit_integration",
+      "path": "orchestration/runtime/completion_e_kernel_audit_integration.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_capability_discovery",
+      "path": "orchestration/runtime/completion_e_kernel_capability_discovery.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_change_detection",
+      "path": "orchestration/runtime/completion_e_kernel_change_detection.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_compatibility_layer",
+      "path": "orchestration/runtime/completion_e_kernel_compatibility_layer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_consistency_checks",
+      "path": "orchestration/runtime/completion_e_kernel_consistency_checks.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_dependency_graph",
+      "path": "orchestration/runtime/completion_e_kernel_dependency_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_developer_diagnostics",
+      "path": "orchestration/runtime/completion_e_kernel_developer_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_diagnostics",
+      "path": "orchestration/runtime/completion_e_kernel_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_event_hierarchy",
+      "path": "orchestration/runtime/completion_e_kernel_event_hierarchy.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_event_prioritization",
+      "path": "orchestration/runtime/completion_e_kernel_event_prioritization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_execution_traces",
+      "path": "orchestration/runtime/completion_e_kernel_execution_traces.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_explanation_layer",
+      "path": "orchestration/runtime/completion_e_kernel_explanation_layer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_failure_simulation",
+      "path": "orchestration/runtime/completion_e_kernel_failure_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_graph_builder",
+      "path": "orchestration/runtime/completion_e_kernel_graph_builder.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_graph_diagnostics",
+      "path": "orchestration/runtime/completion_e_kernel_graph_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_health_metrics",
+      "path": "orchestration/runtime/completion_e_kernel_health_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_integrity_validation",
+      "path": "orchestration/runtime/completion_e_kernel_integrity_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_lifecycle",
+      "path": "orchestration/runtime/completion_e_kernel_lifecycle.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_orchestration_metrics",
+      "path": "orchestration/runtime/completion_e_kernel_orchestration_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_pipeline_optimizer",
+      "path": "orchestration/runtime/completion_e_kernel_pipeline_optimizer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_profiling",
+      "path": "orchestration/runtime/completion_e_kernel_profiling.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_recovery_planning",
+      "path": "orchestration/runtime/completion_e_kernel_recovery_planning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_replay",
+      "path": "orchestration/runtime/completion_e_kernel_replay.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_rollback_coordinator",
+      "path": "orchestration/runtime/completion_e_kernel_rollback_coordinator.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_routing",
+      "path": "orchestration/runtime/completion_e_kernel_routing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_runtime_comparison",
+      "path": "orchestration/runtime/completion_e_kernel_runtime_comparison.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_runtime_explorer",
+      "path": "orchestration/runtime/completion_e_kernel_runtime_explorer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_runtime_snapshots",
+      "path": "orchestration/runtime/completion_e_kernel_runtime_snapshots.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_serialization",
+      "path": "orchestration/runtime/completion_e_kernel_serialization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_state_validation",
+      "path": "orchestration/runtime/completion_e_kernel_state_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_statistics",
+      "path": "orchestration/runtime/completion_e_kernel_statistics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_timing_metadata",
+      "path": "orchestration/runtime/completion_e_kernel_timing_metadata.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_transaction_manager",
+      "path": "orchestration/runtime/completion_e_kernel_transaction_manager.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_validation_reports",
+      "path": "orchestration/runtime/completion_e_kernel_validation_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_e_kernel_visualization_metadata",
+      "path": "orchestration/runtime/completion_e_kernel_visualization_metadata.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_concept_hierarchy",
+      "path": "orchestration/runtime/completion_f_concept_hierarchy.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_concept_inheritance",
+      "path": "orchestration/runtime/completion_f_concept_inheritance.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_concept_lineage",
+      "path": "orchestration/runtime/completion_f_concept_lineage.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_confidence_graph",
+      "path": "orchestration/runtime/completion_f_confidence_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_cross_reference_engine",
+      "path": "orchestration/runtime/completion_f_cross_reference_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_dependency_graph_expansion",
+      "path": "orchestration/runtime/completion_f_dependency_graph_expansion.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_entity_clustering",
+      "path": "orchestration/runtime/completion_f_entity_clustering.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_evidence_lineage_graph",
+      "path": "orchestration/runtime/completion_f_evidence_lineage_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_evidence_neighborhoods",
+      "path": "orchestration/runtime/completion_f_evidence_neighborhoods.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_graph_compression",
+      "path": "orchestration/runtime/completion_f_graph_compression.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_graph_diagnostics",
+      "path": "orchestration/runtime/completion_f_graph_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_graph_integrity_validation",
+      "path": "orchestration/runtime/completion_f_graph_integrity_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_graph_partitioning",
+      "path": "orchestration/runtime/completion_f_graph_partitioning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_graph_statistics",
+      "path": "orchestration/runtime/completion_f_graph_statistics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_graph_traversal_strategies",
+      "path": "orchestration/runtime/completion_f_graph_traversal_strategies.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_historical_graph_snapshots",
+      "path": "orchestration/runtime/completion_f_historical_graph_snapshots.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_centrality",
+      "path": "orchestration/runtime/completion_f_knowledge_centrality.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_graph_auditing",
+      "path": "orchestration/runtime/completion_f_knowledge_graph_auditing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_graph_metrics",
+      "path": "orchestration/runtime/completion_f_knowledge_graph_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_indexing",
+      "path": "orchestration/runtime/completion_f_knowledge_indexing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_lineage_graph",
+      "path": "orchestration/runtime/completion_f_knowledge_lineage_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_map_generation",
+      "path": "orchestration/runtime/completion_f_knowledge_map_generation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_neighborhoods",
+      "path": "orchestration/runtime/completion_f_knowledge_neighborhoods.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_search_planner",
+      "path": "orchestration/runtime/completion_f_knowledge_search_planner.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_topology",
+      "path": "orchestration/runtime/completion_f_knowledge_topology.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_validation_reports",
+      "path": "orchestration/runtime/completion_f_knowledge_validation_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_knowledge_visualization_metadata",
+      "path": "orchestration/runtime/completion_f_knowledge_visualization_metadata.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_relationship_clustering",
+      "path": "orchestration/runtime/completion_f_relationship_clustering.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_relationship_indexing",
+      "path": "orchestration/runtime/completion_f_relationship_indexing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_semantic_indexing",
+      "path": "orchestration/runtime/completion_f_semantic_indexing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_semantic_map_generation",
+      "path": "orchestration/runtime/completion_f_semantic_map_generation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_semantic_neighborhoods",
+      "path": "orchestration/runtime/completion_f_semantic_neighborhoods.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_subgraph_extraction",
+      "path": "orchestration/runtime/completion_f_subgraph_extraction.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_temporal_indexing",
+      "path": "orchestration/runtime/completion_f_temporal_indexing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_f_version_indexing",
+      "path": "orchestration/runtime/completion_f_version_indexing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_argument_builder",
+      "path": "orchestration/runtime/completion_g_argument_builder.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_argument_graph",
+      "path": "orchestration/runtime/completion_g_argument_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_confidence_trees",
+      "path": "orchestration/runtime/completion_g_confidence_trees.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_evidence_prioritization",
+      "path": "orchestration/runtime/completion_g_evidence_prioritization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_iterative_reasoning",
+      "path": "orchestration/runtime/completion_g_iterative_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_planning_heuristics",
+      "path": "orchestration/runtime/completion_g_planning_heuristics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_architecture_reports",
+      "path": "orchestration/runtime/completion_g_reasoning_architecture_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_audit",
+      "path": "orchestration/runtime/completion_g_reasoning_audit.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_benchmarking",
+      "path": "orchestration/runtime/completion_g_reasoning_benchmarking.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_checkpoints",
+      "path": "orchestration/runtime/completion_g_reasoning_checkpoints.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_comparison",
+      "path": "orchestration/runtime/completion_g_reasoning_comparison.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_compatibility",
+      "path": "orchestration/runtime/completion_g_reasoning_compatibility.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_complexity_estimator",
+      "path": "orchestration/runtime/completion_g_reasoning_complexity_estimator.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_cost_estimation",
+      "path": "orchestration/runtime/completion_g_reasoning_cost_estimation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_coverage",
+      "path": "orchestration/runtime/completion_g_reasoning_coverage.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_diagnostics",
+      "path": "orchestration/runtime/completion_g_reasoning_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_edge_case_library",
+      "path": "orchestration/runtime/completion_g_reasoning_edge_case_library.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_explainability",
+      "path": "orchestration/runtime/completion_g_reasoning_explainability.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_export",
+      "path": "orchestration/runtime/completion_g_reasoning_export.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_history",
+      "path": "orchestration/runtime/completion_g_reasoning_history.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_optimizer",
+      "path": "orchestration/runtime/completion_g_reasoning_optimizer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_planner",
+      "path": "orchestration/runtime/completion_g_reasoning_planner.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_replay",
+      "path": "orchestration/runtime/completion_g_reasoning_replay.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_robustness",
+      "path": "orchestration/runtime/completion_g_reasoning_robustness.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_serialization",
+      "path": "orchestration/runtime/completion_g_reasoning_serialization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_snapshots",
+      "path": "orchestration/runtime/completion_g_reasoning_snapshots.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_statistics",
+      "path": "orchestration/runtime/completion_g_reasoning_statistics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_strategies",
+      "path": "orchestration/runtime/completion_g_reasoning_strategies.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_templates",
+      "path": "orchestration/runtime/completion_g_reasoning_templates.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_validation",
+      "path": "orchestration/runtime/completion_g_reasoning_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reasoning_visualization",
+      "path": "orchestration/runtime/completion_g_reasoning_visualization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_recursive_reasoning",
+      "path": "orchestration/runtime/completion_g_recursive_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_reflection_trees",
+      "path": "orchestration/runtime/completion_g_reflection_trees.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_refutation_graph",
+      "path": "orchestration/runtime/completion_g_refutation_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_g_support_graph",
+      "path": "orchestration/runtime/completion_g_support_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_conflict_clustering",
+      "path": "orchestration/runtime/completion_h_conflict_clustering.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_audit",
+      "path": "orchestration/runtime/completion_h_evolution_audit.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_benchmarking",
+      "path": "orchestration/runtime/completion_h_evolution_benchmarking.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_compatibility",
+      "path": "orchestration/runtime/completion_h_evolution_compatibility.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_explainability",
+      "path": "orchestration/runtime/completion_h_evolution_explainability.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_health",
+      "path": "orchestration/runtime/completion_h_evolution_health.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_history",
+      "path": "orchestration/runtime/completion_h_evolution_history.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_integrity",
+      "path": "orchestration/runtime/completion_h_evolution_integrity.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_metrics",
+      "path": "orchestration/runtime/completion_h_evolution_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_planner",
+      "path": "orchestration/runtime/completion_h_evolution_planner.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_replay",
+      "path": "orchestration/runtime/completion_h_evolution_replay.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_reports",
+      "path": "orchestration/runtime/completion_h_evolution_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_serialization",
+      "path": "orchestration/runtime/completion_h_evolution_serialization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_summaries",
+      "path": "orchestration/runtime/completion_h_evolution_summaries.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_validation_reports",
+      "path": "orchestration/runtime/completion_h_evolution_validation_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_evolution_visualization",
+      "path": "orchestration/runtime/completion_h_evolution_visualization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_integration_dependency_analysis",
+      "path": "orchestration/runtime/completion_h_integration_dependency_analysis.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_integration_planning",
+      "path": "orchestration/runtime/completion_h_integration_planning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_integration_simulation",
+      "path": "orchestration/runtime/completion_h_integration_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_knowledge_impact_graph",
+      "path": "orchestration/runtime/completion_h_knowledge_impact_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_knowledge_risk_analysis",
+      "path": "orchestration/runtime/completion_h_knowledge_risk_analysis.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_merge_simulation",
+      "path": "orchestration/runtime/completion_h_merge_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_diagnostics",
+      "path": "orchestration/runtime/completion_h_proposal_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_grouping",
+      "path": "orchestration/runtime/completion_h_proposal_grouping.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_history",
+      "path": "orchestration/runtime/completion_h_proposal_history.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_lifecycle",
+      "path": "orchestration/runtime/completion_h_proposal_lifecycle.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_lineage",
+      "path": "orchestration/runtime/completion_h_proposal_lineage.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_ranking",
+      "path": "orchestration/runtime/completion_h_proposal_ranking.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_proposal_scoring",
+      "path": "orchestration/runtime/completion_h_proposal_scoring.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_rollback_dependencies",
+      "path": "orchestration/runtime/completion_h_rollback_dependencies.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_rollback_graph",
+      "path": "orchestration/runtime/completion_h_rollback_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_rollback_simulation",
+      "path": "orchestration/runtime/completion_h_rollback_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_rollback_validation",
+      "path": "orchestration/runtime/completion_h_rollback_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_version_diagnostics",
+      "path": "orchestration/runtime/completion_h_version_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_h_version_lineage",
+      "path": "orchestration/runtime/completion_h_version_lineage.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_alternatives",
+      "path": "orchestration/runtime/completion_i_executive_alternatives.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_analytics",
+      "path": "orchestration/runtime/completion_i_executive_analytics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_auditing",
+      "path": "orchestration/runtime/completion_i_executive_auditing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_benchmarking",
+      "path": "orchestration/runtime/completion_i_executive_benchmarking.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_comparisons",
+      "path": "orchestration/runtime/completion_i_executive_comparisons.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_compatibility",
+      "path": "orchestration/runtime/completion_i_executive_compatibility.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_consistency",
+      "path": "orchestration/runtime/completion_i_executive_consistency.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_constraints",
+      "path": "orchestration/runtime/completion_i_executive_constraints.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_dashboards",
+      "path": "orchestration/runtime/completion_i_executive_dashboards.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_decision_graph",
+      "path": "orchestration/runtime/completion_i_executive_decision_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_dependency_graph",
+      "path": "orchestration/runtime/completion_i_executive_dependency_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_diagnostics",
+      "path": "orchestration/runtime/completion_i_executive_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_explainability",
+      "path": "orchestration/runtime/completion_i_executive_explainability.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_export",
+      "path": "orchestration/runtime/completion_i_executive_export.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_forecasting",
+      "path": "orchestration/runtime/completion_i_executive_forecasting.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_history",
+      "path": "orchestration/runtime/completion_i_executive_history.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_optimization",
+      "path": "orchestration/runtime/completion_i_executive_optimization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_planning_metrics",
+      "path": "orchestration/runtime/completion_i_executive_planning_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_policy_evaluation",
+      "path": "orchestration/runtime/completion_i_executive_policy_evaluation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_reflection_graph",
+      "path": "orchestration/runtime/completion_i_executive_reflection_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_replay",
+      "path": "orchestration/runtime/completion_i_executive_replay.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_reports",
+      "path": "orchestration/runtime/completion_i_executive_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_runtime_metrics",
+      "path": "orchestration/runtime/completion_i_executive_runtime_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_serialization",
+      "path": "orchestration/runtime/completion_i_executive_serialization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_simulation",
+      "path": "orchestration/runtime/completion_i_executive_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_validation",
+      "path": "orchestration/runtime/completion_i_executive_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_executive_workload_estimation",
+      "path": "orchestration/runtime/completion_i_executive_workload_estimation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_goal_graph",
+      "path": "orchestration/runtime/completion_i_goal_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_goal_hierarchy",
+      "path": "orchestration/runtime/completion_i_goal_hierarchy.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_goal_metrics",
+      "path": "orchestration/runtime/completion_i_goal_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_operational_planning",
+      "path": "orchestration/runtime/completion_i_operational_planning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_priority_balancing",
+      "path": "orchestration/runtime/completion_i_priority_balancing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_risk_balancing",
+      "path": "orchestration/runtime/completion_i_risk_balancing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_strategic_planning",
+      "path": "orchestration/runtime/completion_i_strategic_planning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_i_tactical_planning",
+      "path": "orchestration/runtime/completion_i_tactical_planning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_master_runtime_report_builder",
+      "path": "orchestration/runtime/completion_j_master_runtime_report_builder.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_analytics",
+      "path": "orchestration/runtime/completion_j_runtime_analytics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_architecture_validator",
+      "path": "orchestration/runtime/completion_j_runtime_architecture_validator.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_benchmark_suite",
+      "path": "orchestration/runtime/completion_j_runtime_benchmark_suite.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_comparison_engine",
+      "path": "orchestration/runtime/completion_j_runtime_comparison_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_compatibility_layer",
+      "path": "orchestration/runtime/completion_j_runtime_compatibility_layer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_completion_reports",
+      "path": "orchestration/runtime/completion_j_runtime_completion_reports.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_consistency_checker",
+      "path": "orchestration/runtime/completion_j_runtime_consistency_checker.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_documentation_generator",
+      "path": "orchestration/runtime/completion_j_runtime_documentation_generator.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_downgrade_planner",
+      "path": "orchestration/runtime/completion_j_runtime_downgrade_planner.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_event_recorder",
+      "path": "orchestration/runtime/completion_j_runtime_event_recorder.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_graph_exporter",
+      "path": "orchestration/runtime/completion_j_runtime_graph_exporter.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_integrity_checker",
+      "path": "orchestration/runtime/completion_j_runtime_integrity_checker.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_metadata_registry",
+      "path": "orchestration/runtime/completion_j_runtime_metadata_registry.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_migration_helpers",
+      "path": "orchestration/runtime/completion_j_runtime_migration_helpers.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_monitoring_simulation",
+      "path": "orchestration/runtime/completion_j_runtime_monitoring_simulation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_object_registry",
+      "path": "orchestration/runtime/completion_j_runtime_object_registry.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_observability",
+      "path": "orchestration/runtime/completion_j_runtime_observability.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_replay_engine",
+      "path": "orchestration/runtime/completion_j_runtime_replay_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_schema_exporter",
+      "path": "orchestration/runtime/completion_j_runtime_schema_exporter.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_schema_validator",
+      "path": "orchestration/runtime/completion_j_runtime_schema_validator.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_snapshot_manager",
+      "path": "orchestration/runtime/completion_j_runtime_snapshot_manager.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_statistics",
+      "path": "orchestration/runtime/completion_j_runtime_statistics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_runtime_upgrade_planner",
+      "path": "orchestration/runtime/completion_j_runtime_upgrade_planner.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_auditing",
+      "path": "orchestration/runtime/completion_j_universal_auditing.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_diagnostics",
+      "path": "orchestration/runtime/completion_j_universal_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_graph_export",
+      "path": "orchestration/runtime/completion_j_universal_graph_export.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_json_export",
+      "path": "orchestration/runtime/completion_j_universal_json_export.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_markdown_export",
+      "path": "orchestration/runtime/completion_j_universal_markdown_export.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_metrics",
+      "path": "orchestration/runtime/completion_j_universal_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_reporting",
+      "path": "orchestration/runtime/completion_j_universal_reporting.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_serialization",
+      "path": "orchestration/runtime/completion_j_universal_serialization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_summaries",
+      "path": "orchestration/runtime/completion_j_universal_summaries.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_validation",
+      "path": "orchestration/runtime/completion_j_universal_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "completion",
+      "module": "orchestration.runtime.completion_j_universal_visualization_metadata",
+      "path": "orchestration/runtime/completion_j_universal_visualization_metadata.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_audit_graph",
+      "path": "orchestration/runtime/deepening_a_audit_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_capability_registry",
+      "path": "orchestration/runtime/deepening_a_capability_registry.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_confidence_propagation",
+      "path": "orchestration/runtime/deepening_a_confidence_propagation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_constraint_engine",
+      "path": "orchestration/runtime/deepening_a_constraint_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_context_graph",
+      "path": "orchestration/runtime/deepening_a_context_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_dependency_validation",
+      "path": "orchestration/runtime/deepening_a_dependency_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_executive_planner",
+      "path": "orchestration/runtime/deepening_a_executive_planner.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_graph_diagnostics",
+      "path": "orchestration/runtime/deepening_a_graph_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_graph_serialization",
+      "path": "orchestration/runtime/deepening_a_graph_serialization.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_graph_validators",
+      "path": "orchestration/runtime/deepening_a_graph_validators.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_graph_visualization_metadata",
+      "path": "orchestration/runtime/deepening_a_graph_visualization_metadata.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_investigation_graph",
+      "path": "orchestration/runtime/deepening_a_investigation_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_kernel",
+      "path": "orchestration/runtime/deepening_a_kernel.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_knowledge_graph",
+      "path": "orchestration/runtime/deepening_a_knowledge_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_lifecycle_manager",
+      "path": "orchestration/runtime/deepening_a_lifecycle_manager.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_memory_graph",
+      "path": "orchestration/runtime/deepening_a_memory_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_object_validation",
+      "path": "orchestration/runtime/deepening_a_object_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_pipeline_builder",
+      "path": "orchestration/runtime/deepening_a_pipeline_builder.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_policy_engine",
+      "path": "orchestration/runtime/deepening_a_policy_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_process_graph",
+      "path": "orchestration/runtime/deepening_a_process_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_reasoning_graph",
+      "path": "orchestration/runtime/deepening_a_reasoning_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_registry_validation",
+      "path": "orchestration/runtime/deepening_a_registry_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_rollback_graph",
+      "path": "orchestration/runtime/deepening_a_rollback_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_runtime_integrity",
+      "path": "orchestration/runtime/deepening_a_runtime_integrity.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_runtime_state",
+      "path": "orchestration/runtime/deepening_a_runtime_state.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_runtime_transactions",
+      "path": "orchestration/runtime/deepening_a_runtime_transactions.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_simulation_graph",
+      "path": "orchestration/runtime/deepening_a_simulation_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_state_transitions",
+      "path": "orchestration/runtime/deepening_a_state_transitions.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_version_graph",
+      "path": "orchestration/runtime/deepening_a_version_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_a_world_graph",
+      "path": "orchestration/runtime/deepening_a_world_graph.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_alternative_hypotheses",
+      "path": "orchestration/runtime/deepening_b_alternative_hypotheses.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_confidence_propagation",
+      "path": "orchestration/runtime/deepening_b_confidence_propagation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_constraint_reasoning",
+      "path": "orchestration/runtime/deepening_b_constraint_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_contradiction_resolution",
+      "path": "orchestration/runtime/deepening_b_contradiction_resolution.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_counterfactual_reasoning",
+      "path": "orchestration/runtime/deepening_b_counterfactual_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_evidence_graph_traversal",
+      "path": "orchestration/runtime/deepening_b_evidence_graph_traversal.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_evidence_weighting",
+      "path": "orchestration/runtime/deepening_b_evidence_weighting.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_explanation_engine",
+      "path": "orchestration/runtime/deepening_b_explanation_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_failure_analysis",
+      "path": "orchestration/runtime/deepening_b_failure_analysis.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_goal_reasoning",
+      "path": "orchestration/runtime/deepening_b_goal_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_hypothesis_engine",
+      "path": "orchestration/runtime/deepening_b_hypothesis_engine.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_meta_reasoning",
+      "path": "orchestration/runtime/deepening_b_meta_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_multi_hop_planning",
+      "path": "orchestration/runtime/deepening_b_multi_hop_planning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_planning_reasoning",
+      "path": "orchestration/runtime/deepening_b_planning_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_decomposition",
+      "path": "orchestration/runtime/deepening_b_reasoning_decomposition.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_diagnostics",
+      "path": "orchestration/runtime/deepening_b_reasoning_diagnostics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_graph_traversal",
+      "path": "orchestration/runtime/deepening_b_reasoning_graph_traversal.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_health",
+      "path": "orchestration/runtime/deepening_b_reasoning_health.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_metrics",
+      "path": "orchestration/runtime/deepening_b_reasoning_metrics.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_replay",
+      "path": "orchestration/runtime/deepening_b_reasoning_replay.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_summaries",
+      "path": "orchestration/runtime/deepening_b_reasoning_summaries.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_traces",
+      "path": "orchestration/runtime/deepening_b_reasoning_traces.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_transactions",
+      "path": "orchestration/runtime/deepening_b_reasoning_transactions.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reasoning_validation",
+      "path": "orchestration/runtime/deepening_b_reasoning_validation.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_reflection",
+      "path": "orchestration/runtime/deepening_b_reflection.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_relationship_reasoning",
+      "path": "orchestration/runtime/deepening_b_relationship_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_risk_reasoning",
+      "path": "orchestration/runtime/deepening_b_risk_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_scenario_reasoning",
+      "path": "orchestration/runtime/deepening_b_scenario_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_semantic_reasoning",
+      "path": "orchestration/runtime/deepening_b_semantic_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_b_temporal_reasoning",
+      "path": "orchestration/runtime/deepening_b_temporal_reasoning.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_claim_registry",
+      "path": "orchestration/runtime/deepening_c_claim_registry.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_concept_registry",
+      "path": "orchestration/runtime/deepening_c_concept_registry.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_confidence_analyzer",
+      "path": "orchestration/runtime/deepening_c_confidence_analyzer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_conflict_analyzer",
+      "path": "orchestration/runtime/deepening_c_conflict_analyzer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_coverage_analyzer",
+      "path": "orchestration/runtime/deepening_c_coverage_analyzer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_dependency_analyzer",
+      "path": "orchestration/runtime/deepening_c_dependency_analyzer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    },
+    {
+      "family": "deepening",
+      "module": "orchestration.runtime.deepening_c_duplicate_analyzer",
+      "path": "orchestration/runtime/deepening_c_duplicate_analyzer.py",
+      "reason": "not imported by runtime modules except possible master runner/tests"
+    }
+  ],
+  "diagnosis": "Many modules are reportable architecture leaves; activation-readiness should connect them through a workflow trace before adding more modules."
+}

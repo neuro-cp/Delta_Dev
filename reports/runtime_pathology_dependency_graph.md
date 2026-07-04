@@ -1,0 +1,301 @@
+# Runtime Pathology Dependency Graph
+
+## Node Count
+612
+
+## Edge Count
+967
+
+## Edges
+- {'source': 'orchestration.runtime.arc_07_investigation', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_08_specialists', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_09_external_evidence', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_10_tool_provider_runtime', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_11_controlled_integration', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_12_evaluation_regression', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_13_sleep_replay', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_14_domain_packs', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_15_executive_operations', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_16_cognitive_os', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_17_world_model', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_18_multitime_memory', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_19_self_model', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_20_adaptive_executive', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_21_multi_runtime_collaboration', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_22_distributed_knowledge_fabric', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_23_scientific_discovery', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_24_cognitive_simulation', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_25_continuous_runtime', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_exhaustive_common', 'target': 'orchestration.runtime.v29_current_state_knowledge_inventory', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_exhaustive_common', 'target': 'orchestration.runtime.v31_learning_opportunity', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_ii_knowledge_substrate', 'target': 'orchestration.runtime.v29_current_state_knowledge_inventory', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_ii_knowledge_substrate', 'target': 'orchestration.runtime.v31_learning_opportunity', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_ii_local_answer', 'target': 'orchestration.runtime.arc_ii_knowledge_substrate', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iii_local_answer', 'target': 'orchestration.runtime.arc_iii_reasoning_engine', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iii_reasoning_engine', 'target': 'orchestration.runtime.arc_ii_knowledge_substrate', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iii_reasoning_engine', 'target': 'orchestration.runtime.v29_current_state_knowledge_inventory', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iii_reasoning_engine', 'target': 'orchestration.runtime.v31_learning_opportunity', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iv_knowledge_evolution', 'target': 'orchestration.runtime.arc_ii_knowledge_substrate', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iv_knowledge_evolution', 'target': 'orchestration.runtime.arc_iii_reasoning_engine', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iv_knowledge_evolution', 'target': 'orchestration.runtime.v29_current_state_knowledge_inventory', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iv_knowledge_evolution', 'target': 'orchestration.runtime.v31_learning_opportunity', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iv_knowledge_evolution', 'target': 'orchestration.runtime.v31_learning_proposal', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_iv_local_answer', 'target': 'orchestration.runtime.arc_iv_knowledge_evolution', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vi_executive_cognition', 'target': 'orchestration.runtime.v29_current_state_knowledge_inventory', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vi_executive_cognition', 'target': 'orchestration.runtime.v31_learning_opportunity', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vi_executive_cognition', 'target': 'orchestration.runtime.v37_capability_registry', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vi_local_answer', 'target': 'orchestration.runtime.arc_vi_executive_cognition', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_local_answer', 'target': 'orchestration.runtime.arc_07_investigation', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_local_answer', 'target': 'orchestration.runtime.arc_08_specialists', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_local_answer', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_local_answer', 'target': 'orchestration.runtime.post_arc_xxv_deepening_runner', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_local_answer', 'target': 'orchestration.runtime.post_arc_xxv_runtime_completion_runner', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_scaffolds', 'target': 'orchestration.runtime.v29_current_state_knowledge_inventory', 'type': 'imports'}
+- {'source': 'orchestration.runtime.arc_vii_xxv_scaffolds', 'target': 'orchestration.runtime.v31_learning_opportunity', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_audit_integration', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_audit_integration', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_capability_discovery', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_capability_discovery', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_change_detection', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_change_detection', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_compatibility_layer', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_compatibility_layer', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_consistency_checks', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_consistency_checks', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_dependency_graph', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_dependency_graph', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_developer_diagnostics', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_developer_diagnostics', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_diagnostics', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_diagnostics', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_event_hierarchy', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_event_hierarchy', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_event_prioritization', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_event_prioritization', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_execution_traces', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_execution_traces', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_explanation_layer', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_explanation_layer', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_failure_simulation', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_failure_simulation', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_graph_builder', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_graph_builder', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_graph_diagnostics', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_graph_diagnostics', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_health_metrics', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_health_metrics', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_integrity_validation', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_integrity_validation', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_lifecycle', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_lifecycle', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_orchestration_metrics', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_orchestration_metrics', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_pipeline_optimizer', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_pipeline_optimizer', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_profiling', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_profiling', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_recovery_planning', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_recovery_planning', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_replay', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_replay', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_rollback_coordinator', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_rollback_coordinator', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_routing', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_routing', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_runtime_comparison', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_runtime_comparison', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_runtime_explorer', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_runtime_explorer', 'target': 'orchestration.runtime.deepening_common', 'type': 'imports'}
+- {'source': 'orchestration.runtime.completion_e_kernel_runtime_snapshots', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
+
+## Isolated Modules
+- orchestration.runtime.cognitive_runtime
+- orchestration.runtime.post_arc_xxv_exhaustive_runner
+- orchestration.runtime.v14_architecture_decisions
+- orchestration.runtime.v14_gap_map
+- orchestration.runtime.v14_output_discipline
+- orchestration.runtime.v14_specialist_router
+- orchestration.runtime.v18_safety_closure_report
+- orchestration.runtime.v19_safety_checkpoint_report
+- orchestration.runtime.v20_safety_checkpoint_report
+- orchestration.runtime.v21_safety_checkpoint_report
+- orchestration.runtime.v22_safety_closure_report
+- orchestration.runtime.v23_safety_checkpoint_report
+- orchestration.runtime.v24_safety_closure_report
+- orchestration.runtime.v25_feature_activation_readiness_matrix
+- orchestration.runtime.v25_hyb1_shadow_live_comparison
+- orchestration.runtime.v25_safety_checkpoint_report
+- orchestration.runtime.v25_scheduler_live_dry_run_trial
+- orchestration.runtime.v25_training_dataset_export_trial
+- orchestration.runtime.v25_training_readiness_audit
+- orchestration.runtime.v26_dataset_redaction_trial
+- orchestration.runtime.v26_feature_activation_gate_console
+- orchestration.runtime.v26_model_artifact_registry_design
+- orchestration.runtime.v26_safety_checkpoint_report
+- orchestration.runtime.v26_training_dataset_review_ui
+- orchestration.runtime.v26_training_job_plan_design
+- orchestration.runtime.v27_evaluator_daily_dry_run_dashboard
+- orchestration.runtime.v27_feature_activation_dry_run_trial
+- orchestration.runtime.v27_full_local_demo
+- orchestration.runtime.v27_hyb1_shadow_dashboard
+- orchestration.runtime.v27_integration_ux_polish
+- orchestration.runtime.v27_master_continuation_handoff
+- orchestration.runtime.v28_validation_hardening
+
+## Root Modules
+- orchestration.runtime.arc_09_external_evidence
+- orchestration.runtime.arc_10_tool_provider_runtime
+- orchestration.runtime.arc_11_controlled_integration
+- orchestration.runtime.arc_12_evaluation_regression
+- orchestration.runtime.arc_13_sleep_replay
+- orchestration.runtime.arc_14_domain_packs
+- orchestration.runtime.arc_15_executive_operations
+- orchestration.runtime.arc_16_cognitive_os
+- orchestration.runtime.arc_17_world_model
+- orchestration.runtime.arc_18_multitime_memory
+- orchestration.runtime.arc_19_self_model
+- orchestration.runtime.arc_20_adaptive_executive
+- orchestration.runtime.arc_21_multi_runtime_collaboration
+- orchestration.runtime.arc_22_distributed_knowledge_fabric
+- orchestration.runtime.arc_23_scientific_discovery
+- orchestration.runtime.arc_24_cognitive_simulation
+- orchestration.runtime.arc_25_continuous_runtime
+- orchestration.runtime.arc_ii_local_answer
+- orchestration.runtime.arc_iii_local_answer
+- orchestration.runtime.arc_iv_local_answer
+- orchestration.runtime.arc_vi_local_answer
+- orchestration.runtime.arc_vii_xxv_local_answer
+- orchestration.runtime.arc_vii_xxv_scaffolds
+- orchestration.runtime.completion_e_kernel_audit_integration
+- orchestration.runtime.completion_e_kernel_capability_discovery
+- orchestration.runtime.completion_e_kernel_change_detection
+- orchestration.runtime.completion_e_kernel_compatibility_layer
+- orchestration.runtime.completion_e_kernel_consistency_checks
+- orchestration.runtime.completion_e_kernel_dependency_graph
+- orchestration.runtime.completion_e_kernel_developer_diagnostics
+- orchestration.runtime.completion_e_kernel_diagnostics
+- orchestration.runtime.completion_e_kernel_event_hierarchy
+- orchestration.runtime.completion_e_kernel_event_prioritization
+- orchestration.runtime.completion_e_kernel_execution_traces
+- orchestration.runtime.completion_e_kernel_explanation_layer
+- orchestration.runtime.completion_e_kernel_failure_simulation
+- orchestration.runtime.completion_e_kernel_graph_builder
+- orchestration.runtime.completion_e_kernel_graph_diagnostics
+- orchestration.runtime.completion_e_kernel_health_metrics
+- orchestration.runtime.completion_e_kernel_integrity_validation
+- orchestration.runtime.completion_e_kernel_lifecycle
+- orchestration.runtime.completion_e_kernel_orchestration_metrics
+- orchestration.runtime.completion_e_kernel_pipeline_optimizer
+- orchestration.runtime.completion_e_kernel_profiling
+- orchestration.runtime.completion_e_kernel_recovery_planning
+- orchestration.runtime.completion_e_kernel_replay
+- orchestration.runtime.completion_e_kernel_rollback_coordinator
+- orchestration.runtime.completion_e_kernel_routing
+- orchestration.runtime.completion_e_kernel_runtime_comparison
+- orchestration.runtime.completion_e_kernel_runtime_explorer
+- orchestration.runtime.completion_e_kernel_runtime_snapshots
+- orchestration.runtime.completion_e_kernel_serialization
+- orchestration.runtime.completion_e_kernel_state_validation
+- orchestration.runtime.completion_e_kernel_statistics
+- orchestration.runtime.completion_e_kernel_timing_metadata
+- orchestration.runtime.completion_e_kernel_transaction_manager
+- orchestration.runtime.completion_e_kernel_validation_reports
+- orchestration.runtime.completion_e_kernel_visualization_metadata
+- orchestration.runtime.completion_f_concept_hierarchy
+- orchestration.runtime.completion_f_concept_inheritance
+- orchestration.runtime.completion_f_concept_lineage
+- orchestration.runtime.completion_f_confidence_graph
+- orchestration.runtime.completion_f_cross_reference_engine
+- orchestration.runtime.completion_f_dependency_graph_expansion
+- orchestration.runtime.completion_f_entity_clustering
+- orchestration.runtime.completion_f_evidence_lineage_graph
+- orchestration.runtime.completion_f_evidence_neighborhoods
+- orchestration.runtime.completion_f_graph_compression
+- orchestration.runtime.completion_f_graph_diagnostics
+- orchestration.runtime.completion_f_graph_integrity_validation
+- orchestration.runtime.completion_f_graph_partitioning
+- orchestration.runtime.completion_f_graph_statistics
+- orchestration.runtime.completion_f_graph_traversal_strategies
+- orchestration.runtime.completion_f_historical_graph_snapshots
+- orchestration.runtime.completion_f_knowledge_centrality
+- orchestration.runtime.completion_f_knowledge_graph_auditing
+- orchestration.runtime.completion_f_knowledge_graph_metrics
+- orchestration.runtime.completion_f_knowledge_indexing
+- orchestration.runtime.completion_f_knowledge_lineage_graph
+- orchestration.runtime.completion_f_knowledge_map_generation
+- orchestration.runtime.completion_f_knowledge_neighborhoods
+- orchestration.runtime.completion_f_knowledge_search_planner
+- orchestration.runtime.completion_f_knowledge_topology
+- orchestration.runtime.completion_f_knowledge_validation_reports
+- orchestration.runtime.completion_f_knowledge_visualization_metadata
+- orchestration.runtime.completion_f_relationship_clustering
+- orchestration.runtime.completion_f_relationship_indexing
+- orchestration.runtime.completion_f_semantic_indexing
+- orchestration.runtime.completion_f_semantic_map_generation
+- orchestration.runtime.completion_f_semantic_neighborhoods
+- orchestration.runtime.completion_f_subgraph_extraction
+- orchestration.runtime.completion_f_temporal_indexing
+- orchestration.runtime.completion_f_version_indexing
+- orchestration.runtime.completion_g_argument_builder
+- orchestration.runtime.completion_g_argument_graph
+- orchestration.runtime.completion_g_confidence_trees
+- orchestration.runtime.completion_g_evidence_prioritization
+- orchestration.runtime.completion_g_iterative_reasoning
+- orchestration.runtime.completion_g_planning_heuristics
+- orchestration.runtime.completion_g_reasoning_architecture_reports
+
+## Leaf Modules
+- orchestration.runtime.candidate_knowledge_retrieval
+- orchestration.runtime.post_arc_xxv_deepening_runner
+- orchestration.runtime.post_arc_xxv_runtime_completion_runner
+- orchestration.runtime.runtime_reasoning
+- orchestration.runtime.v14_action_ledger
+- orchestration.runtime.v14_active_specialist_routing
+- orchestration.runtime.v14_artifact_comparison
+- orchestration.runtime.v14_dry_run_action_execution
+- orchestration.runtime.v14_execution_authorization
+- orchestration.runtime.v14_experience_adapter
+- orchestration.runtime.v14_hypothesis_arbitration
+- orchestration.runtime.v14_lanes
+- orchestration.runtime.v14_offline_evaluation
+- orchestration.runtime.v14_promotion_rollback
+- orchestration.runtime.v14_recall_bridge
+- orchestration.runtime.v14_safety_closure
+- orchestration.runtime.v14_signals
+- orchestration.runtime.v14_specialist_merge
+- orchestration.runtime.v14_structural_semantic_adapter
+- orchestration.runtime.v14_tiny_training_experiment
+- orchestration.runtime.v14_training_dataset
+- orchestration.runtime.v15_canonical_memory_write_trial
+- orchestration.runtime.v15_explicit_canonical_memory_write_trial
+- orchestration.runtime.v15_feedback_memory_candidate
+- orchestration.runtime.v15_integration_gate
+- orchestration.runtime.v15_knowledge_inventory
+- orchestration.runtime.v15_local_knowledge_router
+- orchestration.runtime.v15_selective_activation_plan
+- orchestration.runtime.v15_single_gate_trial
+- orchestration.runtime.v16_canonical_memory_rollback_trial
+- orchestration.runtime.v16_env
+- orchestration.runtime.v16_memory_candidate_review_loop
+- orchestration.runtime.v16_review_ui_export_flow
+- orchestration.runtime.v18_promotion_readiness_scorecard
+- orchestration.runtime.v18_review_ui_evidence_quality_iteration
+- orchestration.runtime.v19_console_review_workflow
+- orchestration.runtime.v19_controlled_general_memory_recall_expansion
+- orchestration.runtime.v19_session_to_memory_candidate
+- orchestration.runtime.v20_controlled_general_memory_trial
+- orchestration.runtime.v20_controlled_general_memory_trial_design
+- orchestration.runtime.v20_controlled_general_recall_trial
+- orchestration.runtime.v20_provider_live_review_bridge
+- orchestration.runtime.v20_scheduler_activation_trial_design
+- orchestration.runtime.v21_hyb1_reevaluation_report_only
+- orchestration.runtime.v22_evaluator_assisted_memory_candidate_review
+- orchestration.runtime.v22_hyb1_opt_in_shadow_trial_design
+- orchestration.runtime.v22_localhost_ui_mutation_bridge
+- orchestration.runtime.v22_provider_evidence_to_memory_candidate
+- orchestration.runtime.v23_daily_evaluator_scheduled_dry_run_trial
+- orchestration.runtime.v23_hyb1_shadow_trial_simulation
+- orchestration.runtime.v24_localhost_full_review_console
+- orchestration.runtime.v29_current_state_knowledge_inventory
+- orchestration.runtime.v32_cognitive_kernel
+- orchestration.runtime.v34_cognitive_state

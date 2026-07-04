@@ -1,0 +1,480 @@
+{
+  "class_total": 1508,
+  "likely_unused_class_count": 79,
+  "likely_unused_classes": [
+    {
+      "class": "CanonicalMemoryWriteCandidate",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryWriteApprovalGate",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryWriteSafetyReview",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryWritePlan",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryRollbackReference",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryWriteDecision",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryWriteAuditRecord",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryWriteTrialReportEntry",
+      "module": "orchestration.runtime.v15_canonical_memory_write_trial",
+      "path": "orchestration/runtime/v15_canonical_memory_write_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "MemoryCandidateApprovalRequirement",
+      "module": "orchestration.runtime.v15_feedback_memory_candidate",
+      "path": "orchestration/runtime/v15_feedback_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "FirstInteractionTrace",
+      "module": "orchestration.runtime.v15_first_interaction",
+      "path": "orchestration/runtime/v15_first_interaction.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "FirstInteractionResult",
+      "module": "orchestration.runtime.v15_first_interaction",
+      "path": "orchestration/runtime/v15_first_interaction.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "FirstInteractionReportEntry",
+      "module": "orchestration.runtime.v15_first_interaction",
+      "path": "orchestration/runtime/v15_first_interaction.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryRollbackRequest",
+      "module": "orchestration.runtime.v16_canonical_memory_rollback_trial",
+      "path": "orchestration/runtime/v16_canonical_memory_rollback_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryRollbackDecision",
+      "module": "orchestration.runtime.v16_canonical_memory_rollback_trial",
+      "path": "orchestration/runtime/v16_canonical_memory_rollback_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "CanonicalMemoryRollbackAuditRecord",
+      "module": "orchestration.runtime.v16_canonical_memory_rollback_trial",
+      "path": "orchestration/runtime/v16_canonical_memory_rollback_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ManualEvaluatorRunLock",
+      "module": "orchestration.runtime.v16_daily_evaluator_manual_run_hardening",
+      "path": "orchestration/runtime/v16_daily_evaluator_manual_run_hardening.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ManualEvaluatorAuditRecord",
+      "module": "orchestration.runtime.v16_daily_evaluator_manual_run_hardening",
+      "path": "orchestration/runtime/v16_daily_evaluator_manual_run_hardening.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "MemoryCandidateReviewAuditRecord",
+      "module": "orchestration.runtime.v16_memory_candidate_review_loop",
+      "path": "orchestration/runtime/v16_memory_candidate_review_loop.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ReviewUIExportRequest",
+      "module": "orchestration.runtime.v16_review_ui_export_flow",
+      "path": "orchestration/runtime/v16_review_ui_export_flow.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ReviewUIExportSafetyStatus",
+      "module": "orchestration.runtime.v16_review_ui_export_flow",
+      "path": "orchestration/runtime/v16_review_ui_export_flow.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SchedulerActivationGateStatus",
+      "module": "orchestration.runtime.v16_scheduler_activation_gate",
+      "path": "orchestration/runtime/v16_scheduler_activation_gate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SchedulerActivationAuditRecord",
+      "module": "orchestration.runtime.v16_scheduler_activation_gate",
+      "path": "orchestration/runtime/v16_scheduler_activation_gate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "AnswerSynthesisTrace",
+      "module": "orchestration.runtime.v17_controlled_answer_synthesis",
+      "path": "orchestration/runtime/v17_controlled_answer_synthesis.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "AnswerSynthesisReportEntry",
+      "module": "orchestration.runtime.v17_controlled_answer_synthesis",
+      "path": "orchestration/runtime/v17_controlled_answer_synthesis.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralRecallRouteRequest",
+      "module": "orchestration.runtime.v17_limited_general_recall_router",
+      "path": "orchestration/runtime/v17_limited_general_recall_router.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralRecallSourcePolicy",
+      "module": "orchestration.runtime.v17_limited_general_recall_router",
+      "path": "orchestration/runtime/v17_limited_general_recall_router.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LimitedGeneralRecallTrace",
+      "module": "orchestration.runtime.v17_limited_general_recall_trial",
+      "path": "orchestration/runtime/v17_limited_general_recall_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LimitedGeneralRecallReportEntry",
+      "module": "orchestration.runtime.v17_limited_general_recall_trial",
+      "path": "orchestration/runtime/v17_limited_general_recall_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "EvidenceReviewExport",
+      "module": "orchestration.runtime.v17_provider_evidence_review_ui",
+      "path": "orchestration/runtime/v17_provider_evidence_review_ui.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "EvidenceReviewUIReportEntry",
+      "module": "orchestration.runtime.v17_provider_evidence_review_ui",
+      "path": "orchestration/runtime/v17_provider_evidence_review_ui.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "EvidenceQualityEvaluationRun",
+      "module": "orchestration.runtime.v18_evidence_quality_evaluation",
+      "path": "orchestration/runtime/v18_evidence_quality_evaluation.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "EvidenceQualityReportEntry",
+      "module": "orchestration.runtime.v18_evidence_quality_evaluation",
+      "path": "orchestration/runtime/v18_evidence_quality_evaluation.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveTrialTrace",
+      "module": "orchestration.runtime.v18_manual_provider_live_trial",
+      "path": "orchestration/runtime/v18_manual_provider_live_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveTrialReportEntry",
+      "module": "orchestration.runtime.v18_manual_provider_live_trial",
+      "path": "orchestration/runtime/v18_manual_provider_live_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveTrialGateRequest",
+      "module": "orchestration.runtime.v18_manual_provider_live_trial_gate",
+      "path": "orchestration/runtime/v18_manual_provider_live_trial_gate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveTrialGateDecision",
+      "module": "orchestration.runtime.v18_manual_provider_live_trial_gate",
+      "path": "orchestration/runtime/v18_manual_provider_live_trial_gate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveTrialGateAuditRecord",
+      "module": "orchestration.runtime.v18_manual_provider_live_trial_gate",
+      "path": "orchestration/runtime/v18_manual_provider_live_trial_gate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveTrialGateReportEntry",
+      "module": "orchestration.runtime.v18_manual_provider_live_trial_gate",
+      "path": "orchestration/runtime/v18_manual_provider_live_trial_gate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "PromotionReadinessAuditRecord",
+      "module": "orchestration.runtime.v18_promotion_readiness_scorecard",
+      "path": "orchestration/runtime/v18_promotion_readiness_scorecard.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "PromotionReadinessReportEntry",
+      "module": "orchestration.runtime.v18_promotion_readiness_scorecard",
+      "path": "orchestration/runtime/v18_promotion_readiness_scorecard.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderEvidencePostReviewRequest",
+      "module": "orchestration.runtime.v18_provider_evidence_post_review",
+      "path": "orchestration/runtime/v18_provider_evidence_post_review.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderEvidenceCrossCheckReview",
+      "module": "orchestration.runtime.v18_provider_evidence_post_review",
+      "path": "orchestration/runtime/v18_provider_evidence_post_review.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderEvidenceReviewDecision",
+      "module": "orchestration.runtime.v18_provider_evidence_post_review",
+      "path": "orchestration/runtime/v18_provider_evidence_post_review.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderEvidencePostReviewAuditRecord",
+      "module": "orchestration.runtime.v18_provider_evidence_post_review",
+      "path": "orchestration/runtime/v18_provider_evidence_post_review.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderEvidencePostReviewReportEntry",
+      "module": "orchestration.runtime.v18_provider_evidence_post_review",
+      "path": "orchestration/runtime/v18_provider_evidence_post_review.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "QualityReviewUIReportEntry",
+      "module": "orchestration.runtime.v18_review_ui_evidence_quality_iteration",
+      "path": "orchestration/runtime/v18_review_ui_evidence_quality_iteration.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ConsoleReviewWorkflowResult",
+      "module": "orchestration.runtime.v19_console_review_workflow",
+      "path": "orchestration/runtime/v19_console_review_workflow.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralMemoryExpansionScope",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralMemoryWritePolicy",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralRecallExpansionPolicy",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralMemorySafetyGate",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralMemoryExpansionDecision",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralMemoryExpansionAuditPlan",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "GeneralMemoryExpansionReportEntry",
+      "module": "orchestration.runtime.v19_controlled_general_memory_recall_expansion",
+      "path": "orchestration/runtime/v19_controlled_general_memory_recall_expansion.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LocalDeltaConsoleCommand",
+      "module": "orchestration.runtime.v19_local_delta_console",
+      "path": "orchestration/runtime/v19_local_delta_console.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LocalDeltaConsoleResult",
+      "module": "orchestration.runtime.v19_local_delta_console",
+      "path": "orchestration/runtime/v19_local_delta_console.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SessionMemoryCandidateRequest",
+      "module": "orchestration.runtime.v19_session_to_memory_candidate",
+      "path": "orchestration/runtime/v19_session_to_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SessionMemoryCandidateProposal",
+      "module": "orchestration.runtime.v19_session_to_memory_candidate",
+      "path": "orchestration/runtime/v19_session_to_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SessionMemoryCandidateSafetyReview",
+      "module": "orchestration.runtime.v19_session_to_memory_candidate",
+      "path": "orchestration/runtime/v19_session_to_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SessionMemoryCandidateDecision",
+      "module": "orchestration.runtime.v19_session_to_memory_candidate",
+      "path": "orchestration/runtime/v19_session_to_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SessionMemoryCandidateAuditRecord",
+      "module": "orchestration.runtime.v19_session_to_memory_candidate",
+      "path": "orchestration/runtime/v19_session_to_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SessionMemoryCandidateReportEntry",
+      "module": "orchestration.runtime.v19_session_to_memory_candidate",
+      "path": "orchestration/runtime/v19_session_to_memory_candidate.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ControlledGeneralMemoryScope",
+      "module": "orchestration.runtime.v20_controlled_general_memory_trial_design",
+      "path": "orchestration/runtime/v20_controlled_general_memory_trial_design.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ControlledGeneralMemorySourcePolicy",
+      "module": "orchestration.runtime.v20_controlled_general_memory_trial_design",
+      "path": "orchestration/runtime/v20_controlled_general_memory_trial_design.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ControlledGeneralMemoryWriteRequest",
+      "module": "orchestration.runtime.v20_controlled_general_memory_trial_design",
+      "path": "orchestration/runtime/v20_controlled_general_memory_trial_design.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ControlledGeneralMemoryTrialDecision",
+      "module": "orchestration.runtime.v20_controlled_general_memory_trial_design",
+      "path": "orchestration/runtime/v20_controlled_general_memory_trial_design.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "DeltaUXCommand",
+      "module": "orchestration.runtime.v20_local_ux_consolidation",
+      "path": "orchestration/runtime/v20_local_ux_consolidation.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SchedulerActivationTrialDecision",
+      "module": "orchestration.runtime.v20_scheduler_activation_trial_design",
+      "path": "orchestration/runtime/v20_scheduler_activation_trial_design.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SchedulerActivationPlan",
+      "module": "orchestration.runtime.v21_daily_evaluator_scheduler_activation",
+      "path": "orchestration/runtime/v21_daily_evaluator_scheduler_activation.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "DeltaReviewHandler",
+      "module": "orchestration.runtime.v21_localhost_review_ui",
+      "path": "orchestration/runtime/v21_localhost_review_ui.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "HYB1ShadowTrialScope",
+      "module": "orchestration.runtime.v22_hyb1_opt_in_shadow_trial_design",
+      "path": "orchestration/runtime/v22_hyb1_opt_in_shadow_trial_design.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LocalhostUIMutationBridgeRequest",
+      "module": "orchestration.runtime.v22_localhost_ui_mutation_bridge",
+      "path": "orchestration/runtime/v22_localhost_ui_mutation_bridge.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LocalhostUIMutationBridgeDecision",
+      "module": "orchestration.runtime.v22_localhost_ui_mutation_bridge",
+      "path": "orchestration/runtime/v22_localhost_ui_mutation_bridge.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ScheduledDryRunRequest",
+      "module": "orchestration.runtime.v23_daily_evaluator_scheduled_dry_run_trial",
+      "path": "orchestration/runtime/v23_daily_evaluator_scheduled_dry_run_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "HYB1ShadowSimulationRequest",
+      "module": "orchestration.runtime.v23_hyb1_shadow_trial_simulation",
+      "path": "orchestration/runtime/v23_hyb1_shadow_trial_simulation.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "LocalhostWriteExecutionRequest",
+      "module": "orchestration.runtime.v23_localhost_write_execution_bridge",
+      "path": "orchestration/runtime/v23_localhost_write_execution_bridge.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "ProviderLiveToCandidateRequest",
+      "module": "orchestration.runtime.v23_provider_live_to_candidate_trial",
+      "path": "orchestration/runtime/v23_provider_live_to_candidate_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "RecallSynthesisRequest",
+      "module": "orchestration.runtime.v23_recall_to_synthesis_integration",
+      "path": "orchestration/runtime/v23_recall_to_synthesis_integration.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "FullConsoleSnapshot",
+      "module": "orchestration.runtime.v24_localhost_full_review_console",
+      "path": "orchestration/runtime/v24_localhost_full_review_console.py",
+      "reason": "class appears only at definition/as_dict level"
+    }
+  ]
+}

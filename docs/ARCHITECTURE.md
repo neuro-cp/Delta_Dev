@@ -707,3 +707,15 @@ This is still architecture, not activation. Completion modules remain
 providers, grant provider authority, browse autonomously, execute tools, start
 schedulers or background workers, mutate memory, mutate knowledge, perform
 hidden writes, promote HYB1, or change Model B defaults.
+
+## Runtime Pathology Principle
+
+After the post-ARC XXV completion pass, DELTA's primary risk is no longer
+missing architecture vocabulary. The primary risk is incoherence from too many
+safe but disconnected components.
+
+Future work should prefer vertical integration, consumer mapping, middleware
+contracts, and duplicate lifecycle consolidation over additional broad
+scaffold generation. A module is not architecture-complete merely because it is
+typed, tested, reportable, and safe. It must also have a clear creator,
+consumer, validator, auditor, and place in an end-to-end cognitive workflow.

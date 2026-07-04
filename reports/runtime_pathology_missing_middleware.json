@@ -1,0 +1,45 @@
+{
+  "items": [
+    {
+      "between": "Kernel -> Knowledge",
+      "impact": 10,
+      "missing": "read-only substrate query adapter"
+    },
+    {
+      "between": "Knowledge -> Reasoning",
+      "impact": 9,
+      "missing": "evidence-role and query-intent projection envelope"
+    },
+    {
+      "between": "Reasoning -> Executive",
+      "impact": 8,
+      "missing": "decision-need extraction layer"
+    },
+    {
+      "between": "Executive -> Learning",
+      "impact": 8,
+      "missing": "outcome expectation and review trigger bridge"
+    },
+    {
+      "between": "Learning -> Integration",
+      "impact": 9,
+      "missing": "single proposal lifecycle state machine"
+    },
+    {
+      "between": "Investigation -> Reasoning",
+      "impact": 8,
+      "missing": "question-to-evidence request planner"
+    },
+    {
+      "between": "Reasoning -> Specialists",
+      "impact": 7,
+      "missing": "advisory request/response contract with authority boundaries"
+    },
+    {
+      "between": "Review -> Answer",
+      "impact": 8,
+      "missing": "final response synthesis envelope that cites audit graph nodes"
+    }
+  ],
+  "missing_middleware_count": 8
+}

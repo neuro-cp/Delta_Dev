@@ -114,6 +114,27 @@ hidden write, or HYB1 promotion occurred.
 Current next recommendation:
 PROCEED_RUNTIME_ACTIVATION_READINESS_REVIEW
 
+Runtime pathology exploration is complete. DELTA should stop broad scaffold
+expansion for now. The pathology review analyzed 612 runtime modules and
+produced reports under `reports/MASTER_PATHOLOGY_REPORT.*` and
+`reports/runtime_pathology_*`.
+
+Key result: DELTA has high safety and broad architectural coverage, but its
+main weakness is vertical coherence. Many modules are safe, typed, tested, and
+reportable, yet they remain workflow leaves or duplicated scaffold patterns.
+
+Current pathology counts:
+
+- architectural debt items: 25
+- duplicate system signals: 38
+- dead-like scaffold/module paths: 353
+- disconnected modules: 32
+- likely unused classes: 79
+- runtime maturity estimate: 68%
+
+Current next recommendation:
+PROCEED_VERTICAL_INTEGRATION_PATHOLOGY_REDUCTION
+
 Runtime V3.1 is complete as a gated learning integration readiness layer. DELTA
 can detect possible learning opportunities, create LearningProposal objects,
 aggregate contradiction review bundles, explain why proposals exist or remain
