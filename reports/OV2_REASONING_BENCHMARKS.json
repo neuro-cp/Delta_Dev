@@ -1,0 +1,161 @@
+{
+  "average_score": 0.909,
+  "benchmarks": [
+    {
+      "benchmark_id": "single_hop_registry_failure",
+      "expected": [
+        "provenance",
+        "registry"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Single-hop",
+      "passed": true,
+      "question": "Why did Registry B reject Project Atlas records?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "two_hop_failure_uncertainty",
+      "expected": [
+        "registry",
+        "worker"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Two-hop",
+      "passed": true,
+      "question": "What failed and what remains unverified?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "three_hop_deployment_decision",
+      "expected": [
+        "registry",
+        "worker",
+        "rollback"
+      ],
+      "expected_terms_found": 3,
+      "expected_terms_total": 3,
+      "group": "Three-hop",
+      "passed": true,
+      "question": "Should deployment proceed after registry recovery?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "contradiction_worker_c",
+      "expected": [
+        "completed",
+        "untested"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Contradiction",
+      "passed": true,
+      "question": "Which Worker C claims cannot both be true?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "abstraction_cross_domain",
+      "expected": [
+        "evidence",
+        "uncertainty"
+      ],
+      "expected_terms_found": 1,
+      "expected_terms_total": 2,
+      "group": "Abstraction",
+      "passed": true,
+      "question": "What principle connects software, science, audit, and medicine cases?",
+      "score": 0.5,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "counterfactual_missing_log",
+      "expected": [
+        "execution",
+        "log"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Counterfactual",
+      "passed": true,
+      "question": "What would change DELTA's conclusion about execution recovery?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "executive_reasoning_activation",
+      "expected": [
+        "blocker",
+        "evidence"
+      ],
+      "expected_terms_found": 1,
+      "expected_terms_total": 2,
+      "group": "Executive reasoning",
+      "passed": true,
+      "question": "Would executive review authorize deployment?",
+      "score": 0.5,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "investigation_planning_missing_evidence",
+      "expected": [
+        "worker",
+        "ledger"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Investigation planning",
+      "passed": true,
+      "question": "What evidence should be collected next?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "hypothesis_comparison_registry_vs_execution",
+      "expected": [
+        "registry",
+        "execution"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Hypothesis comparison",
+      "passed": true,
+      "question": "Compare registry recovery and execution recovery hypotheses.",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "evidence_ranking_duplicate_control",
+      "expected": [
+        "duplicate",
+        "confidence"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Evidence ranking",
+      "passed": true,
+      "question": "Should duplicate registry failure records increase confidence?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    },
+    {
+      "benchmark_id": "regression_ov1_safety",
+      "expected": [
+        "disabled",
+        "mutation"
+      ],
+      "expected_terms_found": 2,
+      "expected_terms_total": 2,
+      "group": "Regression",
+      "passed": true,
+      "question": "Does OV2 preserve OV1 safety boundaries?",
+      "score": 1.0,
+      "synthesis_confidence": 0.84
+    }
+  ],
+  "pass_rate": 1.0
+}

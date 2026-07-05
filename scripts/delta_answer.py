@@ -32,6 +32,7 @@ from orchestration.runtime.arc_vii_xxv_local_answer import (
     run_post_arc_deepening_answer,
     run_runtime_completion_answer,
 )
+from orchestration.runtime.ov2_cognitive_quality import is_ov2_question, answer_ov2_question
 
 
 def main() -> int:
@@ -46,6 +47,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_ov2_question(query):
+        data = answer_ov2_question(query)
     elif is_runtime_completion_question(query):
         data = run_runtime_completion_answer(query)
     elif is_post_arc_deepening_question(query):
@@ -93,6 +96,8 @@ def main() -> int:
     elif data.get("phase") == "Runtime ARC I V3.9":
         print(data["answer_text"])
     elif data.get("phase") == "Runtime V3.1":
+        print(data["answer_text"])
+    elif data.get("phase") == "OV2 Cognitive Quality":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

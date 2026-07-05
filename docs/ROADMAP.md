@@ -2,6 +2,14 @@
 
 ## Current Phase
 
+OV2 cognitive quality validation is complete. The current recommended phase is
+`PROCEED_OV3_CONTROLLED_REASONING_VERTICAL_SLICE`.
+
+OV3 should validate a controlled read-only reasoning vertical slice using the
+OV2 proposition, graph, hypothesis, disconfirmation, and synthesis path. Do not
+enable live corpus ingestion, providers, canonical writes, training,
+schedulers, actions, memory mutation, knowledge mutation, or HYB1 promotion.
+
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
 Cold-start note: read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then
@@ -988,6 +996,32 @@ OV1 validates:
 Recommended next roadmap item:
 
 `PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW`
+
+## OV2 Cognitive Quality And Activation Confidence
+
+DELTA completed OV2 as a cognitive-quality upgrade over OV1, not activation.
+OV2 adds deterministic propositions, semantic deduplication, proposition graph
+traversal, hypothesis generation, disconfirmation checks, higher-order
+synthesis, reasoning benchmarks, activation confidence scoring, and a manual
+activation rehearsal.
+
+Key results:
+
+- operational confidence: `0.99`
+- reasoning confidence: `0.829`
+- activation confidence: `0.562`
+- reasoning benchmark pass rate: `0.909`
+- activation performed: `false`
+
+Only read-only substrate retrieval, grounded answer synthesis, and the
+evaluation/regression loop are marked as future activation-eligible candidates
+after manual review. Live corpus ingestion, provider calls, canonical writes,
+training, schedulers, actions, memory mutation, knowledge mutation, and HYB1
+promotion remain disabled.
+
+Recommended next roadmap item:
+
+`PROCEED_OV3_CONTROLLED_REASONING_VERTICAL_SLICE`
 
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 

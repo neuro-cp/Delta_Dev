@@ -395,3 +395,36 @@ benchmarks at 20, 50, and 100 document scales.
 
 Current next recommendation:
 PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW
+
+OV2 cognitive quality and activation confidence is complete.
+
+New OV2 surface:
+
+- `orchestration/runtime/ov2_cognitive_quality.py`
+- `scripts/delta_ov2_cognitive_quality.py`
+- `reports/OV2_COGNITIVE_QUALITY_REVIEW.md/json`
+- `reports/OV2_ACTIVATION_CONFIDENCE.md/json`
+- `reports/OV2_REASONING_BENCHMARKS.md/json`
+- `reports/OV2_READINESS.md/json`
+- `ui/delta_ov2_dashboard.html`
+- `docs/continuation_ov2.md`
+
+OV2 adds deterministic proposition normalization, semantic deduplication,
+proposition graph traversal, hypotheses, disconfirmation, higher-order
+synthesis, reasoning benchmarks, activation confidence scoring, and manual
+activation rehearsal.
+
+Current OV2 metrics:
+
+- operational confidence: `0.99`
+- reasoning confidence: `0.875`
+- activation confidence: `0.571`
+- OV2 readiness score: `0.812`
+- reasoning benchmark pass rate: `1.0`
+
+Activation remains disabled. Only read-only substrate retrieval, grounded
+answer synthesis, and evaluation/regression loop are future
+activation-eligible candidates after manual review.
+
+Current next recommendation:
+PROCEED_OV3_CONTROLLED_REASONING_VERTICAL_SLICE

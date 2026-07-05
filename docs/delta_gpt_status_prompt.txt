@@ -1,0 +1,40 @@
+DELTA status prompt for GPT
+===========================
+
+We are working on DELTA, a governed cognitive runtime in G:\Delta_Dev.
+
+Current state:
+- RC1 architecture validation passed.
+- OV1 operational validation passed.
+- Latest commit: f900d7c, "Complete DELTA OV1 operational validation marathon".
+- Runtime maturity estimate from recent reports is high, but no live capabilities are enabled.
+- Model B remains the default runtime.
+- HYB1 remains dormant/env-gated only.
+- No training, fine-tuning, provider authority, autonomous memory, scheduler, action execution, canonical writes, or hidden mutation is enabled.
+
+What DELTA appears to do well:
+- Refuses to invent missing evidence.
+- Preserves contradictions instead of collapsing them into false certainty.
+- Maintains provenance, source ids, semantic ids, confidence, and uncertainty.
+- Runs deterministic operational validation over allowlisted fixture corpora.
+- Keeps safety/governance invariants intact while exercising runtime paths.
+
+Current concern:
+DELTA may be over-scoring its own "reasoning." It is very strong at governed retrieval, provenance, and summarization, but current answers still often look like retrieved evidence summaries rather than higher-order reasoning.
+
+Main OV2 question:
+How do we move DELTA from governed semantic retrieval toward better cognitive synthesis without weakening safety?
+
+Likely OV2 focus:
+- Deduplicate semantically equivalent evidence before synthesis.
+- Traverse the semantic graph instead of relying mostly on token overlap.
+- Generate explicit hypotheses from retrieved evidence.
+- Search for disconfirming evidence before finalizing conclusions.
+- Produce higher-order abstractions that relate multiple records.
+- Add harder two-hop, three-hop, and abstraction benchmarks.
+
+Important boundary:
+Do not recommend broad new architecture or live activation yet. The next work should improve cognitive quality inside the existing governed runtime, still with no training, no canonical mutation, no provider authority, no scheduler, and no action execution.
+
+Question for GPT:
+Given this state, what should OV2 prioritize to improve DELTA's reasoning quality while preserving deterministic governance and safety?

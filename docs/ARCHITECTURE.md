@@ -872,3 +872,32 @@ OV1 remains noncanonical. It performs no provider calls, provider authority,
 canonical memory writes, live knowledge mutation, memory mutation, learning,
 scheduler/background worker activation, action execution, HYB1 promotion, or
 Model B default change.
+
+## OV2 Cognitive Quality And Activation Confidence
+
+OV2 improves reasoning quality inside the existing governed OV1 runtime rather
+than activating new capabilities. It introduces a deterministic proposition
+layer over OV1 semantic records:
+
+```text
+semantic records
+-> deduplicated propositions
+-> proposition graph traversal
+-> hypotheses
+-> disconfirmation pass
+-> higher-order synthesis
+-> reasoning benchmarks
+-> activation confidence review
+```
+
+The proposition layer collapses repeated semantic records into normalized
+claims while preserving all supporting provenance. Duplicate evidence adds
+source traceability, not extra truth. Hypotheses remain temporary reasoning
+objects, and disconfirmation searches for conflicting or missing evidence
+before synthesis.
+
+OV2 marks only read-only substrate retrieval, grounded answer synthesis, and
+the evaluation/regression loop as future activation-eligible candidates after
+manual review. It does not perform activation, provider calls, canonical writes,
+knowledge mutation, memory mutation, training, scheduler/background worker
+activation, action execution, HYB1 promotion, or Model B default changes.
