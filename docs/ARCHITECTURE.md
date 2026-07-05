@@ -845,3 +845,30 @@ This is runtime behavior over fixtures, not a new architecture layer. It does
 not enable live providers, arbitrary corpus ingestion, canonical writes, live
 learning, knowledge mutation, memory mutation, scheduler/background workers,
 action execution, HYB1 promotion, or Model B default changes.
+
+## OV1 Operational Validation
+
+OV1 reframes the post-RC1 phase as operational validation rather than feature
+activation. The goal is to prove that existing runtime capabilities behave
+correctly under controlled conditions.
+
+OV1 introduces a deterministic allowlisted local corpus loader and validates
+the operational path:
+
+```text
+allowlisted corpus
+-> semantic/entity/claim/source/confidence/uncertainty extraction
+-> noncanonical knowledge graph
+-> read-only retrieval
+-> grounded answer with confidence, provenance, and uncertainty
+-> contradiction clusters
+-> investigation plan
+-> executive review
+-> self review
+-> benchmark scores
+```
+
+OV1 remains noncanonical. It performs no provider calls, provider authority,
+canonical memory writes, live knowledge mutation, memory mutation, learning,
+scheduler/background worker activation, action execution, HYB1 promotion, or
+Model B default change.

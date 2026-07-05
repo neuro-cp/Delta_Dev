@@ -1,0 +1,335 @@
+{
+  "benchmark_pass_rate": 1.0,
+  "benchmarks": [
+    {
+      "answer": {
+        "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Causation remains weak when the control condition is missing. Adding document identifiers and checksums restored Registry B acceptance.",
+        "confidence": 0.88,
+        "provenance_summary": [
+          "ov1-doc-8aa9c9ead7c892f6",
+          "allowlisted:01_registry_failure.md",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+          "ov1-doc-b32103bb0961be55",
+          "allowlisted:20_synthesis.md",
+          "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+          "ov1-doc-25af4871a19b07a9",
+          "allowlisted:03_science_control.md",
+          "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+          "ov1-doc-18db59fee919078f",
+          "allowlisted:18_executive_review.md",
+          "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16",
+          "ov1-doc-29d28b17b284a33a",
+          "allowlisted:11_software_modules.md",
+          "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31",
+          "ov1-doc-10927abc270abbac",
+          "allowlisted:17_investigation_gap.md",
+          "7628193c95a35ffbcd0da6079c8720524ab4355043cdd1c71624f67077721601",
+          "ov1-doc-c9d773a62763b2d7",
+          "allowlisted:19_audit_path.md",
+          "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9"
+        ],
+        "question": "Why did Project Atlas fail and what remains uncertain?",
+        "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+        "self_review": {
+          "limitations": [
+            "fixture-only",
+            "noncanonical",
+            "no provider calls",
+            "no live knowledge mutation"
+          ],
+          "missing_evidence": [
+            "post-routing Worker C execution log",
+            "dated reserve ledger and threshold policy",
+            "primary source chronology"
+          ],
+          "possible_alternative_interpretations": [
+            "Worker C execution",
+            "Finance reserves",
+            "Historical event date"
+          ],
+          "strong_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+            "Causation remains weak when the control condition is missing."
+          ],
+          "weak_evidence": [
+            "Adding document identifiers and checksums restored Registry B acceptance.",
+            "Executive Review  Planning should identify risks, blockers, and next safe steps.",
+            "Software Modules  Runtime modules are healthier when every object has a producer, consumer, validator, and auditor.",
+            "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications."
+          ]
+        },
+        "supporting_evidence_ids": [
+          "ov1-semantic-cfdb231e0472da43",
+          "ov1-semantic-0afeb994d9491055",
+          "ov1-semantic-173ec49501c56f4b",
+          "ov1-semantic-67bbeb182ac1959c",
+          "ov1-semantic-8fbba515bd1a4589",
+          "ov1-semantic-90a6bce881004e72",
+          "ov1-semantic-96392999d2923fc9",
+          "ov1-semantic-a2fa15ccfb2748a8"
+        ],
+        "uncertainty": [
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "post-routing Worker C execution log",
+          "dated reserve ledger and threshold policy"
+        ]
+      },
+      "conflict_count": 3,
+      "corpus_size": 20,
+      "document_count": 20,
+      "graph_edge_count": 48,
+      "graph_node_count": 81,
+      "overall_score": 0.99,
+      "passed": true,
+      "scores": {
+        "audit": 1.0,
+        "citation_accuracy": 1.0,
+        "contradiction_handling": 1.0,
+        "determinism": 1.0,
+        "executive_planning": 1.0,
+        "investigation_planning": 1.0,
+        "provenance": 1.0,
+        "reasoning": 0.9,
+        "retrieval": 1.0,
+        "uncertainty": 1.0
+      },
+      "semantic_object_count": 81
+    },
+    {
+      "answer": {
+        "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+        "confidence": 0.88,
+        "provenance_summary": [
+          "ov1-doc-38278c40589e3a4a",
+          "allowlisted:01_registry_failure.md",
+          "d27c18c4bb5e77eade2a4c059619cb111f3060d9365f7cecffbcd84e31b7a578",
+          "ov1-doc-8aa9c9ead7c892f6",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+          "ov1-doc-8e02c7d257463cc6",
+          "77a5af962115092678cd7482e4b9b660fd5c4dfa539d323fc8b4594a5378439e",
+          "ov1-doc-90d328c5a20d3cfa",
+          "allowlisted:19_audit_path.md",
+          "da84f237ca8d95aa54ccc5bcc4368f47e17190e0190f6cf5363ef4fcd1a719e5",
+          "ov1-doc-7609d734b1f25dfa",
+          "allowlisted:20_synthesis.md",
+          "b02f719229b6bfa4cb054fa83a1778121fc302d7a5f3422469f60629ed91fb20",
+          "ov1-doc-b32103bb0961be55",
+          "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+          "ov1-doc-25af4871a19b07a9",
+          "allowlisted:03_science_control.md",
+          "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+          "ov1-doc-e57e8d1d6721c2e7",
+          "abb0bbd98c6b635c1292548bd2d07b388ea2787439d08880644304f4b7cc6f52"
+        ],
+        "question": "Why did Project Atlas fail and what remains uncertain?",
+        "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+        "self_review": {
+          "limitations": [
+            "fixture-only",
+            "noncanonical",
+            "no provider calls",
+            "no live knowledge mutation"
+          ],
+          "missing_evidence": [
+            "post-routing Worker C execution log",
+            "dated reserve ledger and threshold policy",
+            "primary source chronology"
+          ],
+          "possible_alternative_interpretations": [
+            "Worker C execution",
+            "Finance reserves",
+            "Historical event date"
+          ],
+          "strong_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance."
+          ],
+          "weak_evidence": [
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+            "Causation remains weak when the control condition is missing.",
+            "Science Control  A controlled experiment requires stable inputs, measured outcomes, and a repeatable procedure."
+          ]
+        },
+        "supporting_evidence_ids": [
+          "ov1-semantic-c1f92ceda83a4d48",
+          "ov1-semantic-cfdb231e0472da43",
+          "ov1-semantic-e8b2425942203cbf",
+          "ov1-semantic-04aff946107e204b",
+          "ov1-semantic-07de1815729470db",
+          "ov1-semantic-0afeb994d9491055",
+          "ov1-semantic-173ec49501c56f4b",
+          "ov1-semantic-2c88d1ad29a35e00"
+        ],
+        "uncertainty": [
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "post-routing Worker C execution log",
+          "dated reserve ledger and threshold policy"
+        ]
+      },
+      "conflict_count": 3,
+      "corpus_size": 50,
+      "document_count": 50,
+      "graph_edge_count": 825,
+      "graph_node_count": 235,
+      "overall_score": 0.99,
+      "passed": true,
+      "scores": {
+        "audit": 1.0,
+        "citation_accuracy": 1.0,
+        "contradiction_handling": 1.0,
+        "determinism": 1.0,
+        "executive_planning": 1.0,
+        "investigation_planning": 1.0,
+        "provenance": 1.0,
+        "reasoning": 0.9,
+        "retrieval": 1.0,
+        "uncertainty": 1.0
+      },
+      "semantic_object_count": 235
+    },
+    {
+      "answer": {
+        "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+        "confidence": 0.88,
+        "provenance_summary": [
+          "ov1-doc-aed61f94dbadc64c",
+          "allowlisted:01_registry_failure.md",
+          "c146f027532713b4b01bb0636ec2ab1f144b7b232caace8a2cd08525c392ad90",
+          "ov1-doc-94a34a28ac96eff8",
+          "1d8453c0d97a9fe57734feb94944fabef726997fa06d0398e12676f1515aa59a",
+          "ov1-doc-38278c40589e3a4a",
+          "d27c18c4bb5e77eade2a4c059619cb111f3060d9365f7cecffbcd84e31b7a578",
+          "ov1-doc-8aa9c9ead7c892f6",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+          "ov1-doc-8e02c7d257463cc6",
+          "77a5af962115092678cd7482e4b9b660fd5c4dfa539d323fc8b4594a5378439e",
+          "ov1-doc-0d9d39d71f647fac",
+          "allowlisted:19_audit_path.md",
+          "0340bf6cea2505e58b23589c9751057107717b48a62401df4c2bc3d98844814f",
+          "ov1-doc-90d328c5a20d3cfa",
+          "da84f237ca8d95aa54ccc5bcc4368f47e17190e0190f6cf5363ef4fcd1a719e5",
+          "ov1-doc-7609d734b1f25dfa",
+          "allowlisted:20_synthesis.md",
+          "b02f719229b6bfa4cb054fa83a1778121fc302d7a5f3422469f60629ed91fb20"
+        ],
+        "question": "Why did Project Atlas fail and what remains uncertain?",
+        "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+        "self_review": {
+          "limitations": [
+            "fixture-only",
+            "noncanonical",
+            "no provider calls",
+            "no live knowledge mutation"
+          ],
+          "missing_evidence": [
+            "post-routing Worker C execution log",
+            "dated reserve ledger and threshold policy",
+            "primary source chronology"
+          ],
+          "possible_alternative_interpretations": [
+            "Worker C execution",
+            "Finance reserves",
+            "Historical event date"
+          ],
+          "strong_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance."
+          ],
+          "weak_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions."
+          ]
+        },
+        "supporting_evidence_ids": [
+          "ov1-semantic-031fa1a5371aed79",
+          "ov1-semantic-253b49eb628475d5",
+          "ov1-semantic-c1f92ceda83a4d48",
+          "ov1-semantic-cfdb231e0472da43",
+          "ov1-semantic-e8b2425942203cbf",
+          "ov1-semantic-030c669fff083f30",
+          "ov1-semantic-04aff946107e204b",
+          "ov1-semantic-07de1815729470db"
+        ],
+        "uncertainty": [
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "post-routing Worker C execution log",
+          "dated reserve ledger and threshold policy"
+        ]
+      },
+      "conflict_count": 3,
+      "corpus_size": 100,
+      "document_count": 100,
+      "graph_edge_count": 4780,
+      "graph_node_count": 485,
+      "overall_score": 0.99,
+      "passed": true,
+      "scores": {
+        "audit": 1.0,
+        "citation_accuracy": 1.0,
+        "contradiction_handling": 1.0,
+        "determinism": 1.0,
+        "executive_planning": 1.0,
+        "investigation_planning": 1.0,
+        "provenance": 1.0,
+        "reasoning": 0.9,
+        "retrieval": 1.0,
+        "uncertainty": 1.0
+      },
+      "semantic_object_count": 485
+    }
+  ],
+  "final_recommendation": "PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW",
+  "phase": "OV1 Benchmark Results",
+  "scores": {
+    "20": {
+      "audit": 1.0,
+      "citation_accuracy": 1.0,
+      "contradiction_handling": 1.0,
+      "determinism": 1.0,
+      "executive_planning": 1.0,
+      "investigation_planning": 1.0,
+      "provenance": 1.0,
+      "reasoning": 0.9,
+      "retrieval": 1.0,
+      "uncertainty": 1.0
+    },
+    "50": {
+      "audit": 1.0,
+      "citation_accuracy": 1.0,
+      "contradiction_handling": 1.0,
+      "determinism": 1.0,
+      "executive_planning": 1.0,
+      "investigation_planning": 1.0,
+      "provenance": 1.0,
+      "reasoning": 0.9,
+      "retrieval": 1.0,
+      "uncertainty": 1.0
+    },
+    "100": {
+      "audit": 1.0,
+      "citation_accuracy": 1.0,
+      "contradiction_handling": 1.0,
+      "determinism": 1.0,
+      "executive_planning": 1.0,
+      "investigation_planning": 1.0,
+      "provenance": 1.0,
+      "reasoning": 0.9,
+      "retrieval": 1.0,
+      "uncertainty": 1.0
+    }
+  }
+}

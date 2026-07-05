@@ -965,6 +965,30 @@ Recommended next roadmap item:
 
 `PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST`
 
+## OV1 Operational Validation
+
+DELTA completed OV1 operational validation over an allowlisted local fixture
+corpus. This is not a new architecture layer and not live activation. It
+validates controlled runtime behavior.
+
+OV1 validates:
+
+- allowlisted corpus loading
+- semantic extraction
+- entity, relationship, claim, source, confidence, and uncertainty records
+- noncanonical knowledge graph lookup/traversal
+- grounded question answering with evidence ids
+- multi-document synthesis for 20, 50, and 100 document corpora
+- contradiction clustering
+- investigation planning
+- executive review
+- answer self-review
+- benchmark scoring
+
+Recommended next roadmap item:
+
+`PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW`
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

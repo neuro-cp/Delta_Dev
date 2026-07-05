@@ -4284,3 +4284,35 @@ and no action execution.
 Next recommendation:
 
 `PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST`
+
+## OV1 Operational Validation
+
+Completed OV1 as the first operational validation pass after RC1. The work
+does not add a new architecture layer; it validates controlled runtime behavior
+over an allowlisted local corpus.
+
+Generated artifacts:
+
+- `data/ov1_allowlisted_corpus/`
+- `orchestration/runtime/ov1_operational_validation.py`
+- `scripts/delta_ov1_operational_validation.py`
+- `tests/runtime_ov1/test_ov1_operational_validation.py`
+- `reports/OV1_OPERATIONAL_VALIDATION.md`
+- `reports/OV1_OPERATIONAL_VALIDATION.json`
+- `reports/OV1_BENCHMARK_RESULTS.md`
+- `reports/OV1_BENCHMARK_RESULTS.json`
+- `ui/delta_ov1_dashboard.html`
+- `docs/continuation_ov1.md`
+
+OV1 validates deterministic allowlisted corpus loading, semantic extraction,
+noncanonical knowledge graph construction, grounded answers, multi-document
+synthesis across 20/50/100 document corpora, contradiction clusters,
+investigation planning, executive review, self-review, and benchmark scoring.
+
+Safety state remains unchanged: no provider calls, no canonical memory, no live
+knowledge mutation, no memory mutation, no learning, no schedulers/background
+workers, no actions, no HYB1 promotion, and Model B remains default.
+
+Next recommendation:
+
+`PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW`

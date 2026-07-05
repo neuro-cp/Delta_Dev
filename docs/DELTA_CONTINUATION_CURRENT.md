@@ -376,3 +376,22 @@ end-to-end learning simulation.
 
 Current next recommendation:
 PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST
+
+OV1 operational validation is complete.
+
+New operational validation surface:
+
+- `orchestration/runtime/ov1_operational_validation.py`
+- `scripts/delta_ov1_operational_validation.py`
+- `reports/OV1_OPERATIONAL_VALIDATION.md/json`
+- `reports/OV1_BENCHMARK_RESULTS.md/json`
+- `ui/delta_ov1_dashboard.html`
+- `docs/continuation_ov1.md`
+
+OV1 validates an allowlisted local corpus through semantic extraction,
+noncanonical graph construction, read-only grounded answering, contradiction
+clustering, investigation planning, executive review, self-review, and
+benchmarks at 20, 50, and 100 document scales.
+
+Current next recommendation:
+PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW

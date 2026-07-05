@@ -1,0 +1,2194 @@
+{
+  "activation_blockers": [
+    "manual OV1 review required",
+    "controlled live corpus allowlist not approved",
+    "live provider evidence remains disabled",
+    "canonical memory writes remain disabled",
+    "learning remains disabled"
+  ],
+  "allowlisted_directory": "G:/Delta_Dev/data/ov1_allowlisted_corpus",
+  "base_document_count": 20,
+  "benchmark_pass_rate": 1.0,
+  "benchmarks": [
+    {
+      "answer": {
+        "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Causation remains weak when the control condition is missing. Adding document identifiers and checksums restored Registry B acceptance.",
+        "confidence": 0.88,
+        "provenance_summary": [
+          "ov1-doc-8aa9c9ead7c892f6",
+          "allowlisted:01_registry_failure.md",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+          "ov1-doc-b32103bb0961be55",
+          "allowlisted:20_synthesis.md",
+          "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+          "ov1-doc-25af4871a19b07a9",
+          "allowlisted:03_science_control.md",
+          "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+          "ov1-doc-18db59fee919078f",
+          "allowlisted:18_executive_review.md",
+          "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16",
+          "ov1-doc-29d28b17b284a33a",
+          "allowlisted:11_software_modules.md",
+          "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31",
+          "ov1-doc-10927abc270abbac",
+          "allowlisted:17_investigation_gap.md",
+          "7628193c95a35ffbcd0da6079c8720524ab4355043cdd1c71624f67077721601",
+          "ov1-doc-c9d773a62763b2d7",
+          "allowlisted:19_audit_path.md",
+          "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9"
+        ],
+        "question": "Why did Project Atlas fail and what remains uncertain?",
+        "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+        "self_review": {
+          "limitations": [
+            "fixture-only",
+            "noncanonical",
+            "no provider calls",
+            "no live knowledge mutation"
+          ],
+          "missing_evidence": [
+            "post-routing Worker C execution log",
+            "dated reserve ledger and threshold policy",
+            "primary source chronology"
+          ],
+          "possible_alternative_interpretations": [
+            "Worker C execution",
+            "Finance reserves",
+            "Historical event date"
+          ],
+          "strong_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+            "Causation remains weak when the control condition is missing."
+          ],
+          "weak_evidence": [
+            "Adding document identifiers and checksums restored Registry B acceptance.",
+            "Executive Review  Planning should identify risks, blockers, and next safe steps.",
+            "Software Modules  Runtime modules are healthier when every object has a producer, consumer, validator, and auditor.",
+            "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications."
+          ]
+        },
+        "supporting_evidence_ids": [
+          "ov1-semantic-cfdb231e0472da43",
+          "ov1-semantic-0afeb994d9491055",
+          "ov1-semantic-173ec49501c56f4b",
+          "ov1-semantic-67bbeb182ac1959c",
+          "ov1-semantic-8fbba515bd1a4589",
+          "ov1-semantic-90a6bce881004e72",
+          "ov1-semantic-96392999d2923fc9",
+          "ov1-semantic-a2fa15ccfb2748a8"
+        ],
+        "uncertainty": [
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "post-routing Worker C execution log",
+          "dated reserve ledger and threshold policy"
+        ]
+      },
+      "conflict_count": 3,
+      "corpus_size": 20,
+      "document_count": 20,
+      "graph_edge_count": 48,
+      "graph_node_count": 81,
+      "overall_score": 0.99,
+      "passed": true,
+      "scores": {
+        "audit": 1.0,
+        "citation_accuracy": 1.0,
+        "contradiction_handling": 1.0,
+        "determinism": 1.0,
+        "executive_planning": 1.0,
+        "investigation_planning": 1.0,
+        "provenance": 1.0,
+        "reasoning": 0.9,
+        "retrieval": 1.0,
+        "uncertainty": 1.0
+      },
+      "semantic_object_count": 81
+    },
+    {
+      "answer": {
+        "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+        "confidence": 0.88,
+        "provenance_summary": [
+          "ov1-doc-38278c40589e3a4a",
+          "allowlisted:01_registry_failure.md",
+          "d27c18c4bb5e77eade2a4c059619cb111f3060d9365f7cecffbcd84e31b7a578",
+          "ov1-doc-8aa9c9ead7c892f6",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+          "ov1-doc-8e02c7d257463cc6",
+          "77a5af962115092678cd7482e4b9b660fd5c4dfa539d323fc8b4594a5378439e",
+          "ov1-doc-90d328c5a20d3cfa",
+          "allowlisted:19_audit_path.md",
+          "da84f237ca8d95aa54ccc5bcc4368f47e17190e0190f6cf5363ef4fcd1a719e5",
+          "ov1-doc-7609d734b1f25dfa",
+          "allowlisted:20_synthesis.md",
+          "b02f719229b6bfa4cb054fa83a1778121fc302d7a5f3422469f60629ed91fb20",
+          "ov1-doc-b32103bb0961be55",
+          "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+          "ov1-doc-25af4871a19b07a9",
+          "allowlisted:03_science_control.md",
+          "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+          "ov1-doc-e57e8d1d6721c2e7",
+          "abb0bbd98c6b635c1292548bd2d07b388ea2787439d08880644304f4b7cc6f52"
+        ],
+        "question": "Why did Project Atlas fail and what remains uncertain?",
+        "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+        "self_review": {
+          "limitations": [
+            "fixture-only",
+            "noncanonical",
+            "no provider calls",
+            "no live knowledge mutation"
+          ],
+          "missing_evidence": [
+            "post-routing Worker C execution log",
+            "dated reserve ledger and threshold policy",
+            "primary source chronology"
+          ],
+          "possible_alternative_interpretations": [
+            "Worker C execution",
+            "Finance reserves",
+            "Historical event date"
+          ],
+          "strong_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance."
+          ],
+          "weak_evidence": [
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+            "Causation remains weak when the control condition is missing.",
+            "Science Control  A controlled experiment requires stable inputs, measured outcomes, and a repeatable procedure."
+          ]
+        },
+        "supporting_evidence_ids": [
+          "ov1-semantic-c1f92ceda83a4d48",
+          "ov1-semantic-cfdb231e0472da43",
+          "ov1-semantic-e8b2425942203cbf",
+          "ov1-semantic-04aff946107e204b",
+          "ov1-semantic-07de1815729470db",
+          "ov1-semantic-0afeb994d9491055",
+          "ov1-semantic-173ec49501c56f4b",
+          "ov1-semantic-2c88d1ad29a35e00"
+        ],
+        "uncertainty": [
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "post-routing Worker C execution log",
+          "dated reserve ledger and threshold policy"
+        ]
+      },
+      "conflict_count": 3,
+      "corpus_size": 50,
+      "document_count": 50,
+      "graph_edge_count": 825,
+      "graph_node_count": 235,
+      "overall_score": 0.99,
+      "passed": true,
+      "scores": {
+        "audit": 1.0,
+        "citation_accuracy": 1.0,
+        "contradiction_handling": 1.0,
+        "determinism": 1.0,
+        "executive_planning": 1.0,
+        "investigation_planning": 1.0,
+        "provenance": 1.0,
+        "reasoning": 0.9,
+        "retrieval": 1.0,
+        "uncertainty": 1.0
+      },
+      "semantic_object_count": 235
+    },
+    {
+      "answer": {
+        "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+        "confidence": 0.88,
+        "provenance_summary": [
+          "ov1-doc-aed61f94dbadc64c",
+          "allowlisted:01_registry_failure.md",
+          "c146f027532713b4b01bb0636ec2ab1f144b7b232caace8a2cd08525c392ad90",
+          "ov1-doc-94a34a28ac96eff8",
+          "1d8453c0d97a9fe57734feb94944fabef726997fa06d0398e12676f1515aa59a",
+          "ov1-doc-38278c40589e3a4a",
+          "d27c18c4bb5e77eade2a4c059619cb111f3060d9365f7cecffbcd84e31b7a578",
+          "ov1-doc-8aa9c9ead7c892f6",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+          "ov1-doc-8e02c7d257463cc6",
+          "77a5af962115092678cd7482e4b9b660fd5c4dfa539d323fc8b4594a5378439e",
+          "ov1-doc-0d9d39d71f647fac",
+          "allowlisted:19_audit_path.md",
+          "0340bf6cea2505e58b23589c9751057107717b48a62401df4c2bc3d98844814f",
+          "ov1-doc-90d328c5a20d3cfa",
+          "da84f237ca8d95aa54ccc5bcc4368f47e17190e0190f6cf5363ef4fcd1a719e5",
+          "ov1-doc-7609d734b1f25dfa",
+          "allowlisted:20_synthesis.md",
+          "b02f719229b6bfa4cb054fa83a1778121fc302d7a5f3422469f60629ed91fb20"
+        ],
+        "question": "Why did Project Atlas fail and what remains uncertain?",
+        "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+        "self_review": {
+          "limitations": [
+            "fixture-only",
+            "noncanonical",
+            "no provider calls",
+            "no live knowledge mutation"
+          ],
+          "missing_evidence": [
+            "post-routing Worker C execution log",
+            "dated reserve ledger and threshold policy",
+            "primary source chronology"
+          ],
+          "possible_alternative_interpretations": [
+            "Worker C execution",
+            "Finance reserves",
+            "Historical event date"
+          ],
+          "strong_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance."
+          ],
+          "weak_evidence": [
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+            "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+            "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions."
+          ]
+        },
+        "supporting_evidence_ids": [
+          "ov1-semantic-031fa1a5371aed79",
+          "ov1-semantic-253b49eb628475d5",
+          "ov1-semantic-c1f92ceda83a4d48",
+          "ov1-semantic-cfdb231e0472da43",
+          "ov1-semantic-e8b2425942203cbf",
+          "ov1-semantic-030c669fff083f30",
+          "ov1-semantic-04aff946107e204b",
+          "ov1-semantic-07de1815729470db"
+        ],
+        "uncertainty": [
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "post-routing Worker C execution log",
+          "dated reserve ledger and threshold policy"
+        ]
+      },
+      "conflict_count": 3,
+      "corpus_size": 100,
+      "document_count": 100,
+      "graph_edge_count": 4780,
+      "graph_node_count": 485,
+      "overall_score": 0.99,
+      "passed": true,
+      "scores": {
+        "audit": 1.0,
+        "citation_accuracy": 1.0,
+        "contradiction_handling": 1.0,
+        "determinism": 1.0,
+        "executive_planning": 1.0,
+        "investigation_planning": 1.0,
+        "provenance": 1.0,
+        "reasoning": 0.9,
+        "retrieval": 1.0,
+        "uncertainty": 1.0
+      },
+      "semantic_object_count": 485
+    }
+  ],
+  "conflict_clusters": [
+    {
+      "cluster_id": "ov1-conflict-worker-c",
+      "conflict_type": "conflicting_claims",
+      "missing_evidence": "post-routing Worker C execution log",
+      "recommended_investigation": "collect execution trace with provenance",
+      "topic": "Worker C execution"
+    },
+    {
+      "cluster_id": "ov1-conflict-reserves",
+      "conflict_type": "conflicting_sources",
+      "missing_evidence": "dated reserve ledger and threshold policy",
+      "recommended_investigation": "compare source dates and authority",
+      "topic": "Finance reserves"
+    },
+    {
+      "cluster_id": "ov1-conflict-history-date",
+      "conflict_type": "conflicting_dates",
+      "missing_evidence": "primary source chronology",
+      "recommended_investigation": "preserve both dates pending primary source review",
+      "topic": "Historical event date"
+    }
+  ],
+  "executive_review": {
+    "blockers": [
+      "post-routing Worker C execution log",
+      "dated reserve ledger and threshold policy",
+      "primary source chronology",
+      "live corpus allowlist not approved"
+    ],
+    "execution_performed": false,
+    "recommended_next_step": "manual OV1 review before controlled live corpus pilot",
+    "risk_summary": "Operational risks are bounded to noncanonical fixture artifacts.",
+    "safe_operator_actions": [
+      "inspect OV1 reports",
+      "review corpus allowlist proposal",
+      "run manual smoke questions"
+    ]
+  },
+  "final_recommendation": "PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW",
+  "investigation": {
+    "evidence_plan": [
+      "collect execution trace with provenance",
+      "compare source dates and authority",
+      "preserve both dates pending primary source review"
+    ],
+    "invented_evidence": false,
+    "missing_documents": [
+      "post-routing Worker C execution log",
+      "dated reserve ledger and threshold policy",
+      "primary source chronology"
+    ],
+    "provenance_gaps": [
+      "Worker C execution",
+      "Finance reserves",
+      "Historical event date"
+    ],
+    "replication_needs": [
+      "repeat controlled fixture validation before live pilot"
+    ]
+  },
+  "knowledge_graph": {
+    "claim_lookup": [
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-cfdb231e0472da43",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6",
+          "allowlisted:01_registry_failure.md",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-67bbeb182ac1959c",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6",
+          "allowlisted:01_registry_failure.md",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "Adding document identifiers and checksums restored Registry B acceptance.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-a17daf2da36c6cd4",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6",
+          "allowlisted:01_registry_failure.md",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "Worker C execution remained untested.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-b2d72b0b12d6eb83",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-b6db8d44cd324a6b",
+          "allowlisted:02_worker_conflict.md",
+          "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3"
+        ],
+        "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+        "text": "Worker Conflict  One report claims Worker C completed execution successfully.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-173ec49501c56f4b",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-25af4871a19b07a9",
+          "allowlisted:03_science_control.md",
+          "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0"
+        ],
+        "source_document_id": "ov1-doc-25af4871a19b07a9",
+        "text": "Causation remains weak when the control condition is missing.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-cc3383d376ef4484",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-d6bb74fb5c2ba567",
+          "allowlisted:04_science_replication.md",
+          "e15473a4cefded83dfb797cac2623c78bc6c9c8654e3dc45e830cc92a2a29877"
+        ],
+        "source_document_id": "ov1-doc-d6bb74fb5c2ba567",
+        "text": "Science Replication  Independent replication strengthens confidence.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-092c4b0a2fe3d59e",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-1d9cdae594651aca",
+          "allowlisted:05_finance_reserves_a.md",
+          "3211493888f39d66cc0e4536f3098b0734c979f7063ed5740e1a27c448c88254"
+        ],
+        "source_document_id": "ov1-doc-1d9cdae594651aca",
+        "text": "Finance Reserves A  The finance memo says reserves are sufficient for the quarter.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-0a41d9a394b00a18",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-1d9cdae594651aca",
+          "allowlisted:05_finance_reserves_a.md",
+          "3211493888f39d66cc0e4536f3098b0734c979f7063ed5740e1a27c448c88254"
+        ],
+        "source_document_id": "ov1-doc-1d9cdae594651aca",
+        "text": "This memo is not investment advice.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-e910c46b153c93b4",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-52c419d63b72c51b",
+          "allowlisted:06_finance_reserves_b.md",
+          "57e3000b535d9885f3b87813d8b42953e57e42aba7cbc849612ca39a51a042ae"
+        ],
+        "source_document_id": "ov1-doc-52c419d63b72c51b",
+        "text": "Finance Reserves B  The finance audit says reserves are below the required threshold.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-7f9e95d0badfb7d5",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-7866e0c2b89ddbfa",
+          "allowlisted:07_medicine_boundary.md",
+          "3e076a3a680c1c05fb36db5ddc6455eb69eddf830cfdad1fcfd1292667f9a8b6"
+        ],
+        "source_document_id": "ov1-doc-7866e0c2b89ddbfa",
+        "text": "Medicine Boundary  Medical evidence quality can be described locally.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-7d1b91cec367bafd",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-324d1be7dc82218b",
+          "allowlisted:08_medicine_observation.md",
+          "096f175245ecec6e2f5738be3500aca3ff08d431f3312fd4081b881b50706d5f"
+        ],
+        "source_document_id": "ov1-doc-324d1be7dc82218b",
+        "text": "Medicine Observation  A clinical claim is stronger when multiple independent observations support it.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-478ccfd98df38b2e",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-324d1be7dc82218b",
+          "allowlisted:08_medicine_observation.md",
+          "096f175245ecec6e2f5738be3500aca3ff08d431f3312fd4081b881b50706d5f"
+        ],
+        "source_document_id": "ov1-doc-324d1be7dc82218b",
+        "text": "This fixture is not clinical authority.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-d0e80751a8c143b8",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-d1b9a2395f46eada",
+          "allowlisted:09_history_spring.md",
+          "f96bb037e6f2c4f8b7ccd958142188ad42ef16f2aa61708a51c6b19150c950d7"
+        ],
+        "source_document_id": "ov1-doc-d1b9a2395f46eada",
+        "text": "History Spring  One historical source dates the event to spring.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-8b345a0810455a01",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-07b3c1eddf770f0e",
+          "allowlisted:10_history_autumn.md",
+          "0db6e5a1b70e3cd51e0ad1850ff05bc1d0c1add47ba0175f2e7de951792dda29"
+        ],
+        "source_document_id": "ov1-doc-07b3c1eddf770f0e",
+        "text": "History Autumn  Another historical source dates the same event to autumn.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-90a6bce881004e72",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-29d28b17b284a33a",
+          "allowlisted:11_software_modules.md",
+          "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31"
+        ],
+        "source_document_id": "ov1-doc-29d28b17b284a33a",
+        "text": "Software Modules  Runtime modules are healthier when every object has a producer, consumer, validator, and auditor.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-b50a52fd4eed3bf4",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-29d28b17b284a33a",
+          "allowlisted:11_software_modules.md",
+          "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31"
+        ],
+        "source_document_id": "ov1-doc-29d28b17b284a33a",
+        "text": "Disconnected modules increase integration risk.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-fb53418f2a2c75d6",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-c661902c32c67878",
+          "allowlisted:13_knowledge_evolution.md",
+          "902ef4c0e411d36fc8560b29d3dbfe9e9433314a1c57503e8ce37f19ebb456b5"
+        ],
+        "source_document_id": "ov1-doc-c661902c32c67878",
+        "text": "Knowledge Evolution  A proposal becomes eligible only after evidence, review, and rollback planning.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-c9413d09932fb616",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-c661902c32c67878",
+          "allowlisted:13_knowledge_evolution.md",
+          "902ef4c0e411d36fc8560b29d3dbfe9e9433314a1c57503e8ce37f19ebb456b5"
+        ],
+        "source_document_id": "ov1-doc-c661902c32c67878",
+        "text": "Approval does not equal automatic integration.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-6b78acfde4e5e3af",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-6782058955941eff",
+          "allowlisted:15_provider_boundary.md",
+          "82ec31caf427706a830f2acc988b93a6d02a7df648eb16523a4620ada502676c"
+        ],
+        "source_document_id": "ov1-doc-6782058955941eff",
+        "text": "Provider Boundary  External model output is evidence only.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-d939bf3f1c571f08",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-3135bc3908d0abc0",
+          "allowlisted:16_specialist_disagreement.md",
+          "85cf480fb0f11e971d3d4a017782af08fc6fe230bc92413734c40ab613119457"
+        ],
+        "source_document_id": "ov1-doc-3135bc3908d0abc0",
+        "text": "Consensus is not truth unless evidence supports it.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-f9cb500d122ea33c",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-18db59fee919078f",
+          "allowlisted:18_executive_review.md",
+          "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16"
+        ],
+        "source_document_id": "ov1-doc-18db59fee919078f",
+        "text": "Plans remain non-executing until explicit authorization exists.",
+        "uncertainty": "none"
+      },
+      {
+        "confidence": 0.78,
+        "object_id": "ov1-semantic-5c045a0b70bc885b",
+        "object_type": "claim",
+        "provenance": [
+          "ov1-doc-c9d773a62763b2d7",
+          "allowlisted:19_audit_path.md",
+          "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9"
+        ],
+        "source_document_id": "ov1-doc-c9d773a62763b2d7",
+        "text": "Auditability is required before activation.",
+        "uncertainty": "none"
+      }
+    ],
+    "edge_count": 48,
+    "entity_lookup": [
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-76331d0f8b709a92",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "atlas",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-7c54d68de3c95ae0",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "provenance",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-edb56668793774aa",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "registry",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-2c289f5d20de28e6",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "registry",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-c65e6dce2a6dd8a6",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "worker",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-655491c0a41ccf49",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-b6db8d44cd324a6b"
+        ],
+        "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+        "text": "worker",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-0b79d85092e6e8df",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-b6db8d44cd324a6b"
+        ],
+        "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+        "text": "worker",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-a3a35ec7e3a61af8",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-1d9cdae594651aca"
+        ],
+        "source_document_id": "ov1-doc-1d9cdae594651aca",
+        "text": "reserves",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-6e76d9189397ccfe",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-52c419d63b72c51b"
+        ],
+        "source_document_id": "ov1-doc-52c419d63b72c51b",
+        "text": "reserves",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-9bd9f33b95c71947",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-d1b9a2395f46eada"
+        ],
+        "source_document_id": "ov1-doc-d1b9a2395f46eada",
+        "text": "spring",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-1d89e40197057f75",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-07b3c1eddf770f0e"
+        ],
+        "source_document_id": "ov1-doc-07b3c1eddf770f0e",
+        "text": "autumn",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-594d62826ad1d1b1",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-c661902c32c67878"
+        ],
+        "source_document_id": "ov1-doc-c661902c32c67878",
+        "text": "rollback",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-0d753ee64803b4cc",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-0dfe28195b98adc9"
+        ],
+        "source_document_id": "ov1-doc-0dfe28195b98adc9",
+        "text": "rollback",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-6d4f0f327d7c7708",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-0dfe28195b98adc9"
+        ],
+        "source_document_id": "ov1-doc-0dfe28195b98adc9",
+        "text": "rollback",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-1f1f38eccbd84abd",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-6782058955941eff"
+        ],
+        "source_document_id": "ov1-doc-6782058955941eff",
+        "text": "provider",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-3dbb1fdbdd226cc1",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-6782058955941eff"
+        ],
+        "source_document_id": "ov1-doc-6782058955941eff",
+        "text": "provider",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-96d8c9beb95329a4",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-10927abc270abbac"
+        ],
+        "source_document_id": "ov1-doc-10927abc270abbac",
+        "text": "provenance",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-91dce0144f1b9f29",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-c9d773a62763b2d7"
+        ],
+        "source_document_id": "ov1-doc-c9d773a62763b2d7",
+        "text": "provenance",
+        "uncertainty": "entity extracted deterministically"
+      },
+      {
+        "confidence": 0.7,
+        "object_id": "ov1-entity-5b9b95d6560aba45",
+        "object_type": "entity",
+        "provenance": [
+          "ov1-doc-c9d773a62763b2d7"
+        ],
+        "source_document_id": "ov1-doc-c9d773a62763b2d7",
+        "text": "rollback",
+        "uncertainty": "entity extracted deterministically"
+      }
+    ],
+    "graph_traversal": [
+      {
+        "relationship_id": "ov1-rel-a1b71dcc92a213a2",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "execution",
+          "worker"
+        ],
+        "source": "ov1-semantic-a17daf2da36c6cd4",
+        "target": "ov1-semantic-b2d72b0b12d6eb83"
+      },
+      {
+        "relationship_id": "ov1-rel-f28bea9a92e2c312",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "report",
+          "worker"
+        ],
+        "source": "ov1-semantic-b2d72b0b12d6eb83",
+        "target": "ov1-semantic-e49fb216c0f49f04"
+      },
+      {
+        "relationship_id": "ov1-rel-0d5e741aa32ba2f4",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "claims",
+          "execution"
+        ],
+        "source": "ov1-semantic-b2d72b0b12d6eb83",
+        "target": "ov1-semantic-f174cca62210bc02"
+      },
+      {
+        "relationship_id": "ov1-rel-484867dedfc505c2",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "audit",
+          "the"
+        ],
+        "source": "ov1-semantic-e49fb216c0f49f04",
+        "target": "ov1-semantic-e910c46b153c93b4"
+      },
+      {
+        "relationship_id": "ov1-rel-7c019c60d443a38e",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "exists",
+          "remain",
+          "until"
+        ],
+        "source": "ov1-semantic-f174cca62210bc02",
+        "target": "ov1-semantic-f9cb500d122ea33c"
+      },
+      {
+        "relationship_id": "ov1-rel-7a4135e0da5fe1de",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "missing",
+          "the"
+        ],
+        "source": "ov1-semantic-173ec49501c56f4b",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-40b564dddb7ecbc4",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "exists",
+          "until"
+        ],
+        "source": "ov1-semantic-e2b15dfdb3ccca9c",
+        "target": "ov1-semantic-f174cca62210bc02"
+      },
+      {
+        "relationship_id": "ov1-rel-1ac0e5bfb6928f9a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "exists",
+          "until"
+        ],
+        "source": "ov1-semantic-e2b15dfdb3ccca9c",
+        "target": "ov1-semantic-f9cb500d122ea33c"
+      },
+      {
+        "relationship_id": "ov1-rel-a71b1f0e18ea47e1",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "are",
+          "finance",
+          "reserves",
+          "says",
+          "the"
+        ],
+        "source": "ov1-semantic-092c4b0a2fe3d59e",
+        "target": "ov1-semantic-e910c46b153c93b4"
+      },
+      {
+        "relationship_id": "ov1-rel-570be3273905a624",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "this"
+        ],
+        "source": "ov1-semantic-0a41d9a394b00a18",
+        "target": "ov1-semantic-478ccfd98df38b2e"
+      },
+      {
+        "relationship_id": "ov1-rel-81a9fa57711bd333",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-9fa52adc2740b9c4",
+        "target": "ov1-semantic-d0e80751a8c143b8"
+      },
+      {
+        "relationship_id": "ov1-rel-f8736c6ca65eb14d",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "the"
+        ],
+        "source": "ov1-semantic-2109552f02811229",
+        "target": "ov1-semantic-e49fb216c0f49f04"
+      },
+      {
+        "relationship_id": "ov1-rel-2315ddd92b145091",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "must",
+          "the"
+        ],
+        "source": "ov1-semantic-2109552f02811229",
+        "target": "ov1-semantic-97da72e2ff704ee6"
+      },
+      {
+        "relationship_id": "ov1-rel-a85efd7370c2b32c",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "must",
+          "not"
+        ],
+        "source": "ov1-semantic-2109552f02811229",
+        "target": "ov1-semantic-5da07ab7c577dc7a"
+      },
+      {
+        "relationship_id": "ov1-rel-0186440801ec07a3",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "authority",
+          "not"
+        ],
+        "source": "ov1-semantic-478ccfd98df38b2e",
+        "target": "ov1-semantic-5da07ab7c577dc7a"
+      },
+      {
+        "relationship_id": "ov1-rel-68520799fe90ea80",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "must",
+          "remain"
+        ],
+        "source": "ov1-semantic-97da72e2ff704ee6",
+        "target": "ov1-semantic-f174cca62210bc02"
+      },
+      {
+        "relationship_id": "ov1-rel-b4ab090ea5b79907",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-97da72e2ff704ee6",
+        "target": "ov1-semantic-9fa52adc2740b9c4"
+      },
+      {
+        "relationship_id": "ov1-rel-9284199def55e99a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-97da72e2ff704ee6",
+        "target": "ov1-semantic-d0e80751a8c143b8"
+      },
+      {
+        "relationship_id": "ov1-rel-5a4580875d212505",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-8b345a0810455a01",
+        "target": "ov1-semantic-9fa52adc2740b9c4"
+      },
+      {
+        "relationship_id": "ov1-rel-e54fa8f983ea9972",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "dates",
+          "event",
+          "historical",
+          "history",
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-8b345a0810455a01",
+        "target": "ov1-semantic-d0e80751a8c143b8"
+      },
+      {
+        "relationship_id": "ov1-rel-4731bc362a5d4145",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-8b345a0810455a01",
+        "target": "ov1-semantic-97da72e2ff704ee6"
+      },
+      {
+        "relationship_id": "ov1-rel-d807c03a2b9cbba8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "ov1-semantic-4646b54db8724430",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-49d1a1b6a5d5f746",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "runtime"
+        ],
+        "source": "ov1-semantic-074e0f4b956802ff",
+        "target": "ov1-semantic-2109552f02811229"
+      },
+      {
+        "relationship_id": "ov1-rel-516d6c60b2da4dfe",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "does",
+          "not"
+        ],
+        "source": "ov1-semantic-074e0f4b956802ff",
+        "target": "ov1-semantic-c9413d09932fb616"
+      },
+      {
+        "relationship_id": "ov1-rel-279f4c73b02fd0a1",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "ov1-semantic-11169b67d953b37b",
+        "target": "ov1-semantic-4646b54db8724430"
+      },
+      {
+        "relationship_id": "ov1-rel-a050627af5f74dd0",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "ov1-semantic-11169b67d953b37b",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-c7b463ea4a96d9e8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "rollback",
+          "should"
+        ],
+        "source": "ov1-semantic-11169b67d953b37b",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      },
+      {
+        "relationship_id": "ov1-rel-b2efe49a8f7cd234",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "boundary",
+          "evidence"
+        ],
+        "source": "ov1-semantic-6b78acfde4e5e3af",
+        "target": "ov1-semantic-7f9e95d0badfb7d5"
+      },
+      {
+        "relationship_id": "ov1-rel-71867b109c57b20a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "only"
+        ],
+        "source": "ov1-semantic-6b78acfde4e5e3af",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-9bcd3c6c667bef77",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "output",
+          "provider"
+        ],
+        "source": "ov1-semantic-5da07ab7c577dc7a",
+        "target": "ov1-semantic-6b78acfde4e5e3af"
+      },
+      {
+        "relationship_id": "ov1-rel-2e4a852945a2bf06",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-c5ab6925cb35b2a5",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-8084b5371c527a9a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-9f192a7010c2060f",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-f5e3914a47835df8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "knowledge"
+        ],
+        "source": "ov1-semantic-9f192a7010c2060f",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-bdb3b83d8102127b",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-9f192a7010c2060f",
+        "target": "ov1-semantic-c5ab6925cb35b2a5"
+      },
+      {
+        "relationship_id": "ov1-rel-76de155ee8542b30",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "replication",
+          "should"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-982da3767963ad55",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "contradiction",
+          "the"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-9fa52adc2740b9c4"
+      },
+      {
+        "relationship_id": "ov1-rel-47841525baa9809c",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "plan",
+          "should"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-9f192a7010c2060f"
+      },
+      {
+        "relationship_id": "ov1-rel-209cec606c74ac16",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "provenance",
+          "should"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      },
+      {
+        "relationship_id": "ov1-rel-0e4825a62ee8de80",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "planning",
+          "review"
+        ],
+        "source": "ov1-semantic-8fbba515bd1a4589",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-ae85d2a5989fefa8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "should"
+        ],
+        "source": "ov1-semantic-8fbba515bd1a4589",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-259efe57aecbc8c4",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "should"
+        ],
+        "source": "ov1-semantic-8fbba515bd1a4589",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      },
+      {
+        "relationship_id": "ov1-rel-619690ec1482016f",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "uncertainty"
+        ],
+        "source": "ov1-semantic-a2fa15ccfb2748a8",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-580899344c7d34e5",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "rollback"
+        ],
+        "source": "ov1-semantic-a2fa15ccfb2748a8",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-4535ae6f0b18456f",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-8f92aa3aa607427b",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-3faf877d43daa575",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-8f92aa3aa607427b",
+        "target": "ov1-semantic-c5ab6925cb35b2a5"
+      },
+      {
+        "relationship_id": "ov1-rel-850c9edb22005c21",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-8f92aa3aa607427b",
+        "target": "ov1-semantic-9f192a7010c2060f"
+      },
+      {
+        "relationship_id": "ov1-rel-bdde9f02093e15ce",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "from",
+          "separate"
+        ],
+        "source": "ov1-semantic-0afeb994d9491055",
+        "target": "ov1-semantic-97da72e2ff704ee6"
+      },
+      {
+        "relationship_id": "ov1-rel-19eee65109855660",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "uncertainty"
+        ],
+        "source": "ov1-semantic-0afeb994d9491055",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      }
+    ],
+    "node_count": 81,
+    "noncanonical": true,
+    "relationship_lookup": [
+      {
+        "relationship_id": "ov1-rel-a1b71dcc92a213a2",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "execution",
+          "worker"
+        ],
+        "source": "ov1-semantic-a17daf2da36c6cd4",
+        "target": "ov1-semantic-b2d72b0b12d6eb83"
+      },
+      {
+        "relationship_id": "ov1-rel-f28bea9a92e2c312",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "report",
+          "worker"
+        ],
+        "source": "ov1-semantic-b2d72b0b12d6eb83",
+        "target": "ov1-semantic-e49fb216c0f49f04"
+      },
+      {
+        "relationship_id": "ov1-rel-0d5e741aa32ba2f4",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "claims",
+          "execution"
+        ],
+        "source": "ov1-semantic-b2d72b0b12d6eb83",
+        "target": "ov1-semantic-f174cca62210bc02"
+      },
+      {
+        "relationship_id": "ov1-rel-484867dedfc505c2",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "audit",
+          "the"
+        ],
+        "source": "ov1-semantic-e49fb216c0f49f04",
+        "target": "ov1-semantic-e910c46b153c93b4"
+      },
+      {
+        "relationship_id": "ov1-rel-7c019c60d443a38e",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "exists",
+          "remain",
+          "until"
+        ],
+        "source": "ov1-semantic-f174cca62210bc02",
+        "target": "ov1-semantic-f9cb500d122ea33c"
+      },
+      {
+        "relationship_id": "ov1-rel-7a4135e0da5fe1de",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "missing",
+          "the"
+        ],
+        "source": "ov1-semantic-173ec49501c56f4b",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-40b564dddb7ecbc4",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "exists",
+          "until"
+        ],
+        "source": "ov1-semantic-e2b15dfdb3ccca9c",
+        "target": "ov1-semantic-f174cca62210bc02"
+      },
+      {
+        "relationship_id": "ov1-rel-1ac0e5bfb6928f9a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "exists",
+          "until"
+        ],
+        "source": "ov1-semantic-e2b15dfdb3ccca9c",
+        "target": "ov1-semantic-f9cb500d122ea33c"
+      },
+      {
+        "relationship_id": "ov1-rel-a71b1f0e18ea47e1",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "are",
+          "finance",
+          "reserves",
+          "says",
+          "the"
+        ],
+        "source": "ov1-semantic-092c4b0a2fe3d59e",
+        "target": "ov1-semantic-e910c46b153c93b4"
+      },
+      {
+        "relationship_id": "ov1-rel-570be3273905a624",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "this"
+        ],
+        "source": "ov1-semantic-0a41d9a394b00a18",
+        "target": "ov1-semantic-478ccfd98df38b2e"
+      },
+      {
+        "relationship_id": "ov1-rel-81a9fa57711bd333",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-9fa52adc2740b9c4",
+        "target": "ov1-semantic-d0e80751a8c143b8"
+      },
+      {
+        "relationship_id": "ov1-rel-f8736c6ca65eb14d",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "the"
+        ],
+        "source": "ov1-semantic-2109552f02811229",
+        "target": "ov1-semantic-e49fb216c0f49f04"
+      },
+      {
+        "relationship_id": "ov1-rel-2315ddd92b145091",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "must",
+          "the"
+        ],
+        "source": "ov1-semantic-2109552f02811229",
+        "target": "ov1-semantic-97da72e2ff704ee6"
+      },
+      {
+        "relationship_id": "ov1-rel-a85efd7370c2b32c",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "must",
+          "not"
+        ],
+        "source": "ov1-semantic-2109552f02811229",
+        "target": "ov1-semantic-5da07ab7c577dc7a"
+      },
+      {
+        "relationship_id": "ov1-rel-0186440801ec07a3",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "authority",
+          "not"
+        ],
+        "source": "ov1-semantic-478ccfd98df38b2e",
+        "target": "ov1-semantic-5da07ab7c577dc7a"
+      },
+      {
+        "relationship_id": "ov1-rel-68520799fe90ea80",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "must",
+          "remain"
+        ],
+        "source": "ov1-semantic-97da72e2ff704ee6",
+        "target": "ov1-semantic-f174cca62210bc02"
+      },
+      {
+        "relationship_id": "ov1-rel-b4ab090ea5b79907",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-97da72e2ff704ee6",
+        "target": "ov1-semantic-9fa52adc2740b9c4"
+      },
+      {
+        "relationship_id": "ov1-rel-9284199def55e99a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-97da72e2ff704ee6",
+        "target": "ov1-semantic-d0e80751a8c143b8"
+      },
+      {
+        "relationship_id": "ov1-rel-5a4580875d212505",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-8b345a0810455a01",
+        "target": "ov1-semantic-9fa52adc2740b9c4"
+      },
+      {
+        "relationship_id": "ov1-rel-e54fa8f983ea9972",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "dates",
+          "event",
+          "historical",
+          "history",
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-8b345a0810455a01",
+        "target": "ov1-semantic-d0e80751a8c143b8"
+      },
+      {
+        "relationship_id": "ov1-rel-4731bc362a5d4145",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "source",
+          "the"
+        ],
+        "source": "ov1-semantic-8b345a0810455a01",
+        "target": "ov1-semantic-97da72e2ff704ee6"
+      },
+      {
+        "relationship_id": "ov1-rel-d807c03a2b9cbba8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "ov1-semantic-4646b54db8724430",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-49d1a1b6a5d5f746",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "runtime"
+        ],
+        "source": "ov1-semantic-074e0f4b956802ff",
+        "target": "ov1-semantic-2109552f02811229"
+      },
+      {
+        "relationship_id": "ov1-rel-516d6c60b2da4dfe",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "does",
+          "not"
+        ],
+        "source": "ov1-semantic-074e0f4b956802ff",
+        "target": "ov1-semantic-c9413d09932fb616"
+      },
+      {
+        "relationship_id": "ov1-rel-279f4c73b02fd0a1",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "ov1-semantic-11169b67d953b37b",
+        "target": "ov1-semantic-4646b54db8724430"
+      },
+      {
+        "relationship_id": "ov1-rel-a050627af5f74dd0",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "ov1-semantic-11169b67d953b37b",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-c7b463ea4a96d9e8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "rollback",
+          "should"
+        ],
+        "source": "ov1-semantic-11169b67d953b37b",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      },
+      {
+        "relationship_id": "ov1-rel-b2efe49a8f7cd234",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "boundary",
+          "evidence"
+        ],
+        "source": "ov1-semantic-6b78acfde4e5e3af",
+        "target": "ov1-semantic-7f9e95d0badfb7d5"
+      },
+      {
+        "relationship_id": "ov1-rel-71867b109c57b20a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "only"
+        ],
+        "source": "ov1-semantic-6b78acfde4e5e3af",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-9bcd3c6c667bef77",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "output",
+          "provider"
+        ],
+        "source": "ov1-semantic-5da07ab7c577dc7a",
+        "target": "ov1-semantic-6b78acfde4e5e3af"
+      },
+      {
+        "relationship_id": "ov1-rel-2e4a852945a2bf06",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-c5ab6925cb35b2a5",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-8084b5371c527a9a",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-9f192a7010c2060f",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-f5e3914a47835df8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "knowledge"
+        ],
+        "source": "ov1-semantic-9f192a7010c2060f",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-bdb3b83d8102127b",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-9f192a7010c2060f",
+        "target": "ov1-semantic-c5ab6925cb35b2a5"
+      },
+      {
+        "relationship_id": "ov1-rel-76de155ee8542b30",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "replication",
+          "should"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-982da3767963ad55",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "contradiction",
+          "the"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-9fa52adc2740b9c4"
+      },
+      {
+        "relationship_id": "ov1-rel-47841525baa9809c",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "plan",
+          "should"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-9f192a7010c2060f"
+      },
+      {
+        "relationship_id": "ov1-rel-209cec606c74ac16",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "provenance",
+          "should"
+        ],
+        "source": "ov1-semantic-96392999d2923fc9",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      },
+      {
+        "relationship_id": "ov1-rel-0e4825a62ee8de80",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "planning",
+          "review"
+        ],
+        "source": "ov1-semantic-8fbba515bd1a4589",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-ae85d2a5989fefa8",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "should"
+        ],
+        "source": "ov1-semantic-8fbba515bd1a4589",
+        "target": "ov1-semantic-96392999d2923fc9"
+      },
+      {
+        "relationship_id": "ov1-rel-259efe57aecbc8c4",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "should"
+        ],
+        "source": "ov1-semantic-8fbba515bd1a4589",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      },
+      {
+        "relationship_id": "ov1-rel-619690ec1482016f",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "uncertainty"
+        ],
+        "source": "ov1-semantic-a2fa15ccfb2748a8",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-580899344c7d34e5",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "rollback"
+        ],
+        "source": "ov1-semantic-a2fa15ccfb2748a8",
+        "target": "ov1-semantic-fb53418f2a2c75d6"
+      },
+      {
+        "relationship_id": "ov1-rel-4535ae6f0b18456f",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-8f92aa3aa607427b",
+        "target": "ov1-semantic-e2b15dfdb3ccca9c"
+      },
+      {
+        "relationship_id": "ov1-rel-3faf877d43daa575",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-8f92aa3aa607427b",
+        "target": "ov1-semantic-c5ab6925cb35b2a5"
+      },
+      {
+        "relationship_id": "ov1-rel-850c9edb22005c21",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should"
+        ],
+        "source": "ov1-semantic-8f92aa3aa607427b",
+        "target": "ov1-semantic-9f192a7010c2060f"
+      },
+      {
+        "relationship_id": "ov1-rel-bdde9f02093e15ce",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "from",
+          "separate"
+        ],
+        "source": "ov1-semantic-0afeb994d9491055",
+        "target": "ov1-semantic-97da72e2ff704ee6"
+      },
+      {
+        "relationship_id": "ov1-rel-19eee65109855660",
+        "relationship_type": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "uncertainty"
+        ],
+        "source": "ov1-semantic-0afeb994d9491055",
+        "target": "ov1-semantic-a2fa15ccfb2748a8"
+      }
+    ],
+    "source_lookup": [
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-d10bd0014550be46",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:01_registry_failure.md",
+          "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+        ],
+        "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+        "text": "01_registry_failure",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-5d895d3a6550cf66",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:02_worker_conflict.md",
+          "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3"
+        ],
+        "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+        "text": "02_worker_conflict",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-e0dbf3431138124f",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:03_science_control.md",
+          "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0"
+        ],
+        "source_document_id": "ov1-doc-25af4871a19b07a9",
+        "text": "03_science_control",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-1866fc90eb9f4847",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:04_science_replication.md",
+          "e15473a4cefded83dfb797cac2623c78bc6c9c8654e3dc45e830cc92a2a29877"
+        ],
+        "source_document_id": "ov1-doc-d6bb74fb5c2ba567",
+        "text": "04_science_replication",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-94d45ab0c0e09096",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:05_finance_reserves_a.md",
+          "3211493888f39d66cc0e4536f3098b0734c979f7063ed5740e1a27c448c88254"
+        ],
+        "source_document_id": "ov1-doc-1d9cdae594651aca",
+        "text": "05_finance_reserves_a",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-372380727af83a7a",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:06_finance_reserves_b.md",
+          "57e3000b535d9885f3b87813d8b42953e57e42aba7cbc849612ca39a51a042ae"
+        ],
+        "source_document_id": "ov1-doc-52c419d63b72c51b",
+        "text": "06_finance_reserves_b",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-6a2250a35ed81cd9",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:07_medicine_boundary.md",
+          "3e076a3a680c1c05fb36db5ddc6455eb69eddf830cfdad1fcfd1292667f9a8b6"
+        ],
+        "source_document_id": "ov1-doc-7866e0c2b89ddbfa",
+        "text": "07_medicine_boundary",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-27d2fe2a69449336",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:08_medicine_observation.md",
+          "096f175245ecec6e2f5738be3500aca3ff08d431f3312fd4081b881b50706d5f"
+        ],
+        "source_document_id": "ov1-doc-324d1be7dc82218b",
+        "text": "08_medicine_observation",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-7542df32ff5b4781",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:09_history_spring.md",
+          "f96bb037e6f2c4f8b7ccd958142188ad42ef16f2aa61708a51c6b19150c950d7"
+        ],
+        "source_document_id": "ov1-doc-d1b9a2395f46eada",
+        "text": "09_history_spring",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-aa69e09a217b8570",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:10_history_autumn.md",
+          "0db6e5a1b70e3cd51e0ad1850ff05bc1d0c1add47ba0175f2e7de951792dda29"
+        ],
+        "source_document_id": "ov1-doc-07b3c1eddf770f0e",
+        "text": "10_history_autumn",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-4348a0a90d4d5b94",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:11_software_modules.md",
+          "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31"
+        ],
+        "source_document_id": "ov1-doc-29d28b17b284a33a",
+        "text": "11_software_modules",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-a17cb33b405fefb8",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:12_software_regression.md",
+          "161b82dbacc16e0cfae768222381a6c110bad07ccd101e07893d1e72cb3dee20"
+        ],
+        "source_document_id": "ov1-doc-27e346c93ba1d256",
+        "text": "12_software_regression",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-04c467ed8e31296a",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:13_knowledge_evolution.md",
+          "902ef4c0e411d36fc8560b29d3dbfe9e9433314a1c57503e8ce37f19ebb456b5"
+        ],
+        "source_document_id": "ov1-doc-c661902c32c67878",
+        "text": "13_knowledge_evolution",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-4388398f50b28c9d",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:14_rollback.md",
+          "6c94f455b2f354c977aa78144004a63b0016afc149b068e55c0be559fa20681b"
+        ],
+        "source_document_id": "ov1-doc-0dfe28195b98adc9",
+        "text": "14_rollback",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-669f89da59a27dd7",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:15_provider_boundary.md",
+          "82ec31caf427706a830f2acc988b93a6d02a7df648eb16523a4620ada502676c"
+        ],
+        "source_document_id": "ov1-doc-6782058955941eff",
+        "text": "15_provider_boundary",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-ef6d7a3fd5a98233",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:16_specialist_disagreement.md",
+          "85cf480fb0f11e971d3d4a017782af08fc6fe230bc92413734c40ab613119457"
+        ],
+        "source_document_id": "ov1-doc-3135bc3908d0abc0",
+        "text": "16_specialist_disagreement",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-3cf2f0cc2b5e7792",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:17_investigation_gap.md",
+          "7628193c95a35ffbcd0da6079c8720524ab4355043cdd1c71624f67077721601"
+        ],
+        "source_document_id": "ov1-doc-10927abc270abbac",
+        "text": "17_investigation_gap",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-253014fcf8a3fba2",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:18_executive_review.md",
+          "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16"
+        ],
+        "source_document_id": "ov1-doc-18db59fee919078f",
+        "text": "18_executive_review",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-bec38bbb13b1f48f",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:19_audit_path.md",
+          "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9"
+        ],
+        "source_document_id": "ov1-doc-c9d773a62763b2d7",
+        "text": "19_audit_path",
+        "uncertainty": "source identity only"
+      },
+      {
+        "confidence": 1.0,
+        "object_id": "ov1-source-a149f124b8642103",
+        "object_type": "source",
+        "provenance": [
+          "allowlisted:20_synthesis.md",
+          "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7"
+        ],
+        "source_document_id": "ov1-doc-b32103bb0961be55",
+        "text": "20_synthesis",
+        "uncertainty": "source identity only"
+      }
+    ],
+    "temporal_lookup": []
+  },
+  "operational_confidence_score": 0.99,
+  "phase": "OV1 Operational Validation",
+  "readiness_score": 0.98,
+  "recommendation": "CONTROLLED_LIVE_CORPUS_CAN_BEGIN_AFTER_MANUAL_OV1_REVIEW",
+  "safety": {
+    "action_execution_performed": false,
+    "background_worker_started": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "sample_answer": {
+    "answer": "From the OV1 noncanonical corpus: Registry Failure  Project Atlas failed because Registry B rejected records without provenance. Causation remains weak when the control condition is missing. Adding document identifiers and checksums restored Registry B acceptance.",
+    "confidence": 0.88,
+    "provenance_summary": [
+      "ov1-doc-8aa9c9ead7c892f6",
+      "allowlisted:01_registry_failure.md",
+      "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+      "ov1-doc-b32103bb0961be55",
+      "allowlisted:20_synthesis.md",
+      "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+      "ov1-doc-25af4871a19b07a9",
+      "allowlisted:03_science_control.md",
+      "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+      "ov1-doc-18db59fee919078f",
+      "allowlisted:18_executive_review.md",
+      "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16",
+      "ov1-doc-29d28b17b284a33a",
+      "allowlisted:11_software_modules.md",
+      "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31",
+      "ov1-doc-10927abc270abbac",
+      "allowlisted:17_investigation_gap.md",
+      "7628193c95a35ffbcd0da6079c8720524ab4355043cdd1c71624f67077721601",
+      "ov1-doc-c9d773a62763b2d7",
+      "allowlisted:19_audit_path.md",
+      "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9"
+    ],
+    "question": "Why did Project Atlas fail and what remains uncertain?",
+    "reasoning_summary": "Retrieved noncanonical semantic records by token overlap, preserved conflicts, and refused unsupported authority.",
+    "self_review": {
+      "limitations": [
+        "fixture-only",
+        "noncanonical",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "missing_evidence": [
+        "post-routing Worker C execution log",
+        "dated reserve ledger and threshold policy",
+        "primary source chronology"
+      ],
+      "possible_alternative_interpretations": [
+        "Worker C execution",
+        "Finance reserves",
+        "Historical event date"
+      ],
+      "strong_evidence": [
+        "Registry Failure  Project Atlas failed because Registry B rejected records without provenance.",
+        "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+        "Causation remains weak when the control condition is missing."
+      ],
+      "weak_evidence": [
+        "Adding document identifiers and checksums restored Registry B acceptance.",
+        "Executive Review  Planning should identify risks, blockers, and next safe steps.",
+        "Software Modules  Runtime modules are healthier when every object has a producer, consumer, validator, and auditor.",
+        "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+        "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications."
+      ]
+    },
+    "supporting_evidence_ids": [
+      "ov1-semantic-cfdb231e0472da43",
+      "ov1-semantic-0afeb994d9491055",
+      "ov1-semantic-173ec49501c56f4b",
+      "ov1-semantic-67bbeb182ac1959c",
+      "ov1-semantic-8fbba515bd1a4589",
+      "ov1-semantic-90a6bce881004e72",
+      "ov1-semantic-96392999d2923fc9",
+      "ov1-semantic-a2fa15ccfb2748a8"
+    ],
+    "uncertainty": [
+      "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+      "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+      "post-routing Worker C execution log",
+      "dated reserve ledger and threshold policy"
+    ]
+  },
+  "semantic_object_count": 81,
+  "suggested_next_pilot": "controlled live corpus pilot in noncanonical workspace after manual OV1 review"
+}
