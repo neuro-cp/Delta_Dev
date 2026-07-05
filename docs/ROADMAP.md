@@ -909,6 +909,40 @@ Recommended next roadmap item:
 
 `PROCEED_WAVE_0_MANUAL_RC1_VALIDATION`
 
+## RC1 Activation Wave Chain Readiness
+
+DELTA completed the RC1 activation wave chain as staged readiness work.
+
+Completed waves:
+
+1. Wave 0 manual RC1 validation.
+2. Wave 1 fixture-only corpus ingestion into noncanonical semantic records.
+3. Wave 2 read-only retrieval and grounded synthesis.
+4. Wave 3 approval-gated simulated substrate writes.
+5. Wave 4 rollback and evaluation validation.
+6. Wave 5 provider-assisted evidence simulation.
+7. Wave 6 controlled live corpus pilot design.
+8. Wave 7 limited learning/consolidation pilot design.
+
+First actual enabled state:
+
+`fixture_only_noncanonical_semantic_record_ingestion`
+
+Still blocked:
+
+- real provider calls
+- arbitrary live corpus ingestion
+- canonical memory writes
+- live knowledge mutation
+- live learning/consolidation
+- scheduler/background workers
+- action execution
+- HYB1 promotion
+
+Recommended next roadmap item:
+
+`PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW`
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

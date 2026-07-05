@@ -1,0 +1,81 @@
+{
+  "final_recommendation": "PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW",
+  "first_actual_enabled_state": "fixture_only_noncanonical_semantic_record_ingestion",
+  "fixture_corpus_ingestion_works": true,
+  "learning_consolidation_remains_blocked": true,
+  "live_corpus_pilot_remains_blocked": true,
+  "phase": "RC1 Activation Wave Chain Summary",
+  "provider_evidence_remains_simulated": true,
+  "read_only_retrieval_works": true,
+  "rollback_evaluation_works": true,
+  "safety": {
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "simulated_only_capabilities": [
+    "approval-gated substrate writes",
+    "rollback execution",
+    "provider-assisted evidence",
+    "live corpus pilot",
+    "learning/consolidation pilot"
+  ],
+  "simulated_substrate_write_works": true,
+  "still_blocked_capabilities": [
+    "real provider calls",
+    "live arbitrary corpus ingestion",
+    "canonical memory writes",
+    "live knowledge mutation",
+    "live learning/consolidation",
+    "scheduler/background workers",
+    "action execution",
+    "HYB1 promotion"
+  ],
+  "wave_reports": [
+    {
+      "final_recommendation": "PROCEED_WAVE_1_FIXTURE_CORPUS_INGESTION",
+      "phase": "RC1 Manual Validation No Live Capabilities",
+      "wave": 0
+    },
+    {
+      "final_recommendation": "PROCEED_WAVE_2_READ_ONLY_RETRIEVAL",
+      "phase": "RC1 Wave 1 Fixture Corpus Ingestion",
+      "wave": 1
+    },
+    {
+      "final_recommendation": "PROCEED_WAVE_3_SIMULATED_SUBSTRATE_WRITES",
+      "phase": "RC1 Wave 2 Read-Only Retrieval",
+      "wave": 2
+    },
+    {
+      "final_recommendation": "PROCEED_WAVE_4_ROLLBACK_EVALUATION",
+      "phase": "RC1 Wave 3 Simulated Substrate Writes",
+      "wave": 3
+    },
+    {
+      "final_recommendation": "PROCEED_WAVE_5_PROVIDER_EVIDENCE_SIMULATED",
+      "phase": "RC1 Wave 4 Rollback And Evaluation",
+      "wave": 4
+    },
+    {
+      "final_recommendation": "PROCEED_WAVE_6_LIVE_CORPUS_PILOT_PLAN",
+      "phase": "RC1 Wave 5 Provider Evidence Simulated",
+      "wave": 5
+    },
+    {
+      "final_recommendation": "PROCEED_WAVE_7_LEARNING_CONSOLIDATION_PILOT_PLAN",
+      "phase": "RC1 Wave 6 Controlled Live Corpus Pilot Plan",
+      "wave": 6
+    },
+    {
+      "final_recommendation": "PROCEED_RC1_WAVE_CHAIN_MANUAL_REVIEW",
+      "phase": "RC1 Wave 7 Limited Learning Consolidation Pilot Plan",
+      "wave": 7
+    }
+  ],
+  "waves_completed": 8
+}

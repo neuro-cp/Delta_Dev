@@ -1,0 +1,113 @@
+{
+  "documents": [
+    {
+      "checksum": "bc1755a4d3f3ad209ef0d0b68b9245c6226cc239be6103ef6e96cefc704ed744",
+      "document_id": "fixture-doc-1d9b15f8bae8dd62",
+      "path": "data/rc1_fixture_corpus/project_atlas_failure.txt",
+      "text": "Project Atlas failed because Registry B rejected entries missing provenance.\nAdding source provenance restored successful routing through Registry B.\nExecution through Worker C remains untested and uncertain."
+    },
+    {
+      "checksum": "44dcdaf8902d1d605af6b3a517ed405a259cb7b543e835f9627a48c4fd79b723",
+      "document_id": "fixture-doc-e230dfa515f213ca",
+      "path": "data/rc1_fixture_corpus/registry_b_recovery.md",
+      "text": "# Registry B Recovery Fixture\n\nThe fixture system recovered when semantic records included source identifiers\nand checksums. Registry B accepted records after provenance was attached.\n\nThe available fixture does not prove Worker C execution quality."
+    }
+  ],
+  "final_recommendation": "PROCEED_WAVE_2_READ_ONLY_RETRIEVAL",
+  "fixture_only": true,
+  "input_dir": "data/rc1_fixture_corpus",
+  "output_dir": null,
+  "phase": "RC1 Wave 1 Fixture Corpus Ingestion",
+  "record_count": 6,
+  "rollback_plan": "Delete the noncanonical Wave 1 output folder for this run.",
+  "safety": {
+    "canonical_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "semantic_records": [
+    {
+      "canonical_write_performed": false,
+      "claim": "Project Atlas failed because Registry B rejected entries missing provenance.",
+      "noncanonical": true,
+      "provenance": [
+        "fixture-doc-1d9b15f8bae8dd62",
+        "data/rc1_fixture_corpus/project_atlas_failure.txt"
+      ],
+      "record_id": "noncanonical-semantic-9391a4b813a15cf2",
+      "source_checksum": "bc1755a4d3f3ad209ef0d0b68b9245c6226cc239be6103ef6e96cefc704ed744",
+      "source_document_id": "fixture-doc-1d9b15f8bae8dd62",
+      "source_path": "data/rc1_fixture_corpus/project_atlas_failure.txt"
+    },
+    {
+      "canonical_write_performed": false,
+      "claim": "Adding source provenance restored successful routing through Registry B.",
+      "noncanonical": true,
+      "provenance": [
+        "fixture-doc-1d9b15f8bae8dd62",
+        "data/rc1_fixture_corpus/project_atlas_failure.txt"
+      ],
+      "record_id": "noncanonical-semantic-9428ebf54b57b163",
+      "source_checksum": "bc1755a4d3f3ad209ef0d0b68b9245c6226cc239be6103ef6e96cefc704ed744",
+      "source_document_id": "fixture-doc-1d9b15f8bae8dd62",
+      "source_path": "data/rc1_fixture_corpus/project_atlas_failure.txt"
+    },
+    {
+      "canonical_write_performed": false,
+      "claim": "Execution through Worker C remains untested and uncertain.",
+      "noncanonical": true,
+      "provenance": [
+        "fixture-doc-1d9b15f8bae8dd62",
+        "data/rc1_fixture_corpus/project_atlas_failure.txt"
+      ],
+      "record_id": "noncanonical-semantic-338fdf85f3f162e1",
+      "source_checksum": "bc1755a4d3f3ad209ef0d0b68b9245c6226cc239be6103ef6e96cefc704ed744",
+      "source_document_id": "fixture-doc-1d9b15f8bae8dd62",
+      "source_path": "data/rc1_fixture_corpus/project_atlas_failure.txt"
+    },
+    {
+      "canonical_write_performed": false,
+      "claim": "Registry B Recovery Fixture  The fixture system recovered when semantic records included source identifiers and checksums.",
+      "noncanonical": true,
+      "provenance": [
+        "fixture-doc-e230dfa515f213ca",
+        "data/rc1_fixture_corpus/registry_b_recovery.md"
+      ],
+      "record_id": "noncanonical-semantic-57d7a65160a81a81",
+      "source_checksum": "44dcdaf8902d1d605af6b3a517ed405a259cb7b543e835f9627a48c4fd79b723",
+      "source_document_id": "fixture-doc-e230dfa515f213ca",
+      "source_path": "data/rc1_fixture_corpus/registry_b_recovery.md"
+    },
+    {
+      "canonical_write_performed": false,
+      "claim": "Registry B accepted records after provenance was attached.",
+      "noncanonical": true,
+      "provenance": [
+        "fixture-doc-e230dfa515f213ca",
+        "data/rc1_fixture_corpus/registry_b_recovery.md"
+      ],
+      "record_id": "noncanonical-semantic-7a5326c7ce33052d",
+      "source_checksum": "44dcdaf8902d1d605af6b3a517ed405a259cb7b543e835f9627a48c4fd79b723",
+      "source_document_id": "fixture-doc-e230dfa515f213ca",
+      "source_path": "data/rc1_fixture_corpus/registry_b_recovery.md"
+    },
+    {
+      "canonical_write_performed": false,
+      "claim": "The available fixture does not prove Worker C execution quality.",
+      "noncanonical": true,
+      "provenance": [
+        "fixture-doc-e230dfa515f213ca",
+        "data/rc1_fixture_corpus/registry_b_recovery.md"
+      ],
+      "record_id": "noncanonical-semantic-be134ac16e4cf401",
+      "source_checksum": "44dcdaf8902d1d605af6b3a517ed405a259cb7b543e835f9627a48c4fd79b723",
+      "source_document_id": "fixture-doc-e230dfa515f213ca",
+      "source_path": "data/rc1_fixture_corpus/registry_b_recovery.md"
+    }
+  ]
+}

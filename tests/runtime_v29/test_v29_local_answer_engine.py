@@ -55,3 +55,19 @@ def test_v29_answer_engine_answers_rc1_activation_questions():
     assert "Wave 7 limited learning/consolidation pilot" in waves["draft"]["answer_text"]
     assert learning["local_answer"]["topic_id"] == "can_learn_yet"
     assert "remain disabled" in learning["draft"]["answer_text"]
+
+
+def test_v29_answer_engine_answers_rc1_wave_chain_questions():
+    wave = run_v29_local_answer("What wave is DELTA on?")
+    fixture = run_v29_local_answer("Can DELTA retrieve from fixture records?")
+    provider = run_v29_local_answer("Can DELTA call providers yet?")
+    knowledge = run_v29_local_answer("Can DELTA write knowledge yet?")
+
+    assert wave["local_answer"]["topic_id"] == "wave_state"
+    assert "Wave 7" in wave["draft"]["answer_text"]
+    assert fixture["local_answer"]["topic_id"] == "fixture_retrieval_status"
+    assert "read-only mode" in fixture["draft"]["answer_text"]
+    assert provider["local_answer"]["topic_id"] == "provider_call_status"
+    assert "remain disabled" in provider["draft"]["answer_text"]
+    assert knowledge["local_answer"]["topic_id"] == "knowledge_write_status"
+    assert "canonical knowledge writes" in knowledge["draft"]["answer_text"]

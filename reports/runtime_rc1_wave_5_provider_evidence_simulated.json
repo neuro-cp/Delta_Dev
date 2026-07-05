@@ -1,0 +1,26 @@
+{
+  "advisory_only": true,
+  "authority_granted": false,
+  "final_recommendation": "PROCEED_WAVE_6_LIVE_CORPUS_PILOT_PLAN",
+  "phase": "RC1 Wave 5 Provider Evidence Simulated",
+  "provider_call_performed": false,
+  "provider_request": {
+    "approval_required": true,
+    "approved": true,
+    "request_id": "provider-request-rc1-wave5"
+  },
+  "provider_response_envelope": {
+    "advisory_only": true,
+    "response_id": "simulated-provider-evidence-rc1-wave5",
+    "text": "Provider simulation says fixture provenance should be treated as evidence, not authority.",
+    "uncertainty": "simulated provider output cannot establish truth"
+  },
+  "safety": {
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "training_performed": false
+  },
+  "simulated_provider_response": true
+}

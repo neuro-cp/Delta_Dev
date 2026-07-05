@@ -1,0 +1,57 @@
+{
+  "answer": "The fixture evidence says Project Atlas failed because Registry B rejected records missing provenance. Adding provenance restored routing/acceptance. Worker C execution remains uncertain because the fixture records say it was untested and not proven.",
+  "evidence_ids": [
+    "noncanonical-semantic-57d7a65160a81a81",
+    "noncanonical-semantic-338fdf85f3f162e1",
+    "noncanonical-semantic-be134ac16e4cf401"
+  ],
+  "final_recommendation": "PROCEED_WAVE_3_SIMULATED_SUBSTRATE_WRITES",
+  "known_claims": [],
+  "mutating": false,
+  "phase": "RC1 Wave 2 Read-Only Retrieval",
+  "question": "Why did the fixture system fail, what fixed it, and what remains uncertain?",
+  "read_only": true,
+  "retrieved_evidence": [
+    {
+      "claim": "Registry B Recovery Fixture  The fixture system recovered when semantic records included source identifiers and checksums.",
+      "provenance": [
+        "fixture-doc-e230dfa515f213ca",
+        "data/rc1_fixture_corpus/registry_b_recovery.md"
+      ],
+      "record_id": "noncanonical-semantic-57d7a65160a81a81",
+      "score": 4
+    },
+    {
+      "claim": "Execution through Worker C remains untested and uncertain.",
+      "provenance": [
+        "fixture-doc-1d9b15f8bae8dd62",
+        "data/rc1_fixture_corpus/project_atlas_failure.txt"
+      ],
+      "record_id": "noncanonical-semantic-338fdf85f3f162e1",
+      "score": 3
+    },
+    {
+      "claim": "The available fixture does not prove Worker C execution quality.",
+      "provenance": [
+        "fixture-doc-e230dfa515f213ca",
+        "data/rc1_fixture_corpus/registry_b_recovery.md"
+      ],
+      "record_id": "noncanonical-semantic-be134ac16e4cf401",
+      "score": 2
+    }
+  ],
+  "safety": {
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false,
+    "recall_mutation_performed": false
+  },
+  "uncertainty": [
+    "Execution through Worker C remains untested and uncertain.",
+    "The available fixture does not prove Worker C execution quality."
+  ],
+  "unsupported_claims_refused": [
+    "Worker C definitely executed successfully.",
+    "Registry B performed action execution."
+  ]
+}

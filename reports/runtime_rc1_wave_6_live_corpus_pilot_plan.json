@@ -1,0 +1,50 @@
+{
+  "activation_enabled": false,
+  "allowed_file_types": [
+    ".txt",
+    ".md"
+  ],
+  "directory_allowlist_rules": [
+    "operator supplies a local path explicitly",
+    "path must not be repository root",
+    "path must not include .env, key, credential, or secret-like names"
+  ],
+  "dry_run_only": true,
+  "final_recommendation": "PROCEED_WAVE_7_LEARNING_CONSOLIDATION_PILOT_PLAN",
+  "live_activation_blockers": [
+    "Wave 0 manual validation must pass",
+    "Wave 1 fixture ingestion must pass",
+    "secret scan must pass",
+    "manual approval gate must be implemented"
+  ],
+  "maximum_corpus_size_bytes": 250000,
+  "operator_approval_checklist": [
+    "confirm input directory",
+    "confirm noncanonical output",
+    "confirm max size",
+    "confirm no provider calls"
+  ],
+  "phase": "RC1 Wave 6 Controlled Live Corpus Pilot Plan",
+  "provenance_requirements": [
+    "source path",
+    "sha256 checksum",
+    "parser version",
+    "run id"
+  ],
+  "rollback_delete_requirements": [
+    "all outputs under .tmp/rc1_live_corpus_pilot/<run_id>",
+    "delete run folder to rollback"
+  ],
+  "safety": {
+    "knowledge_mutation_performed": false,
+    "live_arbitrary_ingestion_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false,
+    "training_performed": false
+  },
+  "sensitive_data_handling": [
+    "skip secret-like files",
+    "record skipped count",
+    "run secret scan after output"
+  ]
+}

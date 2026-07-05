@@ -325,3 +325,35 @@ noncanonical output, no-mutation, rollback, and secret-scan tests exist.
 
 Current next recommendation:
 PROCEED_WAVE_0_MANUAL_RC1_VALIDATION
+
+RC1 wave chain readiness is complete.
+
+First actual enabled state:
+
+- fixture-only ingestion into noncanonical semantic records from the committed
+  RC1 fixture corpus.
+
+Validated readiness surfaces:
+
+- Wave 0 manual validation
+- Wave 1 fixture corpus ingestion
+- Wave 2 read-only retrieval and grounded synthesis
+- Wave 3 simulated substrate writes
+- Wave 4 rollback/evaluation simulation
+- Wave 5 simulated provider evidence
+- Wave 6 live corpus pilot design
+- Wave 7 learning/consolidation pilot design
+
+Still blocked:
+
+- real provider calls
+- arbitrary live corpus ingestion
+- canonical memory writes
+- live knowledge mutation
+- live learning/consolidation
+- scheduler/background workers
+- action execution
+- HYB1 promotion
+
+Current next recommendation:
+PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW

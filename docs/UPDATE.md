@@ -4203,3 +4203,43 @@ worker, no memory mutation, no knowledge mutation, and no hidden writes.
 Next recommendation:
 
 `PROCEED_WAVE_0_MANUAL_RC1_VALIDATION`
+
+## RC1 Activation Wave Chain Readiness
+
+Completed the full RC1 activation wave chain as staged readiness work. This did
+not broadly enable live capabilities.
+
+Generated artifacts:
+
+- `orchestration/runtime/rc1_wave_0_manual_validation.py`
+- `orchestration/runtime/rc1_wave_1_fixture_corpus_ingestion.py`
+- `orchestration/runtime/rc1_wave_2_readonly_retrieval.py`
+- `orchestration/runtime/rc1_wave_3_simulated_substrate_writes.py`
+- `orchestration/runtime/rc1_wave_4_rollback_evaluation.py`
+- `orchestration/runtime/rc1_wave_5_provider_evidence_simulated.py`
+- `orchestration/runtime/rc1_wave_6_live_corpus_pilot_plan.py`
+- `orchestration/runtime/rc1_wave_7_learning_consolidation_pilot_plan.py`
+- `orchestration/runtime/rc1_wave_chain_summary.py`
+- `reports/runtime_rc1_wave_chain_summary.md`
+- `reports/runtime_rc1_wave_chain_summary.json`
+- `ui/delta_rc1_wave_chain_dashboard.html`
+- `docs/continuation_rc1_wave_chain.md`
+
+Wave result:
+
+- Wave 0 manual validation passed.
+- Wave 1 fixture corpus ingestion works for committed fixtures only.
+- Wave 2 read-only retrieval and grounded synthesis work over Wave 1 records.
+- Wave 3 substrate writes remain simulated with approval/overwatch gates.
+- Wave 4 rollback/evaluation remains simulated.
+- Wave 5 provider evidence remains simulated/advisory only.
+- Wave 6 live corpus pilot remains blocked/design-only.
+- Wave 7 learning/consolidation remains blocked/design-only.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no provider calls, no scheduler/background worker, no action
+execution, no memory mutation, no live knowledge mutation, and no hidden writes.
+
+Next recommendation:
+
+`PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW`

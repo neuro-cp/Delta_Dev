@@ -1,0 +1,28 @@
+{
+  "approval_valid": true,
+  "audit_chain_complete": true,
+  "candidate": {
+    "candidate_id": "rc1-wave3-candidate-38d196992e5d1e7c",
+    "claim": "Project Atlas failed because Registry B rejected entries missing provenance."
+  },
+  "final_recommendation": "PROCEED_WAVE_4_ROLLBACK_EVALUATION",
+  "overwatch_allowed": true,
+  "owner_override": false,
+  "phase": "RC1 Wave 3 Simulated Substrate Writes",
+  "safety": {
+    "canonical_write_performed": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false
+  },
+  "simulated_delta": {
+    "candidate_id": "rc1-wave3-candidate-38d196992e5d1e7c",
+    "claim": "Project Atlas failed because Registry B rejected entries missing provenance.",
+    "delta_id": "simulated-delta-c18efeacd6ef3d55",
+    "rollback_token": "rollback-token-9e425d13ab07c429",
+    "simulated_write": true,
+    "write_performed": false
+  },
+  "simulated_write": true,
+  "write_performed": false
+}

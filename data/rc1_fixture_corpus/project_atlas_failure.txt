@@ -1,0 +1,3 @@
+Project Atlas failed because Registry B rejected entries missing provenance.
+Adding source provenance restored successful routing through Registry B.
+Execution through Worker C remains untested and uncertain.

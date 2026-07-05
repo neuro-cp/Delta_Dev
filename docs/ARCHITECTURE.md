@@ -814,3 +814,19 @@ Safety boundary: no training, provider authority, autonomous browsing, action
 execution, scheduler/background worker, memory mutation, knowledge mutation,
 hidden write, HYB1 promotion, or Model B default change is allowed by RC1
 readiness planning.
+
+## RC1 Activation Wave Chain
+
+The RC1 activation wave chain validates the planned sequence through Wave 7
+without turning later capabilities live. The first actual enabled state is
+fixture-only ingestion from `data/rc1_fixture_corpus` into noncanonical
+semantic records. Read-only retrieval can synthesize grounded fixture answers
+from those records with explicit uncertainty.
+
+All later capabilities remain simulated, dry-run, or design-only:
+
+- substrate writes are simulated deltas, not live knowledge mutation.
+- rollback/evaluation is simulation-only.
+- provider evidence is simulated and advisory-only.
+- live corpus pilots remain blocked pending manual approval and allowlisting.
+- learning/consolidation pilots remain disabled pending explicit future gates.

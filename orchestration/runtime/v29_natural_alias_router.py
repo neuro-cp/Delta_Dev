@@ -119,6 +119,14 @@ def _alias_map() -> dict[str, tuple[str, ...]]:
             "first live-ish capability",
             "first live capability",
         ),
+        "wave_state": ("what wave is delta on", "which wave is delta on", "current wave"),
+        "waves_passed": ("which waves passed", "what waves passed", "waves completed"),
+        "first_activated_capability": ("what is the first activated capability", "first activated capability"),
+        "corpus_ingestion_status": ("can delta ingest a corpus yet", "can you ingest a corpus yet", "ingest corpus"),
+        "fixture_retrieval_status": ("can delta retrieve from fixture records", "retrieve from fixture records"),
+        "knowledge_write_status": ("can delta write knowledge yet", "write knowledge yet"),
+        "provider_call_status": ("can delta call providers yet", "call providers yet"),
+        "live_activation_blockers": ("what remains blocked before live activation", "blocked before live activation"),
     }
 
 
@@ -185,6 +193,22 @@ def _answer_for(topic_id: str, inventory: dict[str, object]) -> str:
             "It should run only after Wave 0 manual validation, with an allowlisted fixture folder, noncanonical output, "
             "provenance hashes, no provider calls, and rollback by deleting the run workspace."
         )
+    if topic_id == "wave_state":
+        return "DELTA has completed the RC1 wave-chain readiness pass through Wave 7, but live activation remains gated and blocked pending manual review."
+    if topic_id == "waves_passed":
+        return "Waves 0 through 7 passed as deterministic readiness work: manual validation, fixture ingestion, read-only retrieval, simulated writes, rollback/evaluation, simulated provider evidence, live corpus pilot design, and learning/consolidation pilot design."
+    if topic_id == "first_activated_capability":
+        return "The first actual enabled state is fixture-only ingestion into noncanonical semantic records. It is not canonical memory, not live knowledge, and not training."
+    if topic_id == "corpus_ingestion_status":
+        return "DELTA can ingest only the committed RC1 fixture corpus into noncanonical semantic records. Arbitrary live corpus ingestion remains blocked."
+    if topic_id == "fixture_retrieval_status":
+        return "Yes. DELTA can retrieve from Wave 1 fixture semantic records in read-only mode and synthesize grounded answers with uncertainty."
+    if topic_id == "knowledge_write_status":
+        return "No. DELTA can simulate an approval-gated substrate delta, but canonical knowledge writes and live knowledge mutation remain disabled."
+    if topic_id == "provider_call_status":
+        return "No. Provider evidence remains simulated/advisory only. Real provider calls and provider authority remain disabled until a future explicit gate."
+    if topic_id == "live_activation_blockers":
+        return "Before live activation, DELTA still needs manual RC1 review, live adapter approval, corpus allowlisting, secret-scan enforcement, rollback validation, overwatch gates, and explicit owner/admin approval."
     return route_v29_alias("").answer_text
 
 

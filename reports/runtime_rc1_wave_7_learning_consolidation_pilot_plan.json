@@ -1,0 +1,74 @@
+{
+  "acceptance_criteria": [
+    "candidate remains noncanonical",
+    "decision is reviewable",
+    "no live learning occurs",
+    "no memory or knowledge mutation occurs"
+  ],
+  "activation_blockers": [
+    "Wave 6 pilot must pass",
+    "manual operator approval path must exist",
+    "overwatch gate must exist",
+    "rollback simulation must pass"
+  ],
+  "approval_workflow": [
+    "admin approval",
+    "single candidate scope",
+    "audit record"
+  ],
+  "canonical_write_enabled": false,
+  "consolidation_eligibility": [
+    "supporting evidence exists",
+    "uncertainty listed",
+    "contradiction check complete"
+  ],
+  "consolidation_enabled": false,
+  "eligible_source_types": [
+    "noncanonical_semantic_record",
+    "reviewed_fixture_evidence",
+    "simulated_consolidation_candidate"
+  ],
+  "evaluation_workflow": [
+    "pre-state",
+    "simulated delta",
+    "post-state estimate",
+    "regression check"
+  ],
+  "final_recommendation": "PROCEED_RC1_WAVE_CHAIN_MANUAL_REVIEW",
+  "learning_enabled": false,
+  "overwatch_workflow": [
+    "allow",
+    "block",
+    "escalate"
+  ],
+  "owner_override_workflow": [
+    "explicit owner override only",
+    "override audit required"
+  ],
+  "phase": "RC1 Wave 7 Limited Learning Consolidation Pilot Plan",
+  "rollback_workflow": [
+    "rollback token",
+    "rollback simulation",
+    "post-rollback validation"
+  ],
+  "safety": {
+    "canonical_write_performed": false,
+    "knowledge_mutation_performed": false,
+    "learning_performed": false,
+    "live_consolidation_performed": false,
+    "memory_mutation_performed": false,
+    "training_performed": false
+  },
+  "semantic_record_eligibility": [
+    "provenance present",
+    "checksum present",
+    "noncanonical status",
+    "review pending"
+  ],
+  "stop_conditions": [
+    "missing provenance",
+    "unsupported confidence increase",
+    "provider authority request",
+    "canonical write request"
+  ]
+}

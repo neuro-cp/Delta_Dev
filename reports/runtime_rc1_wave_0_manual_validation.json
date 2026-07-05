@@ -1,0 +1,44 @@
+{
+  "checks": {
+    "activation_readiness_reports": true,
+    "adversarial_summary": true,
+    "current_state": true,
+    "fixture_document_to_audit_trace": true,
+    "grounded_answer_with_uncertainty": true,
+    "identity_runtime_status": true,
+    "kernel_routing": true,
+    "read_only_substrate_query": true,
+    "rollback_simulation": true,
+    "semantic_consolidation_cycle": true,
+    "state_machine": true
+  },
+  "final_recommendation": "PROCEED_WAVE_1_FIXTURE_CORPUS_INGESTION",
+  "live_capabilities_enabled": false,
+  "passed": true,
+  "phase": "RC1 Manual Validation No Live Capabilities",
+  "prohibited_capabilities": {
+    "action_execution_performed": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "safety": {
+    "autonomous_browsing_performed": false,
+    "autonomous_execution_performed": false,
+    "background_worker_started": false,
+    "fine_tuning_performed": false,
+    "hidden_write_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "wave": 0
+}

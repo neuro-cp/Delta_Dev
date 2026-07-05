@@ -1,0 +1,38 @@
+{
+  "after_state": {
+    "live_records": [],
+    "simulated_records": []
+  },
+  "before_state": {
+    "live_records": [],
+    "simulated_records": [
+      {
+        "candidate_id": "rc1-wave3-candidate-38d196992e5d1e7c",
+        "claim": "Project Atlas failed because Registry B rejected entries missing provenance.",
+        "delta_id": "simulated-delta-c18efeacd6ef3d55",
+        "rollback_token": "rollback-token-9e425d13ab07c429",
+        "simulated_write": true,
+        "write_performed": false
+      }
+    ]
+  },
+  "evaluation_recommendation": "simulation_safe_continue_to_provider_evidence_design",
+  "final_recommendation": "PROCEED_WAVE_5_PROVIDER_EVIDENCE_SIMULATED",
+  "health_delta": {
+    "cognitive_health_score": 1.0,
+    "knowledge_health_delta": 0,
+    "regression_detected": false
+  },
+  "live_rollback_performed": false,
+  "phase": "RC1 Wave 4 Rollback And Evaluation",
+  "restored_pre_state": true,
+  "rollback_simulated": true,
+  "rollback_token": "rollback-token-9e425d13ab07c429",
+  "safety": {
+    "action_execution_performed": false,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "provider_call_performed": false
+  },
+  "stop_conditions_detected": []
+}
