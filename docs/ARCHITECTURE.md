@@ -830,3 +830,18 @@ All later capabilities remain simulated, dry-run, or design-only:
 - provider evidence is simulated and advisory-only.
 - live corpus pilots remain blocked pending manual approval and allowlisting.
 - learning/consolidation pilots remain disabled pending explicit future gates.
+
+## RC1 Integrated Cognitive Runtime
+
+DELTA now has a deterministic integrated runtime review surface that exercises
+complete workflows rather than isolated modules. The integrated runtime uses a
+20-document fixture corpus and connects semantic extraction, noncanonical
+semantic records, read-only retrieval, contradiction detection, relationship
+graph construction, evidence assembly, grounded synthesis, simulated proposal
+creation, approval/overwatch simulation, rollback/evaluation simulation,
+provider-evidence simulation, investigation planning, and self explanation.
+
+This is runtime behavior over fixtures, not a new architecture layer. It does
+not enable live providers, arbitrary corpus ingestion, canonical writes, live
+learning, knowledge mutation, memory mutation, scheduler/background workers,
+action execution, HYB1 promotion, or Model B default changes.

@@ -71,3 +71,19 @@ def test_v29_answer_engine_answers_rc1_wave_chain_questions():
     assert "remain disabled" in provider["draft"]["answer_text"]
     assert knowledge["local_answer"]["topic_id"] == "knowledge_write_status"
     assert "canonical knowledge writes" in knowledge["draft"]["answer_text"]
+
+
+def test_v29_answer_engine_answers_integrated_runtime_questions():
+    know = run_v29_local_answer("What do you know?")
+    records = run_v29_local_answer("Which semantic records support this?")
+    audit = run_v29_local_answer("Show the audit path.")
+    rollback = run_v29_local_answer("Show the rollback path.")
+
+    assert know["local_answer"]["topic_id"] == "integrated_what_know"
+    assert "noncanonical semantic records" in know["draft"]["answer_text"]
+    assert records["local_answer"]["topic_id"] == "integrated_supporting_records"
+    assert "source checksums" in records["draft"]["answer_text"]
+    assert audit["local_answer"]["topic_id"] == "integrated_audit_path"
+    assert "no live mutation" in audit["draft"]["answer_text"]
+    assert rollback["local_answer"]["topic_id"] == "integrated_rollback_path"
+    assert "no canonical write occurred" in rollback["draft"]["answer_text"]

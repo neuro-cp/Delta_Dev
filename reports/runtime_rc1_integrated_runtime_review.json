@@ -1,0 +1,1909 @@
+{
+  "contradictions": [
+    {
+      "claims": [
+        "Worker C execution remains untested after routing was restored.",
+        "Engineering Contradiction  One engineering note claims Worker C completed execution successfully.",
+        "A later audit note says Worker C was never tested during the restored routing run."
+      ],
+      "evidence_weighting": "conflicting claims remain advisory and cited",
+      "resolution": "preserve contradiction pending stronger evidence",
+      "topic": "Worker C execution"
+    },
+    {
+      "claims": [
+        "Finance Risk  The finance fixture says liquidity risk rises when cash reserves fall and obligations remain fixed.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "Another finance note says reserves are below the required threshold."
+      ],
+      "evidence_weighting": "conflicting claims remain advisory and cited",
+      "resolution": "preserve contradiction pending stronger evidence",
+      "topic": "Finance reserves"
+    },
+    {
+      "claims": [
+        "History Conflict  One historical account dates the event to spring.",
+        "Another account dates the same event to autumn."
+      ],
+      "evidence_weighting": "conflicting claims remain advisory and cited",
+      "resolution": "preserve contradiction pending stronger evidence",
+      "topic": "Historical event date"
+    }
+  ],
+  "domain_counts": {
+    "01": 3,
+    "02": 3,
+    "03": 2,
+    "04": 2,
+    "05": 2,
+    "06": 3,
+    "07": 2,
+    "08": 2,
+    "09": 2,
+    "10": 3,
+    "11": 2,
+    "12": 2,
+    "13": 2,
+    "14": 2,
+    "15": 2,
+    "16": 2,
+    "17": 2,
+    "18": 2,
+    "19": 2,
+    "20": 2
+  },
+  "final_recommendation": "PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST",
+  "fixture_document_count": 20,
+  "integrated_workflow_assessment": "RC1 workflows cooperate end-to-end over fixture-only, read-only, simulated, and design-only surfaces.",
+  "local_answer_support": {
+    "show_audit_path": [
+      "stage:fixture corpus",
+      "stage:semantic records",
+      "stage:replay",
+      "stage:consolidation candidate",
+      "stage:approval",
+      "stage:overwatch",
+      "stage:simulated delta",
+      "stage:rollback",
+      "stage:evaluation",
+      "evidence:integrated-evidence-b2637bc34da028f7",
+      "evidence:integrated-evidence-d53397bdea7f8260",
+      "evidence:integrated-evidence-604c81ec6acd366c",
+      "evidence:integrated-evidence-ccefcc6cc61d6fa7",
+      "evidence:integrated-evidence-151faf6da4db785a",
+      "evidence:integrated-evidence-7f2aac662a7ec7e0",
+      "evidence:integrated-evidence-0b09108b20782e58",
+      "evidence:integrated-evidence-84c19acf2070847c"
+    ],
+    "show_reasoning_path": [
+      "stage:evidence selection",
+      "stage:reasoning chain",
+      "stage:confidence",
+      "stage:uncertainty",
+      "stage:provenance",
+      "stage:limitations",
+      "evidence:integrated-evidence-8ad0994049395290",
+      "evidence:integrated-evidence-7b22af6773522d4d",
+      "evidence:integrated-evidence-1901f01c3d88f96e",
+      "evidence:integrated-evidence-9ab4d612dfece99e",
+      "evidence:integrated-evidence-e9f0bdc76b934036",
+      "evidence:integrated-evidence-bbd5bf70819744e3",
+      "evidence:integrated-evidence-e054214e5b3fab71",
+      "evidence:integrated-evidence-909fcba92c431a7f"
+    ],
+    "show_rollback_path": [
+      "discard fixture outputs",
+      "discard simulated deltas",
+      "no canonical rollback required"
+    ],
+    "what_do_you_know": "The multi-document workflow links records by shared terms and separates known claims from contradictions. Supporting fixture evidence includes: Software Regression  The software fixture says regression tests should cover previous failure modes. The fixture does not authorize investment advice. Remaining uncertainty: Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions. Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+    "what_remains_uncertain": [
+      "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+      "The runtime should report the conflict and cite both accounts.",
+      "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+      "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+      "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+      "Finance Contradiction  One finance note says reserves are sufficient for the quarter."
+    ],
+    "what_would_change_if_proposal_approved": {
+      "candidate_id": "rc1-wave3-candidate-38d196992e5d1e7c",
+      "claim": "Project Atlas failed because Registry B rejected entries missing provenance.",
+      "delta_id": "simulated-delta-c18efeacd6ef3d55",
+      "rollback_token": "rollback-token-9e425d13ab07c429",
+      "simulated_write": true,
+      "write_performed": false
+    },
+    "which_evidence_is_strongest": [
+      {
+        "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "evidence_id": "integrated-evidence-c035479bad01094d",
+        "evidence_role": "uncertainty",
+        "provenance": [
+          "fixture-doc-4a8dedfddec38acf",
+          "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+        ],
+        "record_id": "noncanonical-semantic-079b2fbd536a1009",
+        "score": 2
+      },
+      {
+        "claim": "The runtime should report the conflict and cite both accounts.",
+        "evidence_id": "integrated-evidence-f75fe77ca2f11fc7",
+        "evidence_role": "contradiction",
+        "provenance": [
+          "fixture-doc-63bb798b2bcd5a4d",
+          "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+        ],
+        "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+        "score": 2
+      },
+      {
+        "claim": "Engineering Provenance  Project Atlas failed when Registry B rejected routing records that lacked source provenance.",
+        "evidence_id": "integrated-evidence-88b8be938accf53c",
+        "evidence_role": "support",
+        "provenance": [
+          "fixture-doc-bc0102b786bc6e78",
+          "data/rc1_integrated_fixture_corpus/01_engineering_provenance.md"
+        ],
+        "record_id": "noncanonical-semantic-85d85fe6276a7dab",
+        "score": 2
+      }
+    ],
+    "which_semantic_records_support_this": [
+      "noncanonical-semantic-079b2fbd536a1009",
+      "noncanonical-semantic-0b9c4fecd481172d",
+      "noncanonical-semantic-85d85fe6276a7dab",
+      "noncanonical-semantic-968d415da5cd8985",
+      "noncanonical-semantic-a23f8f869ab32fc2",
+      "noncanonical-semantic-c04eb412537e958f",
+      "noncanonical-semantic-0675564874df1a38",
+      "noncanonical-semantic-2d48beefc54228b8"
+    ],
+    "why_believe_this": "Project Atlas failed because provenance was missing and Registry B rejected the records. Supporting fixture evidence includes: Engineering Provenance  Project Atlas failed when Registry B rejected routing records that lacked source provenance. Software Architecture  The software fixture says architecture improves when modules have clear producers, consumers, validators, and auditors. Remaining uncertainty: Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. The runtime should report the conflict and cite both accounts. Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications."
+  },
+  "phase": "RC1 Integrated Cognitive Runtime",
+  "relationship_graph": {
+    "edge_count": 290,
+    "edges": [
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "registry",
+          "source"
+        ],
+        "source": "noncanonical-semantic-85d85fe6276a7dab",
+        "target": "noncanonical-semantic-984adfb79ff72ad7"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "that",
+          "when"
+        ],
+        "source": "noncanonical-semantic-85d85fe6276a7dab",
+        "target": "noncanonical-semantic-c29ba48db5528dbf"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "execution",
+          "worker"
+        ],
+        "source": "noncanonical-semantic-56c20a9f2f48a606",
+        "target": "noncanonical-semantic-c5a3ea2d2b8fcb1e"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "restored",
+          "routing",
+          "was",
+          "worker"
+        ],
+        "source": "noncanonical-semantic-56c20a9f2f48a606",
+        "target": "noncanonical-semantic-6bc59bbf3798ea87"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "note",
+          "worker"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-c5a3ea2d2b8fcb1e"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-f468572b2c220a0f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-c1dfeaf87ddb7fda"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-c121bef730ece126"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-76738433f224d22f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-e98b42f12f476ff1"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-b9a541ad8d178a1f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-a97a1039de1ad2c5"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-a61ed5c8f030cad0"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "audit",
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6bc59bbf3798ea87",
+        "target": "noncanonical-semantic-968d415da5cd8985"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "contradiction",
+          "execution"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-c5a3ea2d2b8fcb1e"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-c29ba48db5528dbf"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "remain",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-c1dfeaf87ddb7fda"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-c121bef730ece126"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-76738433f224d22f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-7853b7072fe397a7"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-b9a541ad8d178a1f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "evidence",
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-a97a1039de1ad2c5"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "contradiction",
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-c04eb412537e958f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-a61ed5c8f030cad0"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "should",
+          "the"
+        ],
+        "source": "noncanonical-semantic-6afdf3d9b9caa957",
+        "target": "noncanonical-semantic-968d415da5cd8985"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "control",
+          "the"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-f468572b2c220a0f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "the",
+          "when"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-c29ba48db5528dbf"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "the",
+          "when"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-c1dfeaf87ddb7fda"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "the",
+          "when"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-c121bef730ece126"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "not",
+          "the"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-817875b8333e24d5"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "does",
+          "not",
+          "prove"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-5cf731d095b69f31"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "missing",
+          "the"
+        ],
+        "source": "noncanonical-semantic-54d294ac2450d1c0",
+        "target": "noncanonical-semantic-c04eb412537e958f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "fixture",
+          "science",
+          "the"
+        ],
+        "source": "noncanonical-semantic-c29ba48db5528dbf",
+        "target": "noncanonical-semantic-f468572b2c220a0f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "fixture",
+          "the"
+        ],
+        "source": "noncanonical-semantic-c29ba48db5528dbf",
+        "target": "noncanonical-semantic-e98b42f12f476ff1"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "and",
+          "fixture",
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-c1dfeaf87ddb7fda",
+        "target": "noncanonical-semantic-f468572b2c220a0f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "fixture",
+          "the",
+          "when"
+        ],
+        "source": "noncanonical-semantic-c1dfeaf87ddb7fda",
+        "target": "noncanonical-semantic-c29ba48db5528dbf"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "fixture",
+          "says",
+          "the"
+        ],
+        "source": "noncanonical-semantic-c1dfeaf87ddb7fda",
+        "target": "noncanonical-semantic-e98b42f12f476ff1"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "fixture",
+          "the"
+        ],
+        "source": "noncanonical-semantic-2b3ee3128d4bb72e",
+        "target": "noncanonical-semantic-f468572b2c220a0f"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "does",
+          "not",
+          "the"
+        ],
+        "source": "noncanonical-semantic-2b3ee3128d4bb72e",
+        "target": "noncanonical-semantic-54d294ac2450d1c0"
+      },
+      {
+        "relationship": "semantic_overlap",
+        "shared_terms": [
+          "fixture",
+          "the"
+        ],
+        "source": "noncanonical-semantic-2b3ee3128d4bb72e",
+        "target": "noncanonical-semantic-c29ba48db5528dbf"
+      }
+    ],
+    "graph_read_only": true,
+    "node_count": 44
+  },
+  "remaining_blockers_before_wave_1_live_pilot": [
+    "manual RC1 wave-chain review",
+    "operator-approved live corpus allowlist",
+    "secret redaction and skipped-file audit",
+    "noncanonical workspace limits",
+    "rollback-by-workspace deletion verified on pilot artifacts"
+  ],
+  "rollback_evaluation": {
+    "after_state": {
+      "live_records": [],
+      "simulated_records": []
+    },
+    "before_state": {
+      "live_records": [],
+      "simulated_records": [
+        {
+          "candidate_id": "rc1-wave3-candidate-38d196992e5d1e7c",
+          "claim": "Project Atlas failed because Registry B rejected entries missing provenance.",
+          "delta_id": "simulated-delta-c18efeacd6ef3d55",
+          "rollback_token": "rollback-token-9e425d13ab07c429",
+          "simulated_write": true,
+          "write_performed": false
+        }
+      ]
+    },
+    "evaluation_recommendation": "simulation_safe_continue_to_provider_evidence_design",
+    "final_recommendation": "PROCEED_WAVE_5_PROVIDER_EVIDENCE_SIMULATED",
+    "health_delta": {
+      "cognitive_health_score": 1.0,
+      "knowledge_health_delta": 0,
+      "regression_detected": false
+    },
+    "live_rollback_performed": false,
+    "phase": "RC1 Wave 4 Rollback And Evaluation",
+    "restored_pre_state": true,
+    "rollback_simulated": true,
+    "rollback_token": "rollback-token-9e425d13ab07c429",
+    "safety": {
+      "action_execution_performed": false,
+      "knowledge_mutation_performed": false,
+      "memory_mutation_performed": false,
+      "provider_call_performed": false
+    },
+    "stop_conditions_detected": []
+  },
+  "runtime_maturity_estimate": 98,
+  "safety": {
+    "autonomous_browsing_performed": false,
+    "background_worker_started": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1": "dormant_env_gated",
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "semantic_record_count": 44,
+  "simulated_provider_evidence": {
+    "advisory_only": true,
+    "response_id": "simulated-provider-evidence-rc1-wave5",
+    "text": "Provider simulation says fixture provenance should be treated as evidence, not authority.",
+    "uncertainty": "simulated provider output cannot establish truth"
+  },
+  "simulated_substrate_delta": {
+    "candidate_id": "rc1-wave3-candidate-38d196992e5d1e7c",
+    "claim": "Project Atlas failed because Registry B rejected entries missing provenance.",
+    "delta_id": "simulated-delta-c18efeacd6ef3d55",
+    "rollback_token": "rollback-token-9e425d13ab07c429",
+    "simulated_write": true,
+    "write_performed": false
+  },
+  "workflow_count": 8,
+  "workflows": [
+    {
+      "answer": "Project Atlas failed because provenance was missing and Registry B rejected the records. Supporting fixture evidence includes: Engineering Provenance  Project Atlas failed when Registry B rejected routing records that lacked source provenance. Software Architecture  The software fixture says architecture improves when modules have clear producers, consumers, validators, and auditors. Remaining uncertainty: Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. The runtime should report the conflict and cite both accounts. Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+      "audit_path": [
+        "stage:fixture corpus",
+        "stage:semantic extraction",
+        "stage:semantic records",
+        "stage:retrieval",
+        "stage:reasoning",
+        "stage:grounded synthesis",
+        "stage:answer",
+        "evidence:integrated-evidence-c035479bad01094d",
+        "evidence:integrated-evidence-f75fe77ca2f11fc7",
+        "evidence:integrated-evidence-88b8be938accf53c",
+        "evidence:integrated-evidence-231ca45a027524fe",
+        "evidence:integrated-evidence-8c35011488dac9e7",
+        "evidence:integrated-evidence-5e309793ac6fcbeb",
+        "evidence:integrated-evidence-072a7586565e24df",
+        "evidence:integrated-evidence-22cc813067ad3111"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-c035479bad01094d",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 2
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-f75fe77ca2f11fc7",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 2
+        },
+        {
+          "claim": "Engineering Provenance  Project Atlas failed when Registry B rejected routing records that lacked source provenance.",
+          "evidence_id": "integrated-evidence-88b8be938accf53c",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-bc0102b786bc6e78",
+            "data/rc1_integrated_fixture_corpus/01_engineering_provenance.md"
+          ],
+          "record_id": "noncanonical-semantic-85d85fe6276a7dab",
+          "score": 2
+        },
+        {
+          "claim": "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "evidence_id": "integrated-evidence-231ca45a027524fe",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-d9ae3062ee6cb2f7",
+            "data/rc1_integrated_fixture_corpus/19_audit_path.md"
+          ],
+          "record_id": "noncanonical-semantic-968d415da5cd8985",
+          "score": 2
+        },
+        {
+          "claim": "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "evidence_id": "integrated-evidence-8c35011488dac9e7",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-a23f8f869ab32fc2",
+          "score": 2
+        },
+        {
+          "claim": "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+          "evidence_id": "integrated-evidence-5e309793ac6fcbeb",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-7a1d47f1741c5f6d",
+            "data/rc1_integrated_fixture_corpus/17_investigation_gap.md"
+          ],
+          "record_id": "noncanonical-semantic-c04eb412537e958f",
+          "score": 2
+        },
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-072a7586565e24df",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 1
+        },
+        {
+          "claim": "Software Architecture  The software fixture says architecture improves when modules have clear producers, consumers, validators, and auditors.",
+          "evidence_id": "integrated-evidence-22cc813067ad3111",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-4b2300d5b28db600",
+            "data/rc1_integrated_fixture_corpus/11_software_architecture.md"
+          ],
+          "record_id": "noncanonical-semantic-2d48beefc54228b8",
+          "score": 1
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "document_to_semantics_to_answer",
+      "provenance": [
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-bc0102b786bc6e78",
+        "data/rc1_integrated_fixture_corpus/01_engineering_provenance.md",
+        "fixture-doc-d9ae3062ee6cb2f7",
+        "data/rc1_integrated_fixture_corpus/19_audit_path.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-7a1d47f1741c5f6d",
+        "data/rc1_integrated_fixture_corpus/17_investigation_gap.md",
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-4b2300d5b28db600",
+        "data/rc1_integrated_fixture_corpus/11_software_architecture.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "fixture corpus",
+        "semantic extraction",
+        "semantic records",
+        "retrieval",
+        "reasoning",
+        "grounded synthesis",
+        "answer"
+      ],
+      "uncertainty": [
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "The runtime should report the conflict and cite both accounts.",
+        "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+        "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+        "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter."
+      ],
+      "workflow_id": "integrated-workflow-341ac766e499e6c1"
+    },
+    {
+      "answer": "The safe proposal is a simulated noncanonical substrate delta with rollback. Supporting fixture evidence includes: History Source  The history fixture says primary sources should be separated from later interpretation. Knowledge Evolution  The knowledge evolution fixture says a proposal should become eligible only after evidence, review, and rollback planning. Rollback  The rollback fixture says every simulated integration must include a rollback token. Remaining uncertainty: Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions. Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+      "audit_path": [
+        "stage:fixture corpus",
+        "stage:semantic records",
+        "stage:replay",
+        "stage:consolidation candidate",
+        "stage:approval",
+        "stage:overwatch",
+        "stage:simulated delta",
+        "stage:rollback",
+        "stage:evaluation",
+        "evidence:integrated-evidence-b2637bc34da028f7",
+        "evidence:integrated-evidence-d53397bdea7f8260",
+        "evidence:integrated-evidence-604c81ec6acd366c",
+        "evidence:integrated-evidence-ccefcc6cc61d6fa7",
+        "evidence:integrated-evidence-151faf6da4db785a",
+        "evidence:integrated-evidence-7f2aac662a7ec7e0",
+        "evidence:integrated-evidence-0b09108b20782e58",
+        "evidence:integrated-evidence-84c19acf2070847c"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-b2637bc34da028f7",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 4
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-d53397bdea7f8260",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 3
+        },
+        {
+          "claim": "History Source  The history fixture says primary sources should be separated from later interpretation.",
+          "evidence_id": "integrated-evidence-604c81ec6acd366c",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-03e6e4b6cd455973",
+            "data/rc1_integrated_fixture_corpus/09_history_source.md"
+          ],
+          "record_id": "noncanonical-semantic-5b4906e3f8e25336",
+          "score": 3
+        },
+        {
+          "claim": "Knowledge Evolution  The knowledge evolution fixture says a proposal should become eligible only after evidence, review, and rollback planning.",
+          "evidence_id": "integrated-evidence-ccefcc6cc61d6fa7",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-cffc6c8c091f7c47",
+            "data/rc1_integrated_fixture_corpus/13_knowledge_evolution.md"
+          ],
+          "record_id": "noncanonical-semantic-76738433f224d22f",
+          "score": 3
+        },
+        {
+          "claim": "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "evidence_id": "integrated-evidence-151faf6da4db785a",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-d9ae3062ee6cb2f7",
+            "data/rc1_integrated_fixture_corpus/19_audit_path.md"
+          ],
+          "record_id": "noncanonical-semantic-968d415da5cd8985",
+          "score": 3
+        },
+        {
+          "claim": "Science Uncertainty  The science fixture reports that uncertainty should increase when evidence is indirect.",
+          "evidence_id": "integrated-evidence-7f2aac662a7ec7e0",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-a7867099ddba32c2",
+            "data/rc1_integrated_fixture_corpus/04_science_uncertainty.md"
+          ],
+          "record_id": "noncanonical-semantic-c29ba48db5528dbf",
+          "score": 3
+        },
+        {
+          "claim": "Rollback  The rollback fixture says every simulated integration must include a rollback token.",
+          "evidence_id": "integrated-evidence-0b09108b20782e58",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-3cd3cf66f8f618fe",
+            "data/rc1_integrated_fixture_corpus/14_rollback.md"
+          ],
+          "record_id": "noncanonical-semantic-e98b42f12f476ff1",
+          "score": 3
+        },
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-84c19acf2070847c",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 2
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "document_to_semantics_to_proposal",
+      "provenance": [
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-03e6e4b6cd455973",
+        "data/rc1_integrated_fixture_corpus/09_history_source.md",
+        "fixture-doc-cffc6c8c091f7c47",
+        "data/rc1_integrated_fixture_corpus/13_knowledge_evolution.md",
+        "fixture-doc-d9ae3062ee6cb2f7",
+        "data/rc1_integrated_fixture_corpus/19_audit_path.md",
+        "fixture-doc-a7867099ddba32c2",
+        "data/rc1_integrated_fixture_corpus/04_science_uncertainty.md",
+        "fixture-doc-3cd3cf66f8f618fe",
+        "data/rc1_integrated_fixture_corpus/14_rollback.md",
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "fixture corpus",
+        "semantic records",
+        "replay",
+        "consolidation candidate",
+        "approval",
+        "overwatch",
+        "simulated delta",
+        "rollback",
+        "evaluation"
+      ],
+      "uncertainty": [
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+        "Science Uncertainty  The science fixture reports that uncertainty should increase when evidence is indirect.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "The proposal is not canonical knowledge and must remain review-only."
+      ],
+      "workflow_id": "integrated-workflow-1e92b3d66edcfad9"
+    },
+    {
+      "answer": "The runtime retrieves fixture evidence, assembles cited records, preserves uncertainty, and answers without mutation. Remaining uncertainty: Finance Contradiction  One finance note says reserves are sufficient for the quarter. Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. The runtime should report the conflict and cite both accounts.",
+      "audit_path": [
+        "stage:kernel",
+        "stage:knowledge retrieval",
+        "stage:evidence assembly",
+        "stage:reasoning",
+        "stage:executive",
+        "stage:explanation",
+        "stage:answer",
+        "evidence:integrated-evidence-d3d64262e5dd69a0",
+        "evidence:integrated-evidence-4b4fed53e03f6250",
+        "evidence:integrated-evidence-974f28f47dec68eb",
+        "evidence:integrated-evidence-b6b6e095134931d9",
+        "evidence:integrated-evidence-e62496864815dc61",
+        "evidence:integrated-evidence-826f49d0e5360384",
+        "evidence:integrated-evidence-91dbf2eb1f8c8d6e",
+        "evidence:integrated-evidence-d07dcced127fc6f7"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-d3d64262e5dd69a0",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 1
+        },
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-4b4fed53e03f6250",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 1
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-974f28f47dec68eb",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 1
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-b6b6e095134931d9",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 1
+        },
+        {
+          "claim": "It does not prove causation when the control condition is missing.",
+          "evidence_id": "integrated-evidence-e62496864815dc61",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-22d427ed0bd7f6ec",
+            "data/rc1_integrated_fixture_corpus/03_science_control.md"
+          ],
+          "record_id": "noncanonical-semantic-54d294ac2450d1c0",
+          "score": 1
+        },
+        {
+          "claim": "Passing shape tests alone does not prove runtime cooperation.",
+          "evidence_id": "integrated-evidence-826f49d0e5360384",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-e5677b19e90ee99e",
+            "data/rc1_integrated_fixture_corpus/12_software_regression.md"
+          ],
+          "record_id": "noncanonical-semantic-5cf731d095b69f31",
+          "score": 1
+        },
+        {
+          "claim": "History Conflict  One historical account dates the event to spring.",
+          "evidence_id": "integrated-evidence-91dbf2eb1f8c8d6e",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-6a8f6d0166ae64eb",
+          "score": 1
+        },
+        {
+          "claim": "The contradiction should remain visible until execution evidence is available.",
+          "evidence_id": "integrated-evidence-d07dcced127fc6f7",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e54cf2058c58257d",
+            "data/rc1_integrated_fixture_corpus/02_engineering_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-6afdf3d9b9caa957",
+          "score": 1
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "question_answering",
+      "provenance": [
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-22d427ed0bd7f6ec",
+        "data/rc1_integrated_fixture_corpus/03_science_control.md",
+        "fixture-doc-e5677b19e90ee99e",
+        "data/rc1_integrated_fixture_corpus/12_software_regression.md",
+        "fixture-doc-e54cf2058c58257d",
+        "data/rc1_integrated_fixture_corpus/02_engineering_contradiction.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "kernel",
+        "knowledge retrieval",
+        "evidence assembly",
+        "reasoning",
+        "executive",
+        "explanation",
+        "answer"
+      ],
+      "uncertainty": [
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "The runtime should report the conflict and cite both accounts.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "It does not prove causation when the control condition is missing.",
+        "Passing shape tests alone does not prove runtime cooperation.",
+        "History Conflict  One historical account dates the event to spring.",
+        "The contradiction should remain visible until execution evidence is available."
+      ],
+      "workflow_id": "integrated-workflow-b57738860e57cf41"
+    },
+    {
+      "answer": "The contradiction workflow preserves conflicting claims rather than resolving them silently. Remaining uncertainty: Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications. Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions. Engineering Contradiction  One engineering note claims Worker C completed execution successfully.",
+      "audit_path": [
+        "stage:corpus",
+        "stage:semantic graph",
+        "stage:contradiction detection",
+        "stage:evidence weighting",
+        "stage:executive review",
+        "stage:grounded answer",
+        "evidence:integrated-evidence-8d4bacf1f57aa2e1",
+        "evidence:integrated-evidence-47b86b431bd01eee",
+        "evidence:integrated-evidence-79d50d02d003b791",
+        "evidence:integrated-evidence-5bf2aa647da346af",
+        "evidence:integrated-evidence-23a07b6f63571d7d",
+        "evidence:integrated-evidence-7aba1150e9af2506",
+        "evidence:integrated-evidence-416450cab74869a2",
+        "evidence:integrated-evidence-61d17766ca0794e1"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "evidence_id": "integrated-evidence-8d4bacf1f57aa2e1",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-d9ae3062ee6cb2f7",
+            "data/rc1_integrated_fixture_corpus/19_audit_path.md"
+          ],
+          "record_id": "noncanonical-semantic-968d415da5cd8985",
+          "score": 2
+        },
+        {
+          "claim": "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+          "evidence_id": "integrated-evidence-47b86b431bd01eee",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-a23f8f869ab32fc2",
+          "score": 2
+        },
+        {
+          "claim": "Engineering Contradiction  One engineering note claims Worker C completed execution successfully.",
+          "evidence_id": "integrated-evidence-79d50d02d003b791",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e54cf2058c58257d",
+            "data/rc1_integrated_fixture_corpus/02_engineering_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-c5a3ea2d2b8fcb1e",
+          "score": 2
+        },
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-5bf2aa647da346af",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 1
+        },
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-23a07b6f63571d7d",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 1
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-7aba1150e9af2506",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 1
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-416450cab74869a2",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 1
+        },
+        {
+          "claim": "It does not prove causation when the control condition is missing.",
+          "evidence_id": "integrated-evidence-61d17766ca0794e1",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-22d427ed0bd7f6ec",
+            "data/rc1_integrated_fixture_corpus/03_science_control.md"
+          ],
+          "record_id": "noncanonical-semantic-54d294ac2450d1c0",
+          "score": 1
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "contradiction",
+      "provenance": [
+        "fixture-doc-d9ae3062ee6cb2f7",
+        "data/rc1_integrated_fixture_corpus/19_audit_path.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-e54cf2058c58257d",
+        "data/rc1_integrated_fixture_corpus/02_engineering_contradiction.md",
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-22d427ed0bd7f6ec",
+        "data/rc1_integrated_fixture_corpus/03_science_control.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "corpus",
+        "semantic graph",
+        "contradiction detection",
+        "evidence weighting",
+        "executive review",
+        "grounded answer"
+      ],
+      "uncertainty": [
+        "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+        "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+        "Engineering Contradiction  One engineering note claims Worker C completed execution successfully.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "The runtime should report the conflict and cite both accounts.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "It does not prove causation when the control condition is missing.",
+        "Worker C execution",
+        "Finance reserves",
+        "Historical event date"
+      ],
+      "workflow_id": "integrated-workflow-bfa9f419551ad110"
+    },
+    {
+      "answer": "The multi-document workflow links records by shared terms and separates known claims from contradictions. Supporting fixture evidence includes: Software Regression  The software fixture says regression tests should cover previous failure modes. The fixture does not authorize investment advice. Remaining uncertainty: Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions. Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+      "audit_path": [
+        "stage:20 fixture documents",
+        "stage:semantic graph",
+        "stage:relationship graph",
+        "stage:evidence graph",
+        "stage:knowledge graph",
+        "stage:reasoning",
+        "stage:executive",
+        "stage:grounded synthesis",
+        "stage:answer",
+        "evidence:integrated-evidence-e73f0a6d74072319",
+        "evidence:integrated-evidence-90b59f9a999bf0af",
+        "evidence:integrated-evidence-65ab91b53c1d6652",
+        "evidence:integrated-evidence-ccc5f15d4227d9bc",
+        "evidence:integrated-evidence-49cd5a4108ccf468",
+        "evidence:integrated-evidence-1532dc59c6a61a5c",
+        "evidence:integrated-evidence-a3526fb1b5c4ba82",
+        "evidence:integrated-evidence-e06eadba139ab176"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-e73f0a6d74072319",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 3
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-90b59f9a999bf0af",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 3
+        },
+        {
+          "claim": "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "evidence_id": "integrated-evidence-65ab91b53c1d6652",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-d9ae3062ee6cb2f7",
+            "data/rc1_integrated_fixture_corpus/19_audit_path.md"
+          ],
+          "record_id": "noncanonical-semantic-968d415da5cd8985",
+          "score": 3
+        },
+        {
+          "claim": "Science Uncertainty  The science fixture reports that uncertainty should increase when evidence is indirect.",
+          "evidence_id": "integrated-evidence-ccc5f15d4227d9bc",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-a7867099ddba32c2",
+            "data/rc1_integrated_fixture_corpus/04_science_uncertainty.md"
+          ],
+          "record_id": "noncanonical-semantic-c29ba48db5528dbf",
+          "score": 3
+        },
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-49cd5a4108ccf468",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 2
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-1532dc59c6a61a5c",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 2
+        },
+        {
+          "claim": "Software Regression  The software fixture says regression tests should cover previous failure modes.",
+          "evidence_id": "integrated-evidence-a3526fb1b5c4ba82",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-e5677b19e90ee99e",
+            "data/rc1_integrated_fixture_corpus/12_software_regression.md"
+          ],
+          "record_id": "noncanonical-semantic-2ab99caf1c1bed77",
+          "score": 2
+        },
+        {
+          "claim": "The fixture does not authorize investment advice.",
+          "evidence_id": "integrated-evidence-e06eadba139ab176",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-8e70d93b655aa8ac",
+            "data/rc1_integrated_fixture_corpus/05_finance_risk.md"
+          ],
+          "record_id": "noncanonical-semantic-2b3ee3128d4bb72e",
+          "score": 2
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "multi_document_synthesis",
+      "provenance": [
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-d9ae3062ee6cb2f7",
+        "data/rc1_integrated_fixture_corpus/19_audit_path.md",
+        "fixture-doc-a7867099ddba32c2",
+        "data/rc1_integrated_fixture_corpus/04_science_uncertainty.md",
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-e5677b19e90ee99e",
+        "data/rc1_integrated_fixture_corpus/12_software_regression.md",
+        "fixture-doc-8e70d93b655aa8ac",
+        "data/rc1_integrated_fixture_corpus/05_finance_risk.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "20 fixture documents",
+        "semantic graph",
+        "relationship graph",
+        "evidence graph",
+        "knowledge graph",
+        "reasoning",
+        "executive",
+        "grounded synthesis",
+        "answer"
+      ],
+      "uncertainty": [
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+        "Science Uncertainty  The science fixture reports that uncertainty should increase when evidence is indirect.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "The runtime should report the conflict and cite both accounts."
+      ],
+      "workflow_id": "integrated-workflow-ed0c6338d14b5bdc"
+    },
+    {
+      "answer": "The investigation workflow recommends collecting missing provenance, checking contradictions, and keeping specialists advisory. Supporting fixture evidence includes: Investigation Gap  The investigation fixture says a knowledge gap should produce an evidence plan. Remaining uncertainty: Finance Contradiction  One finance note says reserves are sufficient for the quarter. Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. The runtime should report the conflict and cite both accounts.",
+      "audit_path": [
+        "stage:question",
+        "stage:knowledge gap",
+        "stage:evidence plan",
+        "stage:specialists",
+        "stage:consensus",
+        "stage:executive",
+        "stage:recommendation",
+        "evidence:integrated-evidence-77f1510fc58ce840",
+        "evidence:integrated-evidence-817d24d19f48d3f4",
+        "evidence:integrated-evidence-bdd7c32c7fd24bef",
+        "evidence:integrated-evidence-dfd2259d5837d2e7",
+        "evidence:integrated-evidence-153cb8667a47750c",
+        "evidence:integrated-evidence-5b4ed66a5fea4e82",
+        "evidence:integrated-evidence-ab019eedcdf87337",
+        "evidence:integrated-evidence-4bdb82ca3e563b45"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-77f1510fc58ce840",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 1
+        },
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-817d24d19f48d3f4",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 1
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-bdd7c32c7fd24bef",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 1
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-dfd2259d5837d2e7",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 1
+        },
+        {
+          "claim": "It does not prove causation when the control condition is missing.",
+          "evidence_id": "integrated-evidence-153cb8667a47750c",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-22d427ed0bd7f6ec",
+            "data/rc1_integrated_fixture_corpus/03_science_control.md"
+          ],
+          "record_id": "noncanonical-semantic-54d294ac2450d1c0",
+          "score": 1
+        },
+        {
+          "claim": "Passing shape tests alone does not prove runtime cooperation.",
+          "evidence_id": "integrated-evidence-5b4ed66a5fea4e82",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-e5677b19e90ee99e",
+            "data/rc1_integrated_fixture_corpus/12_software_regression.md"
+          ],
+          "record_id": "noncanonical-semantic-5cf731d095b69f31",
+          "score": 1
+        },
+        {
+          "claim": "Investigation Gap  The investigation fixture says a knowledge gap should produce an evidence plan.",
+          "evidence_id": "integrated-evidence-ab019eedcdf87337",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-7a1d47f1741c5f6d",
+            "data/rc1_integrated_fixture_corpus/17_investigation_gap.md"
+          ],
+          "record_id": "noncanonical-semantic-68f70f8b1f5776d5",
+          "score": 1
+        },
+        {
+          "claim": "History Conflict  One historical account dates the event to spring.",
+          "evidence_id": "integrated-evidence-4bdb82ca3e563b45",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-6a8f6d0166ae64eb",
+          "score": 1
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation",
+        "provider evidence is simulated only",
+        "specialists are advisory only"
+      ],
+      "mutating": false,
+      "name": "investigation",
+      "provenance": [
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-22d427ed0bd7f6ec",
+        "data/rc1_integrated_fixture_corpus/03_science_control.md",
+        "fixture-doc-e5677b19e90ee99e",
+        "data/rc1_integrated_fixture_corpus/12_software_regression.md",
+        "fixture-doc-7a1d47f1741c5f6d",
+        "data/rc1_integrated_fixture_corpus/17_investigation_gap.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "question",
+        "knowledge gap",
+        "evidence plan",
+        "specialists",
+        "consensus",
+        "executive",
+        "recommendation"
+      ],
+      "uncertainty": [
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "The runtime should report the conflict and cite both accounts.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "It does not prove causation when the control condition is missing.",
+        "Passing shape tests alone does not prove runtime cooperation.",
+        "History Conflict  One historical account dates the event to spring."
+      ],
+      "workflow_id": "integrated-workflow-0f7075c6a19e822a"
+    },
+    {
+      "answer": "Each integrated answer can expose why evidence was selected, what was excluded, confidence, provenance, and limitations. Supporting fixture evidence includes: Software Architecture  The software fixture says architecture improves when modules have clear producers, consumers, validators, and auditors. Remaining uncertainty: Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications. Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty. The runtime should report the conflict and cite both accounts.",
+      "audit_path": [
+        "stage:evidence selection",
+        "stage:reasoning chain",
+        "stage:confidence",
+        "stage:uncertainty",
+        "stage:provenance",
+        "stage:limitations",
+        "evidence:integrated-evidence-8ad0994049395290",
+        "evidence:integrated-evidence-7b22af6773522d4d",
+        "evidence:integrated-evidence-1901f01c3d88f96e",
+        "evidence:integrated-evidence-9ab4d612dfece99e",
+        "evidence:integrated-evidence-e9f0bdc76b934036",
+        "evidence:integrated-evidence-bbd5bf70819744e3",
+        "evidence:integrated-evidence-e054214e5b3fab71",
+        "evidence:integrated-evidence-909fcba92c431a7f"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+          "evidence_id": "integrated-evidence-8ad0994049395290",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-d9ae3062ee6cb2f7",
+            "data/rc1_integrated_fixture_corpus/19_audit_path.md"
+          ],
+          "record_id": "noncanonical-semantic-968d415da5cd8985",
+          "score": 6
+        },
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-7b22af6773522d4d",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 3
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-1901f01c3d88f96e",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 3
+        },
+        {
+          "claim": "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+          "evidence_id": "integrated-evidence-9ab4d612dfece99e",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-7a1d47f1741c5f6d",
+            "data/rc1_integrated_fixture_corpus/17_investigation_gap.md"
+          ],
+          "record_id": "noncanonical-semantic-c04eb412537e958f",
+          "score": 3
+        },
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-e9f0bdc76b934036",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 2
+        },
+        {
+          "claim": "Software Architecture  The software fixture says architecture improves when modules have clear producers, consumers, validators, and auditors.",
+          "evidence_id": "integrated-evidence-bbd5bf70819744e3",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-4b2300d5b28db600",
+            "data/rc1_integrated_fixture_corpus/11_software_architecture.md"
+          ],
+          "record_id": "noncanonical-semantic-2d48beefc54228b8",
+          "score": 2
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-e054214e5b3fab71",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 2
+        },
+        {
+          "claim": "It does not prove causation when the control condition is missing.",
+          "evidence_id": "integrated-evidence-909fcba92c431a7f",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-22d427ed0bd7f6ec",
+            "data/rc1_integrated_fixture_corpus/03_science_control.md"
+          ],
+          "record_id": "noncanonical-semantic-54d294ac2450d1c0",
+          "score": 2
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "self_explanation",
+      "provenance": [
+        "fixture-doc-d9ae3062ee6cb2f7",
+        "data/rc1_integrated_fixture_corpus/19_audit_path.md",
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-7a1d47f1741c5f6d",
+        "data/rc1_integrated_fixture_corpus/17_investigation_gap.md",
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-4b2300d5b28db600",
+        "data/rc1_integrated_fixture_corpus/11_software_architecture.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-22d427ed0bd7f6ec",
+        "data/rc1_integrated_fixture_corpus/03_science_control.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "evidence selection",
+        "reasoning chain",
+        "confidence",
+        "uncertainty",
+        "provenance",
+        "limitations"
+      ],
+      "uncertainty": [
+        "Audit Path  The audit fixture says each answer should expose provenance, reasoning path, uncertainty, and rollback implications.",
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "The runtime should report the conflict and cite both accounts.",
+        "The plan should request missing provenance, contradiction checks, and replication where relevant.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "It does not prove causation when the control condition is missing."
+      ],
+      "workflow_id": "integrated-workflow-3e806ab046ae081a"
+    },
+    {
+      "answer": "The end-to-end learning simulation stages reviewable changes and then retrieves from fixture evidence without live learning. Supporting fixture evidence includes: The fixture does not authorize investment advice. Remaining uncertainty: It does not prove causation when the control condition is missing. Finance Contradiction  One finance note says reserves are sufficient for the quarter. Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+      "audit_path": [
+        "stage:experience",
+        "stage:semantic record",
+        "stage:replay",
+        "stage:consolidation",
+        "stage:proposal",
+        "stage:approval",
+        "stage:simulated integration",
+        "stage:retrieval",
+        "stage:answer",
+        "evidence:integrated-evidence-7d0cf0d049c0522d",
+        "evidence:integrated-evidence-537042f44f928eee",
+        "evidence:integrated-evidence-013f70afc0dfec9a",
+        "evidence:integrated-evidence-0e8489b302511cda",
+        "evidence:integrated-evidence-505682167a6c78b0",
+        "evidence:integrated-evidence-39a47b805e9fba57",
+        "evidence:integrated-evidence-1681b6b66e764a27",
+        "evidence:integrated-evidence-7c4d5ecdced3dc33"
+      ],
+      "confidence": 0.72,
+      "evidence": [
+        {
+          "claim": "It does not prove causation when the control condition is missing.",
+          "evidence_id": "integrated-evidence-7d0cf0d049c0522d",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-22d427ed0bd7f6ec",
+            "data/rc1_integrated_fixture_corpus/03_science_control.md"
+          ],
+          "record_id": "noncanonical-semantic-54d294ac2450d1c0",
+          "score": 3
+        },
+        {
+          "claim": "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+          "evidence_id": "integrated-evidence-537042f44f928eee",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-f164341afcb73e22",
+            "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md"
+          ],
+          "record_id": "noncanonical-semantic-0675564874df1a38",
+          "score": 2
+        },
+        {
+          "claim": "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+          "evidence_id": "integrated-evidence-013f70afc0dfec9a",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-4a8dedfddec38acf",
+            "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md"
+          ],
+          "record_id": "noncanonical-semantic-079b2fbd536a1009",
+          "score": 2
+        },
+        {
+          "claim": "The runtime should report the conflict and cite both accounts.",
+          "evidence_id": "integrated-evidence-0e8489b302511cda",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-0b9c4fecd481172d",
+          "score": 2
+        },
+        {
+          "claim": "The fixture does not authorize investment advice.",
+          "evidence_id": "integrated-evidence-505682167a6c78b0",
+          "evidence_role": "support",
+          "provenance": [
+            "fixture-doc-8e70d93b655aa8ac",
+            "data/rc1_integrated_fixture_corpus/05_finance_risk.md"
+          ],
+          "record_id": "noncanonical-semantic-2b3ee3128d4bb72e",
+          "score": 2
+        },
+        {
+          "claim": "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+          "evidence_id": "integrated-evidence-39a47b805e9fba57",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-e05820d4b8196401",
+            "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md"
+          ],
+          "record_id": "noncanonical-semantic-3dc433e3b8a29250",
+          "score": 2
+        },
+        {
+          "claim": "Passing shape tests alone does not prove runtime cooperation.",
+          "evidence_id": "integrated-evidence-1681b6b66e764a27",
+          "evidence_role": "uncertainty",
+          "provenance": [
+            "fixture-doc-e5677b19e90ee99e",
+            "data/rc1_integrated_fixture_corpus/12_software_regression.md"
+          ],
+          "record_id": "noncanonical-semantic-5cf731d095b69f31",
+          "score": 2
+        },
+        {
+          "claim": "History Conflict  One historical account dates the event to spring.",
+          "evidence_id": "integrated-evidence-7c4d5ecdced3dc33",
+          "evidence_role": "contradiction",
+          "provenance": [
+            "fixture-doc-63bb798b2bcd5a4d",
+            "data/rc1_integrated_fixture_corpus/10_history_conflict.md"
+          ],
+          "record_id": "noncanonical-semantic-6a8f6d0166ae64eb",
+          "score": 2
+        }
+      ],
+      "limitations": [
+        "fixture-only",
+        "no provider calls",
+        "no live knowledge mutation"
+      ],
+      "mutating": false,
+      "name": "end_to_end_learning_simulation",
+      "provenance": [
+        "fixture-doc-22d427ed0bd7f6ec",
+        "data/rc1_integrated_fixture_corpus/03_science_control.md",
+        "fixture-doc-f164341afcb73e22",
+        "data/rc1_integrated_fixture_corpus/06_finance_contradiction.md",
+        "fixture-doc-4a8dedfddec38acf",
+        "data/rc1_integrated_fixture_corpus/07_medicine_boundary.md",
+        "fixture-doc-63bb798b2bcd5a4d",
+        "data/rc1_integrated_fixture_corpus/10_history_conflict.md",
+        "fixture-doc-8e70d93b655aa8ac",
+        "data/rc1_integrated_fixture_corpus/05_finance_risk.md",
+        "fixture-doc-e05820d4b8196401",
+        "data/rc1_integrated_fixture_corpus/20_multidocument_synthesis.md",
+        "fixture-doc-e5677b19e90ee99e",
+        "data/rc1_integrated_fixture_corpus/12_software_regression.md"
+      ],
+      "rollback_path": [
+        "discard fixture outputs",
+        "discard simulated deltas",
+        "no canonical rollback required"
+      ],
+      "stages": [
+        "experience",
+        "semantic record",
+        "replay",
+        "consolidation",
+        "proposal",
+        "approval",
+        "simulated integration",
+        "retrieval",
+        "answer"
+      ],
+      "uncertainty": [
+        "It does not prove causation when the control condition is missing.",
+        "Finance Contradiction  One finance note says reserves are sufficient for the quarter.",
+        "Medicine Boundary  The medicine fixture can describe evidence quality and uncertainty.",
+        "The runtime should report the conflict and cite both accounts.",
+        "Multi Document Synthesis  The synthesis fixture says multi-document answers should combine evidence without erasing contradictions.",
+        "Passing shape tests alone does not prove runtime cooperation.",
+        "History Conflict  One historical account dates the event to spring.",
+        "No live learning or canonical integration occurred."
+      ],
+      "workflow_id": "integrated-workflow-c6cb41ff39f1f596"
+    }
+  ]
+}

@@ -127,6 +127,15 @@ def _alias_map() -> dict[str, tuple[str, ...]]:
         "knowledge_write_status": ("can delta write knowledge yet", "write knowledge yet"),
         "provider_call_status": ("can delta call providers yet", "call providers yet"),
         "live_activation_blockers": ("what remains blocked before live activation", "blocked before live activation"),
+        "integrated_what_know": ("what do you know", "what does delta know"),
+        "integrated_belief_reason": ("why do you believe this", "why believe this"),
+        "integrated_supporting_records": ("which semantic records support this", "semantic records support"),
+        "integrated_strongest_evidence": ("which evidence is strongest", "strongest evidence"),
+        "integrated_uncertainty": ("what remains uncertain", "remaining uncertainty"),
+        "integrated_proposal_effect": ("what would change if proposal", "if proposal x were approved"),
+        "integrated_reasoning_path": ("show the reasoning path", "reasoning path"),
+        "integrated_audit_path": ("show the audit path", "audit path"),
+        "integrated_rollback_path": ("show the rollback path", "rollback path"),
     }
 
 
@@ -209,6 +218,24 @@ def _answer_for(topic_id: str, inventory: dict[str, object]) -> str:
         return "No. Provider evidence remains simulated/advisory only. Real provider calls and provider authority remain disabled until a future explicit gate."
     if topic_id == "live_activation_blockers":
         return "Before live activation, DELTA still needs manual RC1 review, live adapter approval, corpus allowlisting, secret-scan enforcement, rollback validation, overwatch gates, and explicit owner/admin approval."
+    if topic_id == "integrated_what_know":
+        return "DELTA knows the committed RC1 fixture corpus as noncanonical semantic records, including provenance failures, contradiction examples, evidence boundaries, rollback requirements, and activation blockers."
+    if topic_id == "integrated_belief_reason":
+        return "DELTA believes only what fixture semantic records support: provenance restored Registry B routing, Worker C remains uncertain, and unsupported conclusions must be refused."
+    if topic_id == "integrated_supporting_records":
+        return "Supporting semantic records come from the RC1 integrated fixture corpus and include engineering provenance, Registry B recovery, contradiction, audit, rollback, and synthesis records with source checksums."
+    if topic_id == "integrated_strongest_evidence":
+        return "The strongest local evidence is provenance-bearing fixture evidence that directly explains Registry B rejection and recovery; contradiction and uncertainty records are treated as constraints, not proof."
+    if topic_id == "integrated_uncertainty":
+        return "Worker C execution, conflicting finance reserves, historical date disagreement, and any domain-specific medical/financial/legal conclusion remain uncertain without stronger governed evidence."
+    if topic_id == "integrated_proposal_effect":
+        return "If a proposal were approved in RC1, DELTA would create a simulated substrate delta with audit metadata and rollback token only; canonical writes and live knowledge mutation remain disabled."
+    if topic_id == "integrated_reasoning_path":
+        return "The reasoning path is fixture corpus -> semantic records -> read-only retrieval -> evidence assembly -> contradiction/uncertainty preservation -> grounded synthesis -> answer envelope."
+    if topic_id == "integrated_audit_path":
+        return "The audit path records stage names, evidence ids, provenance, simulated approval/overwatch events, rollback token, and safety flags proving no live mutation occurred."
+    if topic_id == "integrated_rollback_path":
+        return "The rollback path is discard fixture outputs, discard simulated deltas, and use rollback tokens for simulated integration records; no canonical rollback is needed because no canonical write occurred."
     return route_v29_alias("").answer_text
 
 

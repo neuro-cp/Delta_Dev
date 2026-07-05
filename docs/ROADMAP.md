@@ -943,6 +943,28 @@ Recommended next roadmap item:
 
 `PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW`
 
+## RC1 Integrated Cognitive Runtime
+
+DELTA completed an integrated runtime behavior pass over the RC1 wave-chain
+surfaces. The pass added a 20-document fixture corpus and eight end-to-end
+workflows:
+
+1. Document -> semantics -> answer.
+2. Document -> semantics -> proposal.
+3. Question answering.
+4. Contradiction.
+5. Multi-document synthesis.
+6. Investigation.
+7. Self explanation.
+8. End-to-end learning simulation.
+
+The integrated runtime report estimates runtime maturity at `98%` for
+deterministic fixture operation. This does not authorize live capabilities.
+
+Recommended next roadmap item:
+
+`PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST`
+
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
 Runtime ARC VI introduces a planning-only executive layer.

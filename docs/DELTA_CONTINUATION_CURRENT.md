@@ -357,3 +357,22 @@ Still blocked:
 
 Current next recommendation:
 PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW
+
+RC1 integrated cognitive runtime is complete as a deterministic fixture-based
+behavior pass.
+
+New integrated runtime surface:
+
+- `orchestration/runtime/rc1_integrated_cognitive_runtime.py`
+- `scripts/delta_rc1_integrated_runtime.py`
+- `reports/runtime_rc1_integrated_runtime_review.md/json`
+- `ui/delta_rc1_integrated_runtime_dashboard.html`
+- `docs/continuation_rc1_integrated_runtime.md`
+
+The integrated fixture corpus has 20 documents. The runtime exercises document
+to semantics to answer, document to semantics to proposal, question answering,
+contradiction, multi-document synthesis, investigation, self explanation, and
+end-to-end learning simulation.
+
+Current next recommendation:
+PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST

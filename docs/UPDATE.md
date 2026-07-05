@@ -4243,3 +4243,44 @@ execution, no memory mutation, no live knowledge mutation, and no hidden writes.
 Next recommendation:
 
 `PROCEED_MANUAL_RC1_WAVE_CHAIN_REVIEW`
+
+## RC1 Integrated Cognitive Runtime
+
+Completed an integrated cognitive runtime pass focused on behavior over
+fixtures rather than additional architecture layers.
+
+Generated artifacts:
+
+- `data/rc1_integrated_fixture_corpus/`
+- `orchestration/runtime/rc1_integrated_cognitive_runtime.py`
+- `scripts/delta_rc1_integrated_runtime.py`
+- `tests/runtime_rc1/test_rc1_integrated_cognitive_runtime.py`
+- `reports/runtime_rc1_integrated_runtime_review.md`
+- `reports/runtime_rc1_integrated_runtime_review.json`
+- `ui/delta_rc1_integrated_runtime_dashboard.html`
+- `docs/continuation_rc1_integrated_runtime.md`
+
+Integrated workflows:
+
+- document -> semantics -> answer
+- document -> semantics -> proposal
+- question answering
+- contradiction
+- multi-document synthesis
+- investigation
+- self explanation
+- end-to-end learning simulation
+
+The local answer route now covers integrated runtime questions such as "What do
+you know?", "Why do you believe this?", "Which semantic records support this?",
+"Which evidence is strongest?", "What remains uncertain?", "Show the
+reasoning path", "Show the audit path", and "Show the rollback path".
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no provider calls, no arbitrary live ingestion, no canonical writes,
+no memory mutation, no live knowledge mutation, no scheduler/background worker,
+and no action execution.
+
+Next recommendation:
+
+`PROCEED_RC2_PLANNING_MANUAL_REVIEW_FIRST`
