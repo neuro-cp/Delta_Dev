@@ -924,3 +924,18 @@ Checkpoint:
 
 Current next recommendation:
 CONTINUE_SUBSTRATE_EVOLUTION
+
+TP14 substrate-first improvement from TP13 findings is complete.
+
+Checkpoint:
+
+- TP13's small gains were mapped to governed substrate improvements
+- replay comparison indicates the improved substrate can match or exceed the
+  TP13 shadow artifact while preserving governance
+- no new shadow artifact was created
+- no model training, fine-tuning, weight updates, providers, canonical writes,
+  live knowledge mutation, schedulers, actions, HYB1 promotion, or Model B
+  replacement occurred
+
+Current next recommendation:
+TRAINING_REMAINS_UNJUSTIFIED

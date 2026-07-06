@@ -1259,3 +1259,15 @@ TP13 evaluates whether shadow training provides benefit beyond governed
 substrate evolution. The result is conservative: small benchmark movement does
 not justify the governance regression, so substrate evolution remains the
 preferred path.
+
+## TP14 Substrate-First Improvement From TP13 Findings
+
+TP14 converts legitimate TP13 gains into governed substrate improvements:
+proposition normalization, provenance enrichment, contradiction linking,
+uncertainty calibration, retrieval ranking, and replay prioritization.
+
+TP14 changes no model weights and creates no additional shadow artifact. The
+replay comparison indicates substrate improvements can match or exceed TP13's
+small shadow-artifact gains while preserving provenance, auditability,
+rollback, determinism, replay, refusal behavior, uncertainty, and contradiction
+handling.

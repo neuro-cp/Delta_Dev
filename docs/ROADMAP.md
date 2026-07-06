@@ -990,6 +990,16 @@ Current recommendation:
 
 `CONTINUE_SUBSTRATE_EVOLUTION`
 
+## TP14 Substrate-First Improvement From TP13 Findings
+
+TP14 is complete. It analyzed TP13 differences, extracted governed substrate
+improvements, replayed TP13 scenarios with the improved substrate, compared
+substrate improvements against training, and verified governance preservation.
+
+Current recommendation:
+
+`TRAINING_REMAINS_UNJUSTIFIED`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

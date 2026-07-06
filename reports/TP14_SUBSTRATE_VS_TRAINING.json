@@ -1,0 +1,14 @@
+{
+  "new_shadow_artifact_created": false,
+  "phase": "TP14 Substrate Vs Training",
+  "recovered_gains": {
+    "consistency": true,
+    "factual_accuracy": true,
+    "operator_agreement": true,
+    "reasoning_quality": true,
+    "uncertainty_calibration": true
+  },
+  "substrate_governance_advantage": 0.12,
+  "substrate_matches_or_exceeds_shadow": true,
+  "training_repeated": false
+}

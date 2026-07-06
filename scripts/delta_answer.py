@@ -51,6 +51,7 @@ from orchestration.runtime.tp10_training_readiness_review import is_tp10_questio
 from orchestration.runtime.tp11_governed_base_corpus import is_tp11_question, answer_tp11_question
 from orchestration.runtime.tp12_disabled_shadow_training_dry_run import is_tp12_question, answer_tp12_question
 from orchestration.runtime.tp13_research_shadow_training_protocol import is_tp13_question, answer_tp13_question
+from orchestration.runtime.tp14_substrate_first_improvement import is_tp14_question, answer_tp14_question
 
 
 def main() -> int:
@@ -65,6 +66,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_tp14_question(query):
+        data = answer_tp14_question(query)
     elif is_tp13_question(query):
         data = answer_tp13_question(query)
     elif is_tp12_question(query):
@@ -188,6 +191,8 @@ def main() -> int:
     elif data.get("phase") == "TP12 Disabled Shadow Training Dry-Run Validation":
         print(data["answer_text"])
     elif data.get("phase") == "TP13 Research-Only Shadow Training Protocol":
+        print(data["answer_text"])
+    elif data.get("phase") == "TP14 Substrate-First Improvement From TP13 Findings":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

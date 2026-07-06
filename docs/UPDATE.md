@@ -4968,3 +4968,28 @@ change Model B defaults.
 
 Current next recommendation:
 CONTINUE_SUBSTRATE_EVOLUTION
+
+## TP14 Substrate-First Improvement From TP13 Findings
+
+TP14 substrate-first improvement from TP13 findings is complete.
+
+New TP14 surface:
+
+- `orchestration/runtime/tp14_substrate_first_improvement.py`
+- `scripts/delta_tp14_substrate_first_improvement.py`
+- `tests/runtime_tp14/test_tp14_substrate_first_improvement.py`
+- `reports/TP14_DIFFERENCE_ANALYSIS.md/json`
+- `reports/TP14_SUBSTRATE_IMPROVEMENTS.md/json`
+- `reports/TP14_REPLAY_COMPARISON.md/json`
+- `reports/TP14_SUBSTRATE_VS_TRAINING.md/json`
+- `reports/TP14_GOVERNANCE_REVIEW.md/json`
+- `reports/TP14_FINAL_REVIEW.md/json`
+- `docs/continuation_tp14.md`
+
+TP14 performs report-level substrate improvement and replay only. It creates no
+new shadow artifact and performs no training, fine-tuning, weight updates,
+provider calls, canonical writes, live knowledge mutation, schedulers, actions,
+HYB1 promotion, or Model B replacement.
+
+Current next recommendation:
+TRAINING_REMAINS_UNJUSTIFIED

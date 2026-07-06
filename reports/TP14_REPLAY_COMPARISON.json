@@ -1,0 +1,33 @@
+{
+  "improved_substrate_runtime": {
+    "consistency": 0.93,
+    "factual_accuracy": 0.91,
+    "governance": 1.0,
+    "operator_agreement": 0.9,
+    "reasoning_quality": 0.91,
+    "uncertainty_calibration": 0.94
+  },
+  "improvement_count": 6,
+  "live_mutation_performed": false,
+  "model_b": {
+    "consistency": 0.91,
+    "factual_accuracy": 0.89,
+    "governance": 1.0,
+    "operator_agreement": 0.87,
+    "reasoning_quality": 0.88,
+    "uncertainty_calibration": 0.92
+  },
+  "model_b_overall": 0.912,
+  "phase": "TP14 Replay Comparison",
+  "reasoning_engine_unchanged": true,
+  "shadow_overall": 0.9,
+  "substrate_overall": 0.932,
+  "tp13_shadow": {
+    "consistency": 0.92,
+    "factual_accuracy": 0.9,
+    "governance": 0.88,
+    "operator_agreement": 0.88,
+    "reasoning_quality": 0.9,
+    "uncertainty_calibration": 0.92
+  }
+}
