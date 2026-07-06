@@ -1271,3 +1271,15 @@ replay comparison indicates substrate improvements can match or exceed TP13's
 small shadow-artifact gains while preserving provenance, auditability,
 rollback, determinism, replay, refusal behavior, uncertainty, and contradiction
 handling.
+
+## TP15 Governed Substrate Integration Design
+
+TP15 maps the six TP14 substrate improvements into inactive governed
+integration lanes. Each lane defines implementation location, dependencies,
+governance gates, operator review requirements, rollback handles, expected
+runtime effect, evaluation criteria, and falsification behavior.
+
+TP15 performs no live integration. Model B remains unchanged, and the reasoning
+engine remains unchanged. Training, fine-tuning, weight updates, new shadow
+artifacts, providers, canonical writes, live knowledge mutation, schedulers,
+actions, HYB1 promotion, and Model B replacement remain disabled.

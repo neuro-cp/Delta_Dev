@@ -1,0 +1,91 @@
+{
+  "deterministic": true,
+  "passed": true,
+  "phase": "TP15 Rollback Design",
+  "rollback_records": [
+    {
+      "audit_supported": true,
+      "disable_supported": true,
+      "improvement_id": "tp14-proposition-normalization",
+      "inspectable": true,
+      "reconstruction_inputs": [
+        "mapping",
+        "gate_result",
+        "operator_decision",
+        "pre_integration_snapshot"
+      ],
+      "replay_supported": true,
+      "revert_supported": true
+    },
+    {
+      "audit_supported": true,
+      "disable_supported": true,
+      "improvement_id": "tp14-provenance-enrichment",
+      "inspectable": true,
+      "reconstruction_inputs": [
+        "mapping",
+        "gate_result",
+        "operator_decision",
+        "pre_integration_snapshot"
+      ],
+      "replay_supported": true,
+      "revert_supported": true
+    },
+    {
+      "audit_supported": true,
+      "disable_supported": true,
+      "improvement_id": "tp14-contradiction-linking",
+      "inspectable": true,
+      "reconstruction_inputs": [
+        "mapping",
+        "gate_result",
+        "operator_decision",
+        "pre_integration_snapshot"
+      ],
+      "replay_supported": true,
+      "revert_supported": true
+    },
+    {
+      "audit_supported": true,
+      "disable_supported": true,
+      "improvement_id": "tp14-uncertainty-calibration",
+      "inspectable": true,
+      "reconstruction_inputs": [
+        "mapping",
+        "gate_result",
+        "operator_decision",
+        "pre_integration_snapshot"
+      ],
+      "replay_supported": true,
+      "revert_supported": true
+    },
+    {
+      "audit_supported": true,
+      "disable_supported": true,
+      "improvement_id": "tp14-retrieval-ranking",
+      "inspectable": true,
+      "reconstruction_inputs": [
+        "mapping",
+        "gate_result",
+        "operator_decision",
+        "pre_integration_snapshot"
+      ],
+      "replay_supported": true,
+      "revert_supported": true
+    },
+    {
+      "audit_supported": true,
+      "disable_supported": true,
+      "improvement_id": "tp14-replay-prioritization",
+      "inspectable": true,
+      "reconstruction_inputs": [
+        "mapping",
+        "gate_result",
+        "operator_decision",
+        "pre_integration_snapshot"
+      ],
+      "replay_supported": true,
+      "revert_supported": true
+    }
+  ]
+}

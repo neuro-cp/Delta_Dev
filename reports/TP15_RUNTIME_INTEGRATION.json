@@ -1,0 +1,17 @@
+{
+  "active": false,
+  "lanes": {
+    "contradiction_awareness": "inactive contradiction graph hints",
+    "evidence_ordering": "inactive provenance-first evidence ordering",
+    "proposition_quality": "inactive normalized proposition envelope",
+    "replay_prioritization": "inactive replay queue priority markers",
+    "retrieval_ranking": "inactive ranking overlay; improves evidence ordering only after approval",
+    "uncertainty_handling": "inactive uncertainty lane preservation"
+  },
+  "live_mutation": false,
+  "mapped_improvement_count": 6,
+  "passed": true,
+  "phase": "TP15 Runtime Integration Design",
+  "reasoning_engine_unchanged": true,
+  "weight_updates": false
+}

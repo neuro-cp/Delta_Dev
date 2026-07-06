@@ -1,0 +1,43 @@
+{
+  "all_blocked": true,
+  "cases": [
+    {
+      "case": "weak_provenance",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    },
+    {
+      "case": "contradictory_evidence",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    },
+    {
+      "case": "replay_degradation",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    },
+    {
+      "case": "retrieval_degradation",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    },
+    {
+      "case": "rollback_failure",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    },
+    {
+      "case": "operator_disagreement",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    },
+    {
+      "case": "uncertainty_inflation",
+      "decision": "blocked",
+      "improvement_remains_inactive": true
+    }
+  ],
+  "mapped_improvement_count": 6,
+  "passed": true,
+  "phase": "TP15 Falsification"
+}

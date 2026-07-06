@@ -1,0 +1,145 @@
+{
+  "all_bypass_blocked": true,
+  "gates": [
+    {
+      "active": false,
+      "bypass_allowed": false,
+      "gate_status": {
+        "approval": "required_before_activation",
+        "audit": "required_before_activation",
+        "contradiction_handling": "required_before_activation",
+        "determinism": "required_before_activation",
+        "provenance": "required_before_activation",
+        "rollback_registration": "required_before_activation",
+        "uncertainty": "required_before_activation"
+      },
+      "improvement_id": "tp14-proposition-normalization",
+      "required_gates": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction_handling",
+        "uncertainty",
+        "rollback_registration",
+        "determinism"
+      ]
+    },
+    {
+      "active": false,
+      "bypass_allowed": false,
+      "gate_status": {
+        "approval": "required_before_activation",
+        "audit": "required_before_activation",
+        "contradiction_handling": "required_before_activation",
+        "determinism": "required_before_activation",
+        "provenance": "required_before_activation",
+        "rollback_registration": "required_before_activation",
+        "uncertainty": "required_before_activation"
+      },
+      "improvement_id": "tp14-provenance-enrichment",
+      "required_gates": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction_handling",
+        "uncertainty",
+        "rollback_registration",
+        "determinism"
+      ]
+    },
+    {
+      "active": false,
+      "bypass_allowed": false,
+      "gate_status": {
+        "approval": "required_before_activation",
+        "audit": "required_before_activation",
+        "contradiction_handling": "required_before_activation",
+        "determinism": "required_before_activation",
+        "provenance": "required_before_activation",
+        "rollback_registration": "required_before_activation",
+        "uncertainty": "required_before_activation"
+      },
+      "improvement_id": "tp14-contradiction-linking",
+      "required_gates": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction_handling",
+        "uncertainty",
+        "rollback_registration",
+        "determinism"
+      ]
+    },
+    {
+      "active": false,
+      "bypass_allowed": false,
+      "gate_status": {
+        "approval": "required_before_activation",
+        "audit": "required_before_activation",
+        "contradiction_handling": "required_before_activation",
+        "determinism": "required_before_activation",
+        "provenance": "required_before_activation",
+        "rollback_registration": "required_before_activation",
+        "uncertainty": "required_before_activation"
+      },
+      "improvement_id": "tp14-uncertainty-calibration",
+      "required_gates": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction_handling",
+        "uncertainty",
+        "rollback_registration",
+        "determinism"
+      ]
+    },
+    {
+      "active": false,
+      "bypass_allowed": false,
+      "gate_status": {
+        "approval": "required_before_activation",
+        "audit": "required_before_activation",
+        "contradiction_handling": "required_before_activation",
+        "determinism": "required_before_activation",
+        "provenance": "required_before_activation",
+        "rollback_registration": "required_before_activation",
+        "uncertainty": "required_before_activation"
+      },
+      "improvement_id": "tp14-retrieval-ranking",
+      "required_gates": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction_handling",
+        "uncertainty",
+        "rollback_registration",
+        "determinism"
+      ]
+    },
+    {
+      "active": false,
+      "bypass_allowed": false,
+      "gate_status": {
+        "approval": "required_before_activation",
+        "audit": "required_before_activation",
+        "contradiction_handling": "required_before_activation",
+        "determinism": "required_before_activation",
+        "provenance": "required_before_activation",
+        "rollback_registration": "required_before_activation",
+        "uncertainty": "required_before_activation"
+      },
+      "improvement_id": "tp14-replay-prioritization",
+      "required_gates": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction_handling",
+        "uncertainty",
+        "rollback_registration",
+        "determinism"
+      ]
+    }
+  ],
+  "passed": true,
+  "phase": "TP15 Governance Gates"
+}

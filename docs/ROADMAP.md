@@ -1000,6 +1000,16 @@ Current recommendation:
 
 `TRAINING_REMAINS_UNJUSTIFIED`
 
+## TP15 Governed Substrate Integration Design
+
+TP15 is complete. It converted TP14's substrate-first findings into a governed,
+inactive integration design with gates, operator workflow, runtime integration
+lanes, rollback, evaluation gates, and falsification.
+
+Current recommendation:
+
+`READY_FOR_CONTROLLED_SUBSTRATE_INTEGRATION`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

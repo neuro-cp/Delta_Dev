@@ -1,0 +1,223 @@
+{
+  "active_integrations": 0,
+  "mapped_improvements": [
+    {
+      "active": false,
+      "dependencies": [
+        "TP14 finding",
+        "TP15 governance gate",
+        "operator review",
+        "rollback registration"
+      ],
+      "expected_runtime_effect": "cleaner claim units for reasoning",
+      "governance_preserved": true,
+      "governance_requirements": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction handling",
+        "uncertainty",
+        "rollback"
+      ],
+      "implementation_location": "substrate/proposition_layer",
+      "improvement_id": "tp14-proposition-normalization",
+      "operator_review_requirements": [
+        "review",
+        "approve_or_reject",
+        "request_revision",
+        "inspect_evidence",
+        "inspect_uncertainty"
+      ],
+      "rollback_requirements": [
+        "pre_integration_snapshot",
+        "disable_token",
+        "replay_diff",
+        "audit_id"
+      ],
+      "source_metric": "reasoning_quality",
+      "substrate_action": "normalize repeated fixture claims into explicit propositions with source-backed claim ids"
+    },
+    {
+      "active": false,
+      "dependencies": [
+        "TP14 finding",
+        "TP15 governance gate",
+        "operator review",
+        "rollback registration"
+      ],
+      "expected_runtime_effect": "stronger evidence trace visibility",
+      "governance_preserved": true,
+      "governance_requirements": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction handling",
+        "uncertainty",
+        "rollback"
+      ],
+      "implementation_location": "substrate/evidence_packet_builder",
+      "improvement_id": "tp14-provenance-enrichment",
+      "operator_review_requirements": [
+        "review",
+        "approve_or_reject",
+        "request_revision",
+        "inspect_evidence",
+        "inspect_uncertainty"
+      ],
+      "rollback_requirements": [
+        "pre_integration_snapshot",
+        "disable_token",
+        "replay_diff",
+        "audit_id"
+      ],
+      "source_metric": "factual_accuracy",
+      "substrate_action": "attach manifest hash, source family, and review state to retrieved evidence packets"
+    },
+    {
+      "active": false,
+      "dependencies": [
+        "TP14 finding",
+        "TP15 governance gate",
+        "operator review",
+        "rollback registration"
+      ],
+      "expected_runtime_effect": "earlier conflict awareness",
+      "governance_preserved": true,
+      "governance_requirements": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction handling",
+        "uncertainty",
+        "rollback"
+      ],
+      "implementation_location": "substrate/contradiction_graph",
+      "improvement_id": "tp14-contradiction-linking",
+      "operator_review_requirements": [
+        "review",
+        "approve_or_reject",
+        "request_revision",
+        "inspect_evidence",
+        "inspect_uncertainty"
+      ],
+      "rollback_requirements": [
+        "pre_integration_snapshot",
+        "disable_token",
+        "replay_diff",
+        "audit_id"
+      ],
+      "source_metric": "contradiction_handling",
+      "substrate_action": "link unresolved execution/recovery claims to contradiction metadata before synthesis"
+    },
+    {
+      "active": false,
+      "dependencies": [
+        "TP14 finding",
+        "TP15 governance gate",
+        "operator review",
+        "rollback registration"
+      ],
+      "expected_runtime_effect": "bounded confidence and better abstention",
+      "governance_preserved": true,
+      "governance_requirements": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction handling",
+        "uncertainty",
+        "rollback"
+      ],
+      "implementation_location": "substrate/uncertainty_lane",
+      "improvement_id": "tp14-uncertainty-calibration",
+      "operator_review_requirements": [
+        "review",
+        "approve_or_reject",
+        "request_revision",
+        "inspect_evidence",
+        "inspect_uncertainty"
+      ],
+      "rollback_requirements": [
+        "pre_integration_snapshot",
+        "disable_token",
+        "replay_diff",
+        "audit_id"
+      ],
+      "source_metric": "uncertainty_calibration",
+      "substrate_action": "preserve explicit uncertainty labels through replay and answer synthesis"
+    },
+    {
+      "active": false,
+      "dependencies": [
+        "TP14 finding",
+        "TP15 governance gate",
+        "operator review",
+        "rollback registration"
+      ],
+      "expected_runtime_effect": "higher-value evidence ordering",
+      "governance_preserved": true,
+      "governance_requirements": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction handling",
+        "uncertainty",
+        "rollback"
+      ],
+      "implementation_location": "runtime/retrieval_ranker",
+      "improvement_id": "tp14-retrieval-ranking",
+      "operator_review_requirements": [
+        "review",
+        "approve_or_reject",
+        "request_revision",
+        "inspect_evidence",
+        "inspect_uncertainty"
+      ],
+      "rollback_requirements": [
+        "pre_integration_snapshot",
+        "disable_token",
+        "replay_diff",
+        "audit_id"
+      ],
+      "source_metric": "benchmark_performance",
+      "substrate_action": "rank evidence by provenance completeness, contradiction linkage, and review state before lexical adjacency"
+    },
+    {
+      "active": false,
+      "dependencies": [
+        "TP14 finding",
+        "TP15 governance gate",
+        "operator review",
+        "rollback registration"
+      ],
+      "expected_runtime_effect": "review effort focused on unresolved governed records",
+      "governance_preserved": true,
+      "governance_requirements": [
+        "provenance",
+        "approval",
+        "audit",
+        "contradiction handling",
+        "uncertainty",
+        "rollback"
+      ],
+      "implementation_location": "replay/review_queue",
+      "improvement_id": "tp14-replay-prioritization",
+      "operator_review_requirements": [
+        "review",
+        "approve_or_reject",
+        "request_revision",
+        "inspect_evidence",
+        "inspect_uncertainty"
+      ],
+      "rollback_requirements": [
+        "pre_integration_snapshot",
+        "disable_token",
+        "replay_diff",
+        "audit_id"
+      ],
+      "source_metric": "operator_agreement",
+      "substrate_action": "prioritize replay for operator-reviewed records with unresolved contradiction markers"
+    }
+  ],
+  "passed": true,
+  "phase": "TP15 Integration Mapping"
+}

@@ -1,0 +1,92 @@
+{
+  "gates": [
+    {
+      "activation_allowed_now": false,
+      "evidence_required": true,
+      "improvement_id": "tp14-proposition-normalization",
+      "metrics": {
+        "contradiction_preservation": "must_pass_before_activation",
+        "governance_compliance": "must_pass_before_activation",
+        "operator_agreement": "must_pass_before_activation",
+        "provenance_preservation": "must_pass_before_activation",
+        "replay_improvement": "must_pass_before_activation",
+        "uncertainty_calibration": "must_pass_before_activation"
+      }
+    },
+    {
+      "activation_allowed_now": false,
+      "evidence_required": true,
+      "improvement_id": "tp14-provenance-enrichment",
+      "metrics": {
+        "contradiction_preservation": "must_pass_before_activation",
+        "governance_compliance": "must_pass_before_activation",
+        "operator_agreement": "must_pass_before_activation",
+        "provenance_preservation": "must_pass_before_activation",
+        "replay_improvement": "must_pass_before_activation",
+        "uncertainty_calibration": "must_pass_before_activation"
+      }
+    },
+    {
+      "activation_allowed_now": false,
+      "evidence_required": true,
+      "improvement_id": "tp14-contradiction-linking",
+      "metrics": {
+        "contradiction_preservation": "must_pass_before_activation",
+        "governance_compliance": "must_pass_before_activation",
+        "operator_agreement": "must_pass_before_activation",
+        "provenance_preservation": "must_pass_before_activation",
+        "replay_improvement": "must_pass_before_activation",
+        "uncertainty_calibration": "must_pass_before_activation"
+      }
+    },
+    {
+      "activation_allowed_now": false,
+      "evidence_required": true,
+      "improvement_id": "tp14-uncertainty-calibration",
+      "metrics": {
+        "contradiction_preservation": "must_pass_before_activation",
+        "governance_compliance": "must_pass_before_activation",
+        "operator_agreement": "must_pass_before_activation",
+        "provenance_preservation": "must_pass_before_activation",
+        "replay_improvement": "must_pass_before_activation",
+        "uncertainty_calibration": "must_pass_before_activation"
+      }
+    },
+    {
+      "activation_allowed_now": false,
+      "evidence_required": true,
+      "improvement_id": "tp14-retrieval-ranking",
+      "metrics": {
+        "contradiction_preservation": "must_pass_before_activation",
+        "governance_compliance": "must_pass_before_activation",
+        "operator_agreement": "must_pass_before_activation",
+        "provenance_preservation": "must_pass_before_activation",
+        "replay_improvement": "must_pass_before_activation",
+        "uncertainty_calibration": "must_pass_before_activation"
+      }
+    },
+    {
+      "activation_allowed_now": false,
+      "evidence_required": true,
+      "improvement_id": "tp14-replay-prioritization",
+      "metrics": {
+        "contradiction_preservation": "must_pass_before_activation",
+        "governance_compliance": "must_pass_before_activation",
+        "operator_agreement": "must_pass_before_activation",
+        "provenance_preservation": "must_pass_before_activation",
+        "replay_improvement": "must_pass_before_activation",
+        "uncertainty_calibration": "must_pass_before_activation"
+      }
+    }
+  ],
+  "metrics": [
+    "replay_improvement",
+    "operator_agreement",
+    "provenance_preservation",
+    "contradiction_preservation",
+    "uncertainty_calibration",
+    "governance_compliance"
+  ],
+  "passed": true,
+  "phase": "TP15 Evaluation Gates"
+}

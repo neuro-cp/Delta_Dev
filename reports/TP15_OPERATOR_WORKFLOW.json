@@ -1,0 +1,20 @@
+{
+  "active_integration": false,
+  "approval_required": true,
+  "operator_authority": "final",
+  "passed": true,
+  "phase": "TP15 Operator Workflow",
+  "rejection_supported": true,
+  "revision_supported": true,
+  "rollback_supported": true,
+  "steps": [
+    "review integration proposal",
+    "inspect evidence packet",
+    "inspect uncertainty lane",
+    "inspect contradiction links",
+    "approve, reject, or request revision",
+    "inspect replay diff",
+    "register rollback handle",
+    "perform post-decision audit review"
+  ]
+}

@@ -4993,3 +4993,30 @@ HYB1 promotion, or Model B replacement.
 
 Current next recommendation:
 TRAINING_REMAINS_UNJUSTIFIED
+
+## TP15 Governed Substrate Integration Design
+
+TP15 governed substrate integration design is complete.
+
+New TP15 surface:
+
+- `orchestration/runtime/tp15_governed_substrate_integration_design.py`
+- `scripts/delta_tp15_governed_substrate_integration_design.py`
+- `tests/runtime_tp15/test_tp15_governed_substrate_integration_design.py`
+- `reports/TP15_INTEGRATION_MAPPING.md/json`
+- `reports/TP15_GOVERNANCE_GATES.md/json`
+- `reports/TP15_OPERATOR_WORKFLOW.md/json`
+- `reports/TP15_RUNTIME_INTEGRATION.md/json`
+- `reports/TP15_ROLLBACK_DESIGN.md/json`
+- `reports/TP15_EVALUATION_GATES.md/json`
+- `reports/TP15_FALSIFICATION.md/json`
+- `reports/TP15_FINAL_REVIEW.md/json`
+- `docs/continuation_tp15.md`
+
+TP15 is design-only. It performs no live substrate integration, no model
+training, no fine-tuning, no weight updates, no new shadow artifacts, no
+provider calls, no canonical writes, no autonomous actions, no schedulers, no
+HYB1 promotion, and no Model B replacement.
+
+Current next recommendation:
+READY_FOR_CONTROLLED_SUBSTRATE_INTEGRATION

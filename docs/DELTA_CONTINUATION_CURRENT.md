@@ -939,3 +939,19 @@ Checkpoint:
 
 Current next recommendation:
 TRAINING_REMAINS_UNJUSTIFIED
+
+TP15 governed substrate integration design is complete.
+
+Checkpoint:
+
+- six TP14 substrate improvements are mapped into inactive governed integration
+  lanes
+- governance gates, operator workflow, runtime integration design, rollback,
+  evaluation gates, and falsification are defined
+- no live integration occurred
+- Model B and the reasoning engine remain unchanged
+- no training, providers, canonical writes, live knowledge mutation,
+  schedulers, actions, HYB1 promotion, or Model B replacement occurred
+
+Current next recommendation:
+READY_FOR_CONTROLLED_SUBSTRATE_INTEGRATION
