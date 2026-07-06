@@ -531,6 +531,45 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP4 controlled persistent pilot design review is complete.
+
+New TP4 surface:
+
+- `orchestration/runtime/tp4_controlled_persistent_pilot_design.py`
+- `scripts/delta_tp4_design_review.py`
+- `reports/TP4_ACTIVATION_MATRIX.md/json`
+- `reports/TP4_MINIMUM_FEATURE_REVIEW.md/json`
+- `reports/TP4_PERSISTENT_PILOT_DESIGN.md/json`
+- `reports/TP4_GOVERNANCE_AUDIT.md/json`
+- `reports/TP4_REAL_WORLD_EVALUATION.md/json`
+- `reports/TP4_RECOMMENDATION.md/json`
+- `docs/continuation_tp4.md`
+
+TP4 reviewed TP3, classified subsystem activation readiness, selected the
+minimum safe feature candidate, designed the first controlled noncanonical
+persistent pilot, audited governance, and defined the first real-world
+evaluation framework.
+
+Selected minimum feature candidate:
+
+`operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions`
+
+Current TP4 result:
+
+- TP3 accepted for design review, not activation
+- persistent pilot readiness: `design_ready_not_enabled`
+- real-world evaluation readiness: `framework_ready_no_live_data_collection`
+- final recommendation:
+  `READY_FOR_CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION`
+
+Safety state remains unchanged: no model-weight training, no fine-tuning, no
+model update, no provider calls, no canonical writes, no live knowledge
+mutation, no memory mutation, no schedulers/background workers, no action
+execution, no HYB1 promotion, and Model B remains default.
+
+Current next recommendation:
+CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION
+
 TP3 independent verification freeze is complete.
 
 New TP3 surface:

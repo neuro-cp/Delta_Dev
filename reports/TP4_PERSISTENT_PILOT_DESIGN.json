@@ -1,0 +1,71 @@
+{
+  "abort_criteria": [
+    "any provider call",
+    "any canonical write",
+    "any memory/knowledge mutation outside isolated pilot store",
+    "any scheduler/background worker",
+    "any action execution",
+    "any hidden approval inference",
+    "any secret exposure"
+  ],
+  "approval_requirements": [
+    "exact structured approval",
+    "single candidate id",
+    "operator identity",
+    "approval scope: noncanonical_pilot_only"
+  ],
+  "architecture": [
+    "operator session input",
+    "candidate semantic extraction into staging",
+    "review bundle with provenance and uncertainty",
+    "strict operator approval",
+    "isolated noncanonical persistent store write",
+    "audit event",
+    "rollback token",
+    "read-only evaluation replay"
+  ],
+  "enabled_now": false,
+  "operator_experience": [
+    "review candidate",
+    "approve one candidate with exact phrase",
+    "inspect audit trail",
+    "ask read-only questions over pilot store",
+    "run rollback rehearsal"
+  ],
+  "phase": "TP4 Controlled Persistent Pilot Design",
+  "pilot_name": "TP5 controlled noncanonical persistent pilot",
+  "promotion_workflow": "No canonical promotion in TP5; TP5 may only mark records as noncanonical pilot accepted.",
+  "review_workflow": [
+    "create proposal",
+    "show source evidence and uncertainty",
+    "block missing provenance",
+    "block unresolved contradiction unless explicitly marked",
+    "require exact approval phrase"
+  ],
+  "rollback_workflow": [
+    "record pre-write manifest",
+    "write isolated append-only record",
+    "write rollback token",
+    "manual rollback deletes or tombstones pilot workspace record",
+    "verify post-rollback hash/state"
+  ],
+  "selected_capability": "operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions",
+  "storage_model": {
+    "append_only": true,
+    "canonical": false,
+    "records": [
+      "PilotSemanticRecord",
+      "PilotApprovalEvent",
+      "PilotAuditEvent",
+      "PilotRollbackToken"
+    ],
+    "target_store": "data/tp5_noncanonical_pilot_store/"
+  },
+  "success_metrics": {
+    "operator_disagreement_review_required": true,
+    "provenance_coverage_min": 1.0,
+    "rollback_success": 1.0,
+    "unsupported_claim_refusal_min": 1.0,
+    "write_determinism": 1.0
+  }
+}

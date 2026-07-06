@@ -1,0 +1,30 @@
+{
+  "all_required_layers_present": true,
+  "checks": {
+    "audit_trail": "strong",
+    "contradiction_preservation": "strong",
+    "deterministic_replay": "strong",
+    "invariant_enforcement": "strong",
+    "operator_approval": "strong",
+    "provenance": "strong",
+    "refusal_behavior": "strong",
+    "rollback": "strong_for_isolated_store",
+    "safety_gates": "strong",
+    "uncertainty_handling": "strong"
+  },
+  "instrumentation_to_add_before_activation": [
+    "pre/post pilot store manifest",
+    "candidate-level approval transcript",
+    "rollback rehearsal transcript",
+    "operator disagreement record",
+    "provenance coverage report"
+  ],
+  "no_instrumentation_patch_required_now": true,
+  "phase": "TP4 Governance Audit",
+  "pilot": "TP5 controlled noncanonical persistent pilot",
+  "weak_points": [
+    "rollback execution must stay manual/workspace-scoped in TP5",
+    "real operator-session documents may expose malformed provenance edge cases",
+    "exact approval parser must reject casual approval phrases"
+  ]
+}

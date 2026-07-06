@@ -1,0 +1,66 @@
+{
+  "acceptance_criteria": [
+    "all safety invariants preserved",
+    "all approved pilot records rollback cleanly",
+    "operator can inspect every persisted record",
+    "read-only answers cite pilot records as noncanonical"
+  ],
+  "confidence_calibration": [
+    "do not increase confidence from duplicate evidence",
+    "lower confidence for missing provenance",
+    "preserve uncertainty for unresolved contradictions"
+  ],
+  "disagreement_analysis": [
+    "operator disagrees with extracted claim",
+    "operator disagrees with confidence",
+    "operator flags missing source context",
+    "operator rejects consolidation"
+  ],
+  "failure_taxonomy": [
+    "missing_provenance",
+    "bad_extraction",
+    "overconfident_synthesis",
+    "approval_parser_false_positive",
+    "rollback_failure",
+    "hidden_mutation",
+    "unsupported_claim",
+    "contradiction_erasure"
+  ],
+  "live_data_collection_now": false,
+  "operator_sessions": [
+    "small curated document review",
+    "operator-provided correction review",
+    "operator-reviewed semantic consolidation proposal",
+    "rollback rehearsal"
+  ],
+  "phase": "TP4 Real-World Evidence Framework",
+  "quantitative_thresholds": {
+    "approval_parser_false_positive_rate": 0.0,
+    "canonical_write_count": 0,
+    "provenance_coverage": 1.0,
+    "rollback_success_rate": 1.0,
+    "unsupported_claim_refusal": 1.0
+  },
+  "real_document_review": {
+    "excluded": [
+      "production secrets",
+      "unbounded folders",
+      "provider-generated evidence"
+    ],
+    "scope": "local operator-provided documents only after explicit TP5 approval"
+  },
+  "rejection_criteria": [
+    "any canonical write",
+    "any autonomous approval",
+    "any provider call",
+    "any action execution",
+    "any training or model update",
+    "any unrollbackable pilot record"
+  ],
+  "semantic_consolidation_trials": [
+    "one candidate per approval",
+    "noncanonical pilot store only",
+    "source checksum required",
+    "uncertainty and contradictions preserved"
+  ]
+}

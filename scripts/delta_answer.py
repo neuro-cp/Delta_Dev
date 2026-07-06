@@ -41,6 +41,7 @@ from orchestration.runtime.tp0_controlled_training_pilot import is_tp0_question,
 from orchestration.runtime.tp1_generalization_pilot import is_tp1_question, answer_tp1_question
 from orchestration.runtime.tp2_scientific_validation import is_tp2_question, answer_tp2_question
 from orchestration.runtime.tp3_independent_verification_freeze import is_tp3_question, answer_tp3_question
+from orchestration.runtime.tp4_controlled_persistent_pilot_design import is_tp4_question, answer_tp4_question
 
 
 def main() -> int:
@@ -55,6 +56,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_tp4_question(query):
+        data = answer_tp4_question(query)
     elif is_tp3_question(query):
         data = answer_tp3_question(query)
     elif is_tp2_question(query):
@@ -138,6 +141,8 @@ def main() -> int:
     elif data.get("phase") == "TP2 Multi-Corpus Scientific Validation":
         print(data["answer_text"])
     elif data.get("phase") == "TP3 Independent Verification Freeze":
+        print(data["answer_text"])
+    elif data.get("phase") == "TP4 Controlled Persistent Pilot Design Review":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

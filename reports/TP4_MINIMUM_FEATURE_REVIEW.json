@@ -1,0 +1,35 @@
+{
+  "explicitly_not_activated": true,
+  "phase": "TP4 Minimum Safe Feature Review",
+  "recommended_activation_state": "design_ready_not_enabled",
+  "rejected_candidates": [
+    {
+      "capability": "provider_assisted_evidence",
+      "reason": "provider calls remain prohibited and would add authority/secret risk"
+    },
+    {
+      "capability": "canonical_memory_writes",
+      "reason": "canonical writes are too permanent for the first persistent pilot"
+    },
+    {
+      "capability": "autonomous_action_execution",
+      "reason": "execution side effects are unrelated to validating substrate persistence"
+    },
+    {
+      "capability": "HYB1 promotion",
+      "reason": "variant promotion would confound the Model B baseline"
+    }
+  ],
+  "selected_capability": "operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions",
+  "selected_from_matrix": true,
+  "why_safe": [
+    "operator-reviewed",
+    "reversible",
+    "provenance-backed",
+    "deterministic",
+    "audit logged",
+    "feature-scoped",
+    "experimentally measurable"
+  ],
+  "why_smallest": "It only persists operator-reviewed semantic consolidation records into an isolated noncanonical store."
+}

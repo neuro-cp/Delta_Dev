@@ -6,6 +6,41 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP4 Controlled Persistent Pilot Design Review
+
+Completed TP4 as a controlled persistent pilot design review. TP4 did not
+activate persistent learning. It reviewed TP3, created a runtime activation
+matrix, selected the minimum safe feature candidate, designed the first
+controlled noncanonical persistent pilot, audited governance layers, and
+defined a real-world evidence framework.
+
+Generated artifacts:
+
+- `orchestration/runtime/tp4_controlled_persistent_pilot_design.py`
+- `scripts/delta_tp4_design_review.py`
+- `tests/runtime_tp4/test_tp4_controlled_persistent_pilot_design.py`
+- `reports/TP4_ACTIVATION_MATRIX.md/json`
+- `reports/TP4_MINIMUM_FEATURE_REVIEW.md/json`
+- `reports/TP4_PERSISTENT_PILOT_DESIGN.md/json`
+- `reports/TP4_GOVERNANCE_AUDIT.md/json`
+- `reports/TP4_REAL_WORLD_EVALUATION.md/json`
+- `reports/TP4_RECOMMENDATION.md/json`
+- `docs/continuation_tp4.md`
+
+Selected minimum feature candidate:
+
+`operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions`
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+model-weight training, no fine-tuning, no model update, no provider calls, no
+canonical writes, no live knowledge mutation, no memory mutation, no
+schedulers/background workers, no action execution, no hidden writes, and no
+HYB1 promotion.
+
+Final recommendation:
+
+`READY_FOR_CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION`
+
 ### TP3 Independent Verification Freeze
 
 Completed TP3 as an independent verification freeze. TP3 does not improve the

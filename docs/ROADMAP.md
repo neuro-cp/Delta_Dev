@@ -2,12 +2,13 @@
 
 ## Current Phase
 
-TP3 independent verification freeze is complete. The current recommendation
-is `PROCEED_TP4_CONTROLLED_PERSISTENT_PILOT_DESIGN_REVIEW`.
+TP4 controlled persistent pilot design review is complete. The current
+recommendation is
+`READY_FOR_CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION`.
 
-The next phase should design the smallest controlled persistent pilot, but it
-must not activate persistent learning automatically. Preserve explicit human
-review, rollback, independent evaluation, and the existing safety boundary. Do
+The next phase may implement the smallest controlled noncanonical persistent
+pilot, but only inside an isolated pilot store with exact operator approval,
+full provenance, audit records, rollback tokens, and no canonical writes. Do
 not enable model-weight training, providers, canonical writes, live corpus
 ingestion, schedulers, actions, or HYB1 promotion without a separate explicit
 approval milestone.
@@ -35,6 +36,31 @@ Key result:
 Recommended next roadmap item:
 
 `PROCEED_TP4_CONTROLLED_PERSISTENT_PILOT_DESIGN_REVIEW`
+
+## TP4 Controlled Persistent Pilot Design Review
+
+Completed:
+
+- TP3 critical review
+- subsystem activation readiness matrix
+- minimum safe feature candidate selection
+- controlled persistent pilot design
+- governance audit
+- real-world evidence framework
+- TP5 recommendation
+
+Minimum safe feature candidate:
+
+`operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions`
+
+Key boundary:
+
+TP4 did not enable the pilot. It only determined that the design is ready for a
+separate TP5 implementation pass.
+
+Recommended next roadmap item:
+
+`CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION`
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 

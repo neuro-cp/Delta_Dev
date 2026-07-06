@@ -1,0 +1,261 @@
+{
+  "classification_counts": {
+    "Blocked": 4,
+    "Experimental": 2,
+    "Pilot Ready": 3,
+    "Production Ready": 2,
+    "Research Only": 1
+  },
+  "entries": [
+    {
+      "classification": "Production Ready",
+      "rationale": "Deterministic local answers and current-state self-description have been repeatedly validated.",
+      "remaining_risks": [
+        "natural language coverage is still curated"
+      ],
+      "required_future_work": [
+        "expand aliases only when missed local intents are observed"
+      ],
+      "required_safeguards": [
+        "no provider fallback by default",
+        "unknown/refusal path stays explicit"
+      ],
+      "subsystem": "local_answer_and_self_description",
+      "supporting_evidence": [
+        "V2.9/V3.0 answer routing",
+        "TP3 local answer route",
+        "full test suite"
+      ]
+    },
+    {
+      "classification": "Production Ready",
+      "rationale": "OV4 activated this as a read-only trial and OV5 composed it safely.",
+      "remaining_risks": [
+        "operator interpretation may over-trust fixture scores"
+      ],
+      "required_future_work": [
+        "external benchmark replication"
+      ],
+      "required_safeguards": [
+        "report provenance",
+        "no mutation",
+        "operator review"
+      ],
+      "subsystem": "read_only_evaluation_regression_loop",
+      "supporting_evidence": [
+        "OV4 read_only_trial",
+        "OV5 integrated read-only trial",
+        "TP2/TP3 verification reports"
+      ]
+    },
+    {
+      "classification": "Pilot Ready",
+      "rationale": "OV6 and RC1 wave chain validated allowlisted fixture ingestion into noncanonical records.",
+      "remaining_risks": [
+        "real operator documents can be messier than fixtures"
+      ],
+      "required_future_work": [
+        "manual malformed-document acceptance tests"
+      ],
+      "required_safeguards": [
+        "allowlisted folders",
+        "checksums",
+        "noncanonical output",
+        "rollback by workspace deletion"
+      ],
+      "subsystem": "fixture_only_noncanonical_ingestion",
+      "supporting_evidence": [
+        "OV6 controlled allowlisted corpus pilot",
+        "RC1 Wave 1",
+        "TP3 independent pack"
+      ]
+    },
+    {
+      "classification": "Pilot Ready",
+      "rationale": "TP0-TP3 showed reversible noncanonical consolidation can improve reasoning under governance.",
+      "remaining_risks": [
+        "persistent pilot has not yet run on real operator sessions"
+      ],
+      "required_future_work": [
+        "TP5 implementation behind explicit operator gate"
+      ],
+      "required_safeguards": [
+        "exact approval",
+        "isolated store",
+        "audit log",
+        "rollback token",
+        "no canonical promotion"
+      ],
+      "subsystem": "operator_reviewed_noncanonical_semantic_consolidation",
+      "supporting_evidence": [
+        "TP0 mechanism",
+        "TP1 held-out improvement",
+        "TP2 multi-corpus validation",
+        "TP3 freeze"
+      ]
+    },
+    {
+      "classification": "Pilot Ready",
+      "rationale": "OV1-OV5 validated grounded fixture answers from noncanonical substrate records.",
+      "remaining_risks": [
+        "real-world recall quality still untested"
+      ],
+      "required_future_work": [
+        "operator-reviewed real-world sessions"
+      ],
+      "required_safeguards": [
+        "read-only mode",
+        "provenance display",
+        "uncertainty display",
+        "unsupported-claim refusal"
+      ],
+      "subsystem": "read_only_substrate_retrieval_and_grounded_synthesis",
+      "supporting_evidence": [
+        "OV1 retrieval",
+        "OV2 proposition layer",
+        "OV3 vertical slice",
+        "OV5 integrated trial"
+      ]
+    },
+    {
+      "classification": "Experimental",
+      "rationale": "State machine exists and is tested, but live integration remains disabled.",
+      "remaining_risks": [
+        "approval semantics must remain strict under UI usage"
+      ],
+      "required_future_work": [
+        "manual UI/CLI approval rehearsal against TP5 pilot proposals"
+      ],
+      "required_safeguards": [
+        "exact structured approval",
+        "overwatch gate",
+        "owner override audit"
+      ],
+      "subsystem": "simulated_approval_review_integration_state_machine",
+      "supporting_evidence": [
+        "V3.1 gated integration readiness",
+        "RC1 unified state machine"
+      ]
+    },
+    {
+      "classification": "Experimental",
+      "rationale": "Rollback plans and drills are stable, but execution remains simulated or workspace-delete only.",
+      "remaining_risks": [
+        "automatic rollback execution has not been enabled"
+      ],
+      "required_future_work": [
+        "TP5 noncanonical rollback/delete rehearsal"
+      ],
+      "required_safeguards": [
+        "manual rollback command",
+        "pre/post hashes",
+        "audit event"
+      ],
+      "subsystem": "rollback_execution",
+      "supporting_evidence": [
+        "TP0 rollback drill",
+        "TP2 rollback stability",
+        "TP3 rollback stability"
+      ]
+    },
+    {
+      "classification": "Blocked",
+      "rationale": "Provider evidence pathways exist as gated designs, but provider calls are prohibited for TP4.",
+      "remaining_risks": [
+        "provider output could be mistaken for authority",
+        "cost/secret exposure"
+      ],
+      "required_future_work": [
+        "defer until after persistent pilot behavior is understood"
+      ],
+      "required_safeguards": [
+        "exact approval",
+        "evidence-only conversion",
+        "secret redaction"
+      ],
+      "subsystem": "provider_assisted_evidence",
+      "supporting_evidence": [
+        "V2.3/V2.4 provider evidence trials",
+        "safety invariants"
+      ]
+    },
+    {
+      "classification": "Blocked",
+      "rationale": "Canonical mutation remains outside TP4's boundary.",
+      "remaining_risks": [
+        "irreversible belief pollution"
+      ],
+      "required_future_work": [
+        "complete noncanonical pilot first"
+      ],
+      "required_safeguards": [
+        "separate future milestone",
+        "provenance",
+        "rollback",
+        "independent review"
+      ],
+      "subsystem": "canonical_memory_writes",
+      "supporting_evidence": [
+        "TP3 blockers",
+        "architecture invariants"
+      ]
+    },
+    {
+      "classification": "Blocked",
+      "rationale": "TP0-TP3 are substrate-learning pilots, not model-weight training.",
+      "remaining_risks": [
+        "weight changes would confound substrate evidence"
+      ],
+      "required_future_work": [
+        "separate research track only after substrate persistence is understood"
+      ],
+      "required_safeguards": [
+        "none in TP4"
+      ],
+      "subsystem": "model_training_or_finetuning",
+      "supporting_evidence": [
+        "TP0-TP3 safety reports"
+      ]
+    },
+    {
+      "classification": "Blocked",
+      "rationale": "Action/execution scaffolds exist but no autonomous action is safe or required for this pilot.",
+      "remaining_risks": [
+        "side effects",
+        "authorization ambiguity"
+      ],
+      "required_future_work": [
+        "not part of TP5"
+      ],
+      "required_safeguards": [
+        "no execution path",
+        "manual-only review"
+      ],
+      "subsystem": "autonomous_action_execution",
+      "supporting_evidence": [
+        "ARC/execution authorization scaffolds",
+        "invariants"
+      ]
+    },
+    {
+      "classification": "Research Only",
+      "rationale": "HYB1 remains dormant/env-gated and is not needed for persistent-pilot design.",
+      "remaining_risks": [
+        "promotion could change baseline during pilot"
+      ],
+      "required_future_work": [
+        "defer until after Model B baseline pilot"
+      ],
+      "required_safeguards": [
+        "do not enable by default",
+        "shadow-only if separately requested"
+      ],
+      "subsystem": "hyb1_runtime_variant",
+      "supporting_evidence": [
+        "V1.3/V2.x HYB1 shadow reports"
+      ]
+    }
+  ],
+  "no_capability_activated": true,
+  "phase": "TP4 Activation Readiness Matrix"
+}

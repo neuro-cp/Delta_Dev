@@ -1115,3 +1115,21 @@ TP3 does not train model weights, fine-tune, update models, call providers,
 write canonical memory, mutate live knowledge, mutate memory, start
 schedulers/background workers, execute actions, promote HYB1, or change Model
 B defaults.
+
+## TP4 Controlled Persistent Pilot Design Review
+
+TP4 reviews whether DELTA is ready to design its first controlled persistent
+pilot. It does not enable the pilot. The selected candidate is
+operator-reviewed noncanonical semantic consolidation from real operator
+sessions.
+
+The TP4 pilot design is noncanonical, isolated, reversible,
+provenance-backed, deterministic, audit logged, and exact-approval gated. It
+defines storage, review, rollback, operator experience, success metrics, abort
+criteria, governance audit requirements, and a real-world evidence framework
+for a future TP5 implementation.
+
+TP4 does not train model weights, fine-tune, update models, call providers,
+write canonical memory, mutate live knowledge, mutate memory, start
+schedulers/background workers, execute actions, promote HYB1, change Model B
+defaults, or enable persistent learning.
