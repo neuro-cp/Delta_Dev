@@ -4941,3 +4941,30 @@ canonical writes, schedulers, actions, HYB1 promotion, or Model B replacement.
 
 Current next recommendation:
 READY_FOR_RESEARCH_ONLY_SHADOW_TRAINING
+
+## TP13 Research-Only Shadow Training Protocol
+
+TP13 research-only shadow training protocol is complete.
+
+New TP13 surface:
+
+- `orchestration/runtime/tp13_research_shadow_training_protocol.py`
+- `scripts/delta_tp13_research_shadow_training_protocol.py`
+- `tests/runtime_tp13/test_tp13_research_shadow_training_protocol.py`
+- `data/tp13_research_shadow_training/artifacts/shadow_research_artifact.json`
+- `reports/TP13_RESEARCH_PROTOCOL.md/json`
+- `reports/TP13_BASELINE_COMPARISON.md/json`
+- `reports/TP13_GOVERNANCE_IMPACT.md/json`
+- `reports/TP13_REGRESSION_ANALYSIS.md/json`
+- `reports/TP13_ARTIFACT_CONTAINMENT.md/json`
+- `reports/TP13_EXPERIMENT_RESULTS.md/json`
+- `reports/TP13_FINAL_REVIEW.md/json`
+- `docs/continuation_tp13.md`
+
+TP13 created one isolated, non-routable research artifact. It did not deploy
+the artifact, replace Model B, route traffic to the artifact, call providers,
+write canonical memory, start schedulers, execute actions, promote HYB1, or
+change Model B defaults.
+
+Current next recommendation:
+CONTINUE_SUBSTRATE_EVOLUTION

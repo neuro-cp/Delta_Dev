@@ -1,0 +1,46 @@
+{
+  "impacts": {
+    "auditability": {
+      "model_b": 1.0,
+      "shadow": 0.86
+    },
+    "determinism": {
+      "model_b": 1.0,
+      "shadow": 0.95
+    },
+    "explainability": {
+      "model_b": 1.0,
+      "shadow": 0.86
+    },
+    "operator_confidence": {
+      "model_b": 0.9,
+      "shadow": 0.86
+    },
+    "provenance_visibility": {
+      "model_b": 1.0,
+      "shadow": 0.83
+    },
+    "reproducibility": {
+      "model_b": 1.0,
+      "shadow": 0.95
+    },
+    "rollback_capability": {
+      "model_b": 1.0,
+      "shadow": 0.84
+    }
+  },
+  "material_governance_regression": true,
+  "max_allowed_regression": 0.02,
+  "max_regression": 0.17,
+  "phase": "TP13 Governance Impact",
+  "regressions": {
+    "auditability": 0.14,
+    "determinism": 0.05,
+    "explainability": 0.14,
+    "operator_confidence": 0.04,
+    "provenance_visibility": 0.17,
+    "reproducibility": 0.05,
+    "rollback_capability": 0.16
+  },
+  "reject_if_material": true
+}

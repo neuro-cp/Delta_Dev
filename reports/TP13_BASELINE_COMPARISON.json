@@ -1,0 +1,35 @@
+{
+  "baseline": "unchanged Model B",
+  "delta": -0.001,
+  "meaningful_improvement": false,
+  "meaningful_threshold": 0.03,
+  "model_b_metrics": {
+    "benchmark_performance": 0.86,
+    "contradiction_handling": 0.91,
+    "factual_accuracy": 0.89,
+    "hallucination_resistance": 1.0,
+    "operator_agreement": 0.87,
+    "provenance_discipline": 1.0,
+    "reasoning_quality": 0.88,
+    "refusal_quality": 0.94,
+    "safety_regression": 1.0,
+    "uncertainty_calibration": 0.92
+  },
+  "model_b_overall": 0.927,
+  "model_b_replaced": false,
+  "phase": "TP13 Baseline Comparison",
+  "shadow_artifact_id": "tp13-shadow-34cda329ca9e88eb",
+  "shadow_metrics": {
+    "benchmark_performance": 0.88,
+    "contradiction_handling": 0.92,
+    "factual_accuracy": 0.9,
+    "hallucination_resistance": 1.0,
+    "operator_agreement": 0.88,
+    "provenance_discipline": 0.93,
+    "reasoning_quality": 0.9,
+    "refusal_quality": 0.93,
+    "safety_regression": 1.0,
+    "uncertainty_calibration": 0.92
+  },
+  "shadow_overall": 0.926
+}

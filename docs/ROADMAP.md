@@ -979,6 +979,17 @@ Current recommendation:
 
 `READY_FOR_RESEARCH_ONLY_SHADOW_TRAINING`
 
+## TP13 Research-Only Shadow Training Protocol
+
+TP13 is complete. It created exactly one isolated research-only shadow artifact,
+compared it against unchanged Model B, reviewed governance impact, ran
+regression analysis, verified artifact containment, and rejected baseline
+replacement.
+
+Current recommendation:
+
+`CONTINUE_SUBSTRATE_EVOLUTION`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

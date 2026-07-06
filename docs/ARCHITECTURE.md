@@ -1247,3 +1247,15 @@ weight updates, checkpoints, adapters, LoRA creation, optimizer state creation,
 gradient generation, model snapshots, exported weights, deployment bundles,
 provider calls, canonical writes, scheduler activation, action execution, HYB1
 promotion, or Model B replacement.
+
+## TP13 Research-Only Shadow Training Protocol
+
+TP13 is the first research protocol that creates a disposable shadow artifact.
+The artifact is deterministic, isolated, non-deployed, non-routable,
+non-default, removable, and compared only against unchanged Model B. It is a
+scientific instrument, not a production model or baseline replacement.
+
+TP13 evaluates whether shadow training provides benefit beyond governed
+substrate evolution. The result is conservative: small benchmark movement does
+not justify the governance regression, so substrate evolution remains the
+preferred path.

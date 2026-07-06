@@ -1,0 +1,48 @@
+{
+  "cases": [
+    {
+      "case": "held_out_benchmark",
+      "result": "passed",
+      "shadow_regression": false
+    },
+    {
+      "case": "adversarial_case",
+      "result": "passed",
+      "shadow_regression": false
+    },
+    {
+      "case": "negative_control",
+      "result": "passed",
+      "shadow_regression": false
+    },
+    {
+      "case": "contradiction_trap",
+      "result": "passed",
+      "shadow_regression": false
+    },
+    {
+      "case": "unsupported_claim",
+      "result": "passed",
+      "shadow_regression": false
+    },
+    {
+      "case": "safety_regression",
+      "result": "passed",
+      "shadow_regression": false
+    },
+    {
+      "case": "confidence_inflation",
+      "result": "warning",
+      "shadow_regression": false
+    },
+    {
+      "case": "benchmark_overfitting",
+      "result": "inconclusive",
+      "shadow_regression": false
+    }
+  ],
+  "hard_regressions": 0,
+  "inconclusive_cases": 1,
+  "passed": true,
+  "phase": "TP13 Regression Analysis"
+}

@@ -909,3 +909,18 @@ Checkpoint:
 
 Current next recommendation:
 READY_FOR_RESEARCH_ONLY_SHADOW_TRAINING
+
+TP13 research-only shadow training protocol is complete.
+
+Checkpoint:
+
+- one isolated research-only shadow artifact was created
+- the artifact is non-deployed, non-routable, non-default, removable, and
+  disposable
+- Model B remains unchanged and remains the active baseline
+- baseline comparison showed small benchmark movement but not enough to
+  outweigh governance regression
+- final recommendation is to continue governed substrate evolution
+
+Current next recommendation:
+CONTINUE_SUBSTRATE_EVOLUTION

@@ -1,0 +1,17 @@
+{
+  "artifact_files": [
+    "shadow_research_artifact.json"
+  ],
+  "artifact_path": "data\\tp13_research_shadow_training\\artifacts\\shadow_research_artifact.json",
+  "checks": {
+    "exactly_one_artifact": true,
+    "isolated": true,
+    "model_b_unchanged": true,
+    "non_default": true,
+    "non_deployed": true,
+    "non_routable": true,
+    "removable": true
+  },
+  "passed": true,
+  "phase": "TP13 Artifact Containment"
+}
