@@ -1,0 +1,29 @@
+{
+  "rollback_plan": {
+    "preserves_audit_trail": true,
+    "rollback_id": "tp0-rollback-dc70aa153e59d116",
+    "rollback_tokens": [
+      "rollback-55470c960cf54f7b",
+      "rollback-1fa8ea41ed98d936",
+      "rollback-76d388bb1269c7ee"
+    ],
+    "strategy": "remove in-memory/noncanonical consolidated records and preserve reports as audit",
+    "target_record_ids": [
+      "tp0-noncanonical-ae4317e97dd3481c",
+      "tp0-noncanonical-ce23998045a3dea0",
+      "tp0-noncanonical-0a890010154b7b72"
+    ]
+  },
+  "rollback_result": {
+    "audit_preserved": true,
+    "hidden_mutation_detected": false,
+    "passed": true,
+    "pre_consolidation_retrieval_restored": true,
+    "removed_record_ids": [
+      "tp0-noncanonical-ae4317e97dd3481c",
+      "tp0-noncanonical-ce23998045a3dea0",
+      "tp0-noncanonical-0a890010154b7b72"
+    ],
+    "rollback_id": "tp0-rollback-dc70aa153e59d116"
+  }
+}

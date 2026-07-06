@@ -1020,3 +1020,34 @@ training. OV6-OV10 do not train, fine-tune, update model weights, call
 providers, write canonical memory, mutate live knowledge, mutate memory, enable
 persistent learning, start schedulers/background workers, execute actions,
 promote HYB1, or change Model B defaults.
+
+## TP0 Controlled Noncanonical Training Pilot
+
+TP0 is DELTA's first controlled substrate-learning pilot. It is not
+model-weight training, fine-tuning, provider learning, canonical memory, or
+live knowledge mutation.
+
+The TP0 cycle is:
+
+```text
+fixture corpus
+-> semantic records
+-> propositions
+-> deduplication
+-> replay batch
+-> consolidation candidates
+-> operator approval simulation
+-> noncanonical consolidated substrate records
+-> retrieval after consolidation
+-> before/after cognitive evaluation
+-> rollback drill
+-> audit
+```
+
+TP0 proves that fixture evidence can be consolidated into a temporary
+noncanonical substrate and queried afterward while preserving contradictions,
+uncertainty, unsupported-claim refusal, audit metadata, and rollback.
+
+TP0 does not train model weights, call providers, write canonical memory, mutate
+live knowledge, mutate memory, start schedulers/background workers, execute
+actions, promote HYB1, or change Model B defaults.

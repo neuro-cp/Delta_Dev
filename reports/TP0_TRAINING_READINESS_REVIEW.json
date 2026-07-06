@@ -1,0 +1,20 @@
+{
+  "after_cognitive_integrity": 0.966,
+  "before_cognitive_integrity": 0.929,
+  "final_recommendation": "PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT",
+  "operator_review_tp1_justified": true,
+  "passed": true,
+  "phase": "TP0 Training Readiness Review",
+  "remaining_blockers": [
+    "no model-weight training authorization",
+    "canonical writes remain blocked",
+    "live corpus ingestion remains blocked",
+    "provider calls remain blocked",
+    "TP1 still requires explicit operator approval"
+  ],
+  "rollback_passed": true,
+  "tp0_status": "passed",
+  "tp1_recommendation": "Proceed to TP1 only as an expanded fixture-only, noncanonical, operator-approved pilot with rollback and before/after evaluation.",
+  "training_readiness_after_tp0": "Ready for TP1 expanded controlled noncanonical pilot",
+  "training_readiness_score": 0.994
+}

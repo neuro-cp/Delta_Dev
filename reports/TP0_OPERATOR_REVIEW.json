@@ -1,0 +1,174 @@
+{
+  "approved": [
+    {
+      "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+      "approved_by": "operator_review_simulation",
+      "candidate_id": "tp0-candidate-registry_provenance_failure",
+      "canonical_write_allowed": false,
+      "decision": "approved_noncanonical",
+      "decision_id": "tp0-decision-fcbe6eeeeb2f8213",
+      "reason": "operator-approved noncanonical TP0 consolidation only"
+    },
+    {
+      "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+      "approved_by": "operator_review_simulation",
+      "candidate_id": "tp0-candidate-execution_recovery_unproven",
+      "canonical_write_allowed": false,
+      "decision": "approved_noncanonical",
+      "decision_id": "tp0-decision-0a020dfb11261239",
+      "reason": "operator-approved noncanonical TP0 consolidation only"
+    },
+    {
+      "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+      "approved_by": "operator_review_simulation",
+      "candidate_id": "tp0-candidate-governed_evidence_principle",
+      "canonical_write_allowed": false,
+      "decision": "approved_noncanonical",
+      "decision_id": "tp0-decision-5f9dbbf81137f730",
+      "reason": "operator-approved noncanonical TP0 consolidation only"
+    }
+  ],
+  "consolidated": [
+    {
+      "candidate_id": "tp0-candidate-registry_provenance_failure",
+      "canonical": false,
+      "confidence": 0.61,
+      "contradictions_preserved": [],
+      "learned_pattern": "Registry failure was explained by missing provenance; identifiers and checksums restored registry acceptance, not full operation.",
+      "record_id": "tp0-noncanonical-ae4317e97dd3481c",
+      "rollback_token": "rollback-55470c960cf54f7b",
+      "supporting_sources": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "uncertainty": "bounded_noncanonical_fixture_learning"
+    },
+    {
+      "candidate_id": "tp0-candidate-execution_recovery_unproven",
+      "canonical": false,
+      "confidence": 0.59,
+      "contradictions_preserved": [
+        "Worker Conflict  One report claims Worker C completed execution successfully.",
+        "Worker C execution remained untested."
+      ],
+      "learned_pattern": "Worker C evidence preserves contradiction: execution success and untested execution cannot both prove operational recovery.",
+      "record_id": "tp0-noncanonical-ce23998045a3dea0",
+      "rollback_token": "rollback-1fa8ea41ed98d936",
+      "supporting_sources": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "uncertainty": "bounded_noncanonical_fixture_learning"
+    },
+    {
+      "candidate_id": "tp0-candidate-governed_evidence_principle",
+      "canonical": false,
+      "confidence": 0.88,
+      "contradictions_preserved": [],
+      "learned_pattern": "Across fixtures, DELTA learned to separate evidence support, uncertainty, provider boundaries, rollback, and unsupported conclusions.",
+      "record_id": "tp0-noncanonical-0a890010154b7b72",
+      "rollback_token": "rollback-76d388bb1269c7ee",
+      "supporting_sources": [
+        "ov1-doc-c9d773a62763b2d7",
+        "ov1-doc-d6bb74fb5c2ba567",
+        "ov1-doc-8aa9c9ead7c892f6",
+        "ov1-doc-6782058955941eff",
+        "ov1-doc-b32103bb0961be55",
+        "ov1-doc-10927abc270abbac"
+      ],
+      "uncertainty": "bounded_noncanonical_fixture_learning"
+    }
+  ],
+  "final_recommendation": "PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT",
+  "improved": {
+    "abstraction_delta": 0.09,
+    "cognitive_integrity_delta": 0.037,
+    "hypothesis_quality_delta": 0.08,
+    "proposition_quality_delta": 0.05,
+    "retrieval_quality_delta": 0.08
+  },
+  "phase": "TP0 Operator Review",
+  "proposed": [
+    {
+      "approval_required": true,
+      "candidate_id": "tp0-candidate-registry_provenance_failure",
+      "confidence": 0.61,
+      "contradiction_count": 0,
+      "normalized_claim": "registry_provenance_failure",
+      "source_proposition_ids": [
+        "ov2-prop-881021ad1a51c0fd",
+        "ov2-prop-5d2c2460c2945eb6"
+      ],
+      "source_record_ids": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "support_count": 1,
+      "uncertainty": [
+        "none"
+      ]
+    },
+    {
+      "approval_required": true,
+      "candidate_id": "tp0-candidate-execution_recovery_unproven",
+      "confidence": 0.59,
+      "contradiction_count": 2,
+      "normalized_claim": "execution_recovery_unproven",
+      "source_proposition_ids": [
+        "ov2-prop-5342d1bbe6c3a565",
+        "ov2-prop-448e2681d9eb09b1"
+      ],
+      "source_record_ids": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "support_count": 2,
+      "uncertainty": [
+        "none"
+      ]
+    },
+    {
+      "approval_required": true,
+      "candidate_id": "tp0-candidate-governed_evidence_principle",
+      "confidence": 0.88,
+      "contradiction_count": 0,
+      "normalized_claim": "governed_evidence_principle",
+      "source_proposition_ids": [
+        "ov2-prop-c939ba7496ca15c4",
+        "ov2-prop-62c5b8eb238700fc",
+        "ov2-prop-5d2c2460c2945eb6",
+        "ov2-prop-0ca1a5e2173202c5",
+        "ov2-prop-7b5c53fa0a3bc90d",
+        "ov2-prop-a4e80a2f6baae46b"
+      ],
+      "source_record_ids": [
+        "ov1-doc-c9d773a62763b2d7",
+        "ov1-doc-d6bb74fb5c2ba567",
+        "ov1-doc-8aa9c9ead7c892f6",
+        "ov1-doc-6782058955941eff",
+        "ov1-doc-b32103bb0961be55",
+        "ov1-doc-10927abc270abbac"
+      ],
+      "support_count": 6,
+      "uncertainty": [
+        "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications",
+        "Indirect evidence should increase uncertainty until replication exists",
+        "none",
+        "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions"
+      ]
+    }
+  ],
+  "regressed": {},
+  "rollback_result": {
+    "audit_preserved": true,
+    "hidden_mutation_detected": false,
+    "passed": true,
+    "pre_consolidation_retrieval_restored": true,
+    "removed_record_ids": [
+      "tp0-noncanonical-ae4317e97dd3481c",
+      "tp0-noncanonical-ce23998045a3dea0",
+      "tp0-noncanonical-0a890010154b7b72"
+    ],
+    "rollback_id": "tp0-rollback-dc70aa153e59d116"
+  },
+  "tp1_justified": true,
+  "tp1_scope": "fixture-only noncanonical pilot with larger fixture corpus and stricter operator approval"
+}

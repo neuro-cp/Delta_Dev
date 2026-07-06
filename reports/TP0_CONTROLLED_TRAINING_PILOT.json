@@ -1,0 +1,659 @@
+{
+  "autonomous_transition_performed": false,
+  "before_after_evaluation": {
+    "after": {
+      "abstraction": 0.93,
+      "benchmark_average": 0.909,
+      "benchmark_pass_rate": 1.0,
+      "cognitive_integrity": 0.966,
+      "consolidated_record_count": 3,
+      "contradiction_preservation": 1.0,
+      "disconfirmation": 1.0,
+      "example_answer": "DELTA's OV2 synthesis separates stage recovery from operational recovery. The corpus supports the claim that Registry B rejected records without provenance and that identifiers/checksums restored registry acceptance. It does not support the stronger claim that end-to-end execution recovered, because Worker C execution is contradicted or unverified. Therefore activation confidence should increase for fixture reasoning quality, but not for live deployment.",
+      "hypothesis_quality": 0.94,
+      "include_consolidated_noncanonical_records": true,
+      "label": "after",
+      "proposition_quality": 0.959,
+      "retrieval_quality": 0.9,
+      "uncertainty_calibration": 1.0,
+      "unsupported_claim_refusal": 1.0
+    },
+    "before": {
+      "abstraction": 0.84,
+      "benchmark_average": 0.909,
+      "benchmark_pass_rate": 1.0,
+      "cognitive_integrity": 0.929,
+      "consolidated_record_count": 0,
+      "contradiction_preservation": 1.0,
+      "disconfirmation": 1.0,
+      "example_answer": "DELTA's OV2 synthesis separates stage recovery from operational recovery. The corpus supports the claim that Registry B rejected records without provenance and that identifiers/checksums restored registry acceptance. It does not support the stronger claim that end-to-end execution recovered, because Worker C execution is contradicted or unverified. Therefore activation confidence should increase for fixture reasoning quality, but not for live deployment.",
+      "hypothesis_quality": 0.86,
+      "include_consolidated_noncanonical_records": false,
+      "label": "before",
+      "proposition_quality": 0.909,
+      "retrieval_quality": 0.82,
+      "uncertainty_calibration": 1.0,
+      "unsupported_claim_refusal": 1.0
+    },
+    "delta": {
+      "abstraction_delta": 0.09,
+      "cognitive_integrity_delta": 0.037,
+      "confidence_inflation_detected": false,
+      "contradiction_preservation_delta": 0.0,
+      "hypothesis_quality_delta": 0.08,
+      "improvement_source": "consolidation quality and deduplicated proposition support, not repeated evidence inflation",
+      "proposition_quality_delta": 0.05,
+      "retrieval_quality_delta": 0.08,
+      "unsupported_refusal_delta": 0.0
+    }
+  },
+  "consolidated_noncanonical_records": [
+    {
+      "candidate_id": "tp0-candidate-registry_provenance_failure",
+      "canonical": false,
+      "confidence": 0.61,
+      "contradictions_preserved": [],
+      "learned_pattern": "Registry failure was explained by missing provenance; identifiers and checksums restored registry acceptance, not full operation.",
+      "record_id": "tp0-noncanonical-ae4317e97dd3481c",
+      "rollback_token": "rollback-55470c960cf54f7b",
+      "supporting_sources": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "uncertainty": "bounded_noncanonical_fixture_learning"
+    },
+    {
+      "candidate_id": "tp0-candidate-execution_recovery_unproven",
+      "canonical": false,
+      "confidence": 0.59,
+      "contradictions_preserved": [
+        "Worker Conflict  One report claims Worker C completed execution successfully.",
+        "Worker C execution remained untested."
+      ],
+      "learned_pattern": "Worker C evidence preserves contradiction: execution success and untested execution cannot both prove operational recovery.",
+      "record_id": "tp0-noncanonical-ce23998045a3dea0",
+      "rollback_token": "rollback-1fa8ea41ed98d936",
+      "supporting_sources": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "uncertainty": "bounded_noncanonical_fixture_learning"
+    },
+    {
+      "candidate_id": "tp0-candidate-governed_evidence_principle",
+      "canonical": false,
+      "confidence": 0.88,
+      "contradictions_preserved": [],
+      "learned_pattern": "Across fixtures, DELTA learned to separate evidence support, uncertainty, provider boundaries, rollback, and unsupported conclusions.",
+      "record_id": "tp0-noncanonical-0a890010154b7b72",
+      "rollback_token": "rollback-76d388bb1269c7ee",
+      "supporting_sources": [
+        "ov1-doc-c9d773a62763b2d7",
+        "ov1-doc-d6bb74fb5c2ba567",
+        "ov1-doc-8aa9c9ead7c892f6",
+        "ov1-doc-6782058955941eff",
+        "ov1-doc-b32103bb0961be55",
+        "ov1-doc-10927abc270abbac"
+      ],
+      "uncertainty": "bounded_noncanonical_fixture_learning"
+    }
+  ],
+  "consolidation_candidates": [
+    {
+      "approval_required": true,
+      "candidate_id": "tp0-candidate-registry_provenance_failure",
+      "confidence": 0.61,
+      "contradiction_count": 0,
+      "normalized_claim": "registry_provenance_failure",
+      "source_proposition_ids": [
+        "ov2-prop-881021ad1a51c0fd",
+        "ov2-prop-5d2c2460c2945eb6"
+      ],
+      "source_record_ids": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "support_count": 1,
+      "uncertainty": [
+        "none"
+      ]
+    },
+    {
+      "approval_required": true,
+      "candidate_id": "tp0-candidate-execution_recovery_unproven",
+      "confidence": 0.59,
+      "contradiction_count": 2,
+      "normalized_claim": "execution_recovery_unproven",
+      "source_proposition_ids": [
+        "ov2-prop-5342d1bbe6c3a565",
+        "ov2-prop-448e2681d9eb09b1"
+      ],
+      "source_record_ids": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "support_count": 2,
+      "uncertainty": [
+        "none"
+      ]
+    },
+    {
+      "approval_required": true,
+      "candidate_id": "tp0-candidate-governed_evidence_principle",
+      "confidence": 0.88,
+      "contradiction_count": 0,
+      "normalized_claim": "governed_evidence_principle",
+      "source_proposition_ids": [
+        "ov2-prop-c939ba7496ca15c4",
+        "ov2-prop-62c5b8eb238700fc",
+        "ov2-prop-5d2c2460c2945eb6",
+        "ov2-prop-0ca1a5e2173202c5",
+        "ov2-prop-7b5c53fa0a3bc90d",
+        "ov2-prop-a4e80a2f6baae46b"
+      ],
+      "source_record_ids": [
+        "ov1-doc-c9d773a62763b2d7",
+        "ov1-doc-d6bb74fb5c2ba567",
+        "ov1-doc-8aa9c9ead7c892f6",
+        "ov1-doc-6782058955941eff",
+        "ov1-doc-b32103bb0961be55",
+        "ov1-doc-10927abc270abbac"
+      ],
+      "support_count": 6,
+      "uncertainty": [
+        "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications",
+        "Indirect evidence should increase uncertainty until replication exists",
+        "none",
+        "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions"
+      ]
+    }
+  ],
+  "consolidation_decisions": [
+    {
+      "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+      "approved_by": "operator_review_simulation",
+      "candidate_id": "tp0-candidate-registry_provenance_failure",
+      "canonical_write_allowed": false,
+      "decision": "approved_noncanonical",
+      "decision_id": "tp0-decision-fcbe6eeeeb2f8213",
+      "reason": "operator-approved noncanonical TP0 consolidation only"
+    },
+    {
+      "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+      "approved_by": "operator_review_simulation",
+      "candidate_id": "tp0-candidate-execution_recovery_unproven",
+      "canonical_write_allowed": false,
+      "decision": "approved_noncanonical",
+      "decision_id": "tp0-decision-0a020dfb11261239",
+      "reason": "operator-approved noncanonical TP0 consolidation only"
+    },
+    {
+      "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+      "approved_by": "operator_review_simulation",
+      "candidate_id": "tp0-candidate-governed_evidence_principle",
+      "canonical_write_allowed": false,
+      "decision": "approved_noncanonical",
+      "decision_id": "tp0-decision-5f9dbbf81137f730",
+      "reason": "operator-approved noncanonical TP0 consolidation only"
+    }
+  ],
+  "controller_states": [
+    "disabled",
+    "fixture_only",
+    "candidate_generation",
+    "operator_review",
+    "approved_noncanonical",
+    "consolidated_noncanonical",
+    "evaluated",
+    "rolled_back",
+    "blocked"
+  ],
+  "deduplication": {
+    "confidence_inflation_prevented": true,
+    "deduplicated_records": 0,
+    "duplicate_groups": 0,
+    "largest_support_count": 1,
+    "propositions": 42,
+    "semantic_records": 42
+  },
+  "disconfirmation_count": 4,
+  "document_count": 20,
+  "final_recommendation": "PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT",
+  "fixture_corpus": "data/ov1_allowlisted_corpus",
+  "graph": {
+    "edge_count": 11,
+    "node_count": 42
+  },
+  "hypothesis_count": 4,
+  "learned_query_answer": {
+    "answer": "DELTA learned noncanonical fixture patterns: registry acceptance can recover without proving operational recovery; Worker C evidence remains contradictory; and governed evidence requires provenance, uncertainty, rollback, and refusal of unsupported conclusions. This is substrate consolidation only, not model training.",
+    "consolidated_patterns": [
+      "Registry failure was explained by missing provenance; identifiers and checksums restored registry acceptance, not full operation.",
+      "Worker C evidence preserves contradiction: execution success and untested execution cannot both prove operational recovery.",
+      "Across fixtures, DELTA learned to separate evidence support, uncertainty, provider boundaries, rollback, and unsupported conclusions."
+    ],
+    "contradictions_preserved": [
+      "Worker Conflict  One report claims Worker C completed execution successfully.",
+      "Worker C execution remained untested."
+    ],
+    "known": [
+      "Registry failure was explained by missing provenance; identifiers and checksums restored registry acceptance, not full operation.",
+      "Worker C evidence preserves contradiction: execution success and untested execution cannot both prove operational recovery.",
+      "Across fixtures, DELTA learned to separate evidence support, uncertainty, provider boundaries, rollback, and unsupported conclusions."
+    ],
+    "likely": [
+      "governed evidence practices transfer across the fixture domains"
+    ],
+    "model_training_occurred": false,
+    "question": "What has DELTA learned from the fixture corpus?",
+    "source_records": [
+      "ov1-doc-8aa9c9ead7c892f6",
+      "ov1-doc-b6db8d44cd324a6b",
+      "ov1-doc-8aa9c9ead7c892f6",
+      "ov1-doc-c9d773a62763b2d7",
+      "ov1-doc-d6bb74fb5c2ba567",
+      "ov1-doc-8aa9c9ead7c892f6",
+      "ov1-doc-6782058955941eff",
+      "ov1-doc-b32103bb0961be55",
+      "ov1-doc-10927abc270abbac"
+    ],
+    "substrate_status": "noncanonical",
+    "unknown": [
+      "whether these fixture patterns generalize to live corpora without a separate pilot"
+    ],
+    "unsupported_refusals": [
+      "TP0 proves model training occurred",
+      "TP0 authorizes canonical writes",
+      "TP0 proves operational deployment readiness"
+    ]
+  },
+  "operator_review": {
+    "approved": [
+      {
+        "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+        "approved_by": "operator_review_simulation",
+        "candidate_id": "tp0-candidate-registry_provenance_failure",
+        "canonical_write_allowed": false,
+        "decision": "approved_noncanonical",
+        "decision_id": "tp0-decision-fcbe6eeeeb2f8213",
+        "reason": "operator-approved noncanonical TP0 consolidation only"
+      },
+      {
+        "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+        "approved_by": "operator_review_simulation",
+        "candidate_id": "tp0-candidate-execution_recovery_unproven",
+        "canonical_write_allowed": false,
+        "decision": "approved_noncanonical",
+        "decision_id": "tp0-decision-0a020dfb11261239",
+        "reason": "operator-approved noncanonical TP0 consolidation only"
+      },
+      {
+        "approval_text": "APPROVE_TP0_NONCANONICAL_CONSOLIDATION",
+        "approved_by": "operator_review_simulation",
+        "candidate_id": "tp0-candidate-governed_evidence_principle",
+        "canonical_write_allowed": false,
+        "decision": "approved_noncanonical",
+        "decision_id": "tp0-decision-5f9dbbf81137f730",
+        "reason": "operator-approved noncanonical TP0 consolidation only"
+      }
+    ],
+    "consolidated": [
+      {
+        "candidate_id": "tp0-candidate-registry_provenance_failure",
+        "canonical": false,
+        "confidence": 0.61,
+        "contradictions_preserved": [],
+        "learned_pattern": "Registry failure was explained by missing provenance; identifiers and checksums restored registry acceptance, not full operation.",
+        "record_id": "tp0-noncanonical-ae4317e97dd3481c",
+        "rollback_token": "rollback-55470c960cf54f7b",
+        "supporting_sources": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "uncertainty": "bounded_noncanonical_fixture_learning"
+      },
+      {
+        "candidate_id": "tp0-candidate-execution_recovery_unproven",
+        "canonical": false,
+        "confidence": 0.59,
+        "contradictions_preserved": [
+          "Worker Conflict  One report claims Worker C completed execution successfully.",
+          "Worker C execution remained untested."
+        ],
+        "learned_pattern": "Worker C evidence preserves contradiction: execution success and untested execution cannot both prove operational recovery.",
+        "record_id": "tp0-noncanonical-ce23998045a3dea0",
+        "rollback_token": "rollback-1fa8ea41ed98d936",
+        "supporting_sources": [
+          "ov1-doc-b6db8d44cd324a6b",
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "uncertainty": "bounded_noncanonical_fixture_learning"
+      },
+      {
+        "candidate_id": "tp0-candidate-governed_evidence_principle",
+        "canonical": false,
+        "confidence": 0.88,
+        "contradictions_preserved": [],
+        "learned_pattern": "Across fixtures, DELTA learned to separate evidence support, uncertainty, provider boundaries, rollback, and unsupported conclusions.",
+        "record_id": "tp0-noncanonical-0a890010154b7b72",
+        "rollback_token": "rollback-76d388bb1269c7ee",
+        "supporting_sources": [
+          "ov1-doc-c9d773a62763b2d7",
+          "ov1-doc-d6bb74fb5c2ba567",
+          "ov1-doc-8aa9c9ead7c892f6",
+          "ov1-doc-6782058955941eff",
+          "ov1-doc-b32103bb0961be55",
+          "ov1-doc-10927abc270abbac"
+        ],
+        "uncertainty": "bounded_noncanonical_fixture_learning"
+      }
+    ],
+    "final_recommendation": "PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT",
+    "improved": {
+      "abstraction_delta": 0.09,
+      "cognitive_integrity_delta": 0.037,
+      "hypothesis_quality_delta": 0.08,
+      "proposition_quality_delta": 0.05,
+      "retrieval_quality_delta": 0.08
+    },
+    "phase": "TP0 Operator Review",
+    "proposed": [
+      {
+        "approval_required": true,
+        "candidate_id": "tp0-candidate-registry_provenance_failure",
+        "confidence": 0.61,
+        "contradiction_count": 0,
+        "normalized_claim": "registry_provenance_failure",
+        "source_proposition_ids": [
+          "ov2-prop-881021ad1a51c0fd",
+          "ov2-prop-5d2c2460c2945eb6"
+        ],
+        "source_record_ids": [
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "support_count": 1,
+        "uncertainty": [
+          "none"
+        ]
+      },
+      {
+        "approval_required": true,
+        "candidate_id": "tp0-candidate-execution_recovery_unproven",
+        "confidence": 0.59,
+        "contradiction_count": 2,
+        "normalized_claim": "execution_recovery_unproven",
+        "source_proposition_ids": [
+          "ov2-prop-5342d1bbe6c3a565",
+          "ov2-prop-448e2681d9eb09b1"
+        ],
+        "source_record_ids": [
+          "ov1-doc-b6db8d44cd324a6b",
+          "ov1-doc-8aa9c9ead7c892f6"
+        ],
+        "support_count": 2,
+        "uncertainty": [
+          "none"
+        ]
+      },
+      {
+        "approval_required": true,
+        "candidate_id": "tp0-candidate-governed_evidence_principle",
+        "confidence": 0.88,
+        "contradiction_count": 0,
+        "normalized_claim": "governed_evidence_principle",
+        "source_proposition_ids": [
+          "ov2-prop-c939ba7496ca15c4",
+          "ov2-prop-62c5b8eb238700fc",
+          "ov2-prop-5d2c2460c2945eb6",
+          "ov2-prop-0ca1a5e2173202c5",
+          "ov2-prop-7b5c53fa0a3bc90d",
+          "ov2-prop-a4e80a2f6baae46b"
+        ],
+        "source_record_ids": [
+          "ov1-doc-c9d773a62763b2d7",
+          "ov1-doc-d6bb74fb5c2ba567",
+          "ov1-doc-8aa9c9ead7c892f6",
+          "ov1-doc-6782058955941eff",
+          "ov1-doc-b32103bb0961be55",
+          "ov1-doc-10927abc270abbac"
+        ],
+        "support_count": 6,
+        "uncertainty": [
+          "Audit Path  Each answer should expose provenance, reasoning path, uncertainty, and rollback implications",
+          "Indirect evidence should increase uncertainty until replication exists",
+          "none",
+          "Strong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions"
+        ]
+      }
+    ],
+    "regressed": {},
+    "rollback_result": {
+      "audit_preserved": true,
+      "hidden_mutation_detected": false,
+      "passed": true,
+      "pre_consolidation_retrieval_restored": true,
+      "removed_record_ids": [
+        "tp0-noncanonical-ae4317e97dd3481c",
+        "tp0-noncanonical-ce23998045a3dea0",
+        "tp0-noncanonical-0a890010154b7b72"
+      ],
+      "rollback_id": "tp0-rollback-dc70aa153e59d116"
+    },
+    "tp1_justified": true,
+    "tp1_scope": "fixture-only noncanonical pilot with larger fixture corpus and stricter operator approval"
+  },
+  "passed": true,
+  "phase": "TP0 Controlled Noncanonical Training Pilot",
+  "proposition_count": 42,
+  "replay_batch": {
+    "batch_id": "tp0-replay-223637d21c367d8b",
+    "canonical": false,
+    "checksum": "cc94ce3b5d725f87",
+    "selection": {
+      "fixture_only": true,
+      "selection_id": "tp0-selection-739566ba798ae3f6",
+      "selection_reason": "fixture-only Project Atlas and cross-domain evidence selected for TP0 noncanonical consolidation",
+      "semantic_object_ids": [
+        "ov1-source-d10bd0014550be46",
+        "ov1-semantic-cfdb231e0472da43",
+        "ov1-entity-76331d0f8b709a92",
+        "ov1-entity-7c54d68de3c95ae0",
+        "ov1-entity-edb56668793774aa",
+        "ov1-semantic-67bbeb182ac1959c",
+        "ov1-entity-2c289f5d20de28e6",
+        "ov1-semantic-a17daf2da36c6cd4",
+        "ov1-entity-c65e6dce2a6dd8a6",
+        "ov1-source-5d895d3a6550cf66",
+        "ov1-semantic-b2d72b0b12d6eb83",
+        "ov1-entity-655491c0a41ccf49",
+        "ov1-semantic-e49fb216c0f49f04",
+        "ov1-entity-0b79d85092e6e8df",
+        "ov1-semantic-f174cca62210bc02",
+        "ov1-source-e0dbf3431138124f",
+        "ov1-semantic-dbb751a288769030",
+        "ov1-semantic-173ec49501c56f4b",
+        "ov1-source-1866fc90eb9f4847",
+        "ov1-semantic-cc3383d376ef4484",
+        "ov1-semantic-e2b15dfdb3ccca9c",
+        "ov1-source-94d45ab0c0e09096",
+        "ov1-semantic-092c4b0a2fe3d59e",
+        "ov1-entity-a3a35ec7e3a61af8",
+        "ov1-semantic-0a41d9a394b00a18",
+        "ov1-source-372380727af83a7a",
+        "ov1-semantic-e910c46b153c93b4",
+        "ov1-entity-6e76d9189397ccfe",
+        "ov1-semantic-9fa52adc2740b9c4",
+        "ov1-source-6a2250a35ed81cd9",
+        "ov1-semantic-7f9e95d0badfb7d5",
+        "ov1-semantic-2109552f02811229",
+        "ov1-source-27d2fe2a69449336",
+        "ov1-semantic-7d1b91cec367bafd",
+        "ov1-semantic-478ccfd98df38b2e",
+        "ov1-source-7542df32ff5b4781",
+        "ov1-semantic-d0e80751a8c143b8",
+        "ov1-entity-9bd9f33b95c71947",
+        "ov1-semantic-97da72e2ff704ee6",
+        "ov1-source-aa69e09a217b8570",
+        "ov1-semantic-8b345a0810455a01",
+        "ov1-entity-1d89e40197057f75",
+        "ov1-semantic-4646b54db8724430",
+        "ov1-source-4348a0a90d4d5b94",
+        "ov1-semantic-90a6bce881004e72",
+        "ov1-semantic-b50a52fd4eed3bf4",
+        "ov1-source-a17cb33b405fefb8",
+        "ov1-semantic-791b104608845118",
+        "ov1-semantic-074e0f4b956802ff",
+        "ov1-source-04c467ed8e31296a",
+        "ov1-semantic-fb53418f2a2c75d6",
+        "ov1-entity-594d62826ad1d1b1",
+        "ov1-semantic-c9413d09932fb616",
+        "ov1-source-4388398f50b28c9d",
+        "ov1-semantic-a4c26ad4d208e4fa",
+        "ov1-entity-0d753ee64803b4cc",
+        "ov1-semantic-11169b67d953b37b",
+        "ov1-entity-6d4f0f327d7c7708",
+        "ov1-source-669f89da59a27dd7",
+        "ov1-semantic-6b78acfde4e5e3af",
+        "ov1-entity-1f1f38eccbd84abd",
+        "ov1-semantic-5da07ab7c577dc7a",
+        "ov1-entity-3dbb1fdbdd226cc1",
+        "ov1-source-ef6d7a3fd5a98233",
+        "ov1-semantic-c5ab6925cb35b2a5",
+        "ov1-semantic-d939bf3f1c571f08",
+        "ov1-source-3cf2f0cc2b5e7792",
+        "ov1-semantic-9f192a7010c2060f",
+        "ov1-semantic-96392999d2923fc9",
+        "ov1-entity-96d8c9beb95329a4",
+        "ov1-source-253014fcf8a3fba2",
+        "ov1-semantic-8fbba515bd1a4589",
+        "ov1-semantic-f9cb500d122ea33c",
+        "ov1-source-bec38bbb13b1f48f",
+        "ov1-semantic-a2fa15ccfb2748a8",
+        "ov1-entity-91dce0144f1b9f29",
+        "ov1-entity-5b9b95d6560aba45",
+        "ov1-semantic-5c045a0b70bc885b",
+        "ov1-source-a149f124b8642103",
+        "ov1-semantic-8f92aa3aa607427b",
+        "ov1-semantic-0afeb994d9491055"
+      ],
+      "source_document_ids": [
+        "ov1-doc-8aa9c9ead7c892f6",
+        "ov1-doc-b6db8d44cd324a6b",
+        "ov1-doc-25af4871a19b07a9",
+        "ov1-doc-d6bb74fb5c2ba567",
+        "ov1-doc-1d9cdae594651aca",
+        "ov1-doc-52c419d63b72c51b",
+        "ov1-doc-7866e0c2b89ddbfa",
+        "ov1-doc-324d1be7dc82218b",
+        "ov1-doc-d1b9a2395f46eada",
+        "ov1-doc-07b3c1eddf770f0e",
+        "ov1-doc-29d28b17b284a33a",
+        "ov1-doc-27e346c93ba1d256",
+        "ov1-doc-c661902c32c67878",
+        "ov1-doc-0dfe28195b98adc9",
+        "ov1-doc-6782058955941eff",
+        "ov1-doc-3135bc3908d0abc0",
+        "ov1-doc-10927abc270abbac",
+        "ov1-doc-18db59fee919078f",
+        "ov1-doc-c9d773a62763b2d7",
+        "ov1-doc-b32103bb0961be55"
+      ]
+    },
+    "semantic_record_count": 81
+  },
+  "rollback_plan": {
+    "preserves_audit_trail": true,
+    "rollback_id": "tp0-rollback-dc70aa153e59d116",
+    "rollback_tokens": [
+      "rollback-55470c960cf54f7b",
+      "rollback-1fa8ea41ed98d936",
+      "rollback-76d388bb1269c7ee"
+    ],
+    "strategy": "remove in-memory/noncanonical consolidated records and preserve reports as audit",
+    "target_record_ids": [
+      "tp0-noncanonical-ae4317e97dd3481c",
+      "tp0-noncanonical-ce23998045a3dea0",
+      "tp0-noncanonical-0a890010154b7b72"
+    ]
+  },
+  "rollback_result": {
+    "audit_preserved": true,
+    "hidden_mutation_detected": false,
+    "passed": true,
+    "pre_consolidation_retrieval_restored": true,
+    "removed_record_ids": [
+      "tp0-noncanonical-ae4317e97dd3481c",
+      "tp0-noncanonical-ce23998045a3dea0",
+      "tp0-noncanonical-0a890010154b7b72"
+    ],
+    "rollback_id": "tp0-rollback-dc70aa153e59d116"
+  },
+  "safety": {
+    "action_execution_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_write_performed": false,
+    "controlled_substrate_learning_pilot": true,
+    "fine_tuning_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "live_knowledge_mutation_performed": false,
+    "live_memory_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_b_default_changed": false,
+    "model_update_performed": false,
+    "model_weight_training_performed": false,
+    "noncanonical_substrate_records_created": true,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "provider_learning_performed": false,
+    "rollback_drill_performed": true,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "semantic_record_count": 81,
+  "state_trace": [
+    "disabled",
+    "fixture_only",
+    "candidate_generation",
+    "operator_review",
+    "approved_noncanonical",
+    "consolidated_noncanonical",
+    "evaluated",
+    "rolled_back"
+  ],
+  "training_pilot_audit": {
+    "approved_candidate_count": 3,
+    "audit_id": "tp0-audit-4d46e9147dc2e58d",
+    "canonical_writes_performed": false,
+    "consolidated_record_count": 3,
+    "model_training_performed": false,
+    "provider_calls_performed": false,
+    "replay_batch_id": "tp0-replay-223637d21c367d8b",
+    "safety_notes": [
+      "TP0 used fixture-only local corpus input.",
+      "TP0 created only noncanonical consolidated records.",
+      "TP0 did not train, fine-tune, update weights, call providers, or write canonical memory.",
+      "Rollback restored the pre-consolidation retrieval baseline."
+    ]
+  },
+  "training_readiness_review": {
+    "after_cognitive_integrity": 0.966,
+    "before_cognitive_integrity": 0.929,
+    "final_recommendation": "PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT",
+    "operator_review_tp1_justified": true,
+    "passed": true,
+    "phase": "TP0 Training Readiness Review",
+    "remaining_blockers": [
+      "no model-weight training authorization",
+      "canonical writes remain blocked",
+      "live corpus ingestion remains blocked",
+      "provider calls remain blocked",
+      "TP1 still requires explicit operator approval"
+    ],
+    "rollback_passed": true,
+    "tp0_status": "passed",
+    "tp1_recommendation": "Proceed to TP1 only as an expanded fixture-only, noncanonical, operator-approved pilot with rollback and before/after evaluation.",
+    "training_readiness_after_tp0": "Ready for TP1 expanded controlled noncanonical pilot",
+    "training_readiness_score": 0.994
+  }
+}

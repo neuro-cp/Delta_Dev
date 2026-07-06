@@ -531,6 +531,32 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP0 controlled noncanonical training pilot is complete.
+
+New TP0 surface:
+
+- `orchestration/runtime/tp0_controlled_training_pilot.py`
+- `scripts/delta_tp0_controlled_training_pilot.py`
+- `reports/TP0_CONTROLLED_TRAINING_PILOT.md/json`
+- `reports/TP0_BEFORE_AFTER_EVALUATION.md/json`
+- `reports/TP0_ROLLBACK_DRILL.md/json`
+- `reports/TP0_TRAINING_READINESS_REVIEW.md/json`
+- `reports/TP0_OPERATOR_REVIEW.md/json`
+- `ui/delta_tp0_dashboard.html`
+- `docs/continuation_tp0.md`
+
+TP0 completed a fixture-only, operator-reviewed, rollback-capable
+noncanonical substrate learning cycle. It consolidated fixture propositions
+into noncanonical records, evaluated before/after reasoning quality, answered
+what DELTA learned from the fixture corpus, and then rehearsed rollback.
+
+TP0 did not train model weights, fine-tune, update a model, call providers,
+write canonical memory, mutate live knowledge, mutate memory, start schedulers,
+execute actions, promote HYB1, or change Model B defaults.
+
+Current next recommendation:
+PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT
+
 OV6-OV10 operational readiness marathon is complete.
 
 New operational readiness surface:

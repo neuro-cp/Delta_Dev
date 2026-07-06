@@ -6,6 +6,40 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP0 Controlled Noncanonical Training Pilot
+
+Completed TP0 as DELTA's first controlled substrate-learning pilot. This was
+not model-weight training, fine-tuning, provider learning, canonical memory, or
+live knowledge mutation.
+
+Generated artifacts:
+
+- `orchestration/runtime/tp0_controlled_training_pilot.py`
+- `scripts/delta_tp0_controlled_training_pilot.py`
+- `tests/runtime_tp0/test_tp0_controlled_training_pilot.py`
+- `reports/TP0_CONTROLLED_TRAINING_PILOT.md/json`
+- `reports/TP0_BEFORE_AFTER_EVALUATION.md/json`
+- `reports/TP0_ROLLBACK_DRILL.md/json`
+- `reports/TP0_TRAINING_READINESS_REVIEW.md/json`
+- `reports/TP0_OPERATOR_REVIEW.md/json`
+- `ui/delta_tp0_dashboard.html`
+- `docs/continuation_tp0.md`
+
+TP0 ran the fixture-only path from semantic records through propositions,
+deduplication, replay batch, consolidation candidates, operator review
+simulation, approved noncanonical consolidation, retrieval after consolidation,
+before/after cognitive evaluation, rollback drill, and audit.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+model-weight training, no fine-tuning, no model update, no provider calls, no
+canonical writes, no live knowledge mutation, no memory mutation, no
+schedulers/background workers, no action execution, no hidden writes, and no
+HYB1 promotion.
+
+Final recommendation:
+
+`PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT`
+
 ### OV6-OV10 Operational Readiness Marathon
 
 Completed OV6 through OV10 as an operational readiness pass. This did not

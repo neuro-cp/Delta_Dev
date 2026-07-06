@@ -2,12 +2,13 @@
 
 ## Current Phase
 
-OV6-OV10 operational readiness marathon is complete. The current recommendation
-is `READY_FOR_CONTROLLED_TRAINING_PILOT`.
+TP0 controlled noncanonical training pilot is complete. The current
+recommendation is `PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT`.
 
-The next phase should be a separate, explicit controlled training pilot design
-and approval checkpoint. Do not start training as part of ordinary operational
-readiness work.
+The next phase should remain fixture-only, noncanonical, operator-approved,
+rollback-capable, and before/after evaluated. Do not enable model-weight
+training, providers, canonical writes, live corpus ingestion, schedulers,
+actions, or HYB1 promotion.
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 

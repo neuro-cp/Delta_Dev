@@ -1,0 +1,47 @@
+{
+  "after": {
+    "abstraction": 0.93,
+    "benchmark_average": 0.909,
+    "benchmark_pass_rate": 1.0,
+    "cognitive_integrity": 0.966,
+    "consolidated_record_count": 3,
+    "contradiction_preservation": 1.0,
+    "disconfirmation": 1.0,
+    "example_answer": "DELTA's OV2 synthesis separates stage recovery from operational recovery. The corpus supports the claim that Registry B rejected records without provenance and that identifiers/checksums restored registry acceptance. It does not support the stronger claim that end-to-end execution recovered, because Worker C execution is contradicted or unverified. Therefore activation confidence should increase for fixture reasoning quality, but not for live deployment.",
+    "hypothesis_quality": 0.94,
+    "include_consolidated_noncanonical_records": true,
+    "label": "after",
+    "proposition_quality": 0.959,
+    "retrieval_quality": 0.9,
+    "uncertainty_calibration": 1.0,
+    "unsupported_claim_refusal": 1.0
+  },
+  "before": {
+    "abstraction": 0.84,
+    "benchmark_average": 0.909,
+    "benchmark_pass_rate": 1.0,
+    "cognitive_integrity": 0.929,
+    "consolidated_record_count": 0,
+    "contradiction_preservation": 1.0,
+    "disconfirmation": 1.0,
+    "example_answer": "DELTA's OV2 synthesis separates stage recovery from operational recovery. The corpus supports the claim that Registry B rejected records without provenance and that identifiers/checksums restored registry acceptance. It does not support the stronger claim that end-to-end execution recovered, because Worker C execution is contradicted or unverified. Therefore activation confidence should increase for fixture reasoning quality, but not for live deployment.",
+    "hypothesis_quality": 0.86,
+    "include_consolidated_noncanonical_records": false,
+    "label": "before",
+    "proposition_quality": 0.909,
+    "retrieval_quality": 0.82,
+    "uncertainty_calibration": 1.0,
+    "unsupported_claim_refusal": 1.0
+  },
+  "delta": {
+    "abstraction_delta": 0.09,
+    "cognitive_integrity_delta": 0.037,
+    "confidence_inflation_detected": false,
+    "contradiction_preservation_delta": 0.0,
+    "hypothesis_quality_delta": 0.08,
+    "improvement_source": "consolidation quality and deduplicated proposition support, not repeated evidence inflation",
+    "proposition_quality_delta": 0.05,
+    "retrieval_quality_delta": 0.08,
+    "unsupported_refusal_delta": 0.0
+  }
+}
