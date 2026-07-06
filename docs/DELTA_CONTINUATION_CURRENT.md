@@ -1004,3 +1004,11 @@ Final recommendation: `PROCEED_TP22_REPLAY_OPTIMIZATION`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+### TP22 Replay Optimization
+
+Completed TP22: Improve replay prioritization, consolidation scheduling design, evidence weighting, and retrieval without live schedulers.
+
+Final recommendation: `PROCEED_TP23_KNOWLEDGE_QUALITY_OPTIMIZATION`.
+
+Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
+
