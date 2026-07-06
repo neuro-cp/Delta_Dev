@@ -1303,3 +1303,7 @@ TP19 (Independent External Evaluation) preserves the substrate-first architectur
 ### TP20 Architecture Note
 
 TP20 (Training Necessity Reassessment) preserves the substrate-first architecture. It adds evidence and governance around `report_only_decision_gate` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
+
+### TP21 Architecture Note
+
+TP21 (Cognitive Cycle Integration) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
