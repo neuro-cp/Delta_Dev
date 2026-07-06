@@ -1311,3 +1311,7 @@ TP21 (Cognitive Cycle Integration) preserves the substrate-first architecture. I
 ### TP22 Architecture Note
 
 TP22 (Replay Optimization) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
+
+### TP23 Architecture Note
+
+TP23 (Knowledge Quality Optimization) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
