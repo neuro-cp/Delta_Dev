@@ -1,0 +1,249 @@
+{
+  "after_manifest": {
+    "files": {
+      "audit.jsonl": "5b0a49474e2d651cc59c0d04689c3a2df6e929befd5fded50a45107e8a807665",
+      "records.jsonl": "a2dd6163b39fb151cc3eb9cb299b028a0cbaee175dabf43999fee8fcaa415c51",
+      "rollback.jsonl": "4c2baae5ae43e2ff8919c488117d08fe5611eb9ff5f2bdc0216bf7db8d5dfa8b"
+    },
+    "manifest_hash": "da3be539f345d0021dc21111d4af257f1058b015fcad053ae86c3749ac311818",
+    "store": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-348/test_tp6_reports_and_local_ans0"
+  },
+  "before_manifest": {
+    "files": {},
+    "manifest_hash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "store": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-348/test_tp6_reports_and_local_ans0"
+  },
+  "failure_exercises": {
+    "cases": [
+      {
+        "blocks": [
+          "missing_provenance_blocked"
+        ],
+        "case": "missing_provenance",
+        "unsafe_persisted": false
+      },
+      {
+        "blocks": [
+          "exact_operator_approval_required",
+          "approval_candidate_mismatch"
+        ],
+        "case": "invalid_approval",
+        "unsafe_persisted": false
+      },
+      {
+        "blocks": [],
+        "case": "stale_persistence_dry_run",
+        "unsafe_persisted": false
+      },
+      {
+        "blocks": [],
+        "case": "rollback_under_load",
+        "unsafe_persisted": false
+      },
+      {
+        "blocks": [
+          "operator_review_required"
+        ],
+        "case": "conflicting_evidence",
+        "unsafe_persisted": false
+      }
+    ],
+    "passed": true,
+    "phase": "TP6 Failure Exercises",
+    "unsafe_candidates_persisted": false
+  },
+  "final_recommendation": "READY_FOR_LONGITUDINAL_STABILITY_EVALUATION",
+  "governance_stress": {
+    "bypasses_detected": false,
+    "checks": {
+      "approval_gates": true,
+      "audit_history": true,
+      "invariant_enforcement": true,
+      "provenance_integrity": true,
+      "refusal_behavior": true,
+      "replay": true,
+      "rollback": true
+    },
+    "passed": true,
+    "phase": "TP6 Governance Stress"
+  },
+  "metrics": {
+    "approval_rate": 0.5,
+    "average_latency_ms": 2.591,
+    "contradiction_preservation": true,
+    "deterministic_repeatability": true,
+    "operator_workload_review_items": 4,
+    "phase": "TP6 Operational Metrics",
+    "provenance_completeness": true,
+    "rejection_rate": 0.5,
+    "replay_consistency": true,
+    "rollback_frequency": 2,
+    "session_count": 4,
+    "uncertainty_calibration": true
+  },
+  "operator_review": {
+    "approval_burden": "moderate",
+    "audit_usability": "sufficient",
+    "decision_transparency": "sufficient",
+    "items_reviewed": 4,
+    "phase": "TP6 Operator Review",
+    "recommended_improvements": [
+      "add operator-facing batch summary before broader operational trials"
+    ],
+    "replay_usability": "sufficient",
+    "review_clarity": "sufficient",
+    "rollback_usability": "sufficient_for_workspace_scoped_pilot"
+  },
+  "passed": true,
+  "phase": "TP6 Controlled Operational Pilot",
+  "readiness": {
+    "deterministic_replay": true,
+    "final_recommendation": "READY_FOR_LONGITUDINAL_STABILITY_EVALUATION",
+    "governance_effectiveness": true,
+    "operational_stability": true,
+    "passed": true,
+    "persistence_isolation": true,
+    "phase": "TP6 Readiness Review"
+  },
+  "replay": {
+    "contradictions_preserved": true,
+    "mutation_performed": false,
+    "phase": "TP5 Replay Integration",
+    "provenance_preserved": true,
+    "read_only": true,
+    "record_count": 2,
+    "records": [
+      {
+        "authoritative": false,
+        "canonical": false,
+        "claim": "Operator reviewed routing recovery; however Worker C execution remains unresolved",
+        "confidence": 0.72,
+        "contradictions": [
+          "contradiction_or_unresolved_evidence_present"
+        ],
+        "record_id": "tp5-record-883740a35434b7fd",
+        "source_references": [
+          "operator-session://tp6/approved_recovery_note"
+        ],
+        "uncertainty": "explicit_uncertainty"
+      },
+      {
+        "authoritative": false,
+        "canonical": false,
+        "claim": "Operator reviewed unresolved provenance and preserved uncertainty for replay",
+        "confidence": 0.72,
+        "contradictions": [
+          "contradiction_or_unresolved_evidence_present"
+        ],
+        "record_id": "tp5-record-c43c3dcb2dd534a6",
+        "source_references": [
+          "operator-session://tp6/approved_uncertain_note"
+        ],
+        "uncertainty": "explicit_uncertainty"
+      }
+    ],
+    "uncertainty_preserved": true
+  },
+  "rollback": {
+    "all_records_have_rollback": true,
+    "deletion_requires_governance": true,
+    "deterministic": true,
+    "diff_available": true,
+    "historical_reconstruction_available": true,
+    "passed": true,
+    "phase": "TP5 Rollback Validation",
+    "record_count": 2,
+    "rollback_strategy": "manual_tombstone_or_workspace_delete",
+    "rollback_token_count": 2,
+    "version_inspection_available": true
+  },
+  "safety": {
+    "autonomous_action_execution_performed": false,
+    "autonomous_reasoning_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "live_knowledge_mutation_performed": false,
+    "model_b_default_changed": false,
+    "model_training_performed": false,
+    "phase": "TP5 Controlled Noncanonical Persistent Pilot Implementation",
+    "pilot_store_is_noncanonical": true,
+    "pilot_store_write_requires_exact_approval": true,
+    "production_deployment": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "tp6_operational_validation": true,
+    "weight_update_performed": false
+  },
+  "scenarios": [
+    {
+      "blocks": [],
+      "candidate_id": "tp5-candidate-f5364cee894730ee",
+      "latency_ms": 4.845,
+      "persisted": true,
+      "scenario": {
+        "approval_valid": true,
+        "decision": "approve",
+        "expected_persisted": true,
+        "operator_id": "operator-a",
+        "scenario_id": "approved_recovery_note",
+        "text": "Operator reviewed routing recovery; however Worker C execution remains unresolved."
+      },
+      "transition_verified": true
+    },
+    {
+      "blocks": [
+        "exact_operator_approval_required",
+        "approval_candidate_mismatch"
+      ],
+      "candidate_id": "tp5-candidate-d4910fff92b6fb3e",
+      "latency_ms": 0.51,
+      "persisted": false,
+      "scenario": {
+        "approval_valid": false,
+        "decision": "reject",
+        "expected_persisted": false,
+        "operator_id": "operator-b",
+        "scenario_id": "rejected_overclaim",
+        "text": "Operator reviewed a claim that all recovery is complete despite missing evidence."
+      },
+      "transition_verified": true
+    },
+    {
+      "blocks": [],
+      "candidate_id": "tp5-candidate-e6b7e23e9bd9ded5",
+      "latency_ms": 4.381,
+      "persisted": true,
+      "scenario": {
+        "approval_valid": true,
+        "decision": "approve",
+        "expected_persisted": true,
+        "operator_id": "operator-c",
+        "scenario_id": "approved_uncertain_note",
+        "text": "Operator reviewed unresolved provenance and preserved uncertainty for replay."
+      },
+      "transition_verified": true
+    },
+    {
+      "blocks": [
+        "exact_operator_approval_required",
+        "approval_candidate_mismatch"
+      ],
+      "candidate_id": "tp5-candidate-e115dcecce01b1f2",
+      "latency_ms": 0.629,
+      "persisted": false,
+      "scenario": {
+        "approval_valid": false,
+        "decision": "defer",
+        "expected_persisted": false,
+        "operator_id": "operator-d",
+        "scenario_id": "partial_review",
+        "text": "Operator began review but did not provide exact approval."
+      },
+      "transition_verified": true
+    }
+  ],
+  "store": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-348/test_tp6_reports_and_local_ans0"
+}

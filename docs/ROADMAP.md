@@ -2,15 +2,13 @@
 
 ## Current Phase
 
-TP5 controlled noncanonical persistent pilot implementation is complete. The
-current recommendation is `PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION`.
+TP6 controlled operational pilot is complete. The current recommendation is
+`READY_FOR_LONGITUDINAL_STABILITY_EVALUATION`.
 
-The next phase should validate operation under controlled workloads rather than
-add broad architecture. Use real-but-controlled operator sessions against the
-noncanonical pilot store, measure stability, rollback, provenance,
-disagreement, false positives/negatives, and operator burden. Do not enable
-model-weight training, providers, canonical writes, schedulers, actions, or
-HYB1 promotion without a separate explicit approval milestone.
+The next phase should measure stability across repeated sessions, operators,
+replay, rollback, and evidence order. Do not enable model-weight training,
+providers, canonical writes, schedulers, actions, or HYB1 promotion without a
+separate explicit approval milestone.
 
 ## TP3 Independent Verification Freeze
 
@@ -88,6 +86,24 @@ records canonical, authoritative, autonomous, or trained into model weights.
 Recommended next roadmap item:
 
 `PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION`
+
+## TP6 Controlled Operational Pilot
+
+Completed:
+
+- multiple deterministic operator sessions
+- approval, rejection, and defer workflows
+- noncanonical persistence only after exact approval
+- read-only replay
+- rollback validation
+- failure exercises
+- governance stress
+- operational metrics
+- operator workflow review
+
+Final recommendation:
+
+`READY_FOR_LONGITUDINAL_STABILITY_EVALUATION`
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 

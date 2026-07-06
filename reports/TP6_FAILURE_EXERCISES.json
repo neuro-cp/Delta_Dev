@@ -1,0 +1,39 @@
+{
+  "cases": [
+    {
+      "blocks": [
+        "missing_provenance_blocked"
+      ],
+      "case": "missing_provenance",
+      "unsafe_persisted": false
+    },
+    {
+      "blocks": [
+        "exact_operator_approval_required",
+        "approval_candidate_mismatch"
+      ],
+      "case": "invalid_approval",
+      "unsafe_persisted": false
+    },
+    {
+      "blocks": [],
+      "case": "stale_persistence_dry_run",
+      "unsafe_persisted": false
+    },
+    {
+      "blocks": [],
+      "case": "rollback_under_load",
+      "unsafe_persisted": false
+    },
+    {
+      "blocks": [
+        "operator_review_required"
+      ],
+      "case": "conflicting_evidence",
+      "unsafe_persisted": false
+    }
+  ],
+  "passed": true,
+  "phase": "TP6 Failure Exercises",
+  "unsafe_candidates_persisted": false
+}

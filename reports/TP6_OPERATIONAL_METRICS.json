@@ -1,0 +1,14 @@
+{
+  "approval_rate": 0.5,
+  "average_latency_ms": 2.591,
+  "contradiction_preservation": true,
+  "deterministic_repeatability": true,
+  "operator_workload_review_items": 4,
+  "phase": "TP6 Operational Metrics",
+  "provenance_completeness": true,
+  "rejection_rate": 0.5,
+  "replay_consistency": true,
+  "rollback_frequency": 2,
+  "session_count": 4,
+  "uncertainty_calibration": true
+}

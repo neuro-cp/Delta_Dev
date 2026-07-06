@@ -6,6 +6,37 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP6 Controlled Operational Pilot
+
+Completed TP6 as controlled operational validation over the TP5 noncanonical
+pilot store. TP6 exercises multiple operator sessions, approval/rejection
+transitions, noncanonical persistence, read-only replay, rollback, failure
+exercises, governance stress, operational metrics, and operator workflow
+review.
+
+Generated artifacts:
+
+- `orchestration/runtime/tp6_controlled_operational_pilot.py`
+- `scripts/delta_tp6_operational_pilot.py`
+- `tests/runtime_tp6/test_tp6_controlled_operational_pilot.py`
+- `reports/TP6_OPERATIONAL_PILOT.md/json`
+- `reports/TP6_OPERATIONAL_METRICS.md/json`
+- `reports/TP6_FAILURE_EXERCISES.md/json`
+- `reports/TP6_GOVERNANCE_STRESS.md/json`
+- `reports/TP6_OPERATOR_REVIEW.md/json`
+- `reports/TP6_READINESS_REVIEW.md/json`
+- `ui/delta_tp6_dashboard.html`
+- `docs/continuation_tp6.md`
+
+Safety state remains unchanged: no model training, no fine-tuning, no model
+update, no provider calls, no canonical writes, no canonical memory, no live
+knowledge mutation, no autonomous actions, no schedulers/background workers,
+no HYB1 promotion, and Model B remains unchanged.
+
+Final recommendation:
+
+`READY_FOR_LONGITUDINAL_STABILITY_EVALUATION`
+
 ### TP5 Controlled Noncanonical Persistent Pilot Implementation
 
 Completed TP5 as the first controlled persistence implementation. TP5

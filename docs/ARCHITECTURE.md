@@ -1162,3 +1162,15 @@ TP5 does not train model weights, fine-tune, update models, call providers,
 write canonical memory, enable canonical memory, mutate live knowledge outside
 the isolated pilot store, start schedulers/background workers, execute actions,
 promote HYB1, or change Model B defaults.
+
+## TP6 Controlled Operational Pilot
+
+TP6 validates the TP5 noncanonical pilot store under controlled operational
+conditions. It runs multiple deterministic operator sessions through candidate
+generation, review, approval or rejection, noncanonical persistence, replay,
+rollback, failure exercises, metrics, governance stress, and operator workflow
+review.
+
+TP6 is evidence collection, not feature expansion. It does not train, call
+providers, write canonical memory, mutate live knowledge, start schedulers,
+execute actions, promote HYB1, or change Model B defaults.

@@ -1,0 +1,13 @@
+{
+  "approval_burden": "moderate",
+  "audit_usability": "sufficient",
+  "decision_transparency": "sufficient",
+  "items_reviewed": 4,
+  "phase": "TP6 Operator Review",
+  "recommended_improvements": [
+    "add operator-facing batch summary before broader operational trials"
+  ],
+  "replay_usability": "sufficient",
+  "review_clarity": "sufficient",
+  "rollback_usability": "sufficient_for_workspace_scoped_pilot"
+}

@@ -1,0 +1,14 @@
+{
+  "bypasses_detected": false,
+  "checks": {
+    "approval_gates": true,
+    "audit_history": true,
+    "invariant_enforcement": true,
+    "provenance_integrity": true,
+    "refusal_behavior": true,
+    "replay": true,
+    "rollback": true
+  },
+  "passed": true,
+  "phase": "TP6 Governance Stress"
+}

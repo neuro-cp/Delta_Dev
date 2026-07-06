@@ -531,6 +531,41 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP6 controlled operational pilot is complete.
+
+New TP6 surface:
+
+- `orchestration/runtime/tp6_controlled_operational_pilot.py`
+- `scripts/delta_tp6_operational_pilot.py`
+- `reports/TP6_OPERATIONAL_PILOT.md/json`
+- `reports/TP6_OPERATIONAL_METRICS.md/json`
+- `reports/TP6_FAILURE_EXERCISES.md/json`
+- `reports/TP6_GOVERNANCE_STRESS.md/json`
+- `reports/TP6_OPERATOR_REVIEW.md/json`
+- `reports/TP6_READINESS_REVIEW.md/json`
+- `ui/delta_tp6_dashboard.html`
+- `docs/continuation_tp6.md`
+
+TP6 validates controlled operational behavior over the TP5 noncanonical pilot
+store.
+
+Current TP6 result:
+
+- approval/rejection workflow: verified
+- failure exercises: passed
+- replay: read-only and stable
+- rollback: passed
+- governance stress: passed
+- final recommendation: `READY_FOR_LONGITUDINAL_STABILITY_EVALUATION`
+
+Safety state remains unchanged: no model training, no fine-tuning, no model
+update, no provider calls, no canonical writes, no canonical memory, no live
+knowledge mutation, no autonomous actions, no schedulers/background workers,
+no HYB1 promotion, and Model B remains default.
+
+Current next recommendation:
+READY_FOR_LONGITUDINAL_STABILITY_EVALUATION
+
 TP5 controlled noncanonical persistent pilot implementation is complete.
 
 New TP5 surface:
