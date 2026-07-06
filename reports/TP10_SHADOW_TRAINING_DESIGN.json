@@ -1,0 +1,15 @@
+{
+  "deployment_allowed": false,
+  "design_only": true,
+  "minimum_future_requirements": [
+    "frozen dataset manifest",
+    "independent holdout benchmark",
+    "blinded evaluator",
+    "rollback or deactivation strategy",
+    "operator approval",
+    "no production routing"
+  ],
+  "model_artifact_created": false,
+  "phase": "TP10 Shadow Training Design",
+  "training_performed": false
+}

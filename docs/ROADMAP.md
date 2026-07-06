@@ -949,6 +949,16 @@ Current recommendation:
 
 `READY_FOR_TRAINING_READINESS_REVIEW`
 
+## TP10 Training Readiness Review
+
+TP10 is complete. It reviewed training necessity, training risks, shadow
+training design, data governance, evaluation requirements, and governance
+compatibility.
+
+Current recommendation:
+
+`CONTINUE_SUBSTRATE_LEARNING_NO_TRAINING`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

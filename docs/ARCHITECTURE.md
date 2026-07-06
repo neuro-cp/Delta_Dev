@@ -1207,3 +1207,14 @@ handles, conflict handling, falsification cases, and a safety case.
 TP9 performs no canonical writes and enables no canonical memory. It does not
 train, fine-tune, update model weights, call providers, mutate live knowledge,
 start schedulers, execute actions, promote HYB1, or change Model B defaults.
+
+## TP10 Training Readiness Review
+
+TP10 reviews whether DELTA should move from governed substrate learning toward
+model training. The conclusion is conservative: model training is not justified
+yet because substrate learning preserves provenance, audit, rollback, and
+operator review more directly than weight updates.
+
+TP10 performs no training, fine-tuning, weight updates, provider calls,
+canonical writes, scheduler activation, action execution, HYB1 promotion, or
+Model B replacement.

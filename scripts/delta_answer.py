@@ -47,6 +47,7 @@ from orchestration.runtime.tp6_controlled_operational_pilot import is_tp6_questi
 from orchestration.runtime.tp7_longitudinal_stability import is_tp7_question, answer_tp7_question
 from orchestration.runtime.tp8_canonical_promotion_policy import is_tp8_question, answer_tp8_question
 from orchestration.runtime.tp9_controlled_canonical_pilot_design import is_tp9_question, answer_tp9_question
+from orchestration.runtime.tp10_training_readiness_review import is_tp10_question, answer_tp10_question
 
 
 def main() -> int:
@@ -61,6 +62,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_tp10_question(query):
+        data = answer_tp10_question(query)
     elif is_tp9_question(query):
         data = answer_tp9_question(query)
     elif is_tp8_question(query):
@@ -168,6 +171,8 @@ def main() -> int:
     elif data.get("phase") == "TP8 Canonical Promotion Policy Validation":
         print(data["answer_text"])
     elif data.get("phase") == "TP9 Controlled Canonical Pilot Design":
+        print(data["answer_text"])
+    elif data.get("phase") == "TP10 Training Readiness Review":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

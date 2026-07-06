@@ -1,0 +1,12 @@
+{
+  "phase": "TP10 Governance Compatibility",
+  "policy": "prefer reversible substrate evolution over model training",
+  "substrate_learning": {
+    "compatibility": "high",
+    "why": "explicit records, provenance, audit, rollback, operator review"
+  },
+  "weight_training": {
+    "compatibility": "low_until_researched",
+    "why": "behavior changes are compressed into model weights and harder to roll back precisely"
+  }
+}

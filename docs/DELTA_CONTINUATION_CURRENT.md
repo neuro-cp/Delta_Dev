@@ -863,3 +863,16 @@ Checkpoint:
 
 Current next recommendation:
 READY_FOR_TRAINING_READINESS_REVIEW
+
+TP10 training readiness review is complete.
+
+Checkpoint:
+
+- no model training is justified yet
+- substrate learning remains the preferred path
+- shadow training is design-only and research-only
+- data governance and independent evaluation requirements are defined
+- production training is forbidden under current evidence
+
+Current next recommendation:
+CONTINUE_SUBSTRATE_LEARNING_NO_TRAINING

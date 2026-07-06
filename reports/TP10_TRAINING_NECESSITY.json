@@ -1,0 +1,11 @@
+{
+  "conclusion": "continue governed substrate learning; defer model training",
+  "evidence": [
+    "substrate learning and noncanonical persistence already improved controlled evaluations",
+    "canonical promotion remains design-only",
+    "external independent evidence is not yet sufficient to justify irreversible model artifacts",
+    "governed substrate changes preserve provenance and rollback better than weight updates"
+  ],
+  "phase": "TP10 Training Necessity",
+  "training_needed_now": false
+}

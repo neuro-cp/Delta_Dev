@@ -1,0 +1,36 @@
+{
+  "options": [
+    {
+      "option": "continue_substrate_learning_no_training",
+      "reason": "keeps provenance, audit, and rollback explicit",
+      "status": "recommended"
+    },
+    {
+      "option": "canonical_memory_only_improvement",
+      "reason": "requires TP9 pilot activation evidence first",
+      "status": "future_after_pilot"
+    },
+    {
+      "option": "shadow_training_research_only",
+      "reason": "may compare behavior but must not deploy artifacts",
+      "status": "research_only"
+    },
+    {
+      "option": "offline_fine_tune_experiment",
+      "reason": "insufficient governance and rollback evidence",
+      "status": "blocked_now"
+    },
+    {
+      "option": "adapter_lora_experiment",
+      "reason": "still creates model behavior change without adequate audit rollback",
+      "status": "blocked_now"
+    },
+    {
+      "option": "production_training",
+      "reason": "outside current evidence and governance envelope",
+      "status": "forbidden"
+    }
+  ],
+  "phase": "TP10 Training Options",
+  "recommended_option": "continue_substrate_learning_no_training"
+}
