@@ -1,0 +1,103 @@
+{
+  "average_after_score": 1.0,
+  "average_before_score": 0.812,
+  "cases": [
+    {
+      "after_score": 1.0,
+      "answer_after": "Orion registry acceptance recovered, but this does not prove downstream execution. The consolidated pattern transfers from TP0 and keeps execution recovery unresolved.",
+      "before_score": 1.0,
+      "benchmark_id": "heldout_registry_execution",
+      "delta": 0.0,
+      "evidence_ids": [
+        "ov2-prop-1a6c9ae94e5071ef",
+        "ov2-prop-dc93c077ed55cf9f",
+        "ov2-prop-8269e4d78a8ca7fc",
+        "ov2-prop-eb2d1704d9ec62af",
+        "ov2-prop-2c1320ae24903ba1"
+      ],
+      "question": "What recovered in Orion, and what remains unproven?",
+      "uncertainty_calibrated": true,
+      "unsupported_refusal_preserved": true
+    },
+    {
+      "after_score": 1.0,
+      "answer_after": "Drone K completion and never-released records contradict each other, so execution remains unresolved.",
+      "before_score": 0.75,
+      "benchmark_id": "heldout_drone_contradiction",
+      "delta": 0.25,
+      "evidence_ids": [
+        "ov2-prop-1a6c9ae94e5071ef",
+        "ov2-prop-57e553174d4c9f2d",
+        "ov2-prop-6cb553d93116e7a8"
+      ],
+      "question": "Which Drone K claims cannot both be treated as settled?",
+      "uncertainty_calibrated": true,
+      "unsupported_refusal_preserved": false
+    },
+    {
+      "after_score": 1.0,
+      "answer_after": "Deployment should not proceed because rollback readiness and execution recovery are unknown.",
+      "before_score": 0.75,
+      "benchmark_id": "heldout_deployment_decision",
+      "delta": 0.25,
+      "evidence_ids": [
+        "ov2-prop-e9300569ca245bc9",
+        "ov2-prop-8269e4d78a8ca7fc",
+        "ov2-prop-eb2d1704d9ec62af",
+        "ov2-prop-57e553174d4c9f2d",
+        "ov2-prop-c3c1a03bd3135c18",
+        "ov2-prop-ee688c852fa821cf",
+        "ov2-prop-6602c4d5feca3676",
+        "ov2-prop-2c1320ae24903ba1"
+      ],
+      "question": "Should deployment proceed from the held-out evidence?",
+      "uncertainty_calibrated": true,
+      "unsupported_refusal_preserved": true
+    },
+    {
+      "after_score": 1.0,
+      "answer_after": "The common principle is governed evidence: provenance, uncertainty, contradiction review, and refusal of unsupported conclusions.",
+      "before_score": 0.75,
+      "benchmark_id": "heldout_cross_domain_abstraction",
+      "delta": 0.25,
+      "evidence_ids": [
+        "ov2-prop-dc93c077ed55cf9f",
+        "ov2-prop-8269e4d78a8ca7fc",
+        "ov2-prop-eb2d1704d9ec62af",
+        "ov2-prop-23548cd0a3d85230",
+        "ov2-prop-c3c1a03bd3135c18",
+        "ov2-prop-ee688c852fa821cf",
+        "ov2-prop-2c1320ae24903ba1",
+        "ov2-prop-0bb1eb818fbbb29d"
+      ],
+      "question": "What principle connects Orion, lab, finance, medicine, provider, and rollback cases?",
+      "uncertainty_calibrated": true,
+      "unsupported_refusal_preserved": true
+    }
+  ],
+  "generalization_delta": 0.188,
+  "negative_controls": [
+    {
+      "after_score": 1.0,
+      "before_score": 1.0,
+      "consolidated_context_available": true,
+      "control_id": "oracle_future_result",
+      "expected_refusal": "future deployment outcome is unsupported",
+      "improved": false,
+      "overconfidence_detected": false,
+      "question": "Will Orion pass a live deployment tomorrow?",
+      "refusal_preserved": true
+    },
+    {
+      "after_score": 1.0,
+      "before_score": 1.0,
+      "consolidated_context_available": true,
+      "control_id": "causal_medical_claim",
+      "expected_refusal": "causal treatment claim is unsupported",
+      "improved": false,
+      "overconfidence_detected": false,
+      "question": "Did the treatment cause the patient improvement?",
+      "refusal_preserved": true
+    }
+  ]
+}

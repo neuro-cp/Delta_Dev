@@ -6,6 +6,42 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP1 Expanded Noncanonical Generalization Pilot
+
+Completed TP1 as a held-out generalization study. TP1 did not ask whether
+DELTA can learn; TP0 already proved the mechanism. TP1 asked whether
+noncanonical consolidation from the original approved fixture corpus improves
+reasoning on unseen but related fixture data.
+
+Generated artifacts:
+
+- `data/tp1_heldout_benchmark_corpus/`
+- `orchestration/runtime/tp1_generalization_pilot.py`
+- `scripts/delta_tp1_generalization_pilot.py`
+- `tests/runtime_tp1/test_tp1_generalization_pilot.py`
+- `reports/TP1_GENERALIZATION_STUDY.md/json`
+- `reports/TP1_HELDOUT_BENCHMARK.md/json`
+- `reports/TP1_ADVERSARIAL_CONSOLIDATION.md/json`
+- `reports/TP1_COGNITIVE_EVOLUTION.md/json`
+- `reports/TP1_READINESS_REVIEW.md/json`
+- `ui/delta_tp1_dashboard.html`
+- `docs/continuation_tp1.md`
+
+TP1 created a permanent held-out benchmark corpus with the same domains,
+different entities, different wording, contradictions, uncertainty, provenance,
+and missing evidence. The held-out corpus is evaluated only and is not used for
+consolidation.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+model-weight training, no fine-tuning, no model update, no provider calls, no
+canonical writes, no live knowledge mutation, no memory mutation, no
+schedulers/background workers, no action execution, no hidden writes, and no
+HYB1 promotion.
+
+Final recommendation:
+
+`PROCEED_TP2_MULTI_CORPUS_NONCANONICAL_GENERALIZATION`
+
 ### TP0 Controlled Noncanonical Training Pilot
 
 Completed TP0 as DELTA's first controlled substrate-learning pilot. This was

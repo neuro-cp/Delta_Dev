@@ -1,0 +1,13 @@
+{
+  "cognitive_integrity_delta": 0.135,
+  "determinism": 1.0,
+  "disconfirmation_quality": 1.0,
+  "generalization_improvement": 0.188,
+  "graph_reuse": 0.5,
+  "hypothesis_reuse": 0.25,
+  "knowledge_reuse": 0.071,
+  "phase": "TP1 Cognitive Evolution Metrics",
+  "proposition_reuse": 0.25,
+  "reasoning_improvement": 0.188,
+  "rollback_integrity": 1.0
+}

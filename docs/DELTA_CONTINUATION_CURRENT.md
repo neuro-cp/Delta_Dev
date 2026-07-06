@@ -531,6 +531,32 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP1 expanded noncanonical generalization pilot is complete.
+
+New TP1 surface:
+
+- `data/tp1_heldout_benchmark_corpus/`
+- `orchestration/runtime/tp1_generalization_pilot.py`
+- `scripts/delta_tp1_generalization_pilot.py`
+- `reports/TP1_GENERALIZATION_STUDY.md/json`
+- `reports/TP1_HELDOUT_BENCHMARK.md/json`
+- `reports/TP1_ADVERSARIAL_CONSOLIDATION.md/json`
+- `reports/TP1_COGNITIVE_EVOLUTION.md/json`
+- `reports/TP1_READINESS_REVIEW.md/json`
+- `ui/delta_tp1_dashboard.html`
+- `docs/continuation_tp1.md`
+
+TP1 introduced a held-out benchmark corpus that is not used for consolidation.
+It evaluates whether noncanonical consolidation from the original fixture corpus
+improves reasoning on unseen but related fixture data.
+
+TP1 did not train model weights, fine-tune, update a model, call providers,
+write canonical memory, mutate live knowledge, mutate memory, start schedulers,
+execute actions, promote HYB1, or change Model B defaults.
+
+Current next recommendation:
+PROCEED_TP2_MULTI_CORPUS_NONCANONICAL_GENERALIZATION
+
 TP0 controlled noncanonical training pilot is complete.
 
 New TP0 surface:

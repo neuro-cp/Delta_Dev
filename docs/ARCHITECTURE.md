@@ -1051,3 +1051,26 @@ uncertainty, unsupported-claim refusal, audit metadata, and rollback.
 TP0 does not train model weights, call providers, write canonical memory, mutate
 live knowledge, mutate memory, start schedulers/background workers, execute
 actions, promote HYB1, or change Model B defaults.
+
+## TP1 Expanded Noncanonical Generalization Pilot
+
+TP1 tests whether controlled noncanonical consolidation improves reasoning on
+unseen but related fixture data. It introduces a held-out benchmark corpus that
+is never used for consolidation during TP1.
+
+The TP1 evaluation shape is:
+
+```text
+original approved fixture corpus -> noncanonical consolidation
+held-out benchmark corpus -> before/after evaluation only
+```
+
+TP1 measures retrieval quality, reasoning quality, cognitive integrity,
+hypothesis quality, abstraction, disconfirmation, uncertainty calibration,
+unsupported-claim refusal, contradiction handling, provenance preservation,
+negative controls, adversarial consolidation blocking, and rollback integrity.
+
+TP1 remains noncanonical and reversible. It does not train model weights,
+fine-tune, update models, call providers, write canonical memory, mutate live
+knowledge, mutate memory, start schedulers/background workers, execute actions,
+promote HYB1, or change Model B defaults.

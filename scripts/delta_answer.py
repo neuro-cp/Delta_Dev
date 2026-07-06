@@ -38,6 +38,7 @@ from orchestration.runtime.ov4_readonly_activation_trial import is_ov4_question,
 from orchestration.runtime.ov5_integrated_readonly_cognitive_trial import is_ov5_question, answer_ov5_question
 from orchestration.runtime.ov6_ov10_operational_readiness import is_ov6_ov10_question, answer_ov6_ov10_question
 from orchestration.runtime.tp0_controlled_training_pilot import is_tp0_question, answer_tp0_question
+from orchestration.runtime.tp1_generalization_pilot import is_tp1_question, answer_tp1_question
 
 
 def main() -> int:
@@ -52,6 +53,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_tp1_question(query):
+        data = answer_tp1_question(query)
     elif is_tp0_question(query):
         data = answer_tp0_question(query)
     elif is_ov6_ov10_question(query):
@@ -123,6 +126,8 @@ def main() -> int:
     elif data.get("phase") == "OV6-OV10 Operational Readiness":
         print(data["answer_text"])
     elif data.get("phase") == "TP0 Controlled Noncanonical Training Pilot":
+        print(data["answer_text"])
+    elif data.get("phase") == "TP1 Expanded Noncanonical Generalization Pilot":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

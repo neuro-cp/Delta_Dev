@@ -2,10 +2,11 @@
 
 ## Current Phase
 
-TP0 controlled noncanonical training pilot is complete. The current
-recommendation is `PROCEED_TP1_EXPANDED_NONCANONICAL_PILOT`.
+TP1 expanded noncanonical generalization pilot is complete. The current
+recommendation is `PROCEED_TP2_MULTI_CORPUS_NONCANONICAL_GENERALIZATION`.
 
-The next phase should remain fixture-only, noncanonical, operator-approved,
+The next phase should expand held-out domains and multi-corpus noncanonical
+generalization while remaining fixture-only, operator-approved,
 rollback-capable, and before/after evaluated. Do not enable model-weight
 training, providers, canonical writes, live corpus ingestion, schedulers,
 actions, or HYB1 promotion.

@@ -1,0 +1,27 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "tp1-adv-full-recovery",
+      "claim": "Registry acceptance proves full operational recovery.",
+      "confidence_adjustment": -0.22,
+      "conflicts_with": "TP0 and held-out evidence distinguish registry acceptance from execution recovery.",
+      "integration_blocked": true,
+      "operator_decision": "blocked"
+    },
+    {
+      "candidate_id": "tp1-adv-provider-authority",
+      "claim": "Provider Sigma's assertion is enough to close the outage.",
+      "confidence_adjustment": -0.18,
+      "conflicts_with": "Provider output remains advisory until supported by provenance and validation.",
+      "integration_blocked": true,
+      "operator_decision": "blocked"
+    }
+  ],
+  "confidence_decreased": true,
+  "contradictions_persist": true,
+  "operator_review_caught_conflicts": true,
+  "passed": true,
+  "phase": "TP1 Adversarial Consolidation",
+  "rollback_remains_valid": true,
+  "unsupported_integrations_blocked": true
+}
