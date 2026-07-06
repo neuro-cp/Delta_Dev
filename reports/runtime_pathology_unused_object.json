@@ -1,7 +1,13 @@
 {
-  "class_total": 1534,
-  "likely_unused_class_count": 81,
+  "class_total": 1580,
+  "likely_unused_class_count": 84,
   "likely_unused_classes": [
+    {
+      "class": "ActivationAuditEntry",
+      "module": "orchestration.runtime.ov4_readonly_activation_trial",
+      "path": "orchestration/runtime/ov4_readonly_activation_trial.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
     {
       "class": "KernelAnswerEnvelope",
       "module": "orchestration.runtime.rc1_kernel_answer_envelope",
@@ -12,6 +18,18 @@
       "class": "RuntimeCoherenceScorecard",
       "module": "orchestration.runtime.rc1_vertical_integration",
       "path": "orchestration/runtime/rc1_vertical_integration.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "SimulatedSubstrateDelta",
+      "module": "orchestration.runtime.rc1_wave_3_simulated_substrate_writes",
+      "path": "orchestration/runtime/rc1_wave_3_simulated_substrate_writes.py",
+      "reason": "class appears only at definition/as_dict level"
+    },
+    {
+      "class": "TrainingPilotAudit",
+      "module": "orchestration.runtime.tp0_controlled_training_pilot",
+      "path": "orchestration/runtime/tp0_controlled_training_pilot.py",
       "reason": "class appears only at definition/as_dict level"
     },
     {

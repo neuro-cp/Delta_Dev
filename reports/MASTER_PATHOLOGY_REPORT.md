@@ -4,28 +4,28 @@
 DELTA RC1 Runtime Coherence Review
 
 ## Runtime Module Count
-620
+655
 
 ## Dependency Edge Count
-997
+1047
 
 ## Call Edge Count
-2400
+2540
 
 ## Architectural Debt Count
 25
 
 ## Duplicate System Count
-38
+44
 
 ## Dead System Count
 353
 
 ## Disconnected System Count
-32
+35
 
 ## Unused System Count
-81
+84
 
 ## Subsystem Scores
 ```json
@@ -66,7 +66,7 @@ DELTA RC1 Runtime Coherence Review
   "learning": {
     "architecture": 9.0,
     "auditability": 8.5,
-    "connectivity": 9.6,
+    "connectivity": 10,
     "extensibility": 8.0,
     "implementation": 7.0,
     "maintainability": 4.5,
@@ -86,11 +86,11 @@ DELTA RC1 Runtime Coherence Review
     "technical_debt": 7.5
   },
   "runtime": {
-    "architecture": 8.9,
+    "architecture": 9.0,
     "auditability": 8.5,
-    "connectivity": 8.4,
+    "connectivity": 9.6,
     "extensibility": 8.0,
-    "implementation": 6.9,
+    "implementation": 7.0,
     "maintainability": 4.5,
     "runtime_realism": 5,
     "safety": 9.5,
@@ -178,19 +178,19 @@ DELTA RC1 Runtime Coherence Review
 - Replace module-count progress metrics with vertical scenario scorecards
 - Add missing middleware: Reasoning -> Specialists
 - Large module requires role review: orchestration.runtime.arc_vii_xxv_scaffolds
-- Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle
-- Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner
+- Large module requires role review: orchestration.runtime.ov2_cognitive_quality
+- Large module requires role review: orchestration.runtime.ov6_ov10_operational_readiness
 - Large module requires role review: orchestration.runtime.runtime_evaluation
 - Large module requires role review: orchestration.runtime.runtime_reasoning
-- Large module requires role review: orchestration.runtime.v14_action_ledger
-- Large module requires role review: orchestration.runtime.v14_active_specialist_routing
+- Large module requires role review: orchestration.runtime.tp0_controlled_training_pilot
+- Large module requires role review: orchestration.runtime.tp3_independent_verification_freeze
+- Large module requires role review: orchestration.runtime.tp4_controlled_persistent_pilot_design
+- Large module requires role review: orchestration.runtime.tp5_noncanonical_persistent_pilot
 - Large module requires role review: orchestration.runtime.v14_artifact_comparison
 - Large module requires role review: orchestration.runtime.v14_controlled_learning
-- Large module requires role review: orchestration.runtime.v14_dry_run_action_execution
 - Large module requires role review: orchestration.runtime.v14_execution_authorization
 - Large module requires role review: orchestration.runtime.v14_hypothesis_arbitration
 - Large module requires role review: orchestration.runtime.v14_offline_evaluation
-- Large module requires role review: orchestration.runtime.v14_promotion_rollback
 - Large module requires role review: orchestration.runtime.v14_pruning_projection
 - Large module requires role review: orchestration.runtime.v14_recall_bridge
 - Large module requires role review: orchestration.runtime.v14_specialist_merge

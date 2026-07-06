@@ -1,6 +1,6 @@
 # TP3 Freeze Manifest
 
-- repo_commit: `61e90a5448189fc1274f719fbdec2052d13b3c64`
+- repo_commit: `53f989e1090ebca2d9e444f2acb57ad9e2fbbfd6`
 - branch: `codex/delta-cognitive-core`
 - runtime_phase: TP3 independent verification freeze
 

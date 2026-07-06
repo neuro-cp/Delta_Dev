@@ -1283,3 +1283,7 @@ TP15 performs no live integration. Model B remains unchanged, and the reasoning
 engine remains unchanged. Training, fine-tuning, weight updates, new shadow
 artifacts, providers, canonical writes, live knowledge mutation, schedulers,
 actions, HYB1 promotion, and Model B replacement remain disabled.
+
+### TP16 Architecture Note
+
+TP16 (Controlled Substrate Integration) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.

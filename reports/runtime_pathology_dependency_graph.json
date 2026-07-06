@@ -1,5 +1,5 @@
 {
-  "edge_count": 997,
+  "edge_count": 1047,
   "edges": [
     {
       "source": "orchestration.runtime.arc_07_investigation",
@@ -3537,6 +3537,76 @@
       "type": "imports"
     },
     {
+      "source": "orchestration.runtime.ov2_cognitive_quality",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov3_controlled_reasoning_vertical_slice",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov3_controlled_reasoning_vertical_slice",
+      "target": "orchestration.runtime.ov2_cognitive_quality",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov4_readonly_activation_trial",
+      "target": "orchestration.runtime.ov3_controlled_reasoning_vertical_slice",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov5_integrated_readonly_cognitive_trial",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov5_integrated_readonly_cognitive_trial",
+      "target": "orchestration.runtime.ov2_cognitive_quality",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov5_integrated_readonly_cognitive_trial",
+      "target": "orchestration.runtime.ov3_controlled_reasoning_vertical_slice",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov5_integrated_readonly_cognitive_trial",
+      "target": "orchestration.runtime.ov4_readonly_activation_trial",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov6_ov10_operational_readiness",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov6_ov10_operational_readiness",
+      "target": "orchestration.runtime.ov2_cognitive_quality",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov6_ov10_operational_readiness",
+      "target": "orchestration.runtime.ov5_integrated_readonly_cognitive_trial",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov_hyb1_shadow_comparison",
+      "target": "orchestration.runtime.ov3_controlled_reasoning_vertical_slice",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov_hyb1_shadow_comparison",
+      "target": "orchestration.runtime.ov4_readonly_activation_trial",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.ov_hyb1_shadow_comparison",
+      "target": "orchestration.runtime.runtime_reasoning",
+      "type": "imports"
+    },
+    {
       "source": "orchestration.runtime.rc1_adversarial_validation",
       "target": "orchestration.runtime.rc1_document_audit_slice",
       "type": "imports"
@@ -3594,6 +3664,26 @@
     {
       "source": "orchestration.runtime.rc1_document_audit_slice",
       "target": "orchestration.runtime.v36_unified_audit_graph",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_integrated_cognitive_runtime",
+      "target": "orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_integrated_cognitive_runtime",
+      "target": "orchestration.runtime.rc1_wave_3_simulated_substrate_writes",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_integrated_cognitive_runtime",
+      "target": "orchestration.runtime.rc1_wave_4_rollback_evaluation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_integrated_cognitive_runtime",
+      "target": "orchestration.runtime.rc1_wave_5_provider_evidence_simulated",
       "type": "imports"
     },
     {
@@ -3687,6 +3777,61 @@
       "type": "imports"
     },
     {
+      "source": "orchestration.runtime.rc1_wave_2_readonly_retrieval",
+      "target": "orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_3_simulated_substrate_writes",
+      "target": "orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_4_rollback_evaluation",
+      "target": "orchestration.runtime.rc1_wave_3_simulated_substrate_writes",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_0_manual_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_2_readonly_retrieval",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_3_simulated_substrate_writes",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_4_rollback_evaluation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_5_provider_evidence_simulated",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_6_live_corpus_pilot_plan",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_wave_chain_summary",
+      "target": "orchestration.runtime.rc1_wave_7_learning_consolidation_pilot_plan",
+      "type": "imports"
+    },
+    {
       "source": "orchestration.runtime.response_generation",
       "target": "orchestration.runtime.runtime_planning",
       "type": "imports"
@@ -3729,6 +3874,111 @@
     {
       "source": "orchestration.runtime.runtime_v1_pipeline",
       "target": "orchestration.runtime.runtime_reasoning",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp0_controlled_training_pilot",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp0_controlled_training_pilot",
+      "target": "orchestration.runtime.ov2_cognitive_quality",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp10_training_readiness_review",
+      "target": "orchestration.runtime.tp9_controlled_canonical_pilot_design",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp11_governed_base_corpus",
+      "target": "orchestration.runtime.tp10_training_readiness_review",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp12_disabled_shadow_training_dry_run",
+      "target": "orchestration.runtime.tp11_governed_base_corpus",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp13_research_shadow_training_protocol",
+      "target": "orchestration.runtime.tp11_governed_base_corpus",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp13_research_shadow_training_protocol",
+      "target": "orchestration.runtime.tp12_disabled_shadow_training_dry_run",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp14_substrate_first_improvement",
+      "target": "orchestration.runtime.tp13_research_shadow_training_protocol",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp15_governed_substrate_integration_design",
+      "target": "orchestration.runtime.tp14_substrate_first_improvement",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp1_generalization_pilot",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp1_generalization_pilot",
+      "target": "orchestration.runtime.ov2_cognitive_quality",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp1_generalization_pilot",
+      "target": "orchestration.runtime.tp0_controlled_training_pilot",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp2_scientific_validation",
+      "target": "orchestration.runtime.ov1_operational_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp2_scientific_validation",
+      "target": "orchestration.runtime.tp1_generalization_pilot",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp3_independent_verification_freeze",
+      "target": "orchestration.runtime.tp2_scientific_validation",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp6_controlled_operational_pilot",
+      "target": "orchestration.runtime.tp5_noncanonical_persistent_pilot",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp7_longitudinal_stability",
+      "target": "orchestration.runtime.tp5_noncanonical_persistent_pilot",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp7_longitudinal_stability",
+      "target": "orchestration.runtime.tp6_controlled_operational_pilot",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp8_canonical_promotion_policy",
+      "target": "orchestration.runtime.tp5_noncanonical_persistent_pilot",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp8_canonical_promotion_policy",
+      "target": "orchestration.runtime.tp7_longitudinal_stability",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.tp9_controlled_canonical_pilot_design",
+      "target": "orchestration.runtime.tp8_canonical_promotion_policy",
       "type": "imports"
     },
     {
@@ -4990,6 +5240,9 @@
   "isolated_modules": [
     "orchestration.runtime.cognitive_runtime",
     "orchestration.runtime.post_arc_xxv_exhaustive_runner",
+    "orchestration.runtime.rc1_activation_readiness",
+    "orchestration.runtime.tp16_tp30_master_marathon",
+    "orchestration.runtime.tp4_controlled_persistent_pilot_design",
     "orchestration.runtime.v14_architecture_decisions",
     "orchestration.runtime.v14_gap_map",
     "orchestration.runtime.v14_output_discipline",
@@ -5024,10 +5277,17 @@
   "leaf_modules": [
     "orchestration.runtime.candidate_knowledge_retrieval",
     "orchestration.runtime.e2e_semantic_consolidation_cycle",
+    "orchestration.runtime.ov1_operational_validation",
     "orchestration.runtime.post_arc_xxv_deepening_runner",
     "orchestration.runtime.post_arc_xxv_runtime_completion_runner",
     "orchestration.runtime.rc1_runtime_artifact_registry",
+    "orchestration.runtime.rc1_wave_0_manual_validation",
+    "orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion",
+    "orchestration.runtime.rc1_wave_5_provider_evidence_simulated",
+    "orchestration.runtime.rc1_wave_6_live_corpus_pilot_plan",
+    "orchestration.runtime.rc1_wave_7_learning_consolidation_pilot_plan",
     "orchestration.runtime.runtime_reasoning",
+    "orchestration.runtime.tp5_noncanonical_persistent_pilot",
     "orchestration.runtime.v14_action_ledger",
     "orchestration.runtime.v14_active_specialist_routing",
     "orchestration.runtime.v14_artifact_comparison",
@@ -5079,7 +5339,7 @@
     "orchestration.runtime.v32_cognitive_kernel",
     "orchestration.runtime.v34_cognitive_state"
   ],
-  "node_count": 620,
+  "node_count": 655,
   "root_modules": [
     "orchestration.runtime.arc_09_external_evidence",
     "orchestration.runtime.arc_10_tool_provider_runtime",
@@ -5434,8 +5694,14 @@
     "orchestration.runtime.deepening_d_project_summaries",
     "orchestration.runtime.deepening_d_resource_estimation",
     "orchestration.runtime.deepening_d_tasks",
+    "orchestration.runtime.ov6_ov10_operational_readiness",
+    "orchestration.runtime.ov_hyb1_shadow_comparison",
     "orchestration.runtime.rc1_adversarial_validation",
+    "orchestration.runtime.rc1_integrated_cognitive_runtime",
+    "orchestration.runtime.rc1_wave_chain_summary",
     "orchestration.runtime.runtime_evaluation",
+    "orchestration.runtime.tp15_governed_substrate_integration_design",
+    "orchestration.runtime.tp3_independent_verification_freeze",
     "orchestration.runtime.v14_action_ledger_report",
     "orchestration.runtime.v14_active_specialist_routing_report",
     "orchestration.runtime.v14_artifact_comparison_report",

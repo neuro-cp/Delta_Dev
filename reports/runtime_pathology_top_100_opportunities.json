@@ -123,12 +123,12 @@
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle"
+      "title": "Large module requires role review: orchestration.runtime.ov2_cognitive_quality"
     },
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner"
+      "title": "Large module requires role review: orchestration.runtime.ov6_ov10_operational_readiness"
     },
     {
       "category": "maintainability",
@@ -143,12 +143,22 @@
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_action_ledger"
+      "title": "Large module requires role review: orchestration.runtime.tp0_controlled_training_pilot"
     },
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_active_specialist_routing"
+      "title": "Large module requires role review: orchestration.runtime.tp3_independent_verification_freeze"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.tp4_controlled_persistent_pilot_design"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.tp5_noncanonical_persistent_pilot"
     },
     {
       "category": "maintainability",
@@ -159,11 +169,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_controlled_learning"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_dry_run_action_execution"
     },
     {
       "category": "maintainability",
@@ -179,11 +184,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_offline_evaluation"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_promotion_rollback"
     },
     {
       "category": "maintainability",

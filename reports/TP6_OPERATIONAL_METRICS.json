@@ -1,6 +1,6 @@
 {
   "approval_rate": 0.5,
-  "average_latency_ms": 2.591,
+  "average_latency_ms": 2.593,
   "contradiction_preservation": true,
   "deterministic_repeatability": true,
   "operator_workload_review_items": 4,

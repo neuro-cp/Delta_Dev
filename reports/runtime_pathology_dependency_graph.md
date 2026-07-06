@@ -1,10 +1,10 @@
 # Runtime Pathology Dependency Graph
 
 ## Node Count
-620
+655
 
 ## Edge Count
-997
+1047
 
 ## Edges
 - {'source': 'orchestration.runtime.arc_07_investigation', 'target': 'orchestration.runtime.arc_exhaustive_common', 'type': 'imports'}
@@ -111,6 +111,9 @@
 ## Isolated Modules
 - orchestration.runtime.cognitive_runtime
 - orchestration.runtime.post_arc_xxv_exhaustive_runner
+- orchestration.runtime.rc1_activation_readiness
+- orchestration.runtime.tp16_tp30_master_marathon
+- orchestration.runtime.tp4_controlled_persistent_pilot_design
 - orchestration.runtime.v14_architecture_decisions
 - orchestration.runtime.v14_gap_map
 - orchestration.runtime.v14_output_discipline
@@ -247,10 +250,17 @@
 ## Leaf Modules
 - orchestration.runtime.candidate_knowledge_retrieval
 - orchestration.runtime.e2e_semantic_consolidation_cycle
+- orchestration.runtime.ov1_operational_validation
 - orchestration.runtime.post_arc_xxv_deepening_runner
 - orchestration.runtime.post_arc_xxv_runtime_completion_runner
 - orchestration.runtime.rc1_runtime_artifact_registry
+- orchestration.runtime.rc1_wave_0_manual_validation
+- orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion
+- orchestration.runtime.rc1_wave_5_provider_evidence_simulated
+- orchestration.runtime.rc1_wave_6_live_corpus_pilot_plan
+- orchestration.runtime.rc1_wave_7_learning_consolidation_pilot_plan
 - orchestration.runtime.runtime_reasoning
+- orchestration.runtime.tp5_noncanonical_persistent_pilot
 - orchestration.runtime.v14_action_ledger
 - orchestration.runtime.v14_active_specialist_routing
 - orchestration.runtime.v14_artifact_comparison

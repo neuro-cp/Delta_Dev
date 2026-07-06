@@ -1,10 +1,10 @@
 {
   "architectural_debt_count": 25,
-  "call_edge_count": 2400,
+  "call_edge_count": 2540,
   "dead_system_count": 353,
-  "dependency_edge_count": 997,
-  "disconnected_system_count": 32,
-  "duplicate_system_count": 38,
+  "dependency_edge_count": 1047,
+  "disconnected_system_count": 35,
+  "duplicate_system_count": 44,
   "final_recommendation": "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
   "overall_runtime_maturity_estimate": {
     "activation_readiness": "adversarial_validation_passed_no_live_capabilities",
@@ -73,7 +73,7 @@
     "5. Real document adapter readiness review without live upload activation.",
     "6. Consolidate duplicated scaffold lifecycle helpers."
   ],
-  "runtime_module_count": 620,
+  "runtime_module_count": 655,
   "safety": {
     "autonomous_browsing_performed": false,
     "background_worker_started": false,
@@ -126,7 +126,7 @@
     "learning": {
       "architecture": 9.0,
       "auditability": 8.5,
-      "connectivity": 9.6,
+      "connectivity": 10,
       "extensibility": 8.0,
       "implementation": 7.0,
       "maintainability": 4.5,
@@ -146,11 +146,11 @@
       "technical_debt": 7.5
     },
     "runtime": {
-      "architecture": 8.9,
+      "architecture": 9.0,
       "auditability": 8.5,
-      "connectivity": 8.4,
+      "connectivity": 9.6,
       "extensibility": 8.0,
-      "implementation": 6.9,
+      "implementation": 7.0,
       "maintainability": 4.5,
       "runtime_realism": 5,
       "safety": 9.5,
@@ -281,12 +281,12 @@
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.e2e_semantic_consolidation_cycle"
+      "title": "Large module requires role review: orchestration.runtime.ov2_cognitive_quality"
     },
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.post_arc_xxv_runtime_completion_runner"
+      "title": "Large module requires role review: orchestration.runtime.ov6_ov10_operational_readiness"
     },
     {
       "category": "maintainability",
@@ -301,12 +301,22 @@
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_action_ledger"
+      "title": "Large module requires role review: orchestration.runtime.tp0_controlled_training_pilot"
     },
     {
       "category": "maintainability",
       "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_active_specialist_routing"
+      "title": "Large module requires role review: orchestration.runtime.tp3_independent_verification_freeze"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.tp4_controlled_persistent_pilot_design"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.tp5_noncanonical_persistent_pilot"
     },
     {
       "category": "maintainability",
@@ -317,11 +327,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_controlled_learning"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_dry_run_action_execution"
     },
     {
       "category": "maintainability",
@@ -337,11 +342,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_offline_evaluation"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_promotion_rollback"
     },
     {
       "category": "maintainability",
@@ -713,5 +713,5 @@
     "Technical debt will grow if another broad module marathon happens.",
     "The next risk is incoherence from abundance, not missing vocabulary."
   ],
-  "unused_system_count": 81
+  "unused_system_count": 84
 }

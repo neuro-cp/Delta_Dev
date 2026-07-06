@@ -1,7 +1,19 @@
 {
   "corpus_status": "constructed",
-  "excluded_count": 12,
+  "excluded_count": 18,
   "excluded_items": [
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-2c309e6739057d50"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-61f86e93c6a0e402"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-75b771b3d48bf601"
+    },
     {
       "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-9ab0d7a9294bfc63"
@@ -9,6 +21,10 @@
     {
       "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-9abc5c26994ebed8"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-9dc68122e1e22570"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -36,7 +52,15 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-d486b954b76e6f9a"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-d57f4065fed186ba"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-e32b488e32364151"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -57,8 +81,34 @@
     "tp3_independent"
   ],
   "included_count": 25,
-  "item_count": 37,
+  "item_count": 43,
   "items": [
+    {
+      "approval_state": "operator_approved_noncanonical_pilot",
+      "content_hash": "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
+      "contradictions": [
+        "contradiction_or_unresolved_evidence_present"
+      ],
+      "evidence": [
+        "operator-session://tp6/approved_recovery_note"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "noncanonical-07be8ac1048d8acb",
+      "license_status": "repo-local-governed-record",
+      "pii_risk": "none",
+      "provenance": [
+        "operator-session://tp6/approved_recovery_note"
+      ],
+      "review_history": [
+        "operator_approved_noncanonical_pilot"
+      ],
+      "source_family": "noncanonical_pilot",
+      "source_identity": "tp5-record-883740a35434b7fd",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_2\\records.jsonl",
+      "text": "Operator reviewed routing recovery; however Worker C execution remains unresolved",
+      "uncertainty": "explicit_uncertainty"
+    },
     {
       "approval_state": "operator_approved_noncanonical_pilot",
       "content_hash": "41e8b38bff5aec7666de64ca239cdaaea46600807a3d2bd43222c85af612e8b3",
@@ -98,7 +148,7 @@
       ],
       "exclusion_reason": "",
       "included": true,
-      "item_id": "noncanonical-61f86e93c6a0e402",
+      "item_id": "noncanonical-29ec80f9d6806c87",
       "license_status": "repo-local-governed-record",
       "pii_risk": "none",
       "provenance": [
@@ -111,32 +161,6 @@
       "source_identity": "tp5-record-c43c3dcb2dd534a6",
       "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl",
       "text": "Operator reviewed unresolved provenance and preserved uncertainty for replay",
-      "uncertainty": "explicit_uncertainty"
-    },
-    {
-      "approval_state": "operator_approved_noncanonical_pilot",
-      "content_hash": "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
-      "contradictions": [
-        "contradiction_or_unresolved_evidence_present"
-      ],
-      "evidence": [
-        "operator-session://tp6/approved_recovery_note"
-      ],
-      "exclusion_reason": "",
-      "included": true,
-      "item_id": "noncanonical-75b771b3d48bf601",
-      "license_status": "repo-local-governed-record",
-      "pii_risk": "none",
-      "provenance": [
-        "operator-session://tp6/approved_recovery_note"
-      ],
-      "review_history": [
-        "operator_approved_noncanonical_pilot"
-      ],
-      "source_family": "noncanonical_pilot",
-      "source_identity": "tp5-record-883740a35434b7fd",
-      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl",
-      "text": "Operator reviewed routing recovery; however Worker C execution remains unresolved",
       "uncertainty": "explicit_uncertainty"
     },
     {
@@ -715,9 +739,9 @@
       "ov1_allowlisted-bc124d93b4f09b50"
     ],
     "train": [
+      "noncanonical-07be8ac1048d8acb",
       "noncanonical-25a36e16fb2509c7",
-      "noncanonical-61f86e93c6a0e402",
-      "noncanonical-75b771b3d48bf601",
+      "noncanonical-29ec80f9d6806c87",
       "ov1_allowlisted-07d137fe366f14f8",
       "ov1_allowlisted-239b9eab29a7cb8a",
       "ov1_allowlisted-2e42571e8cd9238e",

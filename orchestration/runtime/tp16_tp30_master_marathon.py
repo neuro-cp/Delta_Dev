@@ -80,6 +80,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP14 substrate improvements", "TP15 integration design"),
         ("controlled integration gate map", "effect-size baseline", "rollback registration plan"),
         "PROCEED_TP17_OPERATIONAL_SUBSTRATE_PILOT",
+        "TP17 Operational Substrate Pilot",
     ),
     17: PhaseSpec(
         17,
@@ -93,6 +94,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP16 controlled gate map", "TP15 operator workflow"),
         ("operator workflow scorecard", "pilot behavior report", "rollback exercise"),
         "PROCEED_TP18_CORPUS_EXPANSION",
+        "TP18 Corpus Expansion",
     ),
     18: PhaseSpec(
         18,
@@ -107,6 +109,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP11 base corpus governance", "TP17 pilot behavior"),
         ("corpus expansion manifest design", "contamination gate plan", "held-out isolation review"),
         "PROCEED_TP19_INDEPENDENT_EXTERNAL_EVALUATION",
+        "TP19 Independent External Evaluation",
     ),
     19: PhaseSpec(
         19,
@@ -121,6 +124,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP3 independent verification", "TP18 corpus expansion design"),
         ("external evaluation scorecard", "adversarial evaluation review", "longitudinal comparison"),
         "PROCEED_TP20_TRAINING_NECESSITY_REASSESSMENT",
+        "TP20 Training Necessity Reassessment",
     ),
     20: PhaseSpec(
         20,
@@ -150,6 +154,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP20 substrate-first decision", "architecture cognitive cycle"),
         ("cycle integration map", "stage ownership matrix", "cycle safety review"),
         "PROCEED_TP22_REPLAY_OPTIMIZATION",
+        "TP22 Replay Optimization",
     ),
     22: PhaseSpec(
         22,
@@ -163,6 +168,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP21 cycle map", "TP15 replay prioritization lane"),
         ("replay optimization design", "priority marker audit", "retrieval effect-size review"),
         "PROCEED_TP23_KNOWLEDGE_QUALITY_OPTIMIZATION",
+        "TP23 Knowledge Quality Optimization",
     ),
     23: PhaseSpec(
         23,
@@ -177,6 +183,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP14 proposition and uncertainty findings", "TP22 replay optimization"),
         ("knowledge quality scorecard", "contradiction preservation review", "provenance quality review"),
         "PROCEED_TP24_RUNTIME_OPTIMIZATION",
+        "TP24 Runtime Optimization",
     ),
     24: PhaseSpec(
         24,
@@ -190,6 +197,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP23 knowledge quality scorecard", "runtime pathology reports"),
         ("runtime optimization plan", "latency scorecard", "authority preservation review"),
         "PROCEED_TP25_OPERATOR_EXPERIENCE",
+        "TP25 Operator Experience",
     ),
     25: PhaseSpec(
         25,
@@ -203,6 +211,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP17 operator workflow", "TP24 runtime optimization plan"),
         ("operator UX review", "audit visualization map", "rollback UX checklist"),
         "PROCEED_TP26_LARGE_SCALE_VALIDATION",
+        "TP26 Large Scale Validation",
     ),
     26: PhaseSpec(
         26,
@@ -216,6 +225,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP18 corpus expansion", "TP25 operator UX"),
         ("large-scale validation design", "stability threshold table", "stress-stop conditions"),
         "PROCEED_TP27_INDEPENDENT_REPLICATION",
+        "TP27 Independent Replication",
     ),
     27: PhaseSpec(
         27,
@@ -229,6 +239,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP19 independent evaluation", "TP26 large scale validation"),
         ("replication protocol", "reproducibility scorecard", "effect-size comparison"),
         "PROCEED_TP28_PRODUCTION_READINESS_REVIEW",
+        "TP28 Production Readiness Review",
     ),
     28: PhaseSpec(
         28,
@@ -242,6 +253,7 @@ PHASES: dict[int, PhaseSpec] = {
         ("TP27 replication scorecard", "architecture invariants"),
         ("production readiness review", "monitoring gap map", "backup and disaster recovery checklist"),
         "PROCEED_TP29_ACTIVATION_READINESS",
+        "TP29 Activation Readiness",
     ),
     29: PhaseSpec(
         29,
@@ -307,7 +319,7 @@ def phase_metrics(spec: PhaseSpec) -> dict[str, float]:
         "hyb1_dormant": 1.0,
     }
     if spec.phase == 20:
-        base["training_necessity_supported"] = 0.0
+        base["training_not_justified_by_evidence"] = 1.0
         base["substrate_first_supported"] = 1.0
     if spec.phase in {29, 30}:
         base["activation_requires_operator_decision"] = 1.0

@@ -1701,3 +1701,12 @@ artifacts are enabled.
 Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
+
+### TP16 Controlled Substrate Integration
+
+Completed TP16: Integrate TP14 substrate improvements through TP15 gates in a controlled, reversible, noncanonical envelope.
+
+Final recommendation: `PROCEED_TP17_OPERATIONAL_SUBSTRATE_PILOT`.
+
+Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
+

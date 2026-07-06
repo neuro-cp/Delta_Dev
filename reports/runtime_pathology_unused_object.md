@@ -1,14 +1,17 @@
 # Runtime Pathology Unused Object
 
 ## Class Total
-1534
+1580
 
 ## Likely Unused Class Count
-81
+84
 
 ## Likely Unused Classes
+- orchestration.runtime.ov4_readonly_activation_trial
 - orchestration.runtime.rc1_kernel_answer_envelope
 - orchestration.runtime.rc1_vertical_integration
+- orchestration.runtime.rc1_wave_3_simulated_substrate_writes
+- orchestration.runtime.tp0_controlled_training_pilot
 - orchestration.runtime.v15_canonical_memory_write_trial
 - orchestration.runtime.v15_canonical_memory_write_trial
 - orchestration.runtime.v15_canonical_memory_write_trial

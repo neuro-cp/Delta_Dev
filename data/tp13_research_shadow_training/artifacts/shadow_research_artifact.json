@@ -1,14 +1,14 @@
 {
-  "artifact_id": "tp13-shadow-34cda329ca9e88eb",
+  "artifact_id": "tp13-shadow-8644f628a51b91d7",
   "artifact_type": "research_only_shadow_artifact",
   "canonical_writes": false,
   "created_by_phase": "TP13",
   "deterministic_seed": 13013,
   "learned_surface": {
     "proposition_hashes": [
+      "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
       "41e8b38bff5aec7666de64ca239cdaaea46600807a3d2bd43222c85af612e8b3",
       "c2a81321734f94f7ef84e01b707a3430a5cf1952de627259c519c498b47e63e0",
-      "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
       "3211493888f39d66cc0e4536f3098b0734c979f7063ed5740e1a27c448c88254",
       "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31",
       "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
@@ -56,11 +56,11 @@
         4
       ],
       [
-        "after",
+        "remains",
         4
       ],
       [
-        "remains",
+        "after",
         4
       ],
       [
@@ -88,7 +88,7 @@
         3
       ],
       [
-        "restored",
+        "recovery",
         3
       ],
       [
@@ -96,7 +96,7 @@
         3
       ],
       [
-        "recovery",
+        "restored",
         3
       ],
       [
@@ -115,7 +115,7 @@
   "not_default": true,
   "provider_calls": false,
   "removable": true,
-  "source_manifest_hash": "cb0b9d5e835e5040c0fd3f533b6de9b428b3e2344408f5340e1ac6cadf1702a9",
+  "source_manifest_hash": "444318cf5209a6d24126e9947570df25e23d02f862c592f7633bcd61662a27b0",
   "train_item_count": 19,
   "training_scope": "single deterministic research run over TP11 train split"
 }
