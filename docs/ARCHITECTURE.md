@@ -1335,3 +1335,7 @@ TP27 (Independent Replication) preserves the substrate-first architecture. It ad
 ### TP28 Architecture Note
 
 TP28 (Production Readiness Review) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
+
+### TP29 Architecture Note
+
+TP29 (Activation Readiness) preserves the substrate-first architecture. It adds evidence and governance around `readiness_decision_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
