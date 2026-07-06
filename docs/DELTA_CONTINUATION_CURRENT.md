@@ -964,3 +964,11 @@ Final recommendation: `PROCEED_TP17_OPERATIONAL_SUBSTRATE_PILOT`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+### TP17 Operational Substrate Pilot
+
+Completed TP17: Exercise the controlled substrate integration envelope through operator-reviewed workflows.
+
+Final recommendation: `PROCEED_TP18_CORPUS_EXPANSION`.
+
+Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
+

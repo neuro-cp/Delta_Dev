@@ -18,7 +18,7 @@
   "model_b_overall": 0.927,
   "model_b_replaced": false,
   "phase": "TP13 Baseline Comparison",
-  "shadow_artifact_id": "tp13-shadow-8644f628a51b91d7",
+  "shadow_artifact_id": "tp13-shadow-c831bc14b9c70d67",
   "shadow_metrics": {
     "benchmark_performance": 0.88,
     "contradiction_handling": 0.92,

@@ -11,4 +11,4 @@
 - review_process: `deterministic static review for provenance, approval, PII, duplicates, contamination, uncertainty, and contradictions`
 - governance_model: `noncanonical, reproducible, audit-first, rollback-oriented, no neural weight mutation`
 - update_policy: `future updates require manifest versioning, hash changes, and repeated contamination review`
-- corpus_hash: `444318cf5209a6d24126e9947570df25e23d02f862c592f7633bcd61662a27b0`
+- corpus_hash: `c59eac4647bb320fdb9a6aeea3183da1c9ca1e2ee3806ba90fcf43307be53b64`

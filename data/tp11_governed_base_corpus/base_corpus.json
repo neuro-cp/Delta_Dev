@@ -1,10 +1,18 @@
 {
   "corpus_status": "constructed",
-  "excluded_count": 18,
+  "excluded_count": 24,
   "excluded_items": [
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-29ec80f9d6806c87"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-2c309e6739057d50"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-42628e8888d794fd"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -36,6 +44,10 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-b503b50882146c53"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-b949191969fd9849"
     },
     {
@@ -48,7 +60,19 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-bb72f1f0d96e6ca3"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-bbb8bd87d8d8829c"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-cc99eeaad955c51d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-d40653739b3db18b"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -81,8 +105,34 @@
     "tp3_independent"
   ],
   "included_count": 25,
-  "item_count": 43,
+  "item_count": 49,
   "items": [
+    {
+      "approval_state": "operator_approved_noncanonical_pilot",
+      "content_hash": "c2a81321734f94f7ef84e01b707a3430a5cf1952de627259c519c498b47e63e0",
+      "contradictions": [
+        "contradiction_or_unresolved_evidence_present"
+      ],
+      "evidence": [
+        "operator-session://tp6/approved_uncertain_note"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "noncanonical-02290a7dab06cad7",
+      "license_status": "repo-local-governed-record",
+      "pii_risk": "none",
+      "provenance": [
+        "operator-session://tp6/approved_uncertain_note"
+      ],
+      "review_history": [
+        "operator_approved_noncanonical_pilot"
+      ],
+      "source_family": "noncanonical_pilot",
+      "source_identity": "tp5-record-c43c3dcb2dd534a6",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_1\\records.jsonl",
+      "text": "Operator reviewed unresolved provenance and preserved uncertainty for replay",
+      "uncertainty": "explicit_uncertainty"
+    },
     {
       "approval_state": "operator_approved_noncanonical_pilot",
       "content_hash": "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
@@ -135,32 +185,6 @@
       "source_identity": "tp5-record-336ffc7432bdbe72",
       "source_path": "data\\tp5_noncanonical_pilot_store\\records.jsonl",
       "text": "Operator reviewed a Project Atlas note: routing recovered after Registry B checksums were restored; however Worker C execution remains unresolved and must not be claimed as operational recovery",
-      "uncertainty": "explicit_uncertainty"
-    },
-    {
-      "approval_state": "operator_approved_noncanonical_pilot",
-      "content_hash": "c2a81321734f94f7ef84e01b707a3430a5cf1952de627259c519c498b47e63e0",
-      "contradictions": [
-        "contradiction_or_unresolved_evidence_present"
-      ],
-      "evidence": [
-        "operator-session://tp6/approved_uncertain_note"
-      ],
-      "exclusion_reason": "",
-      "included": true,
-      "item_id": "noncanonical-29ec80f9d6806c87",
-      "license_status": "repo-local-governed-record",
-      "pii_risk": "none",
-      "provenance": [
-        "operator-session://tp6/approved_uncertain_note"
-      ],
-      "review_history": [
-        "operator_approved_noncanonical_pilot"
-      ],
-      "source_family": "noncanonical_pilot",
-      "source_identity": "tp5-record-c43c3dcb2dd534a6",
-      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl",
-      "text": "Operator reviewed unresolved provenance and preserved uncertainty for replay",
       "uncertainty": "explicit_uncertainty"
     },
     {
@@ -739,9 +763,9 @@
       "ov1_allowlisted-bc124d93b4f09b50"
     ],
     "train": [
+      "noncanonical-02290a7dab06cad7",
       "noncanonical-07be8ac1048d8acb",
       "noncanonical-25a36e16fb2509c7",
-      "noncanonical-29ec80f9d6806c87",
       "ov1_allowlisted-07d137fe366f14f8",
       "ov1_allowlisted-239b9eab29a7cb8a",
       "ov1_allowlisted-2e42571e8cd9238e",
