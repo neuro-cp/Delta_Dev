@@ -6,6 +6,46 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP5 Controlled Noncanonical Persistent Pilot Implementation
+
+Completed TP5 as the first controlled persistence implementation. TP5
+implements a governed noncanonical pilot store with exact operator approval,
+provenance preservation, audit logging, rollback registration, read-only
+replay, governance validation, and operator workflow reporting.
+
+Generated artifacts:
+
+- `orchestration/runtime/tp5_noncanonical_persistent_pilot.py`
+- `scripts/delta_tp5_persistent_pilot.py`
+- `tests/runtime_tp5/test_tp5_noncanonical_persistent_pilot.py`
+- `data/tp5_noncanonical_pilot_store/`
+- `reports/TP5_IMPLEMENTATION.md/json`
+- `reports/TP5_PERSISTENT_STORE.md/json`
+- `reports/TP5_GOVERNANCE_VALIDATION.md/json`
+- `reports/TP5_ROLLBACK_VALIDATION.md/json`
+- `reports/TP5_OPERATOR_WORKFLOW.md/json`
+- `reports/TP5_READINESS_REVIEW.md/json`
+- `ui/delta_tp5_dashboard.html`
+- `docs/continuation_tp5.md`
+
+Implemented capability:
+
+`operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions`
+
+TP5 remains noncanonical and non-authoritative. It persists only exact
+operator-approved pilot records into an isolated pilot store and creates audit
+and rollback records for each write.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+model-weight training, no fine-tuning, no model update, no provider calls, no
+canonical writes, no canonical memory, no live knowledge mutation outside the
+isolated pilot store, no schedulers/background workers, no action execution,
+and no hidden writes.
+
+Final recommendation:
+
+`PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION`
+
 ### TP4 Controlled Persistent Pilot Design Review
 
 Completed TP4 as a controlled persistent pilot design review. TP4 did not

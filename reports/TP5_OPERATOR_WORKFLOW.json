@@ -1,0 +1,48 @@
+{
+  "approval_valid": true,
+  "automatic_persistence": false,
+  "background_persistence": false,
+  "candidate": {
+    "candidate_id": "tp5-candidate-32e9ffb768a592d9",
+    "canonical": false,
+    "claim": "Operator reviewed a Project Atlas note: routing recovered after Registry B checksums were restored; however Worker C execution remains unresolved and must not be claimed as operational recovery",
+    "confidence": 0.72,
+    "contradictions": [
+      "contradiction_or_unresolved_evidence_present"
+    ],
+    "created_at": "2026-07-06T00:00:00+00:00",
+    "rejection_history": [],
+    "session_id": "tp5-session-03f45659943e297b",
+    "source_checksum": "9b6b390614d6a8736f029104ffdfe9b70f8b9ebecff803365dc79c03741ef21a",
+    "source_references": [
+      "operator-session://tp5-demo-project-atlas",
+      "report://TP4_RECOMMENDATION"
+    ],
+    "supporting_evidence": [
+      "operator-session://tp5-demo-project-atlas",
+      "report://TP4_RECOMMENDATION"
+    ],
+    "uncertainty": "explicit_uncertainty"
+  },
+  "hidden_persistence": false,
+  "phase": "TP5 Operator Workflow",
+  "session": {
+    "checksum": "9b6b390614d6a8736f029104ffdfe9b70f8b9ebecff803365dc79c03741ef21a",
+    "operator_id": "operator-demo",
+    "session_id": "tp5-session-03f45659943e297b",
+    "source_references": [
+      "operator-session://tp5-demo-project-atlas",
+      "report://TP4_RECOMMENDATION"
+    ],
+    "text": "Operator reviewed a Project Atlas note: routing recovered after Registry B checksums were restored; however Worker C execution remains unresolved and must not be claimed as operational recovery.",
+    "timestamp": "2026-07-06T00:00:00+00:00"
+  },
+  "workflow": [
+    "experience",
+    "candidate",
+    "review",
+    "exact approval",
+    "noncanonical persistence",
+    "replay eligibility"
+  ]
+}

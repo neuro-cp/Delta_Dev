@@ -1,0 +1,63 @@
+{
+  "append_only_history": true,
+  "audit": {
+    "approval_id": "tp5-approval-1492bd10db59810e",
+    "candidate_id": "tp5-candidate-32e9ffb768a592d9",
+    "details": {
+      "authoritative": false,
+      "canonical": false,
+      "provenance_complete": true,
+      "rollback_registered": true
+    },
+    "event_id": "tp5-audit-0d690826f65dc918",
+    "event_type": "noncanonical_pilot_persisted",
+    "operator_id": "operator-demo",
+    "record_id": "tp5-record-336ffc7432bdbe72",
+    "timestamp": "2026-07-06T00:00:00+00:00"
+  },
+  "isolated": true,
+  "noncanonical": true,
+  "operator_owned": true,
+  "persisted": true,
+  "phase": "TP5 Persistent Store",
+  "record": {
+    "approval_id": "tp5-approval-1492bd10db59810e",
+    "authoritative": false,
+    "candidate_id": "tp5-candidate-32e9ffb768a592d9",
+    "canonical": false,
+    "claim": "Operator reviewed a Project Atlas note: routing recovered after Registry B checksums were restored; however Worker C execution remains unresolved and must not be claimed as operational recovery",
+    "confidence": 0.72,
+    "contradictions": [
+      "contradiction_or_unresolved_evidence_present"
+    ],
+    "created_at": "2026-07-06T00:00:00+00:00",
+    "operator_id": "operator-demo",
+    "record_id": "tp5-record-336ffc7432bdbe72",
+    "rejection_history": [],
+    "review_decision": "operator_approved_noncanonical_pilot",
+    "rollback_token": "tp5-rollback-9a4537799beb74f1",
+    "session_id": "tp5-session-03f45659943e297b",
+    "source_checksum": "9b6b390614d6a8736f029104ffdfe9b70f8b9ebecff803365dc79c03741ef21a",
+    "source_references": [
+      "operator-session://tp5-demo-project-atlas",
+      "report://TP4_RECOMMENDATION"
+    ],
+    "supporting_evidence": [
+      "operator-session://tp5-demo-project-atlas",
+      "report://TP4_RECOMMENDATION"
+    ],
+    "uncertainty": "explicit_uncertainty",
+    "version": 1
+  },
+  "rollback": {
+    "candidate_id": "tp5-candidate-32e9ffb768a592d9",
+    "deterministic": true,
+    "post_write_manifest": "3099b91fc78fa400c1e399418aab95a29edc18646ffd868ff81a0e51e03b1bc5",
+    "pre_write_manifest": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "record_id": "tp5-record-336ffc7432bdbe72",
+    "rollback_strategy": "manual_tombstone_or_workspace_delete",
+    "rollback_token": "tp5-rollback-9a4537799beb74f1"
+  },
+  "store": "G:/Delta_Dev/data/tp5_noncanonical_pilot_store",
+  "version_aware": true
+}

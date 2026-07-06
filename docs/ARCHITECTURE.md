@@ -1133,3 +1133,32 @@ TP4 does not train model weights, fine-tune, update models, call providers,
 write canonical memory, mutate live knowledge, mutate memory, start
 schedulers/background workers, execute actions, promote HYB1, change Model B
 defaults, or enable persistent learning.
+
+## TP5 Controlled Noncanonical Persistent Pilot
+
+TP5 implements the first governed persistent capability: operator-reviewed
+noncanonical semantic consolidation into an isolated pilot store.
+
+The TP5 path is:
+
+```text
+operator session
+-> candidate semantic record
+-> review
+-> exact operator approval
+-> noncanonical pilot-store persistence
+-> audit event
+-> rollback token
+-> read-only replay eligibility
+```
+
+TP5 records are explicitly noncanonical and non-authoritative. They preserve
+source references, timestamps, operator identity, review decision, confidence,
+uncertainty, contradictions, supporting evidence, rejection history, and
+rollback lineage. Replay over the pilot store is read-only and may not mutate
+stored knowledge.
+
+TP5 does not train model weights, fine-tune, update models, call providers,
+write canonical memory, enable canonical memory, mutate live knowledge outside
+the isolated pilot store, start schedulers/background workers, execute actions,
+promote HYB1, or change Model B defaults.

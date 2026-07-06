@@ -1,0 +1,13 @@
+{
+  "all_records_have_rollback": true,
+  "deletion_requires_governance": true,
+  "deterministic": true,
+  "diff_available": true,
+  "historical_reconstruction_available": true,
+  "passed": true,
+  "phase": "TP5 Rollback Validation",
+  "record_count": 1,
+  "rollback_strategy": "manual_tombstone_or_workspace_delete",
+  "rollback_token_count": 1,
+  "version_inspection_available": true
+}

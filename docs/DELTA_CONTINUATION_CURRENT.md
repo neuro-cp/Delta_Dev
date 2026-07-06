@@ -531,6 +531,57 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP5 controlled noncanonical persistent pilot implementation is complete.
+
+New TP5 surface:
+
+- `orchestration/runtime/tp5_noncanonical_persistent_pilot.py`
+- `scripts/delta_tp5_persistent_pilot.py`
+- `data/tp5_noncanonical_pilot_store/`
+- `reports/TP5_IMPLEMENTATION.md/json`
+- `reports/TP5_PERSISTENT_STORE.md/json`
+- `reports/TP5_GOVERNANCE_VALIDATION.md/json`
+- `reports/TP5_ROLLBACK_VALIDATION.md/json`
+- `reports/TP5_OPERATOR_WORKFLOW.md/json`
+- `reports/TP5_READINESS_REVIEW.md/json`
+- `ui/delta_tp5_dashboard.html`
+- `docs/continuation_tp5.md`
+
+TP5 implements the first controlled persistence path:
+
+```text
+operator session
+-> candidate
+-> review
+-> exact approval
+-> noncanonical pilot-store persistence
+-> audit event
+-> rollback token
+-> read-only replay eligibility
+```
+
+Implemented capability:
+
+`operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions`
+
+Current TP5 result:
+
+- persistent store status: `implemented_noncanonical_isolated`
+- operator workflow status: `exact_approval_required`
+- provenance validation: passed
+- rollback validation: passed
+- replay integration: read-only evaluation only
+- final recommendation: `PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION`
+
+Safety state remains unchanged: no model-weight training, no fine-tuning, no
+model update, no provider calls, no canonical writes, no canonical memory, no
+live knowledge mutation outside the isolated pilot store, no schedulers or
+background workers, no action execution, no HYB1 promotion, and Model B remains
+default.
+
+Current next recommendation:
+PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION
+
 TP4 controlled persistent pilot design review is complete.
 
 New TP4 surface:

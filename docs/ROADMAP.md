@@ -2,16 +2,15 @@
 
 ## Current Phase
 
-TP4 controlled persistent pilot design review is complete. The current
-recommendation is
-`READY_FOR_CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION`.
+TP5 controlled noncanonical persistent pilot implementation is complete. The
+current recommendation is `PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION`.
 
-The next phase may implement the smallest controlled noncanonical persistent
-pilot, but only inside an isolated pilot store with exact operator approval,
-full provenance, audit records, rollback tokens, and no canonical writes. Do
-not enable model-weight training, providers, canonical writes, live corpus
-ingestion, schedulers, actions, or HYB1 promotion without a separate explicit
-approval milestone.
+The next phase should validate operation under controlled workloads rather than
+add broad architecture. Use real-but-controlled operator sessions against the
+noncanonical pilot store, measure stability, rollback, provenance,
+disagreement, false positives/negatives, and operator burden. Do not enable
+model-weight training, providers, canonical writes, schedulers, actions, or
+HYB1 promotion without a separate explicit approval milestone.
 
 ## TP3 Independent Verification Freeze
 
@@ -61,6 +60,34 @@ separate TP5 implementation pass.
 Recommended next roadmap item:
 
 `CONTROLLED_NONCANONICAL_PERSISTENT_PILOT_IMPLEMENTATION`
+
+## TP5 Controlled Noncanonical Persistent Pilot
+
+Completed:
+
+- isolated noncanonical pilot store
+- exact operator approval parser
+- candidate-to-review-to-persistence workflow
+- immutable provenance fields
+- append-only record/audit/rollback JSONL files
+- rollback validation
+- read-only replay integration
+- governance validation
+- operator workflow report
+- local TP5 answer route
+
+Implemented capability:
+
+`operator_reviewed_noncanonical_semantic_consolidation_from_real_operator_sessions`
+
+Key boundary:
+
+TP5 implements controlled noncanonical persistence. It does not make the
+records canonical, authoritative, autonomous, or trained into model weights.
+
+Recommended next roadmap item:
+
+`PROCEED_PHASE_10_CONTROLLED_OPERATIONAL_VALIDATION`
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
