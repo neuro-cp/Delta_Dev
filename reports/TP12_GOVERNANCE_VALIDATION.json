@@ -1,0 +1,22 @@
+{
+  "checks": {
+    "audit_registration": true,
+    "invariant_enforcement": true,
+    "no_bypass": true,
+    "operator_or_fixture_approval": true,
+    "provenance_validated": true,
+    "rollback_registration": true,
+    "safety_gates": true
+  },
+  "evaluation_hooks": [
+    "held_out_benchmark_registration",
+    "baseline_comparison_registration",
+    "regression_hooks",
+    "refusal_hooks",
+    "provenance_evaluation",
+    "confidence_calibration",
+    "safety_regression_registration"
+  ],
+  "passed": true,
+  "phase": "TP12 Governance Validation"
+}

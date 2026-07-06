@@ -4915,3 +4915,29 @@ promotion, or Model B replacement.
 
 Current next recommendation:
 READY_FOR_SHADOW_TRAINING_DRY_RUN
+
+## TP12 Disabled Shadow Training Dry-Run Validation
+
+TP12 disabled shadow training dry-run validation is complete.
+
+New TP12 surface:
+
+- `orchestration/runtime/tp12_disabled_shadow_training_dry_run.py`
+- `scripts/delta_tp12_disabled_shadow_training_dry_run.py`
+- `tests/runtime_tp12/test_tp12_disabled_shadow_training_dry_run.py`
+- `reports/TP12_DRY_RUN_VALIDATION.md/json`
+- `reports/TP12_DATASET_INTEGRITY.md/json`
+- `reports/TP12_GOVERNANCE_VALIDATION.md/json`
+- `reports/TP12_ARTIFACT_PREVENTION.md/json`
+- `reports/TP12_ABORT_VALIDATION.md/json`
+- `reports/TP12_PIPELINE_FALSIFICATION.md/json`
+- `reports/TP12_READINESS_REVIEW.md/json`
+- `docs/continuation_tp12.md`
+
+TP12 validates the dry-run pipeline only. It performs no training,
+optimization, fine-tuning, weight updates, checkpoints, adapters, LoRA,
+optimizer state creation, gradient generation, model artifacts, provider calls,
+canonical writes, schedulers, actions, HYB1 promotion, or Model B replacement.
+
+Current next recommendation:
+READY_FOR_RESEARCH_ONLY_SHADOW_TRAINING

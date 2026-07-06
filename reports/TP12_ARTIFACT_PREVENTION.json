@@ -1,0 +1,56 @@
+{
+  "all_blocked": true,
+  "artifact_created": false,
+  "attempts": [
+    {
+      "attempt": "checkpoint",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "adapter",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "lora",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "optimizer_state",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "gradient_file",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "model_snapshot",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "exported_weights",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    },
+    {
+      "attempt": "deployment_bundle",
+      "created": false,
+      "decision": "blocked",
+      "reason": "TP12 dry-run artifact guard"
+    }
+  ],
+  "passed": true,
+  "phase": "TP12 Artifact Prevention"
+}

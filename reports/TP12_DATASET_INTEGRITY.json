@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "all_manifest_items_present": true,
+    "content_hashes_match": true,
+    "held_out_isolated": true,
+    "manifest_hash_matches": true,
+    "shadow_config_disabled": true,
+    "split_integrity": true
+  },
+  "hash_mismatches": [],
+  "item_count": 25,
+  "passed": true,
+  "phase": "TP12 Dataset Integrity",
+  "split_overlap": []
+}

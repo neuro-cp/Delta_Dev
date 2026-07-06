@@ -1,0 +1,47 @@
+{
+  "all_aborted": true,
+  "cases": [
+    {
+      "aborted": true,
+      "case": "manifest_mismatch",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "corpus_mismatch",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "split_mismatch",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "governance_failure",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "missing_approval",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "contamination_detection",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "artifact_request",
+      "repository_mutated": false
+    },
+    {
+      "aborted": true,
+      "case": "optimization_request",
+      "repository_mutated": false
+    }
+  ],
+  "passed": true,
+  "phase": "TP12 Abort Validation"
+}

@@ -1,0 +1,6 @@
+# TP12 Pipeline Falsification
+
+- phase: `TP12 Pipeline Falsification`
+- attempts: `[{'attempt': 'direct_optimizer_invocation', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'hidden_checkpoint_path', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'disabled_manifest', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'altered_hashes', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'evaluation_shortcut', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'artifact_export_request', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'provider_injection', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}, {'attempt': 'canonical_write_attempt', 'decision': 'blocked', 'reason': 'dry-run guard rejected request'}]`
+- all_blocked: `True`
+- passed: `True`

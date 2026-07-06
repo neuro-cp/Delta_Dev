@@ -970,6 +970,15 @@ Current recommendation:
 
 `READY_FOR_SHADOW_TRAINING_DRY_RUN`
 
+## TP12 Disabled Shadow Training Dry-Run Validation
+
+TP12 is complete. It validates the disabled shadow-training pipeline end to end
+without reaching optimization or creating any model artifact.
+
+Current recommendation:
+
+`READY_FOR_RESEARCH_ONLY_SHADOW_TRAINING`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

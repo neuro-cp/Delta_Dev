@@ -1233,3 +1233,17 @@ and disabled shadow-training configuration. It performs no training,
 fine-tuning, weight updates, model artifact creation, checkpoints, LoRA,
 adapters, provider calls, canonical writes, scheduler activation, action
 execution, HYB1 promotion, or Model B replacement.
+
+## TP12 Disabled Shadow Training Dry-Run Validation
+
+TP12 performs a full ground rehearsal of the future shadow-training pipeline
+without training. It validates manifest loading, corpus verification, split
+verification, governance checks, evaluation hook registration, audit and
+rollback registration, abort paths, artifact prevention, and pipeline
+falsification.
+
+TP12 terminates before optimization. It performs no training, fine-tuning,
+weight updates, checkpoints, adapters, LoRA creation, optimizer state creation,
+gradient generation, model snapshots, exported weights, deployment bundles,
+provider calls, canonical writes, scheduler activation, action execution, HYB1
+promotion, or Model B replacement.
