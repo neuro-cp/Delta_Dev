@@ -495,3 +495,38 @@ Current OV4 metrics:
 
 Current next recommendation:
 PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL
+
+OV5 integrated read-only cognitive runtime trial is complete.
+
+New OV5 surface:
+
+- `orchestration/runtime/ov5_integrated_readonly_cognitive_trial.py`
+- `scripts/delta_ov5_integrated_trial.py`
+- `reports/OV5_INTEGRATED_READONLY_COGNITIVE_TRIAL.md/json`
+- `reports/OV5_COGNITIVE_INTEGRITY_SCORE.md/json`
+- `reports/OV5_ACTIVATION_AUDIT.md/json`
+- `reports/OV5_READINESS.md/json`
+- `ui/delta_ov5_dashboard.html`
+- `docs/continuation_ov5.md`
+
+OV5 validates the integrated read-only path:
+
+fixture corpus -> semantic records -> propositions -> deduplication -> graph
+traversal -> hypothesis generation -> disconfirmation -> higher-order
+synthesis -> grounded answer -> read-only evaluation/regression loop ->
+activation audit -> operator recommendation.
+
+Current OV5 metrics:
+
+- cognitive integrity score: `1.0`
+- readiness score: `0.962`
+- read-only trial outcome: `passed`
+- active trial capability: `evaluation/regression loop`
+- next activation candidate: `read-only substrate retrieval and grounded answer synthesis expansion`
+
+Safety state remains unchanged: no provider calls, no canonical memory writes,
+no live knowledge mutation, no memory mutation, no learning, no schedulers, no
+actions, no HYB1 promotion, and Model B remains default.
+
+Current next recommendation:
+PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION

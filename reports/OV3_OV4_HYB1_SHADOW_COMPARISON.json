@@ -1,0 +1,113 @@
+{
+  "final_recommendation": "KEEP_MODEL_B_DEFAULT_HYB1_SHADOW_PARITY_CONFIRMED",
+  "interpretation": "HYB1 shadow mode produced no OV3/OV4 output delta. That means the current OV3 and OV4 workloads preserve parity under the HYB1 shadow environment; HYB1 remains a dormant projection/shadow candidate and does not alter these operational-validation paths.",
+  "mode": "shadow_report_only",
+  "phase": "OV3/OV4 HYB1 Shadow Comparison",
+  "summary": {
+    "action_execution_performed": false,
+    "exact_payload_match": true,
+    "hyb1_effective_output_change": false,
+    "hyb1_projection_used_for_analysis": true,
+    "hyb1_promoted": false,
+    "hyb1_shadow_env_used": true,
+    "knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "metric_deltas_all_zero": true,
+    "model_b_default_changed": false,
+    "provider_call_performed": false,
+    "training_performed": false,
+    "workload_count": 2
+  },
+  "workloads": [
+    {
+      "baseline_hash": "40c988d33f7476e5",
+      "baseline_metrics": {
+        "activation_confidence": 0.585,
+        "final_recommendation": "PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL",
+        "ov3_readiness_score": 0.865,
+        "reasoning_benchmark_average": 0.909,
+        "reasoning_benchmark_pass_rate": 1.0,
+        "reasoning_quality_score": 0.975
+      },
+      "hyb1_projection": {
+        "coverage": {
+          "hyb1_planning": 1.0,
+          "hyb1_response": 1.0,
+          "model_b_planning": 1.0,
+          "model_b_response": 1.0
+        },
+        "planning_count": 18,
+        "reason": "MBV2 filter accepted; projected planning/response coverage is preserved",
+        "reasoning_count": 18,
+        "response_count": 18,
+        "strategy": "hyb1_mbv2_coverage_safe"
+      },
+      "hyb1_shadow_hash": "40c988d33f7476e5",
+      "hyb1_shadow_metrics": {
+        "activation_confidence": 0.585,
+        "final_recommendation": "PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL",
+        "ov3_readiness_score": 0.865,
+        "reasoning_benchmark_average": 0.909,
+        "reasoning_benchmark_pass_rate": 1.0,
+        "reasoning_quality_score": 0.975
+      },
+      "metric_deltas": {},
+      "payloads_equal": true,
+      "safety": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "knowledge_mutation_performed": false,
+        "memory_mutation_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "training_performed": false
+      },
+      "workload": "OV3"
+    },
+    {
+      "baseline_hash": "16981cf62701f60a",
+      "baseline_metrics": {
+        "activation_confidence": 0.64,
+        "activation_readiness": 0.909,
+        "activation_state": "read_only_trial",
+        "final_recommendation": "PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL",
+        "governance_confidence": 0.94,
+        "safety_confidence": 1.0
+      },
+      "hyb1_projection": {
+        "coverage": {
+          "hyb1_planning": 1.0,
+          "hyb1_response": 1.0,
+          "model_b_planning": 1.0,
+          "model_b_response": 1.0
+        },
+        "planning_count": 12,
+        "reason": "MBV2 filter accepted; projected planning/response coverage is preserved",
+        "reasoning_count": 12,
+        "response_count": 12,
+        "strategy": "hyb1_mbv2_coverage_safe"
+      },
+      "hyb1_shadow_hash": "16981cf62701f60a",
+      "hyb1_shadow_metrics": {
+        "activation_confidence": 0.64,
+        "activation_readiness": 0.909,
+        "activation_state": "read_only_trial",
+        "final_recommendation": "PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL",
+        "governance_confidence": 0.94,
+        "safety_confidence": 1.0
+      },
+      "metric_deltas": {},
+      "payloads_equal": true,
+      "safety": {
+        "action_execution_performed": false,
+        "hyb1_promoted": false,
+        "knowledge_mutation_performed": false,
+        "memory_mutation_performed": false,
+        "model_b_default_changed": false,
+        "provider_call_performed": false,
+        "training_performed": false
+      },
+      "workload": "OV4"
+    }
+  ]
+}

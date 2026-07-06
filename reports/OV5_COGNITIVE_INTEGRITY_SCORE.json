@@ -1,0 +1,131 @@
+{
+  "answer_scores": [
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "Why did Project Atlas fail, what recovered, and what remains unproven?",
+      "scores": {
+        "abstraction_quality": 1.0,
+        "audit_completeness": 1.0,
+        "conclusion_consistency": 1.0,
+        "contradiction_preservation": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_support": 1.0,
+        "hypothesis_quality": 1.0,
+        "provenance_survival": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "Should deployment proceed based only on available evidence?",
+      "scores": {
+        "abstraction_quality": 1.0,
+        "audit_completeness": 1.0,
+        "conclusion_consistency": 1.0,
+        "contradiction_preservation": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_support": 1.0,
+        "hypothesis_quality": 1.0,
+        "provenance_survival": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "Which claims are contradictory, and what evidence would resolve them?",
+      "scores": {
+        "abstraction_quality": 1.0,
+        "audit_completeness": 1.0,
+        "conclusion_consistency": 1.0,
+        "contradiction_preservation": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_support": 1.0,
+        "hypothesis_quality": 1.0,
+        "provenance_survival": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "What common principle connects the engineering, science, finance, medicine, history, rollback, provider-boundary, and audit fixtures?",
+      "scores": {
+        "abstraction_quality": 1.0,
+        "audit_completeness": 1.0,
+        "conclusion_consistency": 1.0,
+        "contradiction_preservation": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_support": 1.0,
+        "hypothesis_quality": 1.0,
+        "provenance_survival": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "What conclusion sounds plausible but is unsupported?",
+      "scores": {
+        "abstraction_quality": 1.0,
+        "audit_completeness": 1.0,
+        "conclusion_consistency": 1.0,
+        "contradiction_preservation": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_support": 1.0,
+        "hypothesis_quality": 1.0,
+        "provenance_survival": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "What would change if the Worker C execution log were added?",
+      "scores": {
+        "abstraction_quality": 1.0,
+        "audit_completeness": 1.0,
+        "conclusion_consistency": 1.0,
+        "contradiction_preservation": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_support": 1.0,
+        "hypothesis_quality": 1.0,
+        "provenance_survival": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    }
+  ],
+  "dimensions": {
+    "abstraction_quality": 1.0,
+    "audit_completeness": 1.0,
+    "conclusion_consistency": 1.0,
+    "contradiction_preservation": 1.0,
+    "deterministic_repeatability": 1.0,
+    "disconfirmation_quality": 1.0,
+    "evidence_support": 1.0,
+    "hypothesis_quality": 1.0,
+    "provenance_survival": 1.0,
+    "uncertainty_calibration": 1.0,
+    "unsupported_claim_refusal": 1.0
+  },
+  "final_recommendation": "READ_ONLY_INTEGRATED_TRIAL_PASSED",
+  "passed": true,
+  "reasoning_benchmark_average": 0.909,
+  "reasoning_benchmark_pass_rate": 1.0,
+  "retrieval_independent": true,
+  "score": 1.0
+}

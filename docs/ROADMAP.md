@@ -2,13 +2,13 @@
 
 ## Current Phase
 
-OV4 operator-reviewed read-only activation trial is complete. The current
-recommended phase is `PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL`.
+OV5 integrated read-only cognitive runtime trial is complete. The current
+recommended phase is `PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION`.
 
-OV5 should expand read-only operation to adjacent fixture/noncanonical
-retrieval and grounded synthesis while preserving no live corpus ingestion,
-providers, canonical writes, training, schedulers, actions, memory mutation,
-knowledge mutation, or HYB1 promotion.
+OV6 should expand read-only substrate retrieval and grounded synthesis under
+fixture/noncanonical acceptance gates while preserving no live corpus
+ingestion, providers, canonical writes, training, schedulers, actions, memory
+mutation, knowledge mutation, or HYB1 promotion.
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
@@ -1073,6 +1073,31 @@ promotion, or live corpus activation.
 Recommended next roadmap item:
 
 `PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL`
+
+## OV5 Integrated Read-Only Cognitive Runtime Trial
+
+DELTA completed OV5 as an integrated read-only behavior pass over the existing
+OV1 through OV4 surfaces. The workflow composes fixture corpus loading,
+semantic records, proposition deduplication, graph traversal, hypothesis
+generation, disconfirmation, higher-order synthesis, grounded answers, the OV4
+read-only evaluation/regression loop, activation audit, and operator
+recommendation.
+
+Key results:
+
+- cognitive integrity score: `1.0`
+- readiness score: `0.962`
+- read-only trial outcome: `passed`
+- active trial capability: `evaluation/regression loop`
+- next activation candidate: `read-only substrate retrieval and grounded answer synthesis expansion`
+
+OV5 does not enable live corpus ingestion, provider calls, canonical writes,
+live knowledge mutation, memory mutation, learning, schedulers/background
+workers, actions, HYB1 promotion, or Model B default changes.
+
+Recommended next roadmap item:
+
+`PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION`
 
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 

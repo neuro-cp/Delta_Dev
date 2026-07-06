@@ -959,3 +959,34 @@ recommended improvements, activation impact, and audit records. It must not
 mutate runtime state, call providers, train, write canonical memory, start
 schedulers/background workers, execute actions, promote HYB1, or change Model
 B defaults.
+
+## OV5 Integrated Read-Only Cognitive Runtime Trial
+
+OV5 composes the existing OV1 through OV4 controlled surfaces into a single
+read-only cognitive workflow:
+
+```text
+fixture corpus
+-> semantic records
+-> propositions
+-> deduplication
+-> graph traversal
+-> hypothesis generation
+-> disconfirmation
+-> higher-order synthesis
+-> grounded answer
+-> read-only evaluation/regression loop
+-> activation audit
+-> operator recommendation
+```
+
+The OV4 `evaluation/regression loop` remains the only active trial capability,
+and only as `read_only_trial`. OV5 adds no new authority. It validates that
+multiple existing capabilities can cooperate to produce grounded answers,
+preserve contradictions, refuse unsupported conclusions, score cognitive
+integrity independently from retrieval score, and produce an activation audit
+without mutating memory or knowledge.
+
+OV5 performs no provider calls, canonical writes, live knowledge mutation,
+memory mutation, learning, training, scheduler/background worker activation,
+action execution, HYB1 promotion, or Model B default changes.

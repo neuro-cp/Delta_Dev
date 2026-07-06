@@ -6,6 +6,48 @@ file before making changes.
 
 ## 2026-07-05
 
+### OV5 Integrated Read-Only Cognitive Runtime Trial
+
+Completed OV5 as an integrated read-only cognitive runtime trial over the
+existing OV1-OV4 surfaces. OV5 does not add broad architecture; it validates
+that existing fixture-only and read-only components cooperate in one auditable
+workflow.
+
+Generated artifacts:
+
+- `orchestration/runtime/ov5_integrated_readonly_cognitive_trial.py`
+- `scripts/delta_ov5_integrated_trial.py`
+- `tests/runtime_ov5/test_ov5_integrated_readonly_cognitive_trial.py`
+- `reports/OV5_INTEGRATED_READONLY_COGNITIVE_TRIAL.md/json`
+- `reports/OV5_COGNITIVE_INTEGRITY_SCORE.md/json`
+- `reports/OV5_ACTIVATION_AUDIT.md/json`
+- `reports/OV5_READINESS.md/json`
+- `ui/delta_ov5_dashboard.html`
+- `docs/continuation_ov5.md`
+
+Key metrics:
+
+- cognitive integrity score: `1.0`
+- readiness score: `0.962`
+- read-only trial outcome: `passed`
+- active trial capability: `evaluation/regression loop`
+- next activation candidate: `read-only substrate retrieval and grounded answer synthesis expansion`
+
+OV5 validates fixture corpus loading, semantic extraction, proposition
+deduplication, graph traversal, hypothesis generation, disconfirmation,
+higher-order synthesis, grounded answers, the OV4 read-only
+evaluation/regression loop, activation audit, and operator recommendation.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no fine-tuning, no model updates, no provider authority, no provider
+calls, no canonical writes, no live knowledge mutation, no memory mutation, no
+learning, no schedulers/background workers, no action execution, no hidden
+writes, and no HYB1 promotion.
+
+Next recommendation:
+
+`PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION`
+
 ### OV4 Operator-Reviewed Read-Only Activation Trial
 
 Completed OV4 as DELTA's first governed capability activation trial. The only
