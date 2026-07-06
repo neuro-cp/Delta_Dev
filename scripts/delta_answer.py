@@ -54,6 +54,7 @@ from orchestration.runtime.tp13_research_shadow_training_protocol import is_tp13
 from orchestration.runtime.tp14_substrate_first_improvement import is_tp14_question, answer_tp14_question
 from orchestration.runtime.tp15_governed_substrate_integration_design import is_tp15_question, answer_tp15_question
 from orchestration.runtime.tp16_tp30_master_marathon import is_tp16_tp30_question, answer_tp16_tp30_question
+from orchestration.runtime.rc1_release_candidate_freeze import is_rc1_question, answer_rc1_question
 
 
 def main() -> int:
@@ -68,6 +69,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_rc1_question(query):
+        data = answer_rc1_question(query)
     elif is_tp16_tp30_question(query):
         data = answer_tp16_tp30_question(query)
     elif is_tp15_question(query):
@@ -203,6 +206,8 @@ def main() -> int:
     elif data.get("phase") == "TP15 Governed Substrate Integration Design":
         print(data["answer_text"])
     elif data.get("phase", "").startswith("TP") and "answer_text" in data:
+        print(data["answer_text"])
+    elif data.get("phase") == "DELTA Runtime v4.0 RC1":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

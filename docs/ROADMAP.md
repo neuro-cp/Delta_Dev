@@ -1822,3 +1822,18 @@ Final recommendation: `SUBSTRATE_EVOLUTION_REMAINS_PRIMARY_NEXT_PATH`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+## DELTA Runtime v4.0 RC1
+
+DELTA Runtime v4.0 RC1 is the current release-candidate freeze. Planned
+architecture expansion is complete. The roadmap now moves from speculative
+feature expansion to controlled operational use and observation.
+
+Current recommendation:
+
+`CREATE_DELTA_RUNTIME_V4_RC1_FREEZE`
+
+Future work should prioritize operational evidence, usability, integration,
+performance, evaluation, and measured bottlenecks. Training remains deferred
+until independently justified. New numbered architecture phases should not be
+started without evidence from real workflows.
+

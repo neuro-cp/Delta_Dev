@@ -1,0 +1,28 @@
+{
+  "classes": {
+    "bug": "incorrect deterministic behavior or testable defect",
+    "documentation": "operator guide, report, or continuation gap",
+    "governance": "approval, authority, audit, or invariant concern",
+    "operator_workflow": "review, rollback, approval, or triage workflow issue",
+    "performance": "latency, scale, resource, or throughput issue",
+    "provenance": "missing, weak, or unclear source trace",
+    "reasoning": "weak inference, synthesis, contradiction handling, or uncertainty behavior",
+    "replay": "replay ordering, consolidation review, or reproducibility issue",
+    "retrieval": "missed, irrelevant, or poorly ranked evidence",
+    "usability": "operator confusion or unnecessary friction"
+  },
+  "priorities": {
+    "P0": "safety invariant breach or hidden authority risk",
+    "P1": "blocks operational workflow or corrupts evidence",
+    "P2": "material quality issue with workaround",
+    "P3": "minor friction or documentation improvement"
+  },
+  "triage_inputs": [
+    "reproducibility",
+    "impact",
+    "safety_risk",
+    "operator_frequency",
+    "evidence_strength"
+  ],
+  "version": "DELTA Runtime v4.0 RC1"
+}

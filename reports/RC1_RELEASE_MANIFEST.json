@@ -1,0 +1,37 @@
+{
+  "architecture_expansion_complete": true,
+  "baseline_commit": "786d2f45",
+  "capabilities": [
+    "governed runtime",
+    "deterministic local reasoning and answer routing",
+    "provenance-backed reports",
+    "replay and rollback design",
+    "operator-reviewed persistence pathways",
+    "substrate-first evolution evidence",
+    "independent validation and replication reports"
+  ],
+  "limitations": [
+    "not production activated",
+    "no autonomous learning",
+    "no provider authority",
+    "no canonical promotion by default",
+    "no scheduler or autonomous action",
+    "future work must be justified by operational evidence"
+  ],
+  "operational_baseline": true,
+  "purpose": "transition from architecture expansion to controlled operational use",
+  "safety": {
+    "autonomous_action_enabled": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false,
+    "model_training_performed": false,
+    "provider_authority_changed": false,
+    "routing_changed": false,
+    "scheduler_activated": false,
+    "weight_update_performed": false
+  },
+  "status": "release_candidate_freeze",
+  "version": "DELTA Runtime v4.0 RC1"
+}

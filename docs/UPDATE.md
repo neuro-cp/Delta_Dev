@@ -5141,3 +5141,32 @@ Final recommendation: `SUBSTRATE_EVOLUTION_REMAINS_PRIMARY_NEXT_PATH`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+### DELTA Runtime v4.0 RC1 Release Candidate Freeze
+
+Created the DELTA Runtime v4.0 RC1 release-candidate freeze after TP30. RC1
+marks the transition from planned architecture expansion into sustained
+controlled operational use.
+
+Generated artifacts:
+
+- `orchestration/runtime/rc1_release_candidate_freeze.py`
+- `scripts/delta_rc1_release_candidate_freeze.py`
+- `tests/runtime_rc1/test_rc1_release_candidate_freeze.py`
+- `reports/RC1_RELEASE_MANIFEST.md/json`
+- `reports/RC1_VALIDATION_SUMMARY.md/json`
+- `reports/RC1_OPERATOR_GUIDE.md`
+- `reports/RC1_OPERATIONAL_OBSERVATION_FRAMEWORK.md/json`
+- `reports/RC1_FAILURE_CLASSIFICATION.md/json`
+- `reports/RC1_DEVELOPMENT_POLICY.md`
+- `reports/RC1_FINAL_REVIEW.md/json`
+- `docs/DELTA_RUNTIME_V4_RC1.md`
+- `docs/continuation_rc1.md`
+
+Final recommendation:
+
+`CREATE_DELTA_RUNTIME_V4_RC1_FREEZE`
+
+Future work must originate from operational evidence: observed failure,
+operator request, measured bottleneck, reproducible bug, or scientific
+evidence. Safety state remains unchanged.
+

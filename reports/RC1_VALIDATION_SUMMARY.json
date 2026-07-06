@@ -1,0 +1,27 @@
+{
+  "deterministic": true,
+  "expected_json_reports_valid": 896,
+  "expected_tests_collected": 1792,
+  "expected_tests_passed": 1792,
+  "governed": true,
+  "latest_tp_phase": "TP30",
+  "latest_tp_recommendation": "SUBSTRATE_EVOLUTION_REMAINS_PRIMARY_NEXT_PATH",
+  "operator_controlled": true,
+  "provenance_backed": true,
+  "replay_capable": true,
+  "reproducible": true,
+  "rollback_capable": true,
+  "safety": {
+    "autonomous_action_enabled": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_default_changed": false,
+    "model_training_performed": false,
+    "provider_authority_changed": false,
+    "routing_changed": false,
+    "scheduler_activated": false,
+    "weight_update_performed": false
+  },
+  "version": "DELTA Runtime v4.0 RC1"
+}

@@ -1076,3 +1076,27 @@ Final recommendation: `SUBSTRATE_EVOLUTION_REMAINS_PRIMARY_NEXT_PATH`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+## DELTA Runtime v4.0 RC1
+
+RC1 release-candidate freeze is complete.
+
+Current recommendation:
+
+`CREATE_DELTA_RUNTIME_V4_RC1_FREEZE`
+
+Read next:
+
+- `docs/DELTA_RUNTIME_V4_RC1.md`
+- `docs/continuation_rc1.md`
+- `reports/RC1_FINAL_REVIEW.md`
+- `reports/RC1_RELEASE_MANIFEST.md`
+- `reports/RC1_OPERATIONAL_OBSERVATION_FRAMEWORK.md`
+
+Next development mode:
+
+Use DELTA in controlled operational workflows. Log operator friction, missing
+evidence, confusing behavior, weak explanations, replay problems, retrieval
+failures, provenance issues, latency, workflow interruptions, feature requests,
+and unexpected strengths. Future engineering should be driven by that evidence,
+not by speculative architecture expansion.
+

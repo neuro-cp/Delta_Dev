@@ -1343,3 +1343,16 @@ TP29 (Activation Readiness) preserves the substrate-first architecture. It adds 
 ### TP30 Architecture Note
 
 TP30 (Final Roadmap Review) preserves the substrate-first architecture. It adds evidence and governance around `final_review_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
+
+## DELTA Runtime v4.0 RC1 Architecture Freeze
+
+DELTA Runtime v4.0 RC1 freezes the planned architecture roadmap after TP30.
+This is an operational transition, not a new cognitive subsystem. Future
+engineering must be justified by observed operational behavior: reproducible
+failures, operator requests, measured bottlenecks, scientific evidence, or
+workflow evidence gathered during controlled use.
+
+RC1 preserves the existing safety boundary: no model training, no fine-tuning,
+no weight updates, no provider authority change, no production deployment, no
+baseline routing change, no canonical migration, no autonomous action, no
+scheduler activation, no HYB1 promotion, and no Model B replacement.

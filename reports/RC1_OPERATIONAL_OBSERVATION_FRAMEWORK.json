@@ -1,0 +1,34 @@
+{
+  "categories": [
+    "operator_friction",
+    "missing_evidence",
+    "confusing_behavior",
+    "weak_explanation",
+    "replay_problem",
+    "retrieval_failure",
+    "provenance_issue",
+    "latency",
+    "workflow_interruption",
+    "feature_request",
+    "unexpected_strength"
+  ],
+  "evidence_standard": "observations must include reproduction steps, report paths, trace ids, or operator workflow evidence",
+  "goal": "turn operational use into engineering evidence",
+  "opinion_only_entries_allowed": false,
+  "required_fields": [
+    "observation_id",
+    "timestamp",
+    "operator",
+    "workflow",
+    "category",
+    "expected_behavior",
+    "observed_behavior",
+    "evidence_path",
+    "reproduction_steps",
+    "severity",
+    "impact",
+    "candidate_fix",
+    "triage_decision"
+  ],
+  "version": "DELTA Runtime v4.0 RC1"
+}
