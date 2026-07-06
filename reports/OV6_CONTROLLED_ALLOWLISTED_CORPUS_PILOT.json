@@ -1,0 +1,435 @@
+{
+  "allowlisted_document_count": 20,
+  "audit_log": [
+    "allowlist verified",
+    "document checksums computed",
+    "semantic records generated in-memory",
+    "noncanonical boundary verified",
+    "rollback/delete plan generated"
+  ],
+  "checksum_manifest": {
+    "ov1-doc-07b3c1eddf770f0e": {
+      "checksum": "0db6e5a1b70e3cd51e0ad1850ff05bc1d0c1add47ba0175f2e7de951792dda29",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/10_history_autumn.md",
+      "provenance": "allowlisted:10_history_autumn.md"
+    },
+    "ov1-doc-0dfe28195b98adc9": {
+      "checksum": "6c94f455b2f354c977aa78144004a63b0016afc149b068e55c0be559fa20681b",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/14_rollback.md",
+      "provenance": "allowlisted:14_rollback.md"
+    },
+    "ov1-doc-10927abc270abbac": {
+      "checksum": "7628193c95a35ffbcd0da6079c8720524ab4355043cdd1c71624f67077721601",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/17_investigation_gap.md",
+      "provenance": "allowlisted:17_investigation_gap.md"
+    },
+    "ov1-doc-18db59fee919078f": {
+      "checksum": "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/18_executive_review.md",
+      "provenance": "allowlisted:18_executive_review.md"
+    },
+    "ov1-doc-1d9cdae594651aca": {
+      "checksum": "3211493888f39d66cc0e4536f3098b0734c979f7063ed5740e1a27c448c88254",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/05_finance_reserves_a.md",
+      "provenance": "allowlisted:05_finance_reserves_a.md"
+    },
+    "ov1-doc-25af4871a19b07a9": {
+      "checksum": "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/03_science_control.md",
+      "provenance": "allowlisted:03_science_control.md"
+    },
+    "ov1-doc-27e346c93ba1d256": {
+      "checksum": "161b82dbacc16e0cfae768222381a6c110bad07ccd101e07893d1e72cb3dee20",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/12_software_regression.md",
+      "provenance": "allowlisted:12_software_regression.md"
+    },
+    "ov1-doc-29d28b17b284a33a": {
+      "checksum": "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/11_software_modules.md",
+      "provenance": "allowlisted:11_software_modules.md"
+    },
+    "ov1-doc-3135bc3908d0abc0": {
+      "checksum": "85cf480fb0f11e971d3d4a017782af08fc6fe230bc92413734c40ab613119457",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/16_specialist_disagreement.md",
+      "provenance": "allowlisted:16_specialist_disagreement.md"
+    },
+    "ov1-doc-324d1be7dc82218b": {
+      "checksum": "096f175245ecec6e2f5738be3500aca3ff08d431f3312fd4081b881b50706d5f",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/08_medicine_observation.md",
+      "provenance": "allowlisted:08_medicine_observation.md"
+    },
+    "ov1-doc-52c419d63b72c51b": {
+      "checksum": "57e3000b535d9885f3b87813d8b42953e57e42aba7cbc849612ca39a51a042ae",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/06_finance_reserves_b.md",
+      "provenance": "allowlisted:06_finance_reserves_b.md"
+    },
+    "ov1-doc-6782058955941eff": {
+      "checksum": "82ec31caf427706a830f2acc988b93a6d02a7df648eb16523a4620ada502676c",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/15_provider_boundary.md",
+      "provenance": "allowlisted:15_provider_boundary.md"
+    },
+    "ov1-doc-7866e0c2b89ddbfa": {
+      "checksum": "3e076a3a680c1c05fb36db5ddc6455eb69eddf830cfdad1fcfd1292667f9a8b6",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/07_medicine_boundary.md",
+      "provenance": "allowlisted:07_medicine_boundary.md"
+    },
+    "ov1-doc-8aa9c9ead7c892f6": {
+      "checksum": "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/01_registry_failure.md",
+      "provenance": "allowlisted:01_registry_failure.md"
+    },
+    "ov1-doc-b32103bb0961be55": {
+      "checksum": "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/20_synthesis.md",
+      "provenance": "allowlisted:20_synthesis.md"
+    },
+    "ov1-doc-b6db8d44cd324a6b": {
+      "checksum": "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/02_worker_conflict.md",
+      "provenance": "allowlisted:02_worker_conflict.md"
+    },
+    "ov1-doc-c661902c32c67878": {
+      "checksum": "902ef4c0e411d36fc8560b29d3dbfe9e9433314a1c57503e8ce37f19ebb456b5",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/13_knowledge_evolution.md",
+      "provenance": "allowlisted:13_knowledge_evolution.md"
+    },
+    "ov1-doc-c9d773a62763b2d7": {
+      "checksum": "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/19_audit_path.md",
+      "provenance": "allowlisted:19_audit_path.md"
+    },
+    "ov1-doc-d1b9a2395f46eada": {
+      "checksum": "f96bb037e6f2c4f8b7ccd958142188ad42ef16f2aa61708a51c6b19150c950d7",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/09_history_spring.md",
+      "provenance": "allowlisted:09_history_spring.md"
+    },
+    "ov1-doc-d6bb74fb5c2ba567": {
+      "checksum": "e15473a4cefded83dfb797cac2623c78bc6c9c8654e3dc45e830cc92a2a29877",
+      "path": "G:/Delta_Dev/data/ov1_allowlisted_corpus/04_science_replication.md",
+      "provenance": "allowlisted:04_science_replication.md"
+    }
+  },
+  "checksums_present": true,
+  "final_recommendation": "PROCEED_OV7_INTEGRATED_READONLY_RUNTIME",
+  "full_provenance": true,
+  "mode": "fixture_allowlisted_noncanonical",
+  "noncanonical_only": true,
+  "passed": true,
+  "phase": "OV6 Controlled Allowlisted Corpus Pilot",
+  "rollback_delete": {
+    "available": true,
+    "execution_performed": false,
+    "rollback_tokens": [
+      "rollback-ov6-8a132e57af189c53",
+      "rollback-ov6-29be8f2c2755cbb8",
+      "rollback-ov6-ea17bc2287d6d909",
+      "rollback-ov6-ade6a128729097f4",
+      "rollback-ov6-e12bc4b1b7948b2d",
+      "rollback-ov6-a536e7a256a61d1e",
+      "rollback-ov6-7b0e149446673ade",
+      "rollback-ov6-193919b22584cfee",
+      "rollback-ov6-2a5e82ebc9ec4339",
+      "rollback-ov6-cca609580e6cf3ec",
+      "rollback-ov6-483a8706f0431c19",
+      "rollback-ov6-4acfadab47305d3d",
+      "rollback-ov6-4cab0d3e906fef9f",
+      "rollback-ov6-84ff6f6aefa2bde9",
+      "rollback-ov6-a0b247eb3f074406",
+      "rollback-ov6-7fa2f9ef9c524743",
+      "rollback-ov6-6e34bf55ab1cd35d",
+      "rollback-ov6-720cdcd47e60e5e5",
+      "rollback-ov6-ab32300056307407",
+      "rollback-ov6-716e7ec966644f09"
+    ],
+    "strategy": "delete noncanonical generated artifact workspace and preserve audit report"
+  },
+  "safety": {
+    "action_execution_performed": false,
+    "activation_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_write_enabled": false,
+    "canonical_write_performed": false,
+    "controlled_training_pilot_started": false,
+    "fine_tuning_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "live_corpus_activation_performed": false,
+    "live_knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "persistent_learning_enabled": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "read_only_trial": true,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "semantic_record_count": 81,
+  "semantic_records_preview": [
+    {
+      "canonical": false,
+      "checksum": "a46eff7877ab5fd6",
+      "object_type": "source",
+      "provenance": [
+        "allowlisted:01_registry_failure.md",
+        "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+      ],
+      "record_id": "ov6-record-ab773b465abd3090",
+      "rollback_token": "rollback-ov6-8a132e57af189c53",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "01_registry_failure"
+    },
+    {
+      "canonical": false,
+      "checksum": "2ba5c57f9ff213df",
+      "object_type": "claim",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6",
+        "allowlisted:01_registry_failure.md",
+        "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+      ],
+      "record_id": "ov6-record-6b52309cfdb2d60a",
+      "rollback_token": "rollback-ov6-29be8f2c2755cbb8",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "Registry Failure  Project Atlas failed because Registry B rejected records without provenance."
+    },
+    {
+      "canonical": false,
+      "checksum": "a87a24beed7b7902",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "record_id": "ov6-record-84d234a4f9da9764",
+      "rollback_token": "rollback-ov6-ea17bc2287d6d909",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "atlas"
+    },
+    {
+      "canonical": false,
+      "checksum": "9ff2e2e687be634e",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "record_id": "ov6-record-0c80736c70fa3052",
+      "rollback_token": "rollback-ov6-ade6a128729097f4",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "provenance"
+    },
+    {
+      "canonical": false,
+      "checksum": "0012681c71faea19",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "record_id": "ov6-record-ce5a5490e72d81d6",
+      "rollback_token": "rollback-ov6-e12bc4b1b7948b2d",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "registry"
+    },
+    {
+      "canonical": false,
+      "checksum": "a8fc8b682a3ac629",
+      "object_type": "claim",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6",
+        "allowlisted:01_registry_failure.md",
+        "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+      ],
+      "record_id": "ov6-record-aae9c21f24de2835",
+      "rollback_token": "rollback-ov6-a536e7a256a61d1e",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "Adding document identifiers and checksums restored Registry B acceptance."
+    },
+    {
+      "canonical": false,
+      "checksum": "0012681c71faea19",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "record_id": "ov6-record-5f9c04fe6e737a55",
+      "rollback_token": "rollback-ov6-7b0e149446673ade",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "registry"
+    },
+    {
+      "canonical": false,
+      "checksum": "b472721684c8f0c3",
+      "object_type": "claim",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6",
+        "allowlisted:01_registry_failure.md",
+        "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589"
+      ],
+      "record_id": "ov6-record-0dc800e8e272d29c",
+      "rollback_token": "rollback-ov6-193919b22584cfee",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "Worker C execution remained untested."
+    },
+    {
+      "canonical": false,
+      "checksum": "e403f9efaf974dbc",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-8aa9c9ead7c892f6"
+      ],
+      "record_id": "ov6-record-0e3587813d5fe094",
+      "rollback_token": "rollback-ov6-2a5e82ebc9ec4339",
+      "source_document_id": "ov1-doc-8aa9c9ead7c892f6",
+      "text": "worker"
+    },
+    {
+      "canonical": false,
+      "checksum": "508863e1e1e08d02",
+      "object_type": "source",
+      "provenance": [
+        "allowlisted:02_worker_conflict.md",
+        "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3"
+      ],
+      "record_id": "ov6-record-09ea789b908ef31b",
+      "rollback_token": "rollback-ov6-cca609580e6cf3ec",
+      "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+      "text": "02_worker_conflict"
+    },
+    {
+      "canonical": false,
+      "checksum": "f04e7a985686761f",
+      "object_type": "claim",
+      "provenance": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "allowlisted:02_worker_conflict.md",
+        "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3"
+      ],
+      "record_id": "ov6-record-8c96dcacac801468",
+      "rollback_token": "rollback-ov6-483a8706f0431c19",
+      "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+      "text": "Worker Conflict  One report claims Worker C completed execution successfully."
+    },
+    {
+      "canonical": false,
+      "checksum": "9439c9245f5df6f9",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-b6db8d44cd324a6b"
+      ],
+      "record_id": "ov6-record-bf43062706303ef6",
+      "rollback_token": "rollback-ov6-4acfadab47305d3d",
+      "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+      "text": "worker"
+    },
+    {
+      "canonical": false,
+      "checksum": "3efff97a6744105c",
+      "object_type": "uncertainty",
+      "provenance": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "allowlisted:02_worker_conflict.md",
+        "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3"
+      ],
+      "record_id": "ov6-record-f54dc69430a5d46b",
+      "rollback_token": "rollback-ov6-4cab0d3e906fef9f",
+      "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+      "text": "The audit report states Worker C was not tested after routing was restored."
+    },
+    {
+      "canonical": false,
+      "checksum": "9439c9245f5df6f9",
+      "object_type": "entity",
+      "provenance": [
+        "ov1-doc-b6db8d44cd324a6b"
+      ],
+      "record_id": "ov6-record-68dfa7766a2c7071",
+      "rollback_token": "rollback-ov6-84ff6f6aefa2bde9",
+      "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+      "text": "worker"
+    },
+    {
+      "canonical": false,
+      "checksum": "d3602eef1e600ea6",
+      "object_type": "procedure",
+      "provenance": [
+        "ov1-doc-b6db8d44cd324a6b",
+        "allowlisted:02_worker_conflict.md",
+        "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3"
+      ],
+      "record_id": "ov6-record-784169dddd9c6dd6",
+      "rollback_token": "rollback-ov6-a0b247eb3f074406",
+      "source_document_id": "ov1-doc-b6db8d44cd324a6b",
+      "text": "Both claims must remain visible until execution evidence exists."
+    },
+    {
+      "canonical": false,
+      "checksum": "de757b01d3a57149",
+      "object_type": "source",
+      "provenance": [
+        "allowlisted:03_science_control.md",
+        "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0"
+      ],
+      "record_id": "ov6-record-e4d182e234503ec4",
+      "rollback_token": "rollback-ov6-7fa2f9ef9c524743",
+      "source_document_id": "ov1-doc-25af4871a19b07a9",
+      "text": "03_science_control"
+    },
+    {
+      "canonical": false,
+      "checksum": "4aba6ab9eca20bed",
+      "object_type": "procedure",
+      "provenance": [
+        "ov1-doc-25af4871a19b07a9",
+        "allowlisted:03_science_control.md",
+        "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0"
+      ],
+      "record_id": "ov6-record-9e9ca362f0bafd7f",
+      "rollback_token": "rollback-ov6-6e34bf55ab1cd35d",
+      "source_document_id": "ov1-doc-25af4871a19b07a9",
+      "text": "Science Control  A controlled experiment requires stable inputs, measured outcomes, and a repeatable procedure."
+    },
+    {
+      "canonical": false,
+      "checksum": "f419d3c22b36873f",
+      "object_type": "claim",
+      "provenance": [
+        "ov1-doc-25af4871a19b07a9",
+        "allowlisted:03_science_control.md",
+        "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0"
+      ],
+      "record_id": "ov6-record-adaed87a5bc1ef27",
+      "rollback_token": "rollback-ov6-720cdcd47e60e5e5",
+      "source_document_id": "ov1-doc-25af4871a19b07a9",
+      "text": "Causation remains weak when the control condition is missing."
+    },
+    {
+      "canonical": false,
+      "checksum": "a601b1d16eff9438",
+      "object_type": "source",
+      "provenance": [
+        "allowlisted:04_science_replication.md",
+        "e15473a4cefded83dfb797cac2623c78bc6c9c8654e3dc45e830cc92a2a29877"
+      ],
+      "record_id": "ov6-record-cbfec944f0fee6bf",
+      "rollback_token": "rollback-ov6-ab32300056307407",
+      "source_document_id": "ov1-doc-d6bb74fb5c2ba567",
+      "text": "04_science_replication"
+    },
+    {
+      "canonical": false,
+      "checksum": "81388dca5fb85202",
+      "object_type": "claim",
+      "provenance": [
+        "ov1-doc-d6bb74fb5c2ba567",
+        "allowlisted:04_science_replication.md",
+        "e15473a4cefded83dfb797cac2623c78bc6c9c8654e3dc45e830cc92a2a29877"
+      ],
+      "record_id": "ov6-record-15b43bb5de5862ec",
+      "rollback_token": "rollback-ov6-716e7ec966644f09",
+      "source_document_id": "ov1-doc-d6bb74fb5c2ba567",
+      "text": "Science Replication  Independent replication strengthens confidence."
+    }
+  ]
+}

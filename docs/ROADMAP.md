@@ -2,13 +2,12 @@
 
 ## Current Phase
 
-OV5 integrated read-only cognitive runtime trial is complete. The current
-recommended phase is `PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION`.
+OV6-OV10 operational readiness marathon is complete. The current recommendation
+is `READY_FOR_CONTROLLED_TRAINING_PILOT`.
 
-OV6 should expand read-only substrate retrieval and grounded synthesis under
-fixture/noncanonical acceptance gates while preserving no live corpus
-ingestion, providers, canonical writes, training, schedulers, actions, memory
-mutation, knowledge mutation, or HYB1 promotion.
+The next phase should be a separate, explicit controlled training pilot design
+and approval checkpoint. Do not start training as part of ordinary operational
+readiness work.
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
@@ -1098,6 +1097,36 @@ workers, actions, HYB1 promotion, or Model B default changes.
 Recommended next roadmap item:
 
 `PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION`
+
+## OV6-OV10 Operational Readiness Marathon
+
+DELTA completed OV6 through OV10 as an operational readiness pass rather than
+an architecture expansion or training run.
+
+Completed:
+
+- OV6 controlled allowlisted corpus pilot.
+- OV7 integrated read-only cognitive runtime.
+- OV8 activation readiness review.
+- OV9 operational hardening.
+- OV10 controlled training readiness review.
+
+Key results:
+
+- operational readiness score: `0.974`
+- reasoning quality score: `0.909`
+- activation confidence: `0.869`
+- training readiness score: `1.0`
+- training readiness assessment: `Ready for controlled training pilot`
+
+Training remains disabled. The recommended first pilot is fixture-only,
+noncanonical, operator-approved, and rollback-capable. It should be its own
+milestone with explicit approval, isolated outputs, baseline comparison, and
+rollback/delete rehearsal.
+
+Recommended next roadmap item:
+
+`READY_FOR_CONTROLLED_TRAINING_PILOT`
 
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 

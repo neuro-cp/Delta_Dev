@@ -1,0 +1,58 @@
+{
+  "final_recommendation": "READY_FOR_CONTROLLED_TRAINING_PILOT",
+  "first_controlled_training_pilot_recommendation": {
+    "entry_criteria": [
+      "operator reviews OV6-OV10 reports",
+      "explicit controlled training pilot approval is provided",
+      "training output target remains isolated and noncanonical",
+      "rollback/delete is rehearsed"
+    ],
+    "recommended_scope": "fixture-only, noncanonical, operator-approved, rollback-capable training simulation first",
+    "state": "not_started"
+  },
+  "passed": true,
+  "phase": "OV10 Controlled Training Readiness Review",
+  "prerequisites": {
+    "allowlisted_ingestion": true,
+    "audit": true,
+    "benchmark_baselines": true,
+    "checksums": true,
+    "deterministic_replay": true,
+    "governance": true,
+    "noncanonical_semantic_records": true,
+    "operator_approval_path": true,
+    "provenance": true,
+    "quality_metrics": true,
+    "regression_comparison": true,
+    "rollback": true
+  },
+  "remaining_blockers": [],
+  "safety": {
+    "action_execution_performed": false,
+    "activation_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_write_enabled": false,
+    "canonical_write_performed": false,
+    "controlled_training_pilot_started": false,
+    "fine_tuning_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "live_corpus_activation_performed": false,
+    "live_knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "persistent_learning_enabled": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "read_only_trial": true,
+    "scheduler_started": false,
+    "training_performed": false
+  },
+  "training_enabled": false,
+  "training_performed": false,
+  "training_readiness_assessment": "Ready for controlled training pilot",
+  "training_readiness_score": 1.0
+}

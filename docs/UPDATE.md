@@ -4,6 +4,56 @@ This is the canonical running handoff log for Delta development. A new Codex
 session should read `docs/ARCHITECTURE.md`, then `docs/ROADMAP.md`, then this
 file before making changes.
 
+## 2026-07-06
+
+### OV6-OV10 Operational Readiness Marathon
+
+Completed OV6 through OV10 as an operational readiness pass. This did not
+enable training. The endpoint is readiness for a future controlled training
+pilot after explicit review and approval.
+
+Generated artifacts:
+
+- `orchestration/runtime/ov6_ov10_operational_readiness.py`
+- `scripts/delta_ov6_ov10_operational_readiness.py`
+- `tests/runtime_ov6_ov10/test_ov6_ov10_operational_readiness.py`
+- `reports/OV6_CONTROLLED_ALLOWLISTED_CORPUS_PILOT.md/json`
+- `reports/OV7_INTEGRATED_READONLY_COGNITIVE_RUNTIME.md/json`
+- `reports/OV8_ACTIVATION_READINESS.md/json`
+- `reports/OV9_OPERATIONAL_HARDENING.md/json`
+- `reports/OV10_CONTROLLED_TRAINING_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_OPERATIONAL_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_ACTIVATION_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_TRAINING_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_ARCHITECTURE_CONSISTENCY_REVIEW.md/json`
+- `ui/delta_ov6_ov10_operational_readiness_dashboard.html`
+- `docs/continuation_ov6_ov10.md`
+
+Key metrics:
+
+- operational readiness score: `0.974`
+- reasoning quality score: `0.909`
+- activation confidence: `0.869`
+- training readiness score: `1.0`
+- training readiness assessment: `Ready for controlled training pilot`
+
+OV6 verifies allowlisted fixture ingestion into noncanonical semantic records
+with provenance, checksums, rollback/delete planning, and audit logging. OV7
+reuses the integrated read-only runtime. OV8 assigns activation eligibility and
+gates to required capabilities. OV9 hardens against larger, noisy, duplicate,
+conflicting, missing-provenance, malformed, and partial-failure fixture cases.
+OV10 verifies prerequisites for a future controlled training pilot.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no fine-tuning, no model updates, no provider authority, no provider
+calls, no canonical writes, no live knowledge mutation, no memory mutation, no
+persistent learning, no schedulers/background workers, no action execution, no
+hidden writes, and no HYB1 promotion.
+
+Final recommendation:
+
+`READY_FOR_CONTROLLED_TRAINING_PILOT`
+
 ## 2026-07-05
 
 ### OV5 Integrated Read-Only Cognitive Runtime Trial

@@ -990,3 +990,33 @@ without mutating memory or knowledge.
 OV5 performs no provider calls, canonical writes, live knowledge mutation,
 memory mutation, learning, training, scheduler/background worker activation,
 action execution, HYB1 promotion, or Model B default changes.
+
+## OV6-OV10 Operational Readiness
+
+OV6 through OV10 transform DELTA from integrated read-only validation toward
+controlled training readiness without enabling training.
+
+The operational readiness path is:
+
+```text
+controlled allowlisted corpus pilot
+-> integrated read-only runtime
+-> activation readiness review
+-> operational hardening
+-> controlled training readiness review
+```
+
+OV6 verifies allowlisted local corpus ingestion, noncanonical semantic record
+generation, full provenance, checksums, rollback/delete planning, and audit
+logging. OV7 reuses the integrated read-only cognitive runtime. OV8 assigns
+activation eligibility, gates, rollback requirements, and confidence to every
+required capability. OV9 stress-tests larger fixture corpora, noisy documents,
+duplicate evidence, conflicting evidence, missing provenance, malformed inputs,
+and partial failures. OV10 verifies that training prerequisites exist while
+leaving training disabled.
+
+The result is readiness for a future controlled training pilot, not active
+training. OV6-OV10 do not train, fine-tune, update model weights, call
+providers, write canonical memory, mutate live knowledge, mutate memory, enable
+persistent learning, start schedulers/background workers, execute actions,
+promote HYB1, or change Model B defaults.

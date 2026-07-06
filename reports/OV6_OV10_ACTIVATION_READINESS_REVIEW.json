@@ -1,0 +1,516 @@
+{
+  "activation_confidence": 0.869,
+  "activation_performed": false,
+  "capabilities": [
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "allowlisted local corpus ingestion",
+      "capability_id": "ov8-capability-01",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "noncanonical semantic records",
+      "capability_id": "ov8-capability-02",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "proposition layer",
+      "capability_id": "ov8-capability-03",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "semantic deduplication",
+      "capability_id": "ov8-capability-04",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "graph traversal",
+      "capability_id": "ov8-capability-05",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "hypothesis generation",
+      "capability_id": "ov8-capability-06",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "disconfirmation",
+      "capability_id": "ov8-capability-07",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.87,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "higher-order synthesis",
+      "capability_id": "ov8-capability-08",
+      "current_status": "fixture_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "grounded answer generation",
+      "capability_id": "ov8-capability-09",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "read-only retrieval",
+      "capability_id": "ov8-capability-10",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "evaluation/regression loop",
+      "capability_id": "ov8-capability-11",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.76,
+      "activation_eligibility": "blocked_until_more_evidence",
+      "capability": "operator-reviewed audit dashboard",
+      "capability_id": "ov8-capability-12",
+      "current_status": "disabled",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.82,
+      "activation_eligibility": "blocked_until_more_evidence",
+      "capability": "rollback/delete generated artifacts",
+      "capability_id": "ov8-capability-13",
+      "current_status": "dry_run",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.82,
+      "activation_eligibility": "blocked_until_more_evidence",
+      "capability": "activation controller",
+      "capability_id": "ov8-capability-14",
+      "current_status": "dry_run",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.82,
+      "activation_eligibility": "blocked_until_more_evidence",
+      "capability": "activation audit",
+      "capability_id": "ov8-capability-15",
+      "current_status": "dry_run",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.82,
+      "activation_eligibility": "blocked_until_more_evidence",
+      "capability": "activation confidence engine",
+      "capability_id": "ov8-capability-16",
+      "current_status": "dry_run",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "cognitive integrity scoring",
+      "capability_id": "ov8-capability-17",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "reasoning benchmark suite",
+      "capability_id": "ov8-capability-18",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "operational benchmark suite",
+      "capability_id": "ov8-capability-19",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    },
+    {
+      "activation_confidence": 0.91,
+      "activation_eligibility": "eligible_after_operator_review",
+      "capability": "regression benchmark suite",
+      "capability_id": "ov8-capability-20",
+      "current_status": "read_only",
+      "governance_requirement": "operator-reviewed audit plus future overwatch before any persistent integration",
+      "required_gates": [
+        "manual operator review",
+        "no provider calls",
+        "no canonical writes",
+        "rollback/delete available",
+        "audit record generated"
+      ],
+      "required_tests": [
+        "unit",
+        "integration",
+        "determinism",
+        "rollback",
+        "audit",
+        "safety invariant"
+      ],
+      "rollback_requirement": "workspace deletion or simulation-only rollback until canonical authority exists"
+    }
+  ],
+  "final_recommendation": "PROCEED_OV9_OPERATIONAL_HARDENING",
+  "governance_verified": true,
+  "operator_review_required": true,
+  "passed": true,
+  "phase": "OV8 Activation Readiness",
+  "rollback_verified": true,
+  "safety": {
+    "action_execution_performed": false,
+    "activation_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_write_enabled": false,
+    "canonical_write_performed": false,
+    "controlled_training_pilot_started": false,
+    "fine_tuning_performed": false,
+    "hyb1": "dormant_env_gated",
+    "hyb1_promoted": false,
+    "knowledge_mutation_performed": false,
+    "live_corpus_activation_performed": false,
+    "live_knowledge_mutation_performed": false,
+    "memory_mutation_performed": false,
+    "model_b_default": "unchanged",
+    "model_update_performed": false,
+    "persistent_learning_enabled": false,
+    "provider_authority_granted": false,
+    "provider_call_performed": false,
+    "read_only_trial": true,
+    "scheduler_started": false,
+    "training_performed": false
+  }
+}

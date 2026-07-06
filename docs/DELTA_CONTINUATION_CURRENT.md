@@ -530,3 +530,34 @@ actions, no HYB1 promotion, and Model B remains default.
 
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
+
+OV6-OV10 operational readiness marathon is complete.
+
+New operational readiness surface:
+
+- `orchestration/runtime/ov6_ov10_operational_readiness.py`
+- `scripts/delta_ov6_ov10_operational_readiness.py`
+- `reports/OV6_CONTROLLED_ALLOWLISTED_CORPUS_PILOT.md/json`
+- `reports/OV7_INTEGRATED_READONLY_COGNITIVE_RUNTIME.md/json`
+- `reports/OV8_ACTIVATION_READINESS.md/json`
+- `reports/OV9_OPERATIONAL_HARDENING.md/json`
+- `reports/OV10_CONTROLLED_TRAINING_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_OPERATIONAL_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_ACTIVATION_READINESS_REVIEW.md/json`
+- `reports/OV6_OV10_TRAINING_READINESS_REVIEW.md/json`
+- `ui/delta_ov6_ov10_operational_readiness_dashboard.html`
+- `docs/continuation_ov6_ov10.md`
+
+Current OV6-OV10 metrics:
+
+- operational readiness score: `0.974`
+- reasoning quality score: `0.909`
+- activation confidence: `0.869`
+- training readiness score: `1.0`
+- training readiness assessment: `Ready for controlled training pilot`
+
+Training remains disabled. The next phase should be a separate controlled
+training pilot design/approval checkpoint, not automatic training execution.
+
+Current next recommendation:
+READY_FOR_CONTROLLED_TRAINING_PILOT
