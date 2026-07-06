@@ -531,6 +531,35 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP2 multi-corpus scientific validation is complete.
+
+New TP2 surface:
+
+- `data/tp2_multi_corpus_benchmark/`
+- `orchestration/runtime/tp2_scientific_validation.py`
+- `scripts/delta_tp2_scientific_validation.py`
+- `reports/TP2_MULTI_CORPUS_GENERALIZATION.md/json`
+- `reports/TP2_BLINDED_EVALUATION.md/json`
+- `reports/TP2_CROSS_DOMAIN_TRANSFER.md/json`
+- `reports/TP2_NEGATIVE_CONTROLS.md/json`
+- `reports/TP2_LONGITUDINAL_REPLAY.md/json`
+- `reports/TP2_TRAINING_SCIENCE_REVIEW.md/json`
+- `reports/TP2_READINESS.md/json`
+- `ui/delta_tp2_dashboard.html`
+- `docs/continuation_tp2.md`
+
+TP2 evaluates independent engineering, medicine, finance, history, scientific
+research, cybersecurity, infrastructure, and general-knowledge corpora with
+blinded evaluation, negative controls, cross-domain transfer, adversarial
+validation, and longitudinal replay.
+
+TP2 did not train model weights, fine-tune, update a model, call providers,
+write canonical memory, mutate live knowledge, mutate memory, start schedulers,
+execute actions, promote HYB1, or change Model B defaults.
+
+Current next recommendation:
+PROCEED_TP3_INDEPENDENT_VERIFICATION_FREEZE
+
 TP1 expanded noncanonical generalization pilot is complete.
 
 New TP1 surface:

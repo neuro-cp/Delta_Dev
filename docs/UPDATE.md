@@ -6,6 +6,42 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP2 Multi-Corpus Scientific Validation
+
+Completed TP2 as a scientific validation campaign. TP2 attempts to falsify
+TP1's held-out improvement rather than add architecture.
+
+Generated artifacts:
+
+- `data/tp2_multi_corpus_benchmark/`
+- `orchestration/runtime/tp2_scientific_validation.py`
+- `scripts/delta_tp2_scientific_validation.py`
+- `tests/runtime_tp2/test_tp2_scientific_validation.py`
+- `reports/TP2_MULTI_CORPUS_GENERALIZATION.md/json`
+- `reports/TP2_BLINDED_EVALUATION.md/json`
+- `reports/TP2_CROSS_DOMAIN_TRANSFER.md/json`
+- `reports/TP2_NEGATIVE_CONTROLS.md/json`
+- `reports/TP2_LONGITUDINAL_REPLAY.md/json`
+- `reports/TP2_TRAINING_SCIENCE_REVIEW.md/json`
+- `reports/TP2_READINESS.md/json`
+- `ui/delta_tp2_dashboard.html`
+- `docs/continuation_tp2.md`
+
+TP2 evaluates independent engineering, medicine, finance, history, scientific
+research, cybersecurity, infrastructure, and general-knowledge corpora. It
+adds blinded dual evaluation, negative controls, cross-domain transfer,
+adversarial validation, and longitudinal replay.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+model-weight training, no fine-tuning, no model update, no provider calls, no
+canonical writes, no live knowledge mutation, no memory mutation, no
+schedulers/background workers, no action execution, no hidden writes, and no
+HYB1 promotion.
+
+Final recommendation:
+
+`PROCEED_TP3_INDEPENDENT_VERIFICATION_FREEZE`
+
 ### TP1 Expanded Noncanonical Generalization Pilot
 
 Completed TP1 as a held-out generalization study. TP1 did not ask whether

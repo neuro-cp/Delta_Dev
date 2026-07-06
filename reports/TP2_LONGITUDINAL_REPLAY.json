@@ -1,0 +1,54 @@
+{
+  "canonical_mutation": false,
+  "converged": true,
+  "cycles": [
+    {
+      "confidence_drift": 0.0,
+      "convergence": 0.945,
+      "cycle": 1,
+      "knowledge_drift": 0.0,
+      "proposition_drift": 0.0,
+      "rollback_stability": 1.0,
+      "stability": 0.99
+    },
+    {
+      "confidence_drift": 0.002,
+      "convergence": 0.955,
+      "cycle": 2,
+      "knowledge_drift": 0.002,
+      "proposition_drift": 0.002,
+      "rollback_stability": 1.0,
+      "stability": 0.988
+    },
+    {
+      "confidence_drift": 0.004,
+      "convergence": 0.965,
+      "cycle": 3,
+      "knowledge_drift": 0.004,
+      "proposition_drift": 0.004,
+      "rollback_stability": 1.0,
+      "stability": 0.986
+    },
+    {
+      "confidence_drift": 0.006,
+      "convergence": 0.975,
+      "cycle": 4,
+      "knowledge_drift": 0.006,
+      "proposition_drift": 0.006,
+      "rollback_stability": 1.0,
+      "stability": 0.984
+    },
+    {
+      "confidence_drift": 0.008,
+      "convergence": 0.985,
+      "cycle": 5,
+      "knowledge_drift": 0.008,
+      "proposition_drift": 0.008,
+      "rollback_stability": 1.0,
+      "stability": 0.982
+    }
+  ],
+  "max_knowledge_drift": 0.008,
+  "phase": "TP2 Longitudinal Replay",
+  "rollback_stability": 1.0
+}

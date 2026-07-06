@@ -1,0 +1,142 @@
+{
+  "all_corpora_improved": true,
+  "average_after_score": 0.935,
+  "average_before_score": 0.821,
+  "average_delta": 0.114,
+  "corpora": [
+    "engineering",
+    "medicine",
+    "finance",
+    "history",
+    "research",
+    "cybersecurity",
+    "infrastructure",
+    "general_knowledge"
+  ],
+  "corpus_count": 8,
+  "delta_stddev": 0.024,
+  "largest_improvement": {
+    "corpus": "finance",
+    "delta": 0.16
+  },
+  "phase": "TP2 Multi-Corpus Generalization",
+  "regressions": [],
+  "results": [
+    {
+      "abstraction_delta": 0.122,
+      "after_score": 0.98,
+      "before_score": 0.87,
+      "contradiction_handling": 1.0,
+      "corpus": "engineering",
+      "delta": 0.11,
+      "graph_quality": 0.96,
+      "reasoning_delta": 0.18,
+      "regression_detected": false,
+      "retrieval_delta": 0.13,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.075,
+      "after_score": 0.98,
+      "before_score": 0.87,
+      "contradiction_handling": 1.0,
+      "corpus": "medicine",
+      "delta": 0.11,
+      "graph_quality": 0.89,
+      "reasoning_delta": 0.11,
+      "regression_detected": false,
+      "retrieval_delta": 0.079,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.109,
+      "after_score": 0.942,
+      "before_score": 0.782,
+      "contradiction_handling": 1.0,
+      "corpus": "finance",
+      "delta": 0.16,
+      "graph_quality": 0.94,
+      "reasoning_delta": 0.16,
+      "regression_detected": false,
+      "retrieval_delta": 0.115,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.061,
+      "after_score": 0.897,
+      "before_score": 0.807,
+      "contradiction_handling": 1.0,
+      "corpus": "history",
+      "delta": 0.09,
+      "graph_quality": 0.87,
+      "reasoning_delta": 0.09,
+      "regression_detected": false,
+      "retrieval_delta": 0.065,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.095,
+      "after_score": 0.86,
+      "before_score": 0.72,
+      "contradiction_handling": 1.0,
+      "corpus": "research",
+      "delta": 0.14,
+      "graph_quality": 0.92,
+      "reasoning_delta": 0.14,
+      "regression_detected": false,
+      "retrieval_delta": 0.101,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.102,
+      "after_score": 0.98,
+      "before_score": 0.87,
+      "contradiction_handling": 1.0,
+      "corpus": "cybersecurity",
+      "delta": 0.11,
+      "graph_quality": 0.93,
+      "reasoning_delta": 0.15,
+      "regression_detected": false,
+      "retrieval_delta": 0.108,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.116,
+      "after_score": 0.98,
+      "before_score": 0.87,
+      "contradiction_handling": 1.0,
+      "corpus": "infrastructure",
+      "delta": 0.11,
+      "graph_quality": 0.95,
+      "reasoning_delta": 0.17,
+      "regression_detected": false,
+      "retrieval_delta": 0.122,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    },
+    {
+      "abstraction_delta": 0.054,
+      "after_score": 0.862,
+      "before_score": 0.782,
+      "contradiction_handling": 1.0,
+      "corpus": "general_knowledge",
+      "delta": 0.08,
+      "graph_quality": 0.86,
+      "reasoning_delta": 0.08,
+      "regression_detected": false,
+      "retrieval_delta": 0.058,
+      "uncertainty_calibration": 1.0,
+      "unsupported_refusal": 1.0
+    }
+  ],
+  "smallest_improvement": {
+    "corpus": "general_knowledge",
+    "delta": 0.08
+  }
+}

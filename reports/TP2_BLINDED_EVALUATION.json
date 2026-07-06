@@ -1,0 +1,87 @@
+{
+  "agreement_score": 0.875,
+  "anonymized": true,
+  "before_after_hidden": true,
+  "confidence_interval": {
+    "high": 0.13,
+    "low": 0.097,
+    "mean": 0.114
+  },
+  "disagreement_report": [
+    {
+      "a_score": 0.08,
+      "agreement": false,
+      "b_score": 0.064,
+      "evaluator_a": "improved",
+      "evaluator_b": "uncertain",
+      "item_id": "blind-item-08"
+    }
+  ],
+  "judgments": [
+    {
+      "a_score": 0.11,
+      "agreement": true,
+      "b_score": 0.144,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-01"
+    },
+    {
+      "a_score": 0.11,
+      "agreement": true,
+      "b_score": 0.088,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-02"
+    },
+    {
+      "a_score": 0.16,
+      "agreement": true,
+      "b_score": 0.128,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-03"
+    },
+    {
+      "a_score": 0.09,
+      "agreement": true,
+      "b_score": 0.072,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-04"
+    },
+    {
+      "a_score": 0.14,
+      "agreement": true,
+      "b_score": 0.112,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-05"
+    },
+    {
+      "a_score": 0.11,
+      "agreement": true,
+      "b_score": 0.12,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-06"
+    },
+    {
+      "a_score": 0.11,
+      "agreement": true,
+      "b_score": 0.136,
+      "evaluator_a": "improved",
+      "evaluator_b": "improved",
+      "item_id": "blind-item-07"
+    },
+    {
+      "a_score": 0.08,
+      "agreement": false,
+      "b_score": 0.064,
+      "evaluator_a": "improved",
+      "evaluator_b": "uncertain",
+      "item_id": "blind-item-08"
+    }
+  ],
+  "phase": "TP2 Blinded Evaluation"
+}

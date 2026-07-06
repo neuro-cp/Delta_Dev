@@ -1,0 +1,13 @@
+{
+  "adversarial_passed": true,
+  "blinded_agreement": 0.875,
+  "every_corpus_improved": true,
+  "interpretation": "promising fixture-local scientific evidence; external independent verification is still required before live activation",
+  "negative_controls_passed": true,
+  "phase": "TP2 Training Science Review",
+  "reasoning_improved": true,
+  "regressions": [],
+  "rollback_perfect": true,
+  "statistically_consistent": true,
+  "tp3_justified": true
+}

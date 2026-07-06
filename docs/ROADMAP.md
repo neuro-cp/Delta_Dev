@@ -2,14 +2,14 @@
 
 ## Current Phase
 
-TP1 expanded noncanonical generalization pilot is complete. The current
-recommendation is `PROCEED_TP2_MULTI_CORPUS_NONCANONICAL_GENERALIZATION`.
+TP2 multi-corpus scientific validation is complete. The current recommendation
+is `PROCEED_TP3_INDEPENDENT_VERIFICATION_FREEZE`.
 
-The next phase should expand held-out domains and multi-corpus noncanonical
-generalization while remaining fixture-only, operator-approved,
-rollback-capable, and before/after evaluated. Do not enable model-weight
-training, providers, canonical writes, live corpus ingestion, schedulers,
-actions, or HYB1 promotion.
+The next phase should freeze the runtime and create independent benchmark
+suites that were not used during development. Do not continue broad
+architecture expansion until independent verification is complete. Do not
+enable model-weight training, providers, canonical writes, live corpus
+ingestion, schedulers, actions, or HYB1 promotion.
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 

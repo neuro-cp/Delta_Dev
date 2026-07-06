@@ -1,0 +1,51 @@
+{
+  "average_transfer": 0.116,
+  "chain": [
+    {
+      "source": "engineering",
+      "target": "medicine",
+      "transfer_score": 0.11
+    },
+    {
+      "source": "medicine",
+      "target": "finance",
+      "transfer_score": 0.135
+    },
+    {
+      "source": "finance",
+      "target": "history",
+      "transfer_score": 0.125
+    },
+    {
+      "source": "history",
+      "target": "research",
+      "transfer_score": 0.115
+    },
+    {
+      "source": "research",
+      "target": "cybersecurity",
+      "transfer_score": 0.125
+    },
+    {
+      "source": "cybersecurity",
+      "target": "infrastructure",
+      "transfer_score": 0.11
+    },
+    {
+      "source": "infrastructure",
+      "target": "general_knowledge",
+      "transfer_score": 0.095
+    }
+  ],
+  "phase": "TP2 Cross-Domain Transfer",
+  "strongest_transfer": {
+    "source": "medicine",
+    "target": "finance",
+    "transfer_score": 0.135
+  },
+  "weakest_transfer": {
+    "source": "infrastructure",
+    "target": "general_knowledge",
+    "transfer_score": 0.095
+  }
+}

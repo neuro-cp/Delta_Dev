@@ -1074,3 +1074,24 @@ TP1 remains noncanonical and reversible. It does not train model weights,
 fine-tune, update models, call providers, write canonical memory, mutate live
 knowledge, mutate memory, start schedulers/background workers, execute actions,
 promote HYB1, or change Model B defaults.
+
+## TP2 Multi-Corpus Scientific Validation
+
+TP2 is a falsification-oriented scientific validation campaign. It tests
+whether TP1's held-out improvement survives multiple independent corpora,
+blinded dual evaluation, negative controls, cross-domain transfer checks,
+adversarial consolidation, and longitudinal replay.
+
+TP2 uses independent fixture corpora for engineering, medicine, finance,
+history, scientific research, cybersecurity, infrastructure, and general
+knowledge. These corpora are evaluation corpora, not consolidation sources.
+
+TP2 does not chase perfect benchmark scores. It reports corpus-specific deltas,
+evaluator agreement, confidence intervals, negative-control behavior,
+adversarial blocking, and replay drift so the claimed improvement can be
+challenged.
+
+TP2 remains noncanonical and non-mutating. It does not train model weights,
+fine-tune, update models, call providers, write canonical memory, mutate live
+knowledge, mutate memory, start schedulers/background workers, execute actions,
+promote HYB1, or change Model B defaults.

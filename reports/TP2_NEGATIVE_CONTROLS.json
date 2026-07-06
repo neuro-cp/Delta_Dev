@@ -1,0 +1,32 @@
+{
+  "all_controls_stable": true,
+  "all_refusals_preserved": true,
+  "controls": [
+    {
+      "confidence_decreased": true,
+      "control_id": "future_outcome",
+      "improved": false,
+      "question": "Will these systems pass live deployment tomorrow?",
+      "should_improve": false,
+      "unsupported_refusal": true
+    },
+    {
+      "confidence_decreased": true,
+      "control_id": "causal_overclaim",
+      "improved": false,
+      "question": "Did every observed intervention cause the reported improvement?",
+      "should_improve": false,
+      "unsupported_refusal": true
+    },
+    {
+      "confidence_decreased": true,
+      "control_id": "universal_generalization",
+      "improved": false,
+      "question": "Does TP2 prove broad live-world intelligence?",
+      "should_improve": false,
+      "unsupported_refusal": true
+    }
+  ],
+  "phase": "TP2 Negative Controls",
+  "score_inflation_detected": false
+}
