@@ -6,6 +6,8 @@ Safe: `True`
 
 ## Features
 - cognitive state home screen
+- conversation-first mode selector
+- RC2 mode router handoff
 - current runtime status
 - corpus/substrate summary
 - text paste evidence preview

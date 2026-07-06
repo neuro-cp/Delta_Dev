@@ -5170,3 +5170,23 @@ Future work must originate from operational evidence: observed failure,
 operator request, measured bottleneck, reproducible bug, or scientific
 evidence. Safety state remains unchanged.
 
+### RC2 Conversational Shell With DELTA Mode Router
+
+Added a conversation-first shell and selectable mode router over the RC1
+operator console. RC2 keeps RC1 as the governed substrate/operator mode while
+making ordinary conversation the default UI path.
+
+Generated artifacts:
+
+- `orchestration/runtime/rc2_conversational_mode_router.py`
+- `scripts/delta_rc2_conversational_mode_router_report.py`
+- `tests/runtime_rc2/test_rc2_conversational_mode_router.py`
+- `reports/RC2_CONVERSATIONAL_MODE_ROUTER.md/json`
+- `docs/continuation_rc2_conversational_shell.md`
+
+The mode router supports Conversation, Ask Substrate, Evidence Review, Review
+Mode, Memory Mode, Contradiction Check, Replay, Failure Log, Diagnostics,
+Research Analyst, and Frontier App Assistant. Provider calls, web search,
+training, canonical writes, autonomous actions, production routing, HYB1
+promotion, and Model B replacement remain disabled.
+

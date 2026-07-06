@@ -22,6 +22,7 @@ from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     preview_evidence_ingest,
     validate_console_safe,
 )
+from orchestration.runtime.rc2_conversational_mode_router import MODES, render_route, route_message  # noqa: E402
 
 
 def _format_snapshot(snapshot: dict[str, object]) -> str:
@@ -133,11 +134,15 @@ class DeltaOperatorConsole:
         ttk.Button(actions, text="Replay", command=self._show_replay).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(actions, text="Log Issue", command=self._log_observation).pack(side=tk.LEFT, padx=(6, 0))
 
-        ask_bar = ttk.LabelFrame(frame, text="Ask DELTA")
+        ask_bar = ttk.LabelFrame(frame, text="DELTA Conversation / Mode Router")
         ask_bar.pack(fill=tk.X, pady=(8, 0))
+        ttk.Label(ask_bar, text="Mode").pack(side=tk.LEFT, padx=(6, 0))
+        self.mode = ttk.Combobox(ask_bar, values=MODES, width=24, state="readonly")
+        self.mode.set("Conversation")
+        self.mode.pack(side=tk.LEFT, padx=6, pady=6)
         self.question = ttk.Entry(ask_bar)
         self.question.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=6, pady=6)
-        self.question.insert(0, "What do you know about Frontier?")
+        self.question.insert(0, "What color is the sky?")
         ttk.Button(ask_bar, text="Send", command=self._ask).pack(side=tk.RIGHT, padx=6)
 
         panes = ttk.PanedWindow(frame, orient=tk.HORIZONTAL)
@@ -215,17 +220,9 @@ class DeltaOperatorConsole:
         message = self.question.get().strip()
         if not message:
             return
-        data = answer_operator_question(message)
+        data = route_message(self.mode.get(), message, self.paste.get("1.0", tk.END))
         self._refresh_state_cards()
-        self._write_output(
-            data["answer"]
-            + "\n\nSafety:\n"
-            + f"- provider_calls_performed: {data['provider_calls_performed']}\n"
-            + f"- training_performed: {data['training_performed']}\n"
-            + f"- canonical_write_performed: {data['canonical_write_performed']}\n"
-            + f"- autonomous_action_performed: {data['autonomous_action_performed']}\n"
-            + f"- route: {data['route']}\n"
-        )
+        self._write_output(render_route(data))
 
     def _preview_evidence(self) -> None:
         data = preview_evidence_ingest(self.paste.get("1.0", tk.END))

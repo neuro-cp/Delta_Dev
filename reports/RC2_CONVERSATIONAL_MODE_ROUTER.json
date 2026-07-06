@@ -1,0 +1,208 @@
+{
+  "cases": [
+    {
+      "answer": "The sky usually appears blue during the day because the atmosphere scatters shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "confidence": "high_for_general_knowledge",
+      "escalation_plan": {
+        "enabled_now": false,
+        "intent": "general_conversation",
+        "provider_calls_performed": false,
+        "recommended_routes": [
+          "local_conversation",
+          "substrate_check"
+        ],
+        "requires_operator_approval": false,
+        "web_search_performed": false
+      },
+      "mode": "Conversation",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "route": "local_conversation_scaffold",
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "That question likely needs specialist or provider-assisted research. RC2 can produce a gated escalation plan, but no provider or web call is enabled in this scaffold.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "confidence": "requires_gated_escalation",
+      "escalation_plan": {
+        "enabled_now": false,
+        "intent": "external_knowledge_request",
+        "provider_calls_performed": false,
+        "recommended_routes": [
+          "local_model_research",
+          "web_search_with_operator_approval",
+          "large_model_review_with_operator_approval"
+        ],
+        "requires_operator_approval": true,
+        "web_search_performed": false
+      },
+      "mode": "Conversation",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "route": "local_conversation_scaffold",
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "Detected 1 proposition candidate(s).",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "extracted": {
+        "candidate_count": 1,
+        "candidates": [
+          {
+            "canonical": false,
+            "claim": "Project Frontier has AI workers.",
+            "confidence": "operator_asserted_unverified",
+            "proposition_id": "rc1-proposition-9e51db7e8605ae30",
+            "selected_by_default": true,
+            "source": "operator_paste",
+            "status": "pending_operator_review"
+          }
+        ],
+        "canonical_write_performed": false,
+        "persisted": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "mode": "Evidence Review",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "preview": {
+        "canonical_write_performed": false,
+        "characters": 32,
+        "nonempty_lines": 1,
+        "note": "Paste preview only. No upload, provider call, training, canonical write, or substrate mutation occurred.",
+        "persisted": false,
+        "preview_id": "rc1-evidence-preview-9e51db7e8605ae30",
+        "provider_calls_performed": false,
+        "sha256": "9e51db7e8605ae30044c42de4e7d004d2a6cd500d206eeb91e43ef13665a9470"
+      },
+      "provider_calls_performed": false,
+      "route": "evidence_review",
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "I found approved noncanonical RC1 substrate evidence:\n- Project Frontier has AI workers. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier uses OCR. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier uses a speech worker. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier processes invoices. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier requires operator review before approval. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier should not approve uncertain invoices automatically. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier approves uncertain invoices automatically. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n\nNo contradictory evidence is currently recorded in the RC1 local substrate.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "mode": "Ask Substrate",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "question": "What do you know about Frontier?",
+      "route": "rc1_noncanonical_substrate",
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "Research Analyst mode can plan local/provider/web escalation, but external routes are disabled until explicitly gated.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "escalation_plan": {
+        "enabled_now": false,
+        "intent": "external_knowledge_request",
+        "provider_calls_performed": false,
+        "recommended_routes": [
+          "local_model_research",
+          "web_search_with_operator_approval",
+          "large_model_review_with_operator_approval"
+        ],
+        "requires_operator_approval": true,
+        "web_search_performed": false
+      },
+      "mode": "Research Analyst",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "route": "research_analyst_scaffold",
+      "training_performed": false,
+      "web_search_performed": false
+    }
+  ],
+  "final_recommendation": "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE",
+  "flags": {
+    "autonomous_actions_enabled": false,
+    "canonical_writes_enabled": false,
+    "hyb1_promoted": false,
+    "mode_router_enabled": true,
+    "model_b_default_changed": false,
+    "production_routing_enabled": false,
+    "provider_calls_enabled": false,
+    "rc2_conversational_shell_enabled": true,
+    "training_enabled": false,
+    "web_search_enabled": false
+  },
+  "modes": [
+    "Conversation",
+    "Ask Substrate",
+    "Evidence Review",
+    "Review Mode",
+    "Memory Mode",
+    "Contradiction Check",
+    "Replay",
+    "Failure Log",
+    "Diagnostics",
+    "Research Analyst",
+    "Frontier App Assistant"
+  ],
+  "phase": "RC2 Conversational Shell With DELTA Mode Router",
+  "safe": true
+}
