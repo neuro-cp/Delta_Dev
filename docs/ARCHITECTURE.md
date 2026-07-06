@@ -1291,3 +1291,7 @@ TP16 (Controlled Substrate Integration) preserves the substrate-first architectu
 ### TP17 Architecture Note
 
 TP17 (Operational Substrate Pilot) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
+
+### TP18 Architecture Note
+
+TP18 (Corpus Expansion) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.

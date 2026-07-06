@@ -5037,3 +5037,11 @@ Final recommendation: `PROCEED_TP18_CORPUS_EXPANSION`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+### TP18 Corpus Expansion
+
+Completed TP18: Expand governed corpus readiness with deterministic manifests, provenance, contamination checks, review workflow, and held-out isolation.
+
+Final recommendation: `PROCEED_TP19_INDEPENDENT_EXTERNAL_EVALUATION`.
+
+Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
+
