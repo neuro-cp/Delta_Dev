@@ -928,6 +928,17 @@ Recommended next phase:
 
 `PROCEED_MANUAL_LOCAL_DEMO_AND_SELECTED_CLEANUP_REVIEW`
 
+## TP8 Canonical Promotion Policy Validation
+
+TP8 is complete. It validated canonical-promotion policy in simulation only:
+provenance, reviewer agreement, contradiction blocking, uncertainty handling,
+rollback, replay, audit, and falsification behavior all pass without enabling
+canonical memory.
+
+Current recommendation:
+
+`READY_FOR_CONTROLLED_CANONICAL_PILOT_DESIGN`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

@@ -1,0 +1,54 @@
+{
+  "abstention_requirements": [
+    "block_if_uncertain",
+    "block_if_source_ambiguous",
+    "block_if_stale"
+  ],
+  "audit_requirements": [
+    "approval_chain",
+    "promotion_rationale",
+    "timestamp",
+    "source_lineage"
+  ],
+  "canonical_memory_enabled": false,
+  "contradiction_handling_requirements": [
+    "unresolved contradictions block",
+    "contradictions preserved",
+    "no deletion of counterevidence"
+  ],
+  "minimum_operator_approval_requirements": [
+    "two independent reviewers",
+    "explicit promotion approval",
+    "minority objection preservation"
+  ],
+  "minimum_provenance_requirements": [
+    "source_references",
+    "source_checksum",
+    "audit_id",
+    "operator_id"
+  ],
+  "phase": "TP8 Canonical Promotion Policy",
+  "rejection_requirements": [
+    "reason_code",
+    "evidence_gap",
+    "reviewer_disagreement",
+    "operator_visible"
+  ],
+  "replay_requirements": [
+    "read_only_replay_before",
+    "read_only_replay_after_simulation"
+  ],
+  "reviewer_agreement_requirements": {
+    "minimum_agreement": 1.0,
+    "minority_objection_blocks": true
+  },
+  "rollback_requirements": [
+    "pre_promotion_state",
+    "rollback_target",
+    "reversible_transformation_path"
+  ],
+  "uncertainty_thresholds": {
+    "max_unresolved_uncertainty": 0,
+    "minimum_confidence": 0.85
+  }
+}

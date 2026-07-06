@@ -833,3 +833,19 @@ training pilot design/approval checkpoint, not automatic training execution.
 
 Current next recommendation:
 READY_FOR_CONTROLLED_TRAINING_PILOT
+
+TP8 canonical promotion policy validation is complete.
+
+Checkpoint:
+
+- canonical promotion policy was validated in simulation only
+- canonical memory remains disabled
+- canonical writes remain disabled
+- reviewer disagreement, weak provenance, contradictions, unresolved
+  uncertainty, stale evidence, duplicate evidence, and hallucination lures are
+  blocked
+- rollback, replay, audit, and source-lineage requirements are preserved as
+  future gates
+
+Current next recommendation:
+READY_FOR_CONTROLLED_CANONICAL_PILOT_DESIGN

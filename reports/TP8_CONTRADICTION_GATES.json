@@ -1,0 +1,47 @@
+{
+  "cases": [
+    {
+      "auditable": true,
+      "candidate_id": "candidate-contradiction",
+      "classification": "contradiction_unresolved",
+      "reasons": [
+        "unresolved contradiction"
+      ]
+    },
+    {
+      "auditable": true,
+      "candidate_id": "candidate-unsupported",
+      "classification": "needs_more_evidence",
+      "reasons": [
+        "confidence below threshold"
+      ]
+    },
+    {
+      "auditable": true,
+      "candidate_id": "candidate-weak_provenance",
+      "classification": "provenance_incomplete",
+      "reasons": [
+        "missing provenance"
+      ]
+    },
+    {
+      "auditable": true,
+      "candidate_id": "candidate-reviewer_disagreement",
+      "classification": "operator_disagreement",
+      "reasons": [
+        "reviewer disagreement"
+      ]
+    },
+    {
+      "auditable": true,
+      "candidate_id": "candidate-stale",
+      "classification": "needs_more_evidence",
+      "reasons": [
+        "uncertainty unresolved"
+      ]
+    }
+  ],
+  "passed": true,
+  "phase": "TP8 Contradiction And Uncertainty Gates",
+  "unsafe_cases_blocked": true
+}

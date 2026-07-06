@@ -4807,3 +4807,28 @@ workers, no actions, no HYB1 promotion, and Model B remains default.
 Next recommendation:
 
 `PROCEED_OV2_CONTROLLED_LIVE_CORPUS_PILOT_REVIEW`
+
+## TP8 Canonical Promotion Policy Validation
+
+TP8 canonical promotion policy validation is complete.
+
+New TP8 surface:
+
+- `orchestration/runtime/tp8_canonical_promotion_policy.py`
+- `scripts/delta_tp8_policy_validation.py`
+- `tests/runtime_tp8/test_tp8_canonical_promotion_policy.py`
+- `reports/TP8_PROMOTION_POLICY.md/json`
+- `reports/TP8_POLICY_SIMULATION.md/json`
+- `reports/TP8_CONTRADICTION_GATES.md/json`
+- `reports/TP8_MULTI_REVIEWER_VALIDATION.md/json`
+- `reports/TP8_FALSIFICATION_SUITE.md/json`
+- `reports/TP8_POLICY_SCORECARD.md/json`
+- `reports/TP8_READINESS_REVIEW.md/json`
+- `ui/delta_tp8_dashboard.html`
+- `docs/continuation_tp8.md`
+
+TP8 did not enable canonical memory or perform canonical writes. It validates
+only future policy gates and recommends controlled canonical pilot design.
+
+Current next recommendation:
+READY_FOR_CONTROLLED_CANONICAL_PILOT_DESIGN

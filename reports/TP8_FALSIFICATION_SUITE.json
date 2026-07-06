@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "blocked": true,
+      "case": "unsupported_claim",
+      "classification": "needs_more_evidence"
+    },
+    {
+      "blocked": true,
+      "case": "false_authority",
+      "classification": "provenance_incomplete"
+    },
+    {
+      "blocked": true,
+      "case": "duplicated_evidence",
+      "classification": "needs_more_evidence"
+    },
+    {
+      "blocked": true,
+      "case": "circular_evidence",
+      "classification": "provenance_incomplete"
+    },
+    {
+      "blocked": true,
+      "case": "stale_evidence",
+      "classification": "needs_more_evidence"
+    },
+    {
+      "blocked": true,
+      "case": "contradictory_sources",
+      "classification": "contradiction_unresolved"
+    },
+    {
+      "blocked": true,
+      "case": "operator_disagreement",
+      "classification": "operator_disagreement"
+    },
+    {
+      "blocked": true,
+      "case": "provenance_loss",
+      "classification": "provenance_incomplete"
+    },
+    {
+      "blocked": true,
+      "case": "hallucination_lure",
+      "classification": "rejected"
+    },
+    {
+      "blocked": true,
+      "case": "transfer_trap",
+      "classification": "contradiction_unresolved"
+    }
+  ],
+  "passed": true,
+  "phase": "TP8 Falsification Suite",
+  "unsafe_candidates_blocked": true
+}

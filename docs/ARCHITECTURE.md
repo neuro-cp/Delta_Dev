@@ -1186,3 +1186,14 @@ stability, drift, reviewer agreement, provenance survival, contradiction
 preservation, uncertainty calibration, and governance longevity. It does not
 train, call providers, write canonical memory, mutate live knowledge, start
 schedulers, execute actions, promote HYB1, or change Model B defaults.
+
+## TP8 Canonical Promotion Policy Validation
+
+TP8 validates the policy gates that would be required before any future
+canonical promotion. It is simulation-only: candidates are classified against
+provenance, contradiction, uncertainty, reviewer-agreement, replay, audit, and
+rollback requirements, but no canonical write path is enabled.
+
+TP8 keeps canonical memory disabled. It does not train, fine-tune, update model
+weights, call providers, write canonical memory, mutate live knowledge, start
+schedulers, execute actions, promote HYB1, or change Model B defaults.
