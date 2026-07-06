@@ -1,0 +1,1 @@
+Treasury hedging reduced foreign-exchange variance during the pilot quarter. The dataset excludes two volatile settlement days, creating a provenance trap. The proposal recommends leverage expansion despite unresolved liquidity stress.

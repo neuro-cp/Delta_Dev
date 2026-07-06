@@ -2,14 +2,39 @@
 
 ## Current Phase
 
-TP2 multi-corpus scientific validation is complete. The current recommendation
-is `PROCEED_TP3_INDEPENDENT_VERIFICATION_FREEZE`.
+TP3 independent verification freeze is complete. The current recommendation
+is `PROCEED_TP4_CONTROLLED_PERSISTENT_PILOT_DESIGN_REVIEW`.
 
-The next phase should freeze the runtime and create independent benchmark
-suites that were not used during development. Do not continue broad
-architecture expansion until independent verification is complete. Do not
-enable model-weight training, providers, canonical writes, live corpus
-ingestion, schedulers, actions, or HYB1 promotion.
+The next phase should design the smallest controlled persistent pilot, but it
+must not activate persistent learning automatically. Preserve explicit human
+review, rollback, independent evaluation, and the existing safety boundary. Do
+not enable model-weight training, providers, canonical writes, live corpus
+ingestion, schedulers, actions, or HYB1 promotion without a separate explicit
+approval milestone.
+
+## TP3 Independent Verification Freeze
+
+Completed:
+
+- immutable freeze manifest
+- independent verification replay script
+- external benchmark pack not used by TP0 through TP2
+- falsification tests for shuffled labels, duplicate evidence, contradictions,
+  missing provenance, false authority, unsupported conclusions, noisy
+  irrelevant documents, and cross-domain transfer traps
+- independent scorecard separate from TP2 scoring
+- release freeze review
+- local answer routes for TP3 verification questions
+
+Key result:
+
+- final recommendation: `VERIFIED_READY_FOR_CONTROLLED_PERSISTENT_PILOT`
+- rollback stability: `1.0`
+- no live capabilities enabled
+
+Recommended next roadmap item:
+
+`PROCEED_TP4_CONTROLLED_PERSISTENT_PILOT_DESIGN_REVIEW`
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 

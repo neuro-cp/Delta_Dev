@@ -1,0 +1,236 @@
+{
+  "benchmark_pack": {
+    "documents": [
+      {
+        "checksum": "ee59466c3546e1fea606f570c2914be8c9837f5a6edb11ddd9fffc8f85b4b8e5",
+        "contradiction_present": false,
+        "document_id": "tp3-cybersecurity_provenance-ee59466c3546",
+        "domain": "cybersecurity_provenance",
+        "missing_evidence_present": true,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/cybersecurity_provenance.md",
+        "provenance_trap_present": true,
+        "text_preview": "Endpoint logs show token rotation before the second intrusion attempt. A copied incident table omits checksum provenance and repeats one source twice. Attribution to the vendor patch remains plausible but unproven."
+      },
+      {
+        "checksum": "734b1026e480643a0908fd196e68c0be2486379e8fa5ed6a570b44a6a2e09755",
+        "contradiction_present": true,
+        "document_id": "tp3-engineering-734b1026e480",
+        "domain": "engineering",
+        "missing_evidence_present": true,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/engineering.md",
+        "provenance_trap_present": true,
+        "text_preview": "Valve telemetry shows the east manifold stabilized after gasket replacement. However, the archive lacks post-pressure-cycle inspection, so durability is unresolved. A vendor memo claims the root cause is solved, but the "
+      },
+      {
+        "checksum": "aa3578795bdad7e9e13267b24b69b849e3099d96a205388235f5417dece92917",
+        "contradiction_present": false,
+        "document_id": "tp3-finance_risk-aa3578795bda",
+        "domain": "finance_risk",
+        "missing_evidence_present": true,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/finance_risk.md",
+        "provenance_trap_present": true,
+        "text_preview": "Treasury hedging reduced foreign-exchange variance during the pilot quarter. The dataset excludes two volatile settlement days, creating a provenance trap. The proposal recommends leverage expansion despite unresolved li"
+      },
+      {
+        "checksum": "58e0cbff17208f9f0e2463f4d03038c36098063340e1f3338d5c23d66da2ed83",
+        "contradiction_present": false,
+        "document_id": "tp3-general_reasoning-58e0cbff1720",
+        "domain": "general_reasoning",
+        "missing_evidence_present": false,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/general_reasoning.md",
+        "provenance_trap_present": false,
+        "text_preview": "A tutoring cohort improved after spaced practice and a new instructor joined midterm. The report claims spaced practice alone caused the gain. The evidence supports improvement but not exclusive causality."
+      },
+      {
+        "checksum": "b6942769a250626a331080ab0561f27288bc6777cca67a395d65f3cd57524d54",
+        "contradiction_present": true,
+        "document_id": "tp3-history_conflict-b6942769a250",
+        "domain": "history_conflict",
+        "missing_evidence_present": true,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/history_conflict.md",
+        "provenance_trap_present": false,
+        "text_preview": "Archive A states the harbor closure began after the blockade order. Archive B dates the closure two days before the order. Both archives are partial, so a single clean causal sequence is unsupported."
+      },
+      {
+        "checksum": "b2a11db18073da2c3e6b12842a936b40323276d98b30405c2418d16030b3c0b7",
+        "contradiction_present": false,
+        "document_id": "tp3-infrastructure_planning-b2a11db18073",
+        "domain": "infrastructure_planning",
+        "missing_evidence_present": true,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/infrastructure_planning.md",
+        "provenance_trap_present": false,
+        "text_preview": "Bridge sensors reported lower vibration after lane restrictions. Material fatigue readings were not collected during peak load. A planning note claims reopening is safe, but the missing fatigue evidence blocks that concl"
+      },
+      {
+        "checksum": "febc8176d84f11c78fd9b58975bb90850af4a601e719da44605f150a91856043",
+        "contradiction_present": true,
+        "document_id": "tp3-medical_evidence-febc8176d84f",
+        "domain": "medical_evidence",
+        "missing_evidence_present": true,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/medical_evidence.md",
+        "provenance_trap_present": false,
+        "text_preview": "A clinic review links the new dosage checklist to fewer transcription errors. The same sample also changed staffing coverage, so causality is uncertain. A summary says patient risk is eliminated, but adverse-event follow"
+      },
+      {
+        "checksum": "85fb029b0a11fca91a344f4a982bcf775cca7293b95bc261ff8741932b3f962c",
+        "contradiction_present": true,
+        "document_id": "tp3-scientific_uncertainty-85fb029b0a11",
+        "domain": "scientific_uncertainty",
+        "missing_evidence_present": false,
+        "path": "G:/Delta_Dev/data/tp3_independent_benchmark_pack/scientific_uncertainty.md",
+        "provenance_trap_present": false,
+        "text_preview": "Lab notebooks show catalyst yield improved after temperature control. Solvent purity also changed in the same run. The replication plan should preserve both hypotheses rather than declare a single cause."
+      }
+    ],
+    "domain_count": 8,
+    "domains": [
+      "cybersecurity_provenance",
+      "engineering",
+      "finance_risk",
+      "general_reasoning",
+      "history_conflict",
+      "infrastructure_planning",
+      "medical_evidence",
+      "scientific_uncertainty"
+    ]
+  },
+  "falsification_passed": true,
+  "manifest": {
+    "blocked_capabilities": [
+      "model training",
+      "fine tuning",
+      "weight updates",
+      "provider calls",
+      "canonical writes",
+      "live memory mutation",
+      "live knowledge mutation",
+      "scheduler/background workers",
+      "action execution",
+      "HYB1 promotion"
+    ],
+    "branch": "codex/delta-cognitive-core",
+    "corpus_hashes": {
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/cybersecurity_provenance.md": "ee59466c3546e1fea606f570c2914be8c9837f5a6edb11ddd9fffc8f85b4b8e5",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/engineering.md": "734b1026e480643a0908fd196e68c0be2486379e8fa5ed6a570b44a6a2e09755",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/finance_risk.md": "aa3578795bdad7e9e13267b24b69b849e3099d96a205388235f5417dece92917",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/general_reasoning.md": "58e0cbff17208f9f0e2463f4d03038c36098063340e1f3338d5c23d66da2ed83",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/history_conflict.md": "b6942769a250626a331080ab0561f27288bc6777cca67a395d65f3cd57524d54",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/infrastructure_planning.md": "b2a11db18073da2c3e6b12842a936b40323276d98b30405c2418d16030b3c0b7",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/medical_evidence.md": "febc8176d84f11c78fd9b58975bb90850af4a601e719da44605f150a91856043",
+      "G:/Delta_Dev/data/tp3_independent_benchmark_pack/scientific_uncertainty.md": "85fb029b0a11fca91a344f4a982bcf775cca7293b95bc261ff8741932b3f962c"
+    },
+    "created_at": "2026-07-06T00:00:00+00:00",
+    "enabled_capabilities": [
+      "fixture-only deterministic verification",
+      "report-only independent scoring",
+      "local answer route for TP3 status"
+    ],
+    "expected_commands": [
+      ".\\.venv311\\Scripts\\python.exe scripts\\delta_tp3_independent_verify.py",
+      ".\\.venv311\\Scripts\\python.exe -m pytest tests\\runtime_tp3 -q -ra"
+    ],
+    "expected_outputs": {
+      "blinded_evaluator_agreement": 0.875,
+      "negative_controls_pass": true,
+      "rollback_stability": 1.0,
+      "tp2_average_delta": 0.114
+    },
+    "phase": "TP3 Freeze Manifest",
+    "repo_commit": "61e90a5448189fc1274f719fbdec2052d13b3c64",
+    "report_hashes": {
+      "reports/TP0_BEFORE_AFTER_EVALUATION.json": "51d4ac4a753d0f673a529b50c862ed7391990c0364f3dd34b481a0730c1a8282",
+      "reports/TP0_CONTROLLED_TRAINING_PILOT.json": "7a57c9be85fcabbaa55c95133b4581537362ae71b4c1ad28e62c34343b87c9e0",
+      "reports/TP0_ROLLBACK_DRILL.json": "1ebea34bd9d17c8fbb932ff6316ec98a5533b60d27d62ef24e052a1d0a7cdf82",
+      "reports/TP1_ADVERSARIAL_CONSOLIDATION.json": "7082e9022e9c0a0c722dbe0b65b45c3c6ad8e3763c32dd6bf0b5708e8a9021ff",
+      "reports/TP1_GENERALIZATION_STUDY.json": "44102f0e6791966cf3234ab366e3ed24ca540029982df124e79faa741e23825e",
+      "reports/TP1_HELDOUT_BENCHMARK.json": "df020f5dd22f73aee4f76a0a1d63f630484bec677e75dca959d2fc8e6859cc84",
+      "reports/TP2_BLINDED_EVALUATION.json": "c0b118571a806b0b1cf56b5f75aa40ad74c01921ed19d76571d34f636d81cce4",
+      "reports/TP2_CROSS_DOMAIN_TRANSFER.json": "1dad0473a611b1502809aea813746587ed23cb3e0ba2d2a543a381fac3a45f99",
+      "reports/TP2_LONGITUDINAL_REPLAY.json": "4dcc466f78050cf5381e17802f7f2cd0ad1181cab37ac68c0ec586dddb0662f9",
+      "reports/TP2_MULTI_CORPUS_GENERALIZATION.json": "bae7c20f95eb71a8067816458bb46608615610448a1c7ef24ef7f88425cf3376",
+      "reports/TP2_NEGATIVE_CONTROLS.json": "5b1bbac05b23800f0a85f9ad50a778a4b2643516116fbb3882ec20affee2d62e",
+      "reports/TP2_READINESS.json": "e587a14946c4e427054c8df7f7bd2f10fb96061ff05b1db8563c32a4c618ab33"
+    },
+    "runtime_phase": "TP3 independent verification freeze",
+    "safety_invariants": {
+      "action_execution_performed": false,
+      "background_worker_started": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1_promoted": false,
+      "live_knowledge_mutation_performed": false,
+      "live_memory_mutation_performed": false,
+      "model_b_default_changed": false,
+      "model_training_performed": false,
+      "phase": "TP3 Independent Verification Freeze",
+      "provider_call_performed": false,
+      "scheduler_started": false,
+      "weight_update_performed": false
+    },
+    "verification_criteria": [
+      "corpus hashes match manifest",
+      "selected TP0-TP2 report hashes remain readable",
+      "TP2 replay matches frozen expected values",
+      "falsification cases block unsafe interpretations",
+      "rollback remains stable",
+      "no prohibited capability flag becomes true"
+    ]
+  },
+  "passed": true,
+  "phase": "TP3 Independent Verification",
+  "release_outcome": "VERIFIED_READY_FOR_CONTROLLED_PERSISTENT_PILOT",
+  "safety": {
+    "action_execution_performed": false,
+    "background_worker_started": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "live_knowledge_mutation_performed": false,
+    "live_memory_mutation_performed": false,
+    "model_b_default_changed": false,
+    "model_training_performed": false,
+    "phase": "TP3 Independent Verification Freeze",
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "weight_update_performed": false
+  },
+  "scorecard_passed": true,
+  "tp2_replay": {
+    "comparisons": {
+      "average_delta": {
+        "expected": 0.114,
+        "matches": true,
+        "observed": 0.114
+      },
+      "blinded_evaluator_agreement": {
+        "expected": 0.875,
+        "matches": true,
+        "observed": 0.875
+      },
+      "cross_domain_average_transfer": {
+        "expected": 0.116,
+        "matches": true,
+        "observed": 0.116
+      },
+      "negative_controls_passed": {
+        "expected": true,
+        "matches": true,
+        "observed": true
+      },
+      "rollback_stability": {
+        "expected": 1.0,
+        "matches": true,
+        "observed": 1.0
+      }
+    },
+    "observed": {
+      "average_delta": 0.114,
+      "blinded_evaluator_agreement": 0.875,
+      "cross_domain_average_transfer": 0.116,
+      "negative_controls_passed": true,
+      "rollback_stability": 1.0
+    },
+    "passed": true,
+    "phase": "TP3 TP2 Benchmark Replay"
+  }
+}

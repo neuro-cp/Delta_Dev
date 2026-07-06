@@ -1,0 +1,1 @@
+Endpoint logs show token rotation before the second intrusion attempt. A copied incident table omits checksum provenance and repeats one source twice. Attribution to the vendor patch remains plausible but unproven.

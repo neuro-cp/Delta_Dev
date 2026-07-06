@@ -1,0 +1,1 @@
+Lab notebooks show catalyst yield improved after temperature control. Solvent purity also changed in the same run. The replication plan should preserve both hypotheses rather than declare a single cause.

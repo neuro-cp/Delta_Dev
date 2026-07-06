@@ -1,0 +1,1 @@
+Archive A states the harbor closure began after the blockade order. Archive B dates the closure two days before the order. Both archives are partial, so a single clean causal sequence is unsupported.

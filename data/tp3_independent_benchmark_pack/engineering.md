@@ -1,0 +1,1 @@
+Valve telemetry shows the east manifold stabilized after gasket replacement. However, the archive lacks post-pressure-cycle inspection, so durability is unresolved. A vendor memo claims the root cause is solved, but the memo cites no inspection log.

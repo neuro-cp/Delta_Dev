@@ -1,0 +1,19 @@
+{
+  "falsification_passed": true,
+  "final_recommendation": "VERIFIED_READY_FOR_CONTROLLED_PERSISTENT_PILOT",
+  "frozen_commit": "61e90a5448189fc1274f719fbdec2052d13b3c64",
+  "manifest_complete": true,
+  "passed": true,
+  "phase": "TP3 Release Freeze Review",
+  "remaining_blockers": [
+    "independent human review still required before persistent pilot",
+    "persistent learning remains disabled",
+    "canonical writes remain disabled",
+    "provider calls remain disabled",
+    "live corpus ingestion remains disabled"
+  ],
+  "rollback_stability": 1.0,
+  "scorecard_passed": true,
+  "tp2_replay_passed": true,
+  "verification_outcome": "VERIFIED_READY_FOR_CONTROLLED_PERSISTENT_PILOT"
+}

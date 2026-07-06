@@ -6,6 +6,42 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP3 Independent Verification Freeze
+
+Completed TP3 as an independent verification freeze. TP3 does not improve the
+runtime to chase scores; it freezes TP0 through TP2 evidence so the reported
+substrate-learning improvements can be replayed, hashed, challenged, and
+reviewed independently.
+
+Generated artifacts:
+
+- `data/tp3_independent_benchmark_pack/`
+- `orchestration/runtime/tp3_independent_verification_freeze.py`
+- `scripts/delta_tp3_independent_verify.py`
+- `tests/runtime_tp3/test_tp3_independent_verification_freeze.py`
+- `reports/TP3_FREEZE_MANIFEST.md/json`
+- `reports/TP3_INDEPENDENT_VERIFICATION.md/json`
+- `reports/TP3_FALSIFICATION_TESTS.md/json`
+- `reports/TP3_INDEPENDENT_SCORECARD.md/json`
+- `reports/TP3_RELEASE_FREEZE_REVIEW.md/json`
+- `reports/TP3_INDEPENDENT_VERIFY_REPLAY.json`
+- `ui/delta_tp3_dashboard.html`
+- `docs/continuation_tp3.md`
+
+TP3 verifies corpus hashes, selected TP0 through TP2 report hashes, TP2 replay
+metrics, negative controls, rollback stability, independent falsification
+cases, and an independent scorecard that does not reuse the TP2 scorer.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+model-weight training, no fine-tuning, no model update, no provider calls, no
+canonical writes, no live knowledge mutation, no memory mutation, no
+schedulers/background workers, no action execution, no hidden writes, and no
+HYB1 promotion.
+
+Final recommendation:
+
+`VERIFIED_READY_FOR_CONTROLLED_PERSISTENT_PILOT`
+
 ### TP2 Multi-Corpus Scientific Validation
 
 Completed TP2 as a scientific validation campaign. TP2 attempts to falsify

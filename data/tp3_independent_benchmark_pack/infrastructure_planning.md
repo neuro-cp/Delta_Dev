@@ -1,0 +1,1 @@
+Bridge sensors reported lower vibration after lane restrictions. Material fatigue readings were not collected during peak load. A planning note claims reopening is safe, but the missing fatigue evidence blocks that conclusion.

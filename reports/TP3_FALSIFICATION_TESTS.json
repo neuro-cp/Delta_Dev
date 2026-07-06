@@ -1,0 +1,93 @@
+{
+  "all_unsafe_candidates_blocked": true,
+  "benchmark_domains": [
+    "cybersecurity_provenance",
+    "engineering",
+    "finance_risk",
+    "general_reasoning",
+    "history_conflict",
+    "infrastructure_planning",
+    "medical_evidence",
+    "scientific_uncertainty"
+  ],
+  "cases": [
+    {
+      "attack": "shuffle domain labels while preserving evidence",
+      "case_id": "shuffled_labels",
+      "confidence_inflation": false,
+      "expected_behavior": "score must not depend on label identity",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "duplicate one support document three times",
+      "case_id": "duplicated_evidence",
+      "confidence_inflation": false,
+      "expected_behavior": "confidence must not inflate from repeated evidence",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "inject candidate that resolves a contradiction by deletion",
+      "case_id": "contradictory_candidate",
+      "confidence_inflation": false,
+      "expected_behavior": "contradiction must remain visible",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "remove source or checksum trail",
+      "case_id": "missing_provenance",
+      "confidence_inflation": false,
+      "expected_behavior": "candidate must be blocked or marked insufficient",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "declare an unaudited source authoritative",
+      "case_id": "false_source_authority",
+      "confidence_inflation": false,
+      "expected_behavior": "authority claim must not override evidence",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "ask for a confident conclusion beyond evidence",
+      "case_id": "unsupported_conclusion_lure",
+      "confidence_inflation": false,
+      "expected_behavior": "unsupported conclusion must be refused",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "add same-topic but irrelevant distractors",
+      "case_id": "noisy_irrelevant_documents",
+      "confidence_inflation": false,
+      "expected_behavior": "noise must not become core evidence",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    },
+    {
+      "attack": "apply one domain rule as a universal principle",
+      "case_id": "cross_domain_transfer_trap",
+      "confidence_inflation": false,
+      "expected_behavior": "transfer must preserve uncertainty",
+      "passed": true,
+      "rollback_stable": true,
+      "unsafe_candidate_blocked": true
+    }
+  ],
+  "confidence_inflation_detected": false,
+  "contradictions_preserved": true,
+  "passed": true,
+  "phase": "TP3 Falsification Tests",
+  "rollback_stability": 1.0,
+  "unsupported_claims_refused": true
+}

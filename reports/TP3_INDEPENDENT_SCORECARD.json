@@ -1,0 +1,18 @@
+{
+  "implementation_note": "independent scoring shape; TP2 scorer is not reused",
+  "metrics": {
+    "abstraction": 0.85,
+    "contradiction_preservation": 0.875,
+    "determinism": 1.0,
+    "disconfirmation": 0.875,
+    "evidence_support": 1.0,
+    "governance_compliance": 1.0,
+    "provenance_survival": 0.875,
+    "rollback_integrity": 1.0,
+    "uncertainty_calibration": 0.938,
+    "unsupported_claim_refusal": 1.0
+  },
+  "overall_score": 0.941,
+  "passed": true,
+  "phase": "TP3 Independent Scorecard"
+}

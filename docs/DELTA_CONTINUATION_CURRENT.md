@@ -531,6 +531,43 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP3 independent verification freeze is complete.
+
+New TP3 surface:
+
+- `data/tp3_independent_benchmark_pack/`
+- `orchestration/runtime/tp3_independent_verification_freeze.py`
+- `scripts/delta_tp3_independent_verify.py`
+- `reports/TP3_FREEZE_MANIFEST.md/json`
+- `reports/TP3_INDEPENDENT_VERIFICATION.md/json`
+- `reports/TP3_FALSIFICATION_TESTS.md/json`
+- `reports/TP3_INDEPENDENT_SCORECARD.md/json`
+- `reports/TP3_RELEASE_FREEZE_REVIEW.md/json`
+- `ui/delta_tp3_dashboard.html`
+- `docs/continuation_tp3.md`
+
+TP3 freezes TP0 through TP2 evidence for independent verification. It records
+runtime commit, corpus hashes, selected report hashes, safety invariants,
+expected commands, expected outputs, and verification criteria. It also creates
+an independent eight-domain benchmark pack, falsification tests, an independent
+scorecard, and a release freeze review.
+
+Current TP3 result:
+
+- TP2 replay: passed
+- falsification tests: passed
+- independent scorecard: passed
+- rollback stability: `1.0`
+- final recommendation: `VERIFIED_READY_FOR_CONTROLLED_PERSISTENT_PILOT`
+
+Safety state remains unchanged: no model-weight training, no fine-tuning, no
+model update, no provider calls, no canonical writes, no live knowledge
+mutation, no memory mutation, no schedulers/background workers, no action
+execution, no HYB1 promotion, and Model B remains default.
+
+Current next recommendation:
+PROCEED_TP4_CONTROLLED_PERSISTENT_PILOT_DESIGN_REVIEW
+
 TP2 multi-corpus scientific validation is complete.
 
 New TP2 surface:

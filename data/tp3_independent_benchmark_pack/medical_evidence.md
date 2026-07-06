@@ -1,0 +1,1 @@
+A clinic review links the new dosage checklist to fewer transcription errors. The same sample also changed staffing coverage, so causality is uncertain. A summary says patient risk is eliminated, but adverse-event follow-up is missing.

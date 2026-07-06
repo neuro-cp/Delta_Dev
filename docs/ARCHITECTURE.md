@@ -1095,3 +1095,23 @@ TP2 remains noncanonical and non-mutating. It does not train model weights,
 fine-tune, update models, call providers, write canonical memory, mutate live
 knowledge, mutate memory, start schedulers/background workers, execute actions,
 promote HYB1, or change Model B defaults.
+
+## TP3 Independent Verification Freeze
+
+TP3 freezes the TP0 through TP2 substrate-learning evidence for independent
+verification. Its purpose is not to improve scores, add architecture, or enable
+new capabilities. It creates a reproducible verification package that records
+the runtime commit, corpus hashes, selected report hashes, safety invariants,
+expected commands, expected outputs, and verification criteria.
+
+TP3 adds a small external benchmark pack that was not used by TP0 through TP2,
+independent falsification tests, and an independent scorecard that is separate
+from the TP2 scorer. It verifies TP2 replay, blinded-evaluation values,
+negative controls, rollback stability, provenance survival, contradiction
+preservation, unsupported-claim refusal, determinism, and governance
+compliance.
+
+TP3 does not train model weights, fine-tune, update models, call providers,
+write canonical memory, mutate live knowledge, mutate memory, start
+schedulers/background workers, execute actions, promote HYB1, or change Model
+B defaults.
