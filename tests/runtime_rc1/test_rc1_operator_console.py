@@ -10,6 +10,7 @@ from orchestration.runtime.rc1_operator_console import (
     build_cognitive_state,
     build_operator_snapshot,
     extract_propositions,
+    normalize_claim,
     preview_evidence_ingest,
     validate_console_safe,
 )
@@ -68,6 +69,29 @@ def test_approve_propositions_writes_only_local_noncanonical_store(tmp_path, mon
     assert state["replay_queue"] == 1
     assert answer["route"] == "rc1_noncanonical_substrate"
     assert "Project Frontier has AI workers." in answer["answer"]
+
+
+def test_noncanonical_contradiction_detection_for_frontier_claims(tmp_path, monkeypatch):
+    import orchestration.runtime.rc1_operator_console as console
+
+    monkeypatch.setattr(console, "PROPOSITION_LOG", tmp_path / "props.jsonl")
+    monkeypatch.setattr(console, "EVIDENCE_LOG", tmp_path / "evidence.jsonl")
+    monkeypatch.setattr(console, "REPLAY_LOG", tmp_path / "replay.jsonl")
+    monkeypatch.setattr(console, "CONTRADICTION_LOG", tmp_path / "contradictions.jsonl")
+    negative = "Project Frontier should not approve uncertain invoices automatically."
+    positive = "Project Frontier approves uncertain invoices automatically."
+    assert normalize_claim(negative)["normalized_key"] == normalize_claim(positive)["normalized_key"]
+    assert normalize_claim(negative)["polarity"] == "negative"
+    assert normalize_claim(positive)["polarity"] == "positive"
+    approve_propositions(extract_propositions(negative)["candidates"])
+    result = approve_propositions(extract_propositions(positive)["candidates"])
+    answer = answer_operator_question("Are there contradictions in my Frontier knowledge?")
+    state = build_cognitive_state()
+    assert result["contradiction_count"] == 1
+    assert state["contradictions"] == 1
+    assert "Contradictions detected" in answer["answer"]
+    assert negative in answer["answer"]
+    assert positive in answer["answer"]
 
 
 def test_observation_logging_is_local_operational_log_only(tmp_path):

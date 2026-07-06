@@ -35,6 +35,7 @@ def build_operator_console_report() -> dict[str, Any]:
             "deterministic proposition extraction",
             "operator-approved noncanonical substrate write",
             "cognitive state panel",
+            "deterministic noncanonical contradiction detection",
             "operator review queue inspection",
             "local ask/reasoning panel",
             "provenance/citation via existing report references",

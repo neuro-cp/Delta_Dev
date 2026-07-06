@@ -8,6 +8,7 @@
     "deterministic proposition extraction",
     "operator-approved noncanonical substrate write",
     "cognitive state panel",
+    "deterministic noncanonical contradiction detection",
     "operator review queue inspection",
     "local ask/reasoning panel",
     "provenance/citation via existing report references",
@@ -39,14 +40,14 @@
   "snapshot": {
     "cognitive_state": {
       "canonical_records": 0,
-      "concepts": 0,
+      "concepts": 18,
       "contradictions": 0,
       "corpus_documents": 0,
-      "evidence_links": 0,
-      "knowledge_available": false,
-      "noncanonical_propositions": 0,
+      "evidence_links": 7,
+      "knowledge_available": true,
+      "noncanonical_propositions": 7,
       "pending_review": 0,
-      "replay_queue": 0,
+      "replay_queue": 7,
       "training_records": 0
     },
     "console_flags": {
@@ -73,14 +74,14 @@
       "canonical_write_enabled": false,
       "rc1_noncanonical_state": {
         "canonical_records": 0,
-        "concepts": 0,
+        "concepts": 18,
         "contradictions": 0,
         "corpus_documents": 0,
-        "evidence_links": 0,
-        "knowledge_available": false,
-        "noncanonical_propositions": 0,
+        "evidence_links": 7,
+        "knowledge_available": true,
+        "noncanonical_propositions": 7,
         "pending_review": 0,
-        "replay_queue": 0,
+        "replay_queue": 7,
         "training_records": 0
       },
       "substrate_improvement_count": 6,

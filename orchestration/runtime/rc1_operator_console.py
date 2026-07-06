@@ -30,6 +30,7 @@ OBSERVATION_LOG = DATA / "observations.jsonl"
 PROPOSITION_LOG = DATA / "noncanonical_propositions.jsonl"
 EVIDENCE_LOG = DATA / "evidence_links.jsonl"
 REPLAY_LOG = DATA / "replay_queue.jsonl"
+CONTRADICTION_LOG = DATA / "contradictions.jsonl"
 
 CONSOLE_FLAGS = {
     "rc1_operator_console_enabled": True,
@@ -70,6 +71,79 @@ def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
 
 def _stable_id(prefix: str, text: str) -> str:
     return f"{prefix}-{hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]}"
+
+
+def normalize_claim(claim: str) -> dict[str, Any]:
+    """Normalize a narrow RC1 proposition into subject/predicate/polarity.
+
+    This is deterministic and intentionally conservative. It is built for the
+    first operator-console contradiction class: affirmative claims versus
+    negated/forbidden claims over the same subject and predicate.
+    """
+    text = claim.strip().rstrip(".")
+    lower = text.lower()
+    subject = "unknown"
+    predicate = lower
+    if lower.startswith("project frontier "):
+        subject = "project frontier"
+        predicate = lower.removeprefix("project frontier ").strip()
+
+    polarity = "positive"
+    negative_markers = [
+        "should not ",
+        "must not ",
+        "does not ",
+        "do not ",
+        "cannot ",
+        "can not ",
+        "never ",
+        "requires operator review before ",
+    ]
+    for marker in negative_markers:
+        if marker in predicate:
+            polarity = "negative"
+            predicate = predicate.replace(marker, "", 1).strip()
+            break
+
+    replacements = {
+        "approve ": "approves ",
+        "approval": "approve",
+    }
+    for old, new in replacements.items():
+        predicate = predicate.replace(old, new)
+    predicate = " ".join(predicate.split())
+    return {
+        "subject": subject,
+        "predicate": predicate,
+        "polarity": polarity,
+        "normalized_key": f"{subject}|{predicate}",
+    }
+
+
+def detect_contradictions_for_record(record: dict[str, Any], existing_records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    normalized = record["normalized"]
+    contradictions = []
+    for existing in existing_records:
+        other = existing.get("normalized", normalize_claim(existing.get("claim", "")))
+        if (
+            other["normalized_key"] == normalized["normalized_key"]
+            and other["polarity"] != normalized["polarity"]
+        ):
+            contradiction_id = _stable_id("rc1-contradiction", record["proposition_id"] + existing["proposition_id"])
+            contradictions.append({
+                "contradiction_id": contradiction_id,
+                "subject": normalized["subject"],
+                "predicate": normalized["predicate"],
+                "claim_a": existing["claim"],
+                "claim_a_id": existing["proposition_id"],
+                "claim_a_polarity": other["polarity"],
+                "claim_b": record["claim"],
+                "claim_b_id": record["proposition_id"],
+                "claim_b_polarity": normalized["polarity"],
+                "status": "operator_review_recommended",
+                "canonical": False,
+            })
+    return contradictions
 
 
 def report_summary() -> dict[str, Any]:
@@ -247,9 +321,11 @@ def extract_propositions(pasted_text: str) -> dict[str, Any]:
 
 def approve_propositions(candidates: list[dict[str, Any]]) -> dict[str, Any]:
     """Append approved candidates to the RC1 local noncanonical substrate."""
-    existing_ids = {row["proposition_id"] for row in _read_jsonl(PROPOSITION_LOG)}
+    existing_records = _read_jsonl(PROPOSITION_LOG)
+    existing_ids = {row["proposition_id"] for row in existing_records}
     approved = []
     duplicates = []
+    contradictions = []
     for candidate in candidates:
         proposition_id = candidate["proposition_id"]
         if proposition_id in existing_ids:
@@ -260,6 +336,7 @@ def approve_propositions(candidates: list[dict[str, Any]]) -> dict[str, Any]:
         record = {
             "proposition_id": proposition_id,
             "claim": claim,
+            "normalized": normalize_claim(claim),
             "source": candidate.get("source", "operator_paste"),
             "confidence": candidate.get("confidence", "operator_asserted_unverified"),
             "status": "approved_noncanonical",
@@ -288,12 +365,19 @@ def approve_propositions(candidates: list[dict[str, Any]]) -> dict[str, Any]:
         _append_jsonl(EVIDENCE_LOG, evidence)
         _append_jsonl(REPLAY_LOG, replay)
         approved.append(record)
+        new_contradictions = detect_contradictions_for_record(record, existing_records)
+        for contradiction in new_contradictions:
+            _append_jsonl(CONTRADICTION_LOG, contradiction)
+        contradictions.extend(new_contradictions)
+        existing_records.append(record)
         existing_ids.add(proposition_id)
     return {
         "approved_count": len(approved),
         "duplicate_count": len(duplicates),
+        "contradiction_count": len(contradictions),
         "approved": approved,
         "duplicates": duplicates,
+        "contradictions": contradictions,
         "state": build_cognitive_state(),
         "canonical_write_performed": False,
         "provider_calls_performed": False,
@@ -306,12 +390,13 @@ def build_cognitive_state() -> dict[str, Any]:
     propositions = _read_jsonl(PROPOSITION_LOG)
     evidence = _read_jsonl(EVIDENCE_LOG)
     replay = _read_jsonl(REPLAY_LOG)
+    contradictions = _read_jsonl(CONTRADICTION_LOG)
     return {
         "corpus_documents": 0,
         "noncanonical_propositions": len(propositions),
         "evidence_links": len(evidence),
         "concepts": len({token.strip(".,:;!?").lower() for row in propositions for token in row.get("claim", "").split() if len(token.strip(".,:;!?")) > 3}),
-        "contradictions": 0,
+        "contradictions": len(contradictions),
         "pending_review": 0,
         "replay_queue": len(replay),
         "knowledge_available": bool(propositions),
@@ -327,6 +412,25 @@ def query_noncanonical_substrate(question: str) -> dict[str, Any]:
         if len(token.strip(".,:;!?")) > 3 and token.lower() not in {"what", "know", "about", "does", "tell", "current", "currently"}
     }
     propositions = _read_jsonl(PROPOSITION_LOG)
+    contradictions = _read_jsonl(CONTRADICTION_LOG)
+    if "contradiction" in question.lower() or "conflict" in question.lower():
+        if not contradictions:
+            return {
+                "matched": True,
+                "answer": "No contradictory evidence is currently recorded in the RC1 local substrate.",
+                "matches": [],
+            }
+        lines = ["Contradictions detected in the RC1 local substrate:"]
+        for item in contradictions:
+            lines.append(f"- Topic: {item['subject']} / {item['predicate']}")
+            lines.append(f"  Claim A ({item['claim_a_polarity']}): {item['claim_a']}")
+            lines.append(f"  Claim B ({item['claim_b_polarity']}): {item['claim_b']}")
+            lines.append("  Operator review recommended.")
+        return {
+            "matched": True,
+            "answer": "\n".join(lines),
+            "matches": contradictions,
+        }
     matches = []
     for row in propositions:
         claim_tokens = {token.strip(".,:;!?").lower() for token in row.get("claim", "").split()}
@@ -342,7 +446,10 @@ def query_noncanonical_substrate(question: str) -> dict[str, Any]:
     for row in matches:
         lines.append(f"- {row['claim']} (source: {row['source']}; confidence: {row['confidence']}; canonical: {row['canonical']})")
     lines.append("")
-    lines.append("No contradictory evidence is currently recorded in the RC1 local substrate.")
+    if contradictions:
+        lines.append(f"{len(contradictions)} contradiction(s) are currently recorded; ask about contradictions to inspect them.")
+    else:
+        lines.append("No contradictory evidence is currently recorded in the RC1 local substrate.")
     return {
         "matched": True,
         "answer": "\n".join(lines),
