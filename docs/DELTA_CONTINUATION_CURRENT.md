@@ -531,6 +531,35 @@ actions, no HYB1 promotion, and Model B remains default.
 Current next recommendation:
 PROCEED_OV6_READONLY_RETRIEVAL_SYNTHESIS_EXPANSION
 
+TP7 longitudinal stability and human evaluation is complete.
+
+New TP7 surface:
+
+- `orchestration/runtime/tp7_longitudinal_stability.py`
+- `scripts/delta_tp7_longitudinal.py`
+- `reports/TP7_LONGITUDINAL_EVALUATION.md/json`
+- `reports/TP7_STABILITY_ANALYSIS.md/json`
+- `reports/TP7_HUMAN_EVALUATION.md/json`
+- `reports/TP7_DRIFT_ANALYSIS.md/json`
+- `reports/TP7_LONGITUDINAL_SCORECARD.md/json`
+- `reports/TP7_READINESS_REVIEW.md/json`
+- `ui/delta_tp7_dashboard.html`
+- `docs/continuation_tp7.md`
+
+Current TP7 result:
+
+- repeated runs: `3`
+- deterministic outputs: true
+- behavioral drift detected: false
+- evaluator agreement: `1.0`
+- governance drift: false
+- final recommendation: `READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION`
+
+Safety state remains unchanged.
+
+Current next recommendation:
+READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION
+
 TP6 controlled operational pilot is complete.
 
 New TP6 surface:

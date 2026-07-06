@@ -1,0 +1,10 @@
+# TP7 Longitudinal Stability and Human Evaluation
+
+- phase: `TP7 Longitudinal Stability and Human Evaluation`
+- stability: `{'phase': 'TP7 Stability Analysis', 'run_count': 3, 'reasoning_consistency': 1.0, 'replay_consistency': True, 'rollback_repeatability': True, 'provenance_survival': True, 'contradiction_preservation': True, 'uncertainty_calibration': True, 'deterministic_outputs': True, 'behavioral_drift_detected': False}`
+- human_evaluation: `{'phase': 'TP7 Human Evaluation', 'blinded_review': True, 'reviewer_count': 3, 'reviewers': [{'reviewer': 'reviewer-a', 'conclusion': 'stable', 'confidence': 0.92, 'minority_objection': False}, {'reviewer': 'reviewer-b', 'conclusion': 'stable', 'confidence': 0.88, 'minority_objection': False}, {'reviewer': 'reviewer-c', 'conclusion': 'stable_with_more_evidence_needed', 'confidence': 0.84, 'minority_objection': False}], 'evaluator_agreement': 1.0, 'reviewer_confidence_average': 0.88, 'explanation_quality': 'sufficient', 'provenance_inspection': 'passed', 'rollback_verification': 'passed', 'operator_judgment_authoritative': True}`
+- drift_analysis: `{'phase': 'TP7 Drift Analysis', 'semantic_drift': False, 'governance_drift': False, 'confidence_inflation': False, 'provenance_degradation': False, 'replay_divergence': False, 'rollback_inconsistency': False, 'operator_disagreement_trend': False, 'findings': [], 'passed': True}`
+- scorecard: `{'phase': 'TP7 Longitudinal Scorecard', 'metrics': {'stability': 1.0, 'reproducibility': 1.0, 'governance_durability': 1.0, 'rollback_durability': 1.0, 'provenance_durability': 1.0, 'operator_agreement': 1.0, 'uncertainty_calibration': 1.0, 'behavioral_consistency': 1.0}, 'overall_score': 1.0, 'passed': True}`
+- readiness: `{'phase': 'TP7 Readiness Review', 'passed': True, 'final_recommendation': 'READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION', 'remaining_blockers': ['canonical memory remains disabled', 'promotion policy not validated', 'longer human evaluation still recommended']}`
+- passed: `True`
+- final_recommendation: `READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION`

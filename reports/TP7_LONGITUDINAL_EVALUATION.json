@@ -1,0 +1,144 @@
+{
+  "drift_analysis": {
+    "confidence_inflation": false,
+    "findings": [],
+    "governance_drift": false,
+    "operator_disagreement_trend": false,
+    "passed": true,
+    "phase": "TP7 Drift Analysis",
+    "provenance_degradation": false,
+    "replay_divergence": false,
+    "rollback_inconsistency": false,
+    "semantic_drift": false
+  },
+  "final_recommendation": "READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION",
+  "human_evaluation": {
+    "blinded_review": true,
+    "evaluator_agreement": 1.0,
+    "explanation_quality": "sufficient",
+    "operator_judgment_authoritative": true,
+    "phase": "TP7 Human Evaluation",
+    "provenance_inspection": "passed",
+    "reviewer_confidence_average": 0.88,
+    "reviewer_count": 3,
+    "reviewers": [
+      {
+        "conclusion": "stable",
+        "confidence": 0.92,
+        "minority_objection": false,
+        "reviewer": "reviewer-a"
+      },
+      {
+        "conclusion": "stable",
+        "confidence": 0.88,
+        "minority_objection": false,
+        "reviewer": "reviewer-b"
+      },
+      {
+        "conclusion": "stable_with_more_evidence_needed",
+        "confidence": 0.84,
+        "minority_objection": false,
+        "reviewer": "reviewer-c"
+      }
+    ],
+    "rollback_verification": "passed"
+  },
+  "passed": true,
+  "phase": "TP7 Longitudinal Stability and Human Evaluation",
+  "readiness": {
+    "final_recommendation": "READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION",
+    "passed": true,
+    "phase": "TP7 Readiness Review",
+    "remaining_blockers": [
+      "canonical memory remains disabled",
+      "promotion policy not validated",
+      "longer human evaluation still recommended"
+    ]
+  },
+  "runs": [
+    {
+      "approval_rate": 0.5,
+      "contradiction_preservation": true,
+      "deterministic_repeatability": true,
+      "governance_passed": true,
+      "provenance_completeness": true,
+      "recommendation": "READY_FOR_LONGITUDINAL_STABILITY_EVALUATION",
+      "replay_consistency": true,
+      "rollback_passed": true,
+      "run": 1,
+      "uncertainty_calibration": true
+    },
+    {
+      "approval_rate": 0.5,
+      "contradiction_preservation": true,
+      "deterministic_repeatability": true,
+      "governance_passed": true,
+      "provenance_completeness": true,
+      "recommendation": "READY_FOR_LONGITUDINAL_STABILITY_EVALUATION",
+      "replay_consistency": true,
+      "rollback_passed": true,
+      "run": 2,
+      "uncertainty_calibration": true
+    },
+    {
+      "approval_rate": 0.5,
+      "contradiction_preservation": true,
+      "deterministic_repeatability": true,
+      "governance_passed": true,
+      "provenance_completeness": true,
+      "recommendation": "READY_FOR_LONGITUDINAL_STABILITY_EVALUATION",
+      "replay_consistency": true,
+      "rollback_passed": true,
+      "run": 3,
+      "uncertainty_calibration": true
+    }
+  ],
+  "safety": {
+    "autonomous_action_execution_performed": false,
+    "autonomous_reasoning_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "live_knowledge_mutation_performed": false,
+    "model_b_default_changed": false,
+    "model_training_performed": false,
+    "phase": "TP5 Controlled Noncanonical Persistent Pilot Implementation",
+    "pilot_store_is_noncanonical": true,
+    "pilot_store_write_requires_exact_approval": true,
+    "production_deployment": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "tp6_operational_validation": true,
+    "tp7_longitudinal_validation": true,
+    "weight_update_performed": false
+  },
+  "scorecard": {
+    "metrics": {
+      "behavioral_consistency": 1.0,
+      "governance_durability": 1.0,
+      "operator_agreement": 1.0,
+      "provenance_durability": 1.0,
+      "reproducibility": 1.0,
+      "rollback_durability": 1.0,
+      "stability": 1.0,
+      "uncertainty_calibration": 1.0
+    },
+    "overall_score": 1.0,
+    "passed": true,
+    "phase": "TP7 Longitudinal Scorecard"
+  },
+  "stability": {
+    "behavioral_drift_detected": false,
+    "contradiction_preservation": true,
+    "deterministic_outputs": true,
+    "phase": "TP7 Stability Analysis",
+    "provenance_survival": true,
+    "reasoning_consistency": 1.0,
+    "replay_consistency": true,
+    "rollback_repeatability": true,
+    "run_count": 3,
+    "uncertainty_calibration": true
+  }
+}

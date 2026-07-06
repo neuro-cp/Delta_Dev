@@ -2,11 +2,11 @@
 
 ## Current Phase
 
-TP6 controlled operational pilot is complete. The current recommendation is
-`READY_FOR_LONGITUDINAL_STABILITY_EVALUATION`.
+TP7 longitudinal stability and human evaluation is complete. The current
+recommendation is `READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION`.
 
-The next phase should measure stability across repeated sessions, operators,
-replay, rollback, and evidence order. Do not enable model-weight training,
+The next phase should validate canonical promotion policy without enabling
+canonical memory or autonomous promotion. Do not enable model-weight training,
 providers, canonical writes, schedulers, actions, or HYB1 promotion without a
 separate explicit approval milestone.
 
@@ -104,6 +104,22 @@ Completed:
 Final recommendation:
 
 `READY_FOR_LONGITUDINAL_STABILITY_EVALUATION`
+
+## TP7 Longitudinal Stability And Human Evaluation
+
+Completed:
+
+- repeated controlled operational runs
+- stability analysis
+- reviewer-style human evaluation
+- drift detection
+- behavioral consistency checks
+- governance longevity checks
+- longitudinal scorecard
+
+Final recommendation:
+
+`READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION`
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 

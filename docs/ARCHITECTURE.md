@@ -1174,3 +1174,15 @@ review.
 TP6 is evidence collection, not feature expansion. It does not train, call
 providers, write canonical memory, mutate live knowledge, start schedulers,
 execute actions, promote HYB1, or change Model B defaults.
+
+## TP7 Longitudinal Stability And Human Evaluation
+
+TP7 measures whether the controlled noncanonical persistent pilot remains
+stable across repeated deterministic operational runs, reviewer-style human
+evaluation, replay, rollback, and governance checks.
+
+TP7 is behavioral validation rather than feature development. It measures
+stability, drift, reviewer agreement, provenance survival, contradiction
+preservation, uncertainty calibration, and governance longevity. It does not
+train, call providers, write canonical memory, mutate live knowledge, start
+schedulers, execute actions, promote HYB1, or change Model B defaults.

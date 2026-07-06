@@ -1,0 +1,31 @@
+{
+  "blinded_review": true,
+  "evaluator_agreement": 1.0,
+  "explanation_quality": "sufficient",
+  "operator_judgment_authoritative": true,
+  "phase": "TP7 Human Evaluation",
+  "provenance_inspection": "passed",
+  "reviewer_confidence_average": 0.88,
+  "reviewer_count": 3,
+  "reviewers": [
+    {
+      "conclusion": "stable",
+      "confidence": 0.92,
+      "minority_objection": false,
+      "reviewer": "reviewer-a"
+    },
+    {
+      "conclusion": "stable",
+      "confidence": 0.88,
+      "minority_objection": false,
+      "reviewer": "reviewer-b"
+    },
+    {
+      "conclusion": "stable_with_more_evidence_needed",
+      "confidence": 0.84,
+      "minority_objection": false,
+      "reviewer": "reviewer-c"
+    }
+  ],
+  "rollback_verification": "passed"
+}

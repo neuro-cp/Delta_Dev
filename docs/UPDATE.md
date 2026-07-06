@@ -6,6 +6,33 @@ file before making changes.
 
 ## 2026-07-06
 
+### TP7 Longitudinal Stability And Human Evaluation
+
+Completed TP7 as longitudinal behavioral validation over repeated controlled
+operational runs. TP7 measures stability, drift, reviewer agreement,
+provenance survival, rollback repeatability, replay consistency, uncertainty
+calibration, and governance longevity.
+
+Generated artifacts:
+
+- `orchestration/runtime/tp7_longitudinal_stability.py`
+- `scripts/delta_tp7_longitudinal.py`
+- `tests/runtime_tp7/test_tp7_longitudinal_stability.py`
+- `reports/TP7_LONGITUDINAL_EVALUATION.md/json`
+- `reports/TP7_STABILITY_ANALYSIS.md/json`
+- `reports/TP7_HUMAN_EVALUATION.md/json`
+- `reports/TP7_DRIFT_ANALYSIS.md/json`
+- `reports/TP7_LONGITUDINAL_SCORECARD.md/json`
+- `reports/TP7_READINESS_REVIEW.md/json`
+- `ui/delta_tp7_dashboard.html`
+- `docs/continuation_tp7.md`
+
+Safety state remains unchanged.
+
+Final recommendation:
+
+`READY_FOR_CANONICAL_PROMOTION_POLICY_VALIDATION`
+
 ### TP6 Controlled Operational Pilot
 
 Completed TP6 as controlled operational validation over the TP5 noncanonical
