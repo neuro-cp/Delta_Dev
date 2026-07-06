@@ -1,0 +1,81 @@
+{
+  "activation_state": "report_only_decision_gate",
+  "effect_sizes": {
+    "contradiction_visibility_delta_estimate": 0.035,
+    "operator_review_burden_delta_estimate": -0.02,
+    "proposition_quality_delta_estimate": 0.045,
+    "retrieval_accuracy_delta_estimate": 0.035,
+    "rollback_success_target": 1.0
+  },
+  "evidence_context_available": {
+    "previous_phase": true,
+    "tp13_shadow_training": true,
+    "tp14_substrate_improvements": true,
+    "tp15_final_review": true
+  },
+  "evidence_inputs": [
+    "TP13 training protocol",
+    "TP14 substrate-first findings",
+    "TP19 external evaluation"
+  ],
+  "generated_at_utc": "2026-07-06T00:00:00+00:00",
+  "hard_stop_required": false,
+  "metrics": {
+    "audit_required": 1.0,
+    "deterministic_outputs": 1.0,
+    "hyb1_dormant": 1.0,
+    "model_b_unchanged": 1.0,
+    "operator_review_preserved": 1.0,
+    "provenance_required": 1.0,
+    "rollback_path_defined": 1.0,
+    "safety_invariants_preserved": 1.0,
+    "substrate_first_supported": 1.0,
+    "training_not_justified_by_evidence": 1.0
+  },
+  "next_phase": "TP21 Cognitive Cycle Integration",
+  "objective": "Determine whether substrate evolution has reached a practical ceiling, without performing training.",
+  "operations": [
+    "review TP13 shadow training result",
+    "compare substrate-first improvements against training governance costs",
+    "decide whether evidence supports continuing substrate-first work",
+    "hard-stop if training may be justified"
+  ],
+  "outputs": [
+    "training necessity decision",
+    "substrate-first evidence table",
+    "training hard-stop review"
+  ],
+  "passed": true,
+  "phase": "TP20",
+  "recommendation": "CONTINUE_SUBSTRATE_FIRST",
+  "safety": {
+    "autonomous_action_performed": false,
+    "autonomous_memory_enabled": false,
+    "baseline_routing_changed": false,
+    "canonical_write_performed": false,
+    "checkpoint_created": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "irreversible_canonical_migration_performed": false,
+    "lora_or_adapter_created": false,
+    "model_b_default_changed": false,
+    "model_replaced": false,
+    "model_training_performed": false,
+    "production_deployment_performed": false,
+    "provider_authority_enabled": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "weight_update_performed": false
+  },
+  "score": 1.0,
+  "title": "Training Necessity Reassessment",
+  "training_decision": {
+    "conclusion": "CONTINUE_SUBSTRATE_FIRST",
+    "rationale": [
+      "TP13 shadow artifact gains were too small relative to governance cost",
+      "TP14 recovered the useful direction through substrate-first improvements",
+      "TP15 provided governed integration design without weight changes"
+    ],
+    "training_performed": false
+  }
+}
