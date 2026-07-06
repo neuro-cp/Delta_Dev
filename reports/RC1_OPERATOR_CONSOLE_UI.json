@@ -1,6 +1,7 @@
 {
   "compatibility_ui_route": ".\\.venv311\\Scripts\\python.exe .\\delta_operator_console.py",
   "features": [
+    "cognitive state home screen",
     "current runtime status",
     "corpus/substrate summary",
     "text paste evidence preview",

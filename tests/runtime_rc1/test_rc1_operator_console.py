@@ -83,6 +83,7 @@ def test_observation_logging_is_local_operational_log_only(tmp_path):
 def test_operator_console_report_is_safe():
     report = build_operator_console_report()
     assert report["safe"] is True
+    assert "cognitive state home screen" in report["features"]
     assert "text paste evidence preview" in report["features"]
     assert "deterministic proposition extraction" in report["features"]
     assert "operator-approved noncanonical substrate write" in report["features"]

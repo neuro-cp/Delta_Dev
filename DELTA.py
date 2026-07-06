@@ -65,6 +65,29 @@ def _format_snapshot(snapshot: dict[str, object]) -> str:
     return "\n".join(lines)
 
 
+def _format_cognitive_state(state: dict[str, object]) -> str:
+    lines = [
+        "Cognitive State",
+        "",
+        f"Knowledge available: {state['knowledge_available']}",
+        f"Noncanonical propositions: {state['noncanonical_propositions']}",
+        f"Evidence links: {state['evidence_links']}",
+        f"Concepts: {state['concepts']}",
+        f"Contradictions: {state['contradictions']}",
+        f"Pending review: {state['pending_review']}",
+        f"Replay queue: {state['replay_queue']}",
+        f"Canonical records: {state['canonical_records']}",
+        "",
+        "Operational rhythm:",
+        "1. Paste evidence.",
+        "2. Extract propositions.",
+        "3. Review and approve noncanonical records.",
+        "4. Ask questions against approved evidence.",
+        "5. Log failures or friction.",
+    ]
+    return "\n".join(lines)
+
+
 class DeltaOperatorConsole:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
@@ -81,13 +104,41 @@ class DeltaOperatorConsole:
         frame = ttk.Frame(self.root, padding=10)
         frame.pack(fill=tk.BOTH, expand=True)
 
-        top = ttk.Frame(frame)
-        top.pack(fill=tk.X)
-        ttk.Label(top, text="Question").pack(side=tk.LEFT)
-        self.question = ttk.Entry(top)
-        self.question.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=8)
-        self.question.insert(0, "What is DELTA Runtime v4.0 RC1?")
-        ttk.Button(top, text="Send", command=self._ask).pack(side=tk.RIGHT)
+        header = ttk.LabelFrame(frame, text="Cognitive State")
+        header.pack(fill=tk.X)
+        self.state_vars: dict[str, tk.StringVar] = {}
+        state_fields = [
+            ("Knowledge", "knowledge_available"),
+            ("Propositions", "noncanonical_propositions"),
+            ("Evidence", "evidence_links"),
+            ("Concepts", "concepts"),
+            ("Contradictions", "contradictions"),
+            ("Pending", "pending_review"),
+            ("Replay", "replay_queue"),
+        ]
+        for index, (label, key) in enumerate(state_fields):
+            card = ttk.Frame(header, padding=6)
+            card.grid(row=0, column=index, sticky="ew")
+            header.columnconfigure(index, weight=1)
+            ttk.Label(card, text=label).pack()
+            self.state_vars[key] = tk.StringVar(value="-")
+            ttk.Label(card, textvariable=self.state_vars[key], font=("Segoe UI", 11, "bold")).pack()
+
+        actions = ttk.Frame(frame)
+        actions.pack(fill=tk.X, pady=(8, 0))
+        ttk.Button(actions, text="Import / Paste", command=self._focus_import).pack(side=tk.LEFT)
+        ttk.Button(actions, text="Extract", command=self._extract_propositions).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(actions, text="Approve", command=self._approve_extracted).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(actions, text="Ask", command=self._ask).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(actions, text="Replay", command=self._show_replay).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(actions, text="Log Issue", command=self._log_observation).pack(side=tk.LEFT, padx=(6, 0))
+
+        ask_bar = ttk.LabelFrame(frame, text="Ask DELTA")
+        ask_bar.pack(fill=tk.X, pady=(8, 0))
+        self.question = ttk.Entry(ask_bar)
+        self.question.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=6, pady=6)
+        self.question.insert(0, "What do you know about Frontier?")
+        ttk.Button(ask_bar, text="Send", command=self._ask).pack(side=tk.RIGHT, padx=6)
 
         panes = ttk.PanedWindow(frame, orient=tk.HORIZONTAL)
         panes.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
@@ -97,7 +148,7 @@ class DeltaOperatorConsole:
         panes.add(left, weight=1)
         panes.add(right, weight=2)
 
-        ttk.Label(left, text="Paste Evidence / Notes").pack(anchor=tk.W)
+        ttk.Label(left, text="Import / Paste Evidence").pack(anchor=tk.W)
         self.paste = scrolledtext.ScrolledText(left, height=12, wrap=tk.WORD)
         self.paste.pack(fill=tk.BOTH, expand=True)
         ttk.Button(left, text="Preview Evidence", command=self._preview_evidence).pack(fill=tk.X, pady=(6, 0))
@@ -137,21 +188,35 @@ class DeltaOperatorConsole:
         ttk.Button(buttons, text="Replay / Rollback", command=self._show_replay).pack(fill=tk.X, pady=(4, 0))
         ttk.Button(buttons, text="Failure Taxonomy", command=self._show_failure_taxonomy).pack(fill=tk.X, pady=(4, 0))
 
-        ttk.Label(right, text="Response / Inspection").pack(anchor=tk.W)
+        ttk.Label(right, text="Workspace").pack(anchor=tk.W)
         self.output = scrolledtext.ScrolledText(right, wrap=tk.WORD)
         self.output.pack(fill=tk.BOTH, expand=True)
 
         self.question.bind("<Return>", lambda _event: self._ask())
+        self._refresh_state_cards()
 
     def _write_output(self, text: str) -> None:
         self.output.delete("1.0", tk.END)
         self.output.insert(tk.END, text)
+
+    def _refresh_state_cards(self) -> None:
+        state = build_cognitive_state()
+        for key, var in self.state_vars.items():
+            var.set(str(state[key]))
+
+    def _focus_import(self) -> None:
+        self.paste.focus_set()
+        self._write_output(
+            "Paste evidence on the left, then use Extract Propositions. "
+            "Nothing becomes available for reasoning until you approve extracted propositions into the RC1 noncanonical substrate."
+        )
 
     def _ask(self) -> None:
         message = self.question.get().strip()
         if not message:
             return
         data = answer_operator_question(message)
+        self._refresh_state_cards()
         self._write_output(
             data["answer"]
             + "\n\nSafety:\n"
@@ -164,11 +229,13 @@ class DeltaOperatorConsole:
 
     def _preview_evidence(self) -> None:
         data = preview_evidence_ingest(self.paste.get("1.0", tk.END))
+        self._refresh_state_cards()
         self._write_output(json.dumps(data, indent=2, sort_keys=True))
 
     def _extract_propositions(self) -> None:
         data = extract_propositions(self.paste.get("1.0", tk.END))
         self.extracted = data["candidates"]
+        self._refresh_state_cards()
         lines = ["Detected Propositions", ""]
         if not self.extracted:
             lines.append("No proposition candidates detected.")
@@ -189,6 +256,7 @@ class DeltaOperatorConsole:
             self._extract_propositions()
         result = approve_propositions(self.extracted)
         self.snapshot = build_operator_snapshot()
+        self._refresh_state_cards()
         self._write_output(json.dumps(result, indent=2, sort_keys=True))
 
     def _log_observation(self) -> None:
@@ -197,14 +265,18 @@ class DeltaOperatorConsole:
             note = "Operator created an empty observation placeholder from the RC1 console."
         entry = build_observation_entry(self.category.get(), note, self.severity.get())
         result = append_observation(entry)
+        self._refresh_state_cards()
         self._write_output(json.dumps({"entry": entry, "result": result}, indent=2, sort_keys=True))
 
     def _show_status(self) -> None:
         self.snapshot = build_operator_snapshot()
+        self._refresh_state_cards()
         self._write_output(_format_snapshot(self.snapshot))
 
     def _show_cognitive_state(self) -> None:
-        self._write_output(json.dumps(build_cognitive_state(), indent=2, sort_keys=True))
+        state = build_cognitive_state()
+        self._refresh_state_cards()
+        self._write_output(_format_cognitive_state(state))
 
     def _show_review_queue(self) -> None:
         self._write_output(json.dumps(self.snapshot["operator_review_queue"], indent=2, sort_keys=True))

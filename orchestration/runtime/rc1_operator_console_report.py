@@ -28,6 +28,7 @@ def build_operator_console_report() -> dict[str, Any]:
         "paste_preview": preview,
         "safe": validate_console_safe(snapshot),
         "features": [
+            "cognitive state home screen",
             "current runtime status",
             "corpus/substrate summary",
             "text paste evidence preview",

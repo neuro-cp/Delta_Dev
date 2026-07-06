@@ -5,6 +5,7 @@ UI route: `.\.venv311\Scripts\python.exe .\DELTA.py`
 Safe: `True`
 
 ## Features
+- cognitive state home screen
 - current runtime status
 - corpus/substrate summary
 - text paste evidence preview
