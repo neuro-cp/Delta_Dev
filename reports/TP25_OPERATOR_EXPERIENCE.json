@@ -1,0 +1,68 @@
+{
+  "activation_state": "controlled_noncanonical_or_report_only",
+  "effect_sizes": {
+    "contradiction_visibility_delta_estimate": 0.055,
+    "operator_review_burden_delta_estimate": -0.03,
+    "proposition_quality_delta_estimate": 0.065,
+    "retrieval_accuracy_delta_estimate": 0.05,
+    "rollback_success_target": 1.0
+  },
+  "evidence_context_available": {
+    "previous_phase": true,
+    "tp13_shadow_training": true,
+    "tp14_substrate_improvements": true,
+    "tp15_final_review": true
+  },
+  "evidence_inputs": [
+    "TP17 operator workflow",
+    "TP24 runtime optimization plan"
+  ],
+  "generated_at_utc": "2026-07-06T00:00:00+00:00",
+  "hard_stop_required": false,
+  "metrics": {
+    "audit_required": 1.0,
+    "deterministic_outputs": 1.0,
+    "hyb1_dormant": 1.0,
+    "model_b_unchanged": 1.0,
+    "operator_review_preserved": 1.0,
+    "provenance_required": 1.0,
+    "rollback_path_defined": 1.0,
+    "safety_invariants_preserved": 1.0
+  },
+  "next_phase": "TP26 Large Scale Validation",
+  "objective": "Improve review dashboards, explainability, audit visualization, rollback UX, and governance tooling.",
+  "operations": [
+    "define operator review panels and required explanations",
+    "map rollback UX to rollback records",
+    "surface audit/provenance/uncertainty without granting authority"
+  ],
+  "outputs": [
+    "operator UX review",
+    "audit visualization map",
+    "rollback UX checklist"
+  ],
+  "passed": true,
+  "phase": "TP25",
+  "recommendation": "PROCEED_TP26_LARGE_SCALE_VALIDATION",
+  "safety": {
+    "autonomous_action_performed": false,
+    "autonomous_memory_enabled": false,
+    "baseline_routing_changed": false,
+    "canonical_write_performed": false,
+    "checkpoint_created": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "irreversible_canonical_migration_performed": false,
+    "lora_or_adapter_created": false,
+    "model_b_default_changed": false,
+    "model_replaced": false,
+    "model_training_performed": false,
+    "production_deployment_performed": false,
+    "provider_authority_enabled": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "weight_update_performed": false
+  },
+  "score": 1.0,
+  "title": "Operator Experience"
+}
