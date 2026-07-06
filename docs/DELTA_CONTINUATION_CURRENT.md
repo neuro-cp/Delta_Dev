@@ -462,3 +462,36 @@ candidates.
 
 Current next recommendation:
 PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL
+
+OV4 operator-reviewed read-only activation trial is complete.
+
+New OV4 surface:
+
+- `orchestration/runtime/ov4_readonly_activation_trial.py`
+- `scripts/delta_ov4_readonly_activation_trial.py`
+- `reports/OV4_READONLY_ACTIVATION_TRIAL.md/json`
+- `reports/OV4_ACTIVATION_AUDIT.md/json`
+- `reports/OV4_OPERATOR_REVIEW.md/json`
+- `ui/delta_ov4_dashboard.html`
+- `docs/continuation_ov4.md`
+
+OV4 activates exactly one capability in trial mode:
+
+- capability: `evaluation/regression loop`
+- state: `read_only_trial`
+
+The trial observes fixture/runtime reports and produces quality assessment,
+regression findings, activation impact, audit, evaluation, and rollback
+planning. It performs no mutation.
+
+Current OV4 metrics:
+
+- operational confidence: `0.99`
+- reasoning confidence: `0.975`
+- activation confidence: `0.64`
+- governance confidence: `0.94`
+- safety confidence: `1.0`
+- activation readiness: `0.909`
+
+Current next recommendation:
+PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL

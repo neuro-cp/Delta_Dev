@@ -931,3 +931,31 @@ OV3 remains non-authoritative. It does not activate capabilities, call
 providers, write canonical memory, mutate live knowledge, mutate memory, train,
 start schedulers/background workers, execute actions, promote HYB1, or change
 Model B defaults.
+
+## OV4 Operator-Reviewed Read-Only Activation Trial
+
+OV4 proves that activation itself can be governed. The only capability moved
+into an active trial state is the `evaluation/regression loop`, and only as a
+`read_only_trial`.
+
+The OV4 workflow is:
+
+```text
+activation request
+-> eligibility review
+-> safety review
+-> operator review simulation
+-> read-only activation state transition
+-> report/benchmark observation
+-> audit
+-> evaluation
+-> rollback plan
+-> operator signoff requirement
+```
+
+The trial capability may observe fixture corpus outputs, runtime reports, and
+benchmark reports. It may produce quality assessment, regression findings,
+recommended improvements, activation impact, and audit records. It must not
+mutate runtime state, call providers, train, write canonical memory, start
+schedulers/background workers, execute actions, promote HYB1, or change Model
+B defaults.

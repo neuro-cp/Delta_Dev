@@ -34,6 +34,7 @@ from orchestration.runtime.arc_vii_xxv_local_answer import (
 )
 from orchestration.runtime.ov2_cognitive_quality import is_ov2_question, answer_ov2_question
 from orchestration.runtime.ov3_controlled_reasoning_vertical_slice import is_ov3_question, answer_ov3_question
+from orchestration.runtime.ov4_readonly_activation_trial import is_ov4_question, answer_ov4_question
 
 
 def main() -> int:
@@ -48,6 +49,8 @@ def main() -> int:
     query = " ".join(args.query)
     if args.output_report:
         data = write_v29_answer_report()
+    elif is_ov4_question(query):
+        data = answer_ov4_question(query)
     elif is_ov3_question(query):
         data = answer_ov3_question(query)
     elif is_ov2_question(query):
@@ -103,6 +106,8 @@ def main() -> int:
     elif data.get("phase") == "OV2 Cognitive Quality":
         print(data["answer_text"])
     elif data.get("phase") == "OV3 Controlled Reasoning Vertical Slice":
+        print(data["answer_text"])
+    elif data.get("phase") == "OV4 Operator-Reviewed Read-Only Activation Trial":
         print(data["answer_text"])
     elif "rendered_explanation" in data:
         print(data["rendered_explanation"])

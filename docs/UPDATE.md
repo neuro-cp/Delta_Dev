@@ -6,6 +6,47 @@ file before making changes.
 
 ## 2026-07-05
 
+### OV4 Operator-Reviewed Read-Only Activation Trial
+
+Completed OV4 as DELTA's first governed capability activation trial. The only
+activated trial capability is the `evaluation/regression loop`, and only in
+`read_only_trial` state.
+
+Generated artifacts:
+
+- `orchestration/runtime/ov4_readonly_activation_trial.py`
+- `scripts/delta_ov4_readonly_activation_trial.py`
+- `tests/runtime_ov4/test_ov4_readonly_activation_trial.py`
+- `reports/OV4_READONLY_ACTIVATION_TRIAL.md/json`
+- `reports/OV4_ACTIVATION_AUDIT.md/json`
+- `reports/OV4_OPERATOR_REVIEW.md/json`
+- `ui/delta_ov4_dashboard.html`
+- `docs/continuation_ov4.md`
+
+Key metrics:
+
+- operational confidence: `0.99`
+- reasoning confidence: `0.975`
+- activation confidence: `0.64`
+- governance confidence: `0.94`
+- safety confidence: `1.0`
+- activation readiness: `0.909`
+
+OV4 validates activation request, eligibility review, safety review, operator
+review simulation, read-only state transition, execution trace, audit,
+evaluation, rollback plan, and deterministic failure modes. The active trial
+observes existing reports only and performs no mutation.
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no fine-tuning, no model updates, no provider authority, no provider
+calls, no canonical writes, no live knowledge mutation, no memory mutation, no
+learning, no schedulers/background workers, no action execution, no hidden
+writes, and no HYB1 promotion.
+
+Next recommendation:
+
+`PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL`
+
 ### OV3 Controlled Reasoning Vertical Slice
 
 Completed OV3 as one complete controlled reasoning workflow over the existing

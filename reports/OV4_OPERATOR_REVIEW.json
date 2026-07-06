@@ -1,0 +1,7 @@
+{
+  "approval_simulated": true,
+  "notes": "approval is simulated for OV4 validation; no live authority granted",
+  "outcome": "approved_for_read_only_trial",
+  "reviewer": "operator_simulation",
+  "signoff_required_for_future_live_change": true
+}

@@ -1,0 +1,117 @@
+{
+  "audit_id": "ov4-audit-evaluation-regression-loop-readonly",
+  "eligibility": {
+    "capability": "evaluation/regression loop",
+    "eligible": true,
+    "source_scores": {
+      "ov3_activation_confidence": 0.585,
+      "ov3_readiness": 0.865,
+      "ov3_reasoning_quality": 0.975
+    },
+    "why_blocked": [],
+    "why_eligible": [
+      "OV3 marked evaluation/regression loop closest to activation",
+      "OV3 reasoning quality score >= 0.95",
+      "capability observes reports and benchmarks only",
+      "read-only trial does not mutate runtime state"
+    ]
+  },
+  "evaluation": {
+    "activation_impact": "evaluation/regression loop can observe and score fixture reasoning without mutating state",
+    "execution_mode": "read_only_trial",
+    "inputs_observed": [
+      "OV1 fixture corpus",
+      "OV2 reasoning benchmarks",
+      "OV3 controlled reasoning vertical slice",
+      "OV3 activation eligibility review"
+    ],
+    "mutation_performed": false,
+    "quality_assessment": {
+      "failed_quality_gates": 0,
+      "lower_scoring_gates": [],
+      "quality_gate_count": 6,
+      "reasoning_quality_score": 0.975
+    },
+    "recommended_improvements": [
+      "manual operator review of read-only report outputs",
+      "repeat read-only trial after any report schema change",
+      "keep live corpus and provider paths blocked until separate OV phase"
+    ],
+    "regression_findings": []
+  },
+  "execution_trace": [
+    "request received",
+    "eligibility validated",
+    "safety review passed",
+    "operator approval simulated",
+    "state transitioned to read_only_trial",
+    "evaluation/regression loop observed OV3 quality reports",
+    "audit and rollback plan recorded",
+    "operator signoff remains required for future expansion"
+  ],
+  "operator_review": {
+    "approval_simulated": true,
+    "notes": "approval is simulated for OV4 validation; no live authority granted",
+    "outcome": "approved_for_read_only_trial",
+    "reviewer": "operator_simulation",
+    "signoff_required_for_future_live_change": true
+  },
+  "recommendation": "remain read-only and prepare OV5 controlled read-only expansion review",
+  "request": {
+    "capability": "evaluation/regression loop",
+    "operator_notes": "Simulated operator review only; no live authority granted.",
+    "rationale": "OV3 identified evaluation/regression loop as closest read-only activation candidate.",
+    "request_id": "ov4-request-evaluation-regression-loop-readonly",
+    "requested_by": "operator_review_simulation",
+    "requested_state": "read_only_trial"
+  },
+  "rollback_plan": {
+    "rollback_available": true,
+    "rollback_execution_performed": false,
+    "rollback_steps": [
+      "mark capability state disabled",
+      "retain activation audit for traceability",
+      "delete noncanonical trial workspace if one exists",
+      "rerun safety invariants before any future trial"
+    ],
+    "rollback_type": "state reversion to disabled plus report archive retention"
+  },
+  "safety_review": {
+    "blocked_paths": [],
+    "configuration": {
+      "action_execution_performed": false,
+      "background_worker_started": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "hyb1": "dormant_env_gated",
+      "hyb1_promoted": false,
+      "knowledge_mutation_performed": false,
+      "learning_performed": false,
+      "memory_mutation_performed": false,
+      "model_b_default": "unchanged",
+      "model_update_performed": false,
+      "provider_authority_granted": false,
+      "provider_call_performed": false,
+      "read_only_trial": true,
+      "scheduler_started": false,
+      "training_performed": false
+    },
+    "requirements": [
+      "no mutation",
+      "no providers",
+      "no learning",
+      "no canonical writes",
+      "no schedulers",
+      "no actions",
+      "no background workers"
+    ],
+    "safe": true
+  },
+  "timestamp": "2026-07-05T00:00:00+00:00",
+  "transition": {
+    "from_state": "admin_review",
+    "reason": "transition allowed by deterministic OV4 controller",
+    "to_state": "read_only_trial",
+    "valid": true
+  }
+}

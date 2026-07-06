@@ -2,13 +2,13 @@
 
 ## Current Phase
 
-OV2 cognitive quality validation is complete. The current recommended phase is
-`PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL`.
+OV4 operator-reviewed read-only activation trial is complete. The current
+recommended phase is `PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL`.
 
-OV4 should be an operator-reviewed read-only activation trial over fixture or
-noncanonical evidence only. Do not enable live corpus ingestion, providers,
-canonical writes, training, schedulers, actions, memory mutation, knowledge
-mutation, or HYB1 promotion.
+OV5 should expand read-only operation to adjacent fixture/noncanonical
+retrieval and grounded synthesis while preserving no live corpus ingestion,
+providers, canonical writes, training, schedulers, actions, memory mutation,
+knowledge mutation, or HYB1 promotion.
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
@@ -1048,6 +1048,31 @@ HYB1 promotion remain disabled.
 Recommended next roadmap item:
 
 `PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL`
+
+## OV4 Operator-Reviewed Read-Only Activation Trial
+
+DELTA completed its first governed capability activation trial. The
+`evaluation/regression loop` transitioned into `read_only_trial` through
+deterministic eligibility review, safety review, operator review simulation,
+activation audit, read-only execution, evaluation, rollback planning, and
+operator signoff requirement.
+
+Key results:
+
+- activated capability: `evaluation/regression loop`
+- activation state: `read_only_trial`
+- activation confidence: `0.64`
+- governance confidence: `0.94`
+- safety confidence: `1.0`
+- activation readiness: `0.909`
+
+OV4 does not enable providers, canonical writes, live knowledge mutation,
+memory mutation, learning, schedulers/background workers, actions, HYB1
+promotion, or live corpus activation.
+
+Recommended next roadmap item:
+
+`PROCEED_OV5_READONLY_RETRIEVAL_SYNTHESIS_TRIAL`
 
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 
