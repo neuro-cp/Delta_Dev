@@ -3,12 +3,12 @@
 ## Current Phase
 
 OV2 cognitive quality validation is complete. The current recommended phase is
-`PROCEED_OV3_CONTROLLED_REASONING_VERTICAL_SLICE`.
+`PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL`.
 
-OV3 should validate a controlled read-only reasoning vertical slice using the
-OV2 proposition, graph, hypothesis, disconfirmation, and synthesis path. Do not
-enable live corpus ingestion, providers, canonical writes, training,
-schedulers, actions, memory mutation, knowledge mutation, or HYB1 promotion.
+OV4 should be an operator-reviewed read-only activation trial over fixture or
+noncanonical evidence only. Do not enable live corpus ingestion, providers,
+canonical writes, training, schedulers, actions, memory mutation, knowledge
+mutation, or HYB1 promotion.
 
 Runtime V2.5: Training Readiness Audit Or Feature Activation Readiness Matrix
 
@@ -1022,6 +1022,32 @@ promotion remain disabled.
 Recommended next roadmap item:
 
 `PROCEED_OV3_CONTROLLED_REASONING_VERTICAL_SLICE`
+
+## OV3 Controlled Reasoning Vertical Slice
+
+DELTA completed OV3 as one controlled end-to-end reasoning workflow over the
+existing fixture/noncanonical runtime. The slice runs from fixture corpus
+loading through semantic records, proposition deduplication, graph traversal,
+hypotheses, disconfirmation, synthesis, quality gates, activation confidence
+update simulation, and operator recommendation.
+
+Key results:
+
+- reasoning quality score: `0.975`
+- OV3 readiness score: `0.865`
+- reasoning benchmark pass rate: `1.0`
+- activation confidence: `0.585`
+- closest capability to activation: `evaluation/regression loop`
+
+OV3 does not activate any capability. Read-only substrate retrieval, grounded
+answer synthesis, and the evaluation/regression loop remain future
+manual-review candidates. Live corpus ingestion, provider calls, canonical
+writes, training, schedulers, actions, memory mutation, knowledge mutation, and
+HYB1 promotion remain disabled.
+
+Recommended next roadmap item:
+
+`PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL`
 
 ## Runtime ARC VI Executive Cognition And Goal-Oriented Orchestration
 

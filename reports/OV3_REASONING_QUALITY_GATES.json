@@ -1,0 +1,113 @@
+{
+  "quality_gates": [
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "Why did Project Atlas fail, what recovered, and what remains unproven?",
+      "retrieved_text_summary_only": false,
+      "scores": {
+        "abstraction_quality": 1.0,
+        "contradiction_handling": 1.0,
+        "deduplication_quality": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_completeness": 1.0,
+        "provenance_quality": 1.0,
+        "synthesis_quality": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 0.95,
+      "passed": true,
+      "question": "Should deployment proceed based on the available evidence?",
+      "retrieved_text_summary_only": false,
+      "scores": {
+        "abstraction_quality": 0.5,
+        "contradiction_handling": 1.0,
+        "deduplication_quality": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_completeness": 1.0,
+        "provenance_quality": 1.0,
+        "synthesis_quality": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 0.95,
+      "passed": true,
+      "question": "Which claims contradict each other?",
+      "retrieved_text_summary_only": false,
+      "scores": {
+        "abstraction_quality": 0.5,
+        "contradiction_handling": 1.0,
+        "deduplication_quality": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_completeness": 1.0,
+        "provenance_quality": 1.0,
+        "synthesis_quality": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 0.95,
+      "passed": true,
+      "question": "What evidence would most improve confidence?",
+      "retrieved_text_summary_only": false,
+      "scores": {
+        "abstraction_quality": 0.5,
+        "contradiction_handling": 1.0,
+        "deduplication_quality": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_completeness": 1.0,
+        "provenance_quality": 1.0,
+        "synthesis_quality": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "What general principle connects the engineering, science, finance, medicine, and history fixtures?",
+      "retrieved_text_summary_only": false,
+      "scores": {
+        "abstraction_quality": 1.0,
+        "contradiction_handling": 1.0,
+        "deduplication_quality": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_completeness": 1.0,
+        "provenance_quality": 1.0,
+        "synthesis_quality": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    },
+    {
+      "average_score": 1.0,
+      "passed": true,
+      "question": "What conclusion is unsupported even though it may sound plausible?",
+      "retrieved_text_summary_only": false,
+      "scores": {
+        "abstraction_quality": 1.0,
+        "contradiction_handling": 1.0,
+        "deduplication_quality": 1.0,
+        "deterministic_repeatability": 1.0,
+        "disconfirmation_quality": 1.0,
+        "evidence_completeness": 1.0,
+        "provenance_quality": 1.0,
+        "synthesis_quality": 1.0,
+        "uncertainty_calibration": 1.0,
+        "unsupported_claim_refusal": 1.0
+      }
+    }
+  ],
+  "reasoning_quality_score": 0.975
+}

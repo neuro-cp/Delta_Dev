@@ -901,3 +901,33 @@ the evaluation/regression loop as future activation-eligible candidates after
 manual review. It does not perform activation, provider calls, canonical writes,
 knowledge mutation, memory mutation, training, scheduler/background worker
 activation, action execution, HYB1 promotion, or Model B default changes.
+
+## OV3 Controlled Reasoning Vertical Slice
+
+OV3 proves a complete fixture-only reasoning workflow across the existing OV1
+and OV2 surfaces:
+
+```text
+fixture corpus
+-> semantic records
+-> proposition dedup
+-> graph traversal
+-> hypothesis generation
+-> disconfirmation
+-> higher-order synthesis
+-> evaluation/regression scoring
+-> activation confidence update simulation
+-> operator recommendation
+```
+
+The slice answers harder questions about Project Atlas failure, recovery,
+deployment, contradictions, missing evidence, cross-domain abstraction, and
+unsupported conclusions. Each answer must expose known claims, inferred
+relationships, contradictions, missing evidence, confidence, disconfirming
+evidence, refused unsupported conclusions, provenance ids, and a reasoning
+path.
+
+OV3 remains non-authoritative. It does not activate capabilities, call
+providers, write canonical memory, mutate live knowledge, mutate memory, train,
+start schedulers/background workers, execute actions, promote HYB1, or change
+Model B defaults.

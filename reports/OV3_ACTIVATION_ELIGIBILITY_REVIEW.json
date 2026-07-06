@@ -1,0 +1,872 @@
+{
+  "activation_confidence": 0.585,
+  "activation_eligible_after_manual_review": [
+    "read-only substrate retrieval",
+    "grounded answer synthesis",
+    "evaluation/regression loop"
+  ],
+  "activation_performed": false,
+  "capabilities": [
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.28,
+      "capability": "live document adapter",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.72,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.28,
+      "capability": "real corpus ingestion",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.72,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.696,
+      "capability": "semantic record persistence",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "dry_run",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.304,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.696,
+      "capability": "replay batch persistence",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "dry_run",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.304,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.696,
+      "capability": "consolidation candidate persistence",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "dry_run",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.304,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.44,
+      "capability": "approval-gated substrate write",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.56,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [],
+      "activation_eligible": true,
+      "activation_score": 0.95,
+      "capability": "read-only substrate retrieval",
+      "current_status": "fixture_read_only_available",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "read_only",
+      "remaining_blockers": [
+        "manual OV3 operator review",
+        "fixture-only boundary confirmation",
+        "rollback-by-workspace deletion rehearsal"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "explicit manual review required before any activation change",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.085,
+      "rollback_audit_requirements": [
+        "record activation decision",
+        "retain fixture provenance",
+        "delete noncanonical workspace to rollback"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider calls",
+        "no canonical writes",
+        "no memory mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [],
+      "activation_eligible": true,
+      "activation_score": 0.95,
+      "capability": "grounded answer synthesis",
+      "current_status": "fixture_read_only_available",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "read_only",
+      "remaining_blockers": [
+        "manual OV3 operator review",
+        "fixture-only boundary confirmation",
+        "rollback-by-workspace deletion rehearsal"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "explicit manual review required before any activation change",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.085,
+      "rollback_audit_requirements": [
+        "record activation decision",
+        "retain fixture provenance",
+        "delete noncanonical workspace to rollback"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider calls",
+        "no canonical writes",
+        "no memory mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.28,
+      "capability": "provider-assisted evidence",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.72,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.44,
+      "capability": "specialist deliberation",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.56,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.44,
+      "capability": "graph repair",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.56,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.696,
+      "capability": "executive planning",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "dry_run",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.304,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.28,
+      "capability": "rollback execution",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "disabled",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.72,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [],
+      "activation_eligible": true,
+      "activation_score": 0.95,
+      "capability": "evaluation/regression loop",
+      "current_status": "fixture_read_only_available",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "read_only",
+      "remaining_blockers": [
+        "manual OV3 operator review",
+        "fixture-only boundary confirmation",
+        "rollback-by-workspace deletion rehearsal"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "explicit manual review required before any activation change",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.085,
+      "rollback_audit_requirements": [
+        "record activation decision",
+        "retain fixture provenance",
+        "delete noncanonical workspace to rollback"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider calls",
+        "no canonical writes",
+        "no memory mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    },
+    {
+      "activation_blockers": [
+        "not activation eligible in OV2"
+      ],
+      "activation_eligible": false,
+      "activation_score": 0.696,
+      "capability": "sleep/replay consolidation",
+      "current_status": "disabled",
+      "governance_readiness": "report-only until future explicit gate",
+      "manual_review_checklist": [
+        "safety invariants",
+        "provenance",
+        "uncertainty",
+        "failure modes"
+      ],
+      "operator_checklist": [
+        "inspect report",
+        "verify fixture-only boundary",
+        "confirm no hidden writes",
+        "approve next phase manually"
+      ],
+      "recommended_first_activation_state": "dry_run",
+      "remaining_blockers": [
+        "not in OV3 activation scope",
+        "requires future controlled review"
+      ],
+      "required_benchmarks": [
+        "OV2 reasoning benchmarks",
+        "OV2 regression benchmark"
+      ],
+      "required_evidence": [
+        "deterministic test evidence",
+        "benchmark pass evidence",
+        "manual operator review",
+        "rollback evidence"
+      ],
+      "required_operator_review": "future review required",
+      "required_tests": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ],
+      "risk_score": 0.304,
+      "rollback_audit_requirements": [
+        "future rollback design review required"
+      ],
+      "rollback_readiness": "workspace deletion or simulated rollback only",
+      "safety_gates": [
+        "no provider call",
+        "no training",
+        "no knowledge mutation",
+        "no scheduler",
+        "no action execution"
+      ]
+    }
+  ],
+  "closest_capability_to_activation": "evaluation/regression loop",
+  "final_recommendation": "PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL",
+  "phase": "OV3 Activation Eligibility Review"
+}

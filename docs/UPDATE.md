@@ -6,6 +6,44 @@ file before making changes.
 
 ## 2026-07-05
 
+### OV3 Controlled Reasoning Vertical Slice
+
+Completed OV3 as one complete controlled reasoning workflow over the existing
+OV1/OV2 fixture and noncanonical surfaces. OV3 did not activate DELTA. It
+validates corpus loading, semantic records, proposition deduplication, graph
+traversal, hypothesis generation, disconfirmation, higher-order synthesis,
+quality gates, activation confidence update simulation, and operator
+recommendation in one vertical slice.
+
+Generated artifacts:
+
+- `orchestration/runtime/ov3_controlled_reasoning_vertical_slice.py`
+- `scripts/delta_ov3_vertical_slice.py`
+- `tests/runtime_ov3/test_ov3_controlled_reasoning_vertical_slice.py`
+- `reports/OV3_CONTROLLED_REASONING_VERTICAL_SLICE.md/json`
+- `reports/OV3_REASONING_QUALITY_GATES.md/json`
+- `reports/OV3_ACTIVATION_ELIGIBILITY_REVIEW.md/json`
+- `ui/delta_ov3_dashboard.html`
+- `docs/continuation_ov3.md`
+
+Key metrics:
+
+- reasoning quality score: `0.975`
+- OV3 readiness score: `0.865`
+- reasoning benchmark pass rate: `1.0`
+- activation confidence: `0.585`
+- closest capability to activation: `evaluation/regression loop`
+
+Safety state remains unchanged: Model B default, HYB1 dormant/env-gated, no
+training, no fine-tuning, no model updates, no provider authority, no provider
+calls, no canonical writes, no live knowledge mutation, no memory mutation, no
+schedulers/background workers, no action execution, no hidden writes, and no
+HYB1 promotion.
+
+Next recommendation:
+
+`PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL`
+
 ### OV2 Cognitive Quality And Activation Confidence
 
 Completed OV2 as a reasoning-quality pass over the existing OV1 controlled

@@ -428,3 +428,37 @@ activation-eligible candidates after manual review.
 
 Current next recommendation:
 PROCEED_OV3_CONTROLLED_REASONING_VERTICAL_SLICE
+
+OV3 controlled reasoning vertical slice is complete.
+
+New OV3 surface:
+
+- `orchestration/runtime/ov3_controlled_reasoning_vertical_slice.py`
+- `scripts/delta_ov3_vertical_slice.py`
+- `reports/OV3_CONTROLLED_REASONING_VERTICAL_SLICE.md/json`
+- `reports/OV3_REASONING_QUALITY_GATES.md/json`
+- `reports/OV3_ACTIVATION_ELIGIBILITY_REVIEW.md/json`
+- `ui/delta_ov3_dashboard.html`
+- `docs/continuation_ov3.md`
+
+OV3 validates one complete fixture-only reasoning workflow:
+
+fixture corpus -> semantic records -> proposition dedup -> graph traversal ->
+hypothesis generation -> disconfirmation -> higher-order synthesis ->
+evaluation/regression scoring -> activation confidence update simulation ->
+operator recommendation.
+
+Current OV3 metrics:
+
+- reasoning quality score: `0.975`
+- OV3 readiness score: `0.865`
+- reasoning benchmark pass rate: `1.0`
+- activation confidence: `0.585`
+- closest capability to activation: `evaluation/regression loop`
+
+Activation remains disabled. Read-only substrate retrieval, grounded answer
+synthesis, and evaluation/regression loop remain future manual-review
+candidates.
+
+Current next recommendation:
+PROCEED_OV4_OPERATOR_REVIEWED_READONLY_ACTIVATION_TRIAL
