@@ -1,0 +1,207 @@
+{
+  "all_blocked": true,
+  "cases": [
+    {
+      "candidate_id": "tp9-missing_approval",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": false,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": true,
+        "tp8_policy_passed": true
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-missing_approval",
+        "classification": "eligible_for_future_promotion",
+        "reasons": [
+          "all policy gates satisfied in simulation"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-missing_rollback",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": false,
+        "tp8_policy_passed": true
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-missing_rollback",
+        "classification": "eligible_for_future_promotion",
+        "reasons": [
+          "all policy gates satisfied in simulation"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-wrong_scope",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": false,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": true,
+        "tp8_policy_passed": true
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-wrong_scope",
+        "classification": "eligible_for_future_promotion",
+        "reasons": [
+          "all policy gates satisfied in simulation"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-contradicted",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": false,
+        "rollback_token_available": true,
+        "tp8_policy_passed": false
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-contradicted",
+        "classification": "contradiction_unresolved",
+        "reasons": [
+          "unresolved contradiction"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-uncertain",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": false,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": true,
+        "tp8_policy_passed": false
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-uncertain",
+        "classification": "needs_more_evidence",
+        "reasons": [
+          "uncertainty unresolved"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-reviewer_disagreement",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": false,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": true,
+        "tp8_policy_passed": false
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-reviewer_disagreement",
+        "classification": "operator_disagreement",
+        "reasons": [
+          "reviewer disagreement"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-missing_audit",
+      "checks": {
+        "audit_record_ready": false,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": true,
+        "tp8_policy_passed": true
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-missing_audit",
+        "classification": "eligible_for_future_promotion",
+        "reasons": [
+          "all policy gates satisfied in simulation"
+        ]
+      },
+      "would_write": false
+    },
+    {
+      "candidate_id": "tp9-activation_flag_off",
+      "checks": {
+        "audit_record_ready": true,
+        "bounded_uncertainty": true,
+        "canonical_scope_match": true,
+        "complete_provenance": true,
+        "explicit_operator_approval": true,
+        "future_activation_flag_enabled": false,
+        "multi_reviewer_agreement": true,
+        "no_unresolved_contradiction": true,
+        "rollback_token_available": true,
+        "tp8_policy_passed": true
+      },
+      "decision": "DESIGN_BLOCKED",
+      "policy_classification": {
+        "auditable": true,
+        "candidate_id": "tp9-activation_flag_off",
+        "classification": "eligible_for_future_promotion",
+        "reasons": [
+          "all policy gates satisfied in simulation"
+        ]
+      },
+      "would_write": false
+    }
+  ],
+  "passed": true,
+  "phase": "TP9 Falsification"
+}

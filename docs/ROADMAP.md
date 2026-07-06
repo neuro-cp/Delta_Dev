@@ -939,6 +939,16 @@ Current recommendation:
 
 `READY_FOR_CONTROLLED_CANONICAL_PILOT_DESIGN`
 
+## TP9 Controlled Canonical Pilot Design
+
+TP9 is complete. It designed the first controlled canonical pilot path as an
+inactive, future-gated path with strict scope, explicit approval, rollback,
+audit, and conflict-handling requirements.
+
+Current recommendation:
+
+`READY_FOR_TRAINING_READINESS_REVIEW`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

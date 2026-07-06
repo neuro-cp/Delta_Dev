@@ -4832,3 +4832,29 @@ only future policy gates and recommends controlled canonical pilot design.
 
 Current next recommendation:
 READY_FOR_CONTROLLED_CANONICAL_PILOT_DESIGN
+
+## TP9 Controlled Canonical Pilot Design
+
+TP9 controlled canonical pilot design is complete.
+
+New TP9 surface:
+
+- `orchestration/runtime/tp9_controlled_canonical_pilot_design.py`
+- `scripts/delta_tp9_canonical_pilot_design.py`
+- `tests/runtime_tp9/test_tp9_controlled_canonical_pilot_design.py`
+- `reports/TP9_CANONICAL_PILOT_SCOPE.md/json`
+- `reports/TP9_GATE_MODEL.md/json`
+- `reports/TP9_CANONICAL_WRITE_PATH_DESIGN.md/json`
+- `reports/TP9_ROLLBACK_DESIGN.md/json`
+- `reports/TP9_CONFLICT_HANDLING.md/json`
+- `reports/TP9_FALSIFICATION.md/json`
+- `reports/TP9_SAFETY_CASE.md/json`
+- `reports/TP9_READINESS_REVIEW.md/json`
+- `ui/delta_tp9_dashboard.html`
+- `docs/continuation_tp9.md`
+
+TP9 designs a disabled canonical pilot path only. It performs no canonical
+writes and enables no canonical memory.
+
+Current next recommendation:
+READY_FOR_TRAINING_READINESS_REVIEW

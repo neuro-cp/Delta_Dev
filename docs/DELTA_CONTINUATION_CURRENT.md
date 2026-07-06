@@ -849,3 +849,17 @@ Checkpoint:
 
 Current next recommendation:
 READY_FOR_CONTROLLED_CANONICAL_PILOT_DESIGN
+
+TP9 controlled canonical pilot design is complete.
+
+Checkpoint:
+
+- canonical pilot remains disabled
+- canonical write path is design-only
+- rollback, audit, conflict handling, explicit approval, and future activation
+  gates are specified
+- falsification cases are blocked
+- no canonical memory mutation occurred
+
+Current next recommendation:
+READY_FOR_TRAINING_READINESS_REVIEW

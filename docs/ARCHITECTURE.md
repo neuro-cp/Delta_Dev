@@ -1197,3 +1197,13 @@ rollback requirements, but no canonical write path is enabled.
 TP8 keeps canonical memory disabled. It does not train, fine-tune, update model
 weights, call providers, write canonical memory, mutate live knowledge, start
 schedulers, execute actions, promote HYB1, or change Model B defaults.
+
+## TP9 Controlled Canonical Pilot Design
+
+TP9 designs a narrow future canonical pilot while keeping the pilot disabled.
+It defines pilot scope, gate model, inactive canonical write intent, rollback
+handles, conflict handling, falsification cases, and a safety case.
+
+TP9 performs no canonical writes and enables no canonical memory. It does not
+train, fine-tune, update model weights, call providers, mutate live knowledge,
+start schedulers, execute actions, promote HYB1, or change Model B defaults.

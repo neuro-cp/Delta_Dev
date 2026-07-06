@@ -1,0 +1,18 @@
+{
+  "phase": "TP9 Rollback Design",
+  "procedures": [
+    "single-record rollback",
+    "batch rollback by pilot id",
+    "provenance restoration",
+    "audit diff review"
+  ],
+  "rollback_execution_enabled": false,
+  "rollback_handles": [
+    "record_id",
+    "pre_write_snapshot",
+    "source_candidate_id",
+    "audit_id",
+    "reason_code"
+  ],
+  "rollback_supported": true
+}

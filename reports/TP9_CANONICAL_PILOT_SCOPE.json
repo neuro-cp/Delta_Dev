@@ -1,0 +1,21 @@
+{
+  "activation_requirement": "separate future explicit approval required",
+  "allowed_knowledge": [
+    "low-risk project self-description claims",
+    "fully provenanced operational-status claims"
+  ],
+  "approval_model": "single candidate, exact approval, multi-reviewer policy satisfied",
+  "audit_requirement": "source proposal, reviewer chain, policy gate results, rollback handle, timestamp",
+  "excluded_knowledge": [
+    "personal memory",
+    "medical/legal/financial claims",
+    "action instructions",
+    "provider-derived authority",
+    "unresolved contradictions"
+  ],
+  "phase": "TP9 Canonical Pilot Scope",
+  "pilot_enabled": false,
+  "rollback_requirement": "per-record rollback token plus pre-write snapshot",
+  "scope": "single-domain, operator-reviewed, canonical-write design only",
+  "target_store": "disabled canonical pilot store design"
+}

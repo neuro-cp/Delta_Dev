@@ -1,0 +1,12 @@
+{
+  "conflict_states": [
+    "blocked",
+    "needs_review",
+    "superseded_by_stronger_evidence",
+    "rollback_required"
+  ],
+  "counterevidence_preserved": true,
+  "minority_objections_block": true,
+  "phase": "TP9 Conflict Handling",
+  "unresolved_conflicts_block": true
+}
