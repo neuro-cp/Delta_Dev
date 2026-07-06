@@ -27,6 +27,9 @@ ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports"
 DATA = ROOT / "data" / "rc1_operator_console"
 OBSERVATION_LOG = DATA / "observations.jsonl"
+PROPOSITION_LOG = DATA / "noncanonical_propositions.jsonl"
+EVIDENCE_LOG = DATA / "evidence_links.jsonl"
+REPLAY_LOG = DATA / "replay_queue.jsonl"
 
 CONSOLE_FLAGS = {
     "rc1_operator_console_enabled": True,
@@ -47,6 +50,26 @@ def _load_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _read_jsonl(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    rows = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rows.append(json.loads(line))
+    return rows
+
+
+def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(row, sort_keys=True) + "\n")
+
+
+def _stable_id(prefix: str, text: str) -> str:
+    return f"{prefix}-{hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]}"
 
 
 def report_summary() -> dict[str, Any]:
@@ -89,6 +112,7 @@ def build_corpus_substrate_summary() -> dict[str, Any]:
         "available_artifacts": available,
         "substrate_improvement_count": len(improvements),
         "substrate_improvements": [item.get("improvement_id") for item in improvements],
+        "rc1_noncanonical_state": build_cognitive_state(),
         "canonical_write_enabled": False,
         "training_enabled": False,
     }
@@ -128,6 +152,7 @@ def build_operator_snapshot() -> dict[str, Any]:
         "replay_rollback": build_replay_rollback_inspection(),
         "observation_framework": observation_framework(),
         "failure_classification": failure_classification(),
+        "cognitive_state": build_cognitive_state(),
         "console_flags": CONSOLE_FLAGS,
     }
 
@@ -137,7 +162,11 @@ def answer_operator_question(question: str) -> dict[str, Any]:
     from orchestration.runtime.tp16_tp30_master_marathon import answer_tp16_tp30_question, is_tp16_tp30_question
     from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
 
-    if is_rc1_question(question):
+    substrate = query_noncanonical_substrate(question)
+    if substrate["matched"]:
+        route = "rc1_noncanonical_substrate"
+        answer = substrate["answer"]
+    elif is_rc1_question(question):
         route = "rc1_release_candidate"
         data = answer_rc1_question(question)
         answer = data["answer_text"]
@@ -173,6 +202,151 @@ def preview_evidence_ingest(pasted_text: str) -> dict[str, Any]:
         "canonical_write_performed": False,
         "provider_calls_performed": False,
         "note": "Paste preview only. No upload, provider call, training, canonical write, or substrate mutation occurred.",
+    }
+
+
+def extract_propositions(pasted_text: str) -> dict[str, Any]:
+    """Create reviewable proposition candidates from pasted operator text.
+
+    Extraction is intentionally simple and deterministic for RC1. It creates
+    candidates only; it does not persist anything until the operator approves.
+    """
+    text = pasted_text.strip()
+    candidates: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for raw in text.replace("\r\n", "\n").replace(";", ".").split("\n"):
+        for part in raw.split("."):
+            claim = part.strip()
+            if not claim:
+                continue
+            if claim[-1:] not in {".", "!", "?"}:
+                claim = claim + "."
+            key = claim.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            proposition_id = _stable_id("rc1-proposition", claim)
+            candidates.append({
+                "proposition_id": proposition_id,
+                "claim": claim,
+                "source": "operator_paste",
+                "confidence": "operator_asserted_unverified",
+                "status": "pending_operator_review",
+                "canonical": False,
+                "selected_by_default": True,
+            })
+    return {
+        "candidate_count": len(candidates),
+        "candidates": candidates,
+        "persisted": False,
+        "canonical_write_performed": False,
+        "provider_calls_performed": False,
+        "training_performed": False,
+    }
+
+
+def approve_propositions(candidates: list[dict[str, Any]]) -> dict[str, Any]:
+    """Append approved candidates to the RC1 local noncanonical substrate."""
+    existing_ids = {row["proposition_id"] for row in _read_jsonl(PROPOSITION_LOG)}
+    approved = []
+    duplicates = []
+    for candidate in candidates:
+        proposition_id = candidate["proposition_id"]
+        if proposition_id in existing_ids:
+            duplicates.append(proposition_id)
+            continue
+        claim = candidate["claim"]
+        evidence_id = _stable_id("rc1-evidence", proposition_id + claim)
+        record = {
+            "proposition_id": proposition_id,
+            "claim": claim,
+            "source": candidate.get("source", "operator_paste"),
+            "confidence": candidate.get("confidence", "operator_asserted_unverified"),
+            "status": "approved_noncanonical",
+            "canonical": False,
+            "evidence_id": evidence_id,
+            "rollback_supported": True,
+            "provider_calls_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+        }
+        evidence = {
+            "evidence_id": evidence_id,
+            "proposition_id": proposition_id,
+            "source": "operator_paste",
+            "provenance": "local_rc1_operator_console",
+            "canonical": False,
+        }
+        replay = {
+            "replay_item_id": _stable_id("rc1-replay", proposition_id),
+            "proposition_id": proposition_id,
+            "reason": "new_operator_approved_noncanonical_proposition",
+            "status": "queued_for_manual_replay_review",
+            "scheduler_started": False,
+        }
+        _append_jsonl(PROPOSITION_LOG, record)
+        _append_jsonl(EVIDENCE_LOG, evidence)
+        _append_jsonl(REPLAY_LOG, replay)
+        approved.append(record)
+        existing_ids.add(proposition_id)
+    return {
+        "approved_count": len(approved),
+        "duplicate_count": len(duplicates),
+        "approved": approved,
+        "duplicates": duplicates,
+        "state": build_cognitive_state(),
+        "canonical_write_performed": False,
+        "provider_calls_performed": False,
+        "training_performed": False,
+        "scheduler_started": False,
+    }
+
+
+def build_cognitive_state() -> dict[str, Any]:
+    propositions = _read_jsonl(PROPOSITION_LOG)
+    evidence = _read_jsonl(EVIDENCE_LOG)
+    replay = _read_jsonl(REPLAY_LOG)
+    return {
+        "corpus_documents": 0,
+        "noncanonical_propositions": len(propositions),
+        "evidence_links": len(evidence),
+        "concepts": len({token.strip(".,:;!?").lower() for row in propositions for token in row.get("claim", "").split() if len(token.strip(".,:;!?")) > 3}),
+        "contradictions": 0,
+        "pending_review": 0,
+        "replay_queue": len(replay),
+        "knowledge_available": bool(propositions),
+        "canonical_records": 0,
+        "training_records": 0,
+    }
+
+
+def query_noncanonical_substrate(question: str) -> dict[str, Any]:
+    tokens = {
+        token.strip(".,:;!?").lower()
+        for token in question.split()
+        if len(token.strip(".,:;!?")) > 3 and token.lower() not in {"what", "know", "about", "does", "tell", "current", "currently"}
+    }
+    propositions = _read_jsonl(PROPOSITION_LOG)
+    matches = []
+    for row in propositions:
+        claim_tokens = {token.strip(".,:;!?").lower() for token in row.get("claim", "").split()}
+        if tokens & claim_tokens:
+            matches.append(row)
+    if not matches:
+        return {
+            "matched": False,
+            "answer": "No RC1 noncanonical substrate evidence matched this question.",
+            "matches": [],
+        }
+    lines = ["I found approved noncanonical RC1 substrate evidence:"]
+    for row in matches:
+        lines.append(f"- {row['claim']} (source: {row['source']}; confidence: {row['confidence']}; canonical: {row['canonical']})")
+    lines.append("")
+    lines.append("No contradictory evidence is currently recorded in the RC1 local substrate.")
+    return {
+        "matched": True,
+        "answer": "\n".join(lines),
+        "matches": matches,
     }
 
 
@@ -225,4 +399,3 @@ def validate_console_safe(snapshot: dict[str, Any]) -> bool:
             if key not in {"rc1_operator_console_enabled", "local_desktop_only", "paste_text_only"}
         )
     )
-

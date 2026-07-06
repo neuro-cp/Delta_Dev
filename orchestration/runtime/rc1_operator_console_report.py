@@ -22,7 +22,8 @@ def build_operator_console_report() -> dict[str, Any]:
     preview = preview_evidence_ingest("Sample pasted evidence for RC1 console validation.")
     return {
         "phase": "DELTA Runtime v4.0 RC1 Operator Console UI",
-        "ui_route": ".\\.venv311\\Scripts\\python.exe .\\delta_operator_console.py",
+        "ui_route": ".\\.venv311\\Scripts\\python.exe .\\DELTA.py",
+        "compatibility_ui_route": ".\\.venv311\\Scripts\\python.exe .\\delta_operator_console.py",
         "snapshot": snapshot,
         "paste_preview": preview,
         "safe": validate_console_safe(snapshot),
@@ -30,6 +31,9 @@ def build_operator_console_report() -> dict[str, Any]:
             "current runtime status",
             "corpus/substrate summary",
             "text paste evidence preview",
+            "deterministic proposition extraction",
+            "operator-approved noncanonical substrate write",
+            "cognitive state panel",
             "operator review queue inspection",
             "local ask/reasoning panel",
             "provenance/citation via existing report references",
@@ -94,4 +98,3 @@ if __name__ == "__main__":
         "ui_route": data["ui_route"],
         "final_recommendation": data["final_recommendation"],
     }, indent=2, sort_keys=True))
-

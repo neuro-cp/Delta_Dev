@@ -1,8 +1,12 @@
 {
+  "compatibility_ui_route": ".\\.venv311\\Scripts\\python.exe .\\delta_operator_console.py",
   "features": [
     "current runtime status",
     "corpus/substrate summary",
     "text paste evidence preview",
+    "deterministic proposition extraction",
+    "operator-approved noncanonical substrate write",
+    "cognitive state panel",
     "operator review queue inspection",
     "local ask/reasoning panel",
     "provenance/citation via existing report references",
@@ -32,6 +36,18 @@
   ],
   "safe": true,
   "snapshot": {
+    "cognitive_state": {
+      "canonical_records": 0,
+      "concepts": 0,
+      "contradictions": 0,
+      "corpus_documents": 0,
+      "evidence_links": 0,
+      "knowledge_available": false,
+      "noncanonical_propositions": 0,
+      "pending_review": 0,
+      "replay_queue": 0,
+      "training_records": 0
+    },
     "console_flags": {
       "autonomous_actions_enabled": false,
       "canonical_writes_enabled": false,
@@ -54,6 +70,18 @@
         "TP30_FINAL_ROADMAP_REVIEW.json": true
       },
       "canonical_write_enabled": false,
+      "rc1_noncanonical_state": {
+        "canonical_records": 0,
+        "concepts": 0,
+        "contradictions": 0,
+        "corpus_documents": 0,
+        "evidence_links": 0,
+        "knowledge_available": false,
+        "noncanonical_propositions": 0,
+        "pending_review": 0,
+        "replay_queue": 0,
+        "training_records": 0
+      },
       "substrate_improvement_count": 6,
       "substrate_improvements": [
         "tp14-proposition-normalization",
@@ -189,6 +217,7 @@
           "RC1_FAILURE_CLASSIFICATION.json",
           "RC1_FINAL_REVIEW.json",
           "RC1_OPERATIONAL_OBSERVATION_FRAMEWORK.json",
+          "RC1_OPERATOR_CONSOLE_UI.json",
           "RC1_READINESS_REPORT.json",
           "RC1_READINESS_REVIEW.json",
           "RC1_RELEASE_MANIFEST.json",
@@ -198,7 +227,7 @@
           "RC1_VALIDATION_SUMMARY.json"
         ],
         "latest_tp_report": "TP9_SAFETY_CASE.json",
-        "rc1_report_count": 12,
+        "rc1_report_count": 13,
         "tp_report_count": 119
       },
       "safety": {
@@ -226,5 +255,5 @@
       "version": "DELTA Runtime v4.0 RC1"
     }
   },
-  "ui_route": ".\\.venv311\\Scripts\\python.exe .\\delta_operator_console.py"
+  "ui_route": ".\\.venv311\\Scripts\\python.exe .\\DELTA.py"
 }

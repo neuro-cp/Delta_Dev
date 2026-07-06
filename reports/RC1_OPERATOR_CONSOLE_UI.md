@@ -1,6 +1,6 @@
 # RC1 Operator Console UI
 
-UI route: `.\.venv311\Scripts\python.exe .\delta_operator_console.py`
+UI route: `.\.venv311\Scripts\python.exe .\DELTA.py`
 
 Safe: `True`
 
@@ -8,6 +8,9 @@ Safe: `True`
 - current runtime status
 - corpus/substrate summary
 - text paste evidence preview
+- deterministic proposition extraction
+- operator-approved noncanonical substrate write
+- cognitive state panel
 - operator review queue inspection
 - local ask/reasoning panel
 - provenance/citation via existing report references
