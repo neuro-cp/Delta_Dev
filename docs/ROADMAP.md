@@ -1790,3 +1790,11 @@ Final recommendation: `PROCEED_TP27_INDEPENDENT_REPLICATION`.
 
 Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
 
+### TP27 Independent Replication
+
+Completed TP27: Repeat evaluations on fresh held-out datasets and confirm reproducibility.
+
+Final recommendation: `PROCEED_TP28_PRODUCTION_READINESS_REVIEW`.
+
+Safety state remains unchanged: no model training, no fine-tuning, no weight update, no provider authority, no production deployment, no baseline routing change, no canonical migration, no autonomous action, no scheduler activation, no HYB1 promotion.
+

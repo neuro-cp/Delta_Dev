@@ -1327,3 +1327,7 @@ TP25 (Operator Experience) preserves the substrate-first architecture. It adds e
 ### TP26 Architecture Note
 
 TP26 (Large Scale Validation) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
+
+### TP27 Architecture Note
+
+TP27 (Independent Replication) preserves the substrate-first architecture. It adds evidence and governance around `controlled_noncanonical_or_report_only` without changing Model B, promoting HYB1, training models, calling providers, executing actions, or performing irreversible canonical migration.
