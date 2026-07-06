@@ -1,0 +1,68 @@
+{
+  "activation_state": "controlled_noncanonical_or_report_only",
+  "effect_sizes": {
+    "contradiction_visibility_delta_estimate": 0.067,
+    "operator_review_burden_delta_estimate": -0.036,
+    "proposition_quality_delta_estimate": 0.077,
+    "retrieval_accuracy_delta_estimate": 0.059,
+    "rollback_success_target": 1.0
+  },
+  "evidence_context_available": {
+    "previous_phase": true,
+    "tp13_shadow_training": true,
+    "tp14_substrate_improvements": true,
+    "tp15_final_review": true
+  },
+  "evidence_inputs": [
+    "TP27 replication scorecard",
+    "architecture invariants"
+  ],
+  "generated_at_utc": "2026-07-06T00:00:00+00:00",
+  "hard_stop_required": false,
+  "metrics": {
+    "audit_required": 1.0,
+    "deterministic_outputs": 1.0,
+    "hyb1_dormant": 1.0,
+    "model_b_unchanged": 1.0,
+    "operator_review_preserved": 1.0,
+    "provenance_required": 1.0,
+    "rollback_path_defined": 1.0,
+    "safety_invariants_preserved": 1.0
+  },
+  "next_phase": "TP29 Activation Readiness",
+  "objective": "Review operational maturity, deployment readiness, governance maturity, monitoring, backup, and disaster recovery.",
+  "operations": [
+    "score deployment readiness without deploying",
+    "review monitoring and disaster recovery gaps",
+    "confirm production blockers remain explicit"
+  ],
+  "outputs": [
+    "production readiness review",
+    "monitoring gap map",
+    "backup and disaster recovery checklist"
+  ],
+  "passed": true,
+  "phase": "TP28",
+  "recommendation": "PROCEED_TP29_ACTIVATION_READINESS",
+  "safety": {
+    "autonomous_action_performed": false,
+    "autonomous_memory_enabled": false,
+    "baseline_routing_changed": false,
+    "canonical_write_performed": false,
+    "checkpoint_created": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "irreversible_canonical_migration_performed": false,
+    "lora_or_adapter_created": false,
+    "model_b_default_changed": false,
+    "model_replaced": false,
+    "model_training_performed": false,
+    "production_deployment_performed": false,
+    "provider_authority_enabled": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "weight_update_performed": false
+  },
+  "score": 1.0,
+  "title": "Production Readiness Review"
+}
