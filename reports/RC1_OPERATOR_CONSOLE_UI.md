@@ -1,0 +1,35 @@
+# RC1 Operator Console UI
+
+UI route: `.\.venv311\Scripts\python.exe .\delta_operator_console.py`
+
+Safe: `True`
+
+## Features
+- current runtime status
+- corpus/substrate summary
+- text paste evidence preview
+- operator review queue inspection
+- local ask/reasoning panel
+- provenance/citation via existing report references
+- contradiction and replay references through existing reports
+- replay/rollback inspection
+- structured local failure/observation logging
+- operational observation notes
+
+## Remaining Gaps
+- no file upload workflow yet
+- no live corpus ingestion
+- no provider-assisted answers
+- no canonical writes
+- no autonomous review or action
+
+## Safety
+- no provider calls
+- no training
+- no canonical writes
+- no autonomous action
+- no scheduler activation
+- no HYB1 promotion
+
+## Recommendation
+`USE_RC1_OPERATOR_CONSOLE_FOR_CONTROLLED_OPERATIONAL_OBSERVATION`

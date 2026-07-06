@@ -1,0 +1,230 @@
+{
+  "features": [
+    "current runtime status",
+    "corpus/substrate summary",
+    "text paste evidence preview",
+    "operator review queue inspection",
+    "local ask/reasoning panel",
+    "provenance/citation via existing report references",
+    "contradiction and replay references through existing reports",
+    "replay/rollback inspection",
+    "structured local failure/observation logging",
+    "operational observation notes"
+  ],
+  "final_recommendation": "USE_RC1_OPERATOR_CONSOLE_FOR_CONTROLLED_OPERATIONAL_OBSERVATION",
+  "paste_preview": {
+    "canonical_write_performed": false,
+    "characters": 50,
+    "nonempty_lines": 1,
+    "note": "Paste preview only. No upload, provider call, training, canonical write, or substrate mutation occurred.",
+    "persisted": false,
+    "preview_id": "rc1-evidence-preview-6896a68c0b08bde0",
+    "provider_calls_performed": false,
+    "sha256": "6896a68c0b08bde0f73fb4699b84d3400c4cf4d68e56e7e4476efff039e0ca2f"
+  },
+  "phase": "DELTA Runtime v4.0 RC1 Operator Console UI",
+  "remaining_gaps": [
+    "no file upload workflow yet",
+    "no live corpus ingestion",
+    "no provider-assisted answers",
+    "no canonical writes",
+    "no autonomous review or action"
+  ],
+  "safe": true,
+  "snapshot": {
+    "console_flags": {
+      "autonomous_actions_enabled": false,
+      "canonical_writes_enabled": false,
+      "hyb1_promoted": false,
+      "local_desktop_only": true,
+      "model_b_default_changed": false,
+      "paste_text_only": true,
+      "provider_calls_enabled": false,
+      "rc1_operator_console_enabled": true,
+      "recall_mutation_enabled": false,
+      "scheduler_enabled": false,
+      "training_enabled": false
+    },
+    "corpus_substrate": {
+      "available_artifacts": {
+        "TP11_BASE_CORPUS_MANIFEST.json": false,
+        "TP14_SUBSTRATE_IMPROVEMENTS.json": true,
+        "TP15_INTEGRATION_MAPPING.json": true,
+        "TP20_TRAINING_NECESSITY_REASSESSMENT.json": true,
+        "TP30_FINAL_ROADMAP_REVIEW.json": true
+      },
+      "canonical_write_enabled": false,
+      "substrate_improvement_count": 6,
+      "substrate_improvements": [
+        "tp14-proposition-normalization",
+        "tp14-provenance-enrichment",
+        "tp14-contradiction-linking",
+        "tp14-uncertainty-calibration",
+        "tp14-retrieval-ranking",
+        "tp14-replay-prioritization"
+      ],
+      "training_enabled": false
+    },
+    "failure_classification": {
+      "classes": {
+        "bug": "incorrect deterministic behavior or testable defect",
+        "documentation": "operator guide, report, or continuation gap",
+        "governance": "approval, authority, audit, or invariant concern",
+        "operator_workflow": "review, rollback, approval, or triage workflow issue",
+        "performance": "latency, scale, resource, or throughput issue",
+        "provenance": "missing, weak, or unclear source trace",
+        "reasoning": "weak inference, synthesis, contradiction handling, or uncertainty behavior",
+        "replay": "replay ordering, consolidation review, or reproducibility issue",
+        "retrieval": "missed, irrelevant, or poorly ranked evidence",
+        "usability": "operator confusion or unnecessary friction"
+      },
+      "priorities": {
+        "P0": "safety invariant breach or hidden authority risk",
+        "P1": "blocks operational workflow or corrupts evidence",
+        "P2": "material quality issue with workaround",
+        "P3": "minor friction or documentation improvement"
+      },
+      "triage_inputs": [
+        "reproducibility",
+        "impact",
+        "safety_risk",
+        "operator_frequency",
+        "evidence_strength"
+      ],
+      "version": "DELTA Runtime v4.0 RC1"
+    },
+    "observation_framework": {
+      "categories": [
+        "operator_friction",
+        "missing_evidence",
+        "confusing_behavior",
+        "weak_explanation",
+        "replay_problem",
+        "retrieval_failure",
+        "provenance_issue",
+        "latency",
+        "workflow_interruption",
+        "feature_request",
+        "unexpected_strength"
+      ],
+      "evidence_standard": "observations must include reproduction steps, report paths, trace ids, or operator workflow evidence",
+      "goal": "turn operational use into engineering evidence",
+      "opinion_only_entries_allowed": false,
+      "required_fields": [
+        "observation_id",
+        "timestamp",
+        "operator",
+        "workflow",
+        "category",
+        "expected_behavior",
+        "observed_behavior",
+        "evidence_path",
+        "reproduction_steps",
+        "severity",
+        "impact",
+        "candidate_fix",
+        "triage_decision"
+      ],
+      "version": "DELTA Runtime v4.0 RC1"
+    },
+    "operator_review_queue": [
+      {
+        "active": false,
+        "expected_runtime_effect": "cleaner claim units for reasoning",
+        "item_id": "tp14-proposition-normalization",
+        "operator_review_required": true,
+        "status": "rc1_review_reference"
+      },
+      {
+        "active": false,
+        "expected_runtime_effect": "stronger evidence trace visibility",
+        "item_id": "tp14-provenance-enrichment",
+        "operator_review_required": true,
+        "status": "rc1_review_reference"
+      },
+      {
+        "active": false,
+        "expected_runtime_effect": "earlier conflict awareness",
+        "item_id": "tp14-contradiction-linking",
+        "operator_review_required": true,
+        "status": "rc1_review_reference"
+      },
+      {
+        "active": false,
+        "expected_runtime_effect": "bounded confidence and better abstention",
+        "item_id": "tp14-uncertainty-calibration",
+        "operator_review_required": true,
+        "status": "rc1_review_reference"
+      },
+      {
+        "active": false,
+        "expected_runtime_effect": "higher-value evidence ordering",
+        "item_id": "tp14-retrieval-ranking",
+        "operator_review_required": true,
+        "status": "rc1_review_reference"
+      },
+      {
+        "active": false,
+        "expected_runtime_effect": "review effort focused on unresolved governed records",
+        "item_id": "tp14-replay-prioritization",
+        "operator_review_required": true,
+        "status": "rc1_review_reference"
+      }
+    ],
+    "replay_rollback": {
+      "replay_report_available": true,
+      "replay_scheduler_enabled": false,
+      "rollback_available": true,
+      "rollback_execution_enabled": false,
+      "rollback_records": 6
+    },
+    "runtime_status": {
+      "latest_tp_phase": "TP30",
+      "latest_tp_recommendation": "SUBSTRATE_EVOLUTION_REMAINS_PRIMARY_NEXT_PATH",
+      "operational_baseline": true,
+      "reports": {
+        "latest_rc1_reports": [
+          "RC1_ADVERSARIAL_VALIDATION_REPORT.json",
+          "RC1_DOCUMENT_AUDIT_SLICE.json",
+          "RC1_FAILURE_CLASSIFICATION.json",
+          "RC1_FINAL_REVIEW.json",
+          "RC1_OPERATIONAL_OBSERVATION_FRAMEWORK.json",
+          "RC1_READINESS_REPORT.json",
+          "RC1_READINESS_REVIEW.json",
+          "RC1_RELEASE_MANIFEST.json",
+          "RC1_RUNTIME_ARTIFACT_REGISTRY.json",
+          "RC1_SUBSTRATE_QUERY_ADAPTER.json",
+          "RC1_UNIFIED_REVIEW_STATE_MACHINE.json",
+          "RC1_VALIDATION_SUMMARY.json"
+        ],
+        "latest_tp_report": "TP9_SAFETY_CASE.json",
+        "rc1_report_count": 12,
+        "tp_report_count": 119
+      },
+      "safety": {
+        "autonomous_action_enabled": false,
+        "autonomous_actions_enabled": false,
+        "canonical_write_performed": false,
+        "canonical_writes_enabled": false,
+        "fine_tuning_performed": false,
+        "hyb1_promoted": false,
+        "local_desktop_only": true,
+        "model_b_default_changed": false,
+        "model_training_performed": false,
+        "paste_text_only": true,
+        "provider_authority_changed": false,
+        "provider_calls_enabled": false,
+        "rc1_operator_console_enabled": true,
+        "recall_mutation_enabled": false,
+        "routing_changed": false,
+        "scheduler_activated": false,
+        "scheduler_enabled": false,
+        "training_enabled": false,
+        "weight_update_performed": false
+      },
+      "status": "release_candidate_freeze",
+      "version": "DELTA Runtime v4.0 RC1"
+    }
+  },
+  "ui_route": ".\\.venv311\\Scripts\\python.exe .\\delta_operator_console.py"
+}
