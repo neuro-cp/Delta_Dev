@@ -1,0 +1,20 @@
+{
+  "command": "python scripts/delta_tp11_shadow_training_guard.py --manifest data/tp11_governed_base_corpus/corpus_manifest.json --dry-run-only",
+  "dataset_loader": "manifest-verified loader design only",
+  "enabled": false,
+  "fine_tuning_performed": false,
+  "holdout_count": 2,
+  "manifest_hash": "cb0b9d5e835e5040c0fd3f533b6de9b428b3e2344408f5340e1ac6cadf1702a9",
+  "model_artifact_created": false,
+  "phase": "TP11 Disabled Shadow Training Scaffold",
+  "required_future_gates": [
+    "explicit research approval",
+    "independent evaluator",
+    "no deployment",
+    "no model artifact unless separately approved"
+  ],
+  "train_count": 19,
+  "training_performed": false,
+  "validation_count": 4,
+  "weight_update_performed": false
+}

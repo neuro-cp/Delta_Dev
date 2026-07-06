@@ -1,0 +1,14 @@
+{
+  "duplicate_content_count": 0,
+  "held_out_hash_overlap_count": 0,
+  "held_out_hash_overlaps": [],
+  "held_out_sources_checked": [
+    "tp1_heldout",
+    "tp2_multi_corpus",
+    "tp3_independent"
+  ],
+  "passed": true,
+  "phase": "TP11 Contamination Review",
+  "suspicious_items": [],
+  "suspicious_marker_count": 0
+}

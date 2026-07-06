@@ -876,3 +876,19 @@ Checkpoint:
 
 Current next recommendation:
 CONTINUE_SUBSTRATE_LEARNING_NO_TRAINING
+
+TP11 governed base corpus and shadow training readiness is complete.
+
+Checkpoint:
+
+- governed base corpus package created
+- corpus manifest is deterministic and hash-backed
+- dataset card, governance review, contamination review, and readiness review
+  are generated
+- held-out benchmark sources remain excluded from the corpus
+- shadow training scaffold is disabled and creates no model artifacts
+- no training, fine-tuning, weight updates, providers, canonical writes,
+  schedulers, actions, HYB1 promotion, or Model B replacement occurred
+
+Current next recommendation:
+READY_FOR_SHADOW_TRAINING_DRY_RUN

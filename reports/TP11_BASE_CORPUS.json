@@ -1,0 +1,746 @@
+{
+  "corpus_status": "constructed",
+  "excluded_count": 12,
+  "excluded_items": [
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-9ab0d7a9294bfc63"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-9abc5c26994ebed8"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-a60abce4421f276b"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-a8580f184c89360a"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-b949191969fd9849"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-b974441bedcd4984"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-ba65ff2803c7e1df"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-cc99eeaad955c51d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-d57f4065fed186ba"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-ebcafa21b29632ec"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-eee323b6aeaaa735"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f4c24fb2f857a456"
+    }
+  ],
+  "held_out_families_excluded": [
+    "tp1_heldout",
+    "tp2_multi_corpus",
+    "tp3_independent"
+  ],
+  "included_count": 25,
+  "item_count": 37,
+  "items": [
+    {
+      "approval_state": "operator_approved_noncanonical_pilot",
+      "content_hash": "41e8b38bff5aec7666de64ca239cdaaea46600807a3d2bd43222c85af612e8b3",
+      "contradictions": [
+        "contradiction_or_unresolved_evidence_present"
+      ],
+      "evidence": [
+        "operator-session://tp5-demo-project-atlas",
+        "report://TP4_RECOMMENDATION"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "noncanonical-25a36e16fb2509c7",
+      "license_status": "repo-local-governed-record",
+      "pii_risk": "none",
+      "provenance": [
+        "operator-session://tp5-demo-project-atlas",
+        "report://TP4_RECOMMENDATION"
+      ],
+      "review_history": [
+        "operator_approved_noncanonical_pilot"
+      ],
+      "source_family": "noncanonical_pilot",
+      "source_identity": "tp5-record-336ffc7432bdbe72",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\records.jsonl",
+      "text": "Operator reviewed a Project Atlas note: routing recovered after Registry B checksums were restored; however Worker C execution remains unresolved and must not be claimed as operational recovery",
+      "uncertainty": "explicit_uncertainty"
+    },
+    {
+      "approval_state": "operator_approved_noncanonical_pilot",
+      "content_hash": "c2a81321734f94f7ef84e01b707a3430a5cf1952de627259c519c498b47e63e0",
+      "contradictions": [
+        "contradiction_or_unresolved_evidence_present"
+      ],
+      "evidence": [
+        "operator-session://tp6/approved_uncertain_note"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "noncanonical-61f86e93c6a0e402",
+      "license_status": "repo-local-governed-record",
+      "pii_risk": "none",
+      "provenance": [
+        "operator-session://tp6/approved_uncertain_note"
+      ],
+      "review_history": [
+        "operator_approved_noncanonical_pilot"
+      ],
+      "source_family": "noncanonical_pilot",
+      "source_identity": "tp5-record-c43c3dcb2dd534a6",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl",
+      "text": "Operator reviewed unresolved provenance and preserved uncertainty for replay",
+      "uncertainty": "explicit_uncertainty"
+    },
+    {
+      "approval_state": "operator_approved_noncanonical_pilot",
+      "content_hash": "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
+      "contradictions": [
+        "contradiction_or_unresolved_evidence_present"
+      ],
+      "evidence": [
+        "operator-session://tp6/approved_recovery_note"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "noncanonical-75b771b3d48bf601",
+      "license_status": "repo-local-governed-record",
+      "pii_risk": "none",
+      "provenance": [
+        "operator-session://tp6/approved_recovery_note"
+      ],
+      "review_history": [
+        "operator_approved_noncanonical_pilot"
+      ],
+      "source_family": "noncanonical_pilot",
+      "source_identity": "tp5-record-883740a35434b7fd",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl",
+      "text": "Operator reviewed routing recovery; however Worker C execution remains unresolved",
+      "uncertainty": "explicit_uncertainty"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "3211493888f39d66cc0e4536f3098b0734c979f7063ed5740e1a27c448c88254",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\05_finance_reserves_a.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-07d137fe366f14f8",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\05_finance_reserves_a.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\05_finance_reserves_a.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\05_finance_reserves_a.md",
+      "text": "# Finance Reserves A\n\nThe finance memo says reserves are sufficient for the quarter.\nThis memo is not investment advice.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "eb0acd60462e1bac939a2e67c7955b59f3eb5b062dbac77feea4d7f49100fe31",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\11_software_modules.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-239b9eab29a7cb8a",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\11_software_modules.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\11_software_modules.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\11_software_modules.md",
+      "text": "# Software Modules\n\nRuntime modules are healthier when every object has a producer, consumer, validator, and auditor.\nDisconnected modules increase integration risk.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "0b619bad7b78ff567ab49fa617758b69e165da4d13b4a70b3b1bda7d9c2647e7",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\20_synthesis.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-2e42571e8cd9238e",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\20_synthesis.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\20_synthesis.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\20_synthesis.md",
+      "text": "# Synthesis\n\nMulti-document answers should combine evidence without erasing contradictions.\nStrong answers cite records, separate known claims from uncertainty, and refuse unsupported conclusions.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "161b82dbacc16e0cfae768222381a6c110bad07ccd101e07893d1e72cb3dee20",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\12_software_regression.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-450ff20567345f72",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\12_software_regression.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\12_software_regression.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\12_software_regression.md",
+      "text": "# Software Regression\n\nRegression tests should cover previous failure modes.\nPassing shape tests alone does not prove runtime cooperation.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "da63f78364c3edf39134217bb4fa32cab3e868f92013bb5f2e94f8ba84c68589",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\01_registry_failure.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-4fd510c52a14bfba",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\01_registry_failure.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\01_registry_failure.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\01_registry_failure.md",
+      "text": "# Registry Failure\n\nProject Atlas failed because Registry B rejected records without provenance.\nAdding document identifiers and checksums restored Registry B acceptance.\nWorker C execution remained untested.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "85cf480fb0f11e971d3d4a017782af08fc6fe230bc92413734c40ab613119457",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\16_specialist_disagreement.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-5f8b5ad75002aa64",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\16_specialist_disagreement.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\16_specialist_disagreement.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\16_specialist_disagreement.md",
+      "text": "# Specialist Disagreement\n\nSpecialist disagreement should be preserved as advisory evidence.\nConsensus is not truth unless evidence supports it.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "e15473a4cefded83dfb797cac2623c78bc6c9c8654e3dc45e830cc92a2a29877",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\04_science_replication.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-64286496049bb057",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\04_science_replication.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\04_science_replication.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\04_science_replication.md",
+      "text": "# Science Replication\n\nIndependent replication strengthens confidence.\nIndirect evidence should increase uncertainty until replication exists.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "3e076a3a680c1c05fb36db5ddc6455eb69eddf830cfdad1fcfd1292667f9a8b6",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\07_medicine_boundary.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-642a9c0fdb4a7977",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\07_medicine_boundary.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\07_medicine_boundary.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\07_medicine_boundary.md",
+      "text": "# Medicine Boundary\n\nMedical evidence quality can be described locally.\nThe runtime must not provide diagnosis or treatment instructions.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "aaf1a8a5f15f9161679089cdbabeffd3ae3a8e6aea09c8dc0e9f3f8883b586f3",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\02_worker_conflict.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-6598573a0104d182",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\02_worker_conflict.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\02_worker_conflict.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\02_worker_conflict.md",
+      "text": "# Worker Conflict\n\nOne report claims Worker C completed execution successfully.\nThe audit report states Worker C was not tested after routing was restored.\nBoth claims must remain visible until execution evidence exists.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "57e3000b535d9885f3b87813d8b42953e57e42aba7cbc849612ca39a51a042ae",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\06_finance_reserves_b.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-67d9f12094b1b564",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\06_finance_reserves_b.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\06_finance_reserves_b.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\06_finance_reserves_b.md",
+      "text": "# Finance Reserves B\n\nThe finance audit says reserves are below the required threshold.\nThe contradiction requires source review before action.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "902ef4c0e411d36fc8560b29d3dbfe9e9433314a1c57503e8ce37f19ebb456b5",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\13_knowledge_evolution.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-7050b0bbac37ce17",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\13_knowledge_evolution.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\13_knowledge_evolution.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\13_knowledge_evolution.md",
+      "text": "# Knowledge Evolution\n\nA proposal becomes eligible only after evidence, review, and rollback planning.\nApproval does not equal automatic integration.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "53296982c2ad4f87b7f06a571946c198a83b8bdd9ae94bfcea89b5e157dbf6c0",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\03_science_control.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-756c151033ed0fb2",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\03_science_control.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\03_science_control.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\03_science_control.md",
+      "text": "# Science Control\n\nA controlled experiment requires stable inputs, measured outcomes, and a repeatable procedure.\nCausation remains weak when the control condition is missing.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "18ac11d4ff04b1e26389bbd9c9dc5dd8442c13163f73e61ec0c47d202fe424c9",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\19_audit_path.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-97c0816709e8f9aa",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\19_audit_path.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\19_audit_path.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\19_audit_path.md",
+      "text": "# Audit Path\n\nEach answer should expose provenance, reasoning path, uncertainty, and rollback implications.\nAuditability is required before activation.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "82ec31caf427706a830f2acc988b93a6d02a7df648eb16523a4620ada502676c",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\15_provider_boundary.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-9ae7295a018c1121",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\15_provider_boundary.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\15_provider_boundary.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\15_provider_boundary.md",
+      "text": "# Provider Boundary\n\nExternal model output is evidence only.\nProvider output must not become authority without governance.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "f96bb037e6f2c4f8b7ccd958142188ad42ef16f2aa61708a51c6b19150c950d7",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\09_history_spring.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-a4a6f9aaf6885b10",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\09_history_spring.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\09_history_spring.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\09_history_spring.md",
+      "text": "# History Spring\n\nOne historical source dates the event to spring.\nThe source must remain separate from later interpretation.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "6c94f455b2f354c977aa78144004a63b0016afc149b068e55c0be559fa20681b",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\14_rollback.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-b3f7c269d37fb46a",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\14_rollback.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\14_rollback.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\14_rollback.md",
+      "text": "# Rollback\n\nEvery simulated integration must include a rollback token.\nRollback should restore the prior noncanonical state in simulation.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "7628193c95a35ffbcd0da6079c8720524ab4355043cdd1c71624f67077721601",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\17_investigation_gap.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-bc124d93b4f09b50",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\17_investigation_gap.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\17_investigation_gap.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\17_investigation_gap.md",
+      "text": "# Investigation Gap\n\nA knowledge gap should produce an evidence plan.\nThe plan should request missing provenance, contradiction checks, and replication where relevant.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "8bf5a7c082b3b1ba08b8b530180d81dc0f32d5b8b06ab734e283bee515ddff16",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\18_executive_review.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-cc2ee83526dfa430",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\18_executive_review.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\18_executive_review.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\18_executive_review.md",
+      "text": "# Executive Review\n\nPlanning should identify risks, blockers, and next safe steps.\nPlans remain non-executing until explicit authorization exists.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "0db6e5a1b70e3cd51e0ad1850ff05bc1d0c1add47ba0175f2e7de951792dda29",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\10_history_autumn.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-d9fdbd9e31f691df",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\10_history_autumn.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\10_history_autumn.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\10_history_autumn.md",
+      "text": "# History Autumn\n\nAnother historical source dates the same event to autumn.\nThe conflict should be cited rather than merged silently.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "096f175245ecec6e2f5738be3500aca3ff08d431f3312fd4081b881b50706d5f",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\08_medicine_observation.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "ov1_allowlisted-eff077e93251bb4b",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\ov1_allowlisted_corpus\\08_medicine_observation.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "ov1_allowlisted",
+      "source_identity": "data\\ov1_allowlisted_corpus\\08_medicine_observation.md",
+      "source_path": "data\\ov1_allowlisted_corpus\\08_medicine_observation.md",
+      "text": "# Medicine Observation\n\nA clinical claim is stronger when multiple independent observations support it.\nThis fixture is not clinical authority.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "bc1755a4d3f3ad209ef0d0b68b9245c6226cc239be6103ef6e96cefc704ed744",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\rc1_fixture_corpus\\project_atlas_failure.txt"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "rc1_fixture-061e33093f104bd3",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\rc1_fixture_corpus\\project_atlas_failure.txt"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "rc1_fixture",
+      "source_identity": "data\\rc1_fixture_corpus\\project_atlas_failure.txt",
+      "source_path": "data\\rc1_fixture_corpus\\project_atlas_failure.txt",
+      "text": "Project Atlas failed because Registry B rejected entries missing provenance.\nAdding source provenance restored successful routing through Registry B.\nExecution through Worker C remains untested and uncertain.",
+      "uncertainty": "bounded_fixture"
+    },
+    {
+      "approval_state": "fixture_allowlisted",
+      "content_hash": "44dcdaf8902d1d605af6b3a517ed405a259cb7b543e835f9627a48c4fd79b723",
+      "contradictions": [],
+      "evidence": [
+        "repo-fixture://data\\rc1_fixture_corpus\\registry_b_recovery.md"
+      ],
+      "exclusion_reason": "",
+      "included": true,
+      "item_id": "rc1_fixture-748943f166589564",
+      "license_status": "repo-local-test-fixture",
+      "pii_risk": "none",
+      "provenance": [
+        "repo-fixture://data\\rc1_fixture_corpus\\registry_b_recovery.md"
+      ],
+      "review_history": [
+        "fixture_allowlisted"
+      ],
+      "source_family": "rc1_fixture",
+      "source_identity": "data\\rc1_fixture_corpus\\registry_b_recovery.md",
+      "source_path": "data\\rc1_fixture_corpus\\registry_b_recovery.md",
+      "text": "# Registry B Recovery Fixture\n\nThe fixture system recovered when semantic records included source identifiers\nand checksums. Registry B accepted records after provenance was attached.\n\nThe available fixture does not prove Worker C execution quality.",
+      "uncertainty": "bounded_fixture"
+    }
+  ],
+  "phase": "TP11 Governed Base Corpus",
+  "safety": {
+    "action_execution_performed": false,
+    "adapter_created": false,
+    "autonomous_action_execution_performed": false,
+    "autonomous_promotion_performed": false,
+    "autonomous_reasoning_performed": false,
+    "background_worker_started": false,
+    "canonical_memory_enabled": false,
+    "canonical_memory_mutation_performed": false,
+    "canonical_pilot_enabled": false,
+    "canonical_write_performed": false,
+    "checkpoint_created": false,
+    "fine_tuning_performed": false,
+    "fine_tuning_started": false,
+    "hyb1_promoted": false,
+    "live_knowledge_mutation_performed": false,
+    "lora_created": false,
+    "model_artifact_created": false,
+    "model_b_default_changed": false,
+    "model_training_performed": false,
+    "phase": "TP5 Controlled Noncanonical Persistent Pilot Implementation",
+    "pilot_store_is_noncanonical": true,
+    "pilot_store_write_requires_exact_approval": true,
+    "production_deployment": false,
+    "provider_call_performed": false,
+    "scheduler_started": false,
+    "tp10_training_readiness_review": true,
+    "tp11_governed_base_corpus": true,
+    "tp6_operational_validation": true,
+    "tp7_longitudinal_validation": true,
+    "tp8_policy_validation": true,
+    "tp9_canonical_pilot_design": true,
+    "training_started": false,
+    "weight_update_performed": false
+  },
+  "source_families": [
+    "noncanonical_pilot",
+    "ov1_allowlisted",
+    "rc1_fixture"
+  ],
+  "split": {
+    "holdout": [
+      "ov1_allowlisted-64286496049bb057",
+      "ov1_allowlisted-bc124d93b4f09b50"
+    ],
+    "train": [
+      "noncanonical-25a36e16fb2509c7",
+      "noncanonical-61f86e93c6a0e402",
+      "noncanonical-75b771b3d48bf601",
+      "ov1_allowlisted-07d137fe366f14f8",
+      "ov1_allowlisted-239b9eab29a7cb8a",
+      "ov1_allowlisted-2e42571e8cd9238e",
+      "ov1_allowlisted-450ff20567345f72",
+      "ov1_allowlisted-642a9c0fdb4a7977",
+      "ov1_allowlisted-6598573a0104d182",
+      "ov1_allowlisted-67d9f12094b1b564",
+      "ov1_allowlisted-7050b0bbac37ce17",
+      "ov1_allowlisted-756c151033ed0fb2",
+      "ov1_allowlisted-97c0816709e8f9aa",
+      "ov1_allowlisted-9ae7295a018c1121",
+      "ov1_allowlisted-cc2ee83526dfa430",
+      "ov1_allowlisted-d9fdbd9e31f691df",
+      "ov1_allowlisted-eff077e93251bb4b",
+      "rc1_fixture-061e33093f104bd3",
+      "rc1_fixture-748943f166589564"
+    ],
+    "validation": [
+      "ov1_allowlisted-4fd510c52a14bfba",
+      "ov1_allowlisted-5f8b5ad75002aa64",
+      "ov1_allowlisted-a4a6f9aaf6885b10",
+      "ov1_allowlisted-b3f7c269d37fb46a"
+    ]
+  },
+  "training_performed": false
+}

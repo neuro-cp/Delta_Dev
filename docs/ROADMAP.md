@@ -959,6 +959,17 @@ Current recommendation:
 
 `CONTINUE_SUBSTRATE_LEARNING_NO_TRAINING`
 
+## TP11 Governed Base Corpus And Shadow Training Readiness
+
+TP11 is complete. It packages the first governed base corpus and validates
+dataset governance, manifest reproducibility, dataset-card documentation,
+contamination resistance, held-out benchmark isolation, and disabled
+shadow-training readiness.
+
+Current recommendation:
+
+`READY_FOR_SHADOW_TRAINING_DRY_RUN`
+
 ## Runtime E2E Semantic Consolidation Cycle
 
 DELTA now has a deterministic closed-loop harness that exercises one complete

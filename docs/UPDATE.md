@@ -4886,3 +4886,32 @@ promotion, or Model B replacement.
 
 Current next recommendation:
 CONTINUE_SUBSTRATE_LEARNING_NO_TRAINING
+
+## TP11 Governed Base Corpus And Shadow Training Readiness
+
+TP11 governed base corpus and shadow training readiness is complete.
+
+New TP11 surface:
+
+- `orchestration/runtime/tp11_governed_base_corpus.py`
+- `scripts/delta_tp11_governed_base_corpus.py`
+- `tests/runtime_tp11/test_tp11_governed_base_corpus.py`
+- `data/tp11_governed_base_corpus/base_corpus.json`
+- `data/tp11_governed_base_corpus/corpus_manifest.json`
+- `data/tp11_governed_base_corpus/dataset_card.json`
+- `data/tp11_governed_base_corpus/shadow_training_config.disabled.json`
+- `reports/TP11_BASE_CORPUS.md/json`
+- `reports/TP11_CORPUS_MANIFEST.md/json`
+- `reports/TP11_DATASET_CARD.md/json`
+- `reports/TP11_DATA_GOVERNANCE.md/json`
+- `reports/TP11_CONTAMINATION_REVIEW.md/json`
+- `reports/TP11_READINESS_REVIEW.md/json`
+- `docs/continuation_tp11.md`
+
+TP11 builds a reproducible governed corpus package for future research while
+keeping training disabled. It creates no model artifact, checkpoint, LoRA,
+adapter, provider call, canonical write, scheduler, action execution, HYB1
+promotion, or Model B replacement.
+
+Current next recommendation:
+READY_FOR_SHADOW_TRAINING_DRY_RUN

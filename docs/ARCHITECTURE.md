@@ -1218,3 +1218,18 @@ operator review more directly than weight updates.
 TP10 performs no training, fine-tuning, weight updates, provider calls,
 canonical writes, scheduler activation, action execution, HYB1 promotion, or
 Model B replacement.
+
+## TP11 Governed Base Corpus And Shadow Training Readiness
+
+TP11 constructs a governed base-corpus package for possible future shadow
+training research without performing training. The corpus includes only
+approved repo-local fixture and noncanonical pilot records with source
+identity, content hash, provenance, evidence, review history, approval state,
+uncertainty, and contradiction metadata.
+
+TP11 also creates a deterministic corpus manifest, dataset card, data
+governance review, contamination review, held-out benchmark isolation check,
+and disabled shadow-training configuration. It performs no training,
+fine-tuning, weight updates, model artifact creation, checkpoints, LoRA,
+adapters, provider calls, canonical writes, scheduler activation, action
+execution, HYB1 promotion, or Model B replacement.
