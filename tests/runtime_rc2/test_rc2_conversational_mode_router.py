@@ -86,6 +86,29 @@ def test_conversation_mode_answers_simple_local_question_without_provider(monkey
     assert "I routed" not in rendered
 
 
+def test_social_turn_does_not_trigger_model_memory_or_retrieval(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = route_message("Conversation", "great job")
+    assert payload["intent"]["intent"] == "compliment"
+    assert payload["route"] == "social_conversation"
+    assert payload["local_model_offer"] is None
+    assert payload["supporting_information_offer"] is None
+    assert payload["memory_candidate"] is None
+    assert "glad" in payload["answer"].lower()
+
+
+def test_developer_overlay_shows_route_model_and_support_identifier(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = route_message("Conversation", "What do most people do for fun?")
+    rendered = render_route(payload, developer_overlay=True)
+    assert "Developer Overlay" in rendered
+    assert "Chosen model:" in rendered
+    assert "Support identifier:" in rendered
+    assert "Knowledge boundary: unknown_seek_local_model" in rendered
+
+
 def test_conversation_executes_local_model_when_requested(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
     _isolate_rc2_store(monkeypatch, tmp_path)
@@ -142,6 +165,29 @@ def test_conversation_executes_local_model_when_requested(monkeypatch, tmp_path)
     assert payload["selected_model_lane"]["executed"] is True
     assert payload["provider_calls_performed"] is False
     assert payload["answer"] == "A local model says fire is combustion."
+
+
+def test_lane_selection_uses_usable_family_fallback_when_alias_is_bad(monkeypatch, tmp_path):
+    fail_dir = tmp_path / "fail"
+    good_dir = tmp_path / "good"
+    fail_dir.mkdir()
+    good_dir.mkdir()
+    bad = fail_dir / "qwen-bad.gguf"
+    good = good_dir / "qwen-good.gguf"
+    bad.write_text("bad", encoding="utf-8")
+    good.write_text("good", encoding="utf-8")
+    monkeypatch.setattr(
+        rc2router,
+        "list_available_models",
+        lambda: {
+            "qwen": ModelSpec(name="qwen-bad", path=str(bad), tier=3, description="bad", context_length=4096, family="qwen"),
+            "qwen-good": ModelSpec(name="qwen-good", path=str(good), tier=3, description="good", context_length=4096, family="qwen"),
+        },
+    )
+    lane = select_model_lane("Debug this Python function", "coding")
+    assert lane["selected_model"] == "qwen-good"
+    assert lane["selected_model_id"] == "qwen-good"
+    assert lane["rejected_models"][0]["reason"] == "unusable_or_marked_fail"
 
 
 def test_conversation_answers_water_and_fire_without_placeholder(monkeypatch, tmp_path):
@@ -271,6 +317,55 @@ def test_short_term_session_memory_answers_followup_without_persistence(monkeypa
     assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 0
 
 
+def test_local_model_prompt_includes_recent_context(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    fake_model = tmp_path / "llama-test.gguf"
+    fake_model.write_text("not a real model; ProviderManager is monkeypatched", encoding="utf-8")
+    monkeypatch.setattr(
+        rc2router,
+        "list_available_models",
+        lambda: {
+            "llama": ModelSpec(
+                name="llama-test",
+                path=str(fake_model),
+                tier=4,
+                description="fake",
+                context_length=4096,
+                family="llama",
+            )
+        },
+    )
+    seen = {}
+
+    class FakeProviderManager:
+        def infer(self, *, model_name, prompt, task_type="open_ended", metadata=None):
+            seen["prompt"] = prompt
+            return CanonicalInferenceResult(
+                provider="local_gguf",
+                model_id=model_name,
+                answer="It refers to the prior sky question.",
+                raw_output="It refers to the prior sky question.",
+                confidence=0.8,
+                latency_seconds=0.0,
+                prompt_tokens=len(prompt.split()),
+                response_tokens=8,
+                evidence=[],
+                metadata={},
+            )
+
+    monkeypatch.setattr(rc2router, "ProviderManager", FakeProviderManager)
+    history = [
+        {"role": "user", "content": "What color is the sky?"},
+        {"role": "assistant", "content": "The sky usually looks blue."},
+    ]
+    payload = route_message("Conversation", "Why does it look that way?", history=history, execute_local_model=True)
+    assert payload["local_model_result"]["executed"] is True
+    assert "Relevant recent turns:" in seen["prompt"]
+    assert "What color is the sky?" in seen["prompt"]
+    assert "resolve pronouns" in seen["prompt"]
+
+
 def test_gpt_approval_preview_is_compact_and_no_call(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
     _isolate_rc2_store(monkeypatch, tmp_path)
@@ -348,6 +443,8 @@ def test_intent_classifier_covers_product_intents():
     assert classify_intent("Plan my invoice workflow")["intent"] == "planning"
     assert classify_intent("Analyze this document")["intent"] == "analysis"
     assert classify_intent("Show diagnostics")["intent"] == "diagnostics"
+    assert classify_intent("great job")["intent"] == "compliment"
+    assert classify_intent("nevermind")["intent"] == "cancel"
     assert confidence_engine("What color is the sky?")["provider_necessity"] == "not_required_for_local_response"
 
 

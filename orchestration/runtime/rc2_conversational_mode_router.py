@@ -180,10 +180,34 @@ LOW_CONFIDENCE_MARKERS = (
     "cannot answer",
     "do not have enough",
 )
+
+SOCIAL_INTENT_RESPONSES = {
+    "greeting": "Hi. I'm here with you. What would you like to work through?",
+    "compliment": "Thanks. I'm glad that was helpful.",
+    "acknowledgement": "Got it. What would you like to explore next?",
+    "cancel": "No problem. We'll leave that path alone.",
+    "preference_opinion": "Good, that gives me useful direction. We can keep shaping the system around that.",
+    "personal_emotion": "I hear you. We can keep this low-friction and take it one step at a time.",
+}
+
+
 def classify_intent(message: str) -> dict[str, Any]:
-    lower = message.lower()
+    lower = " ".join(message.lower().strip().split())
+    bare = lower.strip(" .!?")
     if any(term in lower for term in ["diagnostic", "show diagnostics", "runtime status", "system health", "health check"]):
         intent = "diagnostics"
+    elif bare in {"hi", "hello", "hey", "yo", "good morning", "good afternoon", "good evening"}:
+        intent = "greeting"
+    elif bare in {"great job", "good job", "nice work", "excellent work", "well done", "perfect", "that worked", "awesome", "thanks", "thank you"}:
+        intent = "compliment"
+    elif bare in {"okay", "ok", "got it", "sounds good", "cool", "alright", "yes okay"}:
+        intent = "acknowledgement"
+    elif bare in {"nevermind", "never mind", "cancel", "stop", "forget it", "drop it"}:
+        intent = "cancel"
+    elif lower.startswith(("i like", "i want", "i prefer", "i think")) and not lower.endswith("?"):
+        intent = "preference_opinion"
+    elif any(term in lower for term in ["i'm tired", "im tired", "i am tired", "i'm frustrated", "im frustrated", "i feel"]):
+        intent = "personal_emotion"
     elif any(term in lower for term in ["remember", "store", "save this"]):
         intent = "memory_request"
     elif any(term in lower for term in ["contradiction", "conflict", "incompatible"]):
@@ -230,14 +254,7 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
         lane = "everyday_conversation"
 
     available = list_available_models()
-    selected = None
-    for alias in MODEL_LANE_ORDER[lane]:
-        if alias in available and _model_is_usable(available[alias]):
-            selected = alias
-            break
-    if selected is None and available:
-        usable = [key for key, spec in sorted(available.items()) if _model_is_usable(spec)]
-        selected = usable[0] if usable else None
+    selected, candidates, rejected = _select_usable_model_for_lane(available, lane)
     spec = available.get(selected) if selected else None
     meta = LANE_METADATA[lane]
     return {
@@ -248,6 +265,9 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
         "selected_model_id": spec.name if spec else None,
         "selected_model_path": str(Path(spec.path)) if spec else None,
         "available": bool(selected),
+        "selection_reason": _selection_reason(lane, spec),
+        "candidate_models": candidates,
+        "rejected_models": rejected,
         "executed": False,
         "execution_gate": "not_executed_by_default",
         "provider_calls_performed": False,
@@ -260,6 +280,57 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
         "preferred_task_lanes": meta["preferred_task_lanes"],
         "fallback_priority": meta["fallback_priority"],
     }
+
+
+def _select_usable_model_for_lane(available: dict[str, Any], lane: str) -> tuple[str | None, list[dict[str, Any]], list[dict[str, Any]]]:
+    rejected = []
+    for alias in MODEL_LANE_ORDER[lane]:
+        spec = available.get(alias)
+        if spec is None:
+            rejected.append({"requested": alias, "reason": "not_registered"})
+            continue
+        if _model_is_usable(spec):
+            return alias, [_model_candidate(alias, spec, "registered_alias")], rejected
+        rejected.append({"requested": alias, "model_id": spec.name, "reason": "unusable_or_marked_fail"})
+
+    desired_families = MODEL_LANE_ORDER[lane]
+    family_candidates = []
+    seen_model_ids = set()
+    for family in desired_families:
+        for key, spec in sorted(available.items(), key=lambda item: (item[1].tier, item[1].name, item[0])):
+            if spec.name in seen_model_ids:
+                continue
+            if spec.family == family and _model_is_usable(spec):
+                family_candidates.append(_model_candidate(key, spec, f"usable_{family}_family_fallback"))
+                seen_model_ids.add(spec.name)
+    if family_candidates:
+        return str(family_candidates[0]["registry_key"]), family_candidates[:5], rejected
+
+    usable = [
+        _model_candidate(key, spec, "usable_any_family_fallback")
+        for key, spec in sorted(available.items(), key=lambda item: (item[1].tier, item[1].name, item[0]))
+        if _model_is_usable(spec)
+    ]
+    if usable:
+        return str(usable[0]["registry_key"]), usable[:5], rejected
+    return None, [], rejected
+
+
+def _model_candidate(key: str, spec: Any, reason: str) -> dict[str, Any]:
+    return {
+        "registry_key": key,
+        "model_id": spec.name,
+        "family": spec.family,
+        "tier": spec.tier,
+        "capabilities": list(spec.capabilities),
+        "reason": reason,
+    }
+
+
+def _selection_reason(lane: str, spec: Any | None) -> str:
+    if spec is None:
+        return f"No usable local model found for {lane}."
+    return f"Selected {spec.name} because it is a usable local {spec.family} model for the {lane} lane."
 
 
 def _model_is_usable(spec: Any) -> bool:
@@ -302,6 +373,12 @@ def discover_local_model_lanes() -> dict[str, Any]:
 
 def confidence_for_intent(intent: str) -> float:
     table = {
+        "greeting": 0.95,
+        "compliment": 0.95,
+        "acknowledgement": 0.92,
+        "cancel": 0.96,
+        "preference_opinion": 0.84,
+        "personal_emotion": 0.82,
         "diagnostics": 0.92,
         "memory_request": 0.88,
         "contradiction_check": 0.9,
@@ -352,14 +429,27 @@ def _support_offer(message: str, reason: str, history: list[dict[str, str]] | No
     }
 
 
-def _local_model_offer(message: str, reason: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
+def _local_model_offer(
+    message: str,
+    reason: str,
+    history: list[dict[str, str]] | None = None,
+    model_lane: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     packet = build_compact_support_packet(message, history)
+    model_name = (model_lane or {}).get("selected_model_id") or (model_lane or {}).get("selected_model") or "my best local model"
+    lane_name = (model_lane or {}).get("display_name") or "local reasoning lane"
+    prompt = (
+        f"I don't think I've learned this yet. My best local model for this question is {model_name} "
+        f"in the {lane_name}. Would you like me to ask it?"
+    )
     return {
         "offered": True,
         "reason": reason,
-        "prompt": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+        "prompt": prompt,
         "options": ["yes_ask_local_model", "not_now"],
         "compact_local_model_packet": packet,
+        "selected_model": model_name,
+        "support_identifier": (model_lane or {}).get("support_identifier"),
         "local_model_call_performed": False,
         "provider_calls_performed": False,
         "web_search_performed": False,
@@ -382,6 +472,8 @@ def _compact_model_prompt(message: str, history: list[dict[str, str]] | None = N
         lines.extend(["", "Relevant recent turns:"])
         for turn in turns:
             lines.append(f"- {turn['role']}: {turn['content']}")
+        lines.append("")
+        lines.append("Maintain continuity with these turns. If the user is following up, resolve pronouns and references from this context.")
     if concepts:
         lines.extend(["", "Relevant approved local concepts:"])
         for concept in concepts:
@@ -570,7 +662,7 @@ def candidate_is_memory_worthy(candidate: dict[str, Any], payload: dict[str, Any
 
 
 def maybe_build_memory_candidate(message: str, payload: dict[str, Any]) -> dict[str, Any] | None:
-    if payload.get("route") in {"gpt_support_approval_preview", "provider_support_refused_or_local_known"}:
+    if payload.get("route") in {"gpt_support_approval_preview", "provider_support_refused_or_local_known", "social_conversation"}:
         return None
     if payload.get("supporting_information_offer"):
         return None
@@ -647,6 +739,22 @@ def local_conversation_answer(
     if memory := _history_answer(message, history):
         return memory
     local_model_result = None
+    if intent in SOCIAL_INTENT_RESPONSES:
+        return {
+            "route": "social_conversation",
+            "answer": SOCIAL_INTENT_RESPONSES[intent],
+            "confidence": "social_intent",
+            "confidence_score": 0.9,
+            "selected_model_lane": model_lane,
+            "local_model_result": None,
+            "supporting_information_offer": None,
+            "local_model_offer": None,
+            "memory_candidate": None,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+        }
     if "ask gpt automatically" in lower or "call gpt automatically" in lower or "provider automatically" in lower:
         return {
             "route": "provider_policy_answer",
@@ -732,7 +840,7 @@ def local_conversation_answer(
             confidence = "needs_local_reasoning_model"
             confidence_score = 0.3
             support_offer = None
-            local_model_offer = _local_model_offer(message, "missing_learned_or_direct_knowledge", history)
+            local_model_offer = _local_model_offer(message, "missing_learned_or_direct_knowledge", history, model_lane)
             return {
                 "route": "local_model_consent_required",
                 "answer": answer,
@@ -767,7 +875,9 @@ def local_conversation_answer(
 
 def build_escalation_plan(message: str) -> dict[str, Any]:
     intent = classify_intent(message)["intent"]
-    if intent == "external_knowledge_request":
+    if intent in SOCIAL_INTENT_RESPONSES:
+        recommended = ["social_response_only"]
+    elif intent == "external_knowledge_request":
         recommended = ["local_model_research", "web_search_with_operator_approval", "large_model_review_with_operator_approval"]
     elif intent in {"coding", "analysis", "planning", "investigation"}:
         recommended = ["local_conversation", "substrate_check", "local_model_with_operator_gate"]
@@ -789,7 +899,11 @@ def build_escalation_plan(message: str) -> dict[str, Any]:
 
 def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str, Any]:
     intent = classify_intent(message)
-    if substrate_matched:
+    if intent["intent"] in SOCIAL_INTENT_RESPONSES:
+        confidence = intent["confidence"]
+        evidence_quality = "conversation_intent_no_evidence_needed"
+        provider_necessity = "none"
+    elif substrate_matched:
         confidence = 0.9
         evidence_quality = "approved_noncanonical_substrate"
         provider_necessity = "none"
@@ -936,7 +1050,7 @@ def route_message(
     return payload
 
 
-def render_route(payload: dict[str, Any]) -> str:
+def render_route(payload: dict[str, Any], *, developer_overlay: bool = False) -> str:
     if payload.get("mode") == "Conversation":
         lines = [str(payload.get("answer", ""))]
         packet = payload.get("compact_support_packet")
@@ -963,6 +1077,8 @@ def render_route(payload: dict[str, Any]) -> str:
                 "",
                 f"If this was useful, I can keep it as the reversible concept `{candidate.get('concept_name', 'Learned Concept')}`. Choose `Keep This Concept` or type `keep this concept`.",
             ])
+        if developer_overlay:
+            lines.extend(["", render_developer_overlay(payload)])
         return "\n".join(lines)
 
     lines = [
@@ -998,6 +1114,46 @@ def render_route(payload: dict[str, Any]) -> str:
         f"- canonical_write_performed: {payload['canonical_write_performed']}",
         f"- autonomous_action_performed: {payload['autonomous_action_performed']}",
     ])
+    return "\n".join(lines)
+
+
+def render_developer_overlay(payload: dict[str, Any]) -> str:
+    lane = payload.get("selected_model_lane") or {}
+    intent = payload.get("intent") or {}
+    confidence = payload.get("confidence_decision") or {}
+    local_offer = payload.get("local_model_offer") or {}
+    provider_offer = payload.get("supporting_information_offer") or {}
+    local_result = payload.get("local_model_result") or {}
+    route = str(payload.get("route") or "unknown")
+    boundary = "known"
+    if route == "local_model_consent_required":
+        boundary = "unknown_seek_local_model"
+    elif provider_offer:
+        boundary = "unknown_seek_provider_or_sources"
+    elif route in {"developmental_concept_memory", "substrate_first_conversation"}:
+        boundary = "known_from_approved_local_memory"
+    elif route == "social_conversation":
+        boundary = "social_no_knowledge_lookup"
+    rejected = lane.get("rejected_models") or []
+    rejected_text = ", ".join(f"{item.get('requested')}:{item.get('reason')}" for item in rejected[:4]) or "none"
+    lines = [
+        "--- Developer Overlay ---",
+        f"Intent: {intent.get('intent', 'unknown')}",
+        f"Route: {route}",
+        f"Knowledge boundary: {boundary}",
+        f"Chosen lane: {lane.get('display_name') or lane.get('lane') or 'none'}",
+        f"Chosen model: {lane.get('selected_model_id') or lane.get('selected_model') or 'none'}",
+        f"Support identifier: {lane.get('support_identifier') or 'none'}",
+        f"Selection reason: {lane.get('selection_reason') or 'none'}",
+        f"Rejected candidates: {rejected_text}",
+        f"Local model executed: {bool(local_result.get('executed'))}",
+        f"Local model offer: {bool(local_offer.get('offered'))}",
+        f"Provider offer: {bool(provider_offer.get('offered'))}",
+        f"Confidence: {confidence.get('confidence', payload.get('confidence_score'))}",
+        f"Evidence quality: {confidence.get('evidence_quality', payload.get('confidence'))}",
+        f"Provider need: {confidence.get('provider_necessity', 'none')}",
+        "Safety: no training, canonical write, autonomous action, or automatic provider call.",
+    ]
     return "\n".join(lines)
 
 

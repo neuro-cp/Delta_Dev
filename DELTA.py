@@ -86,6 +86,7 @@ class DeltaApp:
         self.session_history: list[dict[str, str]] = []
         self.pending_provider_question: str | None = None
         self.pending_local_model_question: str | None = None
+        self.developer_overlay_enabled = tk.BooleanVar(value=True)
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
@@ -132,6 +133,7 @@ class DeltaApp:
         self.mode = ttk.Combobox(mode_bar, values=DISPLAY_MODES, width=22, state="readonly")
         self.mode.set("Conversation")
         self.mode.pack(side=tk.LEFT, padx=(6, 10))
+        ttk.Checkbutton(mode_bar, text="Developer Overlay", variable=self.developer_overlay_enabled).pack(side=tk.LEFT)
         ttk.Button(mode_bar, text="Advanced Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
 
         self.chat_history = scrolledtext.ScrolledText(self.conversation_tab, wrap=tk.WORD, height=24)
@@ -251,6 +253,7 @@ class DeltaApp:
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
         lower = message.lower().strip()
+        cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
         if self.pending_local_model_question and lower in {"yes", "y", "yes please", "sure", "ask local", "ask the local model", "ask a local model"}:
             target = self.pending_local_model_question
             self.pending_local_model_question = None
@@ -265,12 +268,12 @@ class DeltaApp:
             self.last_payload = payload
             offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
             self.pending_provider_question = target if isinstance(offer, dict) and offer.get("offered") else None
-            rendered = render_route(payload)
+            rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
             self._append_chat("DELTA", rendered)
             self._append_session("assistant", rendered)
             self._refresh_state_cards()
             return
-        if self.pending_local_model_question and lower in {"no", "n", "not now", "no thanks", "keep chatting"}:
+        if self.pending_local_model_question and lower in cancel_words:
             self.pending_local_model_question = None
             self._append_session("user", message)
             reply = "Okay. I will leave that unanswered locally for now."
@@ -289,12 +292,12 @@ class DeltaApp:
             )
             self.last_message = target
             self.last_payload = payload
-            rendered = render_route(payload)
+            rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
             self._append_chat("DELTA", rendered)
             self._append_session("assistant", rendered)
             self._refresh_state_cards()
             return
-        if self.pending_provider_question and lower in {"no", "n", "not now", "no thanks", "keep chatting"}:
+        if self.pending_provider_question and lower in cancel_words:
             self.pending_provider_question = None
             self._append_session("user", message)
             reply = "Okay. I will keep this local and will not ask a provider."
@@ -329,7 +332,7 @@ class DeltaApp:
         local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
         self.pending_local_model_question = message if isinstance(local_offer, dict) and local_offer.get("offered") else None
         self._refresh_state_cards()
-        rendered = render_route(payload)
+        rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
         self._append_chat("DELTA", rendered)
         self._append_session("user", message)
         self._append_session("assistant", rendered)

@@ -73,6 +73,10 @@ def build_conversation_trial_suite(count: int = 100) -> list[ConversationTrialCa
         ("image", "What is in this image?", False, False, False, True, False, False),
         ("document", "Analyze this invoice evidence.", False, False, True, False, False, False),
         ("conversation", "Hello DELTA.", False, False, True, False, False, False),
+        ("social", "Great job.", True, False, False, False, False, False),
+        ("social", "Nevermind.", True, False, False, False, False, False),
+        ("social", "That's exactly what I wanted.", True, False, False, False, False, False),
+        ("personal", "I'm tired.", True, False, False, False, False, False),
         ("self_description", "What is DELTA?", True, False, False, False, False, False),
     ]
     cases: list[ConversationTrialCase] = []
