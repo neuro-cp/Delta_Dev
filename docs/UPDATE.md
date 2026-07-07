@@ -5217,3 +5217,29 @@ This does not enable model execution by default, provider calls, web search,
 training, fine-tuning, weight updates, canonical writes, autonomous actions,
 HYB1 promotion, or Model B replacement.
 
+### RC2 Developmental Concept Formation
+
+Added the first conversational developmental learning loop:
+
+- short-term session memory across conversation turns
+- automatic local model lane selection from the existing registry
+- compact GPT/API support-packet preview with no automatic provider call
+- concept-shaped memory candidates rather than raw answer memories
+- separated noncanonical memory stores for conversation, personal, and
+  knowledge memory
+- `Keep This Concept` / `keep this concept` approval flow
+- noncanonical concept graph links, contradiction records, replay queue entries,
+  provenance, and rollback handles
+- exact reset phrase: `DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE`
+
+Locked lifecycle:
+
+`Conversation -> Candidate Concept -> Operator Approval -> Knowledge Graph ->
+Replay -> Consolidation -> Curriculum -> Competency Tests -> Training Packet ->
+Distillation -> Better Base Model`
+
+Invariant: neural training is a graduation event, not a day-to-day learning
+mechanism. No training, fine-tuning, model artifact creation, provider call,
+web call, canonical write, autonomous action, scheduler, HYB1 promotion, or
+Model B replacement was introduced.
+

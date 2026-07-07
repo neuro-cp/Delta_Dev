@@ -1,0 +1,48 @@
+{
+  "canonical_writes_enabled": false,
+  "safe": true,
+  "sample_candidate": {
+    "approval_status": "pending_operator_approval",
+    "canonical": false,
+    "concept_id": "rc2-concept-8213cc38ec0dbd30",
+    "concept_name": "Fire",
+    "concept_type": "causal_explanation",
+    "created_at": "2026-07-07T03:01:59+00:00",
+    "examples": [
+      "What is fire?"
+    ],
+    "explains": [
+      "What is fire?"
+    ],
+    "memory_type": "knowledge",
+    "misconceptions": [],
+    "propositions": [
+      "Fire is the visible, hot part of combustion.",
+      "A fuel reacts with oxygen, releasing heat and light, and the flame contains hot gases plus glowing particles or excited molecules."
+    ],
+    "provider_calls_performed": false,
+    "related_concepts": [
+      "visible",
+      "combustion",
+      "reacts",
+      "oxygen",
+      "releasing",
+      "light",
+      "flame",
+      "contains",
+      "gases",
+      "glowing"
+    ],
+    "rollback_handle": "rollback-rc2-concept-8213cc38ec0dbd30",
+    "short_definition": "Fire is the visible, hot part of combustion.",
+    "source_answer_id": "rc2-answer-8213cc38ec0dbd30",
+    "source_model_id": "phi4",
+    "source_model_lane": "everyday_conversation",
+    "source_question": "What is fire?",
+    "source_type": "local_model_lane",
+    "training_performed": false,
+    "uncertainty": "low_to_moderate_operator_reviewed"
+  },
+  "summary": "Useful answers become candidate concepts with propositions, related concepts, uncertainty, provenance, rollback handle, and approval status.",
+  "training_enabled": false
+}

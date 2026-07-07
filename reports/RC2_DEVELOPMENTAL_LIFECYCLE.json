@@ -1,0 +1,18 @@
+{
+  "day_to_day_learning": "governed concept formation, operator approval, knowledge graph integration, replay, consolidation, curriculum construction, and competency testing",
+  "invariant": "Neural training is a graduation event, not a day-to-day learning mechanism.",
+  "lifecycle": [
+    "Conversation",
+    "Candidate Concept",
+    "Operator Approval",
+    "Knowledge Graph",
+    "Replay",
+    "Consolidation",
+    "Curriculum",
+    "Competency Tests",
+    "Training Packet",
+    "Distillation",
+    "Better Base Model"
+  ],
+  "safe": true
+}

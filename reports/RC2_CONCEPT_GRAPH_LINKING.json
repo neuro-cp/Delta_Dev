@@ -1,12 +1,12 @@
 {
-  "approval_paths": [
-    "Keep This Concept button",
-    "exact chat phrase: keep this concept"
+  "first_pass_contradiction_rules": [
+    "X is Y vs X is not Y",
+    "should X vs should not X",
+    "can X vs cannot X",
+    "automatic vs requires approval/manual review",
+    "always vs not always",
+    "must vs must not"
   ],
-  "canonical_writes_enabled": false,
-  "casual_yes_counts_as_memory_approval": false,
-  "clear_store_confirmation": "DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE",
-  "enabled": true,
   "memory_state": {
     "canonical_records": 0,
     "concept_contradictions": 0,
@@ -30,6 +30,5 @@
     "training_records": 0
   },
   "safe": true,
-  "target_store": "data/rc2_developmental_memory/knowledge_concepts.jsonl",
-  "training_enabled": false
+  "summary": "Approved concepts create noncanonical concept records, relation edges, contradiction records, replay items, and rollback handles."
 }

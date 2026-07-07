@@ -1393,3 +1393,28 @@ Selective memory starts as reversible local noncanonical memory only. A useful
 answer can be stored only through an explicit UI action or exact user phrase,
 and the local experiment store can be cleared without touching canonical
 memory, reports, source code, provider configuration, or model weights.
+
+## Developmental Learning Lifecycle
+
+DELTA's primary learning path is developmental concept formation, not neural
+weight updates:
+
+```text
+Conversation
+-> Candidate Concept
+-> Operator Approval
+-> Knowledge Graph
+-> Replay
+-> Consolidation
+-> Curriculum
+-> Competency Tests
+-> Training Packet
+-> Distillation
+-> Better Base Model
+```
+
+Neural training is therefore a graduation event, not a day-to-day learning
+mechanism. Day-to-day learning occurs through governed, reversible concept
+formation; operator approval; noncanonical graph integration; replay;
+consolidation; curriculum construction; and competency testing. Only mature,
+reviewed, certified curricula may become future training packets.

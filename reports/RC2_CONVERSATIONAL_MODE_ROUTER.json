@@ -29,14 +29,45 @@
         "message": "What color is the sky?"
       },
       "memory_candidate": {
-        "candidate_id": "rc2-memory-candidate-7c54e0b0ab8d905c",
+        "approval_status": "pending_operator_approval",
         "canonical": false,
-        "claim": "Useful answer for 'What color is the sky?': The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-        "confidence": "user_marked_useful_unverified",
-        "proposition_id": "rc2-memory-proposition-7c54e0b0ab8d905c",
-        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
-        "source": "rc2_conversation_user_marked_useful",
-        "status": "pending_user_memory_confirmation"
+        "concept_id": "rc2-concept-183f0cb7b12abb56",
+        "concept_name": "Daytime Sky Color",
+        "concept_type": "causal_explanation",
+        "created_at": "2026-07-07T03:01:59+00:00",
+        "examples": [
+          "What color is the sky?"
+        ],
+        "explains": [
+          "What color is the sky?"
+        ],
+        "memory_type": "knowledge",
+        "misconceptions": [],
+        "propositions": [
+          "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+        ],
+        "provider_calls_performed": false,
+        "related_concepts": [
+          "daytime",
+          "color",
+          "usually",
+          "looks",
+          "during",
+          "molecules",
+          "scatter",
+          "shorter",
+          "wavelengths",
+          "sunlight"
+        ],
+        "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
+        "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "source_answer_id": "rc2-answer-183f0cb7b12abb56",
+        "source_model_id": "phi4",
+        "source_model_lane": "everyday_conversation",
+        "source_question": "What color is the sky?",
+        "source_type": "local_model_lane",
+        "training_performed": false,
+        "uncertainty": "low_to_moderate_operator_reviewed"
       },
       "mode": "Conversation",
       "mode_router_flags": {
@@ -58,10 +89,21 @@
         "capabilities": [
           "text"
         ],
+        "context_size": 8192,
+        "cost_latency_class": "low_to_medium_local",
+        "display_name": "Everyday Conversation Lane",
         "executed": false,
         "execution_gate": "not_executed_by_default",
-        "lane": "general",
+        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
+        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
+        "fallback_priority": 1,
+        "lane": "everyday_conversation",
         "model_family": "phi4",
+        "preferred_task_lanes": [
+          "conversation",
+          "question",
+          "self_description"
+        ],
         "provider_calls_performed": false,
         "selected_model": "phi4"
       },
@@ -98,14 +140,48 @@
         "message": "What color is water?"
       },
       "memory_candidate": {
-        "candidate_id": "rc2-memory-candidate-965129491cdcc664",
+        "approval_status": "pending_operator_approval",
         "canonical": false,
-        "claim": "Useful answer for 'What color is water?': Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
-        "confidence": "user_marked_useful_unverified",
-        "proposition_id": "rc2-memory-proposition-965129491cdcc664",
-        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
-        "source": "rc2_conversation_user_marked_useful",
-        "status": "pending_user_memory_confirmation"
+        "concept_id": "rc2-concept-203e1e7aabccfa7e",
+        "concept_name": "Water Color",
+        "concept_type": "causal_explanation",
+        "created_at": "2026-07-07T03:01:59+00:00",
+        "examples": [
+          "What color is water?"
+        ],
+        "explains": [
+          "What color is water?"
+        ],
+        "memory_type": "knowledge",
+        "misconceptions": [
+          "The simplified answer may be misleading without context."
+        ],
+        "propositions": [
+          "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
+          "In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context."
+        ],
+        "provider_calls_performed": false,
+        "related_concepts": [
+          "water",
+          "color",
+          "nearly",
+          "colorless",
+          "small",
+          "glass",
+          "large",
+          "amounts",
+          "faintly",
+          "absorbs"
+        ],
+        "rollback_handle": "rollback-rc2-concept-203e1e7aabccfa7e",
+        "short_definition": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
+        "source_answer_id": "rc2-answer-203e1e7aabccfa7e",
+        "source_model_id": "phi4",
+        "source_model_lane": "everyday_conversation",
+        "source_question": "What color is water?",
+        "source_type": "local_model_lane",
+        "training_performed": false,
+        "uncertainty": "low_to_moderate_operator_reviewed"
       },
       "mode": "Conversation",
       "mode_router_flags": {
@@ -127,10 +203,21 @@
         "capabilities": [
           "text"
         ],
+        "context_size": 8192,
+        "cost_latency_class": "low_to_medium_local",
+        "display_name": "Everyday Conversation Lane",
         "executed": false,
         "execution_gate": "not_executed_by_default",
-        "lane": "general",
+        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
+        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
+        "fallback_priority": 1,
+        "lane": "everyday_conversation",
         "model_family": "phi4",
+        "preferred_task_lanes": [
+          "conversation",
+          "question",
+          "self_description"
+        ],
         "provider_calls_performed": false,
         "selected_model": "phi4"
       },
@@ -139,7 +226,7 @@
       "web_search_performed": false
     },
     {
-      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. For this kind of task I would route first to the coding lane with `qwen` available as the preferred local model.",
+      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. For this kind of task I would route first to the Coding / Technical Lane with `qwen` available as the preferred local model.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "confidence": "local_coding_capability_route",
@@ -168,14 +255,46 @@
         "message": "What do you know about coding?"
       },
       "memory_candidate": {
-        "candidate_id": "rc2-memory-candidate-2e1d47872c077b86",
+        "approval_status": "pending_operator_approval",
         "canonical": false,
-        "claim": "Useful answer for 'What do you know about coding?': I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. For this kind of task I would route first to the coding lane with `qwen` available as the preferred local model.",
-        "confidence": "user_marked_useful_unverified",
-        "proposition_id": "rc2-memory-proposition-2e1d47872c077b86",
-        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
-        "source": "rc2_conversation_user_marked_useful",
-        "status": "pending_user_memory_confirmation"
+        "concept_id": "rc2-concept-34b603a979918128",
+        "concept_name": "What Know About Coding",
+        "concept_type": "general_concept",
+        "created_at": "2026-07-07T03:01:59+00:00",
+        "examples": [
+          "What do you know about coding?"
+        ],
+        "explains": [
+          "What do you know about coding?"
+        ],
+        "memory_type": "knowledge",
+        "misconceptions": [],
+        "propositions": [
+          "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior.",
+          "For this kind of task I would route first to the Coding / Technical Lane with `qwen` available as the preferred local model."
+        ],
+        "provider_calls_performed": false,
+        "related_concepts": [
+          "coding",
+          "reading",
+          "explaining",
+          "files",
+          "proposing",
+          "patches",
+          "writing",
+          "tests",
+          "validating",
+          "behavior"
+        ],
+        "rollback_handle": "rollback-rc2-concept-34b603a979918128",
+        "short_definition": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior.",
+        "source_answer_id": "rc2-answer-34b603a979918128",
+        "source_model_id": "qwen",
+        "source_model_lane": "coding_technical",
+        "source_question": "What do you know about coding?",
+        "source_type": "local_model_lane",
+        "training_performed": false,
+        "uncertainty": "low_to_moderate_operator_reviewed"
       },
       "mode": "Conversation",
       "mode_router_flags": {
@@ -198,10 +317,20 @@
           "text",
           "vision"
         ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_local",
+        "display_name": "Coding / Technical Lane",
         "executed": false,
         "execution_gate": "not_executed_by_default",
-        "lane": "coding",
+        "expected_strength": "programming, debugging, architecture, CLI, repo reasoning",
+        "expected_weakness": "may need repo file context or tests for correctness",
+        "fallback_priority": 2,
+        "lane": "coding_technical",
         "model_family": "qwen",
+        "preferred_task_lanes": [
+          "coding",
+          "technical_explanation"
+        ],
         "provider_calls_performed": false,
         "selected_model": "qwen"
       },
@@ -239,14 +368,46 @@
         "message": "What is the relation between Avogadro's number and quantum field theory?"
       },
       "memory_candidate": {
-        "candidate_id": "rc2-memory-candidate-35b033fd5261e968",
+        "approval_status": "pending_operator_approval",
         "canonical": false,
-        "claim": "Useful answer for 'What is the relation between Avogadro's number and quantum field theory?': I do not have enough governed local evidence to answer that confidently. I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path.",
-        "confidence": "user_marked_useful_unverified",
-        "proposition_id": "rc2-memory-proposition-35b033fd5261e968",
-        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
-        "source": "rc2_conversation_user_marked_useful",
-        "status": "pending_user_memory_confirmation"
+        "concept_id": "rc2-concept-59f84e989a80a975",
+        "concept_name": "Avogadro's Number Relationship",
+        "concept_type": "general_concept",
+        "created_at": "2026-07-07T03:01:59+00:00",
+        "examples": [
+          "What is the relation between Avogadro's number and quantum field theory?"
+        ],
+        "explains": [
+          "What is the relation between Avogadro's number and quantum field theory?"
+        ],
+        "memory_type": "knowledge",
+        "misconceptions": [],
+        "propositions": [
+          "I do not have enough governed local evidence to answer that confidently.",
+          "I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path."
+        ],
+        "provider_calls_performed": false,
+        "related_concepts": [
+          "avogadro's",
+          "number",
+          "relationship",
+          "relation",
+          "between",
+          "quantum",
+          "field",
+          "theory",
+          "enough",
+          "governed"
+        ],
+        "rollback_handle": "rollback-rc2-concept-59f84e989a80a975",
+        "short_definition": "I do not have enough governed local evidence to answer that confidently.",
+        "source_answer_id": "rc2-answer-59f84e989a80a975",
+        "source_model_id": "qwen",
+        "source_model_lane": "reasoning_analysis",
+        "source_question": "What is the relation between Avogadro's number and quantum field theory?",
+        "source_type": "local_model_lane",
+        "training_performed": false,
+        "uncertainty": "low_to_moderate_operator_reviewed"
       },
       "mode": "Conversation",
       "mode_router_flags": {
@@ -269,14 +430,37 @@
           "text",
           "vision"
         ],
+        "context_size": 32768,
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
         "executed": false,
         "execution_gate": "not_executed_by_default",
-        "lane": "research",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "lane": "reasoning_analysis",
         "model_family": "qwen",
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ],
         "provider_calls_performed": false,
         "selected_model": "qwen"
       },
       "supporting_information_offer": {
+        "compact_support_packet": {
+          "desired_answer_format": "brief_direct_answer_with_uncertainty_if_needed",
+          "instructions": "Return a concise answer only. Do not include hashes, internal reports, or unrelated diagnostics.",
+          "packet_type": "rc2_supporting_information_request",
+          "provider_call_performed": false,
+          "question": "What is the relation between Avogadro's number and quantum field theory?",
+          "relevant_approved_concepts": [],
+          "relevant_chat_history": [],
+          "routing_reason": "local_or_substrate_confidence_was_insufficient",
+          "web_search_performed": false
+        },
         "dry_run_provider_request": {
           "api_key_present": true,
           "api_key_redacted": true,
@@ -407,6 +591,28 @@
       "web_search_performed": false
     }
   ],
+  "developmental_memory_state": {
+    "canonical_records": 0,
+    "concept_contradictions": 0,
+    "concept_edges": 0,
+    "concept_replay_queue": 0,
+    "conversation_memory_records": 0,
+    "flags": {
+      "autonomous_write_performed": false,
+      "canonical_write_performed": false,
+      "conversation_memory_session_only": true,
+      "developmental_concept_memory_enabled": true,
+      "knowledge_memory_noncanonical": true,
+      "personal_memory_noncanonical": true,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    "knowledge_memory_records": 0,
+    "personal_memory_records": 0,
+    "training_records": 0
+  },
   "display_modes": [
     "Conversation",
     "Memory Mode",
@@ -430,6 +636,326 @@
     "training_enabled": false,
     "web_search_enabled": false
   },
+  "local_model_discovery": {
+    "available_model_count": 15,
+    "lane_order": {
+      "coding_technical": [
+        "qwen",
+        "phi4",
+        "llama",
+        "mistral",
+        "phi3"
+      ],
+      "concept_extraction": [
+        "qwen",
+        "phi4",
+        "llama",
+        "mistral",
+        "phi3"
+      ],
+      "contradiction_detection": [
+        "phi4",
+        "qwen",
+        "llama",
+        "mistral",
+        "phi3"
+      ],
+      "everyday_conversation": [
+        "phi4",
+        "qwen",
+        "llama",
+        "mistral",
+        "phi3"
+      ],
+      "planning": [
+        "phi4",
+        "qwen",
+        "mistral",
+        "llama",
+        "phi3"
+      ],
+      "reasoning_analysis": [
+        "qwen",
+        "llama",
+        "mistral",
+        "phi4",
+        "phi3"
+      ],
+      "vision": [
+        "qwen",
+        "llama",
+        "phi4",
+        "mistral",
+        "phi3"
+      ]
+    },
+    "lanes": {
+      "coding_technical": {
+        "cost_latency_class": "medium_local",
+        "display_name": "Coding / Technical Lane",
+        "expected_strength": "programming, debugging, architecture, CLI, repo reasoning",
+        "expected_weakness": "may need repo file context or tests for correctness",
+        "fallback_priority": 2,
+        "preferred_task_lanes": [
+          "coding",
+          "technical_explanation"
+        ]
+      },
+      "concept_extraction": {
+        "cost_latency_class": "low_local_scaffold",
+        "display_name": "Concept Extraction Lane",
+        "expected_strength": "turn useful answers into reusable concepts",
+        "expected_weakness": "first pass is deterministic and operator-reviewed",
+        "fallback_priority": 6,
+        "preferred_task_lanes": [
+          "memory_request"
+        ]
+      },
+      "contradiction_detection": {
+        "cost_latency_class": "low_local_scaffold",
+        "display_name": "Contradiction Detection Lane",
+        "expected_strength": "first-pass deterministic contradiction checks",
+        "expected_weakness": "semantic contradiction detection remains conservative",
+        "fallback_priority": 7,
+        "preferred_task_lanes": [
+          "contradiction_check"
+        ]
+      },
+      "everyday_conversation": {
+        "cost_latency_class": "low_to_medium_local",
+        "display_name": "Everyday Conversation Lane",
+        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
+        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
+        "fallback_priority": 1,
+        "preferred_task_lanes": [
+          "conversation",
+          "question",
+          "self_description"
+        ]
+      },
+      "planning": {
+        "cost_latency_class": "medium_local",
+        "display_name": "Planning Lane",
+        "expected_strength": "strategy, schedules, staged workflows",
+        "expected_weakness": "cannot execute actions from RC2",
+        "fallback_priority": 4,
+        "preferred_task_lanes": [
+          "planning"
+        ]
+      },
+      "reasoning_analysis": {
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ]
+      },
+      "vision": {
+        "cost_latency_class": "high_local_if_enabled",
+        "display_name": "Vision Lane",
+        "expected_strength": "image-capable model selection when a vision GGUF is available",
+        "expected_weakness": "RC2 UI does not execute vision inference",
+        "fallback_priority": 5,
+        "preferred_task_lanes": [
+          "image"
+        ]
+      }
+    },
+    "model_execution_enabled_by_default": false,
+    "models": [
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_4",
+        "display_name": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "family": "llama",
+        "model_id": "llama",
+        "provider": "local_gguf",
+        "tier": 4
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_4",
+        "display_name": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "family": "llama",
+        "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 4
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
+        "family": "ministral",
+        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
+        "family": "ministral",
+        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+        "family": "mistral",
+        "model_id": "mistral",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+        "family": "mistral",
+        "model_id": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 4096,
+        "cost_latency_class": "local_gguf_tier_1",
+        "display_name": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
+        "family": "phi3",
+        "model_id": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 1
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 4096,
+        "cost_latency_class": "local_gguf_tier_1",
+        "display_name": "phi-3-mini-4k-instruct-gguf-phi-3-mini-4k-instruct-q4",
+        "family": "phi3",
+        "model_id": "phi-3-mini-4k-instruct-gguf-phi-3-mini-4k-instruct-q4",
+        "provider": "local_gguf",
+        "tier": 1
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+        "family": "phi4",
+        "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 4096,
+        "cost_latency_class": "local_gguf_tier_1",
+        "display_name": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
+        "family": "phi3",
+        "model_id": "phi3",
+        "provider": "local_gguf",
+        "tier": 1
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+        "family": "phi4",
+        "model_id": "phi4",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      }
+    ]
+  },
   "local_model_execution_enabled_by_default": false,
   "local_model_lane_selection_enabled": true,
   "modes": [
@@ -451,5 +977,5 @@
   "phase": "RC2 Conversational Shell With DELTA Mode Router",
   "safe": true,
   "useful_answer_memory_enabled": true,
-  "useful_answer_memory_scope": "local_noncanonical_rc1_operator_store"
+  "useful_answer_memory_scope": "local_noncanonical_rc2_developmental_concept_store"
 }

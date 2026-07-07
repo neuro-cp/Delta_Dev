@@ -1110,3 +1110,42 @@ modes. Regular users should not need to understand substrate internals to get
 value from DELTA, and basic conversational usability must not bypass
 governance.
 
+## RC2 Developmental Concept Formation
+
+RC2 now adds the first developmental learning loop on top of the
+conversation-first UI:
+
+- short-term session memory across turns
+- automatic local model lane selection from the existing registry
+- compact ask-GPT support-packet preview with no automatic provider call
+- candidate concept extraction after useful answers
+- explicit `Keep This Concept` / `keep this concept` approval
+- separated noncanonical conversation, personal, and knowledge memory stores
+- approved concept reuse in Conversation mode
+- first-pass deterministic contradiction links
+- replay queue and rollback handles for approved concepts
+
+Current reset phrase for the RC2 developmental concept store:
+
+`DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE`
+
+Current lifecycle invariant:
+
+```text
+Conversation
+-> Candidate Concept
+-> Operator Approval
+-> Knowledge Graph
+-> Replay
+-> Consolidation
+-> Curriculum
+-> Competency Tests
+-> Training Packet
+-> Distillation
+-> Better Base Model
+```
+
+Neural training is a graduation event, not a day-to-day learning mechanism.
+Day-to-day learning remains governed, reversible, noncanonical concept
+formation unless a later phase explicitly changes that.
+

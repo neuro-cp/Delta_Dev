@@ -23,6 +23,14 @@ from orchestration.runtime.rc1_operator_console import (
     preview_evidence_ingest,
     query_noncanonical_substrate,
 )
+from orchestration.runtime.rc2_developmental_concept_memory import (
+    approve_candidate_concept,
+    build_compact_support_packet,
+    build_developmental_memory_state,
+    discover_memory_store_separation,
+    extract_candidate_concept,
+    query_approved_concepts,
+)
 from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
 from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
 
@@ -64,11 +72,72 @@ ROUTER_FLAGS = {
 }
 
 MODEL_LANE_ORDER = {
-    "general": ("phi4", "qwen", "llama", "mistral", "phi3"),
-    "coding": ("qwen", "phi4", "llama", "mistral", "phi3"),
-    "research": ("qwen", "llama", "mistral", "phi4", "phi3"),
+    "everyday_conversation": ("phi4", "qwen", "llama", "mistral", "phi3"),
+    "coding_technical": ("qwen", "phi4", "llama", "mistral", "phi3"),
+    "reasoning_analysis": ("qwen", "llama", "mistral", "phi4", "phi3"),
     "planning": ("phi4", "qwen", "mistral", "llama", "phi3"),
     "vision": ("qwen", "llama", "phi4", "mistral", "phi3"),
+    "concept_extraction": ("qwen", "phi4", "llama", "mistral", "phi3"),
+    "contradiction_detection": ("phi4", "qwen", "llama", "mistral", "phi3"),
+}
+
+LANE_METADATA = {
+    "everyday_conversation": {
+        "display_name": "Everyday Conversation Lane",
+        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
+        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
+        "cost_latency_class": "low_to_medium_local",
+        "preferred_task_lanes": ["conversation", "question", "self_description"],
+        "fallback_priority": 1,
+    },
+    "coding_technical": {
+        "display_name": "Coding / Technical Lane",
+        "expected_strength": "programming, debugging, architecture, CLI, repo reasoning",
+        "expected_weakness": "may need repo file context or tests for correctness",
+        "cost_latency_class": "medium_local",
+        "preferred_task_lanes": ["coding", "technical_explanation"],
+        "fallback_priority": 2,
+    },
+    "reasoning_analysis": {
+        "display_name": "Reasoning / Analysis Lane",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "cost_latency_class": "medium_to_high_local",
+        "preferred_task_lanes": ["analysis", "research", "investigation", "external_knowledge_request"],
+        "fallback_priority": 3,
+    },
+    "planning": {
+        "display_name": "Planning Lane",
+        "expected_strength": "strategy, schedules, staged workflows",
+        "expected_weakness": "cannot execute actions from RC2",
+        "cost_latency_class": "medium_local",
+        "preferred_task_lanes": ["planning"],
+        "fallback_priority": 4,
+    },
+    "vision": {
+        "display_name": "Vision Lane",
+        "expected_strength": "image-capable model selection when a vision GGUF is available",
+        "expected_weakness": "RC2 UI does not execute vision inference",
+        "cost_latency_class": "high_local_if_enabled",
+        "preferred_task_lanes": ["image"],
+        "fallback_priority": 5,
+    },
+    "concept_extraction": {
+        "display_name": "Concept Extraction Lane",
+        "expected_strength": "turn useful answers into reusable concepts",
+        "expected_weakness": "first pass is deterministic and operator-reviewed",
+        "cost_latency_class": "low_local_scaffold",
+        "preferred_task_lanes": ["memory_request"],
+        "fallback_priority": 6,
+    },
+    "contradiction_detection": {
+        "display_name": "Contradiction Detection Lane",
+        "expected_strength": "first-pass deterministic contradiction checks",
+        "expected_weakness": "semantic contradiction detection remains conservative",
+        "cost_latency_class": "low_local_scaffold",
+        "preferred_task_lanes": ["contradiction_check"],
+        "fallback_priority": 7,
+    },
 }
 
 DIRECT_LOCAL_ANSWERS = {
@@ -125,15 +194,19 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
     """Choose the best already-wired local model lane without executing it."""
     intent = intent or classify_intent(message)["intent"]
     if intent == "coding":
-        lane = "coding"
-    elif intent in {"external_knowledge_request", "investigation", "document"}:
-        lane = "research"
+        lane = "coding_technical"
+    elif intent in {"external_knowledge_request", "investigation", "document", "analysis"}:
+        lane = "reasoning_analysis"
     elif intent == "planning":
         lane = "planning"
     elif intent == "image":
         lane = "vision"
+    elif intent == "memory_request":
+        lane = "concept_extraction"
+    elif intent == "contradiction_check":
+        lane = "contradiction_detection"
     else:
-        lane = "general"
+        lane = "everyday_conversation"
 
     available = list_available_models()
     selected = None
@@ -144,8 +217,10 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
     if selected is None and available:
         selected = sorted(available)[0]
     spec = available.get(selected) if selected else None
+    meta = LANE_METADATA[lane]
     return {
         "lane": lane,
+        "display_name": meta["display_name"],
         "selected_model": selected,
         "available": bool(selected),
         "executed": False,
@@ -153,6 +228,35 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
         "provider_calls_performed": False,
         "model_family": spec.family if spec else "unavailable",
         "capabilities": list(spec.capabilities) if spec else [],
+        "context_size": spec.context_length if spec else None,
+        "expected_strength": meta["expected_strength"],
+        "expected_weakness": meta["expected_weakness"],
+        "cost_latency_class": meta["cost_latency_class"],
+        "preferred_task_lanes": meta["preferred_task_lanes"],
+        "fallback_priority": meta["fallback_priority"],
+    }
+
+
+def discover_local_model_lanes() -> dict[str, Any]:
+    models = list_available_models()
+    return {
+        "available_model_count": len(models),
+        "models": [
+            {
+                "model_id": key,
+                "display_name": spec.name,
+                "context_size": spec.context_length,
+                "family": spec.family,
+                "provider": spec.provider,
+                "capabilities": list(spec.capabilities),
+                "tier": spec.tier,
+                "cost_latency_class": "local_gguf_tier_" + str(spec.tier),
+            }
+            for key, spec in sorted(models.items())
+        ],
+        "lanes": LANE_METADATA,
+        "lane_order": MODEL_LANE_ORDER,
+        "model_execution_enabled_by_default": False,
     }
 
 
@@ -190,8 +294,9 @@ def _direct_answer(message: str) -> dict[str, Any] | None:
     return None
 
 
-def _support_offer(message: str, reason: str) -> dict[str, Any]:
+def _support_offer(message: str, reason: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
     dry_run = answer_unknown_with_controlled_provider(message, live_provider=False)
+    packet = build_compact_support_packet(message, history)
     return {
         "offered": True,
         "reason": reason,
@@ -202,36 +307,52 @@ def _support_offer(message: str, reason: str) -> dict[str, Any]:
             "not_now",
         ],
         "dry_run_provider_request": dry_run["route_or_provider_request"],
+        "compact_support_packet": packet,
         "provider_calls_performed": False,
         "web_search_performed": False,
     }
 
 
-def build_memory_candidate_from_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
-    answer = str(payload.get("answer", "")).strip()
-    clean_message = " ".join(str(message).split())
-    claim = f"Useful answer for '{clean_message}': {answer}"
-    digest = hashlib.sha256(claim.encode("utf-8")).hexdigest()[:16]
+def build_gpt_approval_preview(message: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
+    packet = build_compact_support_packet(message, history)
     return {
-        "candidate_id": f"rc2-memory-candidate-{digest}",
-        "proposition_id": f"rc2-memory-proposition-{digest}",
-        "claim": claim if len(claim) <= 600 else claim[:597] + "...",
-        "source": "rc2_conversation_user_marked_useful",
-        "confidence": "user_marked_useful_unverified",
-        "status": "pending_user_memory_confirmation",
-        "canonical": False,
-        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
+        "mode": "Conversation",
+        "route": "gpt_support_approval_preview",
+        "answer": (
+            "I can ask GPT for supporting information, but I will not do it automatically. "
+            "Here is the compact packet I would send after explicit approval. It contains only the current question, short relevant chat history, relevant approved concepts, and the desired answer format."
+        ),
+        "compact_support_packet": packet,
+        "selected_model_lane": select_model_lane(message),
+        "confidence": "requires_explicit_provider_approval",
+        "confidence_score": 0.0,
+        "supporting_information_offer": None,
+        "memory_candidate": None,
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
     }
+
+
+def build_memory_candidate_from_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
+    return extract_candidate_concept(
+        question=message,
+        answer=str(payload.get("answer", "")),
+        source_model_lane=dict(payload.get("selected_model_lane") or select_model_lane(message)),
+        source_type="substrate" if payload.get("route") == "developmental_concept_memory" else "local_model_lane",
+    )
 
 
 def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
     candidate = build_memory_candidate_from_answer(message, payload)
-    result = approve_propositions([candidate])
+    result = approve_candidate_concept(candidate, approval_text="Keep this concept")
     return {
         "candidate": candidate,
         "result": result,
-        "memory_write_performed": result["approved_count"] > 0,
-        "memory_scope": "local_noncanonical_rc1_operator_store",
+        "memory_write_performed": result.get("approved") is True,
+        "memory_scope": "local_noncanonical_rc2_developmental_concept_store",
         "canonical_write_performed": False,
         "training_performed": False,
         "provider_calls_performed": False,
@@ -239,15 +360,40 @@ def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, A
     }
 
 
-def local_conversation_answer(message: str) -> dict[str, Any]:
+def _history_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
+    lower = message.lower()
+    if not history:
+        return None
+    user_turns = [item.get("content", "") for item in history if item.get("role") == "user" and item.get("content")]
+    if ("what did i just ask" in lower or "last thing i asked" in lower) and user_turns:
+        last = user_turns[-1]
+        return {
+            "route": "conversation_short_term_memory",
+            "answer": f"You just asked: \"{last}\"",
+            "confidence": "session_memory",
+            "confidence_score": 0.95,
+            "selected_model_lane": select_model_lane(message),
+            "supporting_information_offer": None,
+            "memory_candidate": None,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+        }
+    return None
+
+
+def local_conversation_answer(message: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
     lower = message.lower()
     intent = classify_intent(message)["intent"]
     model_lane = select_model_lane(message, intent)
     local = run_v29_local_answer(message, use_recall=False)
+    if memory := _history_answer(message, history):
+        return memory
     if intent == "coding":
         answer = (
             "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. "
-            f"For this kind of task I would route first to the {model_lane['lane']} lane"
+            f"For this kind of task I would route first to the {model_lane['display_name']}"
             + (f" with `{model_lane['selected_model']}` available as the preferred local model." if model_lane["selected_model"] else ", but no local model is currently discoverable.")
         )
         confidence = "local_coding_capability_route"
@@ -279,7 +425,7 @@ def local_conversation_answer(message: str) -> dict[str, Any]:
         )
         confidence = "needs_supporting_information"
         confidence_score = 0.35
-        support_offer = _support_offer(message, "insufficient_local_evidence")
+        support_offer = _support_offer(message, "insufficient_local_evidence", history)
     else:
         answer = (
             "I can talk through that, but I do not have enough specific local evidence to make it strong yet. "
@@ -287,7 +433,7 @@ def local_conversation_answer(message: str) -> dict[str, Any]:
         )
         confidence = "low_specificity_conversation"
         confidence_score = 0.55
-        support_offer = _support_offer(message, "low_specificity_or_missing_local_evidence")
+        support_offer = _support_offer(message, "low_specificity_or_missing_local_evidence", history)
     return {
         "route": "local_conversation_model_lane",
         "answer": answer,
@@ -347,12 +493,38 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
     }
 
 
-def route_message(mode: str, message: str, pasted_text: str = "", approve: bool = False) -> dict[str, Any]:
+def route_message(mode: str, message: str, pasted_text: str = "", approve: bool = False, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
     if mode not in MODES:
         mode = "Conversation"
     if mode == "Conversation":
+        if message.strip().lower() in {"ask gpt", "ask gpt for supporting information", "yes ask gpt"}:
+            prior_user = [item.get("content", "") for item in (history or []) if item.get("role") == "user" and item.get("content")]
+            target = prior_user[-1] if prior_user else message
+            payload = build_gpt_approval_preview(target, history)
+            payload["intent"] = classify_intent(target)
+            payload["confidence_decision"] = {
+                "confidence": 0.0,
+                "evidence_quality": "pending_explicit_provider_approval",
+                "retrieval_sufficiency": "insufficient_locally",
+                "provider_necessity": "available_only_after_user_approval",
+            }
+            payload["escalation_plan"] = build_escalation_plan(target)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            return payload
+        concept = query_approved_concepts(message)
         substrate = query_noncanonical_substrate(message)
-        if substrate["matched"]:
+        if concept["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "developmental_concept_memory",
+                "answer": concept["answer"],
+                "confidence": "grounded_in_approved_noncanonical_concept",
+                "confidence_score": 0.92,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": concept["matches"],
+            }
+        elif substrate["matched"]:
             payload = {
                 "mode": mode,
                 "route": "substrate_first_conversation",
@@ -363,7 +535,7 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
                 "supporting_information_offer": None,
             }
         else:
-            payload = {"mode": mode, **local_conversation_answer(message)}
+            payload = {"mode": mode, **local_conversation_answer(message, history)}
         payload["memory_candidate"] = build_memory_candidate_from_answer(message, payload)
         payload["escalation_plan"] = build_escalation_plan(message)
         payload["intent"] = classify_intent(message)
@@ -401,7 +573,7 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
         snapshot = build_operator_snapshot()
         payload = {"mode": mode, "route": "replay_inspection", "answer": "Replay and rollback inspection is available.", "replay": snapshot["replay_rollback"]}
     elif mode == "Diagnostics":
-        payload = {"mode": mode, "route": "diagnostics", "answer": "Runtime diagnostics snapshot.", "state": build_cognitive_state(), "flags": ROUTER_FLAGS}
+        payload = {"mode": mode, "route": "diagnostics", "answer": "Runtime diagnostics snapshot.", "state": build_cognitive_state(), "developmental_memory": build_developmental_memory_state(), "flags": ROUTER_FLAGS}
     elif mode == "Failure Log":
         payload = {"mode": mode, "route": "failure_log_scaffold", "answer": "Use the RC1 observation controls to log operational friction. This mode does not auto-file issues."}
     elif mode == "Research Analyst":
@@ -423,11 +595,23 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
 def render_route(payload: dict[str, Any]) -> str:
     if payload.get("mode") == "Conversation":
         lines = [str(payload.get("answer", ""))]
+        packet = payload.get("compact_support_packet")
+        if isinstance(packet, dict):
+            lines.extend([
+                "",
+                "Compact support packet preview:",
+                f"- question: {packet.get('question')}",
+                f"- recent turns: {len(packet.get('relevant_chat_history', []))}",
+                f"- approved concepts: {len(packet.get('relevant_approved_concepts', []))}",
+                f"- desired format: {packet.get('desired_answer_format')}",
+                "",
+                "No GPT/API call has been made.",
+            ])
         lane = payload.get("selected_model_lane") or {}
         if isinstance(lane, dict) and lane.get("selected_model"):
             lines.extend([
                 "",
-                f"I routed this as a {lane.get('lane')} question. The preferred local model lane is `{lane.get('selected_model')}`, but I did not execute a model call from this safe UI path.",
+                f"I routed this through the {lane.get('display_name', lane.get('lane'))}. Preferred local model: `{lane.get('selected_model')}`. I did not execute a model call from this safe UI path.",
             ])
         offer = payload.get("supporting_information_offer")
         if isinstance(offer, dict) and offer.get("offered"):
@@ -437,9 +621,10 @@ def render_route(payload: dict[str, Any]) -> str:
                 "Reply yes if you want a gated supporting-information path, or keep chatting if not.",
             ])
         if payload.get("memory_candidate"):
+            candidate = payload["memory_candidate"]
             lines.extend([
                 "",
-                "If this was useful, you can mark it useful and I can remember it in the local noncanonical store. It stays reversible and noncanonical.",
+                f"I think I learned a reusable concept: {candidate.get('concept_name', 'Learned Concept')}. If this was useful, choose `Keep This Concept` or type `keep this concept`. It stays reversible and noncanonical.",
             ])
         lines.extend([
             "",
@@ -502,7 +687,9 @@ def build_rc2_report() -> dict[str, Any]:
         "local_model_lane_selection_enabled": True,
         "local_model_execution_enabled_by_default": False,
         "useful_answer_memory_enabled": True,
-        "useful_answer_memory_scope": "local_noncanonical_rc1_operator_store",
+        "useful_answer_memory_scope": "local_noncanonical_rc2_developmental_concept_store",
+        "developmental_memory_state": build_developmental_memory_state(),
+        "local_model_discovery": discover_local_model_lanes(),
         "safe": all(not case["provider_calls_performed"] and not case["training_performed"] and not case["canonical_write_performed"] for case in cases),
         "final_recommendation": "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE",
     }
@@ -564,7 +751,7 @@ def report_payloads() -> dict[str, dict[str, Any]]:
         "RC2_LOCAL_MODEL_ROUTING": {
             "local_model_lane_selection_enabled": True,
             "model_registry": "integration.model_runtime.model_registry",
-            "lanes": MODEL_LANE_ORDER,
+            "discovery": discover_local_model_lanes(),
             "sample_selections": [
                 select_model_lane("What is fire?", "conversation"),
                 select_model_lane("Debug this Python function", "coding"),
@@ -576,12 +763,60 @@ def report_payloads() -> dict[str, dict[str, Any]]:
         },
         "RC2_SELECTIVE_MEMORY_EXPERIMENT": {
             "enabled": True,
-            "approval_paths": ["Remember Last Useful Answer button", "exact chat phrase: remember this useful answer"],
+            "approval_paths": ["Keep This Concept button", "exact chat phrase: keep this concept"],
             "casual_yes_counts_as_memory_approval": False,
-            "target_store": "data/rc1_operator_console/noncanonical_propositions.jsonl",
+            "target_store": "data/rc2_developmental_memory/knowledge_concepts.jsonl",
             "canonical_writes_enabled": False,
             "training_enabled": False,
-            "clear_store_confirmation": "DELETE_RC1_LOCAL_NONCANONICAL_STORE",
+            "clear_store_confirmation": "DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE",
+            "memory_state": build_developmental_memory_state(),
+            "safe": True,
+        },
+        "RC2_MODEL_LANE_ROUTER": {
+            "summary": "Automatic lane router selects everyday conversation, coding/technical, reasoning/analysis, planning, vision, concept extraction, or contradiction detection lanes from the existing model registry.",
+            "discovery": discover_local_model_lanes(),
+            "model_execution_enabled_by_default": False,
+            "provider_calls_performed": False,
+            "safe": True,
+        },
+        "RC2_DEVELOPMENTAL_CONCEPT_FORMATION": {
+            "summary": "Useful answers become candidate concepts with propositions, related concepts, uncertainty, provenance, rollback handle, and approval status.",
+            "sample_candidate": extract_candidate_concept(
+                question="What is fire?",
+                answer=DIRECT_LOCAL_ANSWERS["fire_definition"]["answer"],
+                source_model_lane=select_model_lane("What is fire?"),
+            ),
+            "canonical_writes_enabled": False,
+            "training_enabled": False,
+            "safe": True,
+        },
+        "RC2_MEMORY_STORE_SEPARATION": {
+            "summary": "Conversation, personal, and knowledge memory are separate. Default concept storage goes to knowledge memory unless the user makes it personal.",
+            "stores": discover_memory_store_separation(),
+            "safe": True,
+        },
+        "RC2_CONCEPT_GRAPH_LINKING": {
+            "summary": "Approved concepts create noncanonical concept records, relation edges, contradiction records, replay items, and rollback handles.",
+            "memory_state": build_developmental_memory_state(),
+            "first_pass_contradiction_rules": ["X is Y vs X is not Y", "should X vs should not X", "can X vs cannot X", "automatic vs requires approval/manual review", "always vs not always", "must vs must not"],
+            "safe": True,
+        },
+        "RC2_CONCEPT_APPROVAL_UX": {
+            "summary": "The UI keeps the same layout but offers Keep This Concept, Not now/Discard/Forget after this chat, and compact ask-GPT approval preview paths.",
+            "approval_required": True,
+            "casual_yes_counts_as_approval": False,
+            "safe": True,
+        },
+        "RC2_DEVELOPMENTAL_LIFECYCLE": {
+            "lifecycle": ["Conversation", "Candidate Concept", "Operator Approval", "Knowledge Graph", "Replay", "Consolidation", "Curriculum", "Competency Tests", "Training Packet", "Distillation", "Better Base Model"],
+            "invariant": "Neural training is a graduation event, not a day-to-day learning mechanism.",
+            "day_to_day_learning": "governed concept formation, operator approval, knowledge graph integration, replay, consolidation, curriculum construction, and competency testing",
+            "safe": True,
+        },
+        "RC2_COMPACT_PROVIDER_CONSENT": {
+            "summary": "GPT/API escalation is ask-first and preview-only in RC2. The packet carries only the current question, short relevant chat history, relevant approved concepts, routing reason, and desired answer format.",
+            "sample_packet": build_compact_support_packet("What is the relation between Avogadro's number and quantum field theory?", []),
+            "provider_calls_performed": False,
             "safe": True,
         },
     }

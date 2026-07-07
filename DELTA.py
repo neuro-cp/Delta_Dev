@@ -17,10 +17,13 @@ from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     build_observation_entry,
     build_cognitive_state,
     build_operator_snapshot,
-    clear_local_noncanonical_store,
     extract_propositions,
     preview_evidence_ingest,
     validate_console_safe,
+)
+from orchestration.runtime.rc2_developmental_concept_memory import (  # noqa: E402
+    build_developmental_memory_state,
+    clear_developmental_memory_store,
 )
 from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
     DISPLAY_MODES,
@@ -80,6 +83,7 @@ class DeltaApp:
         self.extracted: list[dict[str, object]] = []
         self.last_message = ""
         self.last_payload: dict[str, object] | None = None
+        self.session_history: list[dict[str, str]] = []
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
@@ -142,7 +146,7 @@ class DeltaApp:
 
         memory_bar = ttk.Frame(self.conversation_tab)
         memory_bar.pack(fill=tk.X, pady=(6, 0))
-        ttk.Button(memory_bar, text="Remember Last Useful Answer", command=self._remember_last_answer).pack(side=tk.LEFT)
+        ttk.Button(memory_bar, text="Keep This Concept", command=self._remember_last_answer).pack(side=tk.LEFT)
         ttk.Button(memory_bar, text="Clear Local Memory Store", command=self._clear_local_store).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Button(memory_bar, text="Open Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
 
@@ -206,6 +210,14 @@ class DeltaApp:
 
     def _refresh_state_cards(self) -> None:
         state = build_cognitive_state()
+        developmental = build_developmental_memory_state()
+        state = {
+            **state,
+            "knowledge_available": state["knowledge_available"] or developmental["knowledge_memory_records"] > 0,
+            "concepts": state["concepts"] + developmental["knowledge_memory_records"],
+            "contradictions": state["contradictions"] + developmental["concept_contradictions"],
+            "replay_queue": state["replay_queue"] + developmental["concept_replay_queue"],
+        }
         for key, var in self.state_vars.items():
             var.set(str(state[key]))
 
@@ -215,11 +227,20 @@ class DeltaApp:
         self.chat_history.see(tk.END)
         self.chat_history.configure(state=tk.DISABLED)
 
+    def _append_session(self, role: str, content: str) -> None:
+        self.session_history.append({"role": role, "content": " ".join(str(content).split())[:1200]})
+        if len(self.session_history) > 24:
+            self.session_history = self.session_history[-24:]
+
+    def _recent_history_for_router(self) -> list[dict[str, str]]:
+        return self.session_history[-10:]
+
     def _show_welcome(self) -> None:
         self._append_chat(
             "DELTA",
             "Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode.",
         )
+        self._append_session("assistant", "Hi. I'm DELTA. You can talk normally here.")
 
     def _send_chat(self) -> None:
         message = self.chat_input.get().strip()
@@ -227,14 +248,29 @@ class DeltaApp:
             return
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
-        if message.lower().strip() == "remember this useful answer":
+        lower = message.lower().strip()
+        if lower in {"remember this useful answer", "keep this concept", "that was useful remember the concept"}:
+            self._append_session("user", message)
             self._remember_last_answer()
             return
-        payload = route_message(self.mode.get(), message, self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "")
+        if lower in {"not now", "discard", "forget after this chat"}:
+            self._append_session("user", message)
+            self._append_chat("DELTA", "Okay. I will keep this in the current conversation only and will not store a concept.")
+            self._append_session("assistant", "Okay. I will keep this in the current conversation only and will not store a concept.")
+            return
+        payload = route_message(
+            self.mode.get(),
+            message,
+            self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "",
+            history=self._recent_history_for_router(),
+        )
         self.last_message = message
         self.last_payload = payload
         self._refresh_state_cards()
-        self._append_chat("DELTA", render_route(payload))
+        rendered = render_route(payload)
+        self._append_chat("DELTA", rendered)
+        self._append_session("user", message)
+        self._append_session("assistant", rendered)
 
     def _remember_last_answer(self) -> None:
         if not self.last_message or not self.last_payload:
@@ -243,24 +279,29 @@ class DeltaApp:
         result = remember_useful_answer(self.last_message, self.last_payload)
         self.snapshot = build_operator_snapshot()
         self._refresh_state_cards()
-        approved = result["result"]["approved_count"]
-        duplicate = result["result"]["duplicate_count"]
-        self._append_chat(
-            "DELTA",
-            f"Stored {approved} useful-answer memory record(s) in the local noncanonical store. Duplicates skipped: {duplicate}. Canonical memory and training stayed off.",
-        )
+        approved = result["result"].get("approved") is True
+        duplicate = result["result"].get("duplicate") is True
+        if approved:
+            concept = result["result"]["stored_concept"]
+            text = f"Kept the concept `{concept['concept_name']}` in noncanonical {concept['memory_type']} memory. Canonical memory and training stayed off."
+        elif duplicate:
+            text = "I already had a matching concept, so I skipped the duplicate. Canonical memory and training stayed off."
+        else:
+            text = "I did not store the concept. Canonical memory and training stayed off."
+        self._append_chat("DELTA", text)
+        self._append_session("assistant", text)
 
     def _clear_local_store(self) -> None:
-        phrase = "DELETE_RC1_LOCAL_NONCANONICAL_STORE"
+        phrase = "DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE"
         entered = simpledialog.askstring(
             "Clear Local Memory Store",
-            f"Type {phrase} to delete only the local noncanonical experiment store.",
+            f"Type {phrase} to delete only the RC2 developmental concept store.",
         )
-        result = clear_local_noncanonical_store(entered or "")
+        result = clear_developmental_memory_store(entered or "")
         self.snapshot = build_operator_snapshot()
         self._refresh_state_cards()
         if result["cleared"]:
-            self._append_chat("DELTA", "The local noncanonical memory store was cleared. Canonical memory, reports, source code, and model weights were untouched.")
+            self._append_chat("DELTA", "The RC2 developmental concept store was cleared. Canonical memory, reports, source code, and model weights were untouched.")
         else:
             self._append_chat("DELTA", "Local memory store was not cleared because the confirmation phrase did not match.")
 
@@ -312,8 +353,9 @@ class DeltaApp:
 
     def _show_cognitive_state(self) -> None:
         state = build_cognitive_state()
+        developmental = build_developmental_memory_state()
         self._refresh_state_cards()
-        self._write_output(_format_cognitive_state(state))
+        self._write_output(_format_cognitive_state(state) + "\n\nDevelopmental concept memory\n" + json.dumps(developmental, indent=2, sort_keys=True))
 
     def _show_review_queue(self) -> None:
         self.snapshot = build_operator_snapshot()

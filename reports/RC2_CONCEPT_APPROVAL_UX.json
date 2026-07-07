@@ -1,0 +1,6 @@
+{
+  "approval_required": true,
+  "casual_yes_counts_as_approval": false,
+  "safe": true,
+  "summary": "The UI keeps the same layout but offers Keep This Concept, Not now/Discard/Forget after this chat, and compact ask-GPT approval preview paths."
+}

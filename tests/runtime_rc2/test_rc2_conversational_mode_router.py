@@ -5,8 +5,10 @@ from orchestration.runtime.rc2_conversational_mode_router import (
     MODES,
     ROUTER_FLAGS,
     build_escalation_plan,
+    build_gpt_approval_preview,
     classify_intent,
     confidence_engine,
+    discover_local_model_lanes,
     remember_useful_answer,
     render_route,
     report_payloads,
@@ -15,6 +17,7 @@ from orchestration.runtime.rc2_conversational_mode_router import (
     write_rc2_report,
 )
 from orchestration.runtime import rc1_operator_console as rc1
+from orchestration.runtime import rc2_developmental_concept_memory as rc2mem
 
 
 def _isolate_rc1_store(monkeypatch, tmp_path):
@@ -28,6 +31,23 @@ def _isolate_rc1_store(monkeypatch, tmp_path):
     monkeypatch.setattr(rc1, "REPLAY_LOG", replay)
     monkeypatch.setattr(rc1, "CONTRADICTION_LOG", contradictions)
     monkeypatch.setattr(rc1, "LOCAL_STORE_LOGS", (proposition, evidence, replay, contradictions))
+
+
+def _isolate_rc2_store(monkeypatch, tmp_path):
+    conversation = tmp_path / "conversation_memory.jsonl"
+    personal = tmp_path / "personal_memory.jsonl"
+    knowledge = tmp_path / "knowledge_concepts.jsonl"
+    edges = tmp_path / "concept_edges.jsonl"
+    replay = tmp_path / "concept_replay_queue.jsonl"
+    contradictions = tmp_path / "concept_contradictions.jsonl"
+    monkeypatch.setattr(rc2mem, "DATA", tmp_path)
+    monkeypatch.setattr(rc2mem, "CONVERSATION_MEMORY_LOG", conversation)
+    monkeypatch.setattr(rc2mem, "PERSONAL_MEMORY_LOG", personal)
+    monkeypatch.setattr(rc2mem, "KNOWLEDGE_MEMORY_LOG", knowledge)
+    monkeypatch.setattr(rc2mem, "CONCEPT_EDGE_LOG", edges)
+    monkeypatch.setattr(rc2mem, "CONCEPT_REPLAY_LOG", replay)
+    monkeypatch.setattr(rc2mem, "CONCEPT_CONTRADICTION_LOG", contradictions)
+    monkeypatch.setattr(rc2mem, "STORE_BY_TYPE", {"conversation": conversation, "personal": personal, "knowledge": knowledge})
 
 
 def test_rc2_test_store_isolated(monkeypatch, tmp_path):
@@ -47,17 +67,19 @@ def test_rc2_modes_include_conversation_and_delta_modes():
 
 def test_conversation_mode_answers_simple_local_question_without_provider(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What color is the sky?")
     assert payload["mode"] == "Conversation"
     assert payload["route"] == "local_conversation_model_lane"
     assert "blue" in payload["answer"].lower()
     assert payload["provider_calls_performed"] is False
     assert payload["training_performed"] is False
-    assert payload["memory_candidate"]["requires_user_action"]
+    assert payload["memory_candidate"]["approval_status"] == "pending_operator_approval"
 
 
 def test_conversation_answers_water_and_fire_without_placeholder(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
     water = route_message("Conversation", "What color is water?")
     fire = route_message("Conversation", "What is fire?")
     assert "colorless" in water["answer"].lower()
@@ -69,9 +91,10 @@ def test_conversation_answers_water_and_fire_without_placeholder(monkeypatch, tm
 
 def test_coding_question_selects_model_lane_without_executing(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What do you know about coding?")
     assert payload["intent"]["intent"] == "coding"
-    assert payload["selected_model_lane"]["lane"] == "coding"
+    assert payload["selected_model_lane"]["lane"] == "coding_technical"
     assert payload["selected_model_lane"]["executed"] is False
     assert payload["provider_calls_performed"] is False
     assert "coding" in payload["answer"].lower()
@@ -79,6 +102,7 @@ def test_coding_question_selects_model_lane_without_executing(monkeypatch, tmp_p
 
 def test_external_knowledge_request_creates_disabled_escalation_plan(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What is the relation between Avogadro's number and quantum field theory?")
     assert payload["provider_calls_performed"] is False
     assert payload["web_search_performed"] is False
@@ -87,6 +111,7 @@ def test_external_knowledge_request_creates_disabled_escalation_plan(monkeypatch
     assert payload["confidence_decision"]["provider_necessity"] == "gated_provider_or_web_may_be_needed"
     assert payload["supporting_information_offer"]["offered"] is True
     assert payload["supporting_information_offer"]["dry_run_provider_request"]["api_key_redacted"] is True
+    assert payload["supporting_information_offer"]["compact_support_packet"]["provider_call_performed"] is False
 
 
 def test_evidence_mode_extracts_without_persistence():
@@ -106,25 +131,80 @@ def test_memory_mode_requires_explicit_approval_flag():
 
 def test_remember_useful_answer_writes_only_noncanonical_local_record(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What is fire?")
     result = remember_useful_answer("What is fire?", payload)
     assert result["memory_write_performed"] is True
-    assert result["memory_scope"] == "local_noncanonical_rc1_operator_store"
+    assert result["memory_scope"] == "local_noncanonical_rc2_developmental_concept_store"
     assert result["canonical_write_performed"] is False
     assert result["training_performed"] is False
-    assert rc1.build_cognitive_state()["noncanonical_propositions"] == 1
+    assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 1
+
+
+def test_approved_concept_is_reused_in_conversation(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    first = route_message("Conversation", "What is fire?")
+    remember_useful_answer("What is fire?", first)
+    followup = route_message("Conversation", "Tell me about fire")
+    assert followup["route"] == "developmental_concept_memory"
+    assert "you taught me" in followup["answer"].lower()
+    assert followup["provider_calls_performed"] is False
+
+
+def test_concept_contradiction_detection_first_pass(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    lane = select_model_lane("Project Frontier is automatic.")
+    first = rc2mem.extract_candidate_concept(
+        question="Is Project Frontier automatic?",
+        answer="Project Frontier is automatic.",
+        source_model_lane=lane,
+    )
+    second = rc2mem.extract_candidate_concept(
+        question="Is Project Frontier automatic?",
+        answer="Project Frontier is not automatic.",
+        source_model_lane=lane,
+    )
+    assert rc2mem.approve_candidate_concept(first)["approved"] is True
+    result = rc2mem.approve_candidate_concept(second)
+    assert result["approved"] is True
+    assert result["contradictions"]
+
+
+def test_short_term_session_memory_answers_followup_without_persistence(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    history = [{"role": "user", "content": "What is fire?"}, {"role": "assistant", "content": "Fire is combustion."}]
+    payload = route_message("Conversation", "What did I just ask?", history=history)
+    assert payload["route"] == "conversation_short_term_memory"
+    assert "what is fire" in payload["answer"].lower()
+    assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 0
+
+
+def test_gpt_approval_preview_is_compact_and_no_call(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    history = [{"role": "user", "content": "Tell me about Avogadro and quantum field theory."}]
+    payload = build_gpt_approval_preview("Tell me about Avogadro and quantum field theory.", history)
+    rendered = render_route(payload)
+    assert payload["provider_calls_performed"] is False
+    assert payload["compact_support_packet"]["provider_call_performed"] is False
+    assert len(payload["compact_support_packet"]["relevant_chat_history"]) == 1
+    assert "No GPT/API call has been made." in rendered
 
 
 def test_clear_local_store_requires_exact_confirmation(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What is fire?")
     remember_useful_answer("What is fire?", payload)
-    refused = rc1.clear_local_noncanonical_store("yes clear it")
+    refused = rc2mem.clear_developmental_memory_store("yes clear it")
     assert refused["cleared"] is False
-    assert rc1.build_cognitive_state()["noncanonical_propositions"] == 1
-    cleared = rc1.clear_local_noncanonical_store("DELETE_RC1_LOCAL_NONCANONICAL_STORE")
+    assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 1
+    cleared = rc2mem.clear_developmental_memory_store("DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE")
     assert cleared["cleared"] is True
-    assert rc1.build_cognitive_state()["noncanonical_propositions"] == 0
+    assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 0
 
 
 def test_router_flags_keep_live_capabilities_disabled():
@@ -153,9 +233,16 @@ def test_intent_and_escalation_are_deterministic():
 
 def test_model_lane_selection_is_deterministic_and_nonexecuting():
     lane = select_model_lane("Debug this Python function", "coding")
-    assert lane["lane"] == "coding"
+    assert lane["lane"] == "coding_technical"
     assert lane["executed"] is False
     assert lane["provider_calls_performed"] is False
+
+
+def test_local_model_lanes_are_discovered_from_registry():
+    data = discover_local_model_lanes()
+    assert "lanes" in data
+    assert "everyday_conversation" in data["lanes"]
+    assert data["model_execution_enabled_by_default"] is False
 
 
 def test_render_and_report(monkeypatch, tmp_path):
@@ -177,6 +264,12 @@ def test_named_rc2_reports_exist_in_payloads():
         "RC2_MEMORY_EXPERIENCE",
         "RC2_OPERATOR_SEPARATION",
         "RC2_UI_REVIEW",
+        "RC2_MODEL_LANE_ROUTER",
+        "RC2_DEVELOPMENTAL_CONCEPT_FORMATION",
+        "RC2_MEMORY_STORE_SEPARATION",
+        "RC2_CONCEPT_GRAPH_LINKING",
+        "RC2_CONCEPT_APPROVAL_UX",
+        "RC2_DEVELOPMENTAL_LIFECYCLE",
     ]:
         assert name in payloads
     assert payloads["RC2_OPERATOR_SEPARATION"]["default_tab"] == "Conversation"

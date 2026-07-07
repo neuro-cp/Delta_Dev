@@ -319,82 +319,8 @@
       }
     ]
   },
-  "local_model_lane_selection_enabled": true,
   "model_execution_enabled_by_default": false,
-  "model_registry": "integration.model_runtime.model_registry",
   "provider_calls_performed": false,
   "safe": true,
-  "sample_selections": [
-    {
-      "available": true,
-      "capabilities": [
-        "text"
-      ],
-      "context_size": 8192,
-      "cost_latency_class": "low_to_medium_local",
-      "display_name": "Everyday Conversation Lane",
-      "executed": false,
-      "execution_gate": "not_executed_by_default",
-      "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
-      "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
-      "fallback_priority": 1,
-      "lane": "everyday_conversation",
-      "model_family": "phi4",
-      "preferred_task_lanes": [
-        "conversation",
-        "question",
-        "self_description"
-      ],
-      "provider_calls_performed": false,
-      "selected_model": "phi4"
-    },
-    {
-      "available": true,
-      "capabilities": [
-        "text",
-        "vision"
-      ],
-      "context_size": 32768,
-      "cost_latency_class": "medium_local",
-      "display_name": "Coding / Technical Lane",
-      "executed": false,
-      "execution_gate": "not_executed_by_default",
-      "expected_strength": "programming, debugging, architecture, CLI, repo reasoning",
-      "expected_weakness": "may need repo file context or tests for correctness",
-      "fallback_priority": 2,
-      "lane": "coding_technical",
-      "model_family": "qwen",
-      "preferred_task_lanes": [
-        "coding",
-        "technical_explanation"
-      ],
-      "provider_calls_performed": false,
-      "selected_model": "qwen"
-    },
-    {
-      "available": true,
-      "capabilities": [
-        "text",
-        "vision"
-      ],
-      "context_size": 32768,
-      "cost_latency_class": "medium_to_high_local",
-      "display_name": "Reasoning / Analysis Lane",
-      "executed": false,
-      "execution_gate": "not_executed_by_default",
-      "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
-      "expected_weakness": "external facts need gated supporting information",
-      "fallback_priority": 3,
-      "lane": "reasoning_analysis",
-      "model_family": "qwen",
-      "preferred_task_lanes": [
-        "analysis",
-        "research",
-        "investigation",
-        "external_knowledge_request"
-      ],
-      "provider_calls_performed": false,
-      "selected_model": "qwen"
-    }
-  ]
+  "summary": "Automatic lane router selects everyday conversation, coding/technical, reasoning/analysis, planning, vision, concept extraction, or contradiction detection lanes from the existing model registry."
 }

@@ -1,0 +1,33 @@
+{
+  "safe": true,
+  "stores": {
+    "conversation_memory": {
+      "default_persistence": "in_memory_ui_history",
+      "optional_log": "G:\\Delta_Dev\\data\\rc2_developmental_memory\\conversation_memory.jsonl",
+      "scope": "session_level_context"
+    },
+    "flags": {
+      "autonomous_write_performed": false,
+      "canonical_write_performed": false,
+      "conversation_memory_session_only": true,
+      "developmental_concept_memory_enabled": true,
+      "knowledge_memory_noncanonical": true,
+      "personal_memory_noncanonical": true,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    "knowledge_memory": {
+      "canonical": false,
+      "scope": "general_reusable_concepts_facts_explanations_relationships",
+      "store": "G:\\Delta_Dev\\data\\rc2_developmental_memory\\knowledge_concepts.jsonl"
+    },
+    "personal_memory": {
+      "canonical": false,
+      "scope": "user_project_preferences_and_personal_facts",
+      "store": "G:\\Delta_Dev\\data\\rc2_developmental_memory\\personal_memory.jsonl"
+    }
+  },
+  "summary": "Conversation, personal, and knowledge memory are separate. Default concept storage goes to knowledge memory unless the user makes it personal."
+}

@@ -1,0 +1,16 @@
+{
+  "provider_calls_performed": false,
+  "safe": true,
+  "sample_packet": {
+    "desired_answer_format": "brief_direct_answer_with_uncertainty_if_needed",
+    "instructions": "Return a concise answer only. Do not include hashes, internal reports, or unrelated diagnostics.",
+    "packet_type": "rc2_supporting_information_request",
+    "provider_call_performed": false,
+    "question": "What is the relation between Avogadro's number and quantum field theory?",
+    "relevant_approved_concepts": [],
+    "relevant_chat_history": [],
+    "routing_reason": "local_or_substrate_confidence_was_insufficient",
+    "web_search_performed": false
+  },
+  "summary": "GPT/API escalation is ask-first and preview-only in RC2. The packet carries only the current question, short relevant chat history, relevant approved concepts, routing reason, and desired answer format."
+}
