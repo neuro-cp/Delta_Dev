@@ -1,16 +1,17 @@
 {
   "cases": [
     {
-      "answer": "The sky usually appears blue during the day because the atmosphere scatters shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "confidence": "high_for_general_knowledge",
+      "confidence": "local_general_knowledge",
       "confidence_decision": {
         "confidence": 0.7,
         "evidence_quality": "local_scaffold_or_mode_context",
         "provider_necessity": "not_required_for_scaffold_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
+      "confidence_score": 0.88,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "question",
@@ -27,6 +28,16 @@
         "intent": "question",
         "message": "What color is the sky?"
       },
+      "memory_candidate": {
+        "candidate_id": "rc2-memory-candidate-7c54e0b0ab8d905c",
+        "canonical": false,
+        "claim": "Useful answer for 'What color is the sky?': The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "confidence": "user_marked_useful_unverified",
+        "proposition_id": "rc2-memory-proposition-7c54e0b0ab8d905c",
+        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
+        "source": "rc2_conversation_user_marked_useful",
+        "status": "pending_user_memory_confirmation"
+      },
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -41,21 +52,175 @@
         "web_search_enabled": false
       },
       "provider_calls_performed": false,
-      "route": "local_conversation_scaffold",
+      "route": "local_conversation_model_lane",
+      "selected_model_lane": {
+        "available": true,
+        "capabilities": [
+          "text"
+        ],
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "lane": "general",
+        "model_family": "phi4",
+        "provider_calls_performed": false,
+        "selected_model": "phi4"
+      },
+      "supporting_information_offer": null,
       "training_performed": false,
       "web_search_performed": false
     },
     {
-      "answer": "That question likely needs specialist or provider-assisted research. RC2 can produce a gated escalation plan, but no provider or web call is enabled in this scaffold.",
+      "answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "confidence": "requires_gated_escalation",
+      "confidence": "local_general_knowledge",
+      "confidence_decision": {
+        "confidence": 0.7,
+        "evidence_quality": "local_scaffold_or_mode_context",
+        "provider_necessity": "not_required_for_scaffold_response",
+        "retrieval_sufficiency": "not_checked_or_insufficient"
+      },
+      "confidence_score": 0.82,
+      "escalation_plan": {
+        "enabled_now": false,
+        "intent": "question",
+        "provider_calls_performed": false,
+        "recommended_routes": [
+          "local_conversation",
+          "substrate_check"
+        ],
+        "requires_operator_approval": false,
+        "web_search_performed": false
+      },
+      "intent": {
+        "confidence": 0.7,
+        "intent": "question",
+        "message": "What color is water?"
+      },
+      "memory_candidate": {
+        "candidate_id": "rc2-memory-candidate-965129491cdcc664",
+        "canonical": false,
+        "claim": "Useful answer for 'What color is water?': Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+        "confidence": "user_marked_useful_unverified",
+        "proposition_id": "rc2-memory-proposition-965129491cdcc664",
+        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
+        "source": "rc2_conversation_user_marked_useful",
+        "status": "pending_user_memory_confirmation"
+      },
+      "mode": "Conversation",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "route": "local_conversation_model_lane",
+      "selected_model_lane": {
+        "available": true,
+        "capabilities": [
+          "text"
+        ],
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "lane": "general",
+        "model_family": "phi4",
+        "provider_calls_performed": false,
+        "selected_model": "phi4"
+      },
+      "supporting_information_offer": null,
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. For this kind of task I would route first to the coding lane with `qwen` available as the preferred local model.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "confidence": "local_coding_capability_route",
+      "confidence_decision": {
+        "confidence": 0.68,
+        "evidence_quality": "local_scaffold_or_mode_context",
+        "provider_necessity": "not_required_for_scaffold_response",
+        "retrieval_sufficiency": "not_checked_or_insufficient"
+      },
+      "confidence_score": 0.78,
+      "escalation_plan": {
+        "enabled_now": false,
+        "intent": "coding",
+        "provider_calls_performed": false,
+        "recommended_routes": [
+          "local_conversation",
+          "substrate_check",
+          "local_model_with_operator_gate"
+        ],
+        "requires_operator_approval": false,
+        "web_search_performed": false
+      },
+      "intent": {
+        "confidence": 0.68,
+        "intent": "coding",
+        "message": "What do you know about coding?"
+      },
+      "memory_candidate": {
+        "candidate_id": "rc2-memory-candidate-2e1d47872c077b86",
+        "canonical": false,
+        "claim": "Useful answer for 'What do you know about coding?': I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. For this kind of task I would route first to the coding lane with `qwen` available as the preferred local model.",
+        "confidence": "user_marked_useful_unverified",
+        "proposition_id": "rc2-memory-proposition-2e1d47872c077b86",
+        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
+        "source": "rc2_conversation_user_marked_useful",
+        "status": "pending_user_memory_confirmation"
+      },
+      "mode": "Conversation",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "route": "local_conversation_model_lane",
+      "selected_model_lane": {
+        "available": true,
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "lane": "coding",
+        "model_family": "qwen",
+        "provider_calls_performed": false,
+        "selected_model": "qwen"
+      },
+      "supporting_information_offer": null,
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "I do not have enough governed local evidence to answer that confidently. I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "confidence": "needs_supporting_information",
       "confidence_decision": {
         "confidence": 0.35,
         "evidence_quality": "insufficient_local_evidence",
         "provider_necessity": "gated_provider_or_web_may_be_needed",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
+      "confidence_score": 0.35,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "external_knowledge_request",
@@ -73,6 +238,16 @@
         "intent": "external_knowledge_request",
         "message": "What is the relation between Avogadro's number and quantum field theory?"
       },
+      "memory_candidate": {
+        "candidate_id": "rc2-memory-candidate-35b033fd5261e968",
+        "canonical": false,
+        "claim": "Useful answer for 'What is the relation between Avogadro's number and quantum field theory?': I do not have enough governed local evidence to answer that confidently. I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path.",
+        "confidence": "user_marked_useful_unverified",
+        "proposition_id": "rc2-memory-proposition-35b033fd5261e968",
+        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
+        "source": "rc2_conversation_user_marked_useful",
+        "status": "pending_user_memory_confirmation"
+      },
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -87,7 +262,40 @@
         "web_search_enabled": false
       },
       "provider_calls_performed": false,
-      "route": "local_conversation_scaffold",
+      "route": "local_conversation_model_lane",
+      "selected_model_lane": {
+        "available": true,
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "lane": "research",
+        "model_family": "qwen",
+        "provider_calls_performed": false,
+        "selected_model": "qwen"
+      },
+      "supporting_information_offer": {
+        "dry_run_provider_request": {
+          "api_key_present": true,
+          "api_key_redacted": true,
+          "authoritative": false,
+          "endpoint": "https://api.openai.com/v1/chat/completions",
+          "model": "gpt-4.1-mini",
+          "question": "What is the relation between Avogadro's number and quantum field theory?"
+        },
+        "offered": true,
+        "options": [
+          "look_for_supporting_information",
+          "ask_gpt_or_web_with_explicit_approval",
+          "not_now"
+        ],
+        "prompt": "I do not have enough local confidence for that. Would you like me to look for supporting information?",
+        "provider_calls_performed": false,
+        "reason": "insufficient_local_evidence",
+        "web_search_performed": false
+      },
       "training_performed": false,
       "web_search_performed": false
     },
@@ -142,7 +350,7 @@
       "web_search_performed": false
     },
     {
-      "answer": "I found approved noncanonical RC1 substrate evidence:\n- Project Frontier has AI workers. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier uses OCR. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier uses a speech worker. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier processes invoices. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier requires operator review before approval. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier should not approve uncertain invoices automatically. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n- Project Frontier approves uncertain invoices automatically. (source: operator_paste; confidence: operator_asserted_unverified; canonical: False)\n\nNo contradictory evidence is currently recorded in the RC1 local substrate.",
+      "answer": "No local deterministic answer was available.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "mode": "Ask Substrate",
@@ -160,7 +368,7 @@
       },
       "provider_calls_performed": false,
       "question": "What do you know about Frontier?",
-      "route": "rc1_noncanonical_substrate",
+      "route": "v29_local_answer",
       "training_performed": false,
       "web_search_performed": false
     },
@@ -222,6 +430,8 @@
     "training_enabled": false,
     "web_search_enabled": false
   },
+  "local_model_execution_enabled_by_default": false,
+  "local_model_lane_selection_enabled": true,
   "modes": [
     "Conversation",
     "Memory Mode",
@@ -239,5 +449,7 @@
     "Frontier App Assistant"
   ],
   "phase": "RC2 Conversational Shell With DELTA Mode Router",
-  "safe": true
+  "safe": true,
+  "useful_answer_memory_enabled": true,
+  "useful_answer_memory_scope": "local_noncanonical_rc1_operator_store"
 }

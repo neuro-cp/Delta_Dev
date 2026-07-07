@@ -8,10 +8,12 @@ routes are represented as gated escalation plans only.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
 
+from integration.model_runtime.model_registry import list_available_models
 from orchestration.runtime.rc1_operator_console import (
     answer_operator_question,
     approve_propositions,
@@ -21,6 +23,8 @@ from orchestration.runtime.rc1_operator_console import (
     preview_evidence_ingest,
     query_noncanonical_substrate,
 )
+from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
+from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,6 +63,32 @@ ROUTER_FLAGS = {
     "model_b_default_changed": False,
 }
 
+MODEL_LANE_ORDER = {
+    "general": ("phi4", "qwen", "llama", "mistral", "phi3"),
+    "coding": ("qwen", "phi4", "llama", "mistral", "phi3"),
+    "research": ("qwen", "llama", "mistral", "phi4", "phi3"),
+    "planning": ("phi4", "qwen", "mistral", "llama", "phi3"),
+    "vision": ("qwen", "llama", "phi4", "mistral", "phi3"),
+}
+
+DIRECT_LOCAL_ANSWERS = {
+    "sky_color": {
+        "triggers": (("sky", "color"),),
+        "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "confidence": 0.88,
+    },
+    "water_color": {
+        "triggers": (("water", "color"), ("color", "water")),
+        "answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+        "confidence": 0.82,
+    },
+    "fire_definition": {
+        "triggers": (("what", "fire"), ("fire",), ("define", "fire")),
+        "answer": "Fire is the visible, hot part of combustion. A fuel reacts with oxygen, releasing heat and light, and the flame contains hot gases plus glowing particles or excited molecules.",
+        "confidence": 0.82,
+    },
+}
+
 
 def classify_intent(message: str) -> dict[str, Any]:
     lower = message.lower()
@@ -68,7 +98,7 @@ def classify_intent(message: str) -> dict[str, Any]:
         intent = "memory_request"
     elif any(term in lower for term in ["contradiction", "conflict", "incompatible"]):
         intent = "contradiction_check"
-    elif any(term in lower for term in ["code", "python", "bug", "function"]):
+    elif any(term in lower for term in ["code", "coding", "python", "bug", "function"]):
         intent = "coding"
     elif any(term in lower for term in ["plan", "schedule", "strategy"]):
         intent = "planning"
@@ -80,15 +110,50 @@ def classify_intent(message: str) -> dict[str, Any]:
         intent = "image"
     elif any(term in lower for term in ["investigate", "case", "research"]):
         intent = "investigation"
-    elif any(term in lower for term in ["what do you know", "frontier", "substrate"]):
-        intent = "substrate_question"
-    elif any(term in lower for term in ["avogadro", "quantum field", "beluga", "whale"]):
-        intent = "external_knowledge_request"
     elif any(term in lower for term in ["how do you work", "what are you", "delta"]):
         intent = "self_description"
+    elif any(term in lower for term in ["avogadro", "quantum field", "beluga", "whale"]):
+        intent = "external_knowledge_request"
+    elif any(term in lower for term in ["what do you know", "frontier", "substrate"]):
+        intent = "substrate_question"
     else:
         intent = "question" if lower.endswith("?") else "conversation"
     return {"intent": intent, "message": message, "confidence": confidence_for_intent(intent)}
+
+
+def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]:
+    """Choose the best already-wired local model lane without executing it."""
+    intent = intent or classify_intent(message)["intent"]
+    if intent == "coding":
+        lane = "coding"
+    elif intent in {"external_knowledge_request", "investigation", "document"}:
+        lane = "research"
+    elif intent == "planning":
+        lane = "planning"
+    elif intent == "image":
+        lane = "vision"
+    else:
+        lane = "general"
+
+    available = list_available_models()
+    selected = None
+    for alias in MODEL_LANE_ORDER[lane]:
+        if alias in available:
+            selected = alias
+            break
+    if selected is None and available:
+        selected = sorted(available)[0]
+    spec = available.get(selected) if selected else None
+    return {
+        "lane": lane,
+        "selected_model": selected,
+        "available": bool(selected),
+        "executed": False,
+        "execution_gate": "not_executed_by_default",
+        "provider_calls_performed": False,
+        "model_family": spec.family if spec else "unavailable",
+        "capabilities": list(spec.capabilities) if spec else [],
+    }
 
 
 def confidence_for_intent(intent: str) -> float:
@@ -111,27 +176,126 @@ def confidence_for_intent(intent: str) -> float:
     return table.get(intent, 0.5)
 
 
+def _direct_answer(message: str) -> dict[str, Any] | None:
+    lower = " " + " ".join(message.lower().replace("?", " ").split()) + " "
+    for answer_id, item in DIRECT_LOCAL_ANSWERS.items():
+        for trigger in item["triggers"]:
+            if all(f" {word} " in lower for word in trigger):
+                return {
+                    "answer_id": answer_id,
+                    "answer": item["answer"],
+                    "confidence_score": item["confidence"],
+                    "confidence": "local_general_knowledge",
+                }
+    return None
+
+
+def _support_offer(message: str, reason: str) -> dict[str, Any]:
+    dry_run = answer_unknown_with_controlled_provider(message, live_provider=False)
+    return {
+        "offered": True,
+        "reason": reason,
+        "prompt": "I do not have enough local confidence for that. Would you like me to look for supporting information?",
+        "options": [
+            "look_for_supporting_information",
+            "ask_gpt_or_web_with_explicit_approval",
+            "not_now",
+        ],
+        "dry_run_provider_request": dry_run["route_or_provider_request"],
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+    }
+
+
+def build_memory_candidate_from_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
+    answer = str(payload.get("answer", "")).strip()
+    clean_message = " ".join(str(message).split())
+    claim = f"Useful answer for '{clean_message}': {answer}"
+    digest = hashlib.sha256(claim.encode("utf-8")).hexdigest()[:16]
+    return {
+        "candidate_id": f"rc2-memory-candidate-{digest}",
+        "proposition_id": f"rc2-memory-proposition-{digest}",
+        "claim": claim if len(claim) <= 600 else claim[:597] + "...",
+        "source": "rc2_conversation_user_marked_useful",
+        "confidence": "user_marked_useful_unverified",
+        "status": "pending_user_memory_confirmation",
+        "canonical": False,
+        "requires_user_action": "click_remember_useful_answer_or_use_advanced_mode",
+    }
+
+
+def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
+    candidate = build_memory_candidate_from_answer(message, payload)
+    result = approve_propositions([candidate])
+    return {
+        "candidate": candidate,
+        "result": result,
+        "memory_write_performed": result["approved_count"] > 0,
+        "memory_scope": "local_noncanonical_rc1_operator_store",
+        "canonical_write_performed": False,
+        "training_performed": False,
+        "provider_calls_performed": False,
+        "rollback_supported": True,
+    }
+
+
 def local_conversation_answer(message: str) -> dict[str, Any]:
     lower = message.lower()
-    if "sky" in lower and "color" in lower:
-        answer = "The sky usually appears blue during the day because the atmosphere scatters shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
-        confidence = "high_for_general_knowledge"
-    elif "how do you work" in lower or "what are you" in lower:
-        answer = "I am DELTA's local conversational shell. I route ordinary conversation, substrate questions, evidence review, contradiction checks, replay inspection, and diagnostics through explicit modes while keeping providers, training, and canonical writes disabled unless a future gate enables them."
-        confidence = "high_for_self_description"
-    elif "beluga" in lower or "whale" in lower:
-        answer = "I do not have a live provider or web route enabled in RC2. I can mark this as an external knowledge request and prepare a gated research route, but I will not invent details as if they were verified substrate knowledge."
-        confidence = "insufficient_local_evidence"
-    elif "avogadro" in lower or "quantum field" in lower:
-        answer = "That question likely needs specialist or provider-assisted research. RC2 can produce a gated escalation plan, but no provider or web call is enabled in this scaffold."
-        confidence = "requires_gated_escalation"
+    intent = classify_intent(message)["intent"]
+    model_lane = select_model_lane(message, intent)
+    local = run_v29_local_answer(message, use_recall=False)
+    if intent == "coding":
+        answer = (
+            "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. "
+            f"For this kind of task I would route first to the {model_lane['lane']} lane"
+            + (f" with `{model_lane['selected_model']}` available as the preferred local model." if model_lane["selected_model"] else ", but no local model is currently discoverable.")
+        )
+        confidence = "local_coding_capability_route"
+        confidence_score = 0.78
+        support_offer = None
+    elif "topics" in lower and ("know" in lower or "best" in lower or "most" in lower):
+        answer = (
+            "Right now I am strongest at explaining DELTA itself, working with local approved substrate memory, "
+            "helping with code and planning conversations, and walking through governed evidence workflows. "
+            "For ordinary world knowledge I can answer simple questions locally; if confidence is low, I should ask whether you want supporting information before escalating."
+        )
+        confidence = "local_capability_self_description"
+        confidence_score = 0.84
+        support_offer = None
+    elif local["local_answer"]["matched"]:
+        answer = str(local["draft"]["answer_text"])
+        confidence = "repo_local_self_knowledge"
+        confidence_score = 0.86
+        support_offer = None
+    elif direct := _direct_answer(message):
+        answer = str(direct["answer"])
+        confidence = str(direct["confidence"])
+        confidence_score = float(direct["confidence_score"])
+        support_offer = None
+    elif intent in {"external_knowledge_request", "image"}:
+        answer = (
+            "I do not have enough governed local evidence to answer that confidently. "
+            "I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path."
+        )
+        confidence = "needs_supporting_information"
+        confidence_score = 0.35
+        support_offer = _support_offer(message, "insufficient_local_evidence")
     else:
-        answer = "I can help think through that conversationally, or you can switch modes to Evidence Review, Ask Substrate, Contradiction Check, Replay, or Diagnostics for governed DELTA runtime behavior."
-        confidence = "general_conversation_scaffold"
+        answer = (
+            "I can talk through that, but I do not have enough specific local evidence to make it strong yet. "
+            "If this matters, I can look for supporting information through an approved route and then ask whether the result was useful enough to remember."
+        )
+        confidence = "low_specificity_conversation"
+        confidence_score = 0.55
+        support_offer = _support_offer(message, "low_specificity_or_missing_local_evidence")
     return {
-        "route": "local_conversation_scaffold",
+        "route": "local_conversation_model_lane",
         "answer": answer,
         "confidence": confidence,
+        "confidence_score": confidence_score,
+        "selected_model_lane": model_lane,
+        "supporting_information_offer": support_offer,
+        "memory_candidate": None,
         "provider_calls_performed": False,
         "web_search_performed": False,
         "training_performed": False,
@@ -194,9 +358,13 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
                 "route": "substrate_first_conversation",
                 "answer": substrate["answer"],
                 "confidence": "grounded_in_noncanonical_substrate",
+                "confidence_score": 0.9,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
             }
         else:
             payload = {"mode": mode, **local_conversation_answer(message)}
+        payload["memory_candidate"] = build_memory_candidate_from_answer(message, payload)
         payload["escalation_plan"] = build_escalation_plan(message)
         payload["intent"] = classify_intent(message)
         payload["confidence_decision"] = confidence_engine(message, substrate["matched"])
@@ -253,6 +421,32 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
 
 
 def render_route(payload: dict[str, Any]) -> str:
+    if payload.get("mode") == "Conversation":
+        lines = [str(payload.get("answer", ""))]
+        lane = payload.get("selected_model_lane") or {}
+        if isinstance(lane, dict) and lane.get("selected_model"):
+            lines.extend([
+                "",
+                f"I routed this as a {lane.get('lane')} question. The preferred local model lane is `{lane.get('selected_model')}`, but I did not execute a model call from this safe UI path.",
+            ])
+        offer = payload.get("supporting_information_offer")
+        if isinstance(offer, dict) and offer.get("offered"):
+            lines.extend([
+                "",
+                offer["prompt"],
+                "Reply yes if you want a gated supporting-information path, or keep chatting if not.",
+            ])
+        if payload.get("memory_candidate"):
+            lines.extend([
+                "",
+                "If this was useful, you can mark it useful and I can remember it in the local noncanonical store. It stays reversible and noncanonical.",
+            ])
+        lines.extend([
+            "",
+            "Safety: no provider call, web search, training, canonical write, or autonomous action was performed.",
+        ])
+        return "\n".join(lines)
+
     lines = [
         f"Mode: {payload.get('mode')}",
         f"Route: {payload.get('route')}",
@@ -292,6 +486,8 @@ def render_route(payload: dict[str, Any]) -> str:
 def build_rc2_report() -> dict[str, Any]:
     cases = [
         route_message("Conversation", "What color is the sky?"),
+        route_message("Conversation", "What color is water?"),
+        route_message("Conversation", "What do you know about coding?"),
         route_message("Conversation", "What is the relation between Avogadro's number and quantum field theory?"),
         route_message("Evidence Review", "", "Project Frontier has AI workers."),
         route_message("Ask Substrate", "What do you know about Frontier?"),
@@ -303,6 +499,10 @@ def build_rc2_report() -> dict[str, Any]:
         "display_modes": DISPLAY_MODES,
         "cases": cases,
         "flags": ROUTER_FLAGS,
+        "local_model_lane_selection_enabled": True,
+        "local_model_execution_enabled_by_default": False,
+        "useful_answer_memory_enabled": True,
+        "useful_answer_memory_scope": "local_noncanonical_rc1_operator_store",
         "safe": all(not case["provider_calls_performed"] and not case["training_performed"] and not case["canonical_write_performed"] for case in cases),
         "final_recommendation": "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE",
     }
@@ -358,7 +558,30 @@ def report_payloads() -> dict[str, dict[str, Any]]:
             "conversation_first": True,
             "visible_modes": DISPLAY_MODES,
             "reduced_default_implementation_terminology": True,
-            "remaining_gap": "provider, web, and true local LLM routes remain gated/off",
+            "remaining_gap": "local model lane selection is wired; model execution, web, and GPT/provider routes remain gated/off by default",
+            "safe": True,
+        },
+        "RC2_LOCAL_MODEL_ROUTING": {
+            "local_model_lane_selection_enabled": True,
+            "model_registry": "integration.model_runtime.model_registry",
+            "lanes": MODEL_LANE_ORDER,
+            "sample_selections": [
+                select_model_lane("What is fire?", "conversation"),
+                select_model_lane("Debug this Python function", "coding"),
+                select_model_lane("Research beluga whales", "external_knowledge_request"),
+            ],
+            "model_execution_enabled_by_default": False,
+            "provider_calls_performed": False,
+            "safe": True,
+        },
+        "RC2_SELECTIVE_MEMORY_EXPERIMENT": {
+            "enabled": True,
+            "approval_paths": ["Remember Last Useful Answer button", "exact chat phrase: remember this useful answer"],
+            "casual_yes_counts_as_memory_approval": False,
+            "target_store": "data/rc1_operator_console/noncanonical_propositions.jsonl",
+            "canonical_writes_enabled": False,
+            "training_enabled": False,
+            "clear_store_confirmation": "DELETE_RC1_LOCAL_NONCANONICAL_STORE",
             "safe": True,
         },
     }

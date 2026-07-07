@@ -31,6 +31,7 @@ PROPOSITION_LOG = DATA / "noncanonical_propositions.jsonl"
 EVIDENCE_LOG = DATA / "evidence_links.jsonl"
 REPLAY_LOG = DATA / "replay_queue.jsonl"
 CONTRADICTION_LOG = DATA / "contradictions.jsonl"
+LOCAL_STORE_LOGS = (PROPOSITION_LOG, EVIDENCE_LOG, REPLAY_LOG, CONTRADICTION_LOG)
 
 CONSOLE_FLAGS = {
     "rc1_operator_console_enabled": True,
@@ -383,6 +384,39 @@ def approve_propositions(candidates: list[dict[str, Any]]) -> dict[str, Any]:
         "provider_calls_performed": False,
         "training_performed": False,
         "scheduler_started": False,
+    }
+
+
+def clear_local_noncanonical_store(confirm_text: str) -> dict[str, Any]:
+    """Delete only the RC1 local noncanonical experiment store.
+
+    This is intentionally narrow. It never touches reports, canonical memory,
+    training artifacts, provider configuration, or repo source files.
+    """
+    required = "DELETE_RC1_LOCAL_NONCANONICAL_STORE"
+    if str(confirm_text).strip() != required:
+        return {
+            "cleared": False,
+            "required_confirmation": required,
+            "reason": "confirmation_phrase_missing_or_incorrect",
+            "canonical_write_performed": False,
+            "training_performed": False,
+            "provider_calls_performed": False,
+        }
+    deleted: list[str] = []
+    for path in LOCAL_STORE_LOGS:
+        if path.exists():
+            path.unlink()
+            deleted.append(str(path))
+    return {
+        "cleared": True,
+        "deleted": deleted,
+        "state": build_cognitive_state(),
+        "local_noncanonical_only": True,
+        "canonical_write_performed": False,
+        "training_performed": False,
+        "provider_calls_performed": False,
+        "recall_mutation_performed": False,
     }
 
 

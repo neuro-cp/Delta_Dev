@@ -4,7 +4,7 @@ import json
 import sys
 import tkinter as tk
 from pathlib import Path
-from tkinter import scrolledtext, ttk
+from tkinter import messagebox, scrolledtext, simpledialog, ttk
 
 
 ROOT = Path(__file__).resolve().parent
@@ -17,12 +17,14 @@ from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     build_observation_entry,
     build_cognitive_state,
     build_operator_snapshot,
+    clear_local_noncanonical_store,
     extract_propositions,
     preview_evidence_ingest,
     validate_console_safe,
 )
 from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
     DISPLAY_MODES,
+    remember_useful_answer,
     render_route,
     route_message,
 )
@@ -76,6 +78,8 @@ class DeltaApp:
         self.root.geometry("1180x780")
         self.snapshot = build_operator_snapshot()
         self.extracted: list[dict[str, object]] = []
+        self.last_message = ""
+        self.last_payload: dict[str, object] | None = None
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
@@ -136,9 +140,15 @@ class DeltaApp:
         ttk.Button(input_bar, text="Send", command=self._send_chat).pack(side=tk.RIGHT)
         self.chat_input.bind("<Return>", lambda _event: self._send_chat())
 
+        memory_bar = ttk.Frame(self.conversation_tab)
+        memory_bar.pack(fill=tk.X, pady=(6, 0))
+        ttk.Button(memory_bar, text="Remember Last Useful Answer", command=self._remember_last_answer).pack(side=tk.LEFT)
+        ttk.Button(memory_bar, text="Clear Local Memory Store", command=self._clear_local_store).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Button(memory_bar, text="Open Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
+
         hint = ttk.Label(
             self.conversation_tab,
-            text="Default mode is natural conversation. DELTA routes to local substrate, memory, research plans, or advanced tools when needed.",
+            text="Default mode is natural conversation. Useful answers can be remembered only when you explicitly mark them useful.",
         )
         hint.pack(anchor=tk.W, pady=(6, 0))
 
@@ -217,9 +227,42 @@ class DeltaApp:
             return
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
+        if message.lower().strip() == "remember this useful answer":
+            self._remember_last_answer()
+            return
         payload = route_message(self.mode.get(), message, self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "")
+        self.last_message = message
+        self.last_payload = payload
         self._refresh_state_cards()
         self._append_chat("DELTA", render_route(payload))
+
+    def _remember_last_answer(self) -> None:
+        if not self.last_message or not self.last_payload:
+            messagebox.showinfo("DELTA", "Ask something first, then mark the answer useful if you want it remembered.")
+            return
+        result = remember_useful_answer(self.last_message, self.last_payload)
+        self.snapshot = build_operator_snapshot()
+        self._refresh_state_cards()
+        approved = result["result"]["approved_count"]
+        duplicate = result["result"]["duplicate_count"]
+        self._append_chat(
+            "DELTA",
+            f"Stored {approved} useful-answer memory record(s) in the local noncanonical store. Duplicates skipped: {duplicate}. Canonical memory and training stayed off.",
+        )
+
+    def _clear_local_store(self) -> None:
+        phrase = "DELETE_RC1_LOCAL_NONCANONICAL_STORE"
+        entered = simpledialog.askstring(
+            "Clear Local Memory Store",
+            f"Type {phrase} to delete only the local noncanonical experiment store.",
+        )
+        result = clear_local_noncanonical_store(entered or "")
+        self.snapshot = build_operator_snapshot()
+        self._refresh_state_cards()
+        if result["cleared"]:
+            self._append_chat("DELTA", "The local noncanonical memory store was cleared. Canonical memory, reports, source code, and model weights were untouched.")
+        else:
+            self._append_chat("DELTA", "Local memory store was not cleared because the confirmation phrase did not match.")
 
     def _write_output(self, text: str) -> None:
         self.output.delete("1.0", tk.END)
@@ -294,4 +337,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

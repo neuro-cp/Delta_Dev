@@ -1,0 +1,13 @@
+{
+  "approval_paths": [
+    "Remember Last Useful Answer button",
+    "exact chat phrase: remember this useful answer"
+  ],
+  "canonical_writes_enabled": false,
+  "casual_yes_counts_as_memory_approval": false,
+  "clear_store_confirmation": "DELETE_RC1_LOCAL_NONCANONICAL_STORE",
+  "enabled": true,
+  "safe": true,
+  "target_store": "data/rc1_operator_console/noncanonical_propositions.jsonl",
+  "training_enabled": false
+}

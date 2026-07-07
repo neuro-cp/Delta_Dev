@@ -1,0 +1,84 @@
+{
+  "lanes": {
+    "coding": [
+      "qwen",
+      "phi4",
+      "llama",
+      "mistral",
+      "phi3"
+    ],
+    "general": [
+      "phi4",
+      "qwen",
+      "llama",
+      "mistral",
+      "phi3"
+    ],
+    "planning": [
+      "phi4",
+      "qwen",
+      "mistral",
+      "llama",
+      "phi3"
+    ],
+    "research": [
+      "qwen",
+      "llama",
+      "mistral",
+      "phi4",
+      "phi3"
+    ],
+    "vision": [
+      "qwen",
+      "llama",
+      "phi4",
+      "mistral",
+      "phi3"
+    ]
+  },
+  "local_model_lane_selection_enabled": true,
+  "model_execution_enabled_by_default": false,
+  "model_registry": "integration.model_runtime.model_registry",
+  "provider_calls_performed": false,
+  "safe": true,
+  "sample_selections": [
+    {
+      "available": true,
+      "capabilities": [
+        "text"
+      ],
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "lane": "general",
+      "model_family": "phi4",
+      "provider_calls_performed": false,
+      "selected_model": "phi4"
+    },
+    {
+      "available": true,
+      "capabilities": [
+        "text",
+        "vision"
+      ],
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "lane": "coding",
+      "model_family": "qwen",
+      "provider_calls_performed": false,
+      "selected_model": "qwen"
+    },
+    {
+      "available": true,
+      "capabilities": [
+        "text",
+        "vision"
+      ],
+      "executed": false,
+      "execution_gate": "not_executed_by_default",
+      "lane": "research",
+      "model_family": "qwen",
+      "provider_calls_performed": false,
+      "selected_model": "qwen"
+    }
+  ]
+}

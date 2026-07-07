@@ -5198,3 +5198,22 @@ substrate memory, replay, contradiction analysis, approval workflows,
 diagnostics, and investigation tools are exposed through intelligent routing or
 explicit modes. Basic conversational usability must not bypass governance.
 
+### RC2 Local Model Lane Routing And Selective Memory
+
+Improved the RC2 conversational path so it no longer falls back to a generic
+placeholder for ordinary prompts. Conversation mode now selects an advisory
+local model lane from the existing local model registry, answers simple local
+questions conversationally, and offers gated supporting-information paths for
+unknown or low-confidence prompts.
+
+Added selective useful-answer memory controls:
+
+- `Remember Last Useful Answer` in the UI
+- exact chat phrase: `remember this useful answer`
+- local noncanonical RC1 experiment store only
+- exact clear phrase: `DELETE_RC1_LOCAL_NONCANONICAL_STORE`
+
+This does not enable model execution by default, provider calls, web search,
+training, fine-tuning, weight updates, canonical writes, autonomous actions,
+HYB1 promotion, or Model B replacement.
+

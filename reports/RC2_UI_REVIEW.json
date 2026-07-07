@@ -1,7 +1,7 @@
 {
   "conversation_first": true,
   "reduced_default_implementation_terminology": true,
-  "remaining_gap": "provider, web, and true local LLM routes remain gated/off",
+  "remaining_gap": "local model lane selection is wired; model execution, web, and GPT/provider routes remain gated/off by default",
   "safe": true,
   "visible_modes": [
     "Conversation",

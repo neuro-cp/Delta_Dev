@@ -2,4 +2,4 @@
 
 Safe: `True`
 
-Summary: `provider, web, and true local LLM routes remain gated/off`
+Summary: `local model lane selection is wired; model execution, web, and GPT/provider routes remain gated/off by default`

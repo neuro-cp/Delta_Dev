@@ -1375,3 +1375,21 @@ RC1 preserves the existing safety boundary: no model training, no fine-tuning,
 no weight updates, no provider authority change, no production deployment, no
 baseline routing change, no canonical migration, no autonomous action, no
 scheduler activation, no HYB1 promotion, and no Model B replacement.
+
+## RC2 Conversational Cognitive OS
+
+RC2 makes conversation the primary product surface while keeping the governed
+cognitive runtime underneath it. Ordinary users should be able to ask normal
+questions without understanding substrate records, replay queues, proposition
+approval, or rollback machinery. Advanced operator workflows remain available
+behind explicit modes.
+
+The RC2 conversational route may select a local model lane from the existing
+model registry, but lane selection is not model execution. Provider calls, web
+search, training, canonical writes, autonomous actions, HYB1 promotion, and
+Model B replacement remain gated off by default.
+
+Selective memory starts as reversible local noncanonical memory only. A useful
+answer can be stored only through an explicit UI action or exact user phrase,
+and the local experiment store can be cleared without touching canonical
+memory, reports, source code, provider configuration, or model weights.
