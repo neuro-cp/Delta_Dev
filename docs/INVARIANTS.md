@@ -70,6 +70,22 @@ roadmap items or feature goals; they are substrate invariants.
   are clients of the substrate, not the substrate itself.
 - Do not optimize Delta around a single interface.
 
+## User Accessibility
+
+- Delta must be useful to regular people, not only developers or operators.
+- The default experience should be conversational-first and natural.
+- A user should be able to ask simple questions, brainstorm, plan, summarize,
+  and request help without understanding substrate internals.
+- Governed cognitive systems such as evidence review, substrate memory,
+  replay, contradiction analysis, approval workflows, and diagnostics should be
+  available through routing or explicit modes, not forced into every
+  interaction.
+- Advanced operator views must remain available, but they should be surfaced as
+  modes or inspection layers over the same governed backend.
+- Basic conversational usability must not bypass governance: memory, evidence,
+  providers, tools, actions, canonical writes, and training still require their
+  explicit gates.
+
 ## Development
 
 - Prefer governance, observability, reproducibility, and metric accuracy over

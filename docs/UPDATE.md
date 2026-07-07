@@ -5190,3 +5190,11 @@ Research Analyst, and Frontier App Assistant. Provider calls, web search,
 training, canonical writes, autonomous actions, production routing, HYB1
 promotion, and Model B replacement remain disabled.
 
+Locked product invariant:
+
+DELTA must be conversational-first and useful to regular people by default.
+The governed cognitive runtime remains the backend, while evidence review,
+substrate memory, replay, contradiction analysis, approval workflows,
+diagnostics, and investigation tools are exposed through intelligent routing or
+explicit modes. Basic conversational usability must not bypass governance.
+

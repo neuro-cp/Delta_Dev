@@ -3,6 +3,15 @@
 RC2 adds a conversation-first UI layer over the RC1 governed operator console.
 The RC1 substrate remains intact and selectable through modes.
 
+Locked product invariant:
+
+DELTA must be conversational-first and useful to regular people by default.
+The governed cognitive runtime remains the backend, but evidence review,
+substrate memory, replay, contradiction analysis, approval workflows, and
+diagnostics should be reached through intelligent routing or explicit modes.
+Regular users should not need to understand substrate internals to get value
+from DELTA.
+
 Current UI route:
 
 ```powershell
@@ -47,4 +56,3 @@ Use Conversation mode for ordinary interaction, Evidence Review and Memory Mode
 for teaching DELTA local facts, Ask Substrate for approved knowledge, and
 Contradiction Check for conflicts. Record missing capabilities as operational
 observations rather than adding speculative architecture.
-

@@ -1100,3 +1100,13 @@ failures, provenance issues, latency, workflow interruptions, feature requests,
 and unexpected strengths. Future engineering should be driven by that evidence,
 not by speculative architecture expansion.
 
+## Locked Product Invariant
+
+DELTA must be conversational-first and useful to regular people by default. The
+governed cognitive runtime remains the backend, but evidence review, substrate
+memory, replay, contradiction analysis, approval workflows, diagnostics, and
+investigation tools should be reached through intelligent routing or explicit
+modes. Regular users should not need to understand substrate internals to get
+value from DELTA, and basic conversational usability must not bypass
+governance.
+

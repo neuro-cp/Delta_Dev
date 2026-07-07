@@ -121,6 +121,25 @@ itself.
 Never optimize the architecture around a single interface. Conversation is one
 possible surface over Delta's cognition, not the organizing principle of Delta.
 
+## Conversational Accessibility Principle
+
+Delta must remain useful to regular people, not only technical operators. The
+default surface should be conversational-first: a user should be able to ask
+ordinary questions, brainstorm, plan, explain, summarize, and request help
+without needing to understand substrate internals, replay queues, proposition
+records, or governance machinery.
+
+Governed cognitive capabilities such as evidence review, substrate memory,
+contradiction analysis, replay, rollback, approval workflows, diagnostics, and
+investigation tools remain essential, but they should appear through
+intelligent routing, progressive disclosure, or explicit modes. They must not
+be required for basic interaction.
+
+This does not make Delta a generic chatbot. The substrate remains the center of
+authority. The conversation layer is the humane operating surface over that
+substrate: simple by default, inspectable when needed, and governed whenever
+state, evidence, memory, or external providers are involved.
+
 ## Reasoning Provider Principle
 
 External and local models are reasoning providers, not the substrate.
