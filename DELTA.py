@@ -84,6 +84,7 @@ class DeltaApp:
         self.last_message = ""
         self.last_payload: dict[str, object] | None = None
         self.session_history: list[dict[str, str]] = []
+        self.pending_provider_question: str | None = None
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
@@ -249,6 +250,30 @@ class DeltaApp:
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
         lower = message.lower().strip()
+        if self.pending_provider_question and lower in {"yes", "y", "yes please", "ask gpt", "ask gpt please", "look for sources"}:
+            target = self.pending_provider_question
+            self.pending_provider_question = None
+            self._append_session("user", message)
+            payload = route_message(
+                "Conversation",
+                target,
+                history=self._recent_history_for_router(),
+                provider_approved=True,
+            )
+            self.last_message = target
+            self.last_payload = payload
+            rendered = render_route(payload)
+            self._append_chat("DELTA", rendered)
+            self._append_session("assistant", rendered)
+            self._refresh_state_cards()
+            return
+        if self.pending_provider_question and lower in {"no", "n", "not now", "no thanks", "keep chatting"}:
+            self.pending_provider_question = None
+            self._append_session("user", message)
+            reply = "Okay. I will keep this local and will not ask a provider."
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
         if lower in {"remember this useful answer", "keep this concept", "that was useful remember the concept"}:
             self._append_session("user", message)
             self._remember_last_answer()
@@ -263,9 +288,17 @@ class DeltaApp:
             message,
             self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "",
             history=self._recent_history_for_router(),
+            execute_local_model=self.mode.get() == "Conversation",
         )
         self.last_message = message
         self.last_payload = payload
+        offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
+        if isinstance(offer, dict) and offer.get("offered"):
+            self.pending_provider_question = message
+        elif payload.get("route") == "gpt_support_approval_preview":
+            self.pending_provider_question = message
+        else:
+            self.pending_provider_question = None
         self._refresh_state_cards()
         rendered = render_route(payload)
         self._append_chat("DELTA", rendered)
@@ -286,6 +319,8 @@ class DeltaApp:
             text = f"Kept the concept `{concept['concept_name']}` in noncanonical {concept['memory_type']} memory. Canonical memory and training stayed off."
         elif duplicate:
             text = "I already had a matching concept, so I skipped the duplicate. Canonical memory and training stayed off."
+        elif result["result"].get("reason") == "no_coherent_memory_candidate":
+            text = "I do not have a clean reusable concept from that answer, so I did not store anything."
         else:
             text = "I did not store the concept. Canonical memory and training stayed off."
         self._append_chat("DELTA", text)

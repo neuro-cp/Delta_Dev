@@ -339,22 +339,24 @@
       "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
       "fallback_priority": 1,
       "lane": "everyday_conversation",
-      "model_family": "phi4",
+      "model_family": "llama",
       "preferred_task_lanes": [
         "conversation",
         "question",
         "self_description"
       ],
       "provider_calls_performed": false,
-      "selected_model": "phi4"
+      "selected_model": "llama",
+      "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
     },
     {
       "available": true,
       "capabilities": [
-        "text",
-        "vision"
+        "text"
       ],
-      "context_size": 32768,
+      "context_size": 8192,
       "cost_latency_class": "medium_local",
       "display_name": "Coding / Technical Lane",
       "executed": false,
@@ -363,21 +365,23 @@
       "expected_weakness": "may need repo file context or tests for correctness",
       "fallback_priority": 2,
       "lane": "coding_technical",
-      "model_family": "qwen",
+      "model_family": "llama",
       "preferred_task_lanes": [
         "coding",
         "technical_explanation"
       ],
       "provider_calls_performed": false,
-      "selected_model": "qwen"
+      "selected_model": "llama",
+      "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "support_identifier": "rc2-local-lane:coding_technical:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
     },
     {
       "available": true,
       "capabilities": [
-        "text",
-        "vision"
+        "text"
       ],
-      "context_size": 32768,
+      "context_size": 8192,
       "cost_latency_class": "medium_to_high_local",
       "display_name": "Reasoning / Analysis Lane",
       "executed": false,
@@ -386,7 +390,7 @@
       "expected_weakness": "external facts need gated supporting information",
       "fallback_priority": 3,
       "lane": "reasoning_analysis",
-      "model_family": "qwen",
+      "model_family": "llama",
       "preferred_task_lanes": [
         "analysis",
         "research",
@@ -394,7 +398,10 @@
         "external_knowledge_request"
       ],
       "provider_calls_performed": false,
-      "selected_model": "qwen"
+      "selected_model": "llama",
+      "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
     }
   ]
 }

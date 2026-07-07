@@ -2,8 +2,9 @@
 
 RC2 makes the RC1 substrate one selectable mode behind a conversational front
 door. It does not enable provider calls, web search, training, canonical
-writes, autonomous actions, or production routing. External/local model
-routes are represented as gated escalation plans only.
+writes, autonomous actions, or production routing. External provider routes
+are consent-gated. Local model lanes may execute when the caller explicitly
+asks for local inference.
 """
 
 from __future__ import annotations
@@ -11,9 +12,12 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
+import json
+import re
 
 from integration.model_runtime.model_registry import list_available_models
+from integration.model_runtime.provider_manager import ProviderManager
 from orchestration.runtime.rc1_operator_console import (
     answer_operator_question,
     approve_propositions,
@@ -156,9 +160,31 @@ DIRECT_LOCAL_ANSWERS = {
         "answer": "Fire is the visible, hot part of combustion. A fuel reacts with oxygen, releasing heat and light, and the flame contains hot gases plus glowing particles or excited molecules.",
         "confidence": 0.82,
     },
+    "common_fun": {
+        "triggers": (("people", "fun"), ("most", "people", "fun")),
+        "answer": "Most people have fun by spending time with friends or family, watching shows or videos, playing games, listening to music, eating out, exercising, doing hobbies, going outdoors, traveling, making things, or relaxing. The exact mix depends a lot on age, culture, money, energy, and personality.",
+        "confidence": 0.78,
+    },
 }
 
+VAGUE_CONCEPT_NAMES = {
+    "What Most People",
+    "What Color",
+    "What Is",
+    "General Question",
+    "User Asked",
+    "Learned Concept",
+}
 
+LOW_CONFIDENCE_MARKERS = (
+    "not enough",
+    "not confident",
+    "supporting information",
+    "look for sources",
+    "ask gpt",
+    "cannot answer",
+    "do not have enough",
+)
 def classify_intent(message: str) -> dict[str, Any]:
     lower = message.lower()
     if any(term in lower for term in ["diagnostic", "status", "health"]):
@@ -211,17 +237,21 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
     available = list_available_models()
     selected = None
     for alias in MODEL_LANE_ORDER[lane]:
-        if alias in available:
+        if alias in available and _model_is_usable(available[alias]):
             selected = alias
             break
     if selected is None and available:
-        selected = sorted(available)[0]
+        usable = [key for key, spec in sorted(available.items()) if _model_is_usable(spec)]
+        selected = usable[0] if usable else None
     spec = available.get(selected) if selected else None
     meta = LANE_METADATA[lane]
     return {
         "lane": lane,
+        "support_identifier": _model_support_identifier(lane, selected, spec),
         "display_name": meta["display_name"],
         "selected_model": selected,
+        "selected_model_id": spec.name if spec else None,
+        "selected_model_path": str(Path(spec.path)) if spec else None,
         "available": bool(selected),
         "executed": False,
         "execution_gate": "not_executed_by_default",
@@ -235,6 +265,21 @@ def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]
         "preferred_task_lanes": meta["preferred_task_lanes"],
         "fallback_priority": meta["fallback_priority"],
     }
+
+
+def _model_is_usable(spec: Any) -> bool:
+    path = Path(str(getattr(spec, "path", "")))
+    parts = {part.lower() for part in path.parts}
+    return bool(path.exists() and "fail" not in parts)
+
+
+def _model_support_identifier(lane: str, selected: str | None, spec: Any | None) -> str:
+    if spec is None or not selected:
+        return f"rc2-local-lane:{lane}:unavailable"
+    capabilities = ",".join(sorted(str(item) for item in getattr(spec, "capabilities", ()))) or "none"
+    family = str(getattr(spec, "family", "unknown"))
+    model_id = str(getattr(spec, "name", selected))
+    return f"rc2-local-lane:{lane}:model:{model_id}:family:{family}:capabilities:{capabilities}"
 
 
 def discover_local_model_lanes() -> dict[str, Any]:
@@ -300,10 +345,9 @@ def _support_offer(message: str, reason: str, history: list[dict[str, str]] | No
     return {
         "offered": True,
         "reason": reason,
-        "prompt": "I do not have enough local confidence for that. Would you like me to look for supporting information?",
+        "prompt": "I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
         "options": [
-            "look_for_supporting_information",
-            "ask_gpt_or_web_with_explicit_approval",
+            "yes_ask_gpt_or_sources",
             "not_now",
         ],
         "dry_run_provider_request": dry_run["route_or_provider_request"],
@@ -313,14 +357,165 @@ def _support_offer(message: str, reason: str, history: list[dict[str, str]] | No
     }
 
 
+def _compact_model_prompt(message: str, history: list[dict[str, str]] | None = None) -> str:
+    packet = build_compact_support_packet(message, history)
+    turns = packet.get("relevant_chat_history", [])
+    concepts = packet.get("relevant_approved_concepts", [])
+    lines = [
+        "Answer like a friendly, concise assistant.",
+        "Use the short conversation context when it matters.",
+        "Do not mention routing, model names, hashes, JSON, or safety flags.",
+        "",
+        "Current user message:",
+        str(packet["question"]),
+    ]
+    if turns:
+        lines.extend(["", "Relevant recent turns:"])
+        for turn in turns:
+            lines.append(f"- {turn['role']}: {turn['content']}")
+    if concepts:
+        lines.extend(["", "Relevant approved local concepts:"])
+        for concept in concepts:
+            lines.append(f"- {concept.get('concept_name')}: {concept.get('short_definition')}")
+    lines.extend(["", "Return only the answer text."])
+    return "\n".join(lines)
+
+
+def execute_local_model_answer(
+    message: str,
+    model_lane: dict[str, Any],
+    history: list[dict[str, str]] | None = None,
+) -> dict[str, Any]:
+    """Execute one selected local model lane when explicitly requested.
+
+    This is a local inference path only. It does not grant provider authority,
+    call GPT/API, train, write memory, or perform actions.
+    """
+    model_name = model_lane.get("selected_model")
+    prompt = _compact_model_prompt(message, history)
+    if not model_name:
+        return {
+            "executed": False,
+            "available": False,
+            "answer": "",
+            "reason": "no_local_model_available",
+            "prompt_sent": prompt,
+            "provider_calls_performed": False,
+        }
+    try:
+        result = ProviderManager().infer(
+            model_name=str(model_name),
+            prompt=prompt,
+            task_type="rc2_conversation",
+            metadata={"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
+        )
+        answer = result.answer
+        confidence = float(result.confidence or 0.72)
+        clean_answer = _naturalize_model_answer(answer)
+        return {
+            "executed": bool(clean_answer),
+            "available": True,
+            "answer": clean_answer,
+            "confidence_score": max(0.0, min(1.0, confidence)),
+            "model_id": model_name,
+            "prompt_sent": prompt,
+            "provider_calls_performed": False,
+        }
+    except Exception as exc:  # pragma: no cover - defensive for local model runtime availability
+        return {
+            "executed": False,
+            "available": True,
+            "answer": "",
+            "reason": f"local_model_execution_failed:{type(exc).__name__}",
+            "prompt_sent": prompt,
+            "provider_calls_performed": False,
+        }
+
+
+def _naturalize_model_answer(text: str) -> str:
+    raw = str(text or "").strip()
+    if not raw:
+        return ""
+    try:
+        parsed = json.loads(raw)
+        if isinstance(parsed, dict) and isinstance(parsed.get("answer"), str):
+            return " ".join(parsed["answer"].split())
+    except Exception:
+        pass
+    match = re.search(r'"answer"\s*:\s*"(?P<answer>.*?)(?:"\s*,\s*"confidence"|"\s*[,}])', raw, flags=re.DOTALL)
+    if match:
+        value = match.group("answer")
+        try:
+            value = json.loads(f'"{value}"')
+        except Exception:
+            value = value.replace(r"\"", '"').replace(r"\n", " ")
+        return " ".join(str(value).split())
+    if raw.startswith("{") and '"answer"' in raw:
+        start = raw.find('"answer"')
+        colon = raw.find(":", start)
+        quote = raw.find('"', colon)
+        if quote >= 0:
+            value = raw[quote + 1 :]
+            value = value.rsplit('"', 1)[0] if '"' in value else value
+            value = value.replace(r"\"", '"').replace(r"\n", " ")
+            return " ".join(value.split())
+    return " ".join(raw.split())
+
+
+def execute_gpt_support_request(
+    message: str,
+    history: list[dict[str, str]] | None = None,
+    *,
+    transport: Callable[[str, dict[str, str], dict[str, object], int], dict[str, object]] | None = None,
+) -> dict[str, Any]:
+    compact_packet = build_compact_support_packet(message, history)
+    provider = answer_unknown_with_controlled_provider(message, live_provider=True, transport=transport)
+    evidence_packet = provider.get("evidence_packet")
+    if evidence_packet and evidence_packet.get("provider_text"):
+        answer = str(evidence_packet["provider_text"]).strip()
+        route = "provider_support_after_user_consent"
+        provider_call = True
+        confidence = "provider_assisted_non_authoritative"
+        confidence_score = 0.72
+    else:
+        decision = ((provider.get("decision") or {}).get("decision") or "live_refused")
+        answer = (
+            "I couldn't ask GPT from this session because the provider gate is not enabled or the API key is unavailable. "
+            "No provider call was made."
+            if decision == "live_refused"
+            else "I did not need GPT because local DELTA knowledge already matched this question."
+        )
+        route = "provider_support_refused_or_local_known"
+        provider_call = False
+        confidence = "provider_path_not_available"
+        confidence_score = 0.2
+    return {
+        "mode": "Conversation",
+        "route": route,
+        "answer": answer,
+        "compact_support_packet": compact_packet,
+        "provider_result": provider,
+        "selected_model_lane": select_model_lane(message),
+        "confidence": confidence,
+        "confidence_score": confidence_score,
+        "supporting_information_offer": None,
+        "memory_candidate": None,
+        "provider_calls_performed": provider_call,
+        "web_search_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+        "mode_router_flags": ROUTER_FLAGS,
+    }
+
+
 def build_gpt_approval_preview(message: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
     packet = build_compact_support_packet(message, history)
     return {
         "mode": "Conversation",
         "route": "gpt_support_approval_preview",
         "answer": (
-            "I can ask GPT for supporting information, but I will not do it automatically. "
-            "Here is the compact packet I would send after explicit approval. It contains only the current question, short relevant chat history, relevant approved concepts, and the desired answer format."
+            "I'm not confident enough locally. Would you like me to ask GPT or look for sources?"
         ),
         "compact_support_packet": packet,
         "selected_model_lane": select_model_lane(message),
@@ -345,8 +540,55 @@ def build_memory_candidate_from_answer(message: str, payload: dict[str, Any]) ->
     )
 
 
-def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
+def candidate_is_memory_worthy(candidate: dict[str, Any], payload: dict[str, Any] | None = None) -> bool:
+    name = " ".join(str(candidate.get("concept_name", "")).split())
+    if not name or name in VAGUE_CONCEPT_NAMES:
+        return False
+    if name.lower().startswith(("what ", "how ", "why ", "tell ", "general ", "user ")):
+        return False
+    answer = str((payload or {}).get("answer") or " ".join(candidate.get("propositions", []))).lower()
+    if any(marker in answer for marker in LOW_CONFIDENCE_MARKERS):
+        return False
+    score = float((payload or {}).get("confidence_score") or 0.0)
+    if score and score < 0.72:
+        return False
+    propositions = [str(item).strip() for item in candidate.get("propositions", []) if str(item).strip()]
+    if not propositions:
+        return False
+    if all(len(item.split()) < 5 for item in propositions):
+        return False
+    return True
+
+
+def maybe_build_memory_candidate(message: str, payload: dict[str, Any]) -> dict[str, Any] | None:
+    if payload.get("route") in {"gpt_support_approval_preview", "provider_support_refused_or_local_known"}:
+        return None
+    if payload.get("supporting_information_offer"):
+        return None
     candidate = build_memory_candidate_from_answer(message, payload)
+    return candidate if candidate_is_memory_worthy(candidate, payload) else None
+
+
+def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
+    existing = payload.get("memory_candidate")
+    candidate = existing if isinstance(existing, dict) else maybe_build_memory_candidate(message, payload)
+    if not candidate:
+        return {
+            "candidate": None,
+            "result": {
+                "approved": False,
+                "reason": "no_coherent_memory_candidate",
+                "canonical_write_performed": False,
+                "training_performed": False,
+                "provider_calls_performed": False,
+            },
+            "memory_write_performed": False,
+            "memory_scope": "none",
+            "canonical_write_performed": False,
+            "training_performed": False,
+            "provider_calls_performed": False,
+            "rollback_supported": False,
+        }
     result = approve_candidate_concept(candidate, approval_text="Keep this concept")
     return {
         "candidate": candidate,
@@ -383,18 +625,40 @@ def _history_answer(message: str, history: list[dict[str, str]] | None) -> dict[
     return None
 
 
-def local_conversation_answer(message: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
+def local_conversation_answer(
+    message: str,
+    history: list[dict[str, str]] | None = None,
+    *,
+    execute_local_model: bool = False,
+) -> dict[str, Any]:
     lower = message.lower()
     intent = classify_intent(message)["intent"]
     model_lane = select_model_lane(message, intent)
     local = run_v29_local_answer(message, use_recall=False)
     if memory := _history_answer(message, history):
         return memory
+    local_model_result = None
+    if execute_local_model and intent not in {"external_knowledge_request", "image"}:
+        local_model_result = execute_local_model_answer(message, model_lane, history)
+        model_lane = {**model_lane, "executed": bool(local_model_result.get("executed"))}
+        if local_model_result.get("executed"):
+            return {
+                "route": "local_conversation_model_lane",
+                "answer": str(local_model_result["answer"]),
+                "confidence": "local_model_inference",
+                "confidence_score": float(local_model_result.get("confidence_score") or 0.72),
+                "selected_model_lane": model_lane,
+                "local_model_result": local_model_result,
+                "supporting_information_offer": None,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+            }
     if intent == "coding":
         answer = (
             "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. "
-            f"For this kind of task I would route first to the {model_lane['display_name']}"
-            + (f" with `{model_lane['selected_model']}` available as the preferred local model." if model_lane["selected_model"] else ", but no local model is currently discoverable.")
         )
         confidence = "local_coding_capability_route"
         confidence_score = 0.78
@@ -421,25 +685,35 @@ def local_conversation_answer(message: str, history: list[dict[str, str]] | None
     elif intent in {"external_knowledge_request", "image"}:
         answer = (
             "I do not have enough governed local evidence to answer that confidently. "
-            "I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path."
+            "I'm not confident enough locally. Would you like me to ask GPT or look for sources?"
         )
         confidence = "needs_supporting_information"
         confidence_score = 0.35
         support_offer = _support_offer(message, "insufficient_local_evidence", history)
     else:
-        answer = (
-            "I can talk through that, but I do not have enough specific local evidence to make it strong yet. "
-            "If this matters, I can look for supporting information through an approved route and then ask whether the result was useful enough to remember."
-        )
-        confidence = "low_specificity_conversation"
-        confidence_score = 0.55
-        support_offer = _support_offer(message, "low_specificity_or_missing_local_evidence", history)
+        if execute_local_model and local_model_result and local_model_result.get("reason"):
+            answer = (
+                "I couldn't reach the local conversation model from this session, so I can only give a cautious built-in response. "
+                "I'm not confident enough locally. Would you like me to ask GPT or look for sources?"
+            )
+            confidence = "local_model_unavailable"
+            confidence_score = 0.3
+            support_offer = _support_offer(message, "local_model_unavailable", history)
+        else:
+            answer = (
+                "I can give a light answer, but I do not have enough local context to make it especially strong. "
+                "If this matters, I can ask GPT or look for sources after you approve that."
+            )
+            confidence = "low_specificity_conversation"
+            confidence_score = 0.55
+            support_offer = _support_offer(message, "low_specificity_or_missing_local_evidence", history)
     return {
         "route": "local_conversation_model_lane",
         "answer": answer,
         "confidence": confidence,
         "confidence_score": confidence_score,
         "selected_model_lane": model_lane,
+        "local_model_result": local_model_result,
         "supporting_information_offer": support_offer,
         "memory_candidate": None,
         "provider_calls_performed": False,
@@ -483,8 +757,8 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
         provider_necessity = "gated_provider_or_web_may_be_needed"
     else:
         confidence = intent["confidence"]
-        evidence_quality = "local_scaffold_or_mode_context"
-        provider_necessity = "not_required_for_scaffold_response"
+        evidence_quality = "local_conversation_or_mode_context"
+        provider_necessity = "not_required_for_local_response"
     return {
         "confidence": round(confidence, 2),
         "evidence_quality": evidence_quality,
@@ -493,10 +767,31 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
     }
 
 
-def route_message(mode: str, message: str, pasted_text: str = "", approve: bool = False, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
+def route_message(
+    mode: str,
+    message: str,
+    pasted_text: str = "",
+    approve: bool = False,
+    history: list[dict[str, str]] | None = None,
+    *,
+    execute_local_model: bool = False,
+    provider_approved: bool = False,
+    provider_transport: Callable[[str, dict[str, str], dict[str, object], int], dict[str, object]] | None = None,
+) -> dict[str, Any]:
     if mode not in MODES:
         mode = "Conversation"
     if mode == "Conversation":
+        if provider_approved:
+            payload = execute_gpt_support_request(message, history, transport=provider_transport)
+            payload["intent"] = classify_intent(message)
+            payload["confidence_decision"] = {
+                "confidence": payload["confidence_score"],
+                "evidence_quality": payload["confidence"],
+                "retrieval_sufficiency": "provider_support_requested_by_user",
+                "provider_necessity": "approved_by_user_for_this_turn",
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            return payload
         if message.strip().lower() in {"ask gpt", "ask gpt for supporting information", "yes ask gpt"}:
             prior_user = [item.get("content", "") for item in (history or []) if item.get("role") == "user" and item.get("content")]
             target = prior_user[-1] if prior_user else message
@@ -535,8 +830,15 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
                 "supporting_information_offer": None,
             }
         else:
-            payload = {"mode": mode, **local_conversation_answer(message, history)}
-        payload["memory_candidate"] = build_memory_candidate_from_answer(message, payload)
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                ),
+            }
+        payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
         payload["escalation_plan"] = build_escalation_plan(message)
         payload["intent"] = classify_intent(message)
         payload["confidence_decision"] = confidence_engine(message, substrate["matched"])
@@ -596,40 +898,23 @@ def render_route(payload: dict[str, Any]) -> str:
     if payload.get("mode") == "Conversation":
         lines = [str(payload.get("answer", ""))]
         packet = payload.get("compact_support_packet")
-        if isinstance(packet, dict):
+        if payload.get("route") == "gpt_support_approval_preview" and isinstance(packet, dict):
             lines.extend([
                 "",
-                "Compact support packet preview:",
-                f"- question: {packet.get('question')}",
-                f"- recent turns: {len(packet.get('relevant_chat_history', []))}",
-                f"- approved concepts: {len(packet.get('relevant_approved_concepts', []))}",
-                f"- desired format: {packet.get('desired_answer_format')}",
-                "",
-                "No GPT/API call has been made.",
-            ])
-        lane = payload.get("selected_model_lane") or {}
-        if isinstance(lane, dict) and lane.get("selected_model"):
-            lines.extend([
-                "",
-                f"I routed this through the {lane.get('display_name', lane.get('lane'))}. Preferred local model: `{lane.get('selected_model')}`. I did not execute a model call from this safe UI path.",
+                "If you say yes, I will send only a compact request: your current question, a few relevant recent turns, and any relevant approved local concepts.",
             ])
         offer = payload.get("supporting_information_offer")
         if isinstance(offer, dict) and offer.get("offered"):
-            lines.extend([
-                "",
-                offer["prompt"],
-                "Reply yes if you want a gated supporting-information path, or keep chatting if not.",
-            ])
+            prompt = str(offer["prompt"])
+            if prompt not in lines[0]:
+                lines.extend(["", prompt])
+            lines.append("Reply yes to approve that one provider request, or no to keep chatting locally.")
         if payload.get("memory_candidate"):
             candidate = payload["memory_candidate"]
             lines.extend([
                 "",
-                f"I think I learned a reusable concept: {candidate.get('concept_name', 'Learned Concept')}. If this was useful, choose `Keep This Concept` or type `keep this concept`. It stays reversible and noncanonical.",
+                f"If this was useful, I can keep it as the reversible concept `{candidate.get('concept_name', 'Learned Concept')}`. Choose `Keep This Concept` or type `keep this concept`.",
             ])
-        lines.extend([
-            "",
-            "Safety: no provider call, web search, training, canonical write, or autonomous action was performed.",
-        ])
         return "\n".join(lines)
 
     lines = [
