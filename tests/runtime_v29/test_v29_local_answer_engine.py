@@ -7,7 +7,7 @@ def test_v29_answer_engine_answers_natural_self_description():
     assert data["phase"] == "Runtime V2.9"
     assert data["local_answer"]["matched"] is True
     assert data["local_answer"]["topic_id"] == "identity"
-    assert "governed cognitive-runtime substrate" in data["draft"]["answer_text"]
+    assert "governed cognitive system" in data["draft"]["answer_text"]
     assert data["decision"]["provider_call_performed"] is False
     assert data["decision"]["memory_write_performed"] is False
 

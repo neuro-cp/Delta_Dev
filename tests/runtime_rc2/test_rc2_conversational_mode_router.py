@@ -172,7 +172,8 @@ def test_broad_question_gets_normal_answer_and_no_bad_concept(monkeypatch, tmp_p
     _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What do most people do for fun?")
     rendered = render_route(payload)
-    assert "friends" in payload["answer"].lower() or "hobbies" in payload["answer"].lower()
+    assert payload["route"] == "local_model_consent_required"
+    assert "local reasoning model" in rendered.lower()
     assert "switch modes" not in payload["answer"].lower()
     assert payload["memory_candidate"] is None
     assert "What Most People" not in rendered
@@ -190,6 +191,16 @@ def test_external_knowledge_request_creates_disabled_escalation_plan(monkeypatch
     assert payload["supporting_information_offer"]["offered"] is True
     assert payload["supporting_information_offer"]["dry_run_provider_request"]["api_key_redacted"] is True
     assert payload["supporting_information_offer"]["compact_support_packet"]["provider_call_performed"] is False
+
+
+def test_concept_retrieval_does_not_overmatch_generic_overlap(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    sky = route_message("Conversation", "What color is the sky?")
+    remember_useful_answer("What color is the sky?", sky)
+    fun = route_message("Conversation", "What do people usually do for fun?")
+    assert fun["route"] == "local_model_consent_required"
+    assert "Daytime Sky Color" not in render_route(fun)
 
 
 def test_evidence_mode_extracts_without_persistence():
@@ -379,7 +390,7 @@ def test_memory_candidate_quality_rejects_vague_concept(monkeypatch, tmp_path):
     payload = route_message("Conversation", "What do most people do for fun?")
     candidate = rc2mem.extract_candidate_concept(
         question="What do most people do for fun?",
-        answer=payload["answer"],
+        answer="People often enjoy sports, reading, music, games, travel, and time with friends.",
         source_model_lane=payload["selected_model_lane"],
     )
     assert candidate["concept_name"] == "What Most People"

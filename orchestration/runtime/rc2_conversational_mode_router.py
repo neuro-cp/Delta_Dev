@@ -160,11 +160,6 @@ DIRECT_LOCAL_ANSWERS = {
         "answer": "Fire is the visible, hot part of combustion. A fuel reacts with oxygen, releasing heat and light, and the flame contains hot gases plus glowing particles or excited molecules.",
         "confidence": 0.82,
     },
-    "common_fun": {
-        "triggers": (("people", "fun"), ("most", "people", "fun")),
-        "answer": "Most people have fun by spending time with friends or family, watching shows or videos, playing games, listening to music, eating out, exercising, doing hobbies, going outdoors, traveling, making things, or relaxing. The exact mix depends a lot on age, culture, money, energy, and personality.",
-        "confidence": 0.78,
-    },
 }
 
 VAGUE_CONCEPT_NAMES = {
@@ -187,7 +182,7 @@ LOW_CONFIDENCE_MARKERS = (
 )
 def classify_intent(message: str) -> dict[str, Any]:
     lower = message.lower()
-    if any(term in lower for term in ["diagnostic", "status", "health"]):
+    if any(term in lower for term in ["diagnostic", "show diagnostics", "runtime status", "system health", "health check"]):
         intent = "diagnostics"
     elif any(term in lower for term in ["remember", "store", "save this"]):
         intent = "memory_request"
@@ -203,7 +198,7 @@ def classify_intent(message: str) -> dict[str, Any]:
         intent = "document"
     elif any(term in lower for term in ["image", "picture", "photo"]):
         intent = "image"
-    elif any(term in lower for term in ["investigate", "case", "research"]):
+    elif any(term in lower for term in ["investigate", "case", "research", "latest status"]):
         intent = "investigation"
     elif any(term in lower for term in ["how do you work", "what are you", "delta"]):
         intent = "self_description"
@@ -352,6 +347,20 @@ def _support_offer(message: str, reason: str, history: list[dict[str, str]] | No
         ],
         "dry_run_provider_request": dry_run["route_or_provider_request"],
         "compact_support_packet": packet,
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+    }
+
+
+def _local_model_offer(message: str, reason: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
+    packet = build_compact_support_packet(message, history)
+    return {
+        "offered": True,
+        "reason": reason,
+        "prompt": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+        "options": ["yes_ask_local_model", "not_now"],
+        "compact_local_model_packet": packet,
+        "local_model_call_performed": False,
         "provider_calls_performed": False,
         "web_search_performed": False,
     }
@@ -638,6 +647,22 @@ def local_conversation_answer(
     if memory := _history_answer(message, history):
         return memory
     local_model_result = None
+    if "ask gpt automatically" in lower or "call gpt automatically" in lower or "provider automatically" in lower:
+        return {
+            "route": "provider_policy_answer",
+            "answer": "No. I should not ask GPT or any provider automatically. If local knowledge is not enough, I should ask your permission first and send only a compact request after you approve.",
+            "confidence": "local_provider_policy",
+            "confidence_score": 0.9,
+            "selected_model_lane": model_lane,
+            "local_model_result": None,
+            "supporting_information_offer": None,
+            "local_model_offer": None,
+            "memory_candidate": None,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+        }
     if execute_local_model and intent not in {"external_knowledge_request", "image"}:
         local_model_result = execute_local_model_answer(message, model_lane, history)
         model_lane = {**model_lane, "executed": bool(local_model_result.get("executed"))}
@@ -701,12 +726,28 @@ def local_conversation_answer(
             support_offer = _support_offer(message, "local_model_unavailable", history)
         else:
             answer = (
-                "I can give a light answer, but I do not have enough local context to make it especially strong. "
-                "If this matters, I can ask GPT or look for sources after you approve that."
+                "I don't think I know enough from my learned local knowledge yet. "
+                "Would you like me to ask a local reasoning model?"
             )
-            confidence = "low_specificity_conversation"
-            confidence_score = 0.55
-            support_offer = _support_offer(message, "low_specificity_or_missing_local_evidence", history)
+            confidence = "needs_local_reasoning_model"
+            confidence_score = 0.3
+            support_offer = None
+            local_model_offer = _local_model_offer(message, "missing_learned_or_direct_knowledge", history)
+            return {
+                "route": "local_model_consent_required",
+                "answer": answer,
+                "confidence": confidence,
+                "confidence_score": confidence_score,
+                "selected_model_lane": model_lane,
+                "local_model_result": local_model_result,
+                "supporting_information_offer": None,
+                "local_model_offer": local_model_offer,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+            }
     return {
         "route": "local_conversation_model_lane",
         "answer": answer,
@@ -715,6 +756,7 @@ def local_conversation_answer(
         "selected_model_lane": model_lane,
         "local_model_result": local_model_result,
         "supporting_information_offer": support_offer,
+        "local_model_offer": None,
         "memory_candidate": None,
         "provider_calls_performed": False,
         "web_search_performed": False,
@@ -909,6 +951,12 @@ def render_route(payload: dict[str, Any]) -> str:
             if prompt not in lines[0]:
                 lines.extend(["", prompt])
             lines.append("Reply yes to approve that one provider request, or no to keep chatting locally.")
+        local_offer = payload.get("local_model_offer")
+        if isinstance(local_offer, dict) and local_offer.get("offered"):
+            prompt = str(local_offer["prompt"])
+            if prompt not in lines[0]:
+                lines.extend(["", prompt])
+            lines.append("Reply yes to ask the local model for this one question, or no to leave it unanswered.")
         if payload.get("memory_candidate"):
             candidate = payload["memory_candidate"]
             lines.extend([

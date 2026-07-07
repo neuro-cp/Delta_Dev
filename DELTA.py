@@ -85,6 +85,7 @@ class DeltaApp:
         self.last_payload: dict[str, object] | None = None
         self.session_history: list[dict[str, str]] = []
         self.pending_provider_question: str | None = None
+        self.pending_local_model_question: str | None = None
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
@@ -250,6 +251,32 @@ class DeltaApp:
         self.chat_input.delete(0, tk.END)
         self._append_chat("You", message)
         lower = message.lower().strip()
+        if self.pending_local_model_question and lower in {"yes", "y", "yes please", "sure", "ask local", "ask the local model", "ask a local model"}:
+            target = self.pending_local_model_question
+            self.pending_local_model_question = None
+            self._append_session("user", message)
+            payload = route_message(
+                "Conversation",
+                target,
+                history=self._recent_history_for_router(),
+                execute_local_model=True,
+            )
+            self.last_message = target
+            self.last_payload = payload
+            offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
+            self.pending_provider_question = target if isinstance(offer, dict) and offer.get("offered") else None
+            rendered = render_route(payload)
+            self._append_chat("DELTA", rendered)
+            self._append_session("assistant", rendered)
+            self._refresh_state_cards()
+            return
+        if self.pending_local_model_question and lower in {"no", "n", "not now", "no thanks", "keep chatting"}:
+            self.pending_local_model_question = None
+            self._append_session("user", message)
+            reply = "Okay. I will leave that unanswered locally for now."
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
         if self.pending_provider_question and lower in {"yes", "y", "yes please", "ask gpt", "ask gpt please", "look for sources"}:
             target = self.pending_provider_question
             self.pending_provider_question = None
@@ -288,7 +315,7 @@ class DeltaApp:
             message,
             self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "",
             history=self._recent_history_for_router(),
-            execute_local_model=self.mode.get() == "Conversation",
+            execute_local_model=False,
         )
         self.last_message = message
         self.last_payload = payload
@@ -299,6 +326,8 @@ class DeltaApp:
             self.pending_provider_question = message
         else:
             self.pending_provider_question = None
+        local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
+        self.pending_local_model_question = message if isinstance(local_offer, dict) and local_offer.get("offered") else None
         self._refresh_state_cards()
         rendered = render_route(payload)
         self._append_chat("DELTA", rendered)

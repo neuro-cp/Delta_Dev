@@ -443,7 +443,22 @@ def query_noncanonical_substrate(question: str) -> dict[str, Any]:
     tokens = {
         token.strip(".,:;!?").lower()
         for token in question.split()
-        if len(token.strip(".,:;!?")) > 3 and token.lower() not in {"what", "know", "about", "does", "tell", "current", "currently"}
+        if len(token.strip(".,:;!?")) > 3
+        and token.lower()
+        not in {
+            "what",
+            "know",
+            "about",
+            "does",
+            "tell",
+            "current",
+            "currently",
+            "usually",
+            "often",
+            "generally",
+            "automatically",
+            "automatic",
+        }
     }
     propositions = _read_jsonl(PROPOSITION_LOG)
     contradictions = _read_jsonl(CONTRADICTION_LOG)
@@ -468,7 +483,9 @@ def query_noncanonical_substrate(question: str) -> dict[str, Any]:
     matches = []
     for row in propositions:
         claim_tokens = {token.strip(".,:;!?").lower() for token in row.get("claim", "").split()}
-        if tokens & claim_tokens:
+        overlap = tokens & claim_tokens
+        minimum_overlap = 1 if len(tokens) == 1 else 2
+        if len(overlap) >= minimum_overlap:
             matches.append(row)
     if not matches:
         return {

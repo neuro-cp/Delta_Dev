@@ -142,8 +142,8 @@ def _alias_map() -> dict[str, tuple[str, ...]]:
 def _answer_for(topic_id: str, inventory: dict[str, object]) -> str:
     if topic_id == "identity":
         return (
-            "DELTA is a governed cognitive-runtime substrate in this repo. In the current local path it can describe "
-            "its scaffold, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation."
+            "DELTA is a governed cognitive system in this repo. In the current local path it can describe "
+            "its architecture, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation."
         )
     if topic_id == "capabilities_active":
         return "Currently active local capabilities: " + "; ".join(inventory["active_local_capabilities"]) + "."

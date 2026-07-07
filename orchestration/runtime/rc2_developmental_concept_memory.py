@@ -191,7 +191,8 @@ def query_approved_concepts(question: str) -> dict[str, Any]:
             " ".join(str(item) for item in row.get("related_concepts", [])),
         ])
         overlap = tokens & _meaningful_tokens(haystack)
-        if overlap:
+        minimum_overlap = 1 if len(tokens) == 1 else 2
+        if len(overlap) >= minimum_overlap:
             scored.append((len(overlap), row))
     if not scored:
         return {"matched": False, "answer": "", "matches": []}
@@ -458,7 +459,26 @@ def _sentence_propositions(answer: str) -> list[str]:
 
 
 def _meaningful_tokens(text: str) -> set[str]:
-    stop = {"what", "about", "that", "this", "from", "with", "does", "tell", "know", "your", "have", "were", "been", "will", "should"}
+    stop = {
+        "what",
+        "about",
+        "that",
+        "this",
+        "from",
+        "with",
+        "does",
+        "tell",
+        "know",
+        "your",
+        "have",
+        "were",
+        "been",
+        "will",
+        "should",
+        "usually",
+        "often",
+        "generally",
+    }
     return {word for word in _normalize_text(text).split() if len(word) > 3 and word not in stop}
 
 
