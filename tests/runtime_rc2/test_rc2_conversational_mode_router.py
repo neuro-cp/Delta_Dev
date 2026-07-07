@@ -167,6 +167,100 @@ def test_conversation_executes_local_model_when_requested(monkeypatch, tmp_path)
     assert payload["answer"] == "A local model says fire is combustion."
 
 
+def test_local_model_falls_back_to_venv_subprocess_when_llama_cpp_missing(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    fake_model = tmp_path / "llama-test.gguf"
+    fake_model.write_text("not a real model; subprocess is monkeypatched", encoding="utf-8")
+    monkeypatch.setattr(
+        rc2router,
+        "list_available_models",
+        lambda: {
+            "llama": ModelSpec(
+                name="llama-test",
+                path=str(fake_model),
+                tier=4,
+                description="fake",
+                context_length=4096,
+                family="llama",
+            )
+        },
+    )
+
+    class MissingLlamaProviderManager:
+        def infer(self, **_kwargs):
+            raise ModuleNotFoundError("No module named 'llama_cpp'", name="llama_cpp")
+
+    monkeypatch.setattr(rc2router, "ProviderManager", MissingLlamaProviderManager)
+    monkeypatch.setattr(
+        rc2router,
+        "_infer_local_model_via_venv_subprocess",
+        lambda model_name, prompt, model_lane: {
+            "executed": True,
+            "available": True,
+            "answer": "Subprocess model answer.",
+            "confidence_score": 0.77,
+            "model_id": model_name,
+            "prompt_sent": prompt,
+            "execution_adapter": "venv_subprocess",
+            "provider_calls_performed": False,
+        },
+    )
+    payload = route_message("Conversation", "what color is the moon", execute_local_model=True)
+    assert payload["local_model_result"]["executed"] is True
+    assert payload["local_model_result"]["execution_adapter"] == "venv_subprocess"
+    assert payload["answer"] == "Subprocess model answer."
+
+
+def test_successful_local_model_answer_offers_memory_candidate(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    fake_model = tmp_path / "llama-test.gguf"
+    fake_model.write_text("not a real model; ProviderManager is monkeypatched", encoding="utf-8")
+    monkeypatch.setattr(
+        rc2router,
+        "list_available_models",
+        lambda: {
+            "llama": ModelSpec(
+                name="llama-test",
+                path=str(fake_model),
+                tier=4,
+                description="fake",
+                context_length=4096,
+                family="llama",
+            )
+        },
+    )
+
+    class FakeProviderManager:
+        def infer(self, **_kwargs):
+            return CanonicalInferenceResult(
+                provider="local_gguf",
+                model_id="llama-test",
+                answer=(
+                    "The moon is mostly gray because its surface is covered in dusty rock called regolith. "
+                    "It can look white, yellow, orange, or red from Earth depending on lighting and atmosphere."
+                ),
+                raw_output="",
+                confidence=0.82,
+                latency_seconds=0.0,
+                prompt_tokens=20,
+                response_tokens=28,
+                evidence=[],
+                metadata={},
+            )
+
+    monkeypatch.setattr(rc2router, "ProviderManager", FakeProviderManager)
+    payload = route_message("Conversation", "what color is the moon", execute_local_model=True)
+    rendered = render_route(payload)
+    assert payload["local_model_result"]["executed"] is True
+    assert payload["memory_candidate"]["concept_name"] == "Moon Color Appearance"
+    assert "Keep This Concept" in rendered
+    assert payload["canonical_write_performed"] is False
+    assert payload["training_performed"] is False
+    assert payload["provider_calls_performed"] is False
+
+
 def test_lane_selection_uses_usable_family_fallback_when_alias_is_bad(monkeypatch, tmp_path):
     fail_dir = tmp_path / "fail"
     good_dir = tmp_path / "good"
@@ -481,7 +575,7 @@ def test_render_and_report(monkeypatch, tmp_path):
     assert report["final_recommendation"] == "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE"
 
 
-def test_memory_candidate_quality_rejects_vague_concept(monkeypatch, tmp_path):
+def test_memory_candidate_quality_allows_coherent_broad_answer(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
     _isolate_rc2_store(monkeypatch, tmp_path)
     payload = route_message("Conversation", "What do most people do for fun?")
@@ -490,7 +584,21 @@ def test_memory_candidate_quality_rejects_vague_concept(monkeypatch, tmp_path):
         answer="People often enjoy sports, reading, music, games, travel, and time with friends.",
         source_model_lane=payload["selected_model_lane"],
     )
-    assert candidate["concept_name"] == "What Most People"
+    answered_payload = {**payload, "answer": "People often enjoy sports, reading, music, games, travel, and time with friends.", "confidence_score": 0.82}
+    assert candidate["concept_name"] == "Common Leisure Activities"
+    assert candidate_is_memory_worthy(candidate, answered_payload) is True
+
+
+def test_memory_candidate_quality_rejects_vague_low_confidence_concept(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = route_message("Conversation", "What most people?")
+    candidate = rc2mem.extract_candidate_concept(
+        question="What most people?",
+        answer="I do not have enough local confidence for that.",
+        source_model_lane=payload["selected_model_lane"],
+    )
+    assert candidate["concept_name"].startswith("What")
     assert candidate_is_memory_worthy(candidate, payload) is False
 
 

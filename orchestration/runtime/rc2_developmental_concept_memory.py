@@ -378,12 +378,19 @@ def infer_memory_type(question: str) -> str:
 
 def infer_concept_name(question: str, answer: str) -> str:
     lower = question.lower()
+    combined = f"{question} {answer}".lower()
     if "fire" in lower:
         return "Fire"
     if "water" in lower and "color" in lower:
         return "Water Color"
+    if "moon" in lower and "color" in lower:
+        return "Moon Color Appearance"
     if "sky" in lower and "color" in lower:
         return "Daytime Sky Color"
+    if "people" in lower and "fun" in lower:
+        return "Common Leisure Activities"
+    if "most people" in lower and any(term in combined for term in ["hobbies", "activities", "entertainment", "relax"]):
+        return "Common Leisure Activities"
     if "avogadro" in lower:
         return "Avogadro's Number Relationship"
     if "python" in lower or "function" in lower or "code" in lower:
