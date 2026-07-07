@@ -26,16 +26,22 @@ from orchestration.runtime.rc1_operator_console import (
 ROOT = Path(__file__).resolve().parents[2]
 REPORTS = ROOT / "reports"
 
-MODES = [
+DISPLAY_MODES = [
     "Conversation",
-    "Ask Substrate",
-    "Evidence Review",
-    "Review Mode",
     "Memory Mode",
-    "Contradiction Check",
+    "Research",
+    "Evidence Review",
+    "Investigation",
     "Replay",
-    "Failure Log",
+    "Developer",
     "Diagnostics",
+]
+
+MODES = DISPLAY_MODES + [
+    "Ask Substrate",
+    "Review Mode",
+    "Contradiction Check",
+    "Failure Log",
     "Research Analyst",
     "Frontier App Assistant",
 ]
@@ -56,10 +62,24 @@ ROUTER_FLAGS = {
 
 def classify_intent(message: str) -> dict[str, Any]:
     lower = message.lower()
-    if any(term in lower for term in ["remember", "store", "save this"]):
+    if any(term in lower for term in ["diagnostic", "status", "health"]):
+        intent = "diagnostics"
+    elif any(term in lower for term in ["remember", "store", "save this"]):
         intent = "memory_request"
     elif any(term in lower for term in ["contradiction", "conflict", "incompatible"]):
         intent = "contradiction_check"
+    elif any(term in lower for term in ["code", "python", "bug", "function"]):
+        intent = "coding"
+    elif any(term in lower for term in ["plan", "schedule", "strategy"]):
+        intent = "planning"
+    elif any(term in lower for term in ["analyze", "compare", "why", "because"]):
+        intent = "analysis"
+    elif any(term in lower for term in ["document", "pdf", "invoice", "evidence"]):
+        intent = "document"
+    elif any(term in lower for term in ["image", "picture", "photo"]):
+        intent = "image"
+    elif any(term in lower for term in ["investigate", "case", "research"]):
+        intent = "investigation"
     elif any(term in lower for term in ["what do you know", "frontier", "substrate"]):
         intent = "substrate_question"
     elif any(term in lower for term in ["avogadro", "quantum field", "beluga", "whale"]):
@@ -67,8 +87,28 @@ def classify_intent(message: str) -> dict[str, Any]:
     elif any(term in lower for term in ["how do you work", "what are you", "delta"]):
         intent = "self_description"
     else:
-        intent = "general_conversation"
-    return {"intent": intent, "message": message}
+        intent = "question" if lower.endswith("?") else "conversation"
+    return {"intent": intent, "message": message, "confidence": confidence_for_intent(intent)}
+
+
+def confidence_for_intent(intent: str) -> float:
+    table = {
+        "diagnostics": 0.92,
+        "memory_request": 0.88,
+        "contradiction_check": 0.9,
+        "coding": 0.68,
+        "planning": 0.72,
+        "analysis": 0.66,
+        "document": 0.78,
+        "image": 0.62,
+        "investigation": 0.76,
+        "substrate_question": 0.9,
+        "external_knowledge_request": 0.86,
+        "self_description": 0.94,
+        "question": 0.7,
+        "conversation": 0.65,
+    }
+    return table.get(intent, 0.5)
 
 
 def local_conversation_answer(message: str) -> dict[str, Any]:
@@ -103,6 +143,12 @@ def build_escalation_plan(message: str) -> dict[str, Any]:
     intent = classify_intent(message)["intent"]
     if intent == "external_knowledge_request":
         recommended = ["local_model_research", "web_search_with_operator_approval", "large_model_review_with_operator_approval"]
+    elif intent in {"coding", "analysis", "planning", "investigation"}:
+        recommended = ["local_conversation", "substrate_check", "local_model_with_operator_gate"]
+    elif intent == "memory_request":
+        recommended = ["conversation_memory_offer", "noncanonical_memory_with_operator_approval"]
+    elif intent == "document":
+        recommended = ["evidence_review", "operator_review", "noncanonical_memory_with_operator_approval"]
     else:
         recommended = ["local_conversation", "substrate_check"]
     return {
@@ -112,6 +158,28 @@ def build_escalation_plan(message: str) -> dict[str, Any]:
         "provider_calls_performed": False,
         "web_search_performed": False,
         "enabled_now": False,
+    }
+
+
+def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str, Any]:
+    intent = classify_intent(message)
+    if substrate_matched:
+        confidence = 0.9
+        evidence_quality = "approved_noncanonical_substrate"
+        provider_necessity = "none"
+    elif intent["intent"] in {"external_knowledge_request", "image"}:
+        confidence = 0.35
+        evidence_quality = "insufficient_local_evidence"
+        provider_necessity = "gated_provider_or_web_may_be_needed"
+    else:
+        confidence = intent["confidence"]
+        evidence_quality = "local_scaffold_or_mode_context"
+        provider_necessity = "not_required_for_scaffold_response"
+    return {
+        "confidence": round(confidence, 2),
+        "evidence_quality": evidence_quality,
+        "retrieval_sufficiency": "sufficient" if substrate_matched else "not_checked_or_insufficient",
+        "provider_necessity": provider_necessity,
     }
 
 
@@ -130,6 +198,8 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
         else:
             payload = {"mode": mode, **local_conversation_answer(message)}
         payload["escalation_plan"] = build_escalation_plan(message)
+        payload["intent"] = classify_intent(message)
+        payload["confidence_decision"] = confidence_engine(message, substrate["matched"])
     elif mode == "Ask Substrate":
         answer = answer_operator_question(message)
         payload = {"mode": mode, **answer}
@@ -152,6 +222,13 @@ def route_message(mode: str, message: str, pasted_text: str = "", approve: bool 
     elif mode == "Contradiction Check":
         answer = answer_operator_question("Are there contradictions in my knowledge?")
         payload = {"mode": mode, **answer}
+    elif mode == "Research":
+        plan = build_escalation_plan(message)
+        payload = {"mode": mode, "route": "research_scaffold", "answer": "Research mode can plan local, web, and larger-model escalation, but external routes are disabled until explicitly gated.", "escalation_plan": plan}
+    elif mode == "Investigation":
+        payload = {"mode": mode, "route": "investigation_scaffold", "answer": "Investigation mode organizes questions, evidence, contradictions, and unresolved claims without enabling autonomous research."}
+    elif mode == "Developer":
+        payload = {"mode": mode, "route": "developer_scaffold", "answer": "Developer mode can reason about code and implementation plans locally, but it does not execute tools or change files from the UI."}
     elif mode == "Replay":
         snapshot = build_operator_snapshot()
         payload = {"mode": mode, "route": "replay_inspection", "answer": "Replay and rollback inspection is available.", "replay": snapshot["replay_rollback"]}
@@ -191,6 +268,15 @@ def render_route(payload: dict[str, Any]) -> str:
             f"- recommended routes: {', '.join(plan['recommended_routes'])}",
             f"- enabled now: {plan['enabled_now']}",
         ])
+    if payload.get("confidence_decision"):
+        confidence = payload["confidence_decision"]
+        lines.extend([
+            "",
+            "Confidence:",
+            f"- estimate: {confidence['confidence']}",
+            f"- evidence: {confidence['evidence_quality']}",
+            f"- provider need: {confidence['provider_necessity']}",
+        ])
     lines.extend([
         "",
         "Safety:",
@@ -214,10 +300,67 @@ def build_rc2_report() -> dict[str, Any]:
     return {
         "phase": "RC2 Conversational Shell With DELTA Mode Router",
         "modes": MODES,
+        "display_modes": DISPLAY_MODES,
         "cases": cases,
         "flags": ROUTER_FLAGS,
         "safe": all(not case["provider_calls_performed"] and not case["training_performed"] and not case["canonical_write_performed"] for case in cases),
         "final_recommendation": "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE",
+    }
+
+
+def report_payloads() -> dict[str, dict[str, Any]]:
+    base = build_rc2_report()
+    return {
+        "RC2_CONVERSATIONAL_ARCHITECTURE": {
+            **base,
+            "focus": "conversation is the product; governed runtime is the engine",
+            "conversation_primary_interface": True,
+            "operator_console_advanced": True,
+        },
+        "RC2_MODE_ROUTER": {
+            "modes": DISPLAY_MODES,
+            "default_mode": "Conversation",
+            "manual_mode_required": False,
+            "safe": base["safe"],
+        },
+        "RC2_INTENT_ROUTER": {
+            "supported_intents": [
+                "conversation",
+                "question",
+                "coding",
+                "research",
+                "planning",
+                "memory",
+                "evidence",
+                "investigation",
+                "analysis",
+                "document",
+                "image",
+                "diagnostics",
+            ],
+            "examples": [classify_intent(text) for text in ["What color is the sky?", "Remember that.", "Analyze this invoice.", "Show diagnostics."]],
+            "safe": True,
+        },
+        "RC2_MEMORY_EXPERIENCE": {
+            "technical_phrase_replaced": "Approve To Noncanonical Substrate",
+            "user_facing_phrase": "Would you like me to remember this?",
+            "default_storage": "none_until_user_approval",
+            "advanced_workflow_preserved": True,
+            "canonical_writes_enabled": False,
+        },
+        "RC2_OPERATOR_SEPARATION": {
+            "default_tab": "Conversation",
+            "advanced_tab": "Advanced / Operator Console",
+            "operator_console_preserved": True,
+            "regular_user_required_to_understand_substrate": False,
+        },
+        "RC2_UI_REVIEW": {
+            "conversation_first": True,
+            "visible_modes": DISPLAY_MODES,
+            "reduced_default_implementation_terminology": True,
+            "remaining_gap": "provider, web, and true local LLM routes remain gated/off",
+            "safe": True,
+        },
     }
 
 
@@ -238,5 +381,17 @@ def write_rc2_report() -> dict[str, Any]:
         "",
     ]
     (REPORTS / "RC2_CONVERSATIONAL_MODE_ROUTER.md").write_text("\n".join(md), encoding="utf-8")
+    for name, data in report_payloads().items():
+        (REPORTS / f"{name}.json").write_text(json.dumps(data, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        (REPORTS / f"{name}.md").write_text(
+            "\n".join([
+                f"# {name.replace('_', ' ').title()}",
+                "",
+                f"Safe: `{data.get('safe', True)}`",
+                "",
+                f"Summary: `{data.get('focus', data.get('remaining_gap', data.get('default_mode', 'RC2 report')) )}`",
+                "",
+            ]),
+            encoding="utf-8",
+        )
     return payload
-

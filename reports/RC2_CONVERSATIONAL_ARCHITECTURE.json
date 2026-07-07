@@ -199,6 +199,7 @@
       "web_search_performed": false
     }
   ],
+  "conversation_primary_interface": true,
   "display_modes": [
     "Conversation",
     "Memory Mode",
@@ -222,6 +223,7 @@
     "training_enabled": false,
     "web_search_enabled": false
   },
+  "focus": "conversation is the product; governed runtime is the engine",
   "modes": [
     "Conversation",
     "Memory Mode",
@@ -238,6 +240,7 @@
     "Research Analyst",
     "Frontier App Assistant"
   ],
+  "operator_console_advanced": true,
   "phase": "RC2 Conversational Shell With DELTA Mode Router",
   "safe": true
 }

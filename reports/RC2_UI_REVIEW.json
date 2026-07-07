@@ -1,0 +1,16 @@
+{
+  "conversation_first": true,
+  "reduced_default_implementation_terminology": true,
+  "remaining_gap": "provider, web, and true local LLM routes remain gated/off",
+  "safe": true,
+  "visible_modes": [
+    "Conversation",
+    "Memory Mode",
+    "Research",
+    "Evidence Review",
+    "Investigation",
+    "Replay",
+    "Developer",
+    "Diagnostics"
+  ]
+}

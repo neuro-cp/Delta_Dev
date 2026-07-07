@@ -4,14 +4,17 @@ RC2 adds a conversational front door with selectable DELTA modes. It does not en
 
 ## Modes
 - Conversation
-- Ask Substrate
-- Evidence Review
-- Review Mode
 - Memory Mode
-- Contradiction Check
+- Research
+- Evidence Review
+- Investigation
 - Replay
-- Failure Log
+- Developer
 - Diagnostics
+- Ask Substrate
+- Review Mode
+- Contradiction Check
+- Failure Log
 - Research Analyst
 - Frontier App Assistant
 

@@ -1,0 +1,15 @@
+{
+  "default_mode": "Conversation",
+  "manual_mode_required": false,
+  "modes": [
+    "Conversation",
+    "Memory Mode",
+    "Research",
+    "Evidence Review",
+    "Investigation",
+    "Replay",
+    "Developer",
+    "Diagnostics"
+  ],
+  "safe": true
+}

@@ -1,0 +1,7 @@
+{
+  "advanced_workflow_preserved": true,
+  "canonical_writes_enabled": false,
+  "default_storage": "none_until_user_approval",
+  "technical_phrase_replaced": "Approve To Noncanonical Substrate",
+  "user_facing_phrase": "Would you like me to remember this?"
+}

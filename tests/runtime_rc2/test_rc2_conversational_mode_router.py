@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from orchestration.runtime.rc2_conversational_mode_router import (
+    DISPLAY_MODES,
     MODES,
     ROUTER_FLAGS,
     build_escalation_plan,
     classify_intent,
+    confidence_engine,
     render_route,
+    report_payloads,
     route_message,
     write_rc2_report,
 )
@@ -13,10 +16,12 @@ from orchestration.runtime.rc2_conversational_mode_router import (
 
 def test_rc2_modes_include_conversation_and_delta_modes():
     assert "Conversation" in MODES
-    assert "Ask Substrate" in MODES
+    assert "Conversation" in DISPLAY_MODES
+    assert "Research" in DISPLAY_MODES
+    assert "Memory Mode" in DISPLAY_MODES
     assert "Evidence Review" in MODES
-    assert "Contradiction Check" in MODES
-    assert "Research Analyst" in MODES
+    assert "Investigation" in DISPLAY_MODES
+    assert "Developer" in DISPLAY_MODES
 
 
 def test_conversation_mode_answers_simple_local_question_without_provider():
@@ -34,6 +39,7 @@ def test_external_knowledge_request_creates_disabled_escalation_plan():
     assert payload["web_search_performed"] is False
     assert payload["escalation_plan"]["enabled_now"] is False
     assert "large_model_review_with_operator_approval" in payload["escalation_plan"]["recommended_routes"]
+    assert payload["confidence_decision"]["provider_necessity"] == "gated_provider_or_web_may_be_needed"
 
 
 def test_evidence_mode_extracts_without_persistence():
@@ -59,6 +65,14 @@ def test_router_flags_keep_live_capabilities_disabled():
     assert ROUTER_FLAGS["autonomous_actions_enabled"] is False
 
 
+def test_intent_classifier_covers_product_intents():
+    assert classify_intent("Can you write Python code?")["intent"] == "coding"
+    assert classify_intent("Plan my invoice workflow")["intent"] == "planning"
+    assert classify_intent("Analyze this document")["intent"] == "analysis"
+    assert classify_intent("Show diagnostics")["intent"] == "diagnostics"
+    assert confidence_engine("What color is the sky?")["provider_necessity"] == "not_required_for_scaffold_response"
+
+
 def test_intent_and_escalation_are_deterministic():
     intent = classify_intent("Tell me about beluga whales")
     plan = build_escalation_plan("Tell me about beluga whales")
@@ -74,3 +88,17 @@ def test_render_and_report():
     assert report["safe"] is True
     assert report["final_recommendation"] == "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE"
 
+
+def test_named_rc2_reports_exist_in_payloads():
+    payloads = report_payloads()
+    for name in [
+        "RC2_CONVERSATIONAL_ARCHITECTURE",
+        "RC2_MODE_ROUTER",
+        "RC2_INTENT_ROUTER",
+        "RC2_MEMORY_EXPERIENCE",
+        "RC2_OPERATOR_SEPARATION",
+        "RC2_UI_REVIEW",
+    ]:
+        assert name in payloads
+    assert payloads["RC2_OPERATOR_SEPARATION"]["default_tab"] == "Conversation"
+    assert payloads["RC2_MEMORY_EXPERIENCE"]["canonical_writes_enabled"] is False
