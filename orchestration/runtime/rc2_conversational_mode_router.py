@@ -9,12 +9,13 @@ asks for local inference.
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
-import json
-from pathlib import Path
-from typing import Any, Callable
+import io
 import json
 import re
+from pathlib import Path
+from typing import Any, Callable
 
 from integration.model_runtime.model_registry import list_available_models
 from integration.model_runtime.provider_manager import ProviderManager
@@ -504,12 +505,13 @@ def execute_local_model_answer(
             "provider_calls_performed": False,
         }
     try:
-        result = ProviderManager().infer(
-            model_name=str(model_name),
-            prompt=prompt,
-            task_type="rc2_conversation",
-            metadata={"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
-        )
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            result = ProviderManager().infer(
+                model_name=str(model_name),
+                prompt=prompt,
+                task_type="rc2_conversation",
+                metadata={"route": "rc2_local_model_lane", "lane": model_lane.get("lane")},
+            )
         answer = result.answer
         confidence = float(result.confidence or 0.72)
         clean_answer = _naturalize_model_answer(answer)
@@ -527,7 +529,7 @@ def execute_local_model_answer(
             "executed": False,
             "available": True,
             "answer": "",
-            "reason": f"local_model_execution_failed:{type(exc).__name__}",
+            "reason": f"local_model_execution_failed:{type(exc).__name__}:{str(exc)[:160]}",
             "prompt_sent": prompt,
             "provider_calls_performed": False,
         }
@@ -1147,6 +1149,7 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
         f"Selection reason: {lane.get('selection_reason') or 'none'}",
         f"Rejected candidates: {rejected_text}",
         f"Local model executed: {bool(local_result.get('executed'))}",
+        f"Local model status: {local_result.get('reason') or ('executed' if local_result.get('executed') else 'not_requested')}",
         f"Local model offer: {bool(local_offer.get('offered'))}",
         f"Provider offer: {bool(provider_offer.get('offered'))}",
         f"Confidence: {confidence.get('confidence', payload.get('confidence_score'))}",
