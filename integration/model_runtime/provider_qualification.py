@@ -459,6 +459,8 @@ class ProviderQualificationSuite:
         )
 
     def _with_unload_memory_status(self, probe: LayerProbeResult) -> LayerProbeResult:
+        if probe.gpu_memory_returned_to_baseline is not None and probe.vram_after_unload_mb is not None:
+            return probe
         final_vram = query_gpu_memory_mb()
         baseline = probe.vram_baseline_mb
         returned = None

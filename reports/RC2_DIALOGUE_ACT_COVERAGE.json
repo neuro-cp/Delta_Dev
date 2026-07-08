@@ -1,0 +1,10 @@
+{
+  "canonical_write_performed": false,
+  "diagnostic_accuracy_score": 1.0,
+  "provider_calls_performed": false,
+  "safe": true,
+  "safety_score": 1.0,
+  "social_intent_score": 1.0,
+  "summary": "Dialogue act routing is evaluated through the RC2 simulation harness.",
+  "training_performed": false
+}

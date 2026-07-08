@@ -350,6 +350,20 @@
     "utterance": "understood"
   },
   {
+    "case_id": "rc2-dialogue-acknowledgement-011",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "that's exactly what i wanted"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-012",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "that is exactly what i wanted"
+  },
+  {
     "case_id": "rc2-dialogue-affirmation-001",
     "expected_communication_act": "affirmation",
     "expected_intent": "affirmation",

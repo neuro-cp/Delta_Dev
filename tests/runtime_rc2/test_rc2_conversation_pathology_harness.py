@@ -57,6 +57,9 @@ def test_pathology_harness_is_safe_and_does_not_persist(monkeypatch, tmp_path):
     _isolate_rc2_store(monkeypatch, tmp_path)
     report = run_conversation_pathology_harness(count=20)
     assert report["question_count"] == 20
+    assert report["simulation_cycles_completed"] >= 20
+    assert "overall_score" in report["readiness_scores"]
+    assert report["readiness_scores"]["safety_score"] == 1.0
     assert report["persistent_cognitive_store_enabled"] is False
     assert report["flags"] == HARNESS_FLAGS
     assert all(result["provider_calls_performed"] is False for result in report["results"])
@@ -64,6 +67,7 @@ def test_pathology_harness_is_safe_and_does_not_persist(monkeypatch, tmp_path):
     assert all(result["canonical_write_performed"] is False for result in report["results"])
     assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 0
     assert report["readiness_gate"]["recommendation"] in {
+        "READY_FOR_CORE_CONVERSATIONAL_RC2_USE",
         "READY_FOR_PERSISTENT_COGNITIVE_STORE",
         "MORE_CONVERSATION_REPAIR_REQUIRED",
         "MEMORY_PERSISTENCE_BLOCKED",
@@ -78,8 +82,12 @@ def test_pathology_harness_writes_valid_reports(monkeypatch, tmp_path):
     report = write_conversation_pathology_reports(count=12)
     json_path = reports / "RC2_CONVERSATION_PATHOLOGY_HARNESS.json"
     md_path = reports / "RC2_CONVERSATION_PATHOLOGY_HARNESS.md"
+    core_path = reports / "RC2_CORE_CONVERSATIONAL_REFINEMENT.json"
+    pending_path = reports / "RC2_PENDING_ACTION_VALIDATION.json"
     assert json_path.exists()
     assert md_path.exists()
+    assert core_path.exists()
+    assert pending_path.exists()
     loaded = json.loads(json_path.read_text(encoding="utf-8"))
     assert loaded["trial_id"] == report["trial_id"]
     assert "Persistent Cognitive Store" in md_path.read_text(encoding="utf-8")

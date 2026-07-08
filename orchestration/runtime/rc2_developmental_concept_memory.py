@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -127,6 +128,34 @@ def approve_candidate_concept(candidate: dict[str, Any], *, approval_text: str =
     duplicate = find_duplicate(candidate, existing)
     pre_contradictions = detect_concept_contradictions(candidate, existing)
     if duplicate and not pre_contradictions:
+        if candidate.get("enrichment_of_concept_id") == duplicate.get("concept_id") or candidate.get("operator_edited"):
+            merged = merge_concept_enrichment(duplicate, candidate)
+            updated = [merged if row.get("concept_id") == duplicate.get("concept_id") else row for row in existing]
+            _write_jsonl(store, updated)
+            replay = {
+                "replay_item_id": f"rc2-concept-replay-{_digest(merged['concept_id'] + merged.get('updated_at', ''))}",
+                "concept_id": merged["concept_id"],
+                "memory_type": memory_type,
+                "reason": "operator_approved_developmental_concept_enrichment",
+                "status": "queued_for_manual_replay_review",
+                "scheduler_started": False,
+            }
+            _append_jsonl(CONCEPT_REPLAY_LOG, replay)
+            return {
+                "approved": True,
+                "stored_concept": merged,
+                "memory_type": memory_type,
+                "duplicate": False,
+                "enriched_existing": True,
+                "enriched_concept_id": duplicate["concept_id"],
+                "contradictions": [],
+                "edges": [],
+                "replay": replay,
+                "canonical_write_performed": False,
+                "training_performed": False,
+                "provider_calls_performed": False,
+                "rollback_supported": True,
+            }
         return {
             "approved": False,
             "duplicate": True,
@@ -171,6 +200,32 @@ def approve_candidate_concept(candidate: dict[str, Any], *, approval_text: str =
         "provider_calls_performed": False,
         "rollback_supported": True,
     }
+
+
+def merge_concept_enrichment(existing: dict[str, Any], candidate: dict[str, Any]) -> dict[str, Any]:
+    merged = dict(existing)
+    candidate_definition = str(candidate.get("short_definition") or "").strip()
+    existing_definition = str(existing.get("short_definition") or "").strip()
+    if candidate_definition and candidate_definition != existing_definition:
+        if existing_definition and candidate_definition.lower() not in existing_definition.lower():
+            merged["short_definition"] = f"{existing_definition} {candidate_definition}".strip()
+        else:
+            merged["short_definition"] = candidate_definition or existing_definition
+
+    merged["propositions"] = _merge_unique_lines(existing.get("propositions", []), candidate.get("propositions", []))
+    merged["related_concepts"] = _merge_unique_lines(existing.get("related_concepts", []), candidate.get("related_concepts", []))
+    merged["examples"] = _merge_unique_lines(existing.get("examples", []), candidate.get("examples", []))
+    merged["misconceptions"] = _merge_unique_lines(existing.get("misconceptions", []), candidate.get("misconceptions", []))
+    merged["explains"] = _merge_unique_lines(existing.get("explains", []), candidate.get("explains", []))
+    merged["operator_notes"] = "\n".join(_merge_unique_lines([existing.get("operator_notes", "")], [candidate.get("operator_notes", "")])).strip()
+    merged["approval_status"] = "approved_noncanonical"
+    merged["canonical"] = False
+    merged["training_performed"] = False
+    merged["provider_calls_performed"] = False
+    merged["enrichment_count"] = int(existing.get("enrichment_count") or 0) + 1
+    merged["updated_at"] = datetime.now(UTC).replace(microsecond=0).isoformat()
+    merged["last_enrichment_source_answer_id"] = candidate.get("source_answer_id")
+    return merged
 
 
 def query_approved_concepts(question: str) -> dict[str, Any]:
@@ -389,6 +444,8 @@ def infer_concept_name(question: str, answer: str) -> str:
         return "Daytime Sky Color"
     if "meaning of life" in lower or "meaning of life" in combined:
         return "Meaning of Life Perspectives"
+    if "workflow" in lower and "coding" in combined:
+        return "Coding Learning Workflow"
     if "people" in lower and "fun" in lower:
         return "Common Leisure Activities"
     if "most people" in lower and any(term in combined for term in ["hobbies", "activities", "entertainment", "relax"]):
@@ -421,11 +478,41 @@ def infer_short_definition(concept_name: str, propositions: list[str], answer: s
 
 
 def infer_related_concepts(concept_name: str, question: str, answer: str) -> list[str]:
-    stop = {"what", "that", "this", "with", "from", "because", "about", "there", "their", "would", "could", "should"}
-    candidates = []
-    for word in f"{concept_name} {question} {answer}".replace("/", " ").split():
+    stop = {
+        "what", "that", "this", "with", "from", "because", "about", "there", "their", "would", "could", "should",
+        "please", "expand", "previous", "answer", "question", "original", "deeper", "useful", "nuance",
+        "conversational", "store", "memory", "user", "asked", "reply", "assistant", "model", "meaning",
+        "perspectives", "complex", "multifaceted", "concept", "approached", "various", "including",
+        "angles", "standpoint", "finding", "significance", "one's", "ones", "view", "views", "contrast",
+        "example", "ultimately", "deeply", "personal", "individual", "greatly", "person",
+    }
+    text = f"{concept_name} {question} {answer}".lower()
+    phrase_patterns = [
+        "pursuit of happiness",
+        "personal growth",
+        "self-reflection",
+        "relationships",
+        "sense of belonging",
+        "purpose",
+        "passions",
+        "search for answers",
+        "uncertainty",
+        "meaninglessness",
+        "meaning-making",
+        "individual purpose",
+        "life philosophy",
+        "existential questions",
+        "subjective meaning",
+        "scientific perspectives",
+        "spiritual perspectives",
+        "philosophical perspectives",
+        "social contribution",
+        "learning and adaptation",
+    ]
+    candidates = [phrase for phrase in phrase_patterns if phrase in text]
+    for word in text.replace("/", " ").split():
         clean = word.strip(".,:;!?()[]{}'\"").lower()
-        if len(clean) > 4 and clean not in stop and clean not in candidates:
+        if len(clean) > 4 and clean not in stop and clean not in candidates and not clean.startswith("rc2"):
             candidates.append(clean)
     return candidates[:10]
 
@@ -460,9 +547,12 @@ def infer_uncertainty(answer: str, lane: dict[str, Any]) -> str:
 def _sentence_propositions(answer: str) -> list[str]:
     clean = _clean(answer)
     parts = []
-    for raw in clean.replace("\r\n", " ").replace("\n", " ").split("."):
+    normalized = re.sub(r"(?m)^\s*\d+\s*[\.)]\s*$", " ", clean)
+    normalized = re.sub(r"(?m)^\s*\d+\s*[\.)]\s*", "", normalized)
+    normalized = re.sub(r"\s+\d+\s*[\.)]\s*", " ", normalized)
+    for raw in normalized.replace("\r\n", " ").replace("\n", " ").split("."):
         item = raw.strip()
-        if item:
+        if item and not re.fullmatch(r"\d+", item):
             parts.append(item + ".")
     return parts[:6]
 
@@ -507,12 +597,36 @@ def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
         handle.write(json.dumps(row, sort_keys=True) + "\n")
 
 
+def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
+
+
+def _merge_unique_lines(*groups: object) -> list[str]:
+    merged = []
+    seen = set()
+    for group in groups:
+        items = group if isinstance(group, list) else [group]
+        for item in items:
+            text = str(item or "").strip()
+            if not text:
+                continue
+            key = _normalize_text(text)
+            if key not in seen:
+                seen.add(key)
+                merged.append(text)
+    return merged
+
+
 def _normalize_approval(text: str) -> str:
     return " ".join(str(text).strip().lower().replace(".", " ").split())
 
 
 def _normalize_text(text: object) -> str:
-    return " " + " ".join(str(text).lower().replace("'", "").replace("-", " ").replace("?", " ").split()) + " "
+    normalized = str(text).lower()
+    for char in ["'", "-", "?", "/", "\\", ".", ",", ":", ";", "!", "(", ")", "[", "]", "{", "}"]:
+        normalized = normalized.replace(char, " ")
+    return " " + " ".join(normalized.split()) + " "
 
 
 def _clean(text: str) -> str:

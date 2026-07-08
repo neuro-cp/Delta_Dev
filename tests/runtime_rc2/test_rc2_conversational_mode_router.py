@@ -493,6 +493,54 @@ def test_approved_concept_is_reused_in_conversation(monkeypatch, tmp_path):
     assert followup["provider_calls_performed"] is False
 
 
+def test_approved_concept_query_tolerates_accidental_slashes(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = route_message("Conversation", "what is the meaning of life")
+    candidate = rc2mem.extract_candidate_concept(
+        question="what is the meaning of life",
+        answer="The meaning of life can involve purpose, relationships, growth, and contribution.",
+        source_model_lane=payload["selected_model_lane"],
+    )
+    assert rc2mem.approve_candidate_concept(candidate)["approved"] is True
+    assert route_message("Conversation", "what is the meaning of life/")["route"] == "developmental_concept_memory"
+    assert route_message("Conversation", "what is the meaning of life\\")["route"] == "developmental_concept_memory"
+
+
+def test_execute_local_model_bypasses_approved_concept_retrieval(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    concept = rc2mem.extract_candidate_concept(
+        question="what is the meaning of life",
+        answer="The meaning of life can involve purpose, relationships, growth, and contribution.",
+        source_model_lane=select_model_lane("what is the meaning of life"),
+    )
+    assert rc2mem.approve_candidate_concept(concept)["approved"] is True
+    seen = {}
+
+    def fake_execute(message, model_lane, history=None):
+        seen["message"] = message
+        return {
+            "executed": True,
+            "available": True,
+            "answer": "A deeper local-model elaboration about meaning, purpose, relationships, and responsibility.",
+            "confidence_score": 0.81,
+            "provider_calls_performed": False,
+        }
+
+    monkeypatch.setattr(rc2router, "execute_local_model_answer", fake_execute)
+    payload = route_message(
+        "Conversation",
+        "Please expand on your previous answer. Original question: what is the meaning of life",
+        history=[{"role": "user", "content": "what is the meaning of life"}],
+        execute_local_model=True,
+    )
+    assert payload["route"] == "local_conversation_model_lane"
+    assert payload["local_model_result"]["executed"] is True
+    assert "deeper local-model elaboration" in payload["answer"]
+    assert "Please expand" in seen["message"]
+
+
 def test_concept_contradiction_detection_first_pass(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
     _isolate_rc2_store(monkeypatch, tmp_path)
@@ -513,6 +561,81 @@ def test_concept_contradiction_detection_first_pass(monkeypatch, tmp_path):
     assert result["contradictions"]
 
 
+def test_deepened_answer_enriches_existing_concept_without_prompt_keywords(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    lane = select_model_lane("what is the meaning of life")
+    first = rc2mem.extract_candidate_concept(
+        question="what is the meaning of life",
+        answer="The meaning of life can involve purpose, relationships, growth, and contribution.",
+        source_model_lane=lane,
+    )
+    assert rc2mem.approve_candidate_concept(first)["approved"] is True
+    enrichment = rc2mem.extract_candidate_concept(
+        question="Please expand on your previous answer for this user question. Original question: what is the meaning of life",
+        answer="Another perspective is that meaning is discovered through relationships, responsibility, creativity, and service to others.",
+        source_model_lane=lane,
+    )
+    enrichment = {
+        **enrichment,
+        "enrichment_of_concept_id": first["concept_id"],
+        "source_question": "what is the meaning of life",
+        "source_type": "local_model_lane_enrichment",
+    }
+    assert enrichment["concept_name"] == "Meaning of Life Perspectives"
+    assert "please" not in enrichment["related_concepts"]
+    assert "expand" not in enrichment["related_concepts"]
+    assert "previous" not in enrichment["related_concepts"]
+    assert "complex" not in enrichment["related_concepts"]
+    assert "multifaceted" not in enrichment["related_concepts"]
+    result = rc2mem.approve_candidate_concept(enrichment)
+    assert result["approved"] is True
+    assert result["enriched_existing"] is True
+    state = rc2mem.build_developmental_memory_state()
+    assert state["knowledge_memory_records"] == 1
+    stored = rc2mem.query_approved_concepts("meaning of life")["matches"][0]
+    assert stored["enrichment_count"] == 1
+    assert any("relationships" in item.lower() for item in stored["propositions"])
+
+
+def test_meaning_of_life_related_concepts_prefer_reusable_phrases(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    candidate = rc2mem.extract_candidate_concept(
+        question="What is the meaning of life?",
+        answer=(
+            "The meaning of life can be explored through the pursuit of happiness, relationships, "
+            "personal growth, self-reflection, purpose, passions, and learning and adaptation."
+        ),
+        source_model_lane=select_model_lane("What is the meaning of life?"),
+    )
+    related = candidate["related_concepts"]
+    assert "pursuit of happiness" in related
+    assert "personal growth" in related
+    assert "self-reflection" in related
+    assert "meaning" not in related
+    assert "complex" not in related
+    assert "concept" not in related
+
+
+def test_list_numbered_answers_do_not_create_numeric_definition(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    candidate = rc2mem.extract_candidate_concept(
+        question="Plan a three-step workflow for understanding coding",
+        answer=(
+            "1.\nResearch the basics of coding: Learn about programming languages, data structures, and algorithms.\n"
+            "2.\nPractice coding: Write code to solve problems and build projects.\n"
+            "3.\nReview and learn from mistakes: Analyze your code, identify errors, and learn from them."
+        ),
+        source_model_lane=select_model_lane("Plan a three-step workflow for understanding coding", "planning"),
+    )
+    assert candidate["concept_name"] == "Coding Learning Workflow"
+    assert candidate["short_definition"] != "1."
+    assert all(item not in {"1.", "2.", "3."} for item in candidate["propositions"])
+    assert "Research the basics of coding" in candidate["short_definition"]
+
+
 def test_short_term_session_memory_answers_followup_without_persistence(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
     _isolate_rc2_store(monkeypatch, tmp_path)
@@ -521,6 +644,36 @@ def test_short_term_session_memory_answers_followup_without_persistence(monkeypa
     assert payload["route"] == "conversation_short_term_memory"
     assert "what is fire" in payload["answer"].lower()
     assert rc2mem.build_developmental_memory_state()["knowledge_memory_records"] == 0
+
+
+def test_vague_followup_does_not_retrieve_wrong_approved_concept(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    sky = rc2mem.extract_candidate_concept(
+        question="What color is the sky?",
+        answer="The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths.",
+        source_model_lane=select_model_lane("What color is the sky?"),
+    )
+    meaning = rc2mem.extract_candidate_concept(
+        question="What is the meaning of life?",
+        answer="The meaning of life can involve purpose, relationships, growth, and contribution.",
+        source_model_lane=select_model_lane("What is the meaning of life?"),
+    )
+    assert rc2mem.approve_candidate_concept(sky)["approved"] is True
+    assert rc2mem.approve_candidate_concept(meaning)["approved"] is True
+    history = [
+        {"role": "user", "content": "What is the meaning of life?"},
+        {"role": "assistant", "content": "The meaning of life can involve purpose, relationships, growth, and contribution."},
+    ]
+    payload = route_message("Conversation", "tell me more", history=history)
+    assert payload["intent"]["communication_act"] == "clarification_followup"
+    assert payload["route"] != "developmental_concept_memory"
+    assert "sky" not in payload["answer"].lower()
+    assert payload["local_model_offer"]["offered"] is True
+    assert payload["pending_action_suggestion"]["action_type"] == "local_model_deepening"
+    rendered = render_route(payload, developer_overlay=True)
+    assert "Active pending action type: local_model_deepening" in rendered
+    assert "Pending action created: True" in rendered
 
 
 def test_local_model_prompt_includes_recent_context(monkeypatch, tmp_path):
@@ -570,6 +723,63 @@ def test_local_model_prompt_includes_recent_context(monkeypatch, tmp_path):
     assert "Relevant recent turns:" in seen["prompt"]
     assert "What color is the sky?" in seen["prompt"]
     assert "resolve pronouns" in seen["prompt"]
+
+
+def test_deepening_prompt_preserves_prior_answer_without_current_message_truncation(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    fake_model = tmp_path / "llama-test.gguf"
+    fake_model.write_text("not a real model; ProviderManager is monkeypatched", encoding="utf-8")
+    monkeypatch.setattr(
+        rc2router,
+        "list_available_models",
+        lambda: {
+            "llama": ModelSpec(
+                name="llama-test",
+                path=str(fake_model),
+                tier=4,
+                description="fake",
+                context_length=4096,
+                family="llama",
+            )
+        },
+    )
+    seen = {}
+
+    class FakeProviderManager:
+        def infer(self, *, model_name, prompt, task_type="open_ended", metadata=None):
+            seen["prompt"] = prompt
+            return CanonicalInferenceResult(
+                provider="local_gguf",
+                model_id=model_name,
+                answer="Here is a deeper explanation.",
+                raw_output="Here is a deeper explanation.",
+                confidence=0.8,
+                latency_seconds=0.0,
+                prompt_tokens=len(prompt.split()),
+                response_tokens=5,
+                evidence=[],
+                metadata={},
+            )
+
+    monkeypatch.setattr(rc2router, "ProviderManager", FakeProviderManager)
+    prior = (
+        "The meaning of life is debated by philosophers, theologians, and scientists. "
+        "It can involve happiness, relationships, purpose, personal growth, and responsibility. "
+        "This sentence appears late enough that the old 700-character compact question would cut it off."
+    )
+    message = (
+        "Please expand on your previous answer for this user question.\n\n"
+        "Original question: What is the meaning of life?\n\n"
+        f"Previous answer: {prior}\n\n"
+        "Go deeper, add useful nuance, keep it conversational, and do not ask to store memory."
+    )
+    payload = route_message("Conversation", message, execute_local_model=True)
+    assert payload["local_model_result"]["executed"] is True
+    assert "Task:\nElaborate on the prior answer" in seen["prompt"]
+    assert "Previous answer to deepen:" in seen["prompt"]
+    assert "This sentence appears late enough" in seen["prompt"]
+    assert "Current user message:" not in seen["prompt"]
 
 
 def test_gpt_approval_preview_is_compact_and_no_call(monkeypatch, tmp_path):

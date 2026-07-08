@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import uuid
 import sys
 import tkinter as tk
 from pathlib import Path
@@ -25,6 +26,7 @@ from orchestration.runtime.rc2_developmental_concept_memory import (  # noqa: E4
     approve_candidate_concept,
     build_developmental_memory_state,
     clear_developmental_memory_store,
+    query_approved_concepts,
 )
 from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
     DISPLAY_MODES,
@@ -98,6 +100,11 @@ def _build_deepening_prompt(question: str, prior_answer: str) -> str:
         f"Previous answer: {prior_answer}\n\n"
         "Go deeper, add useful nuance, keep it conversational, and do not ask to store memory."
     )
+
+
+def _assistant_answer_text(content: str) -> str:
+    text = str(content or "")
+    return text.split("--- Developer Overlay ---", 1)[0].strip()
 
 
 def _lines_from_text(text: str) -> list[str]:
@@ -284,6 +291,19 @@ class DeltaApp:
     def _recent_history_for_router(self) -> list[dict[str, str]]:
         return self.session_history[-10:]
 
+    def _last_substantive_exchange(self) -> dict[str, str] | None:
+        last_assistant = ""
+        for item in reversed(self.session_history):
+            role = item.get("role")
+            content = str(item.get("content") or "")
+            if role == "assistant" and not last_assistant and "Would you like me to ask the local reasoning model to elaborate?" not in content:
+                last_assistant = _assistant_answer_text(content)
+            elif role == "user" and last_assistant:
+                text = content.strip()
+                if text.lower() not in {"yes", "no", "tell me more", "more", "go deeper", "explain more", "elaborate"}:
+                    return {"question": text, "answer": last_assistant}
+        return None
+
     def _show_welcome(self) -> None:
         self._append_chat(
             "DELTA",
@@ -311,6 +331,25 @@ class DeltaApp:
                 history=self._recent_history_for_router(),
                 execute_local_model=True,
             )
+            payload.update({
+                "active_pending_action_id": pending.get("action_id"),
+                "active_pending_action_type": pending.get("action_type", "local_model_deepening"),
+                "pending_action_matched": True,
+                "action_executed": bool((payload.get("local_model_result") or {}).get("executed")),
+                "pending_action_cleared": True,
+            })
+            enrichment_candidate = build_memory_candidate_from_answer(pending["question"], payload)
+            matches = query_approved_concepts(pending["question"]).get("matches", [])
+            if matches:
+                enrichment_candidate = {
+                    **enrichment_candidate,
+                    "enrichment_of_concept_id": matches[0].get("concept_id"),
+                    "enrichment_of_concept_name": matches[0].get("concept_name"),
+                    "approval_status": "pending_operator_enrichment_review",
+                    "source_question": pending["question"],
+                    "source_type": "local_model_lane_enrichment",
+                }
+            payload["memory_candidate"] = enrichment_candidate
             self.last_message = target
             self.last_payload = payload
             rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
@@ -409,9 +448,31 @@ class DeltaApp:
         else:
             self.pending_provider_question = None
         local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
-        self.pending_local_model_question = message if isinstance(local_offer, dict) and local_offer.get("offered") else None
-        if self.pending_local_model_question:
-            self.pending_local_model_deepening = None
+        pending_suggestion = payload.get("pending_action_suggestion") if isinstance(payload, dict) else None
+        if isinstance(pending_suggestion, dict) and pending_suggestion.get("action_type") == "local_model_deepening":
+            exchange = self._last_substantive_exchange() or {"question": message, "answer": str(payload.get("answer") or "")}
+            action_id = f"rc2-pending-action-{uuid.uuid4().hex[:12]}"
+            self.pending_local_model_deepening = {
+                "action_id": action_id,
+                "action_type": "local_model_deepening",
+                "question": exchange["question"],
+                "answer": exchange["answer"],
+                "followup_instruction": message,
+                "source_turn_id": str(len(self.session_history)),
+            }
+            payload["pending_action_suggestion"] = {
+                **pending_suggestion,
+                "action_id": action_id,
+                "original_topic": exchange["question"],
+                "prior_answer_summary": exchange["answer"][:260],
+                "selected_lane": (payload.get("selected_model_lane") or {}).get("lane"),
+                "selected_model": (payload.get("selected_model_lane") or {}).get("selected_model_id"),
+            }
+            self.pending_local_model_question = None
+        else:
+            self.pending_local_model_question = message if isinstance(local_offer, dict) and local_offer.get("offered") else None
+            if self.pending_local_model_question:
+                self.pending_local_model_deepening = None
         self._refresh_state_cards()
         rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
         self._queue_concept_candidate(payload)
@@ -433,14 +494,20 @@ class DeltaApp:
         concept_id = str(candidate.get("concept_id") or "")
         if not concept_id or concept_id in self.concept_review_items:
             return
+        is_enrichment = bool(candidate.get("enrichment_of_concept_id"))
+        concept_label = str(candidate.get("concept_name") or "Learned Concept")
+        source_label = str(candidate.get("source_type") or payload.get("route") or "conversation")
+        if is_enrichment:
+            concept_label = f"Update: {candidate.get('enrichment_of_concept_name') or concept_label}"
+            source_label = "enrichment"
         self.concept_review_items[concept_id] = {"candidate": candidate, "payload": payload}
         self.concept_review.insert(
             "",
             tk.END,
             iid=concept_id,
             values=(
-                str(candidate.get("concept_name") or "Learned Concept"),
-                str(candidate.get("source_type") or payload.get("route") or "conversation"),
+                concept_label,
+                source_label,
                 "pending",
             ),
         )
@@ -493,7 +560,10 @@ class DeltaApp:
         if approved:
             concept = result["stored_concept"]
             self.concept_review.set(concept_id, "status", "accepted")
-            text = f"Kept the concept `{concept['concept_name']}` in noncanonical {concept['memory_type']} memory. Canonical memory and training stayed off."
+            if result.get("enriched_existing"):
+                text = f"Updated the existing concept `{concept['concept_name']}` with the reviewed elaboration. Canonical memory and training stayed off."
+            else:
+                text = f"Kept the concept `{concept['concept_name']}` in noncanonical {concept['memory_type']} memory. Canonical memory and training stayed off."
         elif duplicate:
             self.concept_review.set(concept_id, "status", "duplicate")
             text = "I already had a matching concept, so I skipped the duplicate. Canonical memory and training stayed off."

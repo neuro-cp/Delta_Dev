@@ -2,7 +2,7 @@
   "accuracy": 1.0,
   "confusion_matrix": {
     "acknowledgement": {
-      "acknowledgement": 10
+      "acknowledgement": 12
     },
     "affirmation": {
       "affirmation": 15
@@ -68,7 +68,7 @@
       "thanks": 10
     }
   },
-  "corpus_size": 235,
+  "corpus_size": 237,
   "developer_overlay_fields": [
     "communication_act",
     "confidence",
@@ -98,7 +98,7 @@
     "encouragement_phrase": 5,
     "encouragement_variant": 5,
     "evidence_request": 10,
-    "exact_acknowledgement": 9,
+    "exact_acknowledgement": 11,
     "exact_affirmation": 6,
     "exact_cancel": 6,
     "exact_compliment": 10,

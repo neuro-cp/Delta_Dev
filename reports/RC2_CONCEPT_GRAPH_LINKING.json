@@ -11,7 +11,7 @@
     "canonical_records": 0,
     "concept_contradictions": 0,
     "concept_edges": 1,
-    "concept_replay_queue": 2,
+    "concept_replay_queue": 4,
     "conversation_memory_records": 0,
     "flags": {
       "autonomous_write_performed": false,
@@ -25,7 +25,7 @@
       "training_performed": false,
       "web_search_performed": false
     },
-    "knowledge_memory_records": 2,
+    "knowledge_memory_records": 3,
     "personal_memory_records": 0,
     "training_records": 0
   },

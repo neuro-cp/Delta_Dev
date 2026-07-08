@@ -488,17 +488,36 @@ def _local_model_offer(
 
 
 def _compact_model_prompt(message: str, history: list[dict[str, str]] | None = None) -> str:
+    deepening = _parse_deepening_message(message)
     packet = build_compact_support_packet(message, history)
     turns = packet.get("relevant_chat_history", [])
-    concepts = packet.get("relevant_approved_concepts", [])
+    concept_question = deepening["original_question"] if deepening else message
+    concepts = build_compact_support_packet(concept_question, history).get("relevant_approved_concepts", [])
     lines = [
         "Answer like a friendly, concise assistant.",
         "Use the short conversation context when it matters.",
         "Do not mention routing, model names, hashes, JSON, or safety flags.",
         "",
-        "Current user message:",
-        str(packet["question"]),
     ]
+    if deepening:
+        lines.extend([
+            "Task:",
+            "Elaborate on the prior answer. Add new useful detail, examples, distinctions, or nuance. Do not merely repeat the previous answer.",
+            "",
+            "Original user question:",
+            deepening["original_question"][:1000],
+            "",
+            "Previous answer to deepen:",
+            deepening["previous_answer"][:2400],
+            "",
+            "Follow-up instruction:",
+            deepening["instruction"][:700],
+        ])
+    else:
+        lines.extend([
+            "Current user message:",
+            str(packet["question"]),
+        ])
     if turns:
         lines.extend(["", "Relevant recent turns:"])
         for turn in turns:
@@ -511,6 +530,26 @@ def _compact_model_prompt(message: str, history: list[dict[str, str]] | None = N
             lines.append(f"- {concept.get('concept_name')}: {concept.get('short_definition')}")
     lines.extend(["", "Return only the answer text."])
     return "\n".join(lines)
+
+
+def _parse_deepening_message(message: str) -> dict[str, str] | None:
+    text = str(message or "")
+    marker = "Please expand on your previous answer for this user question."
+    original_label = "Original question:"
+    previous_label = "Previous answer:"
+    instruction = "Go deeper, add useful nuance, keep it conversational, and do not ask to store memory."
+    if marker not in text or original_label not in text or previous_label not in text:
+        return None
+    after_original = text.split(original_label, 1)[1]
+    original_question, rest = after_original.split(previous_label, 1)
+    previous_answer = rest
+    if instruction in previous_answer:
+        previous_answer = previous_answer.split(instruction, 1)[0]
+    return {
+        "original_question": " ".join(original_question.split()).strip(),
+        "previous_answer": " ".join(previous_answer.split()).strip(),
+        "instruction": instruction,
+    }
 
 
 def execute_local_model_answer(
@@ -857,6 +896,28 @@ def local_conversation_answer(
     local = run_v29_local_answer(message, use_recall=False)
     if memory := _history_answer(message, history):
         return memory
+    if intent == "followup":
+        return {
+            "route": "local_model_consent_required",
+            "answer": "I can continue from the recent context. Would you like me to ask the local reasoning model to elaborate?",
+            "confidence": "needs_local_reasoning_model",
+            "confidence_score": 0.55,
+            "selected_model_lane": model_lane,
+            "local_model_result": None,
+            "supporting_information_offer": None,
+            "local_model_offer": _local_model_offer(message, "followup_needs_recent_context", history, model_lane),
+            "pending_action_suggestion": {
+                "action_type": "local_model_deepening",
+                "pending_action_created": True,
+                "followup_instruction": message,
+                "expires_after_turns": 1,
+            },
+            "memory_candidate": None,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+        }
     local_model_result = None
     if intent in SOCIAL_INTENT_RESPONSES:
         return {
@@ -1056,9 +1117,10 @@ def route_message(
     if mode not in MODES:
         mode = "Conversation"
     if mode == "Conversation":
+        intent_info = classify_intent(message)
         if provider_approved:
             payload = execute_gpt_support_request(message, history, transport=provider_transport)
-            payload["intent"] = classify_intent(message)
+            payload["intent"] = intent_info
             payload["confidence_decision"] = {
                 "confidence": payload["confidence_score"],
                 "evidence_quality": payload["confidence"],
@@ -1081,8 +1143,9 @@ def route_message(
             payload["escalation_plan"] = build_escalation_plan(target)
             payload["mode_router_flags"] = ROUTER_FLAGS
             return payload
-        concept = query_approved_concepts(message)
-        substrate = query_noncanonical_substrate(message)
+        bypass_memory_retrieval = execute_local_model or intent_info.get("communication_act") == "clarification_followup" or intent_info.get("intent") == "followup"
+        concept = {"matched": False, "answer": "", "matches": []} if bypass_memory_retrieval else query_approved_concepts(message)
+        substrate = {"matched": False, "answer": "", "matches": []} if bypass_memory_retrieval else query_noncanonical_substrate(message)
         if concept["matched"]:
             payload = {
                 "mode": mode,
@@ -1115,7 +1178,7 @@ def route_message(
             }
         payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
         payload["escalation_plan"] = build_escalation_plan(message)
-        payload["intent"] = classify_intent(message)
+        payload["intent"] = intent_info
         payload["confidence_decision"] = confidence_engine(message, substrate["matched"])
     elif mode == "Ask Substrate":
         answer = answer_operator_question(message)
@@ -1243,6 +1306,10 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
     local_offer = payload.get("local_model_offer") or {}
     provider_offer = payload.get("supporting_information_offer") or {}
     local_result = payload.get("local_model_result") or {}
+    pending = payload.get("pending_action_suggestion") or {}
+    pending_matched = payload.get("pending_action_matched")
+    action_executed = payload.get("action_executed")
+    pending_cleared = payload.get("pending_action_cleared")
     route = str(payload.get("route") or "unknown")
     boundary = "known"
     if route == "local_model_consent_required":
@@ -1272,6 +1339,12 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
         f"Local model status: {local_result.get('reason') or ('executed' if local_result.get('executed') else 'not_requested')}",
         f"Local model offer: {bool(local_offer.get('offered'))}",
         f"Provider offer: {bool(provider_offer.get('offered'))}",
+        f"Active pending action id: {pending.get('action_id') or payload.get('active_pending_action_id') or 'none'}",
+        f"Active pending action type: {pending.get('action_type') or payload.get('active_pending_action_type') or 'none'}",
+        f"Pending action created: {bool(pending.get('pending_action_created'))}",
+        f"Pending action matched: {bool(pending_matched)}",
+        f"Action executed: {bool(action_executed)}",
+        f"Pending action cleared: {bool(pending_cleared)}",
         f"Confidence: {confidence.get('confidence', payload.get('confidence_score'))}",
         f"Evidence quality: {confidence.get('evidence_quality', payload.get('confidence'))}",
         f"Provider need: {confidence.get('provider_necessity', 'none')}",
