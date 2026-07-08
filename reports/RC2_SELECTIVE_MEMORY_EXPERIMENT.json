@@ -1,7 +1,7 @@
 {
   "approval_paths": [
-    "Keep This Concept button",
-    "exact chat phrase: keep this concept"
+    "Concept Review tray",
+    "Accept Selected Concept button"
   ],
   "canonical_writes_enabled": false,
   "casual_yes_counts_as_memory_approval": false,
@@ -10,8 +10,8 @@
   "memory_state": {
     "canonical_records": 0,
     "concept_contradictions": 0,
-    "concept_edges": 0,
-    "concept_replay_queue": 0,
+    "concept_edges": 1,
+    "concept_replay_queue": 2,
     "conversation_memory_records": 0,
     "flags": {
       "autonomous_write_performed": false,
@@ -25,7 +25,7 @@
       "training_performed": false,
       "web_search_performed": false
     },
-    "knowledge_memory_records": 0,
+    "knowledge_memory_records": 2,
     "personal_memory_records": 0,
     "training_records": 0
   },

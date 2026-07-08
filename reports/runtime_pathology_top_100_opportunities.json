@@ -133,6 +133,11 @@
     {
       "category": "maintainability",
       "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.rc2_conversational_mode_router"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.runtime_evaluation"
     },
     {
@@ -169,11 +174,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_controlled_learning"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_execution_authorization"
     },
     {
       "category": "maintainability",

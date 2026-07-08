@@ -4,4 +4,4 @@
 - metrics: `{'provenance_completeness': 1.0, 'licensing_reviewed': 1.0, 'operator_or_fixture_approval': 1.0, 'pii_excluded': 1.0, 'contradiction_metadata_present': 1.0, 'uncertainty_metadata_present': 1.0}`
 - score: `1.0`
 - passed: `True`
-- rejected_item_count: `24`
+- rejected_item_count: `72`

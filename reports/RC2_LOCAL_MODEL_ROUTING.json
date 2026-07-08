@@ -327,6 +327,18 @@
   "sample_selections": [
     {
       "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "llama",
+          "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "llama",
+          "tier": 4
+        }
+      ],
       "capabilities": [
         "text"
       ],
@@ -346,13 +358,38 @@
         "self_description"
       ],
       "provider_calls_performed": false,
+      "rejected_models": [
+        {
+          "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+          "reason": "unusable_or_marked_fail",
+          "requested": "phi4"
+        },
+        {
+          "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+          "reason": "unusable_or_marked_fail",
+          "requested": "qwen"
+        }
+      ],
       "selected_model": "llama",
       "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
       "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
       "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
     },
     {
       "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "llama",
+          "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "llama",
+          "tier": 4
+        }
+      ],
       "capabilities": [
         "text"
       ],
@@ -371,13 +408,38 @@
         "technical_explanation"
       ],
       "provider_calls_performed": false,
+      "rejected_models": [
+        {
+          "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+          "reason": "unusable_or_marked_fail",
+          "requested": "qwen"
+        },
+        {
+          "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+          "reason": "unusable_or_marked_fail",
+          "requested": "phi4"
+        }
+      ],
       "selected_model": "llama",
       "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
       "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the coding_technical lane.",
       "support_identifier": "rc2-local-lane:coding_technical:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
     },
     {
       "available": true,
+      "candidate_models": [
+        {
+          "capabilities": [
+            "text"
+          ],
+          "family": "llama",
+          "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+          "reason": "registered_alias",
+          "registry_key": "llama",
+          "tier": 4
+        }
+      ],
       "capabilities": [
         "text"
       ],
@@ -398,9 +460,17 @@
         "external_knowledge_request"
       ],
       "provider_calls_performed": false,
+      "rejected_models": [
+        {
+          "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+          "reason": "unusable_or_marked_fail",
+          "requested": "qwen"
+        }
+      ],
       "selected_model": "llama",
       "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
       "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+      "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the reasoning_analysis lane.",
       "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
     }
   ]

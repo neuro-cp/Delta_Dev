@@ -4,10 +4,10 @@
   "sample_candidate": {
     "approval_status": "pending_operator_approval",
     "canonical": false,
-    "concept_id": "rc2-concept-8213cc38ec0dbd30",
+    "concept_id": "rc2-concept-b46f822a03edf0bf",
     "concept_name": "Fire",
     "concept_type": "causal_explanation",
-    "created_at": "2026-07-07T03:01:59+00:00",
+    "created_at": "2026-07-08T01:27:19+00:00",
     "examples": [
       "What is fire?"
     ],
@@ -33,10 +33,10 @@
       "gases",
       "glowing"
     ],
-    "rollback_handle": "rollback-rc2-concept-8213cc38ec0dbd30",
+    "rollback_handle": "rollback-rc2-concept-b46f822a03edf0bf",
     "short_definition": "Fire is the visible, hot part of combustion.",
-    "source_answer_id": "rc2-answer-8213cc38ec0dbd30",
-    "source_model_id": "phi4",
+    "source_answer_id": "rc2-answer-b46f822a03edf0bf",
+    "source_model_id": "llama",
     "source_model_lane": "everyday_conversation",
     "source_question": "What is fire?",
     "source_type": "local_model_lane",

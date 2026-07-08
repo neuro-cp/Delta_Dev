@@ -1,5 +1,5 @@
 {
-  "artifact_id": "tp13-shadow-c831bc14b9c70d67",
+  "artifact_id": "tp13-shadow-c60af2b4bafa098b",
   "artifact_type": "research_only_shadow_artifact",
   "canonical_writes": false,
   "created_by_phase": "TP13",
@@ -115,7 +115,7 @@
   "not_default": true,
   "provider_calls": false,
   "removable": true,
-  "source_manifest_hash": "c59eac4647bb320fdb9a6aeea3183da1c9ca1e2ee3806ba90fcf43307be53b64",
+  "source_manifest_hash": "7d61a6d91b6d93eb7932d85aa3589de416bd66641412f3cf4c8b396aec0019db",
   "train_item_count": 19,
   "training_scope": "single deterministic research run over TP11 train split"
 }

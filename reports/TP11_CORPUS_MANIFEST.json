@@ -3,7 +3,7 @@
     "fixture_allowlisted": 22,
     "operator_approved_noncanonical_pilot": 3
   },
-  "corpus_hash": "c59eac4647bb320fdb9a6aeea3183da1c9ca1e2ee3806ba90fcf43307be53b64",
+  "corpus_hash": "7d61a6d91b6d93eb7932d85aa3589de416bd66641412f3cf4c8b396aec0019db",
   "coverage": {
     "approval_state": 1.0,
     "contradiction_metadata": 1.0,
@@ -24,13 +24,13 @@
   "source_inventory": [
     {
       "content_hash": "c2a81321734f94f7ef84e01b707a3430a5cf1952de627259c519c498b47e63e0",
-      "item_id": "noncanonical-02290a7dab06cad7",
-      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_1\\records.jsonl"
+      "item_id": "noncanonical-0151b3bd5a1031ff",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl"
     },
     {
       "content_hash": "3ef7c6d7da2a94ab37c027b264520e473d28fcce6e33dd35d92f8e9f62eb13c5",
-      "item_id": "noncanonical-07be8ac1048d8acb",
-      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_2\\records.jsonl"
+      "item_id": "noncanonical-01b038b35b164087",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_1\\records.jsonl"
     },
     {
       "content_hash": "41e8b38bff5aec7666de64ca239cdaaea46600807a3d2bd43222c85af612e8b3",

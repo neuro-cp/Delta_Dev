@@ -43,8 +43,16 @@
     },
     {
       "category": "maintainability",
-      "evidence": "orchestration/runtime/arc_vii_xxv_scaffolds.py has 1122 lines.",
+      "evidence": "orchestration/runtime/rc2_conversational_mode_router.py has 1427 lines.",
       "id": "DEBT-006",
+      "impact": 6,
+      "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
+      "title": "Large module requires role review: orchestration.runtime.rc2_conversational_mode_router"
+    },
+    {
+      "category": "maintainability",
+      "evidence": "orchestration/runtime/arc_vii_xxv_scaffolds.py has 1122 lines.",
+      "id": "DEBT-007",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.arc_vii_xxv_scaffolds"
@@ -52,7 +60,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/ov2_cognitive_quality.py has 877 lines.",
-      "id": "DEBT-007",
+      "id": "DEBT-008",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.ov2_cognitive_quality"
@@ -60,7 +68,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/runtime_reasoning.py has 865 lines.",
-      "id": "DEBT-008",
+      "id": "DEBT-009",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.runtime_reasoning"
@@ -68,7 +76,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_artifact_comparison.py has 761 lines.",
-      "id": "DEBT-009",
+      "id": "DEBT-010",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_artifact_comparison"
@@ -76,7 +84,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/tp5_noncanonical_persistent_pilot.py has 747 lines.",
-      "id": "DEBT-010",
+      "id": "DEBT-011",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.tp5_noncanonical_persistent_pilot"
@@ -84,7 +92,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/runtime_evaluation.py has 737 lines.",
-      "id": "DEBT-011",
+      "id": "DEBT-012",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.runtime_evaluation"
@@ -92,7 +100,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_hypothesis_arbitration.py has 735 lines.",
-      "id": "DEBT-012",
+      "id": "DEBT-013",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_hypothesis_arbitration"
@@ -100,7 +108,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_controlled_learning.py has 733 lines.",
-      "id": "DEBT-013",
+      "id": "DEBT-014",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_controlled_learning"
@@ -108,7 +116,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_specialist_merge.py has 722 lines.",
-      "id": "DEBT-014",
+      "id": "DEBT-015",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_specialist_merge"
@@ -116,7 +124,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/tp0_controlled_training_pilot.py has 707 lines.",
-      "id": "DEBT-015",
+      "id": "DEBT-016",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.tp0_controlled_training_pilot"
@@ -124,7 +132,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_offline_evaluation.py has 707 lines.",
-      "id": "DEBT-016",
+      "id": "DEBT-017",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_offline_evaluation"
@@ -132,7 +140,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/tp4_controlled_persistent_pilot_design.py has 705 lines.",
-      "id": "DEBT-017",
+      "id": "DEBT-018",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.tp4_controlled_persistent_pilot_design"
@@ -140,7 +148,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/tp3_independent_verification_freeze.py has 703 lines.",
-      "id": "DEBT-018",
+      "id": "DEBT-019",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.tp3_independent_verification_freeze"
@@ -148,7 +156,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_pruning_projection.py has 686 lines.",
-      "id": "DEBT-019",
+      "id": "DEBT-020",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_pruning_projection"
@@ -156,7 +164,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_training_dataset.py has 684 lines.",
-      "id": "DEBT-020",
+      "id": "DEBT-021",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_training_dataset"
@@ -164,7 +172,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_structural_semantic_adapter.py has 680 lines.",
-      "id": "DEBT-021",
+      "id": "DEBT-022",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_structural_semantic_adapter"
@@ -172,7 +180,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/ov6_ov10_operational_readiness.py has 663 lines.",
-      "id": "DEBT-022",
+      "id": "DEBT-023",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.ov6_ov10_operational_readiness"
@@ -180,7 +188,7 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_recall_bridge.py has 659 lines.",
-      "id": "DEBT-023",
+      "id": "DEBT-024",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
       "title": "Large module requires role review: orchestration.runtime.v14_recall_bridge"
@@ -188,18 +196,10 @@
     {
       "category": "maintainability",
       "evidence": "orchestration/runtime/v14_tiny_training_experiment.py has 617 lines.",
-      "id": "DEBT-024",
-      "impact": 6,
-      "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
-      "title": "Large module requires role review: orchestration.runtime.v14_tiny_training_experiment"
-    },
-    {
-      "category": "maintainability",
-      "evidence": "orchestration/runtime/v14_execution_authorization.py has 614 lines.",
       "id": "DEBT-025",
       "impact": 6,
       "recommendation": "Review whether this should split into model, builder, reporter, and test fixture helpers.",
-      "title": "Large module requires role review: orchestration.runtime.v14_execution_authorization"
+      "title": "Large module requires role review: orchestration.runtime.v14_tiny_training_experiment"
     }
   ]
 }

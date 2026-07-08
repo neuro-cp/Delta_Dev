@@ -1,7 +1,7 @@
 # Runtime Pathology Unused Object
 
 ## Class Total
-1580
+1581
 
 ## Likely Unused Class Count
 84

@@ -5,9 +5,9 @@
 {
   "executive": 75,
   "kernel": 46,
-  "knowledge": 87,
+  "knowledge": 88,
   "learning": 67,
-  "other": 265,
+  "other": 270,
   "reasoning": 66,
   "runtime": 49
 }
@@ -31,10 +31,10 @@
 - {'source': 'learning', 'target': 'runtime', 'count': 1}
 - {'source': 'other', 'target': 'executive', 'count': 2}
 - {'source': 'other', 'target': 'kernel', 'count': 4}
-- {'source': 'other', 'target': 'knowledge', 'count': 23}
+- {'source': 'other', 'target': 'knowledge', 'count': 24}
 - {'source': 'other', 'target': 'learning', 'count': 13}
 - {'source': 'other', 'target': 'reasoning', 'count': 5}
-- {'source': 'other', 'target': 'runtime', 'count': 6}
+- {'source': 'other', 'target': 'runtime', 'count': 8}
 - {'source': 'reasoning', 'target': 'other', 'count': 126}
 - {'source': 'runtime', 'target': 'executive', 'count': 1}
 - {'source': 'runtime', 'target': 'knowledge', 'count': 4}

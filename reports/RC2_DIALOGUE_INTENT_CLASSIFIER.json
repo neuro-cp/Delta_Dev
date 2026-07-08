@@ -1,0 +1,129 @@
+{
+  "accuracy": 1.0,
+  "confusion_matrix": {
+    "acknowledgement": {
+      "acknowledgement": 10
+    },
+    "affirmation": {
+      "affirmation": 15
+    },
+    "cancellation": {
+      "cancellation": 10
+    },
+    "clarification_followup": {
+      "clarification_followup": 17
+    },
+    "coding_request": {
+      "coding_request": 10
+    },
+    "compliment": {
+      "compliment": 10
+    },
+    "conceptual_question": {
+      "conceptual_question": 11
+    },
+    "correction": {
+      "correction": 10
+    },
+    "diagnostic_request": {
+      "diagnostic_request": 10
+    },
+    "encouragement": {
+      "encouragement": 10
+    },
+    "evidence_request": {
+      "evidence_request": 10
+    },
+    "factual_question": {
+      "factual_question": 12
+    },
+    "frustration": {
+      "frustration": 10
+    },
+    "greeting": {
+      "greeting": 10
+    },
+    "joke": {
+      "joke": 10
+    },
+    "memory_request": {
+      "memory_request": 10
+    },
+    "planning_request": {
+      "planning_request": 10
+    },
+    "preference": {
+      "preference": 10
+    },
+    "refusal": {
+      "refusal": 10
+    },
+    "research_request": {
+      "research_request": 10
+    },
+    "small_talk": {
+      "small_talk": 10
+    },
+    "thanks": {
+      "thanks": 10
+    }
+  },
+  "corpus_size": 235,
+  "developer_overlay_fields": [
+    "communication_act",
+    "confidence",
+    "matched_rule",
+    "routed_action"
+  ],
+  "misses": [],
+  "routing_policy": {
+    "acknowledgement": "brief response; no routing",
+    "diagnostics_command": "diagnostics",
+    "factual_or_conceptual_question": "substrate/local model path",
+    "followup": "use short-term context",
+    "memory_command": "concept approval path",
+    "refusal_or_cancel": "stop or reject pending action",
+    "social_intent": "respond socially; no SLM, retrieval, memory, or provider"
+  },
+  "rule_coverage": {
+    "acknowledgement_variant": 1,
+    "affirmation_variant": 9,
+    "cancel_variant": 4,
+    "coding_request": 10,
+    "conceptual_question": 11,
+    "correction_phrase": 7,
+    "correction_variant": 3,
+    "diagnostic_variant": 4,
+    "diagnostics_request": 6,
+    "encouragement_phrase": 5,
+    "encouragement_variant": 5,
+    "evidence_request": 10,
+    "exact_acknowledgement": 9,
+    "exact_affirmation": 6,
+    "exact_cancel": 6,
+    "exact_compliment": 10,
+    "exact_greeting": 7,
+    "exact_refusal": 6,
+    "exact_thanks": 6,
+    "external_knowledge_request": 1,
+    "factual_question": 12,
+    "followup_variant": 12,
+    "frustration_phrase": 7,
+    "frustration_variant": 3,
+    "greeting_variant": 3,
+    "joke_phrase": 7,
+    "joke_variant": 3,
+    "memory_request": 7,
+    "memory_variant": 3,
+    "planning_request": 10,
+    "preference_phrase": 10,
+    "refusal_variant": 4,
+    "research_request": 9,
+    "simplify_followup": 5,
+    "small_talk_phrase": 5,
+    "small_talk_variant": 5,
+    "thanks_variant": 4
+  },
+  "safe": true,
+  "summary": "Deterministic communication-act classification now runs before retrieval, model routing, memory formation, or provider escalation."
+}

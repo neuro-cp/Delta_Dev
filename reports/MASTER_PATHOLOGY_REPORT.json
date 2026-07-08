@@ -1,9 +1,9 @@
 {
   "architectural_debt_count": 25,
-  "call_edge_count": 2540,
+  "call_edge_count": 2582,
   "dead_system_count": 353,
-  "dependency_edge_count": 1047,
-  "disconnected_system_count": 35,
+  "dependency_edge_count": 1056,
+  "disconnected_system_count": 34,
   "duplicate_system_count": 44,
   "final_recommendation": "PROCEED_MANUAL_RC1_VALIDATION_NO_LIVE_CAPABILITIES",
   "overall_runtime_maturity_estimate": {
@@ -73,7 +73,7 @@
     "5. Real document adapter readiness review without live upload activation.",
     "6. Consolidate duplicated scaffold lifecycle helpers."
   ],
-  "runtime_module_count": 655,
+  "runtime_module_count": 661,
   "safety": {
     "autonomous_browsing_performed": false,
     "background_worker_started": false,
@@ -291,6 +291,11 @@
     {
       "category": "maintainability",
       "impact": 6,
+      "title": "Large module requires role review: orchestration.runtime.rc2_conversational_mode_router"
+    },
+    {
+      "category": "maintainability",
+      "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.runtime_evaluation"
     },
     {
@@ -327,11 +332,6 @@
       "category": "maintainability",
       "impact": 6,
       "title": "Large module requires role review: orchestration.runtime.v14_controlled_learning"
-    },
-    {
-      "category": "maintainability",
-      "impact": 6,
-      "title": "Large module requires role review: orchestration.runtime.v14_execution_authorization"
     },
     {
       "category": "maintainability",

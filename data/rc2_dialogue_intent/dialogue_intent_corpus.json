@@ -1,0 +1,1647 @@
+[
+  {
+    "case_id": "rc2-dialogue-greeting-001",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hi"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-002",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hello"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-003",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hey"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-004",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "yo"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-005",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "good morning"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-006",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "good afternoon"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-007",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "good evening"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-008",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hello delta"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-009",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hey there"
+  },
+  {
+    "case_id": "rc2-dialogue-greeting-010",
+    "expected_communication_act": "greeting",
+    "expected_intent": "greeting",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hi again"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-001",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thanks"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-002",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thank you"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-003",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thx"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-004",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "appreciate it"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-005",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thanks a lot"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-006",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thank you very much"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-007",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that helped thanks"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-008",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thanks for that"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-009",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "appreciate the help"
+  },
+  {
+    "case_id": "rc2-dialogue-thanks-010",
+    "expected_communication_act": "thanks",
+    "expected_intent": "thanks",
+    "expected_routed_action": "social_response_only",
+    "utterance": "thank you delta"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-001",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "good job"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-002",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "great job"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-003",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "nice work"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-004",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "excellent work"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-005",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "well done"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-006",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "solid answer"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-007",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that's helpful"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-008",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that was helpful"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-009",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "perfect"
+  },
+  {
+    "case_id": "rc2-dialogue-compliment-010",
+    "expected_communication_act": "compliment",
+    "expected_intent": "compliment",
+    "expected_routed_action": "social_response_only",
+    "utterance": "awesome"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-001",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "great effort"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-002",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "keep going"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-003",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "you got this"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-004",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "solid effort"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-005",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "nice progress"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-006",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "good progress"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-007",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "keep working"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-008",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "almost there"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-009",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that is improving"
+  },
+  {
+    "case_id": "rc2-dialogue-encouragement-010",
+    "expected_communication_act": "encouragement",
+    "expected_intent": "encouragement",
+    "expected_routed_action": "social_response_only",
+    "utterance": "stay on it"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-001",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "okay"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-002",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "ok"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-003",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "got it"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-004",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "sounds good"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-005",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "cool"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-006",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "alright"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-007",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "that makes sense"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-008",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "makes sense"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-009",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "no worries"
+  },
+  {
+    "case_id": "rc2-dialogue-acknowledgement-010",
+    "expected_communication_act": "acknowledgement",
+    "expected_intent": "acknowledgement",
+    "expected_routed_action": "brief_acknowledgement_only",
+    "utterance": "understood"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-001",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yes"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-002",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yeah"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-003",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yep"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-004",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "sure"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-005",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "go ahead"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-006",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "do it"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-007",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yes please"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-008",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "sure ask it"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-009",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yes ask the model"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-010",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yes use that"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-011",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "okay go ahead"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-012",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "ok do it"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-013",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "sure go deeper"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-014",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "yes tell me more"
+  },
+  {
+    "case_id": "rc2-dialogue-affirmation-015",
+    "expected_communication_act": "affirmation",
+    "expected_intent": "affirmation",
+    "expected_routed_action": "approve_current_pending_action_only",
+    "utterance": "go ahead and expand"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-001",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "no"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-002",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "nope"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-003",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "nah"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-004",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "don't"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-005",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "do not"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-006",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "not now"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-007",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "no thanks"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-008",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "do not ask"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-009",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "don't store that"
+  },
+  {
+    "case_id": "rc2-dialogue-refusal-010",
+    "expected_communication_act": "refusal",
+    "expected_intent": "refusal",
+    "expected_routed_action": "reject_current_pending_action_only",
+    "utterance": "no don't"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-001",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "nevermind"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-002",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "never mind"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-003",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "cancel"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-004",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "stop"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-005",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "forget it"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-006",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "drop it"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-007",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "leave it"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-008",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "stop that"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-009",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "cancel that"
+  },
+  {
+    "case_id": "rc2-dialogue-cancellation-010",
+    "expected_communication_act": "cancellation",
+    "expected_intent": "cancel",
+    "expected_routed_action": "stop_pending_action",
+    "utterance": "ignore that"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-001",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "actually it was blue"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-002",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "correction it is green"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-003",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "that's wrong"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-004",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "that is wrong"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-005",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "not quite"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-006",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "actually try green"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-007",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "correction: use Frontier"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-008",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "that's not right"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-009",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "you missed a detail"
+  },
+  {
+    "case_id": "rc2-dialogue-correction-010",
+    "expected_communication_act": "correction",
+    "expected_intent": "correction",
+    "expected_routed_action": "revise_prior_answer_or_context",
+    "utterance": "revise that"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-001",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i don't get it"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-002",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i dont get it"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-003",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "this is confusing"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-004",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i'm frustrated"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-005",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "im frustrated"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-006",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that didn't work"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-007",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that did not work"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-008",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "this is annoying"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-009",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i'm stuck"
+  },
+  {
+    "case_id": "rc2-dialogue-frustration-010",
+    "expected_communication_act": "frustration",
+    "expected_intent": "personal_emotion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i feel lost"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-001",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "try again"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-002",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "explain simpler"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-003",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "say it simpler"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-004",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "simpler"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-005",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "can you rephrase that"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-006",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "what do you mean"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-007",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "explain that part"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-008",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "why is that"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-009",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "what about the second part"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-010",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "go deeper"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-011",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "tell me more"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-012",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "continue"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-013",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "expand on that"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-014",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "more detail"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-015",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "more details"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-016",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "give me examples"
+  },
+  {
+    "case_id": "rc2-dialogue-clarification_followup-017",
+    "expected_communication_act": "clarification_followup",
+    "expected_intent": "followup",
+    "expected_routed_action": "use_short_term_context",
+    "utterance": "say more"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-001",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "lol"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-002",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "haha"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-003",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "just kidding"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-004",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "kidding"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-005",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "that was a joke"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-006",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "lol nevermind"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-007",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "haha good one"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-008",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i'm joking"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-009",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "funny"
+  },
+  {
+    "case_id": "rc2-dialogue-joke-010",
+    "expected_communication_act": "joke",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "made me laugh"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-001",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "how are you"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-002",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "how's it going"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-003",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "hows it going"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-004",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "what's up"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-005",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "whats up"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-006",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "how are things"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-007",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "how do you feel"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-008",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "you awake"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-009",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "are you there"
+  },
+  {
+    "case_id": "rc2-dialogue-small_talk-010",
+    "expected_communication_act": "small_talk",
+    "expected_intent": "conversation",
+    "expected_routed_action": "social_response_only",
+    "utterance": "how is your day"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-001",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i like this direction"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-002",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i want shorter answers"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-003",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i prefer plain language"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-004",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i think this works"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-005",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i like the ui"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-006",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i want more detail"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-007",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i prefer local models"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-008",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i think that's better"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-009",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i want it simpler"
+  },
+  {
+    "case_id": "rc2-dialogue-preference-010",
+    "expected_communication_act": "preference",
+    "expected_intent": "preference_opinion",
+    "expected_routed_action": "social_response_only",
+    "utterance": "i like the flow"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-001",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "remember that"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-002",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "remember this"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-003",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "store this"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-004",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "save this"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-005",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "keep this concept"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-006",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "don't remember that"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-007",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "dont remember that"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-008",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "remember my preference"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-009",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "save that for later"
+  },
+  {
+    "case_id": "rc2-dialogue-memory_request-010",
+    "expected_communication_act": "memory_request",
+    "expected_intent": "memory_request",
+    "expected_routed_action": "concept_approval_path",
+    "utterance": "keep this for future chats"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-001",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "show diagnostics"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-002",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "runtime status"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-003",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "system health"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-004",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "health check"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-005",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "developer overlay"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-006",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "show me the route"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-007",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "show confidence"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-008",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "diagnostic mode"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-009",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "what route was used"
+  },
+  {
+    "case_id": "rc2-dialogue-diagnostic_request-010",
+    "expected_communication_act": "diagnostic_request",
+    "expected_intent": "diagnostics",
+    "expected_routed_action": "diagnostics",
+    "utterance": "show safety flags"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-001",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "review this evidence"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-002",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "analyze this document"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-003",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "read this pdf"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-004",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "check this invoice"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-005",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "show citations"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-006",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "what source supports that"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-007",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "extract evidence"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-008",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "review this source"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-009",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "cite the claim"
+  },
+  {
+    "case_id": "rc2-dialogue-evidence_request-010",
+    "expected_communication_act": "evidence_request",
+    "expected_intent": "document",
+    "expected_routed_action": "evidence_review",
+    "utterance": "inspect the document"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-001",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "write python code"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-002",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "debug this function"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-003",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "fix this bug"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-004",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "what is coding"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-005",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "explain this repo"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-006",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "write javascript"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-007",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "make a test"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-008",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "patch the file"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-009",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "review this code"
+  },
+  {
+    "case_id": "rc2-dialogue-coding_request-010",
+    "expected_communication_act": "coding_request",
+    "expected_intent": "coding",
+    "expected_routed_action": "local_model_or_repo_context",
+    "utterance": "why does this function fail"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-001",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "research beluga whales"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-002",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "investigate this case"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-003",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "latest status of the bill"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-004",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "look up sources"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-005",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "find sources for this"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-006",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "research the market"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-007",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "investigate the contradiction"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-008",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "find supporting information"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-009",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "look up current rules"
+  },
+  {
+    "case_id": "rc2-dialogue-research_request-010",
+    "expected_communication_act": "research_request",
+    "expected_intent": "investigation",
+    "expected_routed_action": "research_or_provider_consent_path",
+    "utterance": "research the topic"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-001",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "plan my day"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-002",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "make a schedule"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-003",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "build a roadmap"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-004",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "what is the strategy"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-005",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "plan the sprint"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-006",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "make a workflow"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-007",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "organize the tasks"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-008",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "sequence the work"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-009",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "design a plan"
+  },
+  {
+    "case_id": "rc2-dialogue-planning_request-010",
+    "expected_communication_act": "planning_request",
+    "expected_intent": "planning",
+    "expected_routed_action": "planning_lane",
+    "utterance": "schedule the review"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-001",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "why is the sky blue"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-002",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "how does fire work"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-003",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "explain gravity"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-004",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "what does governance mean"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-005",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "how do pressure cookers work"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-006",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "why do people sleep"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-007",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "explain semantic memory"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-008",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "how does replay help"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-009",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "why does water boil"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-010",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "what is the idea behind rollback"
+  },
+  {
+    "case_id": "rc2-dialogue-conceptual_question-011",
+    "expected_communication_act": "conceptual_question",
+    "expected_intent": "analysis",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "what is the meaning of life"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-001",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "what color is the moon?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-002",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "who wrote hamlet?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-003",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "where is paris?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-004",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "when does water boil?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-005",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "which model is active?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-006",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "is the sky blue?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-007",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "are providers enabled?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-008",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "do you know frontier?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-009",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "can you answer locally?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-010",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "should i store this?"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-011",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "what color is the moon"
+  },
+  {
+    "case_id": "rc2-dialogue-factual_question-012",
+    "expected_communication_act": "factual_question",
+    "expected_intent": "question",
+    "expected_routed_action": "substrate_or_local_model_path",
+    "utterance": "what color is the sky"
+  }
+]

@@ -6,6 +6,7 @@ from orchestration.runtime.rc2_conversational_mode_router import (
     ROUTER_FLAGS,
     build_escalation_plan,
     build_gpt_approval_preview,
+    build_memory_candidate_from_answer,
     candidate_is_memory_worthy,
     classify_intent,
     confidence_engine,
@@ -17,6 +18,12 @@ from orchestration.runtime.rc2_conversational_mode_router import (
     route_message,
     select_model_lane,
     write_rc2_report,
+)
+from orchestration.runtime.rc2_dialogue_intent_classifier import (
+    build_dialogue_intent_corpus,
+    classify_dialogue_act,
+    evaluate_dialogue_intent_corpus,
+    write_dialogue_intent_artifacts,
 )
 from orchestration.runtime import rc1_operator_console as rc1
 from orchestration.runtime import rc2_developmental_concept_memory as rc2mem
@@ -96,6 +103,65 @@ def test_social_turn_does_not_trigger_model_memory_or_retrieval(monkeypatch, tmp
     assert payload["supporting_information_offer"] is None
     assert payload["memory_candidate"] is None
     assert "glad" in payload["answer"].lower()
+
+
+def test_dialogue_act_classifier_covers_social_acceptance_cases():
+    cases = {
+        "great effort": ("encouragement", "social_response_only"),
+        "good job": ("compliment", "social_response_only"),
+        "thanks": ("thanks", "social_response_only"),
+        "nevermind": ("cancellation", "stop_pending_action"),
+        "no": ("refusal", "reject_current_pending_action_only"),
+        "yes": ("affirmation", "approve_current_pending_action_only"),
+        "okay go ahead": ("affirmation", "approve_current_pending_action_only"),
+        "try again": ("clarification_followup", "use_short_term_context"),
+        "explain simpler": ("clarification_followup", "use_short_term_context"),
+        "tell me more": ("clarification_followup", "use_short_term_context"),
+        "remember that": ("memory_request", "concept_approval_path"),
+        "don't remember that": ("memory_request", "concept_approval_path"),
+    }
+    for utterance, (act, action) in cases.items():
+        observed = classify_dialogue_act(utterance)
+        assert observed["communication_act"] == act
+        assert observed["routed_action"] == action
+        assert observed["provider_calls_performed"] is False if "provider_calls_performed" in observed else observed["safety"]["provider_calls_performed"] is False
+
+
+def test_dialogue_corpus_evaluation_is_large_and_clean():
+    corpus = build_dialogue_intent_corpus()
+    report = evaluate_dialogue_intent_corpus(corpus)
+    assert len(corpus) >= 200
+    assert report["corpus_size"] == len(corpus)
+    assert report["accuracy"] >= 0.98
+    assert report["safety"]["training_performed"] is False
+    assert report["safety"]["provider_calls_performed"] is False
+    assert report["safety"]["canonical_write_performed"] is False
+
+
+def test_dialogue_artifact_writer_creates_corpus_and_report(monkeypatch, tmp_path):
+    from orchestration.runtime import rc2_dialogue_intent_classifier as classifier
+
+    monkeypatch.setattr(classifier, "DATA", tmp_path / "data")
+    monkeypatch.setattr(classifier, "REPORTS", tmp_path / "reports")
+    monkeypatch.setattr(classifier, "CORPUS_PATH", tmp_path / "data" / "dialogue_intent_corpus.json")
+    monkeypatch.setattr(classifier, "REPORT_JSON", tmp_path / "reports" / "RC2_DIALOGUE_INTENT_CLASSIFIER.json")
+    monkeypatch.setattr(classifier, "REPORT_MD", tmp_path / "reports" / "RC2_DIALOGUE_INTENT_CLASSIFIER.md")
+    report = write_dialogue_intent_artifacts()
+    assert report["corpus_size"] >= 200
+    assert classifier.CORPUS_PATH.exists()
+    assert classifier.REPORT_JSON.exists()
+    assert classifier.REPORT_MD.exists()
+
+
+def test_social_communication_acts_never_route_to_model_or_memory(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    for utterance in ["great effort", "good job", "thanks", "no", "nevermind", "how are you"]:
+        payload = route_message("Conversation", utterance)
+        assert payload["route"] == "social_conversation"
+        assert payload["local_model_offer"] is None
+        assert payload["memory_candidate"] is None
+        assert payload["provider_calls_performed"] is False
 
 
 def test_developer_overlay_shows_route_model_and_support_identifier(monkeypatch, tmp_path):
@@ -255,7 +321,8 @@ def test_successful_local_model_answer_offers_memory_candidate(monkeypatch, tmp_
     rendered = render_route(payload)
     assert payload["local_model_result"]["executed"] is True
     assert payload["memory_candidate"]["concept_name"] == "Moon Color Appearance"
-    assert "Keep This Concept" in rendered
+    assert "Concept Review" in rendered
+    assert "accepting it there is the only way to store it" in rendered
     assert payload["canonical_write_performed"] is False
     assert payload["training_performed"] is False
     assert payload["provider_calls_performed"] is False
@@ -341,6 +408,51 @@ def test_concept_retrieval_does_not_overmatch_generic_overlap(monkeypatch, tmp_p
     fun = route_message("Conversation", "What do people usually do for fun?")
     assert fun["route"] == "local_model_consent_required"
     assert "Daytime Sky Color" not in render_route(fun)
+
+
+def test_existing_approved_concept_is_not_requeued_for_review(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    sky = route_message("Conversation", "What color is the sky?")
+    remember_useful_answer("What color is the sky?", sky)
+    known = route_message("Conversation", "What color is the sky?")
+    assert known["route"] == "developmental_concept_memory"
+    assert known["memory_candidate"] is None
+
+
+def test_memory_command_does_not_create_concept_from_command_text(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = route_message("Conversation", "remember that")
+    assert payload["intent"]["communication_act"] == "memory_request"
+    assert payload["memory_candidate"] is None
+    assert "Remember That" not in render_route(payload)
+
+
+def test_explicit_memory_request_can_review_lower_confidence_previous_answer(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = {
+        "route": "local_conversation_model_lane",
+        "answer": (
+            "The meaning of life is a broad philosophical question. Some perspectives emphasize purpose, "
+            "relationships, growth, contribution, beauty, truth, or personal fulfillment."
+        ),
+        "confidence_score": 0.65,
+        "selected_model_lane": select_model_lane("what is the meaning of life"),
+    }
+    candidate = build_memory_candidate_from_answer("what is the meaning of life", payload)
+    assert candidate["concept_name"] == "Meaning of Life Perspectives"
+    assert candidate_is_memory_worthy(candidate, payload) is False
+    review_candidate = {
+        **candidate,
+        "approval_status": "pending_operator_review_user_requested",
+        "operator_review_required": True,
+        "memory_request_source": "explicit_user_remember_that",
+        "uncertainty": "moderate_operator_review_required",
+    }
+    assert review_candidate["operator_review_required"] is True
+    assert review_candidate["approval_status"] == "pending_operator_review_user_requested"
 
 
 def test_evidence_mode_extracts_without_persistence():

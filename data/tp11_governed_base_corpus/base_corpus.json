@@ -1,7 +1,55 @@
 {
   "corpus_status": "constructed",
-  "excluded_count": 24,
+  "excluded_count": 72,
   "excluded_items": [
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-02290a7dab06cad7"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-037cd0129b103f8b"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-0630812b3be5465e"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-0658a9660dfd0a24"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-07be8ac1048d8acb"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-12a8c70155640312"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-1f373016b6741086"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-1f6577ecc371c387"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-1fee71d3fda4bbd8"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-25665681b94e702d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-26520142d1132fc0"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-28fe980216d91653"
+    },
     {
       "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-29ec80f9d6806c87"
@@ -12,7 +60,31 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-31723c773b9fdae8"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-37a9f53c20864ac8"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-408796e752eeb7b1"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-42628e8888d794fd"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-4f1f74266de97b59"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-593986bed5c80e5d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-5b71ff517deed145"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -20,7 +92,31 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-62334d328f12e510"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-640758e0fa8a8252"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-6e61de42efc9bd3c"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-6ebbb74f45e160dd"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-75b771b3d48bf601"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-7c74db3afa72432d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-9038ae2da1008119"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -36,11 +132,27 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-a2230236ec3df50b"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-a60abce4421f276b"
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-a7681ad3536fdc5b"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-a8580f184c89360a"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-a9e091dde1d4a52c"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-ad57e5a861acf5f6"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -56,6 +168,10 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-b98a1ff4ba0f8763"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-ba65ff2803c7e1df"
     },
     {
@@ -68,7 +184,19 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-bee9d3f5b8e31fbc"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-c8b520242b9c59f6"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-cc99eeaad955c51d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-d0f5cc666cc87b17"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -84,7 +212,35 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-d9f8ec92fc9ddd37"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-de3dd241aa7d15de"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-df348884a8e96d81"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-e000e73da4a4a24a"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-e0755811bb810e1d"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-e32b488e32364151"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-e529c1575236406b"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-e6cc74dad0c534dd"
     },
     {
       "exclusion_reason": "duplicate content hash",
@@ -96,7 +252,43 @@
     },
     {
       "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f09ace85365e18e4"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f0a1736159470d32"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f1476c1b0e596641"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f1d08aae01ce4155"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
       "item_id": "noncanonical-f4c24fb2f857a456"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f55dc086f46f7824"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-f8cef482d548775f"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-fb7c15cf39b929fa"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-fbf87ab52dbddb59"
+    },
+    {
+      "exclusion_reason": "duplicate content hash",
+      "item_id": "noncanonical-fc0ff576ed671fab"
     }
   ],
   "held_out_families_excluded": [
@@ -105,7 +297,7 @@
     "tp3_independent"
   ],
   "included_count": 25,
-  "item_count": 49,
+  "item_count": 97,
   "items": [
     {
       "approval_state": "operator_approved_noncanonical_pilot",
@@ -118,7 +310,7 @@
       ],
       "exclusion_reason": "",
       "included": true,
-      "item_id": "noncanonical-02290a7dab06cad7",
+      "item_id": "noncanonical-0151b3bd5a1031ff",
       "license_status": "repo-local-governed-record",
       "pii_risk": "none",
       "provenance": [
@@ -129,7 +321,7 @@
       ],
       "source_family": "noncanonical_pilot",
       "source_identity": "tp5-record-c43c3dcb2dd534a6",
-      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_1\\records.jsonl",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_3\\records.jsonl",
       "text": "Operator reviewed unresolved provenance and preserved uncertainty for replay",
       "uncertainty": "explicit_uncertainty"
     },
@@ -144,7 +336,7 @@
       ],
       "exclusion_reason": "",
       "included": true,
-      "item_id": "noncanonical-07be8ac1048d8acb",
+      "item_id": "noncanonical-01b038b35b164087",
       "license_status": "repo-local-governed-record",
       "pii_risk": "none",
       "provenance": [
@@ -155,7 +347,7 @@
       ],
       "source_family": "noncanonical_pilot",
       "source_identity": "tp5-record-883740a35434b7fd",
-      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_2\\records.jsonl",
+      "source_path": "data\\tp5_noncanonical_pilot_store\\tp7_longitudinal\\run_1\\records.jsonl",
       "text": "Operator reviewed routing recovery; however Worker C execution remains unresolved",
       "uncertainty": "explicit_uncertainty"
     },
@@ -763,8 +955,8 @@
       "ov1_allowlisted-bc124d93b4f09b50"
     ],
     "train": [
-      "noncanonical-02290a7dab06cad7",
-      "noncanonical-07be8ac1048d8acb",
+      "noncanonical-0151b3bd5a1031ff",
+      "noncanonical-01b038b35b164087",
       "noncanonical-25a36e16fb2509c7",
       "ov1_allowlisted-07d137fe366f14f8",
       "ov1_allowlisted-239b9eab29a7cb8a",

@@ -1,24 +1,40 @@
 {
   "examples": [
     {
-      "confidence": 0.7,
+      "communication_act": "factual_question",
+      "confidence": 0.82,
       "intent": "question",
-      "message": "What color is the sky?"
+      "matched_rule": "factual_question",
+      "message": "What color is the sky?",
+      "routed_action": "substrate_or_local_model_path",
+      "safe_no_route": false
     },
     {
-      "confidence": 0.88,
+      "communication_act": "memory_request",
+      "confidence": 0.94,
       "intent": "memory_request",
-      "message": "Remember that."
+      "matched_rule": "memory_request",
+      "message": "Remember that.",
+      "routed_action": "concept_approval_path",
+      "safe_no_route": false
     },
     {
-      "confidence": 0.66,
+      "communication_act": "evidence_request",
+      "confidence": 0.9,
       "intent": "analysis",
-      "message": "Analyze this invoice."
+      "matched_rule": "evidence_request",
+      "message": "Analyze this invoice.",
+      "routed_action": "evidence_review",
+      "safe_no_route": false
     },
     {
-      "confidence": 0.92,
+      "communication_act": "diagnostic_request",
+      "confidence": 0.94,
       "intent": "diagnostics",
-      "message": "Show diagnostics."
+      "matched_rule": "diagnostics_request",
+      "message": "Show diagnostics.",
+      "routed_action": "diagnostics",
+      "safe_no_route": false
     }
   ],
   "safe": true,

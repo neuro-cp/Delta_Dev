@@ -86,7 +86,7 @@
       "target": "kernel"
     },
     {
-      "count": 23,
+      "count": 24,
       "source": "other",
       "target": "knowledge"
     },
@@ -101,7 +101,7 @@
       "target": "reasoning"
     },
     {
-      "count": 6,
+      "count": 8,
       "source": "other",
       "target": "runtime"
     },
@@ -139,9 +139,9 @@
   "subsystem_counts": {
     "executive": 75,
     "kernel": 46,
-    "knowledge": 87,
+    "knowledge": 88,
     "learning": 67,
-    "other": 265,
+    "other": 270,
     "reasoning": 66,
     "runtime": 49
   }

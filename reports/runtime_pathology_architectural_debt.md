@@ -9,6 +9,7 @@
 - Kernel does not yet enforce a single runtime execution path
 - Knowledge substrate and reasoning layer are connected by sample fixtures, not live query adapters
 - Approval/integration states exist without one consolidated state machine
+- Large module requires role review: orchestration.runtime.rc2_conversational_mode_router
 - Large module requires role review: orchestration.runtime.arc_vii_xxv_scaffolds
 - Large module requires role review: orchestration.runtime.ov2_cognitive_quality
 - Large module requires role review: orchestration.runtime.runtime_reasoning
@@ -28,4 +29,3 @@
 - Large module requires role review: orchestration.runtime.ov6_ov10_operational_readiness
 - Large module requires role review: orchestration.runtime.v14_recall_bridge
 - Large module requires role review: orchestration.runtime.v14_tiny_training_experiment
-- Large module requires role review: orchestration.runtime.v14_execution_authorization

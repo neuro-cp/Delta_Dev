@@ -47,164 +47,46 @@
           "source_type": "local_model_lane",
           "training_performed": false,
           "uncertainty": "low_to_moderate_operator_reviewed"
-        }
-      ],
-      "confidence": "grounded_in_approved_noncanonical_concept",
-      "confidence_decision": {
-        "confidence": 0.7,
-        "evidence_quality": "local_conversation_or_mode_context",
-        "provider_necessity": "not_required_for_local_response",
-        "retrieval_sufficiency": "not_checked_or_insufficient"
-      },
-      "confidence_score": 0.92,
-      "escalation_plan": {
-        "enabled_now": false,
-        "intent": "question",
-        "provider_calls_performed": false,
-        "recommended_routes": [
-          "local_conversation",
-          "substrate_check"
-        ],
-        "requires_operator_approval": false,
-        "web_search_performed": false
-      },
-      "intent": {
-        "confidence": 0.7,
-        "intent": "question",
-        "message": "What color is the sky?"
-      },
-      "memory_candidate": {
-        "approval_status": "pending_operator_approval",
-        "canonical": false,
-        "concept_id": "rc2-concept-77f273d298c539f5",
-        "concept_name": "Daytime Sky Color",
-        "concept_type": "causal_explanation",
-        "created_at": "2026-07-07T03:19:51+00:00",
-        "examples": [
-          "What color is the sky?"
-        ],
-        "explains": [
-          "What color is the sky?"
-        ],
-        "memory_type": "knowledge",
-        "misconceptions": [],
-        "propositions": [
-          "You taught me the concept `Daytime Sky Color` earlier.",
-          "Based on that: The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-          "Key points: - The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
-        ],
-        "provider_calls_performed": false,
-        "related_concepts": [
-          "daytime",
-          "color",
-          "taught",
-          "concept",
-          "`daytime",
-          "color`",
-          "earlier",
-          "based",
-          "usually",
-          "looks"
-        ],
-        "rollback_handle": "rollback-rc2-concept-77f273d298c539f5",
-        "short_definition": "You taught me the concept `Daytime Sky Color` earlier.",
-        "source_answer_id": "rc2-answer-77f273d298c539f5",
-        "source_model_id": "llama",
-        "source_model_lane": "everyday_conversation",
-        "source_question": "What color is the sky?",
-        "source_type": "substrate",
-        "training_performed": false,
-        "uncertainty": "low_to_moderate_operator_reviewed"
-      },
-      "mode": "Conversation",
-      "mode_router_flags": {
-        "autonomous_actions_enabled": false,
-        "canonical_writes_enabled": false,
-        "hyb1_promoted": false,
-        "mode_router_enabled": true,
-        "model_b_default_changed": false,
-        "production_routing_enabled": false,
-        "provider_calls_enabled": false,
-        "rc2_conversational_shell_enabled": true,
-        "training_enabled": false,
-        "web_search_enabled": false
-      },
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "selected_model_lane": {
-        "available": true,
-        "capabilities": [
-          "text"
-        ],
-        "context_size": 8192,
-        "cost_latency_class": "low_to_medium_local",
-        "display_name": "Everyday Conversation Lane",
-        "executed": false,
-        "execution_gate": "not_executed_by_default",
-        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
-        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
-        "fallback_priority": 1,
-        "lane": "everyday_conversation",
-        "model_family": "llama",
-        "preferred_task_lanes": [
-          "conversation",
-          "question",
-          "self_description"
-        ],
-        "provider_calls_performed": false,
-        "selected_model": "llama",
-        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
-        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-        "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
-      },
-      "supporting_information_offer": null,
-      "training_performed": false,
-      "web_search_performed": false
-    },
-    {
-      "answer": "You taught me the concept `Daytime Sky Color` earlier. Based on that:\nThe sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.\n\nKey points:\n- The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "concept_matches": [
+        },
         {
           "_store_memory_type": "knowledge",
           "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-07T03:03:44+00:00",
+          "approved_at": "2026-07-07T18:03:35+00:00",
           "canonical": false,
-          "concept_id": "rc2-concept-183f0cb7b12abb56",
-          "concept_name": "Daytime Sky Color",
-          "concept_type": "causal_explanation",
-          "created_at": "2026-07-07T03:03:44+00:00",
+          "concept_id": "rc2-concept-7051d920a32ce90e",
+          "concept_name": "Moon Color Appearance",
+          "concept_type": "general_concept",
+          "created_at": "2026-07-07T18:03:22+00:00",
           "examples": [
-            "What color is the sky?"
+            "what color is the moon"
           ],
           "explains": [
-            "What color is the sky?"
+            "what color is the moon"
           ],
           "memory_type": "knowledge",
           "misconceptions": [],
           "propositions": [
-            "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
           ],
           "provider_calls_performed": false,
           "related_concepts": [
-            "daytime",
             "color",
-            "usually",
-            "looks",
-            "during",
-            "molecules",
-            "scatter",
-            "shorter",
-            "wavelengths",
-            "sunlight"
+            "appearance",
+            "generally",
+            "considered",
+            "appear",
+            "lighter",
+            "bluish",
+            "sunlight",
+            "scatters",
+            "surface"
           ],
-          "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
-          "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-          "source_answer_id": "rc2-answer-183f0cb7b12abb56",
-          "source_model_id": "phi4",
+          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
+          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
+          "source_answer_id": "rc2-answer-7051d920a32ce90e",
+          "source_model_id": "llama",
           "source_model_lane": "everyday_conversation",
-          "source_question": "What color is the sky?",
+          "source_question": "what color is the moon",
           "source_type": "local_model_lane",
           "training_performed": false,
           "uncertainty": "low_to_moderate_operator_reviewed"
@@ -212,7 +94,7 @@
       ],
       "confidence": "grounded_in_approved_noncanonical_concept",
       "confidence_decision": {
-        "confidence": 0.7,
+        "confidence": 0.82,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
@@ -230,53 +112,15 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.7,
+        "communication_act": "factual_question",
+        "confidence": 0.82,
         "intent": "question",
-        "message": "What color is water?"
+        "matched_rule": "factual_question",
+        "message": "What color is the sky?",
+        "routed_action": "substrate_or_local_model_path",
+        "safe_no_route": false
       },
-      "memory_candidate": {
-        "approval_status": "pending_operator_approval",
-        "canonical": false,
-        "concept_id": "rc2-concept-d373b2b552b17f58",
-        "concept_name": "Water Color",
-        "concept_type": "causal_explanation",
-        "created_at": "2026-07-07T03:19:51+00:00",
-        "examples": [
-          "What color is water?"
-        ],
-        "explains": [
-          "What color is water?"
-        ],
-        "memory_type": "knowledge",
-        "misconceptions": [],
-        "propositions": [
-          "You taught me the concept `Daytime Sky Color` earlier.",
-          "Based on that: The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-          "Key points: - The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
-        ],
-        "provider_calls_performed": false,
-        "related_concepts": [
-          "water",
-          "color",
-          "taught",
-          "concept",
-          "`daytime",
-          "color`",
-          "earlier",
-          "based",
-          "usually",
-          "looks"
-        ],
-        "rollback_handle": "rollback-rc2-concept-d373b2b552b17f58",
-        "short_definition": "You taught me the concept `Daytime Sky Color` earlier.",
-        "source_answer_id": "rc2-answer-d373b2b552b17f58",
-        "source_model_id": "llama",
-        "source_model_lane": "everyday_conversation",
-        "source_question": "What color is water?",
-        "source_type": "substrate",
-        "training_performed": false,
-        "uncertainty": "low_to_moderate_operator_reviewed"
-      },
+      "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -294,6 +138,18 @@
       "route": "developmental_concept_memory",
       "selected_model_lane": {
         "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
+        ],
         "capabilities": [
           "text"
         ],
@@ -313,9 +169,170 @@
           "self_description"
         ],
         "provider_calls_performed": false,
+        "rejected_models": [
+          {
+            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "phi4"
+          },
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          }
+        ],
         "selected_model": "llama",
         "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
         "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
+        "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
+      },
+      "supporting_information_offer": null,
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    {
+      "answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "confidence": "local_general_knowledge",
+      "confidence_decision": {
+        "confidence": 0.82,
+        "evidence_quality": "local_conversation_or_mode_context",
+        "provider_necessity": "not_required_for_local_response",
+        "retrieval_sufficiency": "not_checked_or_insufficient"
+      },
+      "confidence_score": 0.82,
+      "escalation_plan": {
+        "enabled_now": false,
+        "intent": "question",
+        "provider_calls_performed": false,
+        "recommended_routes": [
+          "local_conversation",
+          "substrate_check"
+        ],
+        "requires_operator_approval": false,
+        "web_search_performed": false
+      },
+      "intent": {
+        "communication_act": "factual_question",
+        "confidence": 0.82,
+        "intent": "question",
+        "matched_rule": "factual_question",
+        "message": "What color is water?",
+        "routed_action": "substrate_or_local_model_path",
+        "safe_no_route": false
+      },
+      "local_model_offer": null,
+      "local_model_result": null,
+      "memory_candidate": {
+        "approval_status": "pending_operator_approval",
+        "canonical": false,
+        "concept_id": "rc2-concept-2e286a7ffe4ccea7",
+        "concept_name": "Water Color",
+        "concept_type": "causal_explanation",
+        "created_at": "2026-07-08T01:27:19+00:00",
+        "examples": [
+          "What color is water?"
+        ],
+        "explains": [
+          "What color is water?"
+        ],
+        "memory_type": "knowledge",
+        "misconceptions": [
+          "The simplified answer may be misleading without context."
+        ],
+        "propositions": [
+          "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
+          "In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context."
+        ],
+        "provider_calls_performed": false,
+        "related_concepts": [
+          "water",
+          "color",
+          "nearly",
+          "colorless",
+          "small",
+          "glass",
+          "large",
+          "amounts",
+          "faintly",
+          "absorbs"
+        ],
+        "rollback_handle": "rollback-rc2-concept-2e286a7ffe4ccea7",
+        "short_definition": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
+        "source_answer_id": "rc2-answer-2e286a7ffe4ccea7",
+        "source_model_id": "llama",
+        "source_model_lane": "everyday_conversation",
+        "source_question": "What color is water?",
+        "source_type": "local_model_lane",
+        "training_performed": false,
+        "uncertainty": "low_to_moderate_operator_reviewed"
+      },
+      "mode": "Conversation",
+      "mode_router_flags": {
+        "autonomous_actions_enabled": false,
+        "canonical_writes_enabled": false,
+        "hyb1_promoted": false,
+        "mode_router_enabled": true,
+        "model_b_default_changed": false,
+        "production_routing_enabled": false,
+        "provider_calls_enabled": false,
+        "rc2_conversational_shell_enabled": true,
+        "training_enabled": false,
+        "web_search_enabled": false
+      },
+      "provider_calls_performed": false,
+      "route": "local_conversation_model_lane",
+      "selected_model_lane": {
+        "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
+        ],
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "low_to_medium_local",
+        "display_name": "Everyday Conversation Lane",
+        "executed": false,
+        "execution_gate": "not_executed_by_default",
+        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
+        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
+        "fallback_priority": 1,
+        "lane": "everyday_conversation",
+        "model_family": "llama",
+        "preferred_task_lanes": [
+          "conversation",
+          "question",
+          "self_description"
+        ],
+        "provider_calls_performed": false,
+        "rejected_models": [
+          {
+            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "phi4"
+          },
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          }
+        ],
+        "selected_model": "llama",
+        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
         "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": null,
@@ -328,7 +345,7 @@
       "canonical_write_performed": false,
       "confidence": "local_coding_capability_route",
       "confidence_decision": {
-        "confidence": 0.68,
+        "confidence": 0.9,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
@@ -347,10 +364,15 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.68,
+        "communication_act": "coding_request",
+        "confidence": 0.9,
         "intent": "coding",
-        "message": "What do you know about coding?"
+        "matched_rule": "coding_request",
+        "message": "What do you know about coding?",
+        "routed_action": "local_model_or_repo_context",
+        "safe_no_route": false
       },
+      "local_model_offer": null,
       "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
@@ -370,6 +392,18 @@
       "route": "local_conversation_model_lane",
       "selected_model_lane": {
         "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
+        ],
         "capabilities": [
           "text"
         ],
@@ -388,9 +422,22 @@
           "technical_explanation"
         ],
         "provider_calls_performed": false,
+        "rejected_models": [
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          },
+          {
+            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "phi4"
+          }
+        ],
         "selected_model": "llama",
         "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
         "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the coding_technical lane.",
         "support_identifier": "rc2-local-lane:coding_technical:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": null,
@@ -422,10 +469,15 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.86,
+        "communication_act": "research_request",
+        "confidence": 0.9,
         "intent": "external_knowledge_request",
-        "message": "What is the relation between Avogadro's number and quantum field theory?"
+        "matched_rule": "external_knowledge_request",
+        "message": "What is the relation between Avogadro's number and quantum field theory?",
+        "routed_action": "research_or_provider_consent_path",
+        "safe_no_route": false
       },
+      "local_model_offer": null,
       "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
@@ -445,6 +497,18 @@
       "route": "local_conversation_model_lane",
       "selected_model_lane": {
         "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
+        ],
         "capabilities": [
           "text"
         ],
@@ -465,9 +529,17 @@
           "external_knowledge_request"
         ],
         "provider_calls_performed": false,
+        "rejected_models": [
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          }
+        ],
         "selected_model": "llama",
         "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
         "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the reasoning_analysis lane.",
         "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": {
@@ -614,8 +686,8 @@
   "developmental_memory_state": {
     "canonical_records": 0,
     "concept_contradictions": 0,
-    "concept_edges": 0,
-    "concept_replay_queue": 1,
+    "concept_edges": 1,
+    "concept_replay_queue": 2,
     "conversation_memory_records": 0,
     "flags": {
       "autonomous_write_performed": false,
@@ -629,9 +701,14 @@
       "training_performed": false,
       "web_search_performed": false
     },
-    "knowledge_memory_records": 1,
+    "knowledge_memory_records": 2,
     "personal_memory_records": 0,
     "training_records": 0
+  },
+  "dialogue_intent_classifier": {
+    "accuracy": 1.0,
+    "corpus_size": 235,
+    "misses": 0
   },
   "display_modes": [
     "Conversation",

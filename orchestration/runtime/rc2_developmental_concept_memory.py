@@ -387,6 +387,8 @@ def infer_concept_name(question: str, answer: str) -> str:
         return "Moon Color Appearance"
     if "sky" in lower and "color" in lower:
         return "Daytime Sky Color"
+    if "meaning of life" in lower or "meaning of life" in combined:
+        return "Meaning of Life Perspectives"
     if "people" in lower and "fun" in lower:
         return "Common Leisure Activities"
     if "most people" in lower and any(term in combined for term in ["hobbies", "activities", "entertainment", "relax"]):

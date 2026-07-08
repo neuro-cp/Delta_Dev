@@ -4,13 +4,13 @@
 DELTA RC1 Runtime Coherence Review
 
 ## Runtime Module Count
-655
+661
 
 ## Dependency Edge Count
-1047
+1056
 
 ## Call Edge Count
-2540
+2582
 
 ## Architectural Debt Count
 25
@@ -22,7 +22,7 @@ DELTA RC1 Runtime Coherence Review
 353
 
 ## Disconnected System Count
-35
+34
 
 ## Unused System Count
 84
@@ -180,6 +180,7 @@ DELTA RC1 Runtime Coherence Review
 - Large module requires role review: orchestration.runtime.arc_vii_xxv_scaffolds
 - Large module requires role review: orchestration.runtime.ov2_cognitive_quality
 - Large module requires role review: orchestration.runtime.ov6_ov10_operational_readiness
+- Large module requires role review: orchestration.runtime.rc2_conversational_mode_router
 - Large module requires role review: orchestration.runtime.runtime_evaluation
 - Large module requires role review: orchestration.runtime.runtime_reasoning
 - Large module requires role review: orchestration.runtime.tp0_controlled_training_pilot
@@ -188,7 +189,6 @@ DELTA RC1 Runtime Coherence Review
 - Large module requires role review: orchestration.runtime.tp5_noncanonical_persistent_pilot
 - Large module requires role review: orchestration.runtime.v14_artifact_comparison
 - Large module requires role review: orchestration.runtime.v14_controlled_learning
-- Large module requires role review: orchestration.runtime.v14_execution_authorization
 - Large module requires role review: orchestration.runtime.v14_hypothesis_arbitration
 - Large module requires role review: orchestration.runtime.v14_offline_evaluation
 - Large module requires role review: orchestration.runtime.v14_pruning_projection

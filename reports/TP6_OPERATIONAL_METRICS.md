@@ -10,5 +10,5 @@
 - contradiction_preservation: `True`
 - uncertainty_calibration: `True`
 - operator_workload_review_items: `4`
-- average_latency_ms: `2.593`
+- average_latency_ms: `2.815`
 - deterministic_repeatability: `True`

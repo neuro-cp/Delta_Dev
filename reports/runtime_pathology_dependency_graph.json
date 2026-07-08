@@ -1,5 +1,5 @@
 {
-  "edge_count": 1047,
+  "edge_count": 1056,
   "edges": [
     {
       "source": "orchestration.runtime.arc_07_investigation",
@@ -3702,6 +3702,26 @@
       "type": "imports"
     },
     {
+      "source": "orchestration.runtime.rc1_operator_console",
+      "target": "orchestration.runtime.rc1_release_candidate_freeze",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_operator_console",
+      "target": "orchestration.runtime.tp16_tp30_master_marathon",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_operator_console",
+      "target": "orchestration.runtime.v29_local_answer_engine",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc1_operator_console_report",
+      "target": "orchestration.runtime.rc1_operator_console",
+      "type": "imports"
+    },
+    {
       "source": "orchestration.runtime.rc1_substrate_query_adapter",
       "target": "orchestration.runtime.arc_ii_knowledge_substrate",
       "type": "imports"
@@ -3829,6 +3849,31 @@
     {
       "source": "orchestration.runtime.rc1_wave_chain_summary",
       "target": "orchestration.runtime.rc1_wave_7_learning_consolidation_pilot_plan",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc2_conversation_pathology_harness",
+      "target": "orchestration.runtime.rc2_conversational_mode_router",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc2_conversational_mode_router",
+      "target": "orchestration.runtime.rc1_operator_console",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc2_conversational_mode_router",
+      "target": "orchestration.runtime.rc2_developmental_concept_memory",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc2_conversational_mode_router",
+      "target": "orchestration.runtime.v17_provider_assisted_unknown_answer",
+      "type": "imports"
+    },
+    {
+      "source": "orchestration.runtime.rc2_conversational_mode_router",
+      "target": "orchestration.runtime.v29_local_answer_engine",
       "type": "imports"
     },
     {
@@ -5241,7 +5286,6 @@
     "orchestration.runtime.cognitive_runtime",
     "orchestration.runtime.post_arc_xxv_exhaustive_runner",
     "orchestration.runtime.rc1_activation_readiness",
-    "orchestration.runtime.tp16_tp30_master_marathon",
     "orchestration.runtime.tp4_controlled_persistent_pilot_design",
     "orchestration.runtime.v14_architecture_decisions",
     "orchestration.runtime.v14_gap_map",
@@ -5280,13 +5324,16 @@
     "orchestration.runtime.ov1_operational_validation",
     "orchestration.runtime.post_arc_xxv_deepening_runner",
     "orchestration.runtime.post_arc_xxv_runtime_completion_runner",
+    "orchestration.runtime.rc1_release_candidate_freeze",
     "orchestration.runtime.rc1_runtime_artifact_registry",
     "orchestration.runtime.rc1_wave_0_manual_validation",
     "orchestration.runtime.rc1_wave_1_fixture_corpus_ingestion",
     "orchestration.runtime.rc1_wave_5_provider_evidence_simulated",
     "orchestration.runtime.rc1_wave_6_live_corpus_pilot_plan",
     "orchestration.runtime.rc1_wave_7_learning_consolidation_pilot_plan",
+    "orchestration.runtime.rc2_developmental_concept_memory",
     "orchestration.runtime.runtime_reasoning",
+    "orchestration.runtime.tp16_tp30_master_marathon",
     "orchestration.runtime.tp5_noncanonical_persistent_pilot",
     "orchestration.runtime.v14_action_ledger",
     "orchestration.runtime.v14_active_specialist_routing",
@@ -5339,7 +5386,7 @@
     "orchestration.runtime.v32_cognitive_kernel",
     "orchestration.runtime.v34_cognitive_state"
   ],
-  "node_count": 655,
+  "node_count": 661,
   "root_modules": [
     "orchestration.runtime.arc_09_external_evidence",
     "orchestration.runtime.arc_10_tool_provider_runtime",
@@ -5698,7 +5745,9 @@
     "orchestration.runtime.ov_hyb1_shadow_comparison",
     "orchestration.runtime.rc1_adversarial_validation",
     "orchestration.runtime.rc1_integrated_cognitive_runtime",
+    "orchestration.runtime.rc1_operator_console_report",
     "orchestration.runtime.rc1_wave_chain_summary",
+    "orchestration.runtime.rc2_conversation_pathology_harness",
     "orchestration.runtime.runtime_evaluation",
     "orchestration.runtime.tp15_governed_substrate_integration_design",
     "orchestration.runtime.tp3_independent_verification_freeze",

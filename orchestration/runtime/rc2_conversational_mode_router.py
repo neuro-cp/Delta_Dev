@@ -20,6 +20,11 @@ from typing import Any, Callable
 
 from integration.model_runtime.model_registry import list_available_models
 from integration.model_runtime.provider_manager import ProviderManager
+from orchestration.runtime.rc2_dialogue_intent_classifier import (
+    classify_dialogue_act,
+    evaluate_dialogue_intent_corpus,
+    write_dialogue_intent_artifacts,
+)
 from orchestration.runtime.rc1_operator_console import (
     answer_operator_question,
     approve_propositions,
@@ -185,15 +190,39 @@ LOW_CONFIDENCE_MARKERS = (
 
 SOCIAL_INTENT_RESPONSES = {
     "greeting": "Hi. I'm here with you. What would you like to work through?",
+    "thanks": "You're welcome. I'm glad that helped.",
     "compliment": "Thanks. I'm glad that was helpful.",
+    "encouragement": "Thanks. I'll keep going carefully.",
     "acknowledgement": "Got it. What would you like to explore next?",
+    "affirmation": "Yes noted. I will only use that as approval when there is a current pending action.",
+    "refusal": "No problem. I will not proceed with that pending action.",
     "cancel": "No problem. We'll leave that path alone.",
+    "correction": "Got it. I will treat that as a correction to the current thread.",
     "preference_opinion": "Good, that gives me useful direction. We can keep shaping the system around that.",
     "personal_emotion": "I hear you. We can keep this low-friction and take it one step at a time.",
+    "followup": "I can rephrase or continue from the recent context.",
+    "joke": "Heh. I caught that as a joke, so I won't route it into memory or retrieval.",
+    "small_talk": "I'm here and ready. What would you like to work on?",
 }
 
 
 def classify_intent(message: str) -> dict[str, Any]:
+    dialogue = classify_dialogue_act(message)
+    if dialogue["confidence"] >= 0.8:
+        intent = str(dialogue["intent"])
+        if dialogue["communication_act"] in {"joke", "small_talk"}:
+            intent = str(dialogue["communication_act"])
+        if dialogue["communication_act"] == "evidence_request" and message.lower().strip().startswith("analyze "):
+            intent = "analysis"
+        return {
+            "intent": intent,
+            "message": message,
+            "confidence": dialogue["confidence"],
+            "communication_act": dialogue["communication_act"],
+            "matched_rule": dialogue["matched_rule"],
+            "routed_action": dialogue["routed_action"],
+            "safe_no_route": dialogue["safe_no_route"],
+        }
     lower = " ".join(message.lower().strip().split())
     bare = lower.strip(" .!?")
     if any(term in lower for term in ["diagnostic", "show diagnostics", "runtime status", "system health", "health check"]):
@@ -743,7 +772,16 @@ def candidate_is_memory_worthy(candidate: dict[str, Any], payload: dict[str, Any
 
 
 def maybe_build_memory_candidate(message: str, payload: dict[str, Any]) -> dict[str, Any] | None:
-    if payload.get("route") in {"gpt_support_approval_preview", "provider_support_refused_or_local_known", "social_conversation"}:
+    intent = payload.get("intent") if isinstance(payload.get("intent"), dict) else classify_intent(message)
+    if intent.get("communication_act") == "memory_request" or intent.get("intent") == "memory_request":
+        return None
+    if payload.get("route") in {
+        "developmental_concept_memory",
+        "substrate_first_conversation",
+        "gpt_support_approval_preview",
+        "provider_support_refused_or_local_known",
+        "social_conversation",
+    }:
         return None
     if payload.get("supporting_information_offer"):
         return None
@@ -1156,7 +1194,7 @@ def render_route(payload: dict[str, Any], *, developer_overlay: bool = False) ->
             candidate = payload["memory_candidate"]
             lines.extend([
                 "",
-                f"If this was useful, I can keep it as the reversible concept `{candidate.get('concept_name', 'Learned Concept')}`. Choose `Keep This Concept` or type `keep this concept`.",
+                f"I noticed a possible reusable concept: `{candidate.get('concept_name', 'Learned Concept')}`. I put it in Concept Review; accepting it there is the only way to store it.",
             ])
         if developer_overlay:
             lines.extend(["", render_developer_overlay(payload)])
@@ -1220,6 +1258,9 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
     lines = [
         "--- Developer Overlay ---",
         f"Intent: {intent.get('intent', 'unknown')}",
+        f"Communication act: {intent.get('communication_act', 'unknown')}",
+        f"Matched rule: {intent.get('matched_rule', 'unknown')}",
+        f"Routed action: {intent.get('routed_action', 'unknown')}",
         f"Route: {route}",
         f"Knowledge boundary: {boundary}",
         f"Chosen lane: {lane.get('display_name') or lane.get('lane') or 'none'}",
@@ -1240,6 +1281,7 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
 
 
 def build_rc2_report() -> dict[str, Any]:
+    dialogue_evaluation = evaluate_dialogue_intent_corpus()
     cases = [
         route_message("Conversation", "What color is the sky?"),
         route_message("Conversation", "What color is water?"),
@@ -1261,6 +1303,11 @@ def build_rc2_report() -> dict[str, Any]:
         "useful_answer_memory_scope": "local_noncanonical_rc2_developmental_concept_store",
         "developmental_memory_state": build_developmental_memory_state(),
         "local_model_discovery": discover_local_model_lanes(),
+        "dialogue_intent_classifier": {
+            "corpus_size": dialogue_evaluation["corpus_size"],
+            "accuracy": dialogue_evaluation["accuracy"],
+            "misses": len(dialogue_evaluation["misses"]),
+        },
         "safe": all(not case["provider_calls_performed"] and not case["training_performed"] and not case["canonical_write_performed"] for case in cases),
         "final_recommendation": "USE_RC2_CONVERSATIONAL_SHELL_AS_PRIMARY_UI_WITH_RC1_OPERATOR_MODE_AVAILABLE",
     }
@@ -1268,6 +1315,7 @@ def build_rc2_report() -> dict[str, Any]:
 
 def report_payloads() -> dict[str, dict[str, Any]]:
     base = build_rc2_report()
+    dialogue_evaluation = evaluate_dialogue_intent_corpus()
     return {
         "RC2_CONVERSATIONAL_ARCHITECTURE": {
             **base,
@@ -1297,6 +1345,25 @@ def report_payloads() -> dict[str, dict[str, Any]]:
                 "diagnostics",
             ],
             "examples": [classify_intent(text) for text in ["What color is the sky?", "Remember that.", "Analyze this invoice.", "Show diagnostics."]],
+            "safe": True,
+        },
+        "RC2_DIALOGUE_INTENT_CLASSIFIER": {
+            "summary": "Deterministic communication-act classification now runs before retrieval, model routing, memory formation, or provider escalation.",
+            "corpus_size": dialogue_evaluation["corpus_size"],
+            "accuracy": dialogue_evaluation["accuracy"],
+            "misses": dialogue_evaluation["misses"],
+            "confusion_matrix": dialogue_evaluation["confusion_matrix"],
+            "rule_coverage": dialogue_evaluation["rule_coverage"],
+            "developer_overlay_fields": ["communication_act", "confidence", "matched_rule", "routed_action"],
+            "routing_policy": {
+                "social_intent": "respond socially; no SLM, retrieval, memory, or provider",
+                "acknowledgement": "brief response; no routing",
+                "refusal_or_cancel": "stop or reject pending action",
+                "followup": "use short-term context",
+                "factual_or_conceptual_question": "substrate/local model path",
+                "memory_command": "concept approval path",
+                "diagnostics_command": "diagnostics",
+            },
             "safe": True,
         },
         "RC2_MEMORY_EXPERIENCE": {
@@ -1334,7 +1401,7 @@ def report_payloads() -> dict[str, dict[str, Any]]:
         },
         "RC2_SELECTIVE_MEMORY_EXPERIMENT": {
             "enabled": True,
-            "approval_paths": ["Keep This Concept button", "exact chat phrase: keep this concept"],
+            "approval_paths": ["Concept Review tray", "Accept Selected Concept button"],
             "casual_yes_counts_as_memory_approval": False,
             "target_store": "data/rc2_developmental_memory/knowledge_concepts.jsonl",
             "canonical_writes_enabled": False,
@@ -1373,7 +1440,7 @@ def report_payloads() -> dict[str, dict[str, Any]]:
             "safe": True,
         },
         "RC2_CONCEPT_APPROVAL_UX": {
-            "summary": "The UI keeps the same layout but offers Keep This Concept, Not now/Discard/Forget after this chat, and compact ask-GPT approval preview paths.",
+            "summary": "The UI keeps the same layout but moves concept approval to a passive Concept Review tray. Chat affirmations do not store memory.",
             "approval_required": True,
             "casual_yes_counts_as_approval": False,
             "safe": True,
@@ -1395,6 +1462,7 @@ def report_payloads() -> dict[str, dict[str, Any]]:
 
 def write_rc2_report() -> dict[str, Any]:
     REPORTS.mkdir(parents=True, exist_ok=True)
+    write_dialogue_intent_artifacts()
     payload = build_rc2_report()
     (REPORTS / "RC2_CONVERSATIONAL_MODE_ROUTER.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     md = [

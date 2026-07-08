@@ -1,10 +1,10 @@
 # Runtime Pathology Call Graph
 
 ## Edge Count
-2540
+2582
 
 ## Ambiguous Call Count
-5027
+5044
 
 ## Edges
 - {'source': 'orchestration.runtime.arc_07_investigation', 'target': 'orchestration.runtime.arc_ii_knowledge_substrate', 'call': 'all'}

@@ -22,12 +22,14 @@ from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     validate_console_safe,
 )
 from orchestration.runtime.rc2_developmental_concept_memory import (  # noqa: E402
+    approve_candidate_concept,
     build_developmental_memory_state,
     clear_developmental_memory_store,
 )
 from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
     DISPLAY_MODES,
-    remember_useful_answer,
+    build_memory_candidate_from_answer,
+    candidate_is_memory_worthy,
     render_route,
     route_message,
 )
@@ -74,6 +76,34 @@ def _format_snapshot(snapshot: dict[str, object]) -> str:
     ])
 
 
+def _model_answer_offers_deepening(answer: str) -> bool:
+    lower = " ".join(str(answer or "").lower().split())
+    offers = (
+        "would you like me to explore",
+        "would you like me to go deeper",
+        "would you like more detail",
+        "would you like more details",
+        "would you like examples",
+        "should i go deeper",
+        "do you want me to expand",
+        "want me to expand",
+    )
+    return any(phrase in lower for phrase in offers)
+
+
+def _build_deepening_prompt(question: str, prior_answer: str) -> str:
+    return (
+        "Please expand on your previous answer for this user question.\n\n"
+        f"Original question: {question}\n\n"
+        f"Previous answer: {prior_answer}\n\n"
+        "Go deeper, add useful nuance, keep it conversational, and do not ask to store memory."
+    )
+
+
+def _lines_from_text(text: str) -> list[str]:
+    return [line.strip() for line in str(text or "").splitlines() if line.strip()]
+
+
 class DeltaApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
@@ -83,9 +113,11 @@ class DeltaApp:
         self.extracted: list[dict[str, object]] = []
         self.last_message = ""
         self.last_payload: dict[str, object] | None = None
+        self.concept_review_items: dict[str, dict[str, object]] = {}
         self.session_history: list[dict[str, str]] = []
         self.pending_provider_question: str | None = None
         self.pending_local_model_question: str | None = None
+        self.pending_local_model_deepening: dict[str, str] | None = None
         self.developer_overlay_enabled = tk.BooleanVar(value=True)
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
@@ -150,13 +182,26 @@ class DeltaApp:
 
         memory_bar = ttk.Frame(self.conversation_tab)
         memory_bar.pack(fill=tk.X, pady=(6, 0))
-        ttk.Button(memory_bar, text="Keep This Concept", command=self._remember_last_answer).pack(side=tk.LEFT)
+        ttk.Button(memory_bar, text="Accept Selected Concept", command=self._accept_selected_concept).pack(side=tk.LEFT)
+        ttk.Button(memory_bar, text="Reject Selected Concept", command=self._reject_selected_concept).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Button(memory_bar, text="Inspect Selected Concept", command=self._inspect_selected_concept).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Button(memory_bar, text="Clear Local Memory Store", command=self._clear_local_store).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Button(memory_bar, text="Open Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
 
+        review = ttk.LabelFrame(self.conversation_tab, text="Concept Review")
+        review.pack(fill=tk.X, pady=(8, 0))
+        self.concept_review = ttk.Treeview(review, columns=("concept", "source", "status"), show="headings", height=3)
+        self.concept_review.heading("concept", text="Potential Concept")
+        self.concept_review.heading("source", text="Source")
+        self.concept_review.heading("status", text="Status")
+        self.concept_review.column("concept", width=360)
+        self.concept_review.column("source", width=180)
+        self.concept_review.column("status", width=120)
+        self.concept_review.pack(fill=tk.X, padx=6, pady=6)
+
         hint = ttk.Label(
             self.conversation_tab,
-            text="Default mode is natural conversation. Useful answers can be remembered only when you explicitly mark them useful.",
+            text="Default mode is natural conversation. Possible concepts appear in Concept Review and are stored only if you press Accept.",
         )
         hint.pack(anchor=tk.W, pady=(6, 0))
 
@@ -254,7 +299,34 @@ class DeltaApp:
         self._append_chat("You", message)
         lower = message.lower().strip()
         cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
-        if self.pending_local_model_question and lower in {"yes", "y", "yes please", "sure", "ask local", "ask the local model", "ask a local model"}:
+        affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
+        if self.pending_local_model_deepening and lower in affirm_words:
+            pending = self.pending_local_model_deepening
+            self.pending_local_model_deepening = None
+            self._append_session("user", message)
+            target = _build_deepening_prompt(pending["question"], pending["answer"])
+            payload = route_message(
+                "Conversation",
+                target,
+                history=self._recent_history_for_router(),
+                execute_local_model=True,
+            )
+            self.last_message = target
+            self.last_payload = payload
+            rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._queue_concept_candidate(payload)
+            self._append_chat("DELTA", rendered)
+            self._append_session("assistant", rendered)
+            self._refresh_state_cards()
+            return
+        if self.pending_local_model_deepening and lower in cancel_words:
+            self.pending_local_model_deepening = None
+            self._append_session("user", message)
+            reply = "Okay. I will not deepen that answer right now."
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if self.pending_local_model_question and lower in (affirm_words | {"ask local", "ask the local model", "ask a local model"}):
             target = self.pending_local_model_question
             self.pending_local_model_question = None
             self._append_session("user", message)
@@ -269,6 +341,8 @@ class DeltaApp:
             offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
             self.pending_provider_question = target if isinstance(offer, dict) and offer.get("offered") else None
             rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._queue_concept_candidate(payload)
+            self._set_deepening_offer_if_present(target, payload)
             self._append_chat("DELTA", rendered)
             self._append_session("assistant", rendered)
             self._refresh_state_cards()
@@ -293,6 +367,8 @@ class DeltaApp:
             self.last_message = target
             self.last_payload = payload
             rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._queue_concept_candidate(payload)
+            self._set_deepening_offer_if_present(target, payload)
             self._append_chat("DELTA", rendered)
             self._append_session("assistant", rendered)
             self._refresh_state_cards()
@@ -304,15 +380,18 @@ class DeltaApp:
             self._append_chat("DELTA", reply)
             self._append_session("assistant", reply)
             return
-        if lower in {"remember this useful answer", "keep this concept", "that was useful remember the concept"}:
+        if lower in {"remember that", "remember this", "store that", "store this", "save that", "save this", "remember this useful answer", "keep this concept", "that was useful remember the concept"}:
             self._append_session("user", message)
-            self._remember_last_answer()
+            reply = self._queue_last_answer_for_review()
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
             return
         if lower in {"not now", "discard", "forget after this chat"}:
             self._append_session("user", message)
             self._append_chat("DELTA", "Okay. I will keep this in the current conversation only and will not store a concept.")
             self._append_session("assistant", "Okay. I will keep this in the current conversation only and will not store a concept.")
             return
+        self.pending_local_model_deepening = None
         payload = route_message(
             self.mode.get(),
             message,
@@ -331,32 +410,210 @@ class DeltaApp:
             self.pending_provider_question = None
         local_offer = payload.get("local_model_offer") if isinstance(payload, dict) else None
         self.pending_local_model_question = message if isinstance(local_offer, dict) and local_offer.get("offered") else None
+        if self.pending_local_model_question:
+            self.pending_local_model_deepening = None
         self._refresh_state_cards()
         rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+        self._queue_concept_candidate(payload)
         self._append_chat("DELTA", rendered)
         self._append_session("user", message)
         self._append_session("assistant", rendered)
 
-    def _remember_last_answer(self) -> None:
-        if not self.last_message or not self.last_payload:
-            messagebox.showinfo("DELTA", "Ask something first, then mark the answer useful if you want it remembered.")
+    def _set_deepening_offer_if_present(self, question: str, payload: dict[str, object]) -> None:
+        answer = str(payload.get("answer") or "")
+        if payload.get("route") == "local_conversation_model_lane" and _model_answer_offers_deepening(answer):
+            self.pending_local_model_deepening = {"question": question, "answer": answer}
+        else:
+            self.pending_local_model_deepening = None
+
+    def _queue_concept_candidate(self, payload: dict[str, object]) -> None:
+        candidate = payload.get("memory_candidate")
+        if not isinstance(candidate, dict):
             return
-        result = remember_useful_answer(self.last_message, self.last_payload)
+        concept_id = str(candidate.get("concept_id") or "")
+        if not concept_id or concept_id in self.concept_review_items:
+            return
+        self.concept_review_items[concept_id] = {"candidate": candidate, "payload": payload}
+        self.concept_review.insert(
+            "",
+            tk.END,
+            iid=concept_id,
+            values=(
+                str(candidate.get("concept_name") or "Learned Concept"),
+                str(candidate.get("source_type") or payload.get("route") or "conversation"),
+                "pending",
+            ),
+        )
+
+    def _queue_last_answer_for_review(self) -> str:
+        if not self.last_message or not isinstance(self.last_payload, dict):
+            return "I do not have a previous answer to turn into a concept yet."
+        existing = self.last_payload.get("memory_candidate")
+        if isinstance(existing, dict):
+            candidate = existing
+        else:
+            candidate = build_memory_candidate_from_answer(self.last_message, self.last_payload)
+            if not candidate_is_memory_worthy(candidate, self.last_payload):
+                candidate = {
+                    **candidate,
+                    "approval_status": "pending_operator_review_user_requested",
+                    "operator_review_required": True,
+                    "memory_request_source": "explicit_user_remember_that",
+                    "uncertainty": "moderate_operator_review_required",
+                    "review_note": "User explicitly asked to remember the previous answer; candidate was queued for manual review despite lower automatic memory-worthiness.",
+                }
+            self.last_payload["memory_candidate"] = candidate
+        before = set(self.concept_review_items)
+        self._queue_concept_candidate(self.last_payload)
+        concept_id = str(candidate.get("concept_id") or "")
+        name = str(candidate.get("concept_name") or "that concept")
+        if concept_id in before:
+            return f"`{name}` is already in Concept Review. Select it and press Accept Selected Concept if you want it stored."
+        return f"I added `{name}` to Concept Review. Select it and press Accept Selected Concept if you want it stored."
+
+    def _selected_concept_id(self) -> str | None:
+        selected = self.concept_review.selection()
+        return str(selected[0]) if selected else None
+
+    def _accept_selected_concept(self) -> None:
+        concept_id = self._selected_concept_id()
+        if not concept_id:
+            messagebox.showinfo("DELTA", "Select a concept from Concept Review first.")
+            return
+        item = self.concept_review_items.get(concept_id)
+        if not item:
+            messagebox.showinfo("DELTA", "That concept is no longer available for review.")
+            return
+        candidate = dict(item["candidate"])
+        result = approve_candidate_concept(candidate, approval_text="Keep this concept")
         self.snapshot = build_operator_snapshot()
         self._refresh_state_cards()
-        approved = result["result"].get("approved") is True
-        duplicate = result["result"].get("duplicate") is True
+        approved = result.get("approved") is True
+        duplicate = result.get("duplicate") is True
         if approved:
-            concept = result["result"]["stored_concept"]
+            concept = result["stored_concept"]
+            self.concept_review.set(concept_id, "status", "accepted")
             text = f"Kept the concept `{concept['concept_name']}` in noncanonical {concept['memory_type']} memory. Canonical memory and training stayed off."
         elif duplicate:
+            self.concept_review.set(concept_id, "status", "duplicate")
             text = "I already had a matching concept, so I skipped the duplicate. Canonical memory and training stayed off."
-        elif result["result"].get("reason") == "no_coherent_memory_candidate":
-            text = "I do not have a clean reusable concept from that answer, so I did not store anything."
         else:
+            self.concept_review.set(concept_id, "status", "not stored")
             text = "I did not store the concept. Canonical memory and training stayed off."
         self._append_chat("DELTA", text)
         self._append_session("assistant", text)
+
+    def _reject_selected_concept(self) -> None:
+        concept_id = self._selected_concept_id()
+        if not concept_id:
+            messagebox.showinfo("DELTA", "Select a concept from Concept Review first.")
+            return
+        self.concept_review.set(concept_id, "status", "rejected")
+        item = self.concept_review_items.get(concept_id, {})
+        candidate = item.get("candidate", {}) if isinstance(item, dict) else {}
+        name = candidate.get("concept_name", "that concept") if isinstance(candidate, dict) else "that concept"
+        text = f"Rejected `{name}`. Nothing was stored."
+        self._append_chat("DELTA", text)
+        self._append_session("assistant", text)
+
+    def _inspect_selected_concept(self) -> None:
+        concept_id = self._selected_concept_id()
+        if not concept_id:
+            messagebox.showinfo("DELTA", "Select a concept from Concept Review first.")
+            return
+        item = self.concept_review_items.get(concept_id)
+        if not item:
+            messagebox.showinfo("DELTA", "That concept is no longer available for review.")
+            return
+        candidate = item["candidate"]
+        if not isinstance(candidate, dict):
+            messagebox.showinfo("DELTA", "That concept candidate is not editable.")
+            return
+        self._open_concept_editor(concept_id, candidate)
+
+    def _open_concept_editor(self, concept_id: str, candidate: dict[str, object]) -> None:
+        editor = tk.Toplevel(self.root)
+        editor.title(f"Edit Concept - {candidate.get('concept_name', 'Candidate')}")
+        editor.geometry("780x680")
+        editor.transient(self.root)
+
+        frame = ttk.Frame(editor, padding=10)
+        frame.pack(fill=tk.BOTH, expand=True)
+        frame.columnconfigure(1, weight=1)
+        frame.rowconfigure(2, weight=1)
+        frame.rowconfigure(3, weight=1)
+        frame.rowconfigure(4, weight=1)
+        frame.rowconfigure(8, weight=1)
+
+        name_var = tk.StringVar(value=str(candidate.get("concept_name") or ""))
+        definition_var = tk.StringVar(value=str(candidate.get("short_definition") or ""))
+        uncertainty_var = tk.StringVar(value=str(candidate.get("uncertainty") or ""))
+        memory_type_var = tk.StringVar(value=str(candidate.get("memory_type") or "knowledge"))
+
+        ttk.Label(frame, text="Concept name").grid(row=0, column=0, sticky="w", pady=3)
+        ttk.Entry(frame, textvariable=name_var).grid(row=0, column=1, sticky="ew", pady=3)
+
+        ttk.Label(frame, text="Short definition").grid(row=1, column=0, sticky="w", pady=3)
+        ttk.Entry(frame, textvariable=definition_var).grid(row=1, column=1, sticky="ew", pady=3)
+
+        ttk.Label(frame, text="Propositions").grid(row=2, column=0, sticky="nw", pady=3)
+        propositions_box = scrolledtext.ScrolledText(frame, height=7, wrap=tk.WORD)
+        propositions_box.grid(row=2, column=1, sticky="nsew", pady=3)
+        propositions_box.insert(tk.END, "\n".join(str(item) for item in candidate.get("propositions", []) if str(item).strip()))
+
+        ttk.Label(frame, text="Related concepts").grid(row=3, column=0, sticky="nw", pady=3)
+        related_box = scrolledtext.ScrolledText(frame, height=5, wrap=tk.WORD)
+        related_box.grid(row=3, column=1, sticky="nsew", pady=3)
+        related_box.insert(tk.END, "\n".join(str(item) for item in candidate.get("related_concepts", []) if str(item).strip()))
+
+        ttk.Label(frame, text="Operator notes").grid(row=4, column=0, sticky="nw", pady=3)
+        notes_box = scrolledtext.ScrolledText(frame, height=5, wrap=tk.WORD)
+        notes_box.grid(row=4, column=1, sticky="nsew", pady=3)
+        notes_box.insert(tk.END, str(candidate.get("operator_notes") or candidate.get("review_note") or ""))
+
+        ttk.Label(frame, text="Uncertainty").grid(row=5, column=0, sticky="w", pady=3)
+        ttk.Entry(frame, textvariable=uncertainty_var).grid(row=5, column=1, sticky="ew", pady=3)
+
+        ttk.Label(frame, text="Memory type").grid(row=6, column=0, sticky="w", pady=3)
+        ttk.Combobox(frame, values=["knowledge", "personal", "conversation"], textvariable=memory_type_var, state="readonly").grid(row=6, column=1, sticky="ew", pady=3)
+
+        ttk.Label(frame, text="Source question").grid(row=7, column=0, sticky="nw", pady=3)
+        source = ttk.Label(frame, text=str(candidate.get("source_question") or ""), wraplength=560)
+        source.grid(row=7, column=1, sticky="ew", pady=3)
+
+        ttk.Label(frame, text="Raw candidate").grid(row=8, column=0, sticky="nw", pady=3)
+        raw_box = scrolledtext.ScrolledText(frame, height=8, wrap=tk.WORD)
+        raw_box.grid(row=8, column=1, sticky="nsew", pady=3)
+        raw_box.insert(tk.END, json.dumps(candidate, indent=2, sort_keys=True))
+        raw_box.configure(state=tk.DISABLED)
+
+        def done() -> None:
+            updated = {
+                **candidate,
+                "concept_name": name_var.get().strip() or str(candidate.get("concept_name") or "Learned Concept"),
+                "short_definition": definition_var.get().strip(),
+                "propositions": _lines_from_text(propositions_box.get("1.0", tk.END)),
+                "related_concepts": _lines_from_text(related_box.get("1.0", tk.END)),
+                "operator_notes": notes_box.get("1.0", tk.END).strip(),
+                "uncertainty": uncertainty_var.get().strip() or "operator_edited",
+                "memory_type": memory_type_var.get().strip() or "knowledge",
+                "operator_edited": True,
+                "approval_status": "pending_operator_review_edited",
+            }
+            self.concept_review_items[concept_id]["candidate"] = updated
+            if self.last_payload and self.last_payload.get("memory_candidate", {}).get("concept_id") == concept_id:
+                self.last_payload["memory_candidate"] = updated
+            self.concept_review.set(concept_id, "concept", updated["concept_name"])
+            self.concept_review.set(concept_id, "source", str(updated.get("source_type") or "edited_candidate"))
+            self.concept_review.set(concept_id, "status", "edited")
+            self._append_chat("DELTA", f"Updated `{updated['concept_name']}` in Concept Review. It is not stored until you press Accept Selected Concept.")
+            self._append_session("assistant", f"Updated `{updated['concept_name']}` in Concept Review.")
+            editor.destroy()
+
+        buttons = ttk.Frame(frame)
+        buttons.grid(row=9, column=0, columnspan=2, sticky="ew", pady=(8, 0))
+        ttk.Button(buttons, text="Done", command=done).pack(side=tk.RIGHT)
+        ttk.Button(buttons, text="Cancel", command=editor.destroy).pack(side=tk.RIGHT, padx=(0, 8))
 
     def _clear_local_store(self) -> None:
         phrase = "DELETE_RC2_DEVELOPMENTAL_MEMORY_STORE"

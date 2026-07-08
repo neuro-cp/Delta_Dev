@@ -136,7 +136,7 @@
       "tp2_average_delta": 0.114
     },
     "phase": "TP3 Freeze Manifest",
-    "repo_commit": "53f989e1090ebca2d9e444f2acb57ad9e2fbbfd6",
+    "repo_commit": "233e8a7d6803e091441631d14f5cf80a3e01dab6",
     "report_hashes": {
       "reports/TP0_BEFORE_AFTER_EVALUATION.json": "51d4ac4a753d0f673a529b50c862ed7391990c0364f3dd34b481a0730c1a8282",
       "reports/TP0_CONTROLLED_TRAINING_PILOT.json": "7a57c9be85fcabbaa55c95133b4581537362ae71b4c1ad28e62c34343b87c9e0",

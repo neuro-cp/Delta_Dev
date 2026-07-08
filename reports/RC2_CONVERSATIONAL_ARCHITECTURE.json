@@ -1,17 +1,105 @@
 {
   "cases": [
     {
-      "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "answer": "You taught me the concept `Daytime Sky Color` earlier. Based on that:\nThe sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.\n\nKey points:\n- The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "confidence": "local_general_knowledge",
+      "concept_matches": [
+        {
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-07T03:03:44+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-183f0cb7b12abb56",
+          "concept_name": "Daytime Sky Color",
+          "concept_type": "causal_explanation",
+          "created_at": "2026-07-07T03:03:44+00:00",
+          "examples": [
+            "What color is the sky?"
+          ],
+          "explains": [
+            "What color is the sky?"
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [],
+          "propositions": [
+            "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+          ],
+          "provider_calls_performed": false,
+          "related_concepts": [
+            "daytime",
+            "color",
+            "usually",
+            "looks",
+            "during",
+            "molecules",
+            "scatter",
+            "shorter",
+            "wavelengths",
+            "sunlight"
+          ],
+          "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
+          "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+          "source_answer_id": "rc2-answer-183f0cb7b12abb56",
+          "source_model_id": "phi4",
+          "source_model_lane": "everyday_conversation",
+          "source_question": "What color is the sky?",
+          "source_type": "local_model_lane",
+          "training_performed": false,
+          "uncertainty": "low_to_moderate_operator_reviewed"
+        },
+        {
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-07T18:03:35+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-7051d920a32ce90e",
+          "concept_name": "Moon Color Appearance",
+          "concept_type": "general_concept",
+          "created_at": "2026-07-07T18:03:22+00:00",
+          "examples": [
+            "what color is the moon"
+          ],
+          "explains": [
+            "what color is the moon"
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [],
+          "propositions": [
+            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
+          ],
+          "provider_calls_performed": false,
+          "related_concepts": [
+            "color",
+            "appearance",
+            "generally",
+            "considered",
+            "appear",
+            "lighter",
+            "bluish",
+            "sunlight",
+            "scatters",
+            "surface"
+          ],
+          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
+          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
+          "source_answer_id": "rc2-answer-7051d920a32ce90e",
+          "source_model_id": "llama",
+          "source_model_lane": "everyday_conversation",
+          "source_question": "what color is the moon",
+          "source_type": "local_model_lane",
+          "training_performed": false,
+          "uncertainty": "low_to_moderate_operator_reviewed"
+        }
+      ],
+      "confidence": "grounded_in_approved_noncanonical_concept",
       "confidence_decision": {
-        "confidence": 0.7,
-        "evidence_quality": "local_scaffold_or_mode_context",
-        "provider_necessity": "not_required_for_scaffold_response",
+        "confidence": 0.82,
+        "evidence_quality": "local_conversation_or_mode_context",
+        "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.88,
+      "confidence_score": 0.92,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "question",
@@ -24,51 +112,15 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.7,
+        "communication_act": "factual_question",
+        "confidence": 0.82,
         "intent": "question",
-        "message": "What color is the sky?"
+        "matched_rule": "factual_question",
+        "message": "What color is the sky?",
+        "routed_action": "substrate_or_local_model_path",
+        "safe_no_route": false
       },
-      "memory_candidate": {
-        "approval_status": "pending_operator_approval",
-        "canonical": false,
-        "concept_id": "rc2-concept-183f0cb7b12abb56",
-        "concept_name": "Daytime Sky Color",
-        "concept_type": "causal_explanation",
-        "created_at": "2026-07-07T03:01:59+00:00",
-        "examples": [
-          "What color is the sky?"
-        ],
-        "explains": [
-          "What color is the sky?"
-        ],
-        "memory_type": "knowledge",
-        "misconceptions": [],
-        "propositions": [
-          "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
-        ],
-        "provider_calls_performed": false,
-        "related_concepts": [
-          "daytime",
-          "color",
-          "usually",
-          "looks",
-          "during",
-          "molecules",
-          "scatter",
-          "shorter",
-          "wavelengths",
-          "sunlight"
-        ],
-        "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
-        "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-        "source_answer_id": "rc2-answer-183f0cb7b12abb56",
-        "source_model_id": "phi4",
-        "source_model_lane": "everyday_conversation",
-        "source_question": "What color is the sky?",
-        "source_type": "local_model_lane",
-        "training_performed": false,
-        "uncertainty": "low_to_moderate_operator_reviewed"
-      },
+      "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -83,9 +135,21 @@
         "web_search_enabled": false
       },
       "provider_calls_performed": false,
-      "route": "local_conversation_model_lane",
+      "route": "developmental_concept_memory",
       "selected_model_lane": {
         "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
+        ],
         "capabilities": [
           "text"
         ],
@@ -98,14 +162,30 @@
         "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
         "fallback_priority": 1,
         "lane": "everyday_conversation",
-        "model_family": "phi4",
+        "model_family": "llama",
         "preferred_task_lanes": [
           "conversation",
           "question",
           "self_description"
         ],
         "provider_calls_performed": false,
-        "selected_model": "phi4"
+        "rejected_models": [
+          {
+            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "phi4"
+          },
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          }
+        ],
+        "selected_model": "llama",
+        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
+        "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": null,
       "training_performed": false,
@@ -117,9 +197,9 @@
       "canonical_write_performed": false,
       "confidence": "local_general_knowledge",
       "confidence_decision": {
-        "confidence": 0.7,
-        "evidence_quality": "local_scaffold_or_mode_context",
-        "provider_necessity": "not_required_for_scaffold_response",
+        "confidence": 0.82,
+        "evidence_quality": "local_conversation_or_mode_context",
+        "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
       "confidence_score": 0.82,
@@ -135,17 +215,23 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.7,
+        "communication_act": "factual_question",
+        "confidence": 0.82,
         "intent": "question",
-        "message": "What color is water?"
+        "matched_rule": "factual_question",
+        "message": "What color is water?",
+        "routed_action": "substrate_or_local_model_path",
+        "safe_no_route": false
       },
+      "local_model_offer": null,
+      "local_model_result": null,
       "memory_candidate": {
         "approval_status": "pending_operator_approval",
         "canonical": false,
-        "concept_id": "rc2-concept-203e1e7aabccfa7e",
+        "concept_id": "rc2-concept-2e286a7ffe4ccea7",
         "concept_name": "Water Color",
         "concept_type": "causal_explanation",
-        "created_at": "2026-07-07T03:01:59+00:00",
+        "created_at": "2026-07-08T01:27:19+00:00",
         "examples": [
           "What color is water?"
         ],
@@ -173,10 +259,10 @@
           "faintly",
           "absorbs"
         ],
-        "rollback_handle": "rollback-rc2-concept-203e1e7aabccfa7e",
+        "rollback_handle": "rollback-rc2-concept-2e286a7ffe4ccea7",
         "short_definition": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
-        "source_answer_id": "rc2-answer-203e1e7aabccfa7e",
-        "source_model_id": "phi4",
+        "source_answer_id": "rc2-answer-2e286a7ffe4ccea7",
+        "source_model_id": "llama",
         "source_model_lane": "everyday_conversation",
         "source_question": "What color is water?",
         "source_type": "local_model_lane",
@@ -200,6 +286,18 @@
       "route": "local_conversation_model_lane",
       "selected_model_lane": {
         "available": true,
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
+        ],
         "capabilities": [
           "text"
         ],
@@ -212,28 +310,44 @@
         "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
         "fallback_priority": 1,
         "lane": "everyday_conversation",
-        "model_family": "phi4",
+        "model_family": "llama",
         "preferred_task_lanes": [
           "conversation",
           "question",
           "self_description"
         ],
         "provider_calls_performed": false,
-        "selected_model": "phi4"
+        "rejected_models": [
+          {
+            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "phi4"
+          },
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          }
+        ],
+        "selected_model": "llama",
+        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the everyday_conversation lane.",
+        "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": null,
       "training_performed": false,
       "web_search_performed": false
     },
     {
-      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. For this kind of task I would route first to the Coding / Technical Lane with `qwen` available as the preferred local model.",
+      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "confidence": "local_coding_capability_route",
       "confidence_decision": {
-        "confidence": 0.68,
-        "evidence_quality": "local_scaffold_or_mode_context",
-        "provider_necessity": "not_required_for_scaffold_response",
+        "confidence": 0.9,
+        "evidence_quality": "local_conversation_or_mode_context",
+        "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
       "confidence_score": 0.78,
@@ -250,52 +364,17 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.68,
+        "communication_act": "coding_request",
+        "confidence": 0.9,
         "intent": "coding",
-        "message": "What do you know about coding?"
+        "matched_rule": "coding_request",
+        "message": "What do you know about coding?",
+        "routed_action": "local_model_or_repo_context",
+        "safe_no_route": false
       },
-      "memory_candidate": {
-        "approval_status": "pending_operator_approval",
-        "canonical": false,
-        "concept_id": "rc2-concept-34b603a979918128",
-        "concept_name": "What Know About Coding",
-        "concept_type": "general_concept",
-        "created_at": "2026-07-07T03:01:59+00:00",
-        "examples": [
-          "What do you know about coding?"
-        ],
-        "explains": [
-          "What do you know about coding?"
-        ],
-        "memory_type": "knowledge",
-        "misconceptions": [],
-        "propositions": [
-          "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior.",
-          "For this kind of task I would route first to the Coding / Technical Lane with `qwen` available as the preferred local model."
-        ],
-        "provider_calls_performed": false,
-        "related_concepts": [
-          "coding",
-          "reading",
-          "explaining",
-          "files",
-          "proposing",
-          "patches",
-          "writing",
-          "tests",
-          "validating",
-          "behavior"
-        ],
-        "rollback_handle": "rollback-rc2-concept-34b603a979918128",
-        "short_definition": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior.",
-        "source_answer_id": "rc2-answer-34b603a979918128",
-        "source_model_id": "qwen",
-        "source_model_lane": "coding_technical",
-        "source_question": "What do you know about coding?",
-        "source_type": "local_model_lane",
-        "training_performed": false,
-        "uncertainty": "low_to_moderate_operator_reviewed"
-      },
+      "local_model_offer": null,
+      "local_model_result": null,
+      "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -313,11 +392,22 @@
       "route": "local_conversation_model_lane",
       "selected_model_lane": {
         "available": true,
-        "capabilities": [
-          "text",
-          "vision"
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
         ],
-        "context_size": 32768,
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
         "cost_latency_class": "medium_local",
         "display_name": "Coding / Technical Lane",
         "executed": false,
@@ -326,20 +416,36 @@
         "expected_weakness": "may need repo file context or tests for correctness",
         "fallback_priority": 2,
         "lane": "coding_technical",
-        "model_family": "qwen",
+        "model_family": "llama",
         "preferred_task_lanes": [
           "coding",
           "technical_explanation"
         ],
         "provider_calls_performed": false,
-        "selected_model": "qwen"
+        "rejected_models": [
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          },
+          {
+            "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "phi4"
+          }
+        ],
+        "selected_model": "llama",
+        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the coding_technical lane.",
+        "support_identifier": "rc2-local-lane:coding_technical:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": null,
       "training_performed": false,
       "web_search_performed": false
     },
     {
-      "answer": "I do not have enough governed local evidence to answer that confidently. I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path.",
+      "answer": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "confidence": "needs_supporting_information",
@@ -363,52 +469,17 @@
         "web_search_performed": false
       },
       "intent": {
-        "confidence": 0.86,
+        "communication_act": "research_request",
+        "confidence": 0.9,
         "intent": "external_knowledge_request",
-        "message": "What is the relation between Avogadro's number and quantum field theory?"
+        "matched_rule": "external_knowledge_request",
+        "message": "What is the relation between Avogadro's number and quantum field theory?",
+        "routed_action": "research_or_provider_consent_path",
+        "safe_no_route": false
       },
-      "memory_candidate": {
-        "approval_status": "pending_operator_approval",
-        "canonical": false,
-        "concept_id": "rc2-concept-59f84e989a80a975",
-        "concept_name": "Avogadro's Number Relationship",
-        "concept_type": "general_concept",
-        "created_at": "2026-07-07T03:01:59+00:00",
-        "examples": [
-          "What is the relation between Avogadro's number and quantum field theory?"
-        ],
-        "explains": [
-          "What is the relation between Avogadro's number and quantum field theory?"
-        ],
-        "memory_type": "knowledge",
-        "misconceptions": [],
-        "propositions": [
-          "I do not have enough governed local evidence to answer that confidently.",
-          "I can prepare a supporting-information request, but I will not call web or GPT unless you explicitly approve that path."
-        ],
-        "provider_calls_performed": false,
-        "related_concepts": [
-          "avogadro's",
-          "number",
-          "relationship",
-          "relation",
-          "between",
-          "quantum",
-          "field",
-          "theory",
-          "enough",
-          "governed"
-        ],
-        "rollback_handle": "rollback-rc2-concept-59f84e989a80a975",
-        "short_definition": "I do not have enough governed local evidence to answer that confidently.",
-        "source_answer_id": "rc2-answer-59f84e989a80a975",
-        "source_model_id": "qwen",
-        "source_model_lane": "reasoning_analysis",
-        "source_question": "What is the relation between Avogadro's number and quantum field theory?",
-        "source_type": "local_model_lane",
-        "training_performed": false,
-        "uncertainty": "low_to_moderate_operator_reviewed"
-      },
+      "local_model_offer": null,
+      "local_model_result": null,
+      "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -426,11 +497,22 @@
       "route": "local_conversation_model_lane",
       "selected_model_lane": {
         "available": true,
-        "capabilities": [
-          "text",
-          "vision"
+        "candidate_models": [
+          {
+            "capabilities": [
+              "text"
+            ],
+            "family": "llama",
+            "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+            "reason": "registered_alias",
+            "registry_key": "llama",
+            "tier": 4
+          }
         ],
-        "context_size": 32768,
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
         "cost_latency_class": "medium_to_high_local",
         "display_name": "Reasoning / Analysis Lane",
         "executed": false,
@@ -439,7 +521,7 @@
         "expected_weakness": "external facts need gated supporting information",
         "fallback_priority": 3,
         "lane": "reasoning_analysis",
-        "model_family": "qwen",
+        "model_family": "llama",
         "preferred_task_lanes": [
           "analysis",
           "research",
@@ -447,7 +529,18 @@
           "external_knowledge_request"
         ],
         "provider_calls_performed": false,
-        "selected_model": "qwen"
+        "rejected_models": [
+          {
+            "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+            "reason": "unusable_or_marked_fail",
+            "requested": "qwen"
+          }
+        ],
+        "selected_model": "llama",
+        "selected_model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "selected_model_path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the reasoning_analysis lane.",
+        "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
       "supporting_information_offer": {
         "compact_support_packet": {
@@ -471,11 +564,10 @@
         },
         "offered": true,
         "options": [
-          "look_for_supporting_information",
-          "ask_gpt_or_web_with_explicit_approval",
+          "yes_ask_gpt_or_sources",
           "not_now"
         ],
-        "prompt": "I do not have enough local confidence for that. Would you like me to look for supporting information?",
+        "prompt": "I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
         "provider_calls_performed": false,
         "reason": "insufficient_local_evidence",
         "web_search_performed": false
@@ -595,8 +687,8 @@
   "developmental_memory_state": {
     "canonical_records": 0,
     "concept_contradictions": 0,
-    "concept_edges": 0,
-    "concept_replay_queue": 0,
+    "concept_edges": 1,
+    "concept_replay_queue": 2,
     "conversation_memory_records": 0,
     "flags": {
       "autonomous_write_performed": false,
@@ -610,9 +702,14 @@
       "training_performed": false,
       "web_search_performed": false
     },
-    "knowledge_memory_records": 0,
+    "knowledge_memory_records": 2,
     "personal_memory_records": 0,
     "training_records": 0
+  },
+  "dialogue_intent_classifier": {
+    "accuracy": 1.0,
+    "corpus_size": 235,
+    "misses": 0
   },
   "display_modes": [
     "Conversation",

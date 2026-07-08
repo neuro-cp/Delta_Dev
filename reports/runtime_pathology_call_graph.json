@@ -1,5 +1,5 @@
 {
-  "ambiguous_call_count": 5027,
+  "ambiguous_call_count": 5044,
   "ambiguous_calls_sample": [
     {
       "call": "arc_safety_invariants",
@@ -502,7 +502,7 @@
       "source": "orchestration.runtime.arc_19_self_model"
     }
   ],
-  "edge_count": 2540,
+  "edge_count": 2582,
   "edges": [
     {
       "call": "all",
