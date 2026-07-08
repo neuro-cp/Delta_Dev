@@ -19,6 +19,7 @@ def _spec(name: str, family: str):
 
 class FakeRunner:
     closed: list[str] = []
+    load_model_calls: list[str] = []
 
     def __init__(self, model_id: str):
         self.model_id = model_id
@@ -35,6 +36,9 @@ class FakeRunner:
             prompt_tokens=len(prompt.split()),
             response_tokens=3,
         )
+
+    def load_model(self):
+        self.load_model_calls.append(self.model_id)
 
     def close(self):
         self.closed.append(self.model_id)
@@ -77,6 +81,28 @@ def test_provider_manager_canonicalizes_inference_result():
     assert result.model_id == "phi4"
     assert result.answer == "phi4: Create a plan"
     assert result.prompt_tokens == 3
+
+
+def test_provider_manager_warms_and_reuses_active_provider(tmp_path):
+    FakeRunner.closed = []
+    FakeRunner.load_model_calls = []
+    manager = ProviderManager(
+        available_models={"llama": _spec("llama", "llama")},
+        runner_factory=lambda spec: FakeRunner(spec.name),
+        keep_loaded=True,
+        status_path=tmp_path / "provider_status.json",
+    )
+
+    warmed = manager.warm("llama")
+    result = manager.infer(model_name="llama", prompt="What is fire?")
+    state = manager.status()
+
+    assert warmed.active_model == "llama"
+    assert result.model_id == "llama"
+    assert state.load_count == 1
+    assert state.unload_count == 0
+    assert FakeRunner.load_model_calls == ["llama"]
+    assert FakeRunner.closed == []
 
 
 def test_provider_manager_uses_capability_database_gpu_layers(tmp_path):

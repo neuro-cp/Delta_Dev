@@ -37,9 +37,17 @@ class GGUFModelRunner(ExternalModelInterface):
     Executes a single GGUF model through a controlled ModelSession.
     """
 
-    def __init__(self, model_name: str, *, n_gpu_layers: int | None = None):
+    def __init__(self, model_name: str, *, n_gpu_layers: int | None = None, keep_loaded: bool = False):
         self.model_name = model_name
         self.session = ModelSession(n_gpu_layers=n_gpu_layers)
+        self.keep_loaded = keep_loaded
+
+    def load_model(self) -> None:
+        model_spec = get_model_spec(self.model_name)
+        self.session.load(model_spec)
+
+    def unload(self) -> None:
+        self.session.unload()
 
     # ------------------------------------------------------------------
     # Model identity helper
@@ -169,7 +177,6 @@ class GGUFModelRunner(ExternalModelInterface):
 
         try:
             self.session.load(model_spec)
-
             raw_output = self.session.generate(prompt)
 
             #print("MODEL OUTPUT:\n")
@@ -177,7 +184,8 @@ class GGUFModelRunner(ExternalModelInterface):
             print()
 
         finally:
-            self.session.unload()
+            if not self.keep_loaded:
+                self.session.unload()
 
         elapsed = time.time() - start
 

@@ -478,43 +478,156 @@ def infer_short_definition(concept_name: str, propositions: list[str], answer: s
 
 
 def infer_related_concepts(concept_name: str, question: str, answer: str) -> list[str]:
-    stop = {
+    text = f"{concept_name} {question} {answer}".lower()
+    candidates: list[str] = []
+
+    semantic_rules = [
+        (
+            ("calorie", "diet", "meal", "breakfast", "lunch", "dinner", "snack", "nutrition", "protein", "carb", "fat"),
+            [
+                "meal planning",
+                "calorie budgeting",
+                "nutrition planning",
+                "portion control",
+                "dietary constraints",
+                "macronutrient balance",
+                "weekly meal structure",
+                "food variety",
+                "diet sustainability",
+            ],
+        ),
+        (
+            ("meaning of life", "purpose", "happiness", "relationships", "self-reflection", "existential"),
+            [
+                "life philosophy",
+                "subjective meaning",
+                "personal growth",
+                "self-reflection",
+                "relationships",
+                "individual purpose",
+                "pursuit of happiness",
+                "meaning-making",
+                "existential questions",
+                "social contribution",
+            ],
+        ),
+        (
+            ("coding", "programming", "debug", "python", "algorithm", "data structure", "software"),
+            [
+                "programming fundamentals",
+                "debugging practice",
+                "algorithmic thinking",
+                "data structures",
+                "software projects",
+                "code review",
+                "learning workflow",
+            ],
+        ),
+        (
+            ("sky", "moon", "color", "light", "bright", "sunlight", "scattering", "wavelength", "reflect"),
+            [
+                "light scattering",
+                "surface reflection",
+                "visible light",
+                "atmospheric optics",
+                "apparent color",
+                "illumination",
+            ],
+        ),
+        (
+            ("plan", "workflow", "schedule", "steps", "strategy", "review"),
+            [
+                "workflow planning",
+                "task sequencing",
+                "review process",
+                "operational planning",
+                "success criteria",
+            ],
+        ),
+    ]
+
+    for triggers, related in semantic_rules:
+        if any(_contains_semantic_trigger(text, trigger) for trigger in triggers):
+            for item in related:
+                _append_related_candidate(candidates, item)
+
+    phrase_patterns = [
+        "pursuit of happiness",
+        "personal growth",
+        "self-reflection",
+        "sense of belonging",
+        "search for answers",
+        "learning and adaptation",
+        "pressure cooking",
+        "phase transition",
+        "heat transfer",
+        "crystal structure",
+        "operator review",
+        "approval workflow",
+    ]
+    for phrase in phrase_patterns:
+        if phrase in text:
+            _append_related_candidate(candidates, phrase)
+
+    if not candidates:
+        for phrase in _extract_reusable_noun_phrases(text):
+            _append_related_candidate(candidates, phrase)
+    return candidates[:10]
+
+
+def _append_related_candidate(candidates: list[str], item: str) -> None:
+    clean = _normalize_related_concept(item)
+    if clean and clean not in candidates:
+        candidates.append(clean)
+
+
+def _contains_semantic_trigger(text: str, trigger: str) -> bool:
+    trigger = str(trigger or "").strip().lower()
+    if not trigger:
+        return False
+    pattern = r"(?<![a-z0-9])" + re.escape(trigger).replace(r"\ ", r"\s+") + r"(?![a-z0-9])"
+    return re.search(pattern, text) is not None
+
+
+def _normalize_related_concept(item: str) -> str:
+    clean = " ".join(str(item or "").lower().replace("/", " ").split())
+    clean = clean.strip(".,:;!?()[]{}'\"")
+    if not clean or clean.startswith("rc2"):
+        return ""
+    blocked = {
         "what", "that", "this", "with", "from", "because", "about", "there", "their", "would", "could", "should",
         "please", "expand", "previous", "answer", "question", "original", "deeper", "useful", "nuance",
         "conversational", "store", "memory", "user", "asked", "reply", "assistant", "model", "meaning",
         "perspectives", "complex", "multifaceted", "concept", "approached", "various", "including",
         "angles", "standpoint", "finding", "significance", "one's", "ones", "view", "views", "contrast",
-        "example", "ultimately", "deeply", "personal", "individual", "greatly", "person",
+        "example", "ultimately", "deeply", "personal", "individual", "greatly", "person", "every",
+        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "breakfast",
+        "lunch", "dinner", "snack", "greek", "yogurt", "apple", "chicken", "salad", "shrimp",
+        "beans", "cottage", "cheese", "peaches", "raspberries", "sweet", "potato",
     }
-    text = f"{concept_name} {question} {answer}".lower()
-    phrase_patterns = [
-        "pursuit of happiness",
-        "personal growth",
-        "self-reflection",
-        "relationships",
-        "sense of belonging",
-        "purpose",
-        "passions",
-        "search for answers",
-        "uncertainty",
-        "meaninglessness",
-        "meaning-making",
-        "individual purpose",
-        "life philosophy",
-        "existential questions",
-        "subjective meaning",
-        "scientific perspectives",
-        "spiritual perspectives",
-        "philosophical perspectives",
-        "social contribution",
-        "learning and adaptation",
+    if clean in blocked:
+        return ""
+    words = clean.split()
+    if len(words) == 1 and (len(clean) < 7 or clean in blocked):
+        return ""
+    if len(words) == 1 and clean.endswith(("ing", "ed")):
+        return ""
+    return clean
+
+
+def _extract_reusable_noun_phrases(text: str) -> list[str]:
+    phrases = []
+    patterns = [
+        r"\b([a-z]+(?:\s+[a-z]+){1,2})\s+(?:planning|workflow|process|strategy|structure|balance|review|control|constraints)\b",
+        r"\b(?:planning|workflow|process|strategy|structure|balance|review|control|constraints)\s+([a-z]+(?:\s+[a-z]+){0,2})\b",
     ]
-    candidates = [phrase for phrase in phrase_patterns if phrase in text]
-    for word in text.replace("/", " ").split():
-        clean = word.strip(".,:;!?()[]{}'\"").lower()
-        if len(clean) > 4 and clean not in stop and clean not in candidates and not clean.startswith("rc2"):
-            candidates.append(clean)
-    return candidates[:10]
+    for pattern in patterns:
+        for match in re.finditer(pattern, text):
+            phrase = match.group(0)
+            normalized = _normalize_related_concept(phrase)
+            if normalized:
+                phrases.append(normalized)
+    return phrases
 
 
 def infer_examples(question: str, answer: str) -> list[str]:

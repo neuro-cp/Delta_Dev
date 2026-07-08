@@ -87,7 +87,10 @@ class RuntimeConversationSession:
 
 
 def run_level2_runtime_integration(*, execute_models: bool = True) -> dict[str, Any]:
-    manager = ProviderManager()
+    try:
+        manager = ProviderManager(keep_loaded=True)
+    except TypeError:
+        manager = ProviderManager()
     session = RuntimeConversationSession(manager)
     events: list[dict[str, Any]] = []
     warm_events: list[dict[str, Any]] = []

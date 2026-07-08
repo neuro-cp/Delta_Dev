@@ -1,0 +1,49 @@
+{
+  "catalog_count": 1038,
+  "domains": {
+    "DELTA architecture itself": 71,
+    "agriculture gardening": 40,
+    "basic physics": 40,
+    "biology": 40,
+    "business": 40,
+    "chemistry": 40,
+    "energy": 40,
+    "engineering": 40,
+    "finance": 40,
+    "geography": 40,
+    "history": 40,
+    "home repair": 40,
+    "law government basics": 40,
+    "logic": 40,
+    "materials science": 40,
+    "mathematics": 40,
+    "medicine health general": 40,
+    "nutrition": 40,
+    "operator_existing": 5,
+    "philosophy": 40,
+    "planning productivity": 42,
+    "programming": 40,
+    "psychology": 40,
+    "social communication": 40,
+    "software architecture": 40,
+    "vehicles mechanics": 40
+  },
+  "paths": {
+    "jsonl": "G:\\Delta_Dev\\data\\rc2_concept_catalog\\rc2_concept_catalog.jsonl",
+    "markdown": "G:\\Delta_Dev\\data\\rc2_concept_catalog\\rc2_concept_catalog.md",
+    "summary": "G:\\Delta_Dev\\data\\rc2_concept_catalog\\rc2_concept_summary.json"
+  },
+  "safety": {
+    "autonomous_provider_calls_performed": false,
+    "canonical_write_performed": false,
+    "deleted_existing_concepts": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "store_reset_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  }
+}

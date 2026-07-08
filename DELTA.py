@@ -34,7 +34,9 @@ from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
     candidate_is_memory_worthy,
     render_route,
     route_message,
+    select_model_lane,
 )
+from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
 def _format_cognitive_state(state: dict[str, object]) -> str:
@@ -125,11 +127,16 @@ class DeltaApp:
         self.pending_provider_question: str | None = None
         self.pending_local_model_question: str | None = None
         self.pending_local_model_deepening: dict[str, str] | None = None
+        self.provider_manager = ProviderManager(keep_loaded=True)
+        self.resident_model_id: str | None = None
+        self.resident_lane: str | None = None
+        self.model_residency_status = "not_warmed"
         self.developer_overlay_enabled = tk.BooleanVar(value=True)
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
         self._refresh_state_cards()
+        self._warm_default_model()
         self._show_welcome()
 
     def _build(self) -> None:
@@ -305,11 +312,57 @@ class DeltaApp:
         return None
 
     def _show_welcome(self) -> None:
+        residency = ""
+        if self.model_residency_status == "warm":
+            residency = " The everyday local model is already loaded for this session."
+        elif self.model_residency_status.startswith("warm_failed"):
+            residency = " Local model warmup did not complete, so I may need to fall back if you ask for local reasoning."
         self._append_chat(
             "DELTA",
-            "Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode.",
+            "Hi. I'm DELTA. You can talk normally here. If a task needs governed memory, evidence review, replay, or diagnostics, I can route it or you can open Advanced mode."
+            + residency,
         )
         self._append_session("assistant", "Hi. I'm DELTA. You can talk normally here.")
+
+    def _warm_default_model(self) -> None:
+        lane = select_model_lane("Hello DELTA.", "conversation")
+        model_id = str(lane.get("selected_model_id") or lane.get("selected_model") or "")
+        if not model_id:
+            self.model_residency_status = "warm_failed:no_model"
+            return
+        try:
+            self.provider_manager.warm(model_id)
+            self.resident_model_id = model_id
+            self.resident_lane = str(lane.get("lane") or "everyday_conversation")
+            self.model_residency_status = "warm"
+        except Exception as exc:  # noqa: BLE001 - UI should stay usable if warmup fails.
+            self.model_residency_status = f"warm_failed:{type(exc).__name__}:{str(exc)[:120]}"
+
+    def _prepare_resident_model_for_question(self, question: str) -> None:
+        lane = select_model_lane(question)
+        model_id = str(lane.get("selected_model_id") or lane.get("selected_model") or "")
+        lane_name = str(lane.get("lane") or "")
+        display = str(lane.get("display_name") or lane_name or "local model")
+        if not model_id:
+            return
+        if self.resident_model_id == model_id:
+            return
+        if self.resident_model_id:
+            if lane_name == "planning":
+                self._append_chat("DELTA", "One moment while I switch to the planning model.")
+            elif self.resident_lane == "planning":
+                self._append_chat("DELTA", "One moment while I switch back to the general conversation model.")
+            else:
+                self._append_chat("DELTA", f"One moment while I switch to the {display}.")
+        else:
+            self._append_chat("DELTA", f"One moment while I load the {display}.")
+        try:
+            self.provider_manager.warm(model_id)
+            self.resident_model_id = model_id
+            self.resident_lane = lane_name
+            self.model_residency_status = "warm"
+        except Exception as exc:  # noqa: BLE001
+            self.model_residency_status = f"switch_failed:{type(exc).__name__}:{str(exc)[:120]}"
 
     def _send_chat(self) -> None:
         message = self.chat_input.get().strip()
@@ -325,11 +378,13 @@ class DeltaApp:
             self.pending_local_model_deepening = None
             self._append_session("user", message)
             target = _build_deepening_prompt(pending["question"], pending["answer"])
+            self._prepare_resident_model_for_question(target)
             payload = route_message(
                 "Conversation",
                 target,
                 history=self._recent_history_for_router(),
                 execute_local_model=True,
+                provider_manager=self.provider_manager,
             )
             payload.update({
                 "active_pending_action_id": pending.get("action_id"),
@@ -374,6 +429,7 @@ class DeltaApp:
                 target,
                 history=self._recent_history_for_router(),
                 execute_local_model=True,
+                provider_manager=self.provider_manager,
             )
             self.last_message = target
             self.last_payload = payload

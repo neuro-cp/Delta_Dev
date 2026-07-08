@@ -618,6 +618,28 @@ def test_meaning_of_life_related_concepts_prefer_reusable_phrases(monkeypatch, t
     assert "concept" not in related
 
 
+def test_diet_plan_related_concepts_are_semantic_not_menu_fragments(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    candidate = rc2mem.extract_candidate_concept(
+        question="make a plan for a 1000 calorie diet for every day of the week.",
+        answer=(
+            "Monday: Breakfast - Greek yogurt and a small apple; Lunch - Grilled chicken salad; "
+            "Dinner - turkey and cheese sandwich. Friday: Breakfast - cottage cheese and peaches; "
+            "Dinner - grilled shrimp with black beans. Saturday: Breakfast - Greek yogurt and raspberries."
+        ),
+        source_model_lane=select_model_lane("make a plan for a 1000 calorie diet for every day of the week.", "planning"),
+    )
+    related = candidate["related_concepts"]
+    assert "meal planning" in related
+    assert "calorie budgeting" in related
+    assert "nutrition planning" in related
+    assert "portion control" in related
+    assert "dietary constraints" in related
+    for bad in ["monday", "breakfast", "greek", "yogurt", "calorie", "every"]:
+        assert bad not in related
+
+
 def test_list_numbered_answers_do_not_create_numeric_definition(monkeypatch, tmp_path):
     _isolate_rc1_store(monkeypatch, tmp_path)
     _isolate_rc2_store(monkeypatch, tmp_path)

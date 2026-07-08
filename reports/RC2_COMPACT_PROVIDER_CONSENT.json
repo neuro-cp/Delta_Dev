@@ -7,7 +7,13 @@
     "packet_type": "rc2_supporting_information_request",
     "provider_call_performed": false,
     "question": "What is the relation between Avogadro's number and quantum field theory?",
-    "relevant_approved_concepts": [],
+    "relevant_approved_concepts": [
+      {
+        "concept_name": "Number Theory (Mathematics)",
+        "memory_type": "knowledge",
+        "short_definition": "Number Theory is a reusable mathematics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the mathematics domain."
+      }
+    ],
     "relevant_chat_history": [],
     "routing_reason": "local_or_substrate_confidence_was_insufficient",
     "web_search_performed": false

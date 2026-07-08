@@ -26,17 +26,19 @@
             "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
           ],
           "provider_calls_performed": false,
+          "quality_flags": [
+            "too_few_propositions"
+          ],
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 0.87,
           "related_concepts": [
-            "daytime",
-            "color",
-            "usually",
-            "looks",
-            "during",
-            "molecules",
-            "scatter",
-            "shorter",
-            "wavelengths",
-            "sunlight"
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
           ],
           "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
           "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
@@ -47,6 +49,54 @@
           "source_type": "local_model_lane",
           "training_performed": false,
           "uncertainty": "low_to_moderate_operator_reviewed"
+        },
+        {
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:06:41+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-a0dce209413271e9",
+          "concept_name": "Light Scattering (Basic Physics)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:06:41+00:00",
+          "domain": "basic physics",
+          "examples": [
+            "Explain how light scattering affects a practical basic physics decision.",
+            "Use light scattering to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain light scattering in basic physics."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Light Scattering should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Light Scattering connects observable situations to underlying basic physics principles.",
+            "Light Scattering is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about light scattering should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-a0dce209413271e9",
+          "short_definition": "Light Scattering is a reusable basic physics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the basic physics domain.",
+          "source_answer_id": "rc2-answer-growth-a0dce209413271e9",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain light scattering in basic physics.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
         },
         {
           "_store_memory_type": "knowledge",
@@ -69,17 +119,19 @@
             "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
           ],
           "provider_calls_performed": false,
+          "quality_flags": [
+            "too_few_propositions"
+          ],
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 0.87,
           "related_concepts": [
-            "color",
-            "appearance",
-            "generally",
-            "considered",
-            "appear",
-            "lighter",
-            "bluish",
-            "sunlight",
-            "scatters",
-            "surface"
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
           ],
           "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
           "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
@@ -90,6 +142,104 @@
           "source_type": "local_model_lane",
           "training_performed": false,
           "uncertainty": "low_to_moderate_operator_reviewed"
+        },
+        {
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:08:45+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-fd92b17edf7d7c5b",
+          "concept_name": "Reflective Listening (Social Communication)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:08:45+00:00",
+          "domain": "social communication",
+          "examples": [
+            "Explain how reflective listening affects a practical social communication decision.",
+            "Use reflective listening to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain reflective listening in social communication."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Reflective Listening should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Reflective Listening connects observable situations to underlying social communication principles.",
+            "Reflective Listening is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about reflective listening should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:09:02+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-fd92b17edf7d7c5b",
+          "short_definition": "Reflective Listening is a reusable social communication concept that helps explain causes, constraints, tradeoffs, and practical decisions in the social communication domain.",
+          "source_answer_id": "rc2-answer-growth-fd92b17edf7d7c5b",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain reflective listening in social communication.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        },
+        {
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T16:49:57+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-1089a6018195daa1",
+          "concept_name": "Solar Brightness Mechanism",
+          "concept_type": "causal_explanation",
+          "created_at": "2026-07-08T16:48:40+00:00",
+          "examples": [
+            "what makes the sun bright?"
+          ],
+          "explains": [
+            "what makes the sun bright?"
+          ],
+          "memory_request_source": "explicit_user_remember_that",
+          "memory_type": "knowledge",
+          "misconceptions": [],
+          "operator_edited": true,
+          "operator_notes": "User explicitly asked to remember the previous answer; candidate was queued for manual review despite lower automatic memory-worthiness.",
+          "operator_review_required": true,
+          "propositions": [
+            "The sun is bright because of its incredibly high surface temperature, which is about 5500 degrees Celsius.",
+            "This heat is produced by nuclear reactions that occur in its core, where hydrogen atoms are fused together to form helium, releasing vast amounts of energy in the process.",
+            "This energy is then radiated outward from the core, making the sun shine so brightly in our sky."
+          ],
+          "provider_calls_performed": false,
+          "quality_name_repaired_from": "What Makes Sun Bright",
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
+          ],
+          "review_note": "User explicitly asked to remember the previous answer; candidate was queued for manual review despite lower automatic memory-worthiness.",
+          "rollback_handle": "rollback-rc2-concept-1089a6018195daa1",
+          "short_definition": "The sun is bright because of its incredibly high surface temperature, which is about 5500 degrees Celsius.",
+          "source_answer_id": "rc2-answer-1089a6018195daa1",
+          "source_model_id": "llama",
+          "source_model_lane": "everyday_conversation",
+          "source_question": "what makes the sun bright?",
+          "source_type": "local_model_lane",
+          "training_performed": false,
+          "uncertainty": "moderate_operator_review_required"
         }
       ],
       "confidence": "grounded_in_approved_noncanonical_concept",
@@ -231,7 +381,7 @@
         "concept_id": "rc2-concept-2e286a7ffe4ccea7",
         "concept_name": "Water Color",
         "concept_type": "causal_explanation",
-        "created_at": "2026-07-08T16:26:05+00:00",
+        "created_at": "2026-07-08T17:11:04+00:00",
         "examples": [
           "What color is water?"
         ],
@@ -248,16 +398,12 @@
         ],
         "provider_calls_performed": false,
         "related_concepts": [
-          "water",
-          "color",
-          "nearly",
-          "colorless",
-          "small",
-          "glass",
-          "large",
-          "amounts",
-          "faintly",
-          "absorbs"
+          "light scattering",
+          "surface reflection",
+          "visible light",
+          "atmospheric optics",
+          "apparent color",
+          "illumination"
         ],
         "rollback_handle": "rollback-rc2-concept-2e286a7ffe4ccea7",
         "short_definition": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
@@ -445,17 +591,64 @@
       "web_search_performed": false
     },
     {
-      "answer": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
+      "answer": "You taught me the concept `Number Theory (Mathematics)` earlier. Based on that:\nNumber Theory is a reusable mathematics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the mathematics domain.\n\nKey points:\n- Number Theory connects observable situations to underlying mathematics principles.\n- Number Theory is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about number theory should separate known facts, assumptions, uncertainty, and practical implications.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "confidence": "needs_supporting_information",
+      "concept_matches": [
+        {
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:07:01+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-489154b2a32d1d16",
+          "concept_name": "Number Theory (Mathematics)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:07:01+00:00",
+          "domain": "mathematics",
+          "examples": [
+            "Explain how number theory affects a practical mathematics decision.",
+            "Use number theory to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain number theory in mathematics."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Number Theory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Number Theory connects observable situations to underlying mathematics principles.",
+            "Number Theory is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about number theory should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_score": 1.0,
+          "related_concepts": [
+            "mathematics reasoning",
+            "mathematics evidence",
+            "mathematics tradeoffs",
+            "mathematics applications",
+            "mathematics uncertainty"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-489154b2a32d1d16",
+          "short_definition": "Number Theory is a reusable mathematics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the mathematics domain.",
+          "source_answer_id": "rc2-answer-growth-489154b2a32d1d16",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain number theory in mathematics.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        }
+      ],
+      "confidence": "grounded_in_approved_noncanonical_concept",
       "confidence_decision": {
         "confidence": 0.35,
         "evidence_quality": "insufficient_local_evidence",
         "provider_necessity": "gated_provider_or_web_may_be_needed",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.35,
+      "confidence_score": 0.92,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "external_knowledge_request",
@@ -477,8 +670,6 @@
         "routed_action": "research_or_provider_consent_path",
         "safe_no_route": false
       },
-      "local_model_offer": null,
-      "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
@@ -494,7 +685,7 @@
         "web_search_enabled": false
       },
       "provider_calls_performed": false,
-      "route": "local_conversation_model_lane",
+      "route": "developmental_concept_memory",
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -542,36 +733,7 @@
         "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the reasoning_analysis lane.",
         "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
-      "supporting_information_offer": {
-        "compact_support_packet": {
-          "desired_answer_format": "brief_direct_answer_with_uncertainty_if_needed",
-          "instructions": "Return a concise answer only. Do not include hashes, internal reports, or unrelated diagnostics.",
-          "packet_type": "rc2_supporting_information_request",
-          "provider_call_performed": false,
-          "question": "What is the relation between Avogadro's number and quantum field theory?",
-          "relevant_approved_concepts": [],
-          "relevant_chat_history": [],
-          "routing_reason": "local_or_substrate_confidence_was_insufficient",
-          "web_search_performed": false
-        },
-        "dry_run_provider_request": {
-          "api_key_present": true,
-          "api_key_redacted": true,
-          "authoritative": false,
-          "endpoint": "https://api.openai.com/v1/chat/completions",
-          "model": "gpt-4.1-mini",
-          "question": "What is the relation between Avogadro's number and quantum field theory?"
-        },
-        "offered": true,
-        "options": [
-          "yes_ask_gpt_or_sources",
-          "not_now"
-        ],
-        "prompt": "I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
-        "provider_calls_performed": false,
-        "reason": "insufficient_local_evidence",
-        "web_search_performed": false
-      },
+      "supporting_information_offer": null,
       "training_performed": false,
       "web_search_performed": false
     },
@@ -687,8 +849,8 @@
   "developmental_memory_state": {
     "canonical_records": 0,
     "concept_contradictions": 0,
-    "concept_edges": 1,
-    "concept_replay_queue": 4,
+    "concept_edges": 24869,
+    "concept_replay_queue": 1041,
     "conversation_memory_records": 0,
     "flags": {
       "autonomous_write_performed": false,
@@ -702,7 +864,7 @@
       "training_performed": false,
       "web_search_performed": false
     },
-    "knowledge_memory_records": 3,
+    "knowledge_memory_records": 1038,
     "personal_memory_records": 0,
     "training_records": 0
   },

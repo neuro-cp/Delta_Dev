@@ -1,0 +1,326 @@
+{
+  "approval_count_this_run": 0,
+  "average_latency_seconds": 0.0,
+  "catalog": {
+    "catalog_count": 1038,
+    "domains": {
+      "DELTA architecture itself": 71,
+      "agriculture gardening": 40,
+      "basic physics": 40,
+      "biology": 40,
+      "business": 40,
+      "chemistry": 40,
+      "energy": 40,
+      "engineering": 40,
+      "finance": 40,
+      "geography": 40,
+      "history": 40,
+      "home repair": 40,
+      "law government basics": 40,
+      "logic": 40,
+      "materials science": 40,
+      "mathematics": 40,
+      "medicine health general": 40,
+      "nutrition": 40,
+      "operator_existing": 5,
+      "philosophy": 40,
+      "planning productivity": 42,
+      "programming": 40,
+      "psychology": 40,
+      "social communication": 40,
+      "software architecture": 40,
+      "vehicles mechanics": 40
+    },
+    "paths": {
+      "jsonl": "G:\\Delta_Dev\\data\\rc2_concept_catalog\\rc2_concept_catalog.jsonl",
+      "markdown": "G:\\Delta_Dev\\data\\rc2_concept_catalog\\rc2_concept_catalog.md",
+      "summary": "G:\\Delta_Dev\\data\\rc2_concept_catalog\\rc2_concept_summary.json"
+    },
+    "safety": {
+      "autonomous_provider_calls_performed": false,
+      "canonical_write_performed": false,
+      "deleted_existing_concepts": false,
+      "fine_tuning_performed": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "store_reset_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    }
+  },
+  "domains_covered": [
+    "DELTA architecture itself",
+    "agriculture gardening",
+    "basic physics",
+    "biology",
+    "business",
+    "chemistry",
+    "energy",
+    "engineering",
+    "finance",
+    "geography",
+    "history",
+    "home repair",
+    "law government basics",
+    "logic",
+    "materials science",
+    "mathematics",
+    "medicine health general",
+    "nutrition",
+    "operator_existing",
+    "philosophy",
+    "planning productivity",
+    "programming",
+    "psychology",
+    "social communication",
+    "software architecture",
+    "vehicles mechanics"
+  ],
+  "duplicate_suppression_count": 957,
+  "duration_seconds": 0.4855,
+  "existing_records_repaired": 199,
+  "final_concept_count": 1038,
+  "growth_run_notes": [
+    "Initial timed run safely reached 935 concepts before timeout; no store reset occurred.",
+    "Continuation completed target and final repair/export reached 1038 approved noncanonical concepts.",
+    "Final repair pass improved semantic related concepts and renamed two awkward operator-created concepts while preserving IDs and rollback handles."
+  ],
+  "local_model_calls": 0,
+  "new_concepts_added": 1033,
+  "original_starting_concept_count": 5,
+  "phase": "DELTA RC2 1000 Concept Growth Run + Concept Catalog Export",
+  "quality_policy": {
+    "minimum_related_concepts": 4,
+    "rejects_keyword_crumbs": true,
+    "rejects_vague_names": true,
+    "repairs_existing_related_concepts": true
+  },
+  "recommendation": "READY_FOR_OPERATOR_INQUIRY_TESTING_WITH_1000_NONCANONICAL_CONCEPTS",
+  "rejected_concepts": 0,
+  "rejected_examples": [],
+  "repair_findings": [
+    {
+      "concept_id": "rc2-concept-183f0cb7b12abb56",
+      "concept_name": "Daytime Sky Color",
+      "quality_flags": [
+        "too_few_propositions"
+      ],
+      "quality_ok": false,
+      "quality_score": 0.87
+    },
+    {
+      "concept_id": "rc2-concept-7051d920a32ce90e",
+      "concept_name": "Moon Color Appearance",
+      "quality_flags": [
+        "too_few_propositions"
+      ],
+      "quality_ok": false,
+      "quality_score": 0.87
+    },
+    {
+      "concept_id": "rc2-concept-c2051228b9425a36",
+      "concept_name": "Meaning of Life Perspectives",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-1089a6018195daa1",
+      "concept_name": "Solar Brightness Mechanism",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-4261527e3b3c2865",
+      "concept_name": "1000 Calorie Diet Meal Plan",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-a0dce209413271e9",
+      "concept_name": "Light Scattering (Basic Physics)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-98783d8f9e3d7af4",
+      "concept_name": "Protein Synthesis (Biology)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-ae2f1692ce7dda52",
+      "concept_name": "Protein Folding (Biology)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-f1c55f2a160e6f51",
+      "concept_name": "Infection Control (Medicine Health General)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-0c7bee2553a8b1f7",
+      "concept_name": "Nutrition Labels (Medicine Health General)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-019d62151b9ed5b9",
+      "concept_name": "Safety Planning (Medicine Health General)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-20a58ea6874ed51f",
+      "concept_name": "Calorie Budgeting (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-8ee3ca9387ce098a",
+      "concept_name": "Macronutrient Balance (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-2270e9c279e9556b",
+      "concept_name": "Protein Intake (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-c4974307c31d30ee",
+      "concept_name": "Fiber Intake (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-afa47c92af8a1e44",
+      "concept_name": "Micronutrients (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-be055d7588edf0ac",
+      "concept_name": "Meal Planning (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-05ab266dc5b45d0c",
+      "concept_name": "Portion Control (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-7ad6a5d65cb6ab71",
+      "concept_name": "Hydration (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-f08f91ea0e3da382",
+      "concept_name": "Satiety (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-ba154989e65c7017",
+      "concept_name": "Glycemic Response (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-5f3b0535c15a7f8e",
+      "concept_name": "Food Variety (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-21eaf61252141e09",
+      "concept_name": "Diet Sustainability (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-67c3bf0a460d9a65",
+      "concept_name": "Nutrition Labels (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    },
+    {
+      "concept_id": "rc2-concept-growth-15bb29df16a773ab",
+      "concept_name": "Meal Timing (Nutrition)",
+      "quality_flags": [],
+      "quality_ok": true,
+      "quality_score": 1.0
+    }
+  ],
+  "required_domains": [
+    "DELTA architecture itself",
+    "agriculture gardening",
+    "basic physics",
+    "biology",
+    "business",
+    "chemistry",
+    "energy",
+    "engineering",
+    "finance",
+    "geography",
+    "history",
+    "home repair",
+    "law government basics",
+    "logic",
+    "materials science",
+    "mathematics",
+    "medicine health general",
+    "nutrition",
+    "philosophy",
+    "planning productivity",
+    "programming",
+    "psychology",
+    "social communication",
+    "software architecture",
+    "vehicles mechanics"
+  ],
+  "safety": {
+    "autonomous_provider_calls_performed": false,
+    "canonical_write_performed": false,
+    "deleted_existing_concepts": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "store_reset_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "starting_concept_count": 5,
+  "target_concepts": 1000
+}

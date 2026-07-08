@@ -50,6 +50,7 @@ class ProviderManager:
         available_models: Mapping[str, ModelSpec] | None = None,
         runner_factory: RunnerFactory | None = None,
         n_gpu_layers: int | None = None,
+        keep_loaded: bool = False,
         status_path: str | Path | None = None,
         capability_db_path: str | Path | None = None,
         provider_capabilities: Mapping[str, Any] | None = None,
@@ -57,6 +58,7 @@ class ProviderManager:
         self.available_models = dict(available_models or list_available_models())
         self.runner_factory = runner_factory
         self.n_gpu_layers = n_gpu_layers
+        self.keep_loaded = keep_loaded
         self.status_path = Path(status_path) if status_path is not None else None
         self.capability_db_path = Path(capability_db_path) if capability_db_path else None
         self.provider_capabilities = dict(provider_capabilities or {})
@@ -75,6 +77,13 @@ class ProviderManager:
         self._active_spec = spec
         self._loaded_at = time.time()
         self._load_count += 1
+        return self._publish_status()
+
+    def warm(self, model_name: str) -> ProviderLoadState:
+        state = self.load(model_name)
+        method = getattr(self._runner, "load_model", None)
+        if callable(method):
+            method()
         return self._publish_status()
 
     def infer(
@@ -148,7 +157,7 @@ class ProviderManager:
             return self.runner_factory(spec)
         from integration.model_runtime.gguf_model_runner import GGUFModelRunner
 
-        return GGUFModelRunner(spec.name, n_gpu_layers=self._gpu_layers_for(spec))
+        return GGUFModelRunner(spec.name, n_gpu_layers=self._gpu_layers_for(spec), keep_loaded=self.keep_loaded)
 
     def _canonical_result(
         self,
