@@ -273,6 +273,54 @@ def query_approved_concepts(question: str) -> dict[str, Any]:
     return {"matched": True, "answer": "\n".join(lines), "matches": matches}
 
 
+def browse_approved_concepts(
+    *,
+    limit: int = 3,
+    domain: str | None = None,
+    exclude_concept_names: list[str] | None = None,
+) -> dict[str, Any]:
+    records = []
+    excluded = {str(name).lower() for name in (exclude_concept_names or [])}
+    wanted_domain = str(domain or "").lower().strip()
+    for memory_type, path in STORE_BY_TYPE.items():
+        for row in _read_jsonl(path):
+            if row.get("approval_status") == "approved_noncanonical" and row.get("canonical") is False:
+                if excluded and str(row.get("concept_name") or "").lower() in excluded:
+                    continue
+                if wanted_domain and str(row.get("domain") or "").lower() != wanted_domain:
+                    continue
+                records.append({**row, "_store_memory_type": memory_type})
+    if not records:
+        return {"matched": False, "answer": "", "matches": []}
+    records.sort(key=lambda row: (
+        -float(row.get("quality_score") or 0.0),
+        str(row.get("domain") or "zz_operator_existing"),
+        str(row.get("concept_name") or ""),
+    ))
+    matches = []
+    seen_names = set()
+    for row in records:
+        name = str(row.get("concept_name") or "").lower()
+        if name in seen_names:
+            continue
+        seen_names.add(name)
+        matches.append(row)
+        if len(matches) >= max(1, limit):
+            break
+    first = matches[0]
+    lines = [
+        f"I know about `{first['concept_name']}` from local noncanonical memory.",
+        str(first.get("short_definition") or "").strip(),
+    ]
+    related = [str(item) for item in first.get("related_concepts", [])[:5] if str(item).strip()]
+    if related:
+        lines.extend(["", "Related ideas:", *[f"- {item}" for item in related]])
+    if len(matches) > 1:
+        lines.extend(["", "A couple of nearby concepts I can also discuss:"])
+        lines.extend(f"- {item.get('concept_name')}" for item in matches[1:])
+    return {"matched": True, "answer": "\n".join(lines), "matches": matches}
+
+
 def build_compact_support_packet(question: str, history: list[dict[str, str]] | None = None, *, max_turns: int = 6) -> dict[str, Any]:
     clean_history = []
     for item in (history or [])[-max_turns:]:

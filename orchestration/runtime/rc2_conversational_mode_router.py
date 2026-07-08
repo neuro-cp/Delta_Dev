@@ -38,6 +38,7 @@ from orchestration.runtime.rc2_developmental_concept_memory import (
     approve_candidate_concept,
     build_compact_support_packet,
     build_developmental_memory_state,
+    browse_approved_concepts,
     discover_memory_store_separation,
     extract_candidate_concept,
     query_approved_concepts,
@@ -207,6 +208,28 @@ SOCIAL_INTENT_RESPONSES = {
 
 
 def classify_intent(message: str) -> dict[str, Any]:
+    lower = " ".join(message.lower().strip().split())
+    bare = lower.strip(" .!?")
+    if _is_memory_browse_request(lower):
+        return {
+            "intent": "knowledge_browse",
+            "message": message,
+            "confidence": 0.94,
+            "communication_act": "knowledge_browse",
+            "matched_rule": "knowledge_browse",
+            "routed_action": "browse_approved_concepts",
+            "safe_no_route": False,
+        }
+    if _is_contextual_browse_followup(lower):
+        return {
+            "intent": "knowledge_browse_followup",
+            "message": message,
+            "confidence": 0.9,
+            "communication_act": "clarification_followup",
+            "matched_rule": "knowledge_browse_followup",
+            "routed_action": "browse_related_approved_concepts",
+            "safe_no_route": False,
+        }
     dialogue = classify_dialogue_act(message)
     if dialogue["confidence"] >= 0.8:
         intent = str(dialogue["intent"])
@@ -223,8 +246,6 @@ def classify_intent(message: str) -> dict[str, Any]:
             "routed_action": dialogue["routed_action"],
             "safe_no_route": dialogue["safe_no_route"],
         }
-    lower = " ".join(message.lower().strip().split())
-    bare = lower.strip(" .!?")
     if any(term in lower for term in ["diagnostic", "show diagnostics", "runtime status", "system health", "health check"]):
         intent = "diagnostics"
     elif bare in {"hi", "hello", "hey", "yo", "good morning", "good afternoon", "good evening"}:
@@ -264,6 +285,99 @@ def classify_intent(message: str) -> dict[str, Any]:
     else:
         intent = "question" if lower.endswith("?") else "conversation"
     return {"intent": intent, "message": message, "confidence": confidence_for_intent(intent)}
+
+
+def _is_memory_browse_request(lower: str) -> bool:
+    bare = lower.strip(" .!?")
+    patterns = {
+        "tell me something you know",
+        "tell me something you learned",
+        "what do you know",
+        "show me something you know",
+        "give me a concept",
+        "show me a concept",
+        "what have you learned",
+        "surprise me with something you know",
+    }
+    return bare in patterns or bare.startswith("tell me about something you know")
+
+
+def _is_contextual_browse_followup(lower: str) -> bool:
+    bare = lower.strip(" .!?")
+    return bare in {
+        "what else",
+        "what else do you know",
+        "what more",
+        "show me another",
+        "another one",
+        "give me another",
+        "tell me another",
+    }
+
+
+DOMAIN_BROWSE_ALIASES = {
+    "law": "law government basics",
+    "legal": "law government basics",
+    "government": "law government basics",
+    "physics": "basic physics",
+    "science": "basic physics",
+    "chemistry": "chemistry",
+    "biology": "biology",
+    "health": "medicine health general",
+    "medicine": "medicine health general",
+    "nutrition": "nutrition",
+    "psychology": "psychology",
+    "philosophy": "philosophy",
+    "logic": "logic",
+    "math": "mathematics",
+    "mathematics": "mathematics",
+    "programming": "programming",
+    "coding": "programming",
+    "software": "software architecture",
+    "business": "business",
+    "finance": "finance",
+    "history": "history",
+    "geography": "geography",
+    "engineering": "engineering",
+    "materials": "materials science",
+    "energy": "energy",
+    "gardening": "agriculture gardening",
+    "agriculture": "agriculture gardening",
+    "mechanics": "vehicles mechanics",
+    "vehicles": "vehicles mechanics",
+    "home repair": "home repair",
+    "communication": "social communication",
+    "productivity": "planning productivity",
+    "delta": "DELTA architecture itself",
+}
+
+
+def _domain_browse_request(message: str) -> str | None:
+    lower = " ".join(str(message or "").lower().strip().split())
+    if not any(phrase in lower for phrase in ("what about", "do you know", "anything about", "tell me about", "show me")):
+        return None
+    for alias, domain in sorted(DOMAIN_BROWSE_ALIASES.items(), key=lambda item: -len(item[0])):
+        pattern = r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])"
+        if re.search(pattern, lower):
+            return domain
+    return None
+
+
+def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any]:
+    for item in reversed(history or []):
+        if item.get("role") != "assistant":
+            continue
+        content = str(item.get("content") or "")
+        match = re.search(r"`([^`]+)`", content)
+        if not match:
+            continue
+        name = match.group(1).strip()
+        domain_match = re.search(r"\(([^)]+)\)\s*$", name)
+        return {
+            "concept_name": name,
+            "domain": domain_match.group(1).lower() if domain_match else None,
+        }
+    return {"concept_name": None, "domain": None}
 
 
 def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]:
@@ -1146,6 +1260,67 @@ def route_message(
             }
             payload["escalation_plan"] = build_escalation_plan(target)
             payload["mode_router_flags"] = ROUTER_FLAGS
+            return payload
+        if intent_info.get("intent") in {"knowledge_browse", "knowledge_browse_followup"}:
+            context = _last_concept_context(history)
+            concept = browse_approved_concepts(
+                limit=3,
+                domain=context.get("domain") if intent_info.get("intent") == "knowledge_browse_followup" else None,
+                exclude_concept_names=[context["concept_name"]] if context.get("concept_name") else None,
+            )
+            if not concept["matched"] and intent_info.get("intent") == "knowledge_browse_followup":
+                concept = browse_approved_concepts(
+                    limit=3,
+                    exclude_concept_names=[context["concept_name"]] if context.get("concept_name") else None,
+                )
+            payload = {
+                "mode": mode,
+                "route": "developmental_concept_browse_followup" if intent_info.get("intent") == "knowledge_browse_followup" else "developmental_concept_browse",
+                "answer": concept["answer"] if concept["matched"] else "I do not have approved local concepts to browse yet.",
+                "confidence": "grounded_in_approved_noncanonical_concept_catalog" if concept["matched"] else "no_approved_local_concepts",
+                "confidence_score": 0.9 if concept["matched"] else 0.2,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": concept.get("matches", []),
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, bool(concept["matched"]))
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return payload
+        domain_browse = _domain_browse_request(message)
+        if domain_browse and intent_info.get("intent") not in {"coding"}:
+            concept = browse_approved_concepts(limit=3, domain=domain_browse)
+            payload = {
+                "mode": mode,
+                "route": "developmental_concept_domain_browse",
+                "answer": concept["answer"] if concept["matched"] else f"I do not have approved local concepts for {domain_browse} yet.",
+                "confidence": "grounded_in_approved_noncanonical_concept_catalog" if concept["matched"] else "no_approved_local_domain_concepts",
+                "confidence_score": 0.9 if concept["matched"] else 0.2,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": concept.get("matches", []),
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "knowledge_domain_browse", "domain": domain_browse}
+            payload["confidence_decision"] = confidence_engine(message, bool(concept["matched"]))
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
             return payload
         bypass_memory_retrieval = execute_local_model or intent_info.get("communication_act") == "clarification_followup" or intent_info.get("intent") == "followup"
         concept = {"matched": False, "answer": "", "matches": []} if bypass_memory_retrieval else query_approved_concepts(message)

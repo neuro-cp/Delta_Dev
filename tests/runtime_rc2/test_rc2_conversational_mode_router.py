@@ -946,6 +946,86 @@ def test_memory_candidate_quality_rejects_vague_low_confidence_concept(monkeypat
     assert candidate_is_memory_worthy(candidate, payload) is False
 
 
+def test_tell_me_something_you_know_browses_approved_concepts(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    candidate = rc2mem.extract_candidate_concept(
+        question="Explain calorie budgeting in nutrition.",
+        answer=(
+            "Calorie budgeting is a nutrition planning concept that connects energy intake, portion control, "
+            "meal planning, and diet sustainability. It helps compare meals against a daily energy target."
+        ),
+        source_model_lane=select_model_lane("Explain calorie budgeting in nutrition.", "planning"),
+    )
+    result = rc2mem.approve_candidate_concept(candidate)
+    assert result["approved"] is True
+
+    payload = route_message("Conversation", "tell me something you know")
+
+    assert payload["route"] == "developmental_concept_browse"
+    assert "I know about" in payload["answer"]
+    assert payload["local_model_offer"] is None if "local_model_offer" in payload else True
+    assert payload["provider_calls_performed"] is False
+    assert payload["training_performed"] is False
+
+
+def test_what_else_browses_another_concept_from_previous_domain(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    for topic in ["buoyancy", "momentum conservation"]:
+        candidate = rc2mem.extract_candidate_concept(
+            question=f"Explain {topic} in basic physics.",
+            answer=(
+                f"{topic.title()} connects observable situations to underlying basic physics principles. "
+                f"{topic.title()} is useful for comparing evidence and reasoning about constraints. "
+                f"Reasoning about {topic} should separate known facts, assumptions, and uncertainty."
+            ),
+            source_model_lane=select_model_lane(f"Explain {topic} in basic physics.", "planning"),
+        )
+        candidate["domain"] = "basic physics"
+        result = rc2mem.approve_candidate_concept(candidate)
+        assert result["approved"] is True
+
+    history = [
+        {"role": "user", "content": "what do you know about physics"},
+        {"role": "assistant", "content": "You taught me the concept `Buoyancy (Basic Physics)` earlier. Based on that: ..."},
+    ]
+    payload = route_message("Conversation", "what else", history=history)
+
+    assert payload["route"] == "developmental_concept_browse_followup"
+    assert "Buoyancy (Basic Physics)" not in payload["answer"]
+    assert "I know about" in payload["answer"]
+    assert payload["provider_calls_performed"] is False
+    assert payload["training_performed"] is False
+
+
+def test_short_domain_question_browses_law_concepts(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    for topic in ["due process", "rule of law"]:
+        candidate = rc2mem.extract_candidate_concept(
+            question=f"Explain {topic} in law government basics.",
+            answer=(
+                f"{topic.title()} connects observable situations to underlying law government principles. "
+                f"{topic.title()} is useful for comparing evidence and reasoning about constraints. "
+                f"Reasoning about {topic} should separate known facts, assumptions, and uncertainty."
+            ),
+            source_model_lane=select_model_lane(f"Explain {topic} in law government basics.", "planning"),
+        )
+        candidate["domain"] = "law government basics"
+        result = rc2mem.approve_candidate_concept(candidate)
+        assert result["approved"] is True
+
+    payload = route_message("Conversation", "do you know anything about law?")
+
+    assert payload["route"] == "developmental_concept_domain_browse"
+    assert "I know about" in payload["answer"]
+    assert "law government" in payload["answer"].lower()
+    assert payload["local_model_offer"] is None if "local_model_offer" in payload else True
+    assert payload["provider_calls_performed"] is False
+    assert payload["training_performed"] is False
+
+
 def test_named_rc2_reports_exist_in_payloads():
     payloads = report_payloads()
     for name in [
