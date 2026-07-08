@@ -556,6 +556,7 @@ def execute_local_model_answer(
     message: str,
     model_lane: dict[str, Any],
     history: list[dict[str, str]] | None = None,
+    provider_manager: ProviderManager | None = None,
 ) -> dict[str, Any]:
     """Execute one selected local model lane when explicitly requested.
 
@@ -575,7 +576,8 @@ def execute_local_model_answer(
         }
     try:
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
-            result = ProviderManager().infer(
+            manager = provider_manager or ProviderManager()
+            result = manager.infer(
                 model_name=str(model_name),
                 prompt=prompt,
                 task_type="rc2_conversation",
@@ -889,6 +891,7 @@ def local_conversation_answer(
     history: list[dict[str, str]] | None = None,
     *,
     execute_local_model: bool = False,
+    provider_manager: ProviderManager | None = None,
 ) -> dict[str, Any]:
     lower = message.lower()
     intent = classify_intent(message)["intent"]
@@ -952,7 +955,7 @@ def local_conversation_answer(
             "canonical_write_performed": False,
         }
     if execute_local_model and intent not in {"external_knowledge_request", "image"}:
-        local_model_result = execute_local_model_answer(message, model_lane, history)
+        local_model_result = execute_local_model_answer(message, model_lane, history, provider_manager=provider_manager)
         model_lane = {**model_lane, "executed": bool(local_model_result.get("executed"))}
         if local_model_result.get("executed"):
             return {
@@ -1112,6 +1115,7 @@ def route_message(
     *,
     execute_local_model: bool = False,
     provider_approved: bool = False,
+    provider_manager: ProviderManager | None = None,
     provider_transport: Callable[[str, dict[str, str], dict[str, object], int], dict[str, object]] | None = None,
 ) -> dict[str, Any]:
     if mode not in MODES:
@@ -1174,6 +1178,7 @@ def route_message(
                     message,
                     history,
                     execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
                 ),
             }
         payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)

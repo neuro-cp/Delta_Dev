@@ -1,0 +1,96 @@
+{
+  "actual_local_model_calls": 20,
+  "average_response_latency_seconds": 10.2197,
+  "model_residency": {
+    "claim": "warm process/session residency only",
+    "cpu_gpu_vram_detectable": false,
+    "status": "ProviderManager kept one active local runner per warmed block when backend allowed it.",
+    "vram_residency_verified": false
+  },
+  "phase": "RC2 Model Residency And Latency",
+  "planning_model": {
+    "available": true,
+    "backend": "local_gguf_provider_manager",
+    "block": "planning_mistral",
+    "error": null,
+    "first_token_latency_seconds": null,
+    "lane": "planning",
+    "load_time_seconds": 0.0055,
+    "loaded": true,
+    "model_switch_time_seconds": 0.0055,
+    "provider_status": {
+      "active_model": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+      "load_count": 6,
+      "loaded": true,
+      "metadata": {
+        "backend_tokens_per_second": null,
+        "capabilities": [
+          "text"
+        ],
+        "context_length": 8192,
+        "family": "mistral",
+        "mmproj_path": null,
+        "path": "G:\\models\\lmstudio-community\\Mistral-7B-Instruct-v0.3-GGUF\\Mistral-7B-Instruct-v0.3-Q4_K_M.gguf",
+        "provider": "local_gguf",
+        "quantization": "Q4_K_M",
+        "recommended_context": null,
+        "recommended_gpu_layers": null,
+        "resident_provider_count": 1,
+        "size_bytes": 4372812000
+      },
+      "n_gpu_layers": null,
+      "unload_count": 5
+    },
+    "residency_claim": "warm process/session only",
+    "selected_model": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "support_identifier": "rc2-local-lane:planning:model:mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m:family:mistral:capabilities:text"
+  },
+  "safety": {
+    "autonomous_action_performed": false,
+    "autonomous_provider_calls_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "scheduler_activation_performed": false,
+    "stored_concepts_deleted": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "warmed_model": {
+    "available": true,
+    "backend": "local_gguf_provider_manager",
+    "block": "everyday_meta_conversation",
+    "error": null,
+    "first_token_latency_seconds": null,
+    "lane": "everyday_conversation",
+    "load_time_seconds": 1.32,
+    "loaded": true,
+    "provider_status": {
+      "active_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+      "load_count": 1,
+      "loaded": true,
+      "metadata": {
+        "backend_tokens_per_second": null,
+        "capabilities": [
+          "text"
+        ],
+        "context_length": 8192,
+        "family": "llama",
+        "mmproj_path": null,
+        "path": "G:\\models\\lmstudio-community\\Meta-Llama-3.1-8B-Instruct-GGUF\\Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "provider": "local_gguf",
+        "quantization": "Q4_K_M",
+        "recommended_context": null,
+        "recommended_gpu_layers": null,
+        "resident_provider_count": 1,
+        "size_bytes": 4920739168
+      },
+      "n_gpu_layers": null,
+      "unload_count": 0
+    },
+    "residency_claim": "warm process/session only",
+    "selected_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+    "support_identifier": "rc2-local-lane:everyday_conversation:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
+  }
+}

@@ -518,7 +518,7 @@ def test_execute_local_model_bypasses_approved_concept_retrieval(monkeypatch, tm
     assert rc2mem.approve_candidate_concept(concept)["approved"] is True
     seen = {}
 
-    def fake_execute(message, model_lane, history=None):
+    def fake_execute(message, model_lane, history=None, provider_manager=None):
         seen["message"] = message
         return {
             "executed": True,
