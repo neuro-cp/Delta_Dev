@@ -1,0 +1,1433 @@
+{
+  "average_readiness_score": 0.8696,
+  "candidate_link_count": 108,
+  "graph_links_written": false,
+  "max_readiness_score": 0.9187,
+  "min_readiness_score": 0.7666,
+  "phase": "RC2.6 Typed Graph Link Readiness",
+  "read_only": true,
+  "recommendation": "PROCEED_TYPED_GRAPH_LINKING_DESIGN",
+  "relation_type_counts": {
+    "analogy_to": 29,
+    "causes": 16,
+    "depends_on": 35,
+    "part_of": 16,
+    "supports": 12
+  },
+  "relation_types_detected": [
+    "analogy_to",
+    "causes",
+    "depends_on",
+    "part_of",
+    "supports"
+  ],
+  "safety": {
+    "canonical_write_performed": false,
+    "graph_links_written": false,
+    "memory_write_performed": false,
+    "provider_calls_performed": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false
+  },
+  "trial_audits": [
+    {
+      "candidate_link_count": 10,
+      "candidate_links": [
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Cellular Respiration (Biology)",
+          "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "target_concept": "Photosynthesis (Biology)",
+          "target_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Cellular Respiration (Biology)",
+          "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "target_concept": "Photosynthesis (Agriculture Gardening)",
+          "target_concept_id": "rc2-concept-growth-7416970f708be834",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Cellular Respiration (Biology)",
+          "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "target_concept": "Energy Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Cellular Respiration (Biology)",
+          "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "target_concept": "Thermal Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Photosynthesis (Biology)",
+          "source_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "target_concept": "Photosynthesis (Agriculture Gardening)",
+          "target_concept_id": "rc2-concept-growth-7416970f708be834",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Photosynthesis (Biology)",
+          "source_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "target_concept": "Energy Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Photosynthesis (Biology)",
+          "source_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "target_concept": "Thermal Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Photosynthesis (Agriculture Gardening)",
+          "source_concept_id": "rc2-concept-growth-7416970f708be834",
+          "target_concept": "Energy Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Photosynthesis (Agriculture Gardening)",
+          "source_concept_id": "rc2-concept-growth-7416970f708be834",
+          "target_concept": "Thermal Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "target_concept": "Thermal Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "written": false
+        }
+      ],
+      "concept_count": 5,
+      "links_written": false,
+      "prompt": "Synthesize how photosynthesis relates to respiration.",
+      "readiness_score": 0.8955,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 10,
+      "candidate_links": [
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "target_concept": "Thermal Storage (Energy)",
+          "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Energy Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "target_concept": "Cellular Respiration (Biology)",
+          "target_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "target_concept": "Photosynthesis (Agriculture Gardening)",
+          "target_concept_id": "rc2-concept-growth-7416970f708be834",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "target_concept": "Cellular Respiration (Biology)",
+          "target_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Storage (Energy)",
+          "source_concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "target_concept": "Photosynthesis (Agriculture Gardening)",
+          "target_concept_id": "rc2-concept-growth-7416970f708be834",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Cellular Respiration (Biology)",
+          "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Cellular Respiration (Biology)",
+          "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "target_concept": "Photosynthesis (Agriculture Gardening)",
+          "target_concept_id": "rc2-concept-growth-7416970f708be834",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Battery Chemistry (Energy)",
+          "source_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "target_concept": "Photosynthesis (Agriculture Gardening)",
+          "target_concept_id": "rc2-concept-growth-7416970f708be834",
+          "written": false
+        }
+      ],
+      "concept_count": 5,
+      "links_written": false,
+      "prompt": "Synthesize how ATP relates to energy storage.",
+      "readiness_score": 0.8955,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 1,
+      "candidate_links": [
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Feedback Loops (Planning Productivity)",
+          "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+          "target_concept": "Feedback Loops (Biology)",
+          "target_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+          "written": false
+        }
+      ],
+      "concept_count": 2,
+      "links_written": false,
+      "prompt": "Synthesize how feedback loops relate to homeostasis.",
+      "readiness_score": 0.8869,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 10,
+      "candidate_links": [
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Gravity (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+          "target_concept": "Projectile Motion (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Gravity (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+          "target_concept": "Simple Harmonic Motion (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Gravity (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+          "target_concept": "Force Vectors (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Gravity (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+          "target_concept": "Pressure (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Projectile Motion (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+          "target_concept": "Simple Harmonic Motion (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Projectile Motion (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+          "target_concept": "Force Vectors (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Projectile Motion (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+          "target_concept": "Pressure (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Simple Harmonic Motion (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+          "target_concept": "Force Vectors (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Simple Harmonic Motion (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+          "target_concept": "Pressure (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Force Vectors (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+          "target_concept": "Pressure (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "written": false
+        }
+      ],
+      "concept_count": 5,
+      "links_written": false,
+      "prompt": "Synthesize how gravity relates to orbital motion.",
+      "readiness_score": 0.859,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 6,
+      "candidate_links": [
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Fluid Flow (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+          "target_concept": "Pressure (Basic Physics)",
+          "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Fluid Flow (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+          "target_concept": "Blood Pressure (Medicine Health General)",
+          "target_concept_id": "rc2-concept-growth-921fccfd53645427",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Fluid Flow (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+          "target_concept": "Constraints (Engineering)",
+          "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Pressure (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "target_concept": "Blood Pressure (Medicine Health General)",
+          "target_concept_id": "rc2-concept-growth-921fccfd53645427",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Pressure (Basic Physics)",
+          "source_concept_id": "rc2-concept-growth-be771744303f4c74",
+          "target_concept": "Constraints (Engineering)",
+          "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Blood Pressure (Medicine Health General)",
+          "source_concept_id": "rc2-concept-growth-921fccfd53645427",
+          "target_concept": "Constraints (Engineering)",
+          "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "written": false
+        }
+      ],
+      "concept_count": 4,
+      "links_written": false,
+      "prompt": "Synthesize how pressure relates to fluid flow.",
+      "readiness_score": 0.86,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 3,
+      "candidate_links": [
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Combustion Engines (Energy)",
+          "source_concept_id": "rc2-concept-growth-05a66946ef14ecdb",
+          "target_concept": "Thermal Efficiency (Energy)",
+          "target_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Combustion Engines (Energy)",
+          "source_concept_id": "rc2-concept-growth-05a66946ef14ecdb",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        }
+      ],
+      "concept_count": 3,
+      "links_written": false,
+      "prompt": "Synthesize how thermodynamics relates to engines.",
+      "readiness_score": 0.8406,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 3,
+      "candidate_links": [
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Interest Rates (Finance)",
+          "source_concept_id": "rc2-concept-growth-e417db538d58dd4a",
+          "target_concept": "Compound Interest (Finance)",
+          "target_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Interest Rates (Finance)",
+          "source_concept_id": "rc2-concept-growth-e417db538d58dd4a",
+          "target_concept": "Inflation (Finance)",
+          "target_concept_id": "rc2-concept-growth-ce8835d76529c7e2",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Compound Interest (Finance)",
+          "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+          "target_concept": "Inflation (Finance)",
+          "target_concept_id": "rc2-concept-growth-ce8835d76529c7e2",
+          "written": false
+        }
+      ],
+      "concept_count": 3,
+      "links_written": false,
+      "prompt": "Synthesize how inflation relates to interest rates.",
+      "readiness_score": 0.892,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 1,
+      "candidate_links": [
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Asset Allocation (Finance)",
+          "source_concept_id": "rc2-concept-growth-c7963f932849b3a0",
+          "target_concept": "Cash Reserves (Finance)",
+          "target_concept_id": "rc2-concept-growth-2c269d55c236230d",
+          "written": false
+        }
+      ],
+      "concept_count": 2,
+      "links_written": false,
+      "prompt": "Synthesize how risk relates to asset allocation.",
+      "readiness_score": 0.8078,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 3,
+      "candidate_links": [
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Compound Interest (Finance)",
+          "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+          "target_concept": "Cash Reserves (Finance)",
+          "target_concept_id": "rc2-concept-growth-2c269d55c236230d",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Compound Interest (Finance)",
+          "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Cash Reserves (Finance)",
+          "source_concept_id": "rc2-concept-growth-2c269d55c236230d",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        }
+      ],
+      "concept_count": 3,
+      "links_written": false,
+      "prompt": "Synthesize how compound interest relates to long-term investing.",
+      "readiness_score": 0.87,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 6,
+      "candidate_links": [
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Feedback Loops (Planning Productivity)",
+          "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+          "target_concept": "Feedback Loops (Biology)",
+          "target_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Feedback Loops (Planning Productivity)",
+          "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+          "target_concept": "Access Control (Software Architecture)",
+          "target_concept_id": "rc2-concept-growth-775056550ee04098",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Feedback Loops (Planning Productivity)",
+          "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+          "target_concept": "Calendar Planning (Planning Productivity)",
+          "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Feedback Loops (Biology)",
+          "source_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+          "target_concept": "Access Control (Software Architecture)",
+          "target_concept_id": "rc2-concept-growth-775056550ee04098",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Feedback Loops (Biology)",
+          "source_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+          "target_concept": "Calendar Planning (Planning Productivity)",
+          "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Access Control (Software Architecture)",
+          "source_concept_id": "rc2-concept-growth-775056550ee04098",
+          "target_concept": "Calendar Planning (Planning Productivity)",
+          "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "written": false
+        }
+      ],
+      "concept_count": 4,
+      "links_written": false,
+      "prompt": "Synthesize what connects planning, feedback loops, and software architecture.",
+      "readiness_score": 0.913,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 1,
+      "candidate_links": [
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Access Control (Software Architecture)",
+          "source_concept_id": "rc2-concept-growth-775056550ee04098",
+          "target_concept": "Api Boundaries (Software Architecture)",
+          "target_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+          "written": false
+        }
+      ],
+      "concept_count": 2,
+      "links_written": false,
+      "prompt": "Synthesize how access control relates to user permissions.",
+      "readiness_score": 0.8247,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 3,
+      "candidate_links": [
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Adapter Pattern (Software Architecture)",
+          "source_concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+          "target_concept": "Api Boundaries (Software Architecture)",
+          "target_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Adapter Pattern (Software Architecture)",
+          "source_concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+          "target_concept": "Access Control (Software Architecture)",
+          "target_concept_id": "rc2-concept-growth-775056550ee04098",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Api Boundaries (Software Architecture)",
+          "source_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+          "target_concept": "Access Control (Software Architecture)",
+          "target_concept_id": "rc2-concept-growth-775056550ee04098",
+          "written": false
+        }
+      ],
+      "concept_count": 3,
+      "links_written": false,
+      "prompt": "Synthesize how adapter patterns relate to system integration.",
+      "readiness_score": 0.8449,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 10,
+      "candidate_links": [
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Operator Approval (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "target_concept": "Operator Approval (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Memory Consolidation (Psychology)",
+          "source_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        }
+      ],
+      "concept_count": 5,
+      "links_written": false,
+      "prompt": "Synthesize how DELTA memory relates to human memory.",
+      "readiness_score": 0.9187,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 6,
+      "candidate_links": [
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "target_concept": "Canonical Memory (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Noncanonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Memory Consolidation (Psychology)",
+          "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Memory Consolidation (Psychology)",
+          "source_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        }
+      ],
+      "concept_count": 4,
+      "links_written": false,
+      "prompt": "Synthesize how noncanonical memory relates to memory consolidation.",
+      "readiness_score": 0.9147,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 6,
+      "candidate_links": [
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Canonical Memory (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Learning Reinforcement (Psychology)",
+          "target_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Learning Reinforcement (Psychology)",
+          "target_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Learning Reinforcement (Psychology)",
+          "source_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+          "target_concept": "Developmental Learning (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "written": false
+        }
+      ],
+      "concept_count": 4,
+      "links_written": false,
+      "prompt": "Synthesize how operator approval relates to learning.",
+      "readiness_score": 0.9147,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 6,
+      "candidate_links": [
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Canonical Memory (Delta Architecture Itself)",
+          "target_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Attention (Psychology)",
+          "target_concept_id": "rc2-concept-growth-0204997183aa8174",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Operator Approval (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "target_concept": "Conflict Resolution (Psychology)",
+          "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Attention (Psychology)",
+          "target_concept_id": "rc2-concept-growth-0204997183aa8174",
+          "written": false
+        },
+        {
+          "confidence": 0.72,
+          "rationale": "Terms indicate one concept may require or rely on another.",
+          "relation_type": "depends_on",
+          "requires_operator_review": true,
+          "source_concept": "Canonical Memory (Delta Architecture Itself)",
+          "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "target_concept": "Conflict Resolution (Psychology)",
+          "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Attention (Psychology)",
+          "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+          "target_concept": "Conflict Resolution (Psychology)",
+          "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "written": false
+        }
+      ],
+      "concept_count": 4,
+      "links_written": false,
+      "prompt": "Synthesize how law relates to governance.",
+      "readiness_score": 0.9179,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 3,
+      "candidate_links": [
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Attention (Psychology)",
+          "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+          "target_concept": "Conflict Resolution (Psychology)",
+          "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Attention (Psychology)",
+          "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+          "target_concept": "Calendar Planning (Planning Productivity)",
+          "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Conflict Resolution (Psychology)",
+          "source_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "target_concept": "Calendar Planning (Planning Productivity)",
+          "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "written": false
+        }
+      ],
+      "concept_count": 3,
+      "links_written": false,
+      "prompt": "Synthesize how evidence relates to decision-making.",
+      "readiness_score": 0.8741,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 3,
+      "candidate_links": [
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Active Listening (Social Communication)",
+          "source_concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+          "target_concept": "Conflict Resolution (Psychology)",
+          "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "written": false
+        },
+        {
+          "confidence": 0.7,
+          "rationale": "Propositions describe causal or conversion behavior.",
+          "relation_type": "causes",
+          "requires_operator_review": true,
+          "source_concept": "Active Listening (Social Communication)",
+          "source_concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+          "target_concept": "Active Listening (Psychology)",
+          "target_concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+          "written": false
+        },
+        {
+          "confidence": 0.68,
+          "rationale": "Concept substance describes support or enablement.",
+          "relation_type": "supports",
+          "requires_operator_review": true,
+          "source_concept": "Conflict Resolution (Psychology)",
+          "source_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "target_concept": "Active Listening (Psychology)",
+          "target_concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+          "written": false
+        }
+      ],
+      "concept_count": 3,
+      "links_written": false,
+      "prompt": "Synthesize how communication relates to conflict resolution.",
+      "readiness_score": 0.8741,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 10,
+      "candidate_links": [
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Energy Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+          "target_concept": "Thermal Efficiency (Energy)",
+          "target_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+          "target_concept": "Insulation (Energy)",
+          "target_concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+          "target_concept": "Insulation (Home Repair)",
+          "target_concept_id": "rc2-concept-growth-a72b30fee84f3703",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Energy Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "target_concept": "Insulation (Energy)",
+          "target_concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "target_concept": "Insulation (Home Repair)",
+          "target_concept_id": "rc2-concept-growth-a72b30fee84f3703",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Thermal Efficiency (Energy)",
+          "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Insulation (Energy)",
+          "source_concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+          "target_concept": "Insulation (Home Repair)",
+          "target_concept_id": "rc2-concept-growth-a72b30fee84f3703",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Insulation (Energy)",
+          "source_concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Insulation (Home Repair)",
+          "source_concept_id": "rc2-concept-growth-a72b30fee84f3703",
+          "target_concept": "Battery Chemistry (Energy)",
+          "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "written": false
+        }
+      ],
+      "concept_count": 5,
+      "links_written": false,
+      "prompt": "Synthesize how insulation relates to energy efficiency.",
+      "readiness_score": 0.8407,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 1,
+      "candidate_links": [
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Photosynthesis (Agriculture Gardening)",
+          "source_concept_id": "rc2-concept-growth-7416970f708be834",
+          "target_concept": "Photosynthesis (Biology)",
+          "target_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "written": false
+        }
+      ],
+      "concept_count": 2,
+      "links_written": false,
+      "prompt": "Synthesize how soil quality relates to plant growth.",
+      "readiness_score": 0.7666,
+      "stored_only": true
+    },
+    {
+      "candidate_link_count": 6,
+      "candidate_links": [
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Alternators (Vehicles Mechanics)",
+          "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+          "target_concept": "Maintenance Planning (Engineering)",
+          "target_concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Alternators (Vehicles Mechanics)",
+          "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+          "target_concept": "Gutter Maintenance (Home Repair)",
+          "target_concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+          "written": false
+        },
+        {
+          "confidence": 0.62,
+          "rationale": "Concepts appear within a shared system or architecture context.",
+          "relation_type": "part_of",
+          "requires_operator_review": true,
+          "source_concept": "Alternators (Vehicles Mechanics)",
+          "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+          "target_concept": "Constraints (Engineering)",
+          "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Maintenance Planning (Engineering)",
+          "source_concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+          "target_concept": "Gutter Maintenance (Home Repair)",
+          "target_concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Maintenance Planning (Engineering)",
+          "source_concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+          "target_concept": "Constraints (Engineering)",
+          "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "written": false
+        },
+        {
+          "confidence": 0.52,
+          "rationale": "The synthesis prompt asks for a connection, but the exact relation type remains tentative.",
+          "relation_type": "analogy_to",
+          "requires_operator_review": true,
+          "source_concept": "Gutter Maintenance (Home Repair)",
+          "source_concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+          "target_concept": "Constraints (Engineering)",
+          "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "written": false
+        }
+      ],
+      "concept_count": 4,
+      "links_written": false,
+      "prompt": "Synthesize how maintenance relates to mechanical reliability.",
+      "readiness_score": 0.85,
+      "stored_only": true
+    }
+  ],
+  "trial_count": 21
+}

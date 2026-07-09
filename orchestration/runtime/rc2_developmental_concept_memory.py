@@ -84,15 +84,47 @@ DOMAIN_ALIASES = {
 RELATED_QUERY_HINTS = {
     "photosynthesis": ("cellular respiration", "energy storage", "carbon cycle"),
     "respiration": ("photosynthesis", "energy storage", "carbon cycle"),
+    "atp": ("energy storage", "cellular respiration", "biology"),
+    "energy storage": ("atp", "battery", "thermal storage", "photosynthesis"),
+    "homeostasis": ("feedback loops", "biology", "regulation"),
     "gravity": ("orbital motion", "force", "motion", "basic physics"),
     "orbital motion": ("gravity", "motion", "force"),
+    "pressure": ("fluid flow", "engineering", "basic physics"),
+    "fluid flow": ("pressure", "engineering", "mechanics"),
+    "thermodynamics": ("engines", "heat", "energy", "engineering"),
+    "engines": ("thermodynamics", "energy", "mechanics"),
     "inflation": ("interest rates", "finance", "money"),
     "interest rates": ("inflation", "finance", "compound interest"),
+    "risk": ("asset allocation", "finance", "risk management"),
+    "asset allocation": ("risk", "finance", "investment"),
+    "compound interest": ("long-term investing", "interest rates", "finance"),
+    "long-term investing": ("compound interest", "asset allocation", "finance"),
     "memory": ("human memory", "delta memory", "consolidation", "noncanonical memory"),
     "human memory": ("memory consolidation", "psychology", "learning"),
+    "delta memory": ("noncanonical memory", "canonical memory", "memory consolidation"),
+    "noncanonical memory": ("canonical memory", "memory consolidation", "delta memory"),
+    "operator approval": ("learning", "noncanonical memory", "governance"),
     "planning": ("feedback loops", "software architecture", "productivity"),
     "feedback loops": ("planning", "software architecture", "systems"),
     "software architecture": ("planning", "modularity", "feedback loops"),
+    "access control": ("user permissions", "authorization", "software architecture"),
+    "user permissions": ("access control", "authorization", "software architecture"),
+    "adapter patterns": ("system integration", "adapter pattern", "software architecture"),
+    "adapter pattern": ("system integration", "software architecture", "api boundaries"),
+    "system integration": ("adapter pattern", "api boundaries", "software architecture"),
+    "law": ("governance", "government", "evidence"),
+    "governance": ("law", "operator approval", "decision-making"),
+    "evidence": ("decision making", "law", "governance"),
+    "decision-making": ("evidence", "risk", "planning"),
+    "decision making": ("evidence", "risk", "planning"),
+    "communication": ("conflict resolution", "active listening", "social communication"),
+    "conflict resolution": ("communication", "active listening", "psychology"),
+    "insulation": ("energy efficiency", "home repair", "thermal storage"),
+    "energy efficiency": ("insulation", "energy", "home repair"),
+    "soil quality": ("plant growth", "agriculture", "photosynthesis"),
+    "plant growth": ("soil quality", "photosynthesis", "agriculture"),
+    "maintenance": ("mechanical reliability", "vehicles mechanics", "planning"),
+    "mechanical reliability": ("maintenance", "vehicles mechanics", "engineering"),
 }
 
 
@@ -575,6 +607,140 @@ def retrieve_multi_concept_set(question: str, *, limit: int = 5) -> dict[str, An
         "duplicate_suppression_count": duplicate_suppression_count,
         "synthesis_readiness": False,
     }
+
+
+def build_read_only_synthesis_trial(question: str, *, limit: int = 5) -> dict[str, Any]:
+    retrieval = retrieve_multi_concept_set(question, limit=max(limit * 3, 12))
+    if not retrieval["matched"]:
+        return {
+            "matched": False,
+            "answer": "",
+            "stored_concepts": [],
+            "tentative_inference": "",
+            "uncertainty": "insufficient_retrieval_set",
+            "synthesis_trial_only": True,
+            "synthesis_enabled": False,
+            "memory_write_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+            "provider_calls_performed": False,
+        }
+    selected_rows = _select_substantive_synthesis_rows(retrieval["matches"], limit=limit)
+    concepts = [_compact_concept_for_synthesis(item) for item in selected_rows]
+    inference = _tentative_bridge(question, concepts)
+    uncertainty = _synthesis_uncertainty(concepts, retrieval["retrieval_set_quality"])
+    lines = [
+        "Stored concepts used:",
+    ]
+    for index, concept in enumerate(concepts, start=1):
+        lines.append(f"{index}. {concept['concept_name']}")
+        lines.append(f"   - Stored knowledge: {concept['short_definition']}")
+    lines.extend([
+        "",
+        "Tentative inference:",
+        inference,
+        "",
+        "Uncertainty:",
+        uncertainty,
+        "",
+        "No memory was written. Synthesis remains trial-only.",
+    ])
+    return {
+        "matched": True,
+        "answer": "\n".join(lines),
+        "stored_concepts": concepts,
+        "tentative_inference": inference,
+        "uncertainty": uncertainty,
+        "retrieval_set_quality": retrieval["retrieval_set_quality"],
+        "source_retrieval": retrieval,
+        "synthesis_trial_only": True,
+        "synthesis_enabled": False,
+        "memory_write_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "provider_calls_performed": False,
+    }
+
+
+def _select_substantive_synthesis_rows(rows: list[dict[str, Any]], *, limit: int) -> list[dict[str, Any]]:
+    indexed = list(enumerate(rows))
+    indexed.sort(key=lambda item: (-_synthesis_substance_score(item[1]), item[0]))
+    strong = [(index, row) for index, row in indexed if _synthesis_substance_score(row) >= 0.7]
+    if len(strong) >= 2:
+        return [row for _, row in strong[:limit]]
+    return [row for _, row in indexed[:limit]]
+
+
+def _synthesis_substance_score(row: dict[str, Any]) -> float:
+    definition = str(row.get("short_definition") or "")
+    propositions = [item for item in row.get("propositions", []) if str(item).strip()]
+    examples = [item for item in row.get("examples", []) if str(item).strip()]
+    misconceptions = [item for item in row.get("misconceptions", []) if str(item).strip()]
+    related = [item for item in row.get("related_concepts", []) if str(item).strip()]
+    score = 0.0
+    if definition and not _is_generic_synthesis_definition(definition):
+        score += 0.35
+    score += min(len(propositions), 3) * 0.12
+    score += min(len(examples), 2) * 0.08
+    score += min(len(misconceptions), 1) * 0.08
+    score += min(len([item for item in related if not _is_generic_synthesis_related(str(item))]), 4) * 0.05
+    if _is_generic_synthesis_definition(definition):
+        score -= 0.25
+    return max(0.0, score)
+
+
+def _is_generic_synthesis_definition(text: str) -> bool:
+    lower = " ".join(text.lower().split())
+    return any(marker in lower for marker in [
+        "is a reusable",
+        "helps explain causes, constraints, tradeoffs",
+        "practical decisions in the",
+        "connects observable situations to underlying",
+    ])
+
+
+def _is_generic_synthesis_related(text: str) -> bool:
+    lower = " ".join(text.lower().split())
+    return lower.endswith(("reasoning", "evidence", "tradeoffs", "constraints")) or lower in {"causes", "effects", "decisions"}
+
+
+def _compact_concept_for_synthesis(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "concept_id": row.get("concept_id"),
+        "concept_name": row.get("concept_name"),
+        "domain": row.get("domain"),
+        "short_definition": str(row.get("short_definition") or "").strip(),
+        "propositions": [str(item) for item in row.get("propositions", [])[:3]],
+        "related_concepts": [str(item) for item in row.get("related_concepts", [])[:5]],
+        "examples": [str(item) for item in row.get("examples", [])[:3]],
+        "misconceptions": [str(item) for item in row.get("misconceptions", [])[:3]],
+        "source_type": row.get("source_type"),
+        "source_model_id": row.get("source_model_id"),
+        "canonical": bool(row.get("canonical")),
+    }
+
+
+def _tentative_bridge(question: str, concepts: list[dict[str, Any]]) -> str:
+    names = [str(item.get("concept_name") or "").lower() for item in concepts]
+    joined = " ".join(names)
+    if "photosynthesis" in joined and "respiration" in joined:
+        return "These stored concepts may connect through energy transformation: photosynthesis stores energy in chemical form, while cellular respiration releases usable energy from that stored material."
+    if "inflation" in joined and "interest" in joined:
+        return "These stored concepts may connect through monetary conditions: inflation changes purchasing power, while interest rates influence borrowing, saving, and policy responses."
+    if "memory" in joined and ("delta" in joined or "noncanonical" in joined or "canonical" in joined):
+        return "These stored concepts may connect through governed retention: DELTA memory separates reversible substrate knowledge from longer-term records, while human memory concepts describe consolidation and recall."
+    if "feedback" in joined and ("planning" in joined or "software" in joined):
+        return "These stored concepts may connect through control loops: planning sets intended direction, feedback reveals deviation, and software architecture can encode the structures that respond to that feedback."
+    primary = [str(item.get("concept_name") or "unnamed concept") for item in concepts[:3]]
+    return f"These stored concepts may be connected, but the bridge is tentative: {', '.join(primary)} appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted."
+
+
+def _synthesis_uncertainty(concepts: list[dict[str, Any]], quality: float) -> str:
+    if quality >= 0.9 and len(concepts) >= 3:
+        return "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    if quality >= 0.7:
+        return "moderate_to_high: the retrieval set is usable, but more concept detail or operator review is needed."
+    return "high: the retrieved concept set is thin or weak, so the bridge should be treated as exploratory only."
 
 
 def browse_approved_concepts(

@@ -1,0 +1,505 @@
+{
+  "concept_ids_preserved": true,
+  "generic_concept_count_after_repair": 0,
+  "phase": "RC2.5A Concept Substance Repair",
+  "recommendation": "RERUN_MANUAL_SYNTHESIS_TRIALS_WITH_REPAIRED_CONCEPT_SUBSTANCE",
+  "repaired": [
+    {
+      "concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+      "concept_name": "Force Vectors (Basic Physics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-51fa261899f4ab4e",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-51fa261899f4ab4e-848a785d057eb895"
+    },
+    {
+      "concept_id": "rc2-concept-growth-f237ca52b3a78146",
+      "concept_name": "Gravity (Basic Physics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-f237ca52b3a78146",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-f237ca52b3a78146-f27f472991697be9"
+    },
+    {
+      "concept_id": "rc2-concept-growth-be771744303f4c74",
+      "concept_name": "Pressure (Basic Physics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-be771744303f4c74",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-be771744303f4c74-fab34f4b7aabc3d1"
+    },
+    {
+      "concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+      "concept_name": "Simple Harmonic Motion (Basic Physics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-640ed8c03d177a2c",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-640ed8c03d177a2c-eccb7bd10b09dda0"
+    },
+    {
+      "concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+      "concept_name": "Fluid Flow (Basic Physics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-1ccdf63b9083acfc",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-1ccdf63b9083acfc-98331e288c17593b"
+    },
+    {
+      "concept_id": "rc2-concept-growth-41ecd561d0223a56",
+      "concept_name": "Projectile Motion (Basic Physics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-41ecd561d0223a56",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-41ecd561d0223a56-fe52d28093388439"
+    },
+    {
+      "concept_id": "rc2-concept-growth-921fccfd53645427",
+      "concept_name": "Blood Pressure (Medicine Health General)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-921fccfd53645427",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-921fccfd53645427-53b2177a8dcde0c6"
+    },
+    {
+      "concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+      "concept_name": "Learning Reinforcement (Psychology)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-14c04b6ac31f7cc9",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-14c04b6ac31f7cc9-ee561c171ad6150b"
+    },
+    {
+      "concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+      "concept_name": "Conflict Resolution (Psychology)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-c0e93a29cb668e60",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-c0e93a29cb668e60-6d09f58e540b926f"
+    },
+    {
+      "concept_id": "rc2-concept-growth-7f8e893fc3a2a1a9",
+      "concept_name": "Burnout Prevention (Psychology)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-7f8e893fc3a2a1a9",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-7f8e893fc3a2a1a9-5a057c974d409b39"
+    },
+    {
+      "concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+      "concept_name": "Constraints (Engineering)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-bb35f3d903ad9377",
+      "score_after": 1.0,
+      "score_before": 0.66,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-bb35f3d903ad9377-3b95259b3b72b97e"
+    },
+    {
+      "concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+      "concept_name": "Maintenance Planning (Engineering)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-1bdd642ce9c532ef",
+      "score_after": 1.0,
+      "score_before": 0.66,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-1bdd642ce9c532ef-badbc52a24a6066b"
+    },
+    {
+      "concept_id": "rc2-concept-growth-31952ed6df4ea1a7",
+      "concept_name": "Calibration (Engineering)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-31952ed6df4ea1a7",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-31952ed6df4ea1a7-cc82942942422413"
+    },
+    {
+      "concept_id": "rc2-concept-growth-1f114ade8c329b95",
+      "concept_name": "Battery Chemistry (Energy)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-1f114ade8c329b95",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-1f114ade8c329b95-c66f42d8790e7f53"
+    },
+    {
+      "concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+      "concept_name": "Energy Efficiency (Energy)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-ce8d0d02037da8c4",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-ce8d0d02037da8c4-c804b8fd86932f4b"
+    },
+    {
+      "concept_id": "rc2-concept-growth-05a66946ef14ecdb",
+      "concept_name": "Combustion Engines (Energy)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-05a66946ef14ecdb",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-05a66946ef14ecdb-9abaefecf6b4d41c"
+    },
+    {
+      "concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+      "concept_name": "Insulation (Energy)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-f4c826a81ca40fda",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-f4c826a81ca40fda-b5da46ea8cece333"
+    },
+    {
+      "concept_id": "rc2-concept-growth-a7507b854fa6497d",
+      "concept_name": "Baseload (Energy)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-a7507b854fa6497d",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-a7507b854fa6497d-b94e768f8efc5397"
+    },
+    {
+      "concept_id": "rc2-concept-growth-5fa69fe183617b61",
+      "concept_name": "Thermal Efficiency (Energy)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-5fa69fe183617b61",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-5fa69fe183617b61-06c82b369dea4813"
+    },
+    {
+      "concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+      "concept_name": "Alternators (Vehicles Mechanics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-db8c47c4e9cf9284",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-db8c47c4e9cf9284-9fb90c7a25ef0e80"
+    },
+    {
+      "concept_id": "rc2-concept-growth-16a479b9c47040ae",
+      "concept_name": "Air Filters (Vehicles Mechanics)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-16a479b9c47040ae",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-16a479b9c47040ae-f15078e06d5ce0d9"
+    },
+    {
+      "concept_id": "rc2-concept-growth-a72b30fee84f3703",
+      "concept_name": "Insulation (Home Repair)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-a72b30fee84f3703",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-a72b30fee84f3703-7c970edb90ff9ddb"
+    },
+    {
+      "concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+      "concept_name": "Gutter Maintenance (Home Repair)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-cd02fcf2ea68a0d0",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-cd02fcf2ea68a0d0-fa75c7a142ea70db"
+    },
+    {
+      "concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+      "concept_name": "Active Listening (Social Communication)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-b0687bdbd25db3ed",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-b0687bdbd25db3ed-c1f7943a709050e1"
+    },
+    {
+      "concept_id": "rc2-concept-growth-cf1e9b8cd8490d6e",
+      "concept_name": "Apologies (Social Communication)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-cf1e9b8cd8490d6e",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-cf1e9b8cd8490d6e-9474a5666dbc3c04"
+    },
+    {
+      "concept_id": "rc2-concept-growth-1b535612743b80c4",
+      "concept_name": "Operator Approval (Delta Architecture Itself)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-1b535612743b80c4",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-1b535612743b80c4-55cab58a3b470acf"
+    },
+    {
+      "concept_id": "rc2-concept-growth-1b535612743b80c4",
+      "concept_name": "Operator Approval (Delta Architecture Itself)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-1b535612743b80c4",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-1b535612743b80c4-55cab58a3b470acf"
+    },
+    {
+      "concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+      "concept_name": "Developmental Learning (Delta Architecture Itself)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-b46a83c4e603f2a6",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-b46a83c4e603f2a6-c32ca48629f48384"
+    },
+    {
+      "concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+      "concept_name": "Developmental Learning (Delta Architecture Itself)",
+      "generic_after": false,
+      "generic_before": true,
+      "rollback_handle": "rollback-rc2-concept-growth-b46a83c4e603f2a6",
+      "score_after": 1.0,
+      "score_before": 0.54,
+      "version_handle": "rc2-5a-substance-repair-rc2-concept-growth-b46a83c4e603f2a6-c32ca48629f48384"
+    }
+  ],
+  "repaired_count": 29,
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "skipped": [
+    {
+      "concept_name": "Photosynthesis (Biology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Cellular Respiration (Biology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Feedback Loops (Biology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Attention (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Behavior Change (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Memory Consolidation (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Attachment (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Active Listening (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Attention Switching (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Behavioral Cues (Psychology)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Audit Logs (Software Architecture)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Caching (Software Architecture)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Access Control (Software Architecture)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Adapter Pattern (Software Architecture)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Api Boundaries (Software Architecture)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Budgeting (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Cash Flow (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Compound Interest (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Asset Allocation (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Inflation (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Balance Sheets (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Capital Budgeting (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Interest Rates (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Cash Reserves (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Break Even Analysis (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Budget Variance (Finance)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Energy Storage (Energy)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Thermal Storage (Energy)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Photosynthesis (Agriculture Gardening)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Calendar Planning (Planning Productivity)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Feedback Loops (Planning Productivity)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Backlog Grooming (Planning Productivity)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Attention Budgeting (Planning Productivity)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Attention Budgeting (Planning Productivity)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Canonical Memory (Delta Architecture Itself)",
+      "reason": "already_substantive",
+      "score": 1.0
+    },
+    {
+      "concept_name": "Canonical Memory (Delta Architecture Itself)",
+      "reason": "already_substantive",
+      "score": 1.0
+    }
+  ],
+  "skipped_count": 38,
+  "synthesis_quality_after_repair": 0.9109,
+  "synthesis_recommendation_after_repair": "PROCEED_TYPED_GRAPH_LINKING_DESIGN",
+  "targeted_concepts": 62
+}

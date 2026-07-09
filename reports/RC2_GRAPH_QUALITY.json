@@ -1,0 +1,50 @@
+{
+  "accepted_links": 62,
+  "average_confidence": 0.7884,
+  "average_uncertainty": 0.35,
+  "candidate_links": 62,
+  "concept_coverage": 1.0,
+  "duplicate_suppression": {
+    "exact_duplicates": 11,
+    "inverse_duplicates": 6,
+    "low_confidence": 29,
+    "self_links": 0
+  },
+  "edge_density": 1.4762,
+  "edited_links": 0,
+  "graph_consistency": 0.85,
+  "graph_store_mutated": false,
+  "isolated_concepts": [],
+  "phase": "RC2.7B Graph Quality Calibration",
+  "rejected_links": 0,
+  "relation_distribution": {
+    "causes": 15,
+    "depends_on": 22,
+    "part_of": 14,
+    "supports": 11
+  },
+  "review_completion": 1.0,
+  "rollback_coverage": 1.0,
+  "safety": {
+    "automatic_graph_link_approval": false,
+    "automatic_graph_link_creation": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "graph_store_mutated": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "storage_gate": {
+    "average_confidence_gate": true,
+    "graph_consistency_gate": true,
+    "ready_for_storage_trial": true,
+    "rollback_coverage_gate": true,
+    "safety_gate": true
+  }
+}

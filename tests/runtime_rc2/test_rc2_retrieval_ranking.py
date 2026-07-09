@@ -81,6 +81,31 @@ def test_multi_concept_retrieval_returns_review_set_without_synthesis(monkeypatc
     assert payload["canonical_write_performed"] is False
 
 
+def test_read_only_synthesis_trial_shows_inputs_and_labeled_inference(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("Photosynthesis", "biology", "Photosynthesis stores energy from light in chemical form.", ("cellular respiration", "energy storage")),
+        _concept("Cellular Respiration", "biology", "Cellular respiration releases usable energy from stored sugars.", ("photosynthesis", "ATP")),
+        _concept("Energy Storage", "energy", "Energy storage keeps energy available for later work.", ("biology",)),
+    ])
+
+    payload = route_message("Conversation", "Synthesize how photosynthesis relates to respiration.")
+
+    assert payload["route"] == "read_only_cross_concept_synthesis_trial"
+    assert payload["synthesis_trial"]["synthesis_trial_only"] is True
+    assert payload["synthesis_trial"]["synthesis_enabled"] is False
+    assert payload["synthesis_trial"]["memory_write_performed"] is False
+    assert payload["memory_candidate"] is None
+    assert "Stored concepts used:" in payload["answer"]
+    assert "Photosynthesis" in payload["answer"]
+    assert "Cellular Respiration" in payload["answer"]
+    assert "Tentative inference:" in payload["answer"]
+    assert "No memory was written" in payload["answer"]
+    assert payload["provider_calls_performed"] is False
+    assert payload["training_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
 def test_domain_browse_alias_does_not_hijack_coding(monkeypatch, tmp_path):
     knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
     _write_concepts(knowledge, [

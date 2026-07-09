@@ -1,0 +1,3555 @@
+{
+  "average_synthesis_quality": 0.9109,
+  "generic_concept_count": 0,
+  "hallucination_risk_average": 0.1286,
+  "max_synthesis_quality": 0.99,
+  "median_synthesis_quality": 0.9055,
+  "min_synthesis_quality": 0.748,
+  "overreach_risk_average": 0.2548,
+  "passed": true,
+  "phase": "RC2.6 Manual Read-Only Synthesis Quality Trials",
+  "recommendation": "PROCEED_TYPED_GRAPH_LINKING_DESIGN",
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "stored_concept_substance_average": 1.0,
+  "synthesis_activation": false,
+  "trial_count": 21,
+  "trial_only": true,
+  "trials": [
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Cellular Respiration (Biology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Photosynthesis (Biology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Energy Storage (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Thermal Storage (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how photosynthesis relates to respiration.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "concept_name": "Cellular Respiration (Biology)",
+          "domain": "biology",
+          "examples": [
+            "Muscle cells using glucose and oxygen to produce ATP during activity.",
+            "Explain how cellular respiration affects a practical biology decision.",
+            "Use cellular respiration to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Cellular respiration is not the same process as breathing, although breathing supplies oxygen and removes carbon dioxide.",
+            "Cellular Respiration should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Cellular respiration converts stored chemical energy into ATP.",
+            "Cellular respiration commonly uses glucose and oxygen as inputs.",
+            "Cellular respiration produces carbon dioxide, water, and usable cellular energy."
+          ],
+          "related_concepts": [
+            "ATP",
+            "glucose",
+            "oxygen",
+            "carbon dioxide",
+            "photosynthesis"
+          ],
+          "short_definition": "Cellular respiration is the process cells use to release usable energy from sugars by converting glucose and oxygen into carbon dioxide, water, and ATP.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "concept_name": "Photosynthesis (Biology)",
+          "domain": "biology",
+          "examples": [
+            "Leaf cells using chloroplasts to make glucose from carbon dioxide and water.",
+            "Explain how photosynthesis affects a practical biology decision.",
+            "Use photosynthesis to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Photosynthesis is not simply plant breathing; it is an energy-storage pathway.",
+            "Photosynthesis should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Photosynthesis captures light energy.",
+            "Photosynthesis stores energy in sugar molecules.",
+            "Photosynthesis supplies energy-rich molecules that respiration can later break down."
+          ],
+          "related_concepts": [
+            "chloroplasts",
+            "glucose",
+            "carbon cycle",
+            "cellular respiration",
+            "oxygen"
+          ],
+          "short_definition": "Photosynthesis is the biological pathway that captures light energy and stores it as chemical energy, usually in sugars made from carbon dioxide and water.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-7416970f708be834",
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "domain": "agriculture gardening",
+          "examples": [
+            "A tomato plant using sunlight to produce sugars that support leaves, roots, flowers, and fruit.",
+            "Explain how photosynthesis affects a practical agriculture gardening decision.",
+            "Use photosynthesis to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Fertilizer does not replace photosynthesis; nutrients support growth but do not provide the plant's main energy source.",
+            "Photosynthesis should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Photosynthesis stores light energy in chemical bonds.",
+            "Plant growth depends on photosynthesis producing sugars.",
+            "Photosynthesis links sunlight, water, carbon dioxide, and plant biomass."
+          ],
+          "related_concepts": [
+            "chlorophyll",
+            "plant growth",
+            "carbon dioxide",
+            "water",
+            "sugars"
+          ],
+          "short_definition": "Photosynthesis in plants converts sunlight, carbon dioxide, and water into sugars that support plant growth while releasing oxygen.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "concept_name": "Energy Storage (Energy)",
+          "domain": "energy",
+          "examples": [
+            "A battery storing electrical energy chemically for later discharge.",
+            "Explain how energy storage affects a practical energy decision.",
+            "Use energy storage to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Energy storage does not create energy; it changes when and how energy can be used.",
+            "Energy Storage should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Energy storage separates energy capture from energy use.",
+            "Stored energy can be chemical, thermal, mechanical, or electrical.",
+            "Energy storage introduces tradeoffs in capacity, efficiency, speed, and stability."
+          ],
+          "related_concepts": [
+            "battery chemistry",
+            "chemical bonds",
+            "thermal storage",
+            "ATP",
+            "grid storage"
+          ],
+          "short_definition": "Energy storage preserves energy in a form that can be released later, such as chemical bonds, batteries, heat reservoirs, or elevated water.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "concept_name": "Thermal Storage (Energy)",
+          "domain": "energy",
+          "examples": [
+            "Molten salt storing heat from solar thermal systems for electricity generation after sunset.",
+            "Explain how thermal storage affects a practical energy decision.",
+            "Use thermal storage to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Thermal storage is not always electricity storage; it may store heat directly.",
+            "Thermal Storage should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Thermal storage stores energy through temperature differences or phase changes.",
+            "Thermal storage can shift energy use from one time period to another.",
+            "Thermal storage performance depends on insulation, heat capacity, and loss rate."
+          ],
+          "related_concepts": [
+            "heat capacity",
+            "phase change",
+            "insulation",
+            "solar thermal energy",
+            "energy storage"
+          ],
+          "short_definition": "Thermal storage holds energy as heat or cold so it can be released later for heating, cooling, industrial processes, or power systems.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 1.0,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.99,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through energy transformation: photosynthesis stores energy in chemical form, while cellular respiration releases usable energy from that stored material.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Energy Storage (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Thermal Storage (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Cellular Respiration (Biology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Battery Chemistry (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how ATP relates to energy storage.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-4e972ba1b928506f",
+          "concept_name": "Energy Storage (Energy)",
+          "domain": "energy",
+          "examples": [
+            "A battery storing electrical energy chemically for later discharge.",
+            "Explain how energy storage affects a practical energy decision.",
+            "Use energy storage to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Energy storage does not create energy; it changes when and how energy can be used.",
+            "Energy Storage should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Energy storage separates energy capture from energy use.",
+            "Stored energy can be chemical, thermal, mechanical, or electrical.",
+            "Energy storage introduces tradeoffs in capacity, efficiency, speed, and stability."
+          ],
+          "related_concepts": [
+            "battery chemistry",
+            "chemical bonds",
+            "thermal storage",
+            "ATP",
+            "grid storage"
+          ],
+          "short_definition": "Energy storage preserves energy in a form that can be released later, such as chemical bonds, batteries, heat reservoirs, or elevated water.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5017b6883fe43909",
+          "concept_name": "Thermal Storage (Energy)",
+          "domain": "energy",
+          "examples": [
+            "Molten salt storing heat from solar thermal systems for electricity generation after sunset.",
+            "Explain how thermal storage affects a practical energy decision.",
+            "Use thermal storage to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Thermal storage is not always electricity storage; it may store heat directly.",
+            "Thermal Storage should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Thermal storage stores energy through temperature differences or phase changes.",
+            "Thermal storage can shift energy use from one time period to another.",
+            "Thermal storage performance depends on insulation, heat capacity, and loss rate."
+          ],
+          "related_concepts": [
+            "heat capacity",
+            "phase change",
+            "insulation",
+            "solar thermal energy",
+            "energy storage"
+          ],
+          "short_definition": "Thermal storage holds energy as heat or cold so it can be released later for heating, cooling, industrial processes, or power systems.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+          "concept_name": "Cellular Respiration (Biology)",
+          "domain": "biology",
+          "examples": [
+            "Muscle cells using glucose and oxygen to produce ATP during activity.",
+            "Explain how cellular respiration affects a practical biology decision.",
+            "Use cellular respiration to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Cellular respiration is not the same process as breathing, although breathing supplies oxygen and removes carbon dioxide.",
+            "Cellular Respiration should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Cellular respiration converts stored chemical energy into ATP.",
+            "Cellular respiration commonly uses glucose and oxygen as inputs.",
+            "Cellular respiration produces carbon dioxide, water, and usable cellular energy."
+          ],
+          "related_concepts": [
+            "ATP",
+            "glucose",
+            "oxygen",
+            "carbon dioxide",
+            "photosynthesis"
+          ],
+          "short_definition": "Cellular respiration is the process cells use to release usable energy from sugars by converting glucose and oxygen into carbon dioxide, water, and ATP.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "concept_name": "Battery Chemistry (Energy)",
+          "domain": "energy",
+          "examples": [
+            "Lithium-ion cells storing energy through movement of lithium ions between electrodes.",
+            "Explain how battery chemistry affects a practical energy decision.",
+            "Use battery chemistry to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "All batteries do not behave the same; chemistry strongly shapes limits and risks.",
+            "Battery Chemistry should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Battery chemistry determines voltage, capacity, safety, lifespan, and charging behavior.",
+            "Batteries store energy by moving ions and electrons through controlled reactions.",
+            "Different chemistries trade off cost, density, stability, and performance."
+          ],
+          "related_concepts": [
+            "energy storage",
+            "electrochemistry",
+            "capacity",
+            "charging",
+            "thermal safety"
+          ],
+          "short_definition": "Battery chemistry describes the materials and reactions that store and release electrical energy through electrochemical processes.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-7416970f708be834",
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "domain": "agriculture gardening",
+          "examples": [
+            "A tomato plant using sunlight to produce sugars that support leaves, roots, flowers, and fruit.",
+            "Explain how photosynthesis affects a practical agriculture gardening decision.",
+            "Use photosynthesis to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Fertilizer does not replace photosynthesis; nutrients support growth but do not provide the plant's main energy source.",
+            "Photosynthesis should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Photosynthesis stores light energy in chemical bonds.",
+            "Plant growth depends on photosynthesis producing sugars.",
+            "Photosynthesis links sunlight, water, carbon dioxide, and plant biomass."
+          ],
+          "related_concepts": [
+            "chlorophyll",
+            "plant growth",
+            "carbon dioxide",
+            "water",
+            "sugars"
+          ],
+          "short_definition": "Photosynthesis in plants converts sunlight, carbon dioxide, and water into sugars that support plant growth while releasing oxygen.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 1.0,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.99,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through energy transformation: photosynthesis stores energy in chemical form, while cellular respiration releases usable energy from that stored material.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Feedback Loops (Planning Productivity)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Feedback Loops (Biology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how feedback loops relate to homeostasis.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+          "concept_name": "Feedback Loops (Planning Productivity)",
+          "domain": "planning productivity",
+          "examples": [
+            "A weekly project review comparing actual progress against planned milestones.",
+            "Explain how feedback loops affects a practical planning productivity decision.",
+            "Use feedback loops to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A feedback loop is not just criticism; it is information used to adjust behavior or plans.",
+            "Feedback Loops should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Feedback loops reveal whether a plan is working.",
+            "Feedback loops support course correction before failure becomes expensive.",
+            "Feedback quality depends on timely, relevant, and interpretable signals."
+          ],
+          "related_concepts": [
+            "planning",
+            "iteration",
+            "metrics",
+            "course correction",
+            "software architecture"
+          ],
+          "short_definition": "Feedback loops in planning are cycles where outcomes are compared with goals so plans can be adjusted.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-195d6720c1b83c20",
+          "concept_name": "Feedback Loops (Biology)",
+          "domain": "biology",
+          "examples": [
+            "Body temperature regulation using sweating or shivering.",
+            "Explain how feedback loops affects a practical biology decision.",
+            "Use feedback loops to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Positive feedback is not always good; it means amplifying change.",
+            "Feedback Loops should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Negative feedback helps maintain homeostasis.",
+            "Positive feedback amplifies a process until a stopping condition occurs.",
+            "Feedback loops connect sensing, response, and regulation."
+          ],
+          "related_concepts": [
+            "homeostasis",
+            "regulation",
+            "signals",
+            "control systems",
+            "planning feedback"
+          ],
+          "short_definition": "Biological feedback loops are regulatory cycles where a system's output influences future activity to maintain stability or amplify change.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.9265,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 0.7
+      },
+      "tentative_inference": "These stored concepts may connect through control loops: planning sets intended direction, feedback reveals deviation, and software architecture can encode the structures that respond to that feedback.",
+      "uncertainty": "moderate_to_high: the retrieval set is usable, but more concept detail or operator review is needed."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Gravity (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Projectile Motion (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Simple Harmonic Motion (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Force Vectors (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 4
+        },
+        {
+          "concept_name": "Pressure (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how gravity relates to orbital motion.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-f237ca52b3a78146",
+          "concept_name": "Gravity (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "A satellite remaining in orbit because its forward motion and gravitational fall balance into a curved path.",
+            "Explain how gravity affects a practical basic physics decision.",
+            "Use gravity to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Gravity does not require air or contact; it acts across distance.",
+            "Gravity should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Gravity accelerates objects toward massive bodies.",
+            "Orbital motion can be understood as continuous falling around a central mass.",
+            "Gravity influences both everyday weight and astronomical motion."
+          ],
+          "related_concepts": [
+            "orbital motion",
+            "force",
+            "mass",
+            "acceleration",
+            "projectile motion"
+          ],
+          "short_definition": "Gravity is the attractive interaction associated with mass and energy that shapes falling motion, weight, planetary orbits, and large-scale structure.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-41ecd561d0223a56",
+          "concept_name": "Projectile Motion (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "A thrown ball following an arc before returning to the ground.",
+            "Explain how projectile motion affects a practical basic physics decision.",
+            "Use projectile motion to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A projectile does not need continued forward force to keep moving horizontally in the idealized model.",
+            "Projectile Motion should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Horizontal and vertical motion can be analyzed separately in simple projectile problems.",
+            "Gravity changes vertical velocity during flight.",
+            "Projectile paths are approximately parabolic when air resistance is ignored."
+          ],
+          "related_concepts": [
+            "gravity",
+            "velocity",
+            "acceleration",
+            "force vectors",
+            "orbital motion"
+          ],
+          "short_definition": "Projectile motion describes the path of an object moving under gravity after launch, often combining horizontal motion with vertical acceleration.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+          "concept_name": "Simple Harmonic Motion (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "A mass on a spring oscillating back and forth after being pulled and released.",
+            "Explain how simple harmonic motion affects a practical basic physics decision.",
+            "Use simple harmonic motion to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Simple harmonic motion is not any repeated motion; it has a specific proportional restoring-force pattern.",
+            "Simple Harmonic Motion should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Simple harmonic motion appears in springs, pendulums, and oscillating systems.",
+            "A restoring force pulls the system back toward equilibrium.",
+            "Energy alternates between kinetic and potential forms during the cycle."
+          ],
+          "related_concepts": [
+            "oscillation",
+            "equilibrium",
+            "energy",
+            "force",
+            "period"
+          ],
+          "short_definition": "Simple harmonic motion is repeating motion around an equilibrium point where the restoring force is proportional to displacement.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+          "concept_name": "Force Vectors (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "Resolving a ramp force into components parallel and perpendicular to the incline.",
+            "Explain how force vectors affects a practical basic physics decision.",
+            "Use force vectors to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Force magnitude alone is insufficient; direction changes the resulting motion.",
+            "Force Vectors should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Forces acting in different directions combine according to vector addition.",
+            "Net force determines acceleration in classical mechanics.",
+            "Breaking forces into components helps analyze motion in two or three dimensions."
+          ],
+          "related_concepts": [
+            "net force",
+            "acceleration",
+            "projectile motion",
+            "gravity",
+            "engineering constraints"
+          ],
+          "short_definition": "Force vectors represent pushes or pulls with both magnitude and direction, allowing multiple forces to be combined and analyzed.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-be771744303f4c74",
+          "concept_name": "Pressure (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "A narrow high heel creating more ground pressure than a flat shoe with the same body weight.",
+            "Explain how pressure affects a practical basic physics decision.",
+            "Use pressure to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Pressure is not the same as total force; area matters.",
+            "Pressure should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Pressure increases when the same force is applied over a smaller area.",
+            "Fluid pressure can drive flow from higher pressure toward lower pressure.",
+            "Pressure changes can store, transmit, or constrain energy in physical systems."
+          ],
+          "related_concepts": [
+            "force",
+            "area",
+            "fluid flow",
+            "hydraulics",
+            "blood pressure"
+          ],
+          "short_definition": "Pressure is force distributed over area, often describing how fluids push on surfaces or how loads act through contact.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.7,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8755,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Gravity (Basic Physics), Projectile Motion (Basic Physics), Simple Harmonic Motion (Basic Physics) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Fluid Flow (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Pressure (Basic Physics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Blood Pressure (Medicine Health General)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Constraints (Engineering)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 4
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how pressure relates to fluid flow.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+          "concept_name": "Fluid Flow (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "Water moving faster through a narrowed section of pipe when pressure conditions allow it.",
+            "Explain how fluid flow affects a practical basic physics decision.",
+            "Use fluid flow to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Fluid flow is not determined by pressure alone; geometry and viscosity also matter.",
+            "Fluid Flow should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Pressure differences can drive fluid motion.",
+            "Viscosity resists flow and dissipates energy.",
+            "Flow behavior depends on geometry, speed, density, and turbulence."
+          ],
+          "related_concepts": [
+            "pressure",
+            "viscosity",
+            "turbulence",
+            "pipes",
+            "engineering"
+          ],
+          "short_definition": "Fluid flow describes how liquids and gases move in response to pressure differences, gravity, viscosity, and boundary conditions.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-be771744303f4c74",
+          "concept_name": "Pressure (Basic Physics)",
+          "domain": "basic physics",
+          "examples": [
+            "A narrow high heel creating more ground pressure than a flat shoe with the same body weight.",
+            "Explain how pressure affects a practical basic physics decision.",
+            "Use pressure to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Pressure is not the same as total force; area matters.",
+            "Pressure should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Pressure increases when the same force is applied over a smaller area.",
+            "Fluid pressure can drive flow from higher pressure toward lower pressure.",
+            "Pressure changes can store, transmit, or constrain energy in physical systems."
+          ],
+          "related_concepts": [
+            "force",
+            "area",
+            "fluid flow",
+            "hydraulics",
+            "blood pressure"
+          ],
+          "short_definition": "Pressure is force distributed over area, often describing how fluids push on surfaces or how loads act through contact.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-921fccfd53645427",
+          "concept_name": "Blood Pressure (Medicine Health General)",
+          "domain": "medicine health general",
+          "examples": [
+            "A reading of 120/80 mmHg describing pressure during heart contraction and relaxation.",
+            "Explain how blood pressure affects a practical medicine health general decision.",
+            "Use blood pressure to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A single reading does not fully define cardiovascular health; context and repeated measurement matter.",
+            "Blood Pressure should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Blood pressure reflects heart pumping, vascular resistance, and blood volume.",
+            "Persistently high blood pressure can increase cardiovascular risk.",
+            "Blood pressure varies with activity, stress, posture, and health conditions."
+          ],
+          "related_concepts": [
+            "fluid pressure",
+            "circulation",
+            "heart",
+            "vascular resistance",
+            "health monitoring"
+          ],
+          "short_definition": "Blood pressure is the force exerted by circulating blood against artery walls, usually measured as systolic and diastolic pressure.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "concept_name": "Constraints (Engineering)",
+          "domain": "engineering",
+          "examples": [
+            "Designing a bridge within load, budget, weather, and safety limits.",
+            "Explain how constraints affects a practical engineering decision.",
+            "Use constraints to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Constraints are not merely obstacles; they define what a successful design must satisfy.",
+            "Constraints should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Constraints narrow the design space.",
+            "Good engineering balances tradeoffs among competing constraints.",
+            "Constraints can be physical, economic, operational, legal, or human."
+          ],
+          "related_concepts": [
+            "tradeoffs",
+            "requirements",
+            "safety factor",
+            "materials",
+            "design"
+          ],
+          "short_definition": "Engineering constraints are limits such as cost, safety, materials, time, regulation, or performance that shape feasible design choices.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 1.0,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.9055,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Fluid Flow (Basic Physics), Pressure (Basic Physics), Blood Pressure (Medicine Health General) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Combustion Engines (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Thermal Efficiency (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Battery Chemistry (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how thermodynamics relates to engines.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-05a66946ef14ecdb",
+          "concept_name": "Combustion Engines (Energy)",
+          "domain": "energy",
+          "examples": [
+            "A car engine burning gasoline to move pistons and turn a crankshaft.",
+            "Explain how combustion engines affects a practical energy decision.",
+            "Use combustion engines to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Combustion engines do not convert all fuel energy into useful work; much becomes waste heat.",
+            "Combustion Engines should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Combustion releases heat by oxidizing fuel.",
+            "Engines convert some thermal energy into mechanical motion.",
+            "Engine efficiency is limited by thermodynamic losses, friction, and heat rejection."
+          ],
+          "related_concepts": [
+            "thermodynamics",
+            "heat engines",
+            "fuel",
+            "mechanical work",
+            "thermal efficiency"
+          ],
+          "short_definition": "Combustion engines convert chemical energy from fuel into heat and mechanical work through controlled burning.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "concept_name": "Thermal Efficiency (Energy)",
+          "domain": "energy",
+          "examples": [
+            "An engine converting only part of fuel heat into mechanical motion while the rest leaves as exhaust and radiator heat.",
+            "Explain how thermal efficiency affects a practical energy decision.",
+            "Use thermal efficiency to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A thermal system cannot convert all heat into useful work under ordinary heat-engine constraints.",
+            "Thermal Efficiency should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Thermal efficiency is constrained by thermodynamics.",
+            "Heat engines reject some heat even when operating well.",
+            "Improving insulation or design can reduce losses in some thermal systems."
+          ],
+          "related_concepts": [
+            "thermodynamics",
+            "combustion engines",
+            "energy efficiency",
+            "waste heat",
+            "heat transfer"
+          ],
+          "short_definition": "Thermal efficiency is the fraction of heat energy converted into useful work or useful output rather than lost as waste heat.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "concept_name": "Battery Chemistry (Energy)",
+          "domain": "energy",
+          "examples": [
+            "Lithium-ion cells storing energy through movement of lithium ions between electrodes.",
+            "Explain how battery chemistry affects a practical energy decision.",
+            "Use battery chemistry to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "All batteries do not behave the same; chemistry strongly shapes limits and risks.",
+            "Battery Chemistry should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Battery chemistry determines voltage, capacity, safety, lifespan, and charging behavior.",
+            "Batteries store energy by moving ions and electrons through controlled reactions.",
+            "Different chemistries trade off cost, density, stability, and performance."
+          ],
+          "related_concepts": [
+            "energy storage",
+            "electrochemistry",
+            "capacity",
+            "charging",
+            "thermal safety"
+          ],
+          "short_definition": "Battery chemistry describes the materials and reactions that store and release electrical energy through electrochemical processes.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.7,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8755,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Combustion Engines (Energy), Thermal Efficiency (Energy), Battery Chemistry (Energy) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Interest Rates (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Compound Interest (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Inflation (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how inflation relates to interest rates.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-e417db538d58dd4a",
+          "concept_name": "Interest Rates (Finance)",
+          "domain": "finance",
+          "examples": [
+            "A mortgage payment rising when the loan interest rate increases.",
+            "Explain how interest rates affects a practical finance decision.",
+            "Use interest rates to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "An interest rate is not the same thing as inflation, though the two often influence each other.",
+            "Interest Rates should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Higher interest rates make borrowing more expensive.",
+            "Interest rates influence saving, investment, asset prices, and debt payments.",
+            "Central banks may adjust interest rates in response to inflation and economic conditions."
+          ],
+          "related_concepts": [
+            "inflation",
+            "borrowing",
+            "central banks",
+            "compound interest",
+            "monetary policy"
+          ],
+          "short_definition": "Interest rates are the cost of borrowing money or the return for lending it, usually expressed as a percentage over time.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-3b7b188af07e7913",
+          "concept_name": "Compound Interest (Finance)",
+          "domain": "finance",
+          "examples": [
+            "Savings growing as each year's interest also earns interest in later years.",
+            "Explain how compound interest affects a practical finance decision.",
+            "Use compound interest to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Compound interest is not linear growth; its effect accelerates over longer periods.",
+            "Compound Interest should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Compounding causes balances to grow faster over time than simple interest.",
+            "The effect of compound interest depends on rate, time, and compounding frequency.",
+            "Compound interest can benefit savers and increase costs for borrowers."
+          ],
+          "related_concepts": [
+            "interest rates",
+            "principal",
+            "time horizon",
+            "debt",
+            "investment returns"
+          ],
+          "short_definition": "Compound interest is interest calculated on both the original principal and previously accumulated interest.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-ce8835d76529c7e2",
+          "concept_name": "Inflation (Finance)",
+          "domain": "finance",
+          "examples": [
+            "A grocery basket costing more this year than last year for similar items.",
+            "Explain how inflation affects a practical finance decision.",
+            "Use inflation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Inflation is not any single price increase; it refers to broad price-level movement.",
+            "Inflation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Inflation means the same amount of money buys fewer goods or services.",
+            "Inflation can be influenced by demand, supply shocks, money supply, and expectations.",
+            "Inflation often affects interest-rate decisions and wage negotiations."
+          ],
+          "related_concepts": [
+            "purchasing power",
+            "interest rates",
+            "monetary policy",
+            "consumer prices",
+            "wages"
+          ],
+          "short_definition": "Inflation is a sustained rise in the general price level, reducing the purchasing power of money over time.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 0.7,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.96,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through monetary conditions: inflation changes purchasing power, while interest rates influence borrowing, saving, and policy responses.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Asset Allocation (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Cash Reserves (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how risk relates to asset allocation.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c7963f932849b3a0",
+          "concept_name": "Asset Allocation (Finance)",
+          "domain": "finance",
+          "examples": [
+            "A retirement portfolio split between stock funds, bond funds, and cash reserves.",
+            "Explain how asset allocation affects a practical finance decision.",
+            "Use asset allocation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Asset allocation is not a guarantee against loss; it manages exposure and tradeoffs.",
+            "Asset Allocation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Asset allocation shapes risk and expected return.",
+            "Diversification across assets can reduce exposure to any single category.",
+            "Asset allocation choices depend on time horizon, liquidity needs, and risk tolerance."
+          ],
+          "related_concepts": [
+            "diversification",
+            "risk tolerance",
+            "portfolio",
+            "bonds",
+            "stocks"
+          ],
+          "short_definition": "Asset allocation is the way an investor divides money among categories such as stocks, bonds, cash, real estate, or other assets.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-2c269d55c236230d",
+          "concept_name": "Cash Reserves (Finance)",
+          "domain": "finance",
+          "examples": [
+            "A small business keeping three months of operating expenses available in a liquid account.",
+            "Explain how cash reserves affects a practical finance decision.",
+            "Use cash reserves to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Cash reserves are not wasted money; they trade some return for flexibility and survival capacity.",
+            "Cash Reserves should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Cash reserves improve resilience when revenue falls or expenses arrive unexpectedly.",
+            "Cash reserves reduce liquidity risk but may earn lower returns than long-term investments.",
+            "Appropriate reserve size depends on obligations, income stability, risk tolerance, and access to credit."
+          ],
+          "related_concepts": [
+            "liquidity",
+            "cash flow",
+            "risk management",
+            "emergency fund",
+            "asset allocation"
+          ],
+          "short_definition": "Cash reserves are readily available funds kept to handle emergencies, volatility, delayed income, or planned near-term needs.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.7,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8395,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 0.7
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Asset Allocation (Finance), Cash Reserves (Finance) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate_to_high: the retrieval set is usable, but more concept detail or operator review is needed."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Compound Interest (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Cash Reserves (Finance)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Memory Consolidation (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how compound interest relates to long-term investing.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-3b7b188af07e7913",
+          "concept_name": "Compound Interest (Finance)",
+          "domain": "finance",
+          "examples": [
+            "Savings growing as each year's interest also earns interest in later years.",
+            "Explain how compound interest affects a practical finance decision.",
+            "Use compound interest to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Compound interest is not linear growth; its effect accelerates over longer periods.",
+            "Compound Interest should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Compounding causes balances to grow faster over time than simple interest.",
+            "The effect of compound interest depends on rate, time, and compounding frequency.",
+            "Compound interest can benefit savers and increase costs for borrowers."
+          ],
+          "related_concepts": [
+            "interest rates",
+            "principal",
+            "time horizon",
+            "debt",
+            "investment returns"
+          ],
+          "short_definition": "Compound interest is interest calculated on both the original principal and previously accumulated interest.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-2c269d55c236230d",
+          "concept_name": "Cash Reserves (Finance)",
+          "domain": "finance",
+          "examples": [
+            "A small business keeping three months of operating expenses available in a liquid account.",
+            "Explain how cash reserves affects a practical finance decision.",
+            "Use cash reserves to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Cash reserves are not wasted money; they trade some return for flexibility and survival capacity.",
+            "Cash Reserves should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Cash reserves improve resilience when revenue falls or expenses arrive unexpectedly.",
+            "Cash reserves reduce liquidity risk but may earn lower returns than long-term investments.",
+            "Appropriate reserve size depends on obligations, income stability, risk tolerance, and access to credit."
+          ],
+          "related_concepts": [
+            "liquidity",
+            "cash flow",
+            "risk management",
+            "emergency fund",
+            "asset allocation"
+          ],
+          "short_definition": "Cash reserves are readily available funds kept to handle emergencies, volatility, delayed income, or planned near-term needs.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "concept_name": "Memory Consolidation (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Remembering a practiced skill better after rest and repeated use.",
+            "Explain how memory consolidation affects a practical psychology decision.",
+            "Use memory consolidation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Consolidation is not perfect copying; memories can be reconstructed and changed.",
+            "Memory Consolidation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Consolidation helps transform short-term traces into more durable memory.",
+            "Sleep and repeated retrieval can influence consolidation.",
+            "Consolidation can integrate new information with prior knowledge."
+          ],
+          "related_concepts": [
+            "learning",
+            "sleep",
+            "retrieval practice",
+            "long-term memory",
+            "forgetting"
+          ],
+          "short_definition": "Memory consolidation is the process by which fragile new memories become more stable and integrated over time.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8815,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 0.95,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Compound Interest (Finance), Cash Reserves (Finance), Memory Consolidation (Psychology) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Feedback Loops (Planning Productivity)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Feedback Loops (Biology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Access Control (Software Architecture)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Calendar Planning (Planning Productivity)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize what connects planning, feedback loops, and software architecture.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+          "concept_name": "Feedback Loops (Planning Productivity)",
+          "domain": "planning productivity",
+          "examples": [
+            "A weekly project review comparing actual progress against planned milestones.",
+            "Explain how feedback loops affects a practical planning productivity decision.",
+            "Use feedback loops to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A feedback loop is not just criticism; it is information used to adjust behavior or plans.",
+            "Feedback Loops should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Feedback loops reveal whether a plan is working.",
+            "Feedback loops support course correction before failure becomes expensive.",
+            "Feedback quality depends on timely, relevant, and interpretable signals."
+          ],
+          "related_concepts": [
+            "planning",
+            "iteration",
+            "metrics",
+            "course correction",
+            "software architecture"
+          ],
+          "short_definition": "Feedback loops in planning are cycles where outcomes are compared with goals so plans can be adjusted.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-195d6720c1b83c20",
+          "concept_name": "Feedback Loops (Biology)",
+          "domain": "biology",
+          "examples": [
+            "Body temperature regulation using sweating or shivering.",
+            "Explain how feedback loops affects a practical biology decision.",
+            "Use feedback loops to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Positive feedback is not always good; it means amplifying change.",
+            "Feedback Loops should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Negative feedback helps maintain homeostasis.",
+            "Positive feedback amplifies a process until a stopping condition occurs.",
+            "Feedback loops connect sensing, response, and regulation."
+          ],
+          "related_concepts": [
+            "homeostasis",
+            "regulation",
+            "signals",
+            "control systems",
+            "planning feedback"
+          ],
+          "short_definition": "Biological feedback loops are regulatory cycles where a system's output influences future activity to maintain stability or amplify change.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-775056550ee04098",
+          "concept_name": "Access Control (Software Architecture)",
+          "domain": "software architecture",
+          "examples": [
+            "A web app allowing admins to manage users while ordinary users can only view their own records.",
+            "Explain how access control affects a practical software architecture decision.",
+            "Use access control to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Authentication is not the same as authorization; login identifies a user, access control decides permissions.",
+            "Access Control should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Access control protects resources by enforcing permissions.",
+            "Access control depends on identity, policy, and authorization checks.",
+            "Weak access control can allow unauthorized data exposure or actions."
+          ],
+          "related_concepts": [
+            "authorization",
+            "authentication",
+            "least privilege",
+            "security",
+            "software architecture"
+          ],
+          "short_definition": "Access control is the software architecture practice of deciding who or what may read, change, execute, or administer a resource.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "concept_name": "Calendar Planning (Planning Productivity)",
+          "domain": "planning productivity",
+          "examples": [
+            "Blocking focused work in the morning, meetings in the afternoon, and review time at the end of the week.",
+            "Explain how calendar planning affects a practical planning productivity decision.",
+            "Use calendar planning to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Calendar planning is not a guarantee that work will happen; it is a coordination tool that still needs feedback and adjustment.",
+            "Calendar Planning should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Calendar planning turns priorities into time-bound commitments.",
+            "Calendar planning helps reveal overload, conflicts, and unrealistic expectations.",
+            "Calendar plans should adapt when feedback shows that estimates or priorities were wrong."
+          ],
+          "related_concepts": [
+            "time blocking",
+            "prioritization",
+            "feedback loops",
+            "attention budgeting",
+            "project planning"
+          ],
+          "short_definition": "Calendar planning assigns work, commitments, and recovery time to specific dates or time blocks so intentions become scheduled actions.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 1.0,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.99,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through control loops: planning sets intended direction, feedback reveals deviation, and software architecture can encode the structures that respond to that feedback.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Access Control (Software Architecture)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Api Boundaries (Software Architecture)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how access control relates to user permissions.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-775056550ee04098",
+          "concept_name": "Access Control (Software Architecture)",
+          "domain": "software architecture",
+          "examples": [
+            "A web app allowing admins to manage users while ordinary users can only view their own records.",
+            "Explain how access control affects a practical software architecture decision.",
+            "Use access control to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Authentication is not the same as authorization; login identifies a user, access control decides permissions.",
+            "Access Control should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Access control protects resources by enforcing permissions.",
+            "Access control depends on identity, policy, and authorization checks.",
+            "Weak access control can allow unauthorized data exposure or actions."
+          ],
+          "related_concepts": [
+            "authorization",
+            "authentication",
+            "least privilege",
+            "security",
+            "software architecture"
+          ],
+          "short_definition": "Access control is the software architecture practice of deciding who or what may read, change, execute, or administer a resource.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+          "concept_name": "Api Boundaries (Software Architecture)",
+          "domain": "software architecture",
+          "examples": [
+            "A runtime module exposing a small function for answer routing while keeping its internal scoring rules private.",
+            "Explain how API boundaries affects a practical software architecture decision.",
+            "Use API boundaries to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "An API boundary is not just a URL or function name; it is the behavioral contract between caller and provider.",
+            "Api Boundaries should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "API boundaries reduce coupling by hiding internal implementation details behind stable interfaces.",
+            "Clear API boundaries make ownership, validation, and error handling easier to reason about.",
+            "Weak API boundaries can spread assumptions across systems and make changes risky."
+          ],
+          "related_concepts": [
+            "interfaces",
+            "contracts",
+            "encapsulation",
+            "adapter pattern",
+            "access control"
+          ],
+          "short_definition": "API boundaries define the contracts, responsibilities, and allowed interactions between software components or services.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.7,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8215,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 0.9,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 0.7
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Access Control (Software Architecture), Api Boundaries (Software Architecture) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate_to_high: the retrieval set is usable, but more concept detail or operator review is needed."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Adapter Pattern (Software Architecture)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Api Boundaries (Software Architecture)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Access Control (Software Architecture)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how adapter patterns relate to system integration.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+          "concept_name": "Adapter Pattern (Software Architecture)",
+          "domain": "software architecture",
+          "examples": [
+            "Wrapping a payment provider API so the application calls a consistent internal payment interface.",
+            "Explain how adapter pattern affects a practical software architecture decision.",
+            "Use adapter pattern to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "An adapter is not a full rewrite; it is a compatibility layer.",
+            "Adapter Pattern should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Adapters translate between existing code and expected interfaces.",
+            "Adapters can reduce coupling when integrating external or legacy systems.",
+            "Adapters should clarify boundaries rather than hide incompatible behavior."
+          ],
+          "related_concepts": [
+            "interfaces",
+            "integration",
+            "wrappers",
+            "decoupling",
+            "software architecture"
+          ],
+          "short_definition": "The adapter pattern lets incompatible interfaces work together by wrapping one interface with another expected shape.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+          "concept_name": "Api Boundaries (Software Architecture)",
+          "domain": "software architecture",
+          "examples": [
+            "A runtime module exposing a small function for answer routing while keeping its internal scoring rules private.",
+            "Explain how API boundaries affects a practical software architecture decision.",
+            "Use API boundaries to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "An API boundary is not just a URL or function name; it is the behavioral contract between caller and provider.",
+            "Api Boundaries should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "API boundaries reduce coupling by hiding internal implementation details behind stable interfaces.",
+            "Clear API boundaries make ownership, validation, and error handling easier to reason about.",
+            "Weak API boundaries can spread assumptions across systems and make changes risky."
+          ],
+          "related_concepts": [
+            "interfaces",
+            "contracts",
+            "encapsulation",
+            "adapter pattern",
+            "access control"
+          ],
+          "short_definition": "API boundaries define the contracts, responsibilities, and allowed interactions between software components or services.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-775056550ee04098",
+          "concept_name": "Access Control (Software Architecture)",
+          "domain": "software architecture",
+          "examples": [
+            "A web app allowing admins to manage users while ordinary users can only view their own records.",
+            "Explain how access control affects a practical software architecture decision.",
+            "Use access control to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Authentication is not the same as authorization; login identifies a user, access control decides permissions.",
+            "Access Control should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Access control protects resources by enforcing permissions.",
+            "Access control depends on identity, policy, and authorization checks.",
+            "Weak access control can allow unauthorized data exposure or actions."
+          ],
+          "related_concepts": [
+            "authorization",
+            "authentication",
+            "least privilege",
+            "security",
+            "software architecture"
+          ],
+          "short_definition": "Access control is the software architecture practice of deciding who or what may read, change, execute, or administer a resource.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.7,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8665,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 0.95,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Adapter Pattern (Software Architecture), Api Boundaries (Software Architecture), Access Control (Software Architecture) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Operator Approval (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Memory Consolidation (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Developmental Learning (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how DELTA memory relates to human memory.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A repeatedly verified project fact promoted after review, contradiction checks, and rollback planning.",
+            "Explain how canonical memory affects a practical DELTA architecture itself decision.",
+            "Use canonical memory to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Canonical memory is not casual chat memory and should not be written automatically.",
+            "Canonical Memory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Canonical memory requires stronger approval than noncanonical memory.",
+            "Canonical memory should preserve provenance and rollback handles.",
+            "Canonical memory remains disabled unless explicit gates allow it."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "provenance",
+            "rollback",
+            "operator approval",
+            "promotion policy"
+          ],
+          "short_definition": "Canonical memory is DELTA's governed long-term memory layer for records that have passed stricter review, provenance, rollback, and promotion requirements.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A user-approved concept stored for later testing while canonical writes remain off.",
+            "Explain how noncanonical memory affects a practical DELTA architecture itself decision.",
+            "Use noncanonical memory to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Noncanonical memory is not model training and does not change neural weights.",
+            "Noncanonical Memory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Noncanonical memory can support retrieval without becoming permanent truth.",
+            "Noncanonical memory remains reversible and reviewable.",
+            "Noncanonical memory is the preferred early learning substrate before canonical promotion."
+          ],
+          "related_concepts": [
+            "canonical memory",
+            "concept review",
+            "rollback",
+            "developmental learning",
+            "operator approval"
+          ],
+          "short_definition": "Noncanonical memory is DELTA's reversible, operator-reviewed substrate for tentative or useful knowledge that has not become canonical.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "concept_name": "Operator Approval (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A user accepting a candidate concept before it enters noncanonical memory.",
+            "Explain how operator approval affects a practical DELTA architecture itself decision.",
+            "Use operator approval to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Operator approval is not implied by casual agreement unless the current pending action explicitly defines that meaning.",
+            "Operator Approval should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Operator approval prevents casual conversation from becoming automatic memory.",
+            "Approval scopes should be explicit and limited to the current action.",
+            "Approval events support auditability, rollback, and governance."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "governance",
+            "audit logs",
+            "rollback",
+            "learning"
+          ],
+          "short_definition": "Operator approval is DELTA's requirement that a human explicitly review and allow certain memory, integration, or escalation steps before they occur.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "concept_name": "Memory Consolidation (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Remembering a practiced skill better after rest and repeated use.",
+            "Explain how memory consolidation affects a practical psychology decision.",
+            "Use memory consolidation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Consolidation is not perfect copying; memories can be reconstructed and changed.",
+            "Memory Consolidation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Consolidation helps transform short-term traces into more durable memory.",
+            "Sleep and repeated retrieval can influence consolidation.",
+            "Consolidation can integrate new information with prior knowledge."
+          ],
+          "related_concepts": [
+            "learning",
+            "sleep",
+            "retrieval practice",
+            "long-term memory",
+            "forgetting"
+          ],
+          "short_definition": "Memory consolidation is the process by which fragile new memories become more stable and integrated over time.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "concept_name": "Developmental Learning (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A useful explanation becoming a reviewed noncanonical concept before any future training packet is considered.",
+            "Explain how developmental learning affects a practical DELTA architecture itself decision.",
+            "Use developmental learning to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Developmental learning is not automatic weight updating; it is governed substrate evolution.",
+            "Developmental Learning should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Developmental learning separates day-to-day knowledge growth from neural training.",
+            "Concepts should mature through review, replay, and consolidation before becoming curriculum material.",
+            "Training is treated as a graduation event rather than the default learning mechanism."
+          ],
+          "related_concepts": [
+            "concept formation",
+            "operator approval",
+            "curriculum",
+            "noncanonical memory",
+            "distillation"
+          ],
+          "short_definition": "Developmental learning is DELTA's staged approach where conversation forms candidate concepts, review creates reversible knowledge, and mature curricula may later support distillation.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.975,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through governed retention: DELTA memory separates reversible substrate knowledge from longer-term records, while human memory concepts describe consolidation and recall.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Memory Consolidation (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Developmental Learning (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how noncanonical memory relates to memory consolidation.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-88228d9a97e97751",
+          "concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A user-approved concept stored for later testing while canonical writes remain off.",
+            "Explain how noncanonical memory affects a practical DELTA architecture itself decision.",
+            "Use noncanonical memory to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Noncanonical memory is not model training and does not change neural weights.",
+            "Noncanonical Memory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Noncanonical memory can support retrieval without becoming permanent truth.",
+            "Noncanonical memory remains reversible and reviewable.",
+            "Noncanonical memory is the preferred early learning substrate before canonical promotion."
+          ],
+          "related_concepts": [
+            "canonical memory",
+            "concept review",
+            "rollback",
+            "developmental learning",
+            "operator approval"
+          ],
+          "short_definition": "Noncanonical memory is DELTA's reversible, operator-reviewed substrate for tentative or useful knowledge that has not become canonical.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A repeatedly verified project fact promoted after review, contradiction checks, and rollback planning.",
+            "Explain how canonical memory affects a practical DELTA architecture itself decision.",
+            "Use canonical memory to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Canonical memory is not casual chat memory and should not be written automatically.",
+            "Canonical Memory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Canonical memory requires stronger approval than noncanonical memory.",
+            "Canonical memory should preserve provenance and rollback handles.",
+            "Canonical memory remains disabled unless explicit gates allow it."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "provenance",
+            "rollback",
+            "operator approval",
+            "promotion policy"
+          ],
+          "short_definition": "Canonical memory is DELTA's governed long-term memory layer for records that have passed stricter review, provenance, rollback, and promotion requirements.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+          "concept_name": "Memory Consolidation (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Remembering a practiced skill better after rest and repeated use.",
+            "Explain how memory consolidation affects a practical psychology decision.",
+            "Use memory consolidation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Consolidation is not perfect copying; memories can be reconstructed and changed.",
+            "Memory Consolidation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Consolidation helps transform short-term traces into more durable memory.",
+            "Sleep and repeated retrieval can influence consolidation.",
+            "Consolidation can integrate new information with prior knowledge."
+          ],
+          "related_concepts": [
+            "learning",
+            "sleep",
+            "retrieval practice",
+            "long-term memory",
+            "forgetting"
+          ],
+          "short_definition": "Memory consolidation is the process by which fragile new memories become more stable and integrated over time.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "concept_name": "Developmental Learning (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A useful explanation becoming a reviewed noncanonical concept before any future training packet is considered.",
+            "Explain how developmental learning affects a practical DELTA architecture itself decision.",
+            "Use developmental learning to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Developmental learning is not automatic weight updating; it is governed substrate evolution.",
+            "Developmental Learning should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Developmental learning separates day-to-day knowledge growth from neural training.",
+            "Concepts should mature through review, replay, and consolidation before becoming curriculum material.",
+            "Training is treated as a graduation event rather than the default learning mechanism."
+          ],
+          "related_concepts": [
+            "concept formation",
+            "operator approval",
+            "curriculum",
+            "noncanonical memory",
+            "distillation"
+          ],
+          "short_definition": "Developmental learning is DELTA's staged approach where conversation forms candidate concepts, review creates reversible knowledge, and mature curricula may later support distillation.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.966,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 0.95,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through governed retention: DELTA memory separates reversible substrate knowledge from longer-term records, while human memory concepts describe consolidation and recall.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Operator Approval (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Learning Reinforcement (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Developmental Learning (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how operator approval relates to learning.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "concept_name": "Operator Approval (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A user accepting a candidate concept before it enters noncanonical memory.",
+            "Explain how operator approval affects a practical DELTA architecture itself decision.",
+            "Use operator approval to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Operator approval is not implied by casual agreement unless the current pending action explicitly defines that meaning.",
+            "Operator Approval should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Operator approval prevents casual conversation from becoming automatic memory.",
+            "Approval scopes should be explicit and limited to the current action.",
+            "Approval events support auditability, rollback, and governance."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "governance",
+            "audit logs",
+            "rollback",
+            "learning"
+          ],
+          "short_definition": "Operator approval is DELTA's requirement that a human explicitly review and allow certain memory, integration, or escalation steps before they occur.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A repeatedly verified project fact promoted after review, contradiction checks, and rollback planning.",
+            "Explain how canonical memory affects a practical DELTA architecture itself decision.",
+            "Use canonical memory to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Canonical memory is not casual chat memory and should not be written automatically.",
+            "Canonical Memory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Canonical memory requires stronger approval than noncanonical memory.",
+            "Canonical memory should preserve provenance and rollback handles.",
+            "Canonical memory remains disabled unless explicit gates allow it."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "provenance",
+            "rollback",
+            "operator approval",
+            "promotion policy"
+          ],
+          "short_definition": "Canonical memory is DELTA's governed long-term memory layer for records that have passed stricter review, provenance, rollback, and promotion requirements.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+          "concept_name": "Learning Reinforcement (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "A student practicing more after receiving clear feedback and improvement evidence.",
+            "Explain how learning reinforcement affects a practical psychology decision.",
+            "Use learning reinforcement to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Negative reinforcement is not punishment; it strengthens behavior by removing an unpleasant condition.",
+            "Learning Reinforcement should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Reinforcement can strengthen associations and behaviors.",
+            "Feedback timing and consistency affect reinforcement effectiveness.",
+            "Reinforcement can be positive or negative depending on whether something is added or removed."
+          ],
+          "related_concepts": [
+            "behavior change",
+            "feedback loops",
+            "learning",
+            "motivation",
+            "operator review"
+          ],
+          "short_definition": "Learning reinforcement is the process by which consequences increase or decrease the likelihood of future behavior or recall.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+          "concept_name": "Developmental Learning (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A useful explanation becoming a reviewed noncanonical concept before any future training packet is considered.",
+            "Explain how developmental learning affects a practical DELTA architecture itself decision.",
+            "Use developmental learning to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Developmental learning is not automatic weight updating; it is governed substrate evolution.",
+            "Developmental Learning should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Developmental learning separates day-to-day knowledge growth from neural training.",
+            "Concepts should mature through review, replay, and consolidation before becoming curriculum material.",
+            "Training is treated as a graduation event rather than the default learning mechanism."
+          ],
+          "related_concepts": [
+            "concept formation",
+            "operator approval",
+            "curriculum",
+            "noncanonical memory",
+            "distillation"
+          ],
+          "short_definition": "Developmental learning is DELTA's staged approach where conversation forms candidate concepts, review creates reversible knowledge, and mature curricula may later support distillation.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.966,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 0.95,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through governed retention: DELTA memory separates reversible substrate knowledge from longer-term records, while human memory concepts describe consolidation and recall.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Operator Approval (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Attention (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Conflict Resolution (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how law relates to governance.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1b535612743b80c4",
+          "concept_name": "Operator Approval (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A user accepting a candidate concept before it enters noncanonical memory.",
+            "Explain how operator approval affects a practical DELTA architecture itself decision.",
+            "Use operator approval to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Operator approval is not implied by casual agreement unless the current pending action explicitly defines that meaning.",
+            "Operator Approval should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Operator approval prevents casual conversation from becoming automatic memory.",
+            "Approval scopes should be explicit and limited to the current action.",
+            "Approval events support auditability, rollback, and governance."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "governance",
+            "audit logs",
+            "rollback",
+            "learning"
+          ],
+          "short_definition": "Operator approval is DELTA's requirement that a human explicitly review and allow certain memory, integration, or escalation steps before they occur.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "domain": "DELTA architecture itself",
+          "examples": [
+            "A repeatedly verified project fact promoted after review, contradiction checks, and rollback planning.",
+            "Explain how canonical memory affects a practical DELTA architecture itself decision.",
+            "Use canonical memory to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Canonical memory is not casual chat memory and should not be written automatically.",
+            "Canonical Memory should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Canonical memory requires stronger approval than noncanonical memory.",
+            "Canonical memory should preserve provenance and rollback handles.",
+            "Canonical memory remains disabled unless explicit gates allow it."
+          ],
+          "related_concepts": [
+            "noncanonical memory",
+            "provenance",
+            "rollback",
+            "operator approval",
+            "promotion policy"
+          ],
+          "short_definition": "Canonical memory is DELTA's governed long-term memory layer for records that have passed stricter review, provenance, rollback, and promotion requirements.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-0204997183aa8174",
+          "concept_name": "Attention (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Focusing on a speaker's voice in a noisy room while ignoring background conversations.",
+            "Explain how attention affects a practical psychology decision.",
+            "Use attention to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Attention is not unlimited awareness; it is selective and can miss important information outside the current focus.",
+            "Attention should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Attention is limited and can be directed by goals, novelty, emotion, or external cues.",
+            "Attention affects perception, memory encoding, decision-making, and task performance.",
+            "Divided attention often reduces accuracy or depth of processing compared with focused attention."
+          ],
+          "related_concepts": [
+            "working memory",
+            "focus",
+            "distraction",
+            "attention switching",
+            "cognitive load"
+          ],
+          "short_definition": "Attention is the cognitive process of selecting some information for focused processing while filtering or deprioritizing other information.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "concept_name": "Conflict Resolution (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Two coworkers agreeing on shared priorities after clarifying what each needs from a project handoff.",
+            "Explain how conflict resolution affects a practical psychology decision.",
+            "Use conflict resolution to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Conflict resolution does not always mean everyone agrees; it may mean a workable boundary or process.",
+            "Conflict Resolution should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Conflict resolution works better when parties distinguish positions from underlying interests.",
+            "Listening, evidence, and fair process can reduce defensive reactions.",
+            "Resolution may require compromise, boundaries, repair, or third-party mediation."
+          ],
+          "related_concepts": [
+            "active listening",
+            "communication",
+            "negotiation",
+            "apologies",
+            "decision-making"
+          ],
+          "short_definition": "Conflict resolution is the process of addressing disagreement by clarifying interests, reducing escalation, and finding acceptable next steps.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 1.0,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.975,
+        "overreach_risk": 0.1,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may connect through governed retention: DELTA memory separates reversible substrate knowledge from longer-term records, while human memory concepts describe consolidation and recall.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Attention (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Conflict Resolution (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Calendar Planning (Planning Productivity)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how evidence relates to decision-making.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-0204997183aa8174",
+          "concept_name": "Attention (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Focusing on a speaker's voice in a noisy room while ignoring background conversations.",
+            "Explain how attention affects a practical psychology decision.",
+            "Use attention to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Attention is not unlimited awareness; it is selective and can miss important information outside the current focus.",
+            "Attention should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Attention is limited and can be directed by goals, novelty, emotion, or external cues.",
+            "Attention affects perception, memory encoding, decision-making, and task performance.",
+            "Divided attention often reduces accuracy or depth of processing compared with focused attention."
+          ],
+          "related_concepts": [
+            "working memory",
+            "focus",
+            "distraction",
+            "attention switching",
+            "cognitive load"
+          ],
+          "short_definition": "Attention is the cognitive process of selecting some information for focused processing while filtering or deprioritizing other information.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "concept_name": "Conflict Resolution (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Two coworkers agreeing on shared priorities after clarifying what each needs from a project handoff.",
+            "Explain how conflict resolution affects a practical psychology decision.",
+            "Use conflict resolution to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Conflict resolution does not always mean everyone agrees; it may mean a workable boundary or process.",
+            "Conflict Resolution should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Conflict resolution works better when parties distinguish positions from underlying interests.",
+            "Listening, evidence, and fair process can reduce defensive reactions.",
+            "Resolution may require compromise, boundaries, repair, or third-party mediation."
+          ],
+          "related_concepts": [
+            "active listening",
+            "communication",
+            "negotiation",
+            "apologies",
+            "decision-making"
+          ],
+          "short_definition": "Conflict resolution is the process of addressing disagreement by clarifying interests, reducing escalation, and finding acceptable next steps.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+          "concept_name": "Calendar Planning (Planning Productivity)",
+          "domain": "planning productivity",
+          "examples": [
+            "Blocking focused work in the morning, meetings in the afternoon, and review time at the end of the week.",
+            "Explain how calendar planning affects a practical planning productivity decision.",
+            "Use calendar planning to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Calendar planning is not a guarantee that work will happen; it is a coordination tool that still needs feedback and adjustment.",
+            "Calendar Planning should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Calendar planning turns priorities into time-bound commitments.",
+            "Calendar planning helps reveal overload, conflicts, and unrealistic expectations.",
+            "Calendar plans should adapt when feedback shows that estimates or priorities were wrong."
+          ],
+          "related_concepts": [
+            "time blocking",
+            "prioritization",
+            "feedback loops",
+            "attention budgeting",
+            "project planning"
+          ],
+          "short_definition": "Calendar planning assigns work, commitments, and recovery time to specific dates or time blocks so intentions become scheduled actions.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8905,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Attention (Psychology), Conflict Resolution (Psychology), Calendar Planning (Planning Productivity) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Active Listening (Social Communication)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Conflict Resolution (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Active Listening (Psychology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how communication relates to conflict resolution.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+          "concept_name": "Active Listening (Social Communication)",
+          "domain": "social communication",
+          "examples": [
+            "Saying 'What I hear is...' before responding to a disagreement.",
+            "Explain how active listening affects a practical social communication decision.",
+            "Use active listening to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Active listening does not require agreeing; it requires understanding before judging.",
+            "Active Listening should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Active listening reduces misunderstanding by checking meaning before reacting.",
+            "Reflecting and clarifying can de-escalate conflict.",
+            "Active listening supports trust because people feel heard and accurately represented."
+          ],
+          "related_concepts": [
+            "communication",
+            "conflict resolution",
+            "empathy",
+            "clarification",
+            "feedback"
+          ],
+          "short_definition": "Active listening in social communication means attending, reflecting, clarifying, and responding in ways that show accurate understanding.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+          "concept_name": "Conflict Resolution (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Two coworkers agreeing on shared priorities after clarifying what each needs from a project handoff.",
+            "Explain how conflict resolution affects a practical psychology decision.",
+            "Use conflict resolution to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Conflict resolution does not always mean everyone agrees; it may mean a workable boundary or process.",
+            "Conflict Resolution should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Conflict resolution works better when parties distinguish positions from underlying interests.",
+            "Listening, evidence, and fair process can reduce defensive reactions.",
+            "Resolution may require compromise, boundaries, repair, or third-party mediation."
+          ],
+          "related_concepts": [
+            "active listening",
+            "communication",
+            "negotiation",
+            "apologies",
+            "decision-making"
+          ],
+          "short_definition": "Conflict resolution is the process of addressing disagreement by clarifying interests, reducing escalation, and finding acceptable next steps.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+          "concept_name": "Active Listening (Psychology)",
+          "domain": "psychology",
+          "examples": [
+            "Repeating a speaker's concern in your own words before offering advice.",
+            "Explain how active listening affects a practical psychology decision.",
+            "Use active listening to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Active listening is not passive agreement; it is careful understanding and feedback.",
+            "Active Listening should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Active listening improves mutual understanding.",
+            "Active listening often uses paraphrasing, clarification, and validation.",
+            "Active listening can reduce conflict by separating interpretation from assumption."
+          ],
+          "related_concepts": [
+            "communication",
+            "empathy",
+            "clarification",
+            "feedback loops",
+            "conflict reduction"
+          ],
+          "short_definition": "Active listening is a communication practice where a listener attends carefully, reflects meaning, and checks understanding before responding.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8905,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Active Listening (Social Communication), Conflict Resolution (Psychology), Active Listening (Psychology) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Energy Efficiency (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Thermal Efficiency (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Insulation (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Insulation (Home Repair)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Battery Chemistry (Energy)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how insulation relates to energy efficiency.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+          "concept_name": "Energy Efficiency (Energy)",
+          "domain": "energy",
+          "examples": [
+            "A well-insulated home requiring less heating energy to maintain comfort.",
+            "Explain how energy efficiency affects a practical energy decision.",
+            "Use energy efficiency to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Energy efficiency is not the same as using less service; it means less energy for the same or similar service.",
+            "Energy Efficiency should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Efficiency improvements reduce wasted energy.",
+            "Insulation can improve efficiency by reducing heat transfer.",
+            "Efficiency is measured relative to useful output, not total energy use alone."
+          ],
+          "related_concepts": [
+            "insulation",
+            "thermal efficiency",
+            "energy storage",
+            "heat transfer",
+            "home repair"
+          ],
+          "short_definition": "Energy efficiency means delivering the same useful service with less energy input by reducing waste and losses.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5fa69fe183617b61",
+          "concept_name": "Thermal Efficiency (Energy)",
+          "domain": "energy",
+          "examples": [
+            "An engine converting only part of fuel heat into mechanical motion while the rest leaves as exhaust and radiator heat.",
+            "Explain how thermal efficiency affects a practical energy decision.",
+            "Use thermal efficiency to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A thermal system cannot convert all heat into useful work under ordinary heat-engine constraints.",
+            "Thermal Efficiency should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Thermal efficiency is constrained by thermodynamics.",
+            "Heat engines reject some heat even when operating well.",
+            "Improving insulation or design can reduce losses in some thermal systems."
+          ],
+          "related_concepts": [
+            "thermodynamics",
+            "combustion engines",
+            "energy efficiency",
+            "waste heat",
+            "heat transfer"
+          ],
+          "short_definition": "Thermal efficiency is the fraction of heat energy converted into useful work or useful output rather than lost as waste heat.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+          "concept_name": "Insulation (Energy)",
+          "domain": "energy",
+          "examples": [
+            "Attic insulation reducing winter heat loss from a house.",
+            "Explain how insulation affects a practical energy decision.",
+            "Use insulation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Insulation does not create heat; it slows unwanted heat movement.",
+            "Insulation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Insulation slows conductive, convective, or radiative heat transfer depending on material and design.",
+            "Better insulation can reduce heating and cooling demand.",
+            "Insulation effectiveness depends on installation quality, moisture, air sealing, and material properties."
+          ],
+          "related_concepts": [
+            "energy efficiency",
+            "heat transfer",
+            "home repair",
+            "thermal resistance",
+            "building envelope"
+          ],
+          "short_definition": "Insulation reduces heat transfer between regions, helping maintain temperature differences with less energy loss.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-a72b30fee84f3703",
+          "concept_name": "Insulation (Home Repair)",
+          "domain": "home repair",
+          "examples": [
+            "Adding attic insulation and sealing gaps around penetrations to reduce heat loss.",
+            "Explain how insulation affects a practical home repair decision.",
+            "Use insulation to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "More insulation is not always useful if air sealing, moisture, or installation problems remain unresolved.",
+            "Insulation should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Home insulation can lower heating and cooling energy needs.",
+            "Air leaks can undermine insulation performance.",
+            "Moisture control matters because wet insulation can lose effectiveness or cause damage."
+          ],
+          "related_concepts": [
+            "air sealing",
+            "energy efficiency",
+            "building envelope",
+            "thermal resistance",
+            "home maintenance"
+          ],
+          "short_definition": "Home insulation is material installed in walls, attics, floors, or ducts to reduce unwanted heat transfer and improve comfort.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1f114ade8c329b95",
+          "concept_name": "Battery Chemistry (Energy)",
+          "domain": "energy",
+          "examples": [
+            "Lithium-ion cells storing energy through movement of lithium ions between electrodes.",
+            "Explain how battery chemistry affects a practical energy decision.",
+            "Use battery chemistry to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "All batteries do not behave the same; chemistry strongly shapes limits and risks.",
+            "Battery Chemistry should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Battery chemistry determines voltage, capacity, safety, lifespan, and charging behavior.",
+            "Batteries store energy by moving ions and electrons through controlled reactions.",
+            "Different chemistries trade off cost, density, stability, and performance."
+          ],
+          "related_concepts": [
+            "energy storage",
+            "electrochemistry",
+            "capacity",
+            "charging",
+            "thermal safety"
+          ],
+          "short_definition": "Battery chemistry describes the materials and reactions that store and release electrical energy through electrochemical processes.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.8905,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Energy Efficiency (Energy), Thermal Efficiency (Energy), Insulation (Energy) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Photosynthesis (Biology)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how soil quality relates to plant growth.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-7416970f708be834",
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "domain": "agriculture gardening",
+          "examples": [
+            "A tomato plant using sunlight to produce sugars that support leaves, roots, flowers, and fruit.",
+            "Explain how photosynthesis affects a practical agriculture gardening decision.",
+            "Use photosynthesis to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Fertilizer does not replace photosynthesis; nutrients support growth but do not provide the plant's main energy source.",
+            "Photosynthesis should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Photosynthesis stores light energy in chemical bonds.",
+            "Plant growth depends on photosynthesis producing sugars.",
+            "Photosynthesis links sunlight, water, carbon dioxide, and plant biomass."
+          ],
+          "related_concepts": [
+            "chlorophyll",
+            "plant growth",
+            "carbon dioxide",
+            "water",
+            "sugars"
+          ],
+          "short_definition": "Photosynthesis in plants converts sunlight, carbon dioxide, and water into sugars that support plant growth while releasing oxygen.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+          "concept_name": "Photosynthesis (Biology)",
+          "domain": "biology",
+          "examples": [
+            "Leaf cells using chloroplasts to make glucose from carbon dioxide and water.",
+            "Explain how photosynthesis affects a practical biology decision.",
+            "Use photosynthesis to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Photosynthesis is not simply plant breathing; it is an energy-storage pathway.",
+            "Photosynthesis should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Photosynthesis captures light energy.",
+            "Photosynthesis stores energy in sugar molecules.",
+            "Photosynthesis supplies energy-rich molecules that respiration can later break down."
+          ],
+          "related_concepts": [
+            "chloroplasts",
+            "glucose",
+            "carbon cycle",
+            "cellular respiration",
+            "oxygen"
+          ],
+          "short_definition": "Photosynthesis is the biological pathway that captures light energy and stores it as chemical energy, usually in sugars made from carbon dioxide and water.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 0.85,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.7,
+        "overall_score": 0.748,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 0.575,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 0.7
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Photosynthesis (Agriculture Gardening), Photosynthesis (Biology) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "high: the retrieved concept set is thin or weak, so the bridge should be treated as exploratory only."
+    },
+    {
+      "concept_substance_scores": [
+        {
+          "concept_name": "Alternators (Vehicles Mechanics)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Maintenance Planning (Engineering)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Gutter Maintenance (Home Repair)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 5
+        },
+        {
+          "concept_name": "Constraints (Engineering)",
+          "example_count": 3,
+          "generic_definition": false,
+          "misconception_count": 2,
+          "penalties": [],
+          "proposition_count": 3,
+          "score": 1.0,
+          "semantic_related_count": 4
+        }
+      ],
+      "matched": true,
+      "memory_write_performed": false,
+      "prompt": "Synthesize how maintenance relates to mechanical reliability.",
+      "stored_concepts": [
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+          "concept_name": "Alternators (Vehicles Mechanics)",
+          "domain": "vehicles mechanics",
+          "examples": [
+            "A car alternator powering headlights and charging the battery while driving.",
+            "Explain how alternators affects a practical vehicles mechanics decision.",
+            "Use alternators to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "A car battery does not power everything indefinitely while driving; the alternator carries much of the electrical load.",
+            "Alternators should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Alternators recharge the battery during operation.",
+            "Alternators supply power to electrical systems after the engine starts.",
+            "Alternator failure can cause battery drain and electrical malfunction."
+          ],
+          "related_concepts": [
+            "vehicle electrical systems",
+            "maintenance",
+            "battery",
+            "mechanical reliability",
+            "energy conversion"
+          ],
+          "short_definition": "Alternators generate electrical power in vehicles by converting mechanical rotation into electricity while the engine runs.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+          "concept_name": "Maintenance Planning (Engineering)",
+          "domain": "engineering",
+          "examples": [
+            "Scheduling vehicle oil changes, belt inspections, and brake checks based on mileage and condition.",
+            "Explain how maintenance planning affects a practical engineering decision.",
+            "Use maintenance planning to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Maintenance planning is not only fixing things after failure; it tries to prevent or prepare for failure.",
+            "Maintenance Planning should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Planned maintenance can reduce downtime and extend asset life.",
+            "Maintenance planning uses condition, usage, risk, and cost information.",
+            "Good maintenance balances prevention costs against failure consequences."
+          ],
+          "related_concepts": [
+            "mechanical reliability",
+            "risk management",
+            "inspection",
+            "planning",
+            "vehicles mechanics"
+          ],
+          "short_definition": "Maintenance planning schedules inspections, servicing, replacement, and repairs to keep systems reliable and reduce unexpected failure.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+          "concept_name": "Gutter Maintenance (Home Repair)",
+          "domain": "home repair",
+          "examples": [
+            "Clearing leaves from gutters before heavy seasonal rain.",
+            "Explain how gutter maintenance affects a practical home repair decision.",
+            "Use gutter maintenance to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Gutters are not cosmetic trim; they are part of a water-control system.",
+            "Gutter Maintenance should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Blocked gutters can cause overflow, fascia damage, foundation moisture, or roof-edge problems.",
+            "Gutter maintenance includes cleaning debris, checking slope, and inspecting leaks or loose fasteners.",
+            "Drainage performance depends on gutters, downspouts, extensions, and site grading."
+          ],
+          "related_concepts": [
+            "drainage",
+            "home maintenance",
+            "roof",
+            "foundation protection",
+            "water damage"
+          ],
+          "short_definition": "Gutter maintenance keeps roof drainage paths clear and functional so water is directed away from the building.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        },
+        {
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+          "concept_name": "Constraints (Engineering)",
+          "domain": "engineering",
+          "examples": [
+            "Designing a bridge within load, budget, weather, and safety limits.",
+            "Explain how constraints affects a practical engineering decision.",
+            "Use constraints to identify what evidence is still missing."
+          ],
+          "misconceptions": [
+            "Constraints are not merely obstacles; they define what a successful design must satisfy.",
+            "Constraints should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Constraints narrow the design space.",
+            "Good engineering balances tradeoffs among competing constraints.",
+            "Constraints can be physical, economic, operational, legal, or human."
+          ],
+          "related_concepts": [
+            "tradeoffs",
+            "requirements",
+            "safety factor",
+            "materials",
+            "design"
+          ],
+          "short_definition": "Engineering constraints are limits such as cost, safety, materials, time, regulation, or performance that shape feasible design choices.",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_type": "rc2_curated_growth_run"
+        }
+      ],
+      "synthesis_enabled": false,
+      "synthesis_quality": {
+        "activation_recommendation": "read_only_operator_review_only",
+        "bridge_usefulness": 0.55,
+        "concept_diversity": 1.0,
+        "evidence_provenance_usage": 1.0,
+        "hallucination_risk": 0.1,
+        "overall_score": 0.9055,
+        "overreach_risk": 0.35,
+        "proposition_usage": 1.0,
+        "retrieval_relevance": 1.0,
+        "stored_concept_substance": 1.0,
+        "uncertainty_quality": 1.0
+      },
+      "tentative_inference": "These stored concepts may be connected, but the bridge is tentative: Alternators (Vehicles Mechanics), Maintenance Planning (Engineering), Gutter Maintenance (Home Repair) appear to share context, constraints, or mechanisms that need operator review before synthesis is trusted.",
+      "uncertainty": "moderate: the retrieval set is strong, but the bridge is inferred and has not been approved as knowledge."
+    }
+  ]
+}

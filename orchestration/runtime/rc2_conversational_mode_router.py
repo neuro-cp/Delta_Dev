@@ -36,6 +36,7 @@ from orchestration.runtime.rc1_operator_console import (
 )
 from orchestration.runtime.rc2_developmental_concept_memory import (
     approve_candidate_concept,
+    build_read_only_synthesis_trial,
     build_compact_support_packet,
     build_developmental_memory_state,
     browse_approved_concepts,
@@ -335,6 +336,30 @@ def _is_contextual_browse_jump(lower: str) -> bool:
         "switch topics",
         "new topic",
     }
+
+
+def _is_synthesis_trial_request(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split())
+    return any(phrase in lower for phrase in (
+        "synthesize",
+        "synthesis trial",
+        "tentative connection",
+        "infer a connection",
+        "cross concept",
+        "cross-concept",
+    ))
+
+
+def _is_graph_assisted_reasoning_request(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split())
+    return any(phrase in lower for phrase in (
+        "graph-assisted reasoning",
+        "graph assisted reasoning",
+        "use the graph",
+        "reason with the graph",
+        "graph-assisted reason",
+        "graph assisted reason",
+    ))
 
 
 DOMAIN_BROWSE_ALIASES = {
@@ -1465,6 +1490,92 @@ def route_message(
             payload["escalation_plan"] = build_escalation_plan(message)
             payload["intent"] = intent_info
             payload["confidence_decision"] = confidence_engine(message, bool(concept["matched"]))
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return payload
+        if _is_graph_assisted_reasoning_request(message):
+            from orchestration.runtime.rc2_graph_assisted_reasoning import build_graph_assisted_reasoning_trial
+
+            reasoning_trial = build_graph_assisted_reasoning_trial(message)
+            payload = {
+                "mode": mode,
+                "route": "read_only_graph_assisted_reasoning_trial",
+                "answer": reasoning_trial["answer"],
+                "confidence": "read_only_graph_assisted_reasoning_trial",
+                "confidence_score": reasoning_trial["reasoning_quality"]["overall_score"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": reasoning_trial["retrieved_concepts"],
+                "graph_assisted_reasoning": {
+                    "approved_graph_edges": reasoning_trial["approved_graph_edges"],
+                    "evidence_chains": reasoning_trial["evidence_chains"],
+                    "reasoning_quality": reasoning_trial["reasoning_quality"],
+                    "trial_only": True,
+                    "read_only": True,
+                    "synthesis_enabled_by_default": False,
+                    "memory_write_performed": False,
+                    "graph_write_performed": False,
+                },
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "graph_assisted_reasoning_trial"}
+            payload["confidence_decision"] = {
+                "confidence": reasoning_trial["reasoning_quality"]["overall_score"],
+                "evidence_quality": "approved_noncanonical_concepts_plus_approved_graph_edges",
+                "retrieval_sufficiency": "graph_assisted_trial_ready",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return payload
+        synthesis_trial = build_read_only_synthesis_trial(message) if _is_synthesis_trial_request(message) else {"matched": False}
+        if synthesis_trial["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "read_only_cross_concept_synthesis_trial",
+                "answer": synthesis_trial["answer"],
+                "confidence": "trial_inference_grounded_in_retrieved_concepts",
+                "confidence_score": synthesis_trial["retrieval_set_quality"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": synthesis_trial["source_retrieval"].get("matches", []),
+                "synthesis_trial": {
+                    "stored_concepts": synthesis_trial["stored_concepts"],
+                    "tentative_inference": synthesis_trial["tentative_inference"],
+                    "uncertainty": synthesis_trial["uncertainty"],
+                    "synthesis_trial_only": True,
+                    "synthesis_enabled": False,
+                    "memory_write_performed": False,
+                },
+                "multi_concept_retrieval": {
+                    "seeds": synthesis_trial["source_retrieval"].get("seeds", []),
+                    "retrieval_set_quality": synthesis_trial["retrieval_set_quality"],
+                    "synthesis_readiness": False,
+                    "duplicate_suppression_count": synthesis_trial["source_retrieval"].get("duplicate_suppression_count", 0),
+                },
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "read_only_synthesis_trial"}
+            payload["confidence_decision"] = {
+                "confidence": synthesis_trial["retrieval_set_quality"],
+                "evidence_quality": "approved_noncanonical_concepts_plus_labeled_inference",
+                "retrieval_sufficiency": "set_ready_for_trial_synthesis_review",
+                "provider_necessity": "none",
+            }
             payload.update({
                 "provider_calls_performed": False,
                 "web_search_performed": False,

@@ -1,0 +1,3872 @@
+{
+  "candidate_report": {
+    "approved": false,
+    "candidate_link_count": 62,
+    "candidate_links": [
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-03ceb5506f097638",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-03ceb5506f097638",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+        "target_concept_name": "Photosynthesis (Biology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d3cd48bc8f18babf",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-d3cd48bc8f18babf",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-7416970f708be834",
+        "target_concept_name": "Photosynthesis (Agriculture Gardening)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d87522ca4abf7b45",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-d87522ca4abf7b45",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+        "target_concept_name": "Energy Storage (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-329a470eaa4d0723",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-329a470eaa4d0723",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+        "target_concept_name": "Thermal Storage (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-2aa6d2710c409168",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-2aa6d2710c409168",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how ATP relates to energy storage."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how ATP relates to energy storage."
+        ],
+        "supporting_trials": [
+          "Synthesize how ATP relates to energy storage."
+        ],
+        "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+        "target_concept_name": "Battery Chemistry (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6f3c62e34f6d88ac",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-6f3c62e34f6d88ac",
+        "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+        "source_concept_name": "Feedback Loops (Planning Productivity)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how feedback loops relate to homeostasis."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how feedback loops relate to homeostasis."
+        ],
+        "supporting_trials": [
+          "Synthesize how feedback loops relate to homeostasis."
+        ],
+        "target_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+        "target_concept_name": "Feedback Loops (Biology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-26c896942e0fcbc2",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-26c896942e0fcbc2",
+        "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+        "source_concept_name": "Gravity (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5ddb3a91f5f881f3",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-5ddb3a91f5f881f3",
+        "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+        "source_concept_name": "Projectile Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-fc52c9c8a44fcfe7",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-fc52c9c8a44fcfe7",
+        "source_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "source_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6033d43b4de6a372",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-6033d43b4de6a372",
+        "source_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "source_concept_name": "Force Vectors (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-23b84b2bba499b0a",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-23b84b2bba499b0a",
+        "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+        "source_concept_name": "Gravity (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "target_concept_name": "Force Vectors (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-9e68f854495bec0c",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-9e68f854495bec0c",
+        "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+        "source_concept_name": "Projectile Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "target_concept_name": "Force Vectors (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6490bc0d0097e073",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-6490bc0d0097e073",
+        "source_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "source_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "target_concept_name": "Force Vectors (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ed6e8deff65a1ed0",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-ed6e8deff65a1ed0",
+        "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+        "source_concept_name": "Gravity (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "target_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a717b5515f4c0988",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-a717b5515f4c0988",
+        "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+        "source_concept_name": "Projectile Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "target_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c2e8226eab19e009",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-c2e8226eab19e009",
+        "source_concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+        "source_concept_name": "Fluid Flow (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_trials": [
+          "Synthesize how pressure relates to fluid flow."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-8aafd49229882637",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-8aafd49229882637",
+        "source_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "source_concept_name": "Pressure (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_trials": [
+          "Synthesize how pressure relates to fluid flow."
+        ],
+        "target_concept_id": "rc2-concept-growth-921fccfd53645427",
+        "target_concept_name": "Blood Pressure (Medicine Health General)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-4da980ac750c2d19",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-4da980ac750c2d19",
+        "source_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "source_concept_name": "Pressure (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_trials": [
+          "Synthesize how pressure relates to fluid flow."
+        ],
+        "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+        "target_concept_name": "Constraints (Engineering)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-e23ad1712f42b553",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-e23ad1712f42b553",
+        "source_concept_id": "rc2-concept-growth-05a66946ef14ecdb",
+        "source_concept_name": "Combustion Engines (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_trials": [
+          "Synthesize how thermodynamics relates to engines."
+        ],
+        "target_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "target_concept_name": "Thermal Efficiency (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-fc35d52e94dd6455",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-fc35d52e94dd6455",
+        "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "source_concept_name": "Thermal Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_trials": [
+          "Synthesize how thermodynamics relates to engines."
+        ],
+        "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+        "target_concept_name": "Battery Chemistry (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-77c2bc4e49b86397",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-77c2bc4e49b86397",
+        "source_concept_id": "rc2-concept-growth-e417db538d58dd4a",
+        "source_concept_name": "Interest Rates (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_trials": [
+          "Synthesize how inflation relates to interest rates."
+        ],
+        "target_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "target_concept_name": "Compound Interest (Finance)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-9c790813c1d48d75",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-9c790813c1d48d75",
+        "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "source_concept_name": "Compound Interest (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_trials": [
+          "Synthesize how inflation relates to interest rates."
+        ],
+        "target_concept_id": "rc2-concept-growth-ce8835d76529c7e2",
+        "target_concept_name": "Inflation (Finance)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1fef4babfe8d8a3f",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-1fef4babfe8d8a3f",
+        "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "source_concept_name": "Compound Interest (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_trials": [
+          "Synthesize how compound interest relates to long-term investing."
+        ],
+        "target_concept_id": "rc2-concept-growth-2c269d55c236230d",
+        "target_concept_name": "Cash Reserves (Finance)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-cc0d62155c98a08c",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-cc0d62155c98a08c",
+        "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "source_concept_name": "Compound Interest (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_trials": [
+          "Synthesize how compound interest relates to long-term investing."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-21a9dd39196895e4",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-21a9dd39196895e4",
+        "source_concept_id": "rc2-concept-growth-2c269d55c236230d",
+        "source_concept_name": "Cash Reserves (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_trials": [
+          "Synthesize how compound interest relates to long-term investing."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-0d5d2091ddea1a82",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-0d5d2091ddea1a82",
+        "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+        "source_concept_name": "Feedback Loops (Planning Productivity)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ff043055114e5a14",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-ff043055114e5a14",
+        "source_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+        "source_concept_name": "Feedback Loops (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-775056550ee04098",
+        "target_concept_name": "Access Control (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a48f7a6bf8fe71d9",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-a48f7a6bf8fe71d9",
+        "source_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+        "source_concept_name": "Feedback Loops (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c8205388eee215ac",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-c8205388eee215ac",
+        "source_concept_id": "rc2-concept-growth-775056550ee04098",
+        "source_concept_name": "Access Control (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5e373709f710ae20",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-5e373709f710ae20",
+        "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+        "source_concept_name": "Feedback Loops (Planning Productivity)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-775056550ee04098",
+        "target_concept_name": "Access Control (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6262c2d54f6ed2cb",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-6262c2d54f6ed2cb",
+        "source_concept_id": "rc2-concept-growth-775056550ee04098",
+        "source_concept_name": "Access Control (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how access control relates to user permissions."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how access control relates to user permissions."
+        ],
+        "supporting_trials": [
+          "Synthesize how access control relates to user permissions."
+        ],
+        "target_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+        "target_concept_name": "Api Boundaries (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5d75a1bed996b16f",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-5d75a1bed996b16f",
+        "source_concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+        "source_concept_name": "Adapter Pattern (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_trials": [
+          "Synthesize how adapter patterns relate to system integration."
+        ],
+        "target_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+        "target_concept_name": "Api Boundaries (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1a6a4cc8a6b81025",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-1a6a4cc8a6b81025",
+        "source_concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+        "source_concept_name": "Adapter Pattern (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_trials": [
+          "Synthesize how adapter patterns relate to system integration."
+        ],
+        "target_concept_id": "rc2-concept-growth-775056550ee04098",
+        "target_concept_name": "Access Control (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-70a30bc3a68a8d88",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-70a30bc3a68a8d88",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "target_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c70f069a74a8613c",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-c70f069a74a8613c",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "target_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c9d5df02b121b083",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-c9d5df02b121b083",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-972b37ba51debace",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-972b37ba51debace",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a2192b6c7f142e1a",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-a2192b6c7f142e1a",
+        "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "source_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "target_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-74bfa448946eb357",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-74bfa448946eb357",
+        "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "source_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-70bf4aeb09fedad5",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-70bf4aeb09fedad5",
+        "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "source_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d2c98b7ea4fa6365",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-d2c98b7ea4fa6365",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-73f64f9fab5168e1",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-73f64f9fab5168e1",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-8fd2fdf7e5bc4941",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-8fd2fdf7e5bc4941",
+        "source_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "source_concept_name": "Memory Consolidation (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-9a14c785a5381302",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-9a14c785a5381302",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_trials": [
+          "Synthesize how operator approval relates to learning."
+        ],
+        "target_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+        "target_concept_name": "Learning Reinforcement (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5b19dabb440e654d",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-5b19dabb440e654d",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_trials": [
+          "Synthesize how operator approval relates to learning."
+        ],
+        "target_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+        "target_concept_name": "Learning Reinforcement (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6d5979f55e9a16b2",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-6d5979f55e9a16b2",
+        "source_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+        "source_concept_name": "Learning Reinforcement (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_trials": [
+          "Synthesize how operator approval relates to learning."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ece2d9b87dabb729",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-ece2d9b87dabb729",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "target_concept_name": "Attention (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1c85ef45db06f3a9",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-1c85ef45db06f3a9",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-bbbe3ff48e669da8",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-bbbe3ff48e669da8",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "target_concept_name": "Attention (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-337b717c90bd2e99",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-337b717c90bd2e99",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-baa33655752e077d",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-baa33655752e077d",
+        "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "source_concept_name": "Attention (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-0158e94037dc25bb",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-0158e94037dc25bb",
+        "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "source_concept_name": "Attention (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_trials": [
+          "Synthesize how evidence relates to decision-making."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ee7f39adbf8c935d",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-ee7f39adbf8c935d",
+        "source_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "source_concept_name": "Conflict Resolution (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_trials": [
+          "Synthesize how evidence relates to decision-making."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-17ce71eca14407ad",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-17ce71eca14407ad",
+        "source_concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+        "source_concept_name": "Active Listening (Social Communication)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_trials": [
+          "Synthesize how communication relates to conflict resolution."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-241517bbc9819a2e",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-241517bbc9819a2e",
+        "source_concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+        "source_concept_name": "Active Listening (Social Communication)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_trials": [
+          "Synthesize how communication relates to conflict resolution."
+        ],
+        "target_concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+        "target_concept_name": "Active Listening (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-15e5d7f1d260851d",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-15e5d7f1d260851d",
+        "source_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "source_concept_name": "Conflict Resolution (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_trials": [
+          "Synthesize how communication relates to conflict resolution."
+        ],
+        "target_concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+        "target_concept_name": "Active Listening (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c416a12aca1c7e0b",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-c416a12aca1c7e0b",
+        "source_concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+        "source_concept_name": "Energy Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_trials": [
+          "Synthesize how insulation relates to energy efficiency."
+        ],
+        "target_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "target_concept_name": "Thermal Efficiency (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1a0b426fb2452b94",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-1a0b426fb2452b94",
+        "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "source_concept_name": "Thermal Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_trials": [
+          "Synthesize how insulation relates to energy efficiency."
+        ],
+        "target_concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+        "target_concept_name": "Insulation (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-3db3fbfeb32b565f",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-3db3fbfeb32b565f",
+        "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "source_concept_name": "Thermal Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_trials": [
+          "Synthesize how insulation relates to energy efficiency."
+        ],
+        "target_concept_id": "rc2-concept-growth-a72b30fee84f3703",
+        "target_concept_name": "Insulation (Home Repair)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-104fa772cecb217b",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-104fa772cecb217b",
+        "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+        "source_concept_name": "Alternators (Vehicles Mechanics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_trials": [
+          "Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "target_concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+        "target_concept_name": "Maintenance Planning (Engineering)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a37073d0cbd3cbfa",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-a37073d0cbd3cbfa",
+        "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+        "source_concept_name": "Alternators (Vehicles Mechanics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_trials": [
+          "Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "target_concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+        "target_concept_name": "Gutter Maintenance (Home Repair)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d0c4db4d38417526",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-d0c4db4d38417526",
+        "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+        "source_concept_name": "Alternators (Vehicles Mechanics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_trials": [
+          "Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+        "target_concept_name": "Constraints (Engineering)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      }
+    ],
+    "duplicate_suppression": {
+      "exact_duplicates": 11,
+      "inverse_duplicates": 6,
+      "low_confidence": 29,
+      "self_links": 0
+    },
+    "phase": "RC2.7 Candidate Typed Graph Links",
+    "relation_types_supported": [
+      "depends_on",
+      "supports",
+      "causes",
+      "part_of",
+      "example_of",
+      "prerequisite_for",
+      "generalizes",
+      "specializes",
+      "contrasts_with",
+      "analogy_to",
+      "enables",
+      "limits",
+      "related_to"
+    ],
+    "safety": {
+      "automatic_graph_link_approval": false,
+      "automatic_graph_link_creation": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "graph_store_mutated": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "synthesis_enabled_by_default": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "source_readiness_candidate_count": 108,
+    "written": false
+  },
+  "phase": "RC2.7 Typed Graph Linking Design",
+  "quality": {
+    "accepted_links": 62,
+    "average_confidence": 0.7884,
+    "average_uncertainty": 0.35,
+    "candidate_links": 62,
+    "concept_coverage": 1.0,
+    "duplicate_suppression": {
+      "exact_duplicates": 11,
+      "inverse_duplicates": 6,
+      "low_confidence": 29,
+      "self_links": 0
+    },
+    "edge_density": 1.4762,
+    "edited_links": 0,
+    "graph_consistency": 0.85,
+    "graph_store_mutated": false,
+    "isolated_concepts": [],
+    "phase": "RC2.7B Graph Quality Calibration",
+    "rejected_links": 0,
+    "relation_distribution": {
+      "causes": 15,
+      "depends_on": 22,
+      "part_of": 14,
+      "supports": 11
+    },
+    "review_completion": 1.0,
+    "rollback_coverage": 1.0,
+    "safety": {
+      "automatic_graph_link_approval": false,
+      "automatic_graph_link_creation": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "graph_store_mutated": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "synthesis_enabled_by_default": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "storage_gate": {
+      "average_confidence_gate": true,
+      "graph_consistency_gate": true,
+      "ready_for_storage_trial": true,
+      "rollback_coverage_gate": true,
+      "safety_gate": true
+    }
+  },
+  "read_only_retrieval_preview": {
+    "edge_count": 5,
+    "edges": [
+      {
+        "approved": false,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:37+00:00",
+        "edge_id": "rc2-edge-03ceb5506f097638",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-03ceb5506f097638",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+        "target_concept_name": "Photosynthesis (Biology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:37+00:00",
+        "edge_id": "rc2-edge-d3cd48bc8f18babf",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-d3cd48bc8f18babf",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-7416970f708be834",
+        "target_concept_name": "Photosynthesis (Agriculture Gardening)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:37+00:00",
+        "edge_id": "rc2-edge-d87522ca4abf7b45",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-d87522ca4abf7b45",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+        "target_concept_name": "Energy Storage (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:37+00:00",
+        "edge_id": "rc2-edge-329a470eaa4d0723",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-329a470eaa4d0723",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+        "target_concept_name": "Thermal Storage (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      },
+      {
+        "approved": false,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:37+00:00",
+        "edge_id": "rc2-edge-2aa6d2710c409168",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "",
+        "rollback_handle": "rollback-rc2-edge-2aa6d2710c409168",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "candidate_review",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how ATP relates to energy storage."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how ATP relates to energy storage."
+        ],
+        "supporting_trials": [
+          "Synthesize how ATP relates to energy storage."
+        ],
+        "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+        "target_concept_name": "Battery Chemistry (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 1
+      }
+    ],
+    "graph_store_mutated": false,
+    "matched": true,
+    "phase": "RC2.7 Read-Only Graph Edge Retrieval",
+    "question": "How does photosynthesis relate to respiration?",
+    "read_only": true,
+    "safety": {
+      "automatic_graph_link_approval": false,
+      "automatic_graph_link_creation": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "graph_store_mutated": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "synthesis_enabled_by_default": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "synthesis_enabled": false
+  },
+  "recommendation": "PROCEED_OPERATOR_REVIEWED_GRAPH_EDGE_STORAGE_TRIAL",
+  "review_report": {
+    "accepted_count": 62,
+    "accepted_edges": [
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-03ceb5506f097638",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-03ceb5506f097638",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-bf4269b5b3722cae",
+        "target_concept_name": "Photosynthesis (Biology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d3cd48bc8f18babf",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-d3cd48bc8f18babf",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-7416970f708be834",
+        "target_concept_name": "Photosynthesis (Agriculture Gardening)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d87522ca4abf7b45",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-d87522ca4abf7b45",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+        "target_concept_name": "Energy Storage (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-329a470eaa4d0723",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-329a470eaa4d0723",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how photosynthesis relates to respiration."
+        ],
+        "supporting_trials": [
+          "Synthesize how photosynthesis relates to respiration."
+        ],
+        "target_concept_id": "rc2-concept-growth-5017b6883fe43909",
+        "target_concept_name": "Thermal Storage (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-2aa6d2710c409168",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-2aa6d2710c409168",
+        "source_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "source_concept_name": "Cellular Respiration (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how ATP relates to energy storage."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how ATP relates to energy storage."
+        ],
+        "supporting_trials": [
+          "Synthesize how ATP relates to energy storage."
+        ],
+        "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+        "target_concept_name": "Battery Chemistry (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6f3c62e34f6d88ac",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-6f3c62e34f6d88ac",
+        "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+        "source_concept_name": "Feedback Loops (Planning Productivity)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how feedback loops relate to homeostasis."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how feedback loops relate to homeostasis."
+        ],
+        "supporting_trials": [
+          "Synthesize how feedback loops relate to homeostasis."
+        ],
+        "target_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+        "target_concept_name": "Feedback Loops (Biology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-26c896942e0fcbc2",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-26c896942e0fcbc2",
+        "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+        "source_concept_name": "Gravity (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5ddb3a91f5f881f3",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-5ddb3a91f5f881f3",
+        "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+        "source_concept_name": "Projectile Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-fc52c9c8a44fcfe7",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-fc52c9c8a44fcfe7",
+        "source_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "source_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6033d43b4de6a372",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-6033d43b4de6a372",
+        "source_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "source_concept_name": "Force Vectors (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-23b84b2bba499b0a",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-23b84b2bba499b0a",
+        "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+        "source_concept_name": "Gravity (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "target_concept_name": "Force Vectors (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-9e68f854495bec0c",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-9e68f854495bec0c",
+        "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+        "source_concept_name": "Projectile Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "target_concept_name": "Force Vectors (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6490bc0d0097e073",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-6490bc0d0097e073",
+        "source_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "source_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-51fa261899f4ab4e",
+        "target_concept_name": "Force Vectors (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ed6e8deff65a1ed0",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-ed6e8deff65a1ed0",
+        "source_concept_id": "rc2-concept-growth-f237ca52b3a78146",
+        "source_concept_name": "Gravity (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "target_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a717b5515f4c0988",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-a717b5515f4c0988",
+        "source_concept_id": "rc2-concept-growth-41ecd561d0223a56",
+        "source_concept_name": "Projectile Motion (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how gravity relates to orbital motion."
+        ],
+        "supporting_trials": [
+          "Synthesize how gravity relates to orbital motion."
+        ],
+        "target_concept_id": "rc2-concept-growth-640ed8c03d177a2c",
+        "target_concept_name": "Simple Harmonic Motion (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c2e8226eab19e009",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-c2e8226eab19e009",
+        "source_concept_id": "rc2-concept-growth-1ccdf63b9083acfc",
+        "source_concept_name": "Fluid Flow (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_trials": [
+          "Synthesize how pressure relates to fluid flow."
+        ],
+        "target_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "target_concept_name": "Pressure (Basic Physics)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-8aafd49229882637",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-8aafd49229882637",
+        "source_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "source_concept_name": "Pressure (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_trials": [
+          "Synthesize how pressure relates to fluid flow."
+        ],
+        "target_concept_id": "rc2-concept-growth-921fccfd53645427",
+        "target_concept_name": "Blood Pressure (Medicine Health General)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-4da980ac750c2d19",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-4da980ac750c2d19",
+        "source_concept_id": "rc2-concept-growth-be771744303f4c74",
+        "source_concept_name": "Pressure (Basic Physics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how pressure relates to fluid flow."
+        ],
+        "supporting_trials": [
+          "Synthesize how pressure relates to fluid flow."
+        ],
+        "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+        "target_concept_name": "Constraints (Engineering)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-e23ad1712f42b553",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-e23ad1712f42b553",
+        "source_concept_id": "rc2-concept-growth-05a66946ef14ecdb",
+        "source_concept_name": "Combustion Engines (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_trials": [
+          "Synthesize how thermodynamics relates to engines."
+        ],
+        "target_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "target_concept_name": "Thermal Efficiency (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-fc35d52e94dd6455",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-fc35d52e94dd6455",
+        "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "source_concept_name": "Thermal Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how thermodynamics relates to engines."
+        ],
+        "supporting_trials": [
+          "Synthesize how thermodynamics relates to engines."
+        ],
+        "target_concept_id": "rc2-concept-growth-1f114ade8c329b95",
+        "target_concept_name": "Battery Chemistry (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-77c2bc4e49b86397",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-77c2bc4e49b86397",
+        "source_concept_id": "rc2-concept-growth-e417db538d58dd4a",
+        "source_concept_name": "Interest Rates (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_trials": [
+          "Synthesize how inflation relates to interest rates."
+        ],
+        "target_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "target_concept_name": "Compound Interest (Finance)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-9c790813c1d48d75",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-9c790813c1d48d75",
+        "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "source_concept_name": "Compound Interest (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how inflation relates to interest rates."
+        ],
+        "supporting_trials": [
+          "Synthesize how inflation relates to interest rates."
+        ],
+        "target_concept_id": "rc2-concept-growth-ce8835d76529c7e2",
+        "target_concept_name": "Inflation (Finance)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1fef4babfe8d8a3f",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-1fef4babfe8d8a3f",
+        "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "source_concept_name": "Compound Interest (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_trials": [
+          "Synthesize how compound interest relates to long-term investing."
+        ],
+        "target_concept_id": "rc2-concept-growth-2c269d55c236230d",
+        "target_concept_name": "Cash Reserves (Finance)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-cc0d62155c98a08c",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-cc0d62155c98a08c",
+        "source_concept_id": "rc2-concept-growth-3b7b188af07e7913",
+        "source_concept_name": "Compound Interest (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_trials": [
+          "Synthesize how compound interest relates to long-term investing."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-21a9dd39196895e4",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-21a9dd39196895e4",
+        "source_concept_id": "rc2-concept-growth-2c269d55c236230d",
+        "source_concept_name": "Cash Reserves (Finance)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how compound interest relates to long-term investing."
+        ],
+        "supporting_trials": [
+          "Synthesize how compound interest relates to long-term investing."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-0d5d2091ddea1a82",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-0d5d2091ddea1a82",
+        "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+        "source_concept_name": "Feedback Loops (Planning Productivity)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ff043055114e5a14",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-ff043055114e5a14",
+        "source_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+        "source_concept_name": "Feedback Loops (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-775056550ee04098",
+        "target_concept_name": "Access Control (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a48f7a6bf8fe71d9",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-a48f7a6bf8fe71d9",
+        "source_concept_id": "rc2-concept-growth-195d6720c1b83c20",
+        "source_concept_name": "Feedback Loops (Biology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c8205388eee215ac",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-c8205388eee215ac",
+        "source_concept_id": "rc2-concept-growth-775056550ee04098",
+        "source_concept_name": "Access Control (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5e373709f710ae20",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-5e373709f710ae20",
+        "source_concept_id": "rc2-concept-growth-d31c1b8954f1557e",
+        "source_concept_name": "Feedback Loops (Planning Productivity)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "supporting_trials": [
+          "Synthesize what connects planning, feedback loops, and software architecture."
+        ],
+        "target_concept_id": "rc2-concept-growth-775056550ee04098",
+        "target_concept_name": "Access Control (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6262c2d54f6ed2cb",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-6262c2d54f6ed2cb",
+        "source_concept_id": "rc2-concept-growth-775056550ee04098",
+        "source_concept_name": "Access Control (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how access control relates to user permissions."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how access control relates to user permissions."
+        ],
+        "supporting_trials": [
+          "Synthesize how access control relates to user permissions."
+        ],
+        "target_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+        "target_concept_name": "Api Boundaries (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5d75a1bed996b16f",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-5d75a1bed996b16f",
+        "source_concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+        "source_concept_name": "Adapter Pattern (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_trials": [
+          "Synthesize how adapter patterns relate to system integration."
+        ],
+        "target_concept_id": "rc2-concept-growth-c5dcb022a494ec00",
+        "target_concept_name": "Api Boundaries (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1a6a4cc8a6b81025",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-1a6a4cc8a6b81025",
+        "source_concept_id": "rc2-concept-growth-0e9d138b7e1efafc",
+        "source_concept_name": "Adapter Pattern (Software Architecture)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how adapter patterns relate to system integration."
+        ],
+        "supporting_trials": [
+          "Synthesize how adapter patterns relate to system integration."
+        ],
+        "target_concept_id": "rc2-concept-growth-775056550ee04098",
+        "target_concept_name": "Access Control (Software Architecture)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-70a30bc3a68a8d88",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-70a30bc3a68a8d88",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "target_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c70f069a74a8613c",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-c70f069a74a8613c",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "target_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c9d5df02b121b083",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-c9d5df02b121b083",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-972b37ba51debace",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-972b37ba51debace",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a2192b6c7f142e1a",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-a2192b6c7f142e1a",
+        "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "source_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "target_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-74bfa448946eb357",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-74bfa448946eb357",
+        "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "source_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-70bf4aeb09fedad5",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-70bf4aeb09fedad5",
+        "source_concept_id": "rc2-concept-growth-88228d9a97e97751",
+        "source_concept_name": "Noncanonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d2c98b7ea4fa6365",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-d2c98b7ea4fa6365",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "target_concept_name": "Memory Consolidation (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.82,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-73f64f9fab5168e1",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-73f64f9fab5168e1",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-8fd2fdf7e5bc4941",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-8fd2fdf7e5bc4941",
+        "source_concept_id": "rc2-concept-growth-ac27ee1b6ed50b61",
+        "source_concept_name": "Memory Consolidation (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how DELTA memory relates to human memory."
+        ],
+        "supporting_trials": [
+          "Synthesize how DELTA memory relates to human memory."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-9a14c785a5381302",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-9a14c785a5381302",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_trials": [
+          "Synthesize how operator approval relates to learning."
+        ],
+        "target_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+        "target_concept_name": "Learning Reinforcement (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-5b19dabb440e654d",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-5b19dabb440e654d",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_trials": [
+          "Synthesize how operator approval relates to learning."
+        ],
+        "target_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+        "target_concept_name": "Learning Reinforcement (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-6d5979f55e9a16b2",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-6d5979f55e9a16b2",
+        "source_concept_id": "rc2-concept-growth-14c04b6ac31f7cc9",
+        "source_concept_name": "Learning Reinforcement (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how operator approval relates to learning."
+        ],
+        "supporting_trials": [
+          "Synthesize how operator approval relates to learning."
+        ],
+        "target_concept_id": "rc2-concept-growth-b46a83c4e603f2a6",
+        "target_concept_name": "Developmental Learning (Delta Architecture Itself)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ece2d9b87dabb729",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-ece2d9b87dabb729",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "target_concept_name": "Attention (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1c85ef45db06f3a9",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-1c85ef45db06f3a9",
+        "source_concept_id": "rc2-concept-growth-1b535612743b80c4",
+        "source_concept_name": "Operator Approval (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-bbbe3ff48e669da8",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-bbbe3ff48e669da8",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "target_concept_name": "Attention (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.8,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-337b717c90bd2e99",
+        "noncanonical": true,
+        "relation_type": "depends_on",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-337b717c90bd2e99",
+        "source_concept_id": "rc2-concept-growth-c49cbc595790d5b8",
+        "source_concept_name": "Canonical Memory (Delta Architecture Itself)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Terms indicate one concept may require or rely on another.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-baa33655752e077d",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-baa33655752e077d",
+        "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "source_concept_name": "Attention (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how law relates to governance."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how law relates to governance."
+        ],
+        "supporting_trials": [
+          "Synthesize how law relates to governance."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-0158e94037dc25bb",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-0158e94037dc25bb",
+        "source_concept_id": "rc2-concept-growth-0204997183aa8174",
+        "source_concept_name": "Attention (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_trials": [
+          "Synthesize how evidence relates to decision-making."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-ee7f39adbf8c935d",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-ee7f39adbf8c935d",
+        "source_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "source_concept_name": "Conflict Resolution (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how evidence relates to decision-making."
+        ],
+        "supporting_trials": [
+          "Synthesize how evidence relates to decision-making."
+        ],
+        "target_concept_id": "rc2-concept-growth-bd75a6d746182bbd",
+        "target_concept_name": "Calendar Planning (Planning Productivity)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-17ce71eca14407ad",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-17ce71eca14407ad",
+        "source_concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+        "source_concept_name": "Active Listening (Social Communication)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_trials": [
+          "Synthesize how communication relates to conflict resolution."
+        ],
+        "target_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "target_concept_name": "Conflict Resolution (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.79,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-241517bbc9819a2e",
+        "noncanonical": true,
+        "relation_type": "causes",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-241517bbc9819a2e",
+        "source_concept_id": "rc2-concept-growth-b0687bdbd25db3ed",
+        "source_concept_name": "Active Listening (Social Communication)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_propositions": [
+          "Propositions describe causal or conversion behavior.",
+          "Detected in synthesis trial: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_trials": [
+          "Synthesize how communication relates to conflict resolution."
+        ],
+        "target_concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+        "target_concept_name": "Active Listening (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.78,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-15e5d7f1d260851d",
+        "noncanonical": true,
+        "relation_type": "supports",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-15e5d7f1d260851d",
+        "source_concept_id": "rc2-concept-growth-c0e93a29cb668e60",
+        "source_concept_name": "Conflict Resolution (Psychology)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_propositions": [
+          "Concept substance describes support or enablement.",
+          "Detected in synthesis trial: Synthesize how communication relates to conflict resolution."
+        ],
+        "supporting_trials": [
+          "Synthesize how communication relates to conflict resolution."
+        ],
+        "target_concept_id": "rc2-concept-growth-55acbdd3e8e4e7c8",
+        "target_concept_name": "Active Listening (Psychology)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-c416a12aca1c7e0b",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-c416a12aca1c7e0b",
+        "source_concept_id": "rc2-concept-growth-ce8d0d02037da8c4",
+        "source_concept_name": "Energy Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_trials": [
+          "Synthesize how insulation relates to energy efficiency."
+        ],
+        "target_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "target_concept_name": "Thermal Efficiency (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-1a0b426fb2452b94",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-1a0b426fb2452b94",
+        "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "source_concept_name": "Thermal Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_trials": [
+          "Synthesize how insulation relates to energy efficiency."
+        ],
+        "target_concept_id": "rc2-concept-growth-f4c826a81ca40fda",
+        "target_concept_name": "Insulation (Energy)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-3db3fbfeb32b565f",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-3db3fbfeb32b565f",
+        "source_concept_id": "rc2-concept-growth-5fa69fe183617b61",
+        "source_concept_name": "Thermal Efficiency (Energy)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how insulation relates to energy efficiency."
+        ],
+        "supporting_trials": [
+          "Synthesize how insulation relates to energy efficiency."
+        ],
+        "target_concept_id": "rc2-concept-growth-a72b30fee84f3703",
+        "target_concept_name": "Insulation (Home Repair)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-104fa772cecb217b",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-104fa772cecb217b",
+        "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+        "source_concept_name": "Alternators (Vehicles Mechanics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_trials": [
+          "Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "target_concept_id": "rc2-concept-growth-1bdd642ce9c532ef",
+        "target_concept_name": "Maintenance Planning (Engineering)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-a37073d0cbd3cbfa",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-a37073d0cbd3cbfa",
+        "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+        "source_concept_name": "Alternators (Vehicles Mechanics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_trials": [
+          "Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "target_concept_id": "rc2-concept-growth-cd02fcf2ea68a0d0",
+        "target_concept_name": "Gutter Maintenance (Home Repair)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      },
+      {
+        "approved": true,
+        "confidence": 0.76,
+        "created_at": "2026-07-09T18:13:20+00:00",
+        "edge_id": "rc2-edge-d0c4db4d38417526",
+        "noncanonical": true,
+        "relation_type": "part_of",
+        "review_notes": "Simulated operator approval for high-confidence candidate.",
+        "rollback_handle": "rollback-rc2-edge-d0c4db4d38417526",
+        "source_concept_id": "rc2-concept-growth-db8c47c4e9cf9284",
+        "source_concept_name": "Alternators (Vehicles Mechanics)",
+        "source_type": "rc2_synthesis_trial_readiness",
+        "status": "approved_noncanonical_simulated",
+        "supporting_examples": [
+          "Trial prompt: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_propositions": [
+          "Concepts appear within a shared system or architecture context.",
+          "Detected in synthesis trial: Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "supporting_trials": [
+          "Synthesize how maintenance relates to mechanical reliability."
+        ],
+        "target_concept_id": "rc2-concept-growth-bb35f3d903ad9377",
+        "target_concept_name": "Constraints (Engineering)",
+        "uncertainty": "moderate: relation is plausible but still requires operator review.",
+        "version": 2
+      }
+    ],
+    "approval_is_simulated": true,
+    "edited_count": 0,
+    "edited_edges": [],
+    "graph_store_mutated": false,
+    "operator_actions_supported": [
+      "accept",
+      "reject",
+      "edit_relation_type",
+      "adjust_confidence",
+      "merge_duplicates",
+      "split_incorrect_links",
+      "add_notes"
+    ],
+    "phase": "RC2.7 Operator Graph Review Harness",
+    "rejected_count": 0,
+    "rejected_edges": [],
+    "review_completion": 1.0,
+    "safety": {
+      "automatic_graph_link_approval": false,
+      "automatic_graph_link_creation": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "graph_store_mutated": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "synthesis_enabled_by_default": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    }
+  },
+  "safety": {
+    "automatic_graph_link_approval": false,
+    "automatic_graph_link_creation": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "graph_store_mutated": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "schema": {
+    "fields": [
+      "edge_id",
+      "source_concept_id",
+      "source_concept_name",
+      "target_concept_id",
+      "target_concept_name",
+      "relation_type",
+      "confidence",
+      "supporting_propositions",
+      "supporting_examples",
+      "supporting_trials",
+      "uncertainty",
+      "source_type",
+      "created_at",
+      "approved",
+      "noncanonical",
+      "rollback_handle",
+      "version",
+      "status",
+      "review_notes"
+    ],
+    "phase": "RC2.7 Graph Edge Schema",
+    "relation_types": [
+      "depends_on",
+      "supports",
+      "causes",
+      "part_of",
+      "example_of",
+      "prerequisite_for",
+      "generalizes",
+      "specializes",
+      "contrasts_with",
+      "analogy_to",
+      "enables",
+      "limits",
+      "related_to"
+    ],
+    "required_fields": [
+      "edge_id",
+      "source_concept_id",
+      "source_concept_name",
+      "target_concept_id",
+      "target_concept_name",
+      "relation_type",
+      "confidence",
+      "supporting_propositions",
+      "supporting_examples",
+      "supporting_trials",
+      "uncertainty",
+      "source_type",
+      "created_at",
+      "approved",
+      "noncanonical",
+      "rollback_handle",
+      "version",
+      "status",
+      "review_notes"
+    ],
+    "safety": {
+      "automatic_graph_link_approval": false,
+      "automatic_graph_link_creation": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "fine_tuning_performed": false,
+      "graph_store_mutated": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "synthesis_enabled_by_default": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "storage_policy": {
+      "approved_default": false,
+      "canonical_write_allowed": false,
+      "default_status": "candidate_review",
+      "noncanonical_default": true,
+      "operator_review_required": true,
+      "rollback_required": true
+    }
+  }
+}
