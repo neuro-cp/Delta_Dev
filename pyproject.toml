@@ -19,3 +19,9 @@ norecursedirs = [
 python_files = [
     "test_*.py",
 ]
+markers = [
+    "rc2_fast: fast RC2 smoke checks suitable for inner-loop validation",
+    "rc2_slow: slower RC2 quality or report tests",
+    "rc2_integration: RC2 integration tests that exercise multiple subsystems",
+    "rc2_report: RC2 report-generation and JSON validation tests",
+]

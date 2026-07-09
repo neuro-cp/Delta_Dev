@@ -1,0 +1,61 @@
+{
+  "phase": "RC2 Validation Strategy Shift",
+  "problem": "The full tests/runtime_rc2 suite has become an integration and release-checkpoint battery, costing too much time and data for every small patch.",
+  "strategy": "Use tiered validation: py_compile and focused tests for edits, rc2_fast_validate.py for inner-loop smoke, and full tests/runtime_rc2 only before commit/push or release checkpoints.",
+  "tiers": {
+    "tier_0_compile": {
+      "when": "After editing Python files.",
+      "commands": [
+        ".\\.venv311\\Scripts\\python.exe -m py_compile <changed python files>"
+      ]
+    },
+    "tier_1_focused_tests": {
+      "when": "After changing one module or one small subsystem.",
+      "commands": [
+        ".\\.venv311\\Scripts\\python.exe -m pytest tests\\runtime_rc2\\test_<changed_area>.py -q"
+      ]
+    },
+    "tier_2_fast_smoke": {
+      "when": "Default RC2 inner-loop validation and before staging.",
+      "commands": [
+        ".\\.venv311\\Scripts\\python.exe scripts\\rc2_fast_validate.py"
+      ],
+      "coverage": [
+        "conversational routing smoke",
+        "multi-concept retrieval smoke",
+        "graph-assisted reasoning smoke",
+        "safety invariant smoke",
+        "JSON report validation smoke"
+      ]
+    },
+    "tier_3_full_rc2": {
+      "when": "Only for final pre-push, release checkpoint, or broad subsystem changes.",
+      "commands": [
+        ".\\.venv311\\Scripts\\python.exe -m pytest tests\\runtime_rc2 -q -ra"
+      ]
+    }
+  },
+  "expected_time_data_savings": {
+    "old_inner_loop": "Full tests/runtime_rc2 after every patch, observed around 20 minutes and high data use.",
+    "new_inner_loop": "Compile plus focused tests plus scripts/rc2_fast_validate.py.",
+    "expected_result": "Most small RC2 patches should avoid full runtime_rc2 until final validation."
+  },
+  "safety_invariants": {
+    "training": false,
+    "fine_tuning": false,
+    "weight_updates": false,
+    "canonical_writes": false,
+    "provider_or_web_calls_by_default": false,
+    "autonomous_actions": false,
+    "scheduler_activation": false,
+    "hyb1_promotion": false,
+    "model_b_replacement": false,
+    "synthesis_default_activation": false
+  },
+  "policy": {
+    "future_marathon_default": "Do not run full runtime_rc2 until final validation.",
+    "full_suite_required_before_push": true,
+    "fast_validation_script": "scripts/rc2_fast_validate.py"
+  },
+  "recommendation": "USE_TIERED_RC2_VALIDATION_AND_RESERVE_FULL_RUNTIME_RC2_FOR_FINAL_CHECKPOINTS"
+}
