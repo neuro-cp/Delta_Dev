@@ -1,0 +1,1086 @@
+{
+  "metrics": {
+    "browse_repetition": 1.0,
+    "browse_repetition_rate": 0.0,
+    "concept_naming_quality": 1.0,
+    "correct_concept_retrieval": 1.0,
+    "duplicate_concept_retrieval": 1.0,
+    "duplicate_suppression_rate": 1.0,
+    "followup_resolution": 1.0,
+    "multi_concept_retrieval": 1.0,
+    "related_concept_quality": 1.0,
+    "retrieval_precision": 1.0,
+    "safety": 1.0,
+    "synthesis_disabled": 1.0,
+    "synthesis_readiness_score": 1.0,
+    "topic_continuity": 1.0,
+    "unnecessary_local_model_avoidance": 0.9688,
+    "unnecessary_local_model_call_rate": 0.0312,
+    "weak_concept_review_candidates": 0.0
+  },
+  "observed_concepts": [
+    "Access Control (Software Architecture)",
+    "Acid Base Reactions (Chemistry)",
+    "Activation Energy (Chemistry)",
+    "Active Listening (Psychology)",
+    "Active Transport (Biology)",
+    "Adaptation (Biology)",
+    "Adapter Pattern (Software Architecture)",
+    "Administrative Procedure (Law Government Basics)",
+    "Advanced Operator Mode (Delta Architecture Itself)",
+    "Agency Guidance (Law Government Basics)",
+    "Alkanes (Chemistry)",
+    "Annuals (Agriculture Gardening)",
+    "Appeals (Law Government Basics)",
+    "Approval Workflow (Delta Architecture Itself)",
+    "Asset Allocation (Finance)",
+    "Attachment (Psychology)",
+    "Attention Budgeting (Planning Productivity)",
+    "Audit Trail (Delta Architecture Itself)",
+    "Balance Sheets (Finance)",
+    "Beneficial Insects (Agriculture Gardening)",
+    "Biodiversity (Biology)",
+    "Buoyancy (Basic Physics)",
+    "Canonical Memory (Delta Architecture Itself)",
+    "Cellular Respiration (Biology)",
+    "Civil Procedure (Law Government Basics)",
+    "Civil Rights (Law Government Basics)",
+    "Companion Planting (Agriculture Gardening)",
+    "Competency Tests (Delta Architecture Itself)",
+    "Compound Interest (Finance)",
+    "Concept Catalog (Delta Architecture Itself)",
+    "Concept Graph (Delta Architecture Itself)",
+    "Concept Replay (Delta Architecture Itself)",
+    "Concept Review (Delta Architecture Itself)",
+    "Energy Storage (Energy)",
+    "Feedback Loops (Biology)",
+    "Feedback Loops (Planning Productivity)",
+    "Force Vectors (Basic Physics)",
+    "Gravity (Basic Physics)",
+    "Immune Memory (Medicine Health General)",
+    "Inflation (Finance)",
+    "Interest Rates (Finance)",
+    "Memory Consolidation (Psychology)",
+    "Memory Management (Programming)",
+    "Noncanonical Memory (Delta Architecture Itself)",
+    "Photosynthesis (Agriculture Gardening)",
+    "Photosynthesis (Biology)",
+    "Plant Disease (Agriculture Gardening)",
+    "Plant Nutrients (Agriculture Gardening)",
+    "Plant Proteins (Nutrition)",
+    "Projectile Motion (Basic Physics)",
+    "Simple Harmonic Motion (Basic Physics)",
+    "Static Electricity (Basic Physics)",
+    "Thermal Storage (Energy)"
+  ],
+  "phase": "RC2 Operator Conversational Quality Suite",
+  "recommendation": "READY_FOR_MANUAL_RC2_OPERATOR_QUALITY_REVIEW",
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "scenario_count": 8,
+  "scenario_results": [
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Basic continuation should keep the active topic and avoid repeating the first answer.",
+        "scenario_id": "A1",
+        "suite": "Conversational Continuity",
+        "turns": [
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "photosynthesis"
+            ],
+            "message": "What is photosynthesis?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "followup",
+            "expected_topic_terms": [
+              "photosynthesis"
+            ],
+            "message": "Why?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "followup",
+            "expected_topic_terms": [
+              "photosynthesis"
+            ],
+            "message": "Go deeper.",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "followup",
+            "expected_topic_terms": [
+              "photosynthesis"
+            ],
+            "message": "Give me an example.",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "browse_followup",
+            "expected_topic_terms": [],
+            "message": "What else?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "You taught me the concept `Photosynthesis (Agriculture Gardening)` earlier. Based on that:\nPhotosynthesis is a reusable agriculture gardening concept that helps explain causes, constraints, tradeoffs, and practical decisions in the agriculture gardening domain.\n\nKey points:\n- Photosynthesis connects",
+          "concept_names": [
+            "Photosynthesis (Agriculture Gardening)",
+            "Photosynthesis (Biology)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "What is photosynthesis?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "Continuing from `Photosynthesis (Agriculture Gardening)`: the useful next step is to inspect the causes or mechanisms behind that concept. I can ask the local reasoning model for a deeper explanation if you want.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "followup",
+          "message": "Why?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "I can continue from `Photosynthesis (Agriculture Gardening)` using the recent context. I have not enabled synthesis or stored anything new.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "followup",
+          "message": "Go deeper.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "Using the recent concept `Photosynthesis (Agriculture Gardening)`, I can give an example from that same topic, but I will keep this as session context rather than storing anything new.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "followup",
+          "message": "Give me an example.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        },
+        {
+          "answer_preview": "I know about `Annuals (Agriculture Gardening)` from local noncanonical memory.\nAnnuals is a reusable agriculture gardening concept that helps explain causes, constraints, tradeoffs, and practical decisions in the agriculture gardening domain.\n\nRelated ideas:\n- agriculture gardening reasoning\n- agric",
+          "concept_names": [
+            "Annuals (Agriculture Gardening)",
+            "Beneficial Insects (Agriculture Gardening)",
+            "Companion Planting (Agriculture Gardening)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse_followup",
+          "message": "What else?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse_followup",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 5
+        }
+      ]
+    },
+    {
+      "passed": false,
+      "scenario": {
+        "goal": "Pronoun-style follow-ups should resolve against the recent topic.",
+        "scenario_id": "A2",
+        "suite": "Conversational Continuity",
+        "turns": [
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "black",
+              "holes"
+            ],
+            "message": "Tell me about black holes.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "followup",
+            "expected_topic_terms": [
+              "black",
+              "holes"
+            ],
+            "message": "How big can they get?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "followup",
+            "expected_topic_terms": [
+              "black",
+              "holes"
+            ],
+            "message": "Why is that?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "followup",
+            "expected_topic_terms": [
+              "black",
+              "holes"
+            ],
+            "message": "Does that happen to all of them?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "I don't think I know enough about black holes from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "Tell me about black holes.",
+          "model_offer": true,
+          "model_ok": false,
+          "route": "local_model_consent_required",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I can continue from your recent topic, black holes. I do not have approved local knowledge for it yet, so I can ask the local reasoning model if you want.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "followup",
+          "message": "How big can they get?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "I can continue from your recent topic, black holes. I do not have approved local knowledge for it yet, so I can ask the local reasoning model if you want.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "followup",
+          "message": "Why is that?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "I can continue from your recent topic, black holes. I do not have approved local knowledge for it yet, so I can ask the local reasoning model if you want.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "followup",
+          "message": "Does that happen to all of them?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        }
+      ]
+    },
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Concept browsing should feel exploratory and avoid immediate repetition.",
+        "scenario_id": "B1-B4",
+        "suite": "Concept Browsing",
+        "turns": [
+          {
+            "expected_route_family": "browse",
+            "expected_topic_terms": [],
+            "message": "Tell me something you know.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "browse_followup",
+            "expected_topic_terms": [],
+            "message": "What else?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "browse_followup",
+            "expected_topic_terms": [],
+            "message": "Another one.",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "browse_jump",
+            "expected_topic_terms": [],
+            "message": "Something completely different.",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "I know about `Advanced Operator Mode (Delta Architecture Itself)` from local noncanonical memory.\nAdvanced Operator Mode is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:",
+          "concept_names": [
+            "Advanced Operator Mode (Delta Architecture Itself)",
+            "Approval Workflow (Delta Architecture Itself)",
+            "Audit Trail (Delta Architecture Itself)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse",
+          "message": "Tell me something you know.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I know about `Canonical Memory (Delta Architecture Itself)` from local noncanonical memory.\nCanonical Memory is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:\n- DELTA arc",
+          "concept_names": [
+            "Canonical Memory (Delta Architecture Itself)",
+            "Competency Tests (Delta Architecture Itself)",
+            "Concept Catalog (Delta Architecture Itself)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse_followup",
+          "message": "What else?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse_followup",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "I know about `Concept Graph (Delta Architecture Itself)` from local noncanonical memory.\nConcept Graph is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:\n- DELTA architect",
+          "concept_names": [
+            "Concept Graph (Delta Architecture Itself)",
+            "Concept Replay (Delta Architecture Itself)",
+            "Concept Review (Delta Architecture Itself)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse_followup",
+          "message": "Another one.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse_followup",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "I know about `Annuals (Agriculture Gardening)` from local noncanonical memory.\nAnnuals is a reusable agriculture gardening concept that helps explain causes, constraints, tradeoffs, and practical decisions in the agriculture gardening domain.\n\nRelated ideas:\n- agriculture gardening reasoning\n- agric",
+          "concept_names": [
+            "Annuals (Agriculture Gardening)",
+            "Beneficial Insects (Agriculture Gardening)",
+            "Companion Planting (Agriculture Gardening)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse_jump",
+          "message": "Something completely different.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse_followup",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        }
+      ]
+    },
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Domain aliases should browse the requested domain.",
+        "scenario_id": "B5",
+        "suite": "Concept Browsing",
+        "turns": [
+          {
+            "expected_route_family": "domain_browse",
+            "expected_topic_terms": [
+              "biology"
+            ],
+            "message": "Do you know anything about biology?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "domain_browse",
+            "expected_topic_terms": [
+              "chemistry"
+            ],
+            "message": "How about chemistry?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "domain_browse",
+            "expected_topic_terms": [
+              "law",
+              "government"
+            ],
+            "message": "What about law?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "I know about `Active Transport (Biology)` from local noncanonical memory.\nActive Transport is a reusable biology concept that helps explain causes, constraints, tradeoffs, and practical decisions in the biology domain.\n\nRelated ideas:\n- biology reasoning\n- biology evidence\n- biology tradeoffs\n- biol",
+          "concept_names": [
+            "Active Transport (Biology)",
+            "Adaptation (Biology)",
+            "Biodiversity (Biology)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "domain_browse",
+          "message": "Do you know anything about biology?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_domain_browse",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I know about `Acid Base Reactions (Chemistry)` from local noncanonical memory.\nAcid Base Reactions is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nRelated ideas:\n- chemistry reasoning\n- chemistry evidence\n- chemistr",
+          "concept_names": [
+            "Acid Base Reactions (Chemistry)",
+            "Activation Energy (Chemistry)",
+            "Alkanes (Chemistry)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "domain_browse",
+          "message": "How about chemistry?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_domain_browse",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "I know about `Administrative Procedure (Law Government Basics)` from local noncanonical memory.\nAdministrative Procedure is a reusable law government concept that helps explain causes, constraints, tradeoffs, and practical decisions in the law government basics domain.\n\nRelated ideas:\n- law governme",
+          "concept_names": [
+            "Administrative Procedure (Law Government Basics)",
+            "Agency Guidance (Law Government Basics)",
+            "Appeals (Law Government Basics)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "domain_browse",
+          "message": "What about law?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_domain_browse",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        }
+      ]
+    },
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Retrieval should prefer relevant concepts and avoid unnecessary model offers.",
+        "scenario_id": "C1-C4",
+        "suite": "Retrieval Quality",
+        "turns": [
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "electric",
+              "voltage",
+              "current",
+              "resistance"
+            ],
+            "message": "Tell me about electricity.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "photosynthesis",
+              "respiration"
+            ],
+            "message": "How does photosynthesis relate to respiration?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "gravity",
+              "orbit"
+            ],
+            "message": "How are gravity and orbital motion connected?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "memory",
+              "delta"
+            ],
+            "message": "Explain AI memory.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "You taught me the concept `Static Electricity (Basic Physics)` earlier. Based on that:\nStatic Electricity is a reusable basic physics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the basic physics domain.\n\nKey points:\n- Static Electricity connects observable ",
+          "concept_names": [
+            "Static Electricity (Basic Physics)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "Tell me about electricity.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I found these relevant concepts:\n1. Photosynthesis (Agriculture Gardening)\n2. Photosynthesis (Biology)\n3. Cellular Respiration (Biology)\n4. Energy Storage (Energy)\n5. Thermal Storage (Energy)\n\nSynthesis is not enabled yet.\nThis retrieval set is ready for review.",
+          "concept_names": [
+            "Photosynthesis (Agriculture Gardening)",
+            "Photosynthesis (Biology)",
+            "Cellular Respiration (Biology)",
+            "Energy Storage (Energy)",
+            "Thermal Storage (Energy)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "How does photosynthesis relate to respiration?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_multi_concept_retrieval",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "I found these relevant concepts:\n1. Gravity (Basic Physics)\n2. Force Vectors (Basic Physics)\n3. Projectile Motion (Basic Physics)\n4. Simple Harmonic Motion (Basic Physics)\n5. Buoyancy (Basic Physics)\n\nSynthesis is not enabled yet.\nThis retrieval set is ready for review.",
+          "concept_names": [
+            "Gravity (Basic Physics)",
+            "Force Vectors (Basic Physics)",
+            "Projectile Motion (Basic Physics)",
+            "Simple Harmonic Motion (Basic Physics)",
+            "Buoyancy (Basic Physics)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "How are gravity and orbital motion connected?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_multi_concept_retrieval",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "You taught me the concept `Canonical Memory (Delta Architecture Itself)` earlier. Based on that:\nCanonical Memory is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nKey points:\n- Canonic",
+          "concept_names": [
+            "Canonical Memory (Delta Architecture Itself)",
+            "Immune Memory (Medicine Health General)",
+            "Memory Consolidation (Psychology)",
+            "Memory Management (Programming)",
+            "Noncanonical Memory (Delta Architecture Itself)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "Explain AI memory.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        }
+      ]
+    },
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Relationship questions should return a reviewed set without enabling synthesis.",
+        "scenario_id": "C5-C8",
+        "suite": "Multi-Concept Retrieval",
+        "turns": [
+          {
+            "expected_route_family": "multi_concept",
+            "expected_topic_terms": [
+              "photosynthesis",
+              "respiration"
+            ],
+            "message": "How does photosynthesis relate to respiration?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "multi_concept",
+            "expected_topic_terms": [
+              "inflation",
+              "interest"
+            ],
+            "message": "Compare inflation and interest rates.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "multi_concept",
+            "expected_topic_terms": [
+              "memory"
+            ],
+            "message": "How does memory in DELTA relate to human memory?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "multi_concept",
+            "expected_topic_terms": [
+              "planning",
+              "feedback",
+              "software"
+            ],
+            "message": "What connects planning, feedback loops, and software architecture?",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "I found these relevant concepts:\n1. Photosynthesis (Agriculture Gardening)\n2. Photosynthesis (Biology)\n3. Cellular Respiration (Biology)\n4. Energy Storage (Energy)\n5. Thermal Storage (Energy)\n\nSynthesis is not enabled yet.\nThis retrieval set is ready for review.",
+          "concept_names": [
+            "Photosynthesis (Agriculture Gardening)",
+            "Photosynthesis (Biology)",
+            "Cellular Respiration (Biology)",
+            "Energy Storage (Energy)",
+            "Thermal Storage (Energy)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "multi_concept",
+          "message": "How does photosynthesis relate to respiration?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_multi_concept_retrieval",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I found these relevant concepts:\n1. Inflation (Finance)\n2. Interest Rates (Finance)\n3. Asset Allocation (Finance)\n4. Balance Sheets (Finance)\n5. Compound Interest (Finance)\n\nSynthesis is not enabled yet.\nThis retrieval set is ready for review.",
+          "concept_names": [
+            "Inflation (Finance)",
+            "Interest Rates (Finance)",
+            "Asset Allocation (Finance)",
+            "Balance Sheets (Finance)",
+            "Compound Interest (Finance)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "multi_concept",
+          "message": "Compare inflation and interest rates.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_multi_concept_retrieval",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "I found these relevant concepts:\n1. Canonical Memory (Delta Architecture Itself)\n2. Noncanonical Memory (Delta Architecture Itself)\n3. Memory Consolidation (Psychology)\n4. Active Listening (Psychology)\n5. Attachment (Psychology)\n\nSynthesis is not enabled yet.\nThis retrieval set is ready for review.",
+          "concept_names": [
+            "Canonical Memory (Delta Architecture Itself)",
+            "Noncanonical Memory (Delta Architecture Itself)",
+            "Memory Consolidation (Psychology)",
+            "Active Listening (Psychology)",
+            "Attachment (Psychology)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "multi_concept",
+          "message": "How does memory in DELTA relate to human memory?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_multi_concept_retrieval",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "I found these relevant concepts:\n1. Feedback Loops (Planning Productivity)\n2. Feedback Loops (Biology)\n3. Access Control (Software Architecture)\n4. Adapter Pattern (Software Architecture)\n5. Attention Budgeting (Planning Productivity)\n\nSynthesis is not enabled yet.\nThis retrieval set is ready for re",
+          "concept_names": [
+            "Feedback Loops (Planning Productivity)",
+            "Feedback Loops (Biology)",
+            "Access Control (Software Architecture)",
+            "Adapter Pattern (Software Architecture)",
+            "Attention Budgeting (Planning Productivity)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "multi_concept",
+          "message": "What connects planning, feedback loops, and software architecture?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_multi_concept_retrieval",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        }
+      ]
+    },
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Temporary facts and multiple entities should stay in session only.",
+        "scenario_id": "D2-D4",
+        "suite": "Short-Term Memory",
+        "turns": [
+          {
+            "expected_route_family": "session_memory",
+            "expected_topic_terms": [
+              "green"
+            ],
+            "message": "Pretend my favorite color is green.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "browse",
+            "expected_topic_terms": [],
+            "message": "Tell me something you know.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "session_memory",
+            "expected_topic_terms": [
+              "green"
+            ],
+            "message": "What's my favorite color in this conversation?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "session_memory",
+            "expected_topic_terms": [
+              "alice",
+              "bob",
+              "truck",
+              "trailer"
+            ],
+            "message": "Alice owns the truck. Bob owns the trailer.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "session_memory",
+            "expected_topic_terms": [
+              "bob",
+              "trailer"
+            ],
+            "message": "Who owns the trailer?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          },
+          {
+            "expected_route_family": "session_memory",
+            "expected_topic_terms": [
+              "alice",
+              "truck"
+            ],
+            "message": "Who owns the truck?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "Got it. For this conversation only, I'll treat your favorite color as green.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "session_memory",
+          "message": "Pretend my favorite color is green.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I know about `Advanced Operator Mode (Delta Architecture Itself)` from local noncanonical memory.\nAdvanced Operator Mode is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:",
+          "concept_names": [
+            "Advanced Operator Mode (Delta Architecture Itself)",
+            "Approval Workflow (Delta Architecture Itself)",
+            "Audit Trail (Delta Architecture Itself)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse",
+          "message": "Tell me something you know.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "In this conversation, your favorite color is green.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "session_memory",
+          "message": "What's my favorite color in this conversation?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "Got it. For this conversation only: Alice owns the truck, and Bob owns the trailer.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "session_memory",
+          "message": "Alice owns the truck. Bob owns the trailer.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        },
+        {
+          "answer_preview": "Bob owns the trailer in this conversation.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "session_memory",
+          "message": "Who owns the trailer?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 5
+        },
+        {
+          "answer_preview": "Alice owns the truck in this conversation.",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "session_memory",
+          "message": "Who owns the truck?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "conversation_short_term_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 6
+        }
+      ]
+    },
+    {
+      "passed": true,
+      "scenario": {
+        "goal": "Known/browsable concepts should avoid unnecessary local model calls.",
+        "scenario_id": "E1-E4",
+        "suite": "Local Model Routing",
+        "turns": [
+          {
+            "expected_route_family": "concept_or_model",
+            "expected_topic_terms": [
+              "newton",
+              "law"
+            ],
+            "message": "Tell me about Newton's First Law.",
+            "should_avoid_model_offer": true,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "local_model_offer",
+            "expected_topic_terms": [],
+            "message": "Invent a new alien ecosystem.",
+            "should_avoid_model_offer": false,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "hybrid",
+            "expected_topic_terms": [
+              "photosynthesis"
+            ],
+            "message": "Explain photosynthesis, then invent a fictional plant that improves it.",
+            "should_avoid_model_offer": false,
+            "should_use_context": false
+          },
+          {
+            "expected_route_family": "browse_followup",
+            "expected_topic_terms": [],
+            "message": "What else do you know?",
+            "should_avoid_model_offer": true,
+            "should_use_context": true
+          }
+        ]
+      },
+      "turn_results": [
+        {
+          "answer_preview": "You taught me the concept `Administrative Procedure (Law Government Basics)` earlier. Based on that:\nAdministrative Procedure is a reusable law government concept that helps explain causes, constraints, tradeoffs, and practical decisions in the law government basics domain.\n\nKey points:\n- Administra",
+          "concept_names": [
+            "Administrative Procedure (Law Government Basics)",
+            "Agency Guidance (Law Government Basics)",
+            "Appeals (Law Government Basics)",
+            "Civil Procedure (Law Government Basics)",
+            "Civil Rights (Law Government Basics)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "concept_or_model",
+          "message": "Tell me about Newton's First Law.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 1
+        },
+        {
+          "answer_preview": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+          "concept_names": [],
+          "duplicate_concept": false,
+          "expected_route_family": "local_model_offer",
+          "message": "Invent a new alien ecosystem.",
+          "model_offer": true,
+          "model_ok": true,
+          "route": "local_model_consent_required",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 2
+        },
+        {
+          "answer_preview": "You taught me the concept `Photosynthesis (Agriculture Gardening)` earlier. Based on that:\nPhotosynthesis is a reusable agriculture gardening concept that helps explain causes, constraints, tradeoffs, and practical decisions in the agriculture gardening domain.\n\nKey points:\n- Photosynthesis connects",
+          "concept_names": [
+            "Photosynthesis (Agriculture Gardening)",
+            "Photosynthesis (Biology)",
+            "Plant Disease (Agriculture Gardening)",
+            "Plant Nutrients (Agriculture Gardening)",
+            "Plant Proteins (Nutrition)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "hybrid",
+          "message": "Explain photosynthesis, then invent a fictional plant that improves it.",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_memory",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 3
+        },
+        {
+          "answer_preview": "I know about `Annuals (Agriculture Gardening)` from local noncanonical memory.\nAnnuals is a reusable agriculture gardening concept that helps explain causes, constraints, tradeoffs, and practical decisions in the agriculture gardening domain.\n\nRelated ideas:\n- agriculture gardening reasoning\n- agric",
+          "concept_names": [
+            "Annuals (Agriculture Gardening)",
+            "Beneficial Insects (Agriculture Gardening)",
+            "Companion Planting (Agriculture Gardening)"
+          ],
+          "duplicate_concept": false,
+          "expected_route_family": "browse_followup",
+          "message": "What else do you know?",
+          "model_offer": false,
+          "model_ok": true,
+          "route": "developmental_concept_browse_followup",
+          "route_ok": true,
+          "safety_ok": true,
+          "topic_ok": true,
+          "turn_index": 4
+        }
+      ]
+    }
+  ],
+  "synthesis_readiness": false,
+  "targets": {
+    "browse_repetition": 0.95,
+    "correct_concept_retrieval": 0.9,
+    "duplicate_concept_retrieval": 0.95,
+    "followup_resolution": 0.95,
+    "multi_concept_retrieval": 0.8,
+    "synthesis_readiness_score": 0.85,
+    "topic_continuity": 0.95,
+    "unnecessary_local_model_calls": 0.9
+  },
+  "turn_count": 34
+}

@@ -1,0 +1,112 @@
+{
+  "matched_count": 5,
+  "multi_concept_retrieval_score": 1.0,
+  "phase": "RC2.3 Multi-Concept Retrieval",
+  "probe_count": 5,
+  "recommendation": "KEEP_SYNTHESIS_DISABLED_AND_CONTINUE_RETRIEVAL_REFINEMENT",
+  "results": [
+    {
+      "duplicate_suppression_count": 0,
+      "matched": true,
+      "question": "How does photosynthesis relate to respiration?",
+      "retrieval_set_quality": 1.0,
+      "seeds": [
+        "photosynthesis",
+        "respiration"
+      ],
+      "synthesis_readiness": false,
+      "top_concepts": [
+        "Photosynthesis (Agriculture Gardening)",
+        "Photosynthesis (Biology)",
+        "Cellular Respiration (Biology)",
+        "Energy Storage (Energy)",
+        "Thermal Storage (Energy)"
+      ]
+    },
+    {
+      "duplicate_suppression_count": 4,
+      "matched": true,
+      "question": "Compare inflation and interest rates.",
+      "retrieval_set_quality": 1.0,
+      "seeds": [
+        "inflation",
+        "interest rates"
+      ],
+      "synthesis_readiness": false,
+      "top_concepts": [
+        "Inflation (Finance)",
+        "Interest Rates (Finance)",
+        "Asset Allocation (Finance)",
+        "Balance Sheets (Finance)",
+        "Compound Interest (Finance)"
+      ]
+    },
+    {
+      "duplicate_suppression_count": 0,
+      "matched": true,
+      "question": "How does memory in DELTA relate to human memory?",
+      "retrieval_set_quality": 1.0,
+      "seeds": [
+        "memory in delta",
+        "human memory"
+      ],
+      "synthesis_readiness": false,
+      "top_concepts": [
+        "Canonical Memory (Delta Architecture Itself)",
+        "Noncanonical Memory (Delta Architecture Itself)",
+        "Memory Consolidation (Psychology)",
+        "Active Listening (Psychology)",
+        "Attachment (Psychology)"
+      ]
+    },
+    {
+      "duplicate_suppression_count": 0,
+      "matched": true,
+      "question": "What connects planning, feedback loops, and software architecture?",
+      "retrieval_set_quality": 1.0,
+      "seeds": [
+        "planning feedback loops",
+        "software architecture"
+      ],
+      "synthesis_readiness": false,
+      "top_concepts": [
+        "Feedback Loops (Planning Productivity)",
+        "Feedback Loops (Biology)",
+        "Access Control (Software Architecture)",
+        "Adapter Pattern (Software Architecture)",
+        "Attention Budgeting (Planning Productivity)"
+      ]
+    },
+    {
+      "duplicate_suppression_count": 0,
+      "matched": true,
+      "question": "How are gravity and orbital motion connected?",
+      "retrieval_set_quality": 1.0,
+      "seeds": [
+        "gravity",
+        "orbital motion"
+      ],
+      "synthesis_readiness": false,
+      "top_concepts": [
+        "Gravity (Basic Physics)",
+        "Force Vectors (Basic Physics)",
+        "Projectile Motion (Basic Physics)",
+        "Simple Harmonic Motion (Basic Physics)",
+        "Buoyancy (Basic Physics)"
+      ]
+    }
+  ],
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "synthesis_readiness": false
+}

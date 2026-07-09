@@ -1,11 +1,108 @@
 {
   "cases": [
     {
-      "answer": "You taught me the concept `Daytime Sky Color` earlier. Based on that:\nThe sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.\n\nKey points:\n- The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "answer": "You taught me the concept `Moon Color Appearance` earlier. Based on that:\nThe moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.\n\nKey points:\n- The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "concept_matches": [
         {
+          "_retrieval_score": {
+            "components": {
+              "concept_name": 18.0,
+              "definition": 1.5,
+              "propositions": 3.0,
+              "quality": 0.87,
+              "related_concepts": 2.5,
+              "source_question": 6.0
+            },
+            "domain": "",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "definition_token_overlap",
+              "name_phrase:color",
+              "name_token_overlap",
+              "proposition_token_overlap",
+              "related_token_overlap",
+              "source_phrase:color is",
+              "source_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 31.87
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-07T18:03:35+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-7051d920a32ce90e",
+          "concept_name": "Moon Color Appearance",
+          "concept_type": "general_concept",
+          "created_at": "2026-07-07T18:03:22+00:00",
+          "examples": [
+            "what color is the moon"
+          ],
+          "explains": [
+            "what color is the moon"
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [],
+          "propositions": [
+            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
+          ],
+          "provider_calls_performed": false,
+          "quality_flags": [
+            "too_few_propositions"
+          ],
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 0.87,
+          "related_concepts": [
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
+          ],
+          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
+          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
+          "source_answer_id": "rc2-answer-7051d920a32ce90e",
+          "source_model_id": "llama",
+          "source_model_lane": "everyday_conversation",
+          "source_question": "what color is the moon",
+          "source_type": "local_model_lane",
+          "training_performed": false,
+          "uncertainty": "low_to_moderate_operator_reviewed"
+        },
+        {
+          "_retrieval_score": {
+            "components": {
+              "concept_name": 18.0,
+              "quality": 0.87,
+              "related_concepts": 2.5,
+              "source_question": 6.0
+            },
+            "domain": "",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "name_phrase:color",
+              "name_token_overlap",
+              "related_token_overlap",
+              "source_phrase:color is",
+              "source_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 27.37
+          },
           "_store_memory_type": "knowledge",
           "approval_status": "approved_noncanonical",
           "approved_at": "2026-07-07T03:03:44+00:00",
@@ -51,6 +148,25 @@
           "uncertainty": "low_to_moderate_operator_reviewed"
         },
         {
+          "_retrieval_score": {
+            "components": {
+              "quality": 1.0,
+              "related_concepts": 6.5
+            },
+            "domain": "basic physics",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "related_phrase:color",
+              "related_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 7.5
+          },
           "_store_memory_type": "knowledge",
           "approval_status": "approved_noncanonical",
           "approved_at": "2026-07-08T17:06:41+00:00",
@@ -99,51 +215,25 @@
           "uncertainty": "low_curated_operator_test_seed"
         },
         {
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-07T18:03:35+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-7051d920a32ce90e",
-          "concept_name": "Moon Color Appearance",
-          "concept_type": "general_concept",
-          "created_at": "2026-07-07T18:03:22+00:00",
-          "examples": [
-            "what color is the moon"
-          ],
-          "explains": [
-            "what color is the moon"
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [],
-          "propositions": [
-            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
-          ],
-          "provider_calls_performed": false,
-          "quality_flags": [
-            "too_few_propositions"
-          ],
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 0.87,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
-          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
-          "source_answer_id": "rc2-answer-7051d920a32ce90e",
-          "source_model_id": "llama",
-          "source_model_lane": "everyday_conversation",
-          "source_question": "what color is the moon",
-          "source_type": "local_model_lane",
-          "training_performed": false,
-          "uncertainty": "low_to_moderate_operator_reviewed"
-        },
-        {
+          "_retrieval_score": {
+            "components": {
+              "quality": 1.0,
+              "related_concepts": 6.5
+            },
+            "domain": "social communication",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "related_phrase:color",
+              "related_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 7.5
+          },
           "_store_memory_type": "knowledge",
           "approval_status": "approved_noncanonical",
           "approved_at": "2026-07-08T17:08:45+00:00",
@@ -192,6 +282,25 @@
           "uncertainty": "low_curated_operator_test_seed"
         },
         {
+          "_retrieval_score": {
+            "components": {
+              "quality": 1.0,
+              "related_concepts": 6.5
+            },
+            "domain": "",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "related_phrase:color",
+              "related_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 7.5
+          },
           "_store_memory_type": "knowledge",
           "approval_status": "approved_noncanonical",
           "approved_at": "2026-07-08T16:49:57+00:00",
@@ -342,17 +451,161 @@
       "web_search_performed": false
     },
     {
-      "answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+      "answer": "You taught me the concept `Moon Color Appearance` earlier. Based on that:\nThe moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.\n\nKey points:\n- The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "confidence": "local_general_knowledge",
+      "concept_matches": [
+        {
+          "_retrieval_score": {
+            "components": {
+              "concept_name": 18.0,
+              "definition": 1.5,
+              "propositions": 3.0,
+              "quality": 0.87,
+              "related_concepts": 2.5,
+              "source_question": 6.0
+            },
+            "domain": "",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "definition_token_overlap",
+              "name_phrase:color",
+              "name_token_overlap",
+              "proposition_token_overlap",
+              "related_token_overlap",
+              "source_phrase:color is",
+              "source_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 31.87
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-07T18:03:35+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-7051d920a32ce90e",
+          "concept_name": "Moon Color Appearance",
+          "concept_type": "general_concept",
+          "created_at": "2026-07-07T18:03:22+00:00",
+          "examples": [
+            "what color is the moon"
+          ],
+          "explains": [
+            "what color is the moon"
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [],
+          "propositions": [
+            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
+          ],
+          "provider_calls_performed": false,
+          "quality_flags": [
+            "too_few_propositions"
+          ],
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 0.87,
+          "related_concepts": [
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
+          ],
+          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
+          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
+          "source_answer_id": "rc2-answer-7051d920a32ce90e",
+          "source_model_id": "llama",
+          "source_model_lane": "everyday_conversation",
+          "source_question": "what color is the moon",
+          "source_type": "local_model_lane",
+          "training_performed": false,
+          "uncertainty": "low_to_moderate_operator_reviewed"
+        },
+        {
+          "_retrieval_score": {
+            "components": {
+              "concept_name": 18.0,
+              "quality": 0.87,
+              "related_concepts": 2.5,
+              "source_question": 6.0
+            },
+            "domain": "",
+            "key_token_overlap": [
+              "color"
+            ],
+            "overlap": [
+              "color"
+            ],
+            "reasons": [
+              "name_phrase:color",
+              "name_token_overlap",
+              "related_token_overlap",
+              "source_phrase:color is",
+              "source_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 27.37
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-07T03:03:44+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-183f0cb7b12abb56",
+          "concept_name": "Daytime Sky Color",
+          "concept_type": "causal_explanation",
+          "created_at": "2026-07-07T03:03:44+00:00",
+          "examples": [
+            "What color is the sky?"
+          ],
+          "explains": [
+            "What color is the sky?"
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [],
+          "propositions": [
+            "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+          ],
+          "provider_calls_performed": false,
+          "quality_flags": [
+            "too_few_propositions"
+          ],
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 0.87,
+          "related_concepts": [
+            "light scattering",
+            "surface reflection",
+            "visible light",
+            "atmospheric optics",
+            "apparent color",
+            "illumination"
+          ],
+          "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
+          "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+          "source_answer_id": "rc2-answer-183f0cb7b12abb56",
+          "source_model_id": "phi4",
+          "source_model_lane": "everyday_conversation",
+          "source_question": "What color is the sky?",
+          "source_type": "local_model_lane",
+          "training_performed": false,
+          "uncertainty": "low_to_moderate_operator_reviewed"
+        }
+      ],
+      "confidence": "grounded_in_approved_noncanonical_concept",
       "confidence_decision": {
         "confidence": 0.82,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.82,
+      "confidence_score": 0.92,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "question",
@@ -373,48 +626,7 @@
         "routed_action": "substrate_or_local_model_path",
         "safe_no_route": false
       },
-      "local_model_offer": null,
-      "local_model_result": null,
-      "memory_candidate": {
-        "approval_status": "pending_operator_approval",
-        "canonical": false,
-        "concept_id": "rc2-concept-2e286a7ffe4ccea7",
-        "concept_name": "Water Color",
-        "concept_type": "causal_explanation",
-        "created_at": "2026-07-08T17:29:45+00:00",
-        "examples": [
-          "What color is water?"
-        ],
-        "explains": [
-          "What color is water?"
-        ],
-        "memory_type": "knowledge",
-        "misconceptions": [
-          "The simplified answer may be misleading without context."
-        ],
-        "propositions": [
-          "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
-          "In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context."
-        ],
-        "provider_calls_performed": false,
-        "related_concepts": [
-          "light scattering",
-          "surface reflection",
-          "visible light",
-          "atmospheric optics",
-          "apparent color",
-          "illumination"
-        ],
-        "rollback_handle": "rollback-rc2-concept-2e286a7ffe4ccea7",
-        "short_definition": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light.",
-        "source_answer_id": "rc2-answer-2e286a7ffe4ccea7",
-        "source_model_id": "llama",
-        "source_model_lane": "everyday_conversation",
-        "source_question": "What color is water?",
-        "source_type": "local_model_lane",
-        "training_performed": false,
-        "uncertainty": "low_to_moderate_operator_reviewed"
-      },
+      "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -429,7 +641,7 @@
         "web_search_enabled": false
       },
       "provider_calls_performed": false,
-      "route": "local_conversation_model_lane",
+      "route": "developmental_concept_memory",
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -486,17 +698,337 @@
       "web_search_performed": false
     },
     {
-      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. ",
+      "answer": "You taught me the concept `Apis (Programming)` earlier. Based on that:\nApis is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.\n\nKey points:\n- Apis connects observable situations to underlying programming principles.\n- Apis is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about APIs should separate known facts, assumptions, uncertainty, and practical implications.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "confidence": "local_coding_capability_route",
+      "concept_matches": [
+        {
+          "_retrieval_score": {
+            "components": {
+              "domain": 8.0,
+              "quality": 1.0
+            },
+            "domain": "programming",
+            "key_token_overlap": [],
+            "overlap": [],
+            "reasons": [
+              "domain_alias_match"
+            ],
+            "relevance_gate_passed": true,
+            "score": 9.0
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:07:04+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-5f210792d446ed74",
+          "concept_name": "Apis (Programming)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:07:04+00:00",
+          "domain": "programming",
+          "examples": [
+            "Explain how APIs affects a practical programming decision.",
+            "Use APIs to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain APIs in programming."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Apis should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Apis connects observable situations to underlying programming principles.",
+            "Apis is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about APIs should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "programming fundamentals",
+            "debugging practice",
+            "algorithmic thinking",
+            "data structures",
+            "software projects",
+            "code review",
+            "learning workflow"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-5f210792d446ed74",
+          "short_definition": "Apis is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
+          "source_answer_id": "rc2-answer-growth-5f210792d446ed74",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain APIs in programming.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        },
+        {
+          "_retrieval_score": {
+            "components": {
+              "domain": 8.0,
+              "quality": 1.0
+            },
+            "domain": "programming",
+            "key_token_overlap": [],
+            "overlap": [],
+            "reasons": [
+              "domain_alias_match"
+            ],
+            "relevance_gate_passed": true,
+            "score": 9.0
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:07:05+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-0ed5fecf3d3291fe",
+          "concept_name": "Asynchronous Programming (Programming)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:07:05+00:00",
+          "domain": "programming",
+          "examples": [
+            "Explain how asynchronous programming affects a practical programming decision.",
+            "Use asynchronous programming to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain asynchronous programming in programming."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Asynchronous Programming should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Asynchronous Programming connects observable situations to underlying programming principles.",
+            "Asynchronous Programming is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about asynchronous programming should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "programming fundamentals",
+            "debugging practice",
+            "algorithmic thinking",
+            "data structures",
+            "software projects",
+            "code review",
+            "learning workflow"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-0ed5fecf3d3291fe",
+          "short_definition": "Asynchronous Programming is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
+          "source_answer_id": "rc2-answer-growth-0ed5fecf3d3291fe",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain asynchronous programming in programming.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        },
+        {
+          "_retrieval_score": {
+            "components": {
+              "domain": 8.0,
+              "quality": 1.0
+            },
+            "domain": "programming",
+            "key_token_overlap": [],
+            "overlap": [],
+            "reasons": [
+              "domain_alias_match"
+            ],
+            "relevance_gate_passed": true,
+            "score": 9.0
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:07:06+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-17b643257c80003a",
+          "concept_name": "Code Review (Programming)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:07:06+00:00",
+          "domain": "programming",
+          "examples": [
+            "Explain how code review affects a practical programming decision.",
+            "Use code review to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain code review in programming."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Code Review should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Code Review connects observable situations to underlying programming principles.",
+            "Code Review is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about code review should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "programming fundamentals",
+            "debugging practice",
+            "algorithmic thinking",
+            "data structures",
+            "software projects",
+            "code review",
+            "learning workflow",
+            "workflow planning",
+            "task sequencing",
+            "review process"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-17b643257c80003a",
+          "short_definition": "Code Review is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
+          "source_answer_id": "rc2-answer-growth-17b643257c80003a",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain code review in programming.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        },
+        {
+          "_retrieval_score": {
+            "components": {
+              "domain": 8.0,
+              "quality": 1.0
+            },
+            "domain": "programming",
+            "key_token_overlap": [],
+            "overlap": [],
+            "reasons": [
+              "domain_alias_match"
+            ],
+            "relevance_gate_passed": true,
+            "score": 9.0
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:07:07+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-cfd1920bbd274c26",
+          "concept_name": "Command Line Interfaces (Programming)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:07:07+00:00",
+          "domain": "programming",
+          "examples": [
+            "Explain how command line interfaces affects a practical programming decision.",
+            "Use command line interfaces to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain command line interfaces in programming."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Command Line Interfaces should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Command Line Interfaces connects observable situations to underlying programming principles.",
+            "Command Line Interfaces is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about command line interfaces should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "programming fundamentals",
+            "debugging practice",
+            "algorithmic thinking",
+            "data structures",
+            "software projects",
+            "code review",
+            "learning workflow"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-cfd1920bbd274c26",
+          "short_definition": "Command Line Interfaces is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
+          "source_answer_id": "rc2-answer-growth-cfd1920bbd274c26",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain command line interfaces in programming.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        },
+        {
+          "_retrieval_score": {
+            "components": {
+              "domain": 8.0,
+              "quality": 1.0
+            },
+            "domain": "programming",
+            "key_token_overlap": [],
+            "overlap": [],
+            "reasons": [
+              "domain_alias_match"
+            ],
+            "relevance_gate_passed": true,
+            "score": 9.0
+          },
+          "_store_memory_type": "knowledge",
+          "approval_status": "approved_noncanonical",
+          "approved_at": "2026-07-08T17:07:05+00:00",
+          "canonical": false,
+          "concept_id": "rc2-concept-growth-075fcaef5c34cf13",
+          "concept_name": "Concurrency (Programming)",
+          "concept_type": "domain_concept",
+          "created_at": "2026-07-08T17:07:05+00:00",
+          "domain": "programming",
+          "examples": [
+            "Explain how concurrency affects a practical programming decision.",
+            "Use concurrency to identify what evidence is still missing."
+          ],
+          "explains": [
+            "Explain concurrency in programming."
+          ],
+          "memory_type": "knowledge",
+          "misconceptions": [
+            "Concurrency should not be treated as a standalone answer without context or evidence."
+          ],
+          "propositions": [
+            "Concurrency connects observable situations to underlying programming principles.",
+            "Concurrency is useful for comparing evidence, identifying constraints, and choosing next questions.",
+            "Reasoning about concurrency should separate known facts, assumptions, uncertainty, and practical implications."
+          ],
+          "provider_calls_performed": false,
+          "quality_repair_reason": "semantic_related_concepts_refinement",
+          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
+          "quality_score": 1.0,
+          "related_concepts": [
+            "programming fundamentals",
+            "debugging practice",
+            "algorithmic thinking",
+            "data structures",
+            "software projects",
+            "code review",
+            "learning workflow"
+          ],
+          "rollback_handle": "rollback-rc2-concept-growth-075fcaef5c34cf13",
+          "short_definition": "Concurrency is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
+          "source_answer_id": "rc2-answer-growth-075fcaef5c34cf13",
+          "source_model_id": "deterministic_curated_growth_no_model_call",
+          "source_model_lane": "curated_concept_growth",
+          "source_question": "Explain concurrency in programming.",
+          "source_type": "rc2_curated_growth_run",
+          "training_performed": false,
+          "uncertainty": "low_curated_operator_test_seed"
+        }
+      ],
+      "confidence": "grounded_in_approved_noncanonical_concept",
       "confidence_decision": {
         "confidence": 0.9,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.78,
+      "confidence_score": 0.92,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "coding",
@@ -518,8 +1050,6 @@
         "routed_action": "local_model_or_repo_context",
         "safe_no_route": false
       },
-      "local_model_offer": null,
-      "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
@@ -535,7 +1065,7 @@
         "web_search_enabled": false
       },
       "provider_calls_performed": false,
-      "route": "local_conversation_model_lane",
+      "route": "developmental_concept_memory",
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -596,6 +1126,34 @@
       "canonical_write_performed": false,
       "concept_matches": [
         {
+          "_retrieval_score": {
+            "components": {
+              "concept_name": 36.0,
+              "definition": 3.0,
+              "propositions": 6.0,
+              "quality": 1.0,
+              "source_question": 2.0
+            },
+            "domain": "mathematics",
+            "key_token_overlap": [
+              "number",
+              "theory"
+            ],
+            "overlap": [
+              "number",
+              "theory"
+            ],
+            "reasons": [
+              "definition_token_overlap",
+              "name_phrase:number",
+              "name_phrase:theory",
+              "name_token_overlap",
+              "proposition_token_overlap",
+              "source_token_overlap"
+            ],
+            "relevance_gate_passed": true,
+            "score": 48.0
+          },
           "_store_memory_type": "knowledge",
           "approval_status": "approved_noncanonical",
           "approved_at": "2026-07-08T17:07:01+00:00",

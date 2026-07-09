@@ -43,6 +43,58 @@ STORE_BY_TYPE = {
     "knowledge": KNOWLEDGE_MEMORY_LOG,
 }
 
+DOMAIN_ALIASES = {
+    "law": "law government basics",
+    "legal": "law government basics",
+    "government": "law government basics",
+    "physics": "basic physics",
+    "science": "basic physics",
+    "chemistry": "chemistry",
+    "biology": "biology",
+    "health": "medicine health general",
+    "medicine": "medicine health general",
+    "nutrition": "nutrition",
+    "psychology": "psychology",
+    "philosophy": "philosophy",
+    "logic": "logic",
+    "math": "mathematics",
+    "mathematics": "mathematics",
+    "programming": "programming",
+    "coding": "programming",
+    "software": "software architecture",
+    "business": "business",
+    "finance": "finance",
+    "history": "history",
+    "geography": "geography",
+    "engineering": "engineering",
+    "materials": "materials science",
+    "metallurgy": "materials science",
+    "energy": "energy",
+    "gardening": "agriculture gardening",
+    "agriculture": "agriculture gardening",
+    "mechanics": "vehicles mechanics",
+    "vehicles": "vehicles mechanics",
+    "home repair": "home repair",
+    "communication": "social communication",
+    "productivity": "planning productivity",
+    "planning": "planning productivity",
+    "delta": "DELTA architecture itself",
+}
+
+RELATED_QUERY_HINTS = {
+    "photosynthesis": ("cellular respiration", "energy storage", "carbon cycle"),
+    "respiration": ("photosynthesis", "energy storage", "carbon cycle"),
+    "gravity": ("orbital motion", "force", "motion", "basic physics"),
+    "orbital motion": ("gravity", "motion", "force"),
+    "inflation": ("interest rates", "finance", "money"),
+    "interest rates": ("inflation", "finance", "compound interest"),
+    "memory": ("human memory", "delta memory", "consolidation", "noncanonical memory"),
+    "human memory": ("memory consolidation", "psychology", "learning"),
+    "planning": ("feedback loops", "software architecture", "productivity"),
+    "feedback loops": ("planning", "software architecture", "systems"),
+    "software architecture": ("planning", "modularity", "feedback loops"),
+}
+
 
 def discover_memory_store_separation() -> dict[str, Any]:
     return {
@@ -228,31 +280,195 @@ def merge_concept_enrichment(existing: dict[str, Any], candidate: dict[str, Any]
     return merged
 
 
-def query_approved_concepts(question: str) -> dict[str, Any]:
-    tokens = _meaningful_tokens(question)
-    if not tokens:
-        return {"matched": False, "answer": "", "matches": []}
+def load_approved_concepts() -> list[dict[str, Any]]:
     records = []
     for memory_type, path in STORE_BY_TYPE.items():
         for row in _read_jsonl(path):
-            if row.get("approval_status") == "approved_noncanonical":
+            if row.get("approval_status") == "approved_noncanonical" and row.get("canonical") is False:
                 records.append({**row, "_store_memory_type": memory_type})
+    return records
+
+
+def retrieval_query_profile(question: str) -> dict[str, Any]:
+    normalized = _normalize_text(question).strip()
+    tokens = _meaningful_tokens(question)
+    domains = {
+        domain
+        for alias, domain in DOMAIN_ALIASES.items()
+        if _contains_phrase(normalized, alias)
+    }
+    aliases = {alias for alias in DOMAIN_ALIASES if _contains_phrase(normalized, alias)}
+    phrases = _query_phrases(normalized)
+    for token in list(tokens):
+        if token in RELATED_QUERY_HINTS:
+            aliases.add(token)
+            phrases.add(token)
+    return {
+        "raw": question,
+        "normalized": normalized,
+        "tokens": tokens,
+        "key_tokens": _query_key_tokens(normalized),
+        "domains": domains,
+        "aliases": aliases,
+        "phrases": phrases,
+    }
+
+
+def rank_approved_concepts(
+    question: str,
+    *,
+    limit: int = 5,
+    domain: str | None = None,
+    exclude_concept_names: list[str] | None = None,
+    exclude_domains: list[str] | None = None,
+) -> dict[str, Any]:
+    profile = retrieval_query_profile(question)
+    excluded = {_normalize_compact(name) for name in (exclude_concept_names or [])}
+    wanted_domain = str(domain or "").lower().strip()
+    blocked_domains = {str(item).lower().strip() for item in (exclude_domains or []) if str(item).strip()}
     scored = []
-    for row in records:
-        haystack = " ".join([
-            str(row.get("concept_name", "")),
-            str(row.get("short_definition", "")),
-            " ".join(str(item) for item in row.get("propositions", [])),
-            " ".join(str(item) for item in row.get("related_concepts", [])),
-        ])
-        overlap = tokens & _meaningful_tokens(haystack)
-        minimum_overlap = 1 if len(tokens) == 1 else 2
-        if len(overlap) >= minimum_overlap:
-            scored.append((len(overlap), row))
-    if not scored:
-        return {"matched": False, "answer": "", "matches": []}
-    scored.sort(key=lambda item: (-item[0], item[1]["concept_name"]))
-    matches = [row for _, row in scored[:5]]
+    duplicate_suppression_count = 0
+    seen_names = set()
+    for row in load_approved_concepts():
+        name_key = _normalize_compact(row.get("concept_name"))
+        if name_key in excluded:
+            continue
+        if wanted_domain and str(row.get("domain") or "").lower().strip() != wanted_domain:
+            continue
+        if blocked_domains and str(row.get("domain") or "").lower().strip() in blocked_domains:
+            continue
+        if name_key in seen_names:
+            duplicate_suppression_count += 1
+            continue
+        seen_names.add(name_key)
+        score = score_concept_for_query(row, profile, forced_domain=domain)
+        if score["score"] > 0 and score.get("relevance_gate_passed"):
+            scored.append((score, row))
+    scored.sort(key=lambda item: (
+        -item[0]["score"],
+        -float(item[1].get("quality_score") or 0.0),
+        str(item[1].get("concept_name") or ""),
+    ))
+    matches = []
+    for score, row in scored[:max(1, limit)]:
+        matches.append({**row, "_retrieval_score": score})
+    return {
+        "matched": bool(matches),
+        "matches": matches,
+        "query_profile": profile,
+        "duplicate_suppression_count": duplicate_suppression_count,
+        "retrieval_precision_estimate": _retrieval_precision_estimate(matches, profile),
+    }
+
+
+def score_concept_for_query(row: dict[str, Any], profile: dict[str, Any], *, forced_domain: str | None = None) -> dict[str, Any]:
+    name = str(row.get("concept_name") or "")
+    domain = str(row.get("domain") or "").lower().strip()
+    definition = str(row.get("short_definition") or "")
+    propositions = " ".join(str(item) for item in row.get("propositions", []))
+    related = " ".join(str(item) for item in row.get("related_concepts", []))
+    source_question = str(row.get("source_question") or "")
+    name_norm = _normalize_text(name).strip()
+    domain_norm = _normalize_text(domain).strip()
+    definition_norm = _normalize_text(definition).strip()
+    propositions_norm = _normalize_text(propositions).strip()
+    related_norm = _normalize_text(related).strip()
+    source_norm = _normalize_text(source_question).strip()
+    text_norm = _normalize_text(" ".join([name, domain, definition, propositions, related, source_question])).strip()
+    name_tokens = _meaningful_tokens(name)
+    definition_tokens = _meaningful_tokens(definition)
+    proposition_tokens = _meaningful_tokens(propositions)
+    related_tokens = _meaningful_tokens(related)
+    source_tokens = _meaningful_tokens(source_question)
+    text_tokens = name_tokens | definition_tokens | proposition_tokens | related_tokens | source_tokens | _meaningful_tokens(domain)
+    tokens = set(profile["tokens"])
+    query_key_tokens = set(profile.get("key_tokens") or tokens)
+    score = 0.0
+    reasons = []
+    components = {
+        "concept_name": 0.0,
+        "propositions": 0.0,
+        "related_concepts": 0.0,
+        "domain": 0.0,
+        "source_question": 0.0,
+        "definition": 0.0,
+        "quality": 0.0,
+    }
+    if forced_domain and domain == str(forced_domain).lower().strip():
+        components["domain"] += 9.0
+        reasons.append("forced_domain_match")
+    if domain and domain in profile["domains"]:
+        components["domain"] += 8.0
+        reasons.append("domain_alias_match")
+    for phrase in profile["phrases"] | profile["aliases"]:
+        if not phrase:
+            continue
+        if _contains_phrase(name_norm, phrase):
+            components["concept_name"] += 40.0 if " " in phrase else 12.0
+            reasons.append(f"name_phrase:{phrase}")
+        elif _contains_phrase(domain_norm, phrase):
+            components["domain"] += 10.0
+            reasons.append(f"domain_phrase:{phrase}")
+        elif _contains_phrase(propositions_norm, phrase):
+            components["propositions"] += 25.0 if " " in phrase else 5.0
+            reasons.append(f"proposition_phrase:{phrase}")
+        elif _contains_phrase(related_norm, phrase):
+            components["related_concepts"] += 15.0 if " " in phrase else 4.0
+            reasons.append(f"related_phrase:{phrase}")
+        elif _contains_phrase(definition_norm, phrase):
+            components["definition"] += 8.0 if " " in phrase else 2.0
+            reasons.append(f"definition_phrase:{phrase}")
+        elif _contains_phrase(source_norm, phrase):
+            components["source_question"] += 5.0
+            reasons.append(f"source_phrase:{phrase}")
+    overlap = tokens & text_tokens
+    name_overlap = tokens & name_tokens
+    proposition_overlap = tokens & proposition_tokens
+    related_overlap = tokens & related_tokens
+    definition_overlap = tokens & definition_tokens
+    source_overlap = tokens & source_tokens
+    if name_overlap:
+        components["concept_name"] += 6.0 * len(name_overlap)
+        reasons.append("name_token_overlap")
+    if proposition_overlap:
+        components["propositions"] += 3.0 * len(proposition_overlap)
+        reasons.append("proposition_token_overlap")
+    if related_overlap:
+        components["related_concepts"] += 2.5 * len(related_overlap)
+        reasons.append("related_token_overlap")
+    if definition_overlap:
+        components["definition"] += 1.5 * len(definition_overlap)
+        reasons.append("definition_token_overlap")
+    if source_overlap:
+        components["source_question"] += 1.0 * len(source_overlap)
+        reasons.append("source_token_overlap")
+    gate_passed = _relevance_gate_passed(
+        query_key_tokens=query_key_tokens,
+        name_overlap=name_overlap,
+        overlap=overlap,
+        reasons=reasons,
+        phrase_count=len(profile["phrases"] | profile["aliases"]),
+    )
+    score = sum(components.values())
+    if score > 0:
+        components["quality"] = min(float(row.get("quality_score") or 0.0), 1.0)
+        score += components["quality"]
+    return {
+        "score": round(score, 4),
+        "components": {key: round(value, 4) for key, value in components.items() if value},
+        "reasons": sorted(set(reasons)),
+        "overlap": sorted(overlap),
+        "key_token_overlap": sorted(query_key_tokens & text_tokens),
+        "domain": domain,
+        "relevance_gate_passed": gate_passed,
+    }
+
+
+def query_approved_concepts(question: str) -> dict[str, Any]:
+    ranked = rank_approved_concepts(question, limit=5)
+    if not ranked["matched"]:
+        return {"matched": False, "answer": "", "matches": [], "scores": []}
+    matches = ranked["matches"]
     first = matches[0]
     lines = [
         f"You taught me the concept `{first['concept_name']}` earlier. Based on that:",
@@ -270,7 +486,95 @@ def query_approved_concepts(question: str) -> dict[str, Any]:
     if contradictions:
         lines.append("")
         lines.append(f"Note: {len(contradictions)} possible contradiction(s) are linked to this concept.")
-    return {"matched": True, "answer": "\n".join(lines), "matches": matches}
+    return {
+        "matched": True,
+        "answer": "\n".join(lines),
+        "matches": matches,
+        "scores": [item.get("_retrieval_score", {}) for item in matches],
+        "retrieval_precision_estimate": ranked["retrieval_precision_estimate"],
+        "duplicate_suppression_count": ranked["duplicate_suppression_count"],
+    }
+
+
+def parse_multi_concept_query(question: str) -> list[str]:
+    normalized = _normalize_text(question).strip()
+    patterns = [
+        r"how (?:does|do|are|is)\s+(.+?)\s+(?:relate to|related to|connected to|connect to|compare to|different from)\s+(.+)",
+        r"compare\s+(.+?)\s+(?:and|with|to)\s+(.+)",
+        r"what connects\s+(.+)",
+        r"relationship between\s+(.+?)\s+and\s+(.+)",
+    ]
+    parts: list[str] = []
+    for pattern in patterns:
+        match = re.search(pattern, normalized)
+        if not match:
+            continue
+        if len(match.groups()) == 1:
+            parts = re.split(r"\s*(?:,| and | with | plus )\s*", match.group(1))
+        else:
+            parts = [match.group(1), match.group(2)]
+        break
+    if not parts and any(term in normalized for term in ["relate", "connected", "compare", "connects"]):
+        parts = [item for item in re.split(r"\s*(?:,| and | with | to )\s*", normalized) if item]
+    cleaned = []
+    for part in parts:
+        item = re.sub(r"\b(how|does|do|are|is|what|the|a|an|concepts?|related|relate|connected|compare|between)\b", " ", part)
+        item = " ".join(item.strip(" ?.!").split())
+        if item and item not in cleaned and len(item) > 2:
+            cleaned.append(item)
+    return cleaned[:5]
+
+
+def retrieve_multi_concept_set(question: str, *, limit: int = 5) -> dict[str, Any]:
+    seeds = parse_multi_concept_query(question)
+    expanded: list[str] = []
+    for seed in seeds:
+        expanded.append(seed)
+        expanded.extend(RELATED_QUERY_HINTS.get(seed.lower(), ()))
+    if len(seeds) < 2:
+        return {
+            "matched": False,
+            "seeds": seeds,
+            "matches": [],
+            "retrieval_set_quality": 0.0,
+            "synthesis_readiness": False,
+        }
+    matches = []
+    seen = set()
+    duplicate_suppression_count = 0
+    for term in expanded:
+        ranked = rank_approved_concepts(term, limit=2)
+        for row in ranked.get("matches", []):
+            key = _normalize_compact(row.get("concept_name"))
+            if key in seen:
+                duplicate_suppression_count += 1
+                continue
+            seen.add(key)
+            matches.append(row)
+            if len(matches) >= limit:
+                break
+        if len(matches) >= limit:
+            break
+    quality = _multi_retrieval_quality(matches, seeds)
+    lines = []
+    if matches:
+        lines.append("I found these relevant concepts:")
+        for index, row in enumerate(matches, start=1):
+            lines.append(f"{index}. {row.get('concept_name')}")
+        lines.extend([
+            "",
+            "Synthesis is not enabled yet.",
+            "This retrieval set is ready for review.",
+        ])
+    return {
+        "matched": len(matches) >= 2,
+        "answer": "\n".join(lines),
+        "seeds": seeds,
+        "matches": matches,
+        "retrieval_set_quality": quality,
+        "duplicate_suppression_count": duplicate_suppression_count,
+        "synthesis_readiness": False,
+    }
 
 
 def browse_approved_concepts(
@@ -278,18 +582,27 @@ def browse_approved_concepts(
     limit: int = 3,
     domain: str | None = None,
     exclude_concept_names: list[str] | None = None,
+    exclude_domains: list[str] | None = None,
 ) -> dict[str, Any]:
-    records = []
     excluded = {str(name).lower() for name in (exclude_concept_names or [])}
     wanted_domain = str(domain or "").lower().strip()
-    for memory_type, path in STORE_BY_TYPE.items():
-        for row in _read_jsonl(path):
-            if row.get("approval_status") == "approved_noncanonical" and row.get("canonical") is False:
-                if excluded and str(row.get("concept_name") or "").lower() in excluded:
-                    continue
-                if wanted_domain and str(row.get("domain") or "").lower() != wanted_domain:
-                    continue
-                records.append({**row, "_store_memory_type": memory_type})
+    blocked_domains = {str(item).lower().strip() for item in (exclude_domains or []) if str(item).strip()}
+    records = []
+    duplicate_suppression_count = 0
+    seen_source_names = set()
+    for row in load_approved_concepts():
+        name = str(row.get("concept_name") or "").lower()
+        if name in seen_source_names:
+            duplicate_suppression_count += 1
+            continue
+        seen_source_names.add(name)
+        if excluded and name in excluded:
+            continue
+        if wanted_domain and str(row.get("domain") or "").lower() != wanted_domain:
+            continue
+        if blocked_domains and str(row.get("domain") or "").lower() in blocked_domains:
+            continue
+        records.append(row)
     if not records:
         return {"matched": False, "answer": "", "matches": []}
     records.sort(key=lambda row: (
@@ -318,7 +631,12 @@ def browse_approved_concepts(
     if len(matches) > 1:
         lines.extend(["", "A couple of nearby concepts I can also discuss:"])
         lines.extend(f"- {item.get('concept_name')}" for item in matches[1:])
-    return {"matched": True, "answer": "\n".join(lines), "matches": matches}
+    return {
+        "matched": True,
+        "answer": "\n".join(lines),
+        "matches": matches,
+        "duplicate_suppression_count": duplicate_suppression_count,
+    }
 
 
 def build_compact_support_packet(question: str, history: list[dict[str, str]] | None = None, *, max_turns: int = 6) -> dict[str, Any]:
@@ -718,6 +1036,111 @@ def _sentence_propositions(answer: str) -> list[str]:
     return parts[:6]
 
 
+def _query_phrases(normalized: str) -> set[str]:
+    stop_phrases = {
+        "what",
+        "what is",
+        "what are",
+        "what do",
+        "tell me",
+        "explain",
+        "how does",
+        "how do",
+        "how are",
+        "relate to",
+        "connected to",
+        "compare",
+        "people",
+        "usually",
+        "for fun",
+    }
+    words = [
+        word for word in normalized.split()
+        if word not in {"the", "a", "an", "and", "or", "to", "of", "in", "what", "do", "does", "usually", "people", "tell", "me", "about", "show", "explain"}
+    ]
+    phrases = set()
+    for size in (3, 2):
+        for index in range(0, max(0, len(words) - size + 1)):
+            phrase = " ".join(words[index:index + size]).strip()
+            if phrase and phrase not in stop_phrases and len(phrase) > 4:
+                phrases.add(phrase)
+    phrases.update(word for word in words if len(word) > 3)
+    return phrases
+
+
+def _query_key_tokens(normalized: str) -> set[str]:
+    return {
+        word for word in _meaningful_tokens(normalized)
+        if word not in {"example", "examples", "pretend", "favorite", "conversation"}
+    }
+
+
+def _relevance_gate_passed(
+    *,
+    query_key_tokens: set[str],
+    name_overlap: set[str],
+    overlap: set[str],
+    reasons: list[str],
+    phrase_count: int,
+) -> bool:
+    if any(reason in {"forced_domain_match", "domain_alias_match"} for reason in reasons):
+        return True
+    if any(reason.startswith("name_phrase:") and " " in reason.split(":", 1)[1] for reason in reasons):
+        return True
+    if len(query_key_tokens) <= 1:
+        return bool(name_overlap or overlap or any(reason.startswith(("name_phrase:", "source_phrase:", "related_phrase:")) for reason in reasons))
+    if len(name_overlap) >= 2:
+        return True
+    if len(query_key_tokens & overlap) >= min(2, len(query_key_tokens)):
+        return True
+    if phrase_count and any(reason.startswith(("proposition_phrase:", "related_phrase:", "source_phrase:")) and " " in reason.split(":", 1)[1] for reason in reasons):
+        return True
+    return False
+
+
+def _contains_phrase(text: str, phrase: str) -> bool:
+    phrase = _normalize_text(phrase).strip()
+    if not phrase:
+        return False
+    return f" {phrase} " in f" {text} "
+
+
+def _normalize_compact(text: object) -> str:
+    return " ".join(_normalize_text(text).split())
+
+
+def _retrieval_precision_estimate(matches: list[dict[str, Any]], profile: dict[str, Any]) -> float:
+    if not matches:
+        return 0.0
+    relevant = 0
+    for row in matches:
+        score = row.get("_retrieval_score") or {}
+        reasons = set(score.get("reasons", []))
+        if score.get("relevance_gate_passed") and (
+            score.get("score", 0) >= 8
+            or "domain_alias_match" in reasons
+            or any(str(reason).startswith("name_phrase:") for reason in reasons)
+        ):
+            relevant += 1
+            continue
+        if score.get("overlap"):
+            relevant += 1
+    return round(relevant / len(matches), 4)
+
+
+def _multi_retrieval_quality(matches: list[dict[str, Any]], seeds: list[str]) -> float:
+    if not seeds or not matches:
+        return 0.0
+    covered = 0
+    for seed in seeds:
+        seed_profile = retrieval_query_profile(seed)
+        if any(score_concept_for_query(row, seed_profile)["score"] >= 6 for row in matches):
+            covered += 1
+    coverage = covered / len(seeds)
+    breadth = min(len(matches), 5) / 5
+    return round((coverage * 0.75) + (breadth * 0.25), 4)
+
+
 def _meaningful_tokens(text: str) -> set[str]:
     stop = {
         "what",
@@ -738,8 +1161,15 @@ def _meaningful_tokens(text: str) -> set[str]:
         "usually",
         "often",
         "generally",
+        "something",
+        "another",
+        "different",
+        "concept",
+        "concepts",
+        "people",
     }
-    return {word for word in _normalize_text(text).split() if len(word) > 3 and word not in stop}
+    short_keep = {"law", "ai", "ui", "ux", "api", "atp", "fun"}
+    return {word for word in _normalize_text(text).split() if (len(word) > 3 or word in short_keep) and word not in stop}
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:

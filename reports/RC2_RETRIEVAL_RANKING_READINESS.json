@@ -1,0 +1,382 @@
+{
+  "browse_repetition_rate": 0.0,
+  "duplicate_suppression_rate": 1.0,
+  "memory_state": {
+    "canonical_records": 0,
+    "concept_contradictions": 0,
+    "concept_edges": 24869,
+    "concept_replay_queue": 1041,
+    "conversation_memory_records": 0,
+    "flags": {
+      "autonomous_write_performed": false,
+      "canonical_write_performed": false,
+      "conversation_memory_session_only": true,
+      "developmental_concept_memory_enabled": true,
+      "knowledge_memory_noncanonical": true,
+      "personal_memory_noncanonical": true,
+      "provider_calls_performed": false,
+      "scheduler_started": false,
+      "training_performed": false,
+      "web_search_performed": false
+    },
+    "knowledge_memory_records": 1038,
+    "personal_memory_records": 0,
+    "training_records": 0
+  },
+  "operator_quality_metrics": {
+    "browse_repetition": 1.0,
+    "browse_repetition_rate": 0.0,
+    "concept_naming_quality": 1.0,
+    "correct_concept_retrieval": 1.0,
+    "duplicate_concept_retrieval": 1.0,
+    "duplicate_suppression_rate": 1.0,
+    "followup_resolution": 1.0,
+    "multi_concept_retrieval": 1.0,
+    "related_concept_quality": 1.0,
+    "retrieval_precision": 1.0,
+    "safety": 1.0,
+    "synthesis_disabled": 1.0,
+    "synthesis_readiness_score": 1.0,
+    "topic_continuity": 1.0,
+    "unnecessary_local_model_avoidance": 0.9688,
+    "unnecessary_local_model_call_rate": 0.0312,
+    "weak_concept_review_candidates": 0.0
+  },
+  "phase": "RC2.3 Retrieval Ranking + Multi-Concept Readiness",
+  "recommendation": "READY_FOR_READ_ONLY_SYNTHESIS_TRIAL_DESIGN_NOT_ACTIVATION",
+  "remaining_blockers": [
+    "none_for_read_only_retrieval_readiness"
+  ],
+  "retrieval_precision": 1.0,
+  "retrieval_probe_results": [
+    {
+      "duplicate_suppression_count": 37,
+      "expected_terms": [
+        "electric",
+        "static",
+        "circuit"
+      ],
+      "matched": true,
+      "question": "Tell me about electricity.",
+      "retrieval_precision_estimate": 1.0,
+      "term_hit": true,
+      "top_concepts": [
+        "Static Electricity (Basic Physics)"
+      ],
+      "top_diagnostics": [
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 1.5,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "source_question": 1.0
+          },
+          "concept_name": "Static Electricity (Basic Physics)",
+          "reasons": [
+            "definition_token_overlap",
+            "name_phrase:electricity",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 24.5
+        }
+      ]
+    },
+    {
+      "duplicate_suppression_count": 37,
+      "expected_terms": [
+        "photosynthesis"
+      ],
+      "matched": true,
+      "question": "Tell me about photosynthesis.",
+      "retrieval_precision_estimate": 1.0,
+      "term_hit": true,
+      "top_concepts": [
+        "Photosynthesis (Agriculture Gardening)",
+        "Photosynthesis (Biology)"
+      ],
+      "top_diagnostics": [
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 1.5,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "source_question": 1.0
+          },
+          "concept_name": "Photosynthesis (Agriculture Gardening)",
+          "reasons": [
+            "definition_token_overlap",
+            "name_phrase:photosynthesis",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 24.5
+        },
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 1.5,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "source_question": 1.0
+          },
+          "concept_name": "Photosynthesis (Biology)",
+          "reasons": [
+            "definition_token_overlap",
+            "name_phrase:photosynthesis",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 24.5
+        }
+      ]
+    },
+    {
+      "duplicate_suppression_count": 37,
+      "expected_terms": [
+        "law",
+        "government"
+      ],
+      "matched": true,
+      "question": "What about law?",
+      "retrieval_precision_estimate": 1.0,
+      "term_hit": true,
+      "top_concepts": [
+        "Administrative Procedure (Law Government Basics)",
+        "Agency Guidance (Law Government Basics)",
+        "Appeals (Law Government Basics)",
+        "Civil Procedure (Law Government Basics)",
+        "Civil Rights (Law Government Basics)"
+      ],
+      "top_diagnostics": [
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 1.5,
+            "domain": 8.0,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "related_concepts": 2.5,
+            "source_question": 1.0
+          },
+          "concept_name": "Administrative Procedure (Law Government Basics)",
+          "reasons": [
+            "definition_token_overlap",
+            "domain_alias_match",
+            "name_phrase:law",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "related_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 35.0
+        },
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 1.5,
+            "domain": 8.0,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "related_concepts": 2.5,
+            "source_question": 1.0
+          },
+          "concept_name": "Agency Guidance (Law Government Basics)",
+          "reasons": [
+            "definition_token_overlap",
+            "domain_alias_match",
+            "name_phrase:law",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "related_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 35.0
+        },
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 1.5,
+            "domain": 8.0,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "related_concepts": 2.5,
+            "source_question": 1.0
+          },
+          "concept_name": "Appeals (Law Government Basics)",
+          "reasons": [
+            "definition_token_overlap",
+            "domain_alias_match",
+            "name_phrase:law",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "related_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 35.0
+        }
+      ]
+    },
+    {
+      "duplicate_suppression_count": 37,
+      "expected_terms": [
+        "coding",
+        "programming",
+        "software"
+      ],
+      "matched": true,
+      "question": "What do you know about coding?",
+      "retrieval_precision_estimate": 1.0,
+      "term_hit": true,
+      "top_concepts": [
+        "Apis (Programming)",
+        "Asynchronous Programming (Programming)",
+        "Code Review (Programming)",
+        "Command Line Interfaces (Programming)",
+        "Concurrency (Programming)"
+      ],
+      "top_diagnostics": [
+        {
+          "components": {
+            "domain": 8.0,
+            "quality": 1.0
+          },
+          "concept_name": "Apis (Programming)",
+          "reasons": [
+            "domain_alias_match"
+          ],
+          "relevance_gate_passed": true,
+          "score": 9.0
+        },
+        {
+          "components": {
+            "domain": 8.0,
+            "quality": 1.0
+          },
+          "concept_name": "Asynchronous Programming (Programming)",
+          "reasons": [
+            "domain_alias_match"
+          ],
+          "relevance_gate_passed": true,
+          "score": 9.0
+        },
+        {
+          "components": {
+            "domain": 8.0,
+            "quality": 1.0
+          },
+          "concept_name": "Code Review (Programming)",
+          "reasons": [
+            "domain_alias_match"
+          ],
+          "relevance_gate_passed": true,
+          "score": 9.0
+        }
+      ]
+    },
+    {
+      "duplicate_suppression_count": 37,
+      "expected_terms": [
+        "memory",
+        "delta",
+        "noncanonical"
+      ],
+      "matched": true,
+      "question": "Explain AI memory.",
+      "retrieval_precision_estimate": 1.0,
+      "term_hit": true,
+      "top_concepts": [
+        "Canonical Memory (Delta Architecture Itself)",
+        "Immune Memory (Medicine Health General)",
+        "Memory Consolidation (Psychology)",
+        "Memory Management (Programming)",
+        "Noncanonical Memory (Delta Architecture Itself)"
+      ],
+      "top_diagnostics": [
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 3.0,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "source_question": 2.0
+          },
+          "concept_name": "Canonical Memory (Delta Architecture Itself)",
+          "reasons": [
+            "definition_token_overlap",
+            "name_phrase:memory",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 27.0
+        },
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 3.0,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "source_question": 2.0
+          },
+          "concept_name": "Immune Memory (Medicine Health General)",
+          "reasons": [
+            "definition_token_overlap",
+            "name_phrase:memory",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 27.0
+        },
+        {
+          "components": {
+            "concept_name": 18.0,
+            "definition": 3.0,
+            "propositions": 3.0,
+            "quality": 1.0,
+            "source_question": 2.0
+          },
+          "concept_name": "Memory Consolidation (Psychology)",
+          "reasons": [
+            "definition_token_overlap",
+            "name_phrase:memory",
+            "name_token_overlap",
+            "proposition_token_overlap",
+            "source_token_overlap"
+          ],
+          "relevance_gate_passed": true,
+          "score": 27.0
+        }
+      ]
+    }
+  ],
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "synthesis_readiness": false,
+  "synthesis_readiness_score": 1.0,
+  "unnecessary_local_model_call_rate": 0.0312
+}

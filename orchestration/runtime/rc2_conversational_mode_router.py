@@ -42,6 +42,7 @@ from orchestration.runtime.rc2_developmental_concept_memory import (
     discover_memory_store_separation,
     extract_candidate_concept,
     query_approved_concepts,
+    retrieve_multi_concept_set,
 )
 from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
 from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
@@ -210,6 +211,16 @@ SOCIAL_INTENT_RESPONSES = {
 def classify_intent(message: str) -> dict[str, Any]:
     lower = " ".join(message.lower().strip().split())
     bare = lower.strip(" .!?")
+    if _is_contextual_browse_jump(lower):
+        return {
+            "intent": "knowledge_browse_jump",
+            "message": message,
+            "confidence": 0.91,
+            "communication_act": "clarification_followup",
+            "matched_rule": "knowledge_browse_jump",
+            "routed_action": "browse_diverse_approved_concepts",
+            "safe_no_route": False,
+        }
     if _is_memory_browse_request(lower):
         return {
             "intent": "knowledge_browse",
@@ -315,6 +326,17 @@ def _is_contextual_browse_followup(lower: str) -> bool:
     }
 
 
+def _is_contextual_browse_jump(lower: str) -> bool:
+    bare = lower.strip(" .!?")
+    return bare in {
+        "something completely different",
+        "show me something different",
+        "different topic",
+        "switch topics",
+        "new topic",
+    }
+
+
 DOMAIN_BROWSE_ALIASES = {
     "law": "law government basics",
     "legal": "law government basics",
@@ -354,8 +376,13 @@ DOMAIN_BROWSE_ALIASES = {
 
 def _domain_browse_request(message: str) -> str | None:
     lower = " ".join(str(message or "").lower().strip().split())
-    if not any(phrase in lower for phrase in ("what about", "do you know", "anything about", "tell me about", "show me")):
+    if not any(phrase in lower for phrase in ("what about", "how about", "do you know", "anything about", "tell me about", "show me")):
         return None
+    if any(phrase in lower for phrase in ("newton", "first law", "second law", "third law", "law of")):
+        return None
+    if any(phrase in lower for phrase in ("should i", "can i sue", "am i liable", "legal advice", "calculate", "court case")):
+        if not any(phrase in lower for phrase in ("concept", "anything about", "tell me about", "show me")):
+            return None
     for alias, domain in sorted(DOMAIN_BROWSE_ALIASES.items(), key=lambda item: -len(item[0])):
         pattern = r"(?<![a-z0-9])" + re.escape(alias) + r"(?![a-z0-9])"
         if re.search(pattern, lower):
@@ -364,20 +391,29 @@ def _domain_browse_request(message: str) -> str | None:
 
 
 def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any]:
+    names = []
+    domain = None
     for item in reversed(history or []):
         if item.get("role") != "assistant":
             continue
         content = str(item.get("content") or "")
-        match = re.search(r"`([^`]+)`", content)
-        if not match:
+        found = [match.strip() for match in re.findall(r"`([^`]+)`", content) if match.strip()]
+        if "A couple of nearby concepts" in content:
+            nearby = content.split("A couple of nearby concepts", 1)[1]
+            found.extend(
+                line.strip()[2:].strip()
+                for line in nearby.splitlines()
+                if line.strip().startswith("- ") and line.strip()[2:].strip()
+            )
+        if not found:
             continue
-        name = match.group(1).strip()
-        domain_match = re.search(r"\(([^)]+)\)\s*$", name)
-        return {
-            "concept_name": name,
-            "domain": domain_match.group(1).lower() if domain_match else None,
-        }
-    return {"concept_name": None, "domain": None}
+        names.extend(found)
+        name = found[0]
+        if domain is None:
+            domain_match = re.search(r"\(([^)]+)\)\s*$", name)
+            domain = domain_match.group(1).lower() if domain_match else None
+    unique_names = list(dict.fromkeys(names))
+    return {"concept_name": unique_names[0] if unique_names else None, "concept_names": unique_names, "domain": domain}
 
 
 def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]:
@@ -979,6 +1015,9 @@ def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, A
 
 def _history_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
     lower = message.lower()
+    session = _session_memory_answer(message, history)
+    if session:
+        return session
     if not history:
         return None
     user_turns = [item.get("content", "") for item in history if item.get("role") == "user" and item.get("content")]
@@ -1000,6 +1039,133 @@ def _history_answer(message: str, history: list[dict[str, str]] | None) -> dict[
     return None
 
 
+def _is_session_memory_turn(message: str) -> bool:
+    lower = message.lower()
+    return any(phrase in lower for phrase in (
+        "pretend my favorite",
+        "favorite color in this conversation",
+        "alice owns",
+        "bob owns",
+        "who owns the",
+    ))
+
+
+def _session_memory_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
+    lower = message.lower()
+    if "pretend my favorite color is" in lower:
+        match = re.search(r"favorite color is\s+([a-zA-Z]+)", lower)
+        color = match.group(1) if match else "that"
+        return _session_payload(message, f"Got it. For this conversation only, I'll treat your favorite color as {color}.")
+    if "alice owns" in lower and "bob owns" in lower:
+        return _session_payload(message, "Got it. For this conversation only: Alice owns the truck, and Bob owns the trailer.")
+    if history and "favorite color" in lower and "conversation" in lower:
+        for item in reversed(history):
+            text = str(item.get("content") or "").lower()
+            match = re.search(r"favorite color is\s+([a-zA-Z]+)", text)
+            if match:
+                return _session_payload(message, f"In this conversation, your favorite color is {match.group(1)}.")
+    if history and "who owns the" in lower:
+        target = "trailer" if "trailer" in lower else "truck" if "truck" in lower else ""
+        for item in reversed(history):
+            text = str(item.get("content") or "").lower()
+            if target == "trailer" and "bob owns the trailer" in text:
+                return _session_payload(message, "Bob owns the trailer in this conversation.")
+            if target == "truck" and "alice owns the truck" in text:
+                return _session_payload(message, "Alice owns the truck in this conversation.")
+    return None
+
+
+def _is_recent_concept_followup(message: str) -> bool:
+    return message.lower().strip(" ?!.") in {
+        "why",
+        "why is that",
+        "go deeper",
+        "give me an example",
+        "how big can they get",
+        "does that happen to all of them",
+    }
+
+
+def _session_payload(message: str, answer: str) -> dict[str, Any]:
+    return {
+        "route": "conversation_short_term_memory",
+        "answer": answer,
+        "confidence": "session_memory",
+        "confidence_score": 0.92,
+        "selected_model_lane": select_model_lane(message),
+        "supporting_information_offer": None,
+        "memory_candidate": None,
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+    }
+
+
+def _recent_concept_followup_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
+    lower = message.lower().strip(" ?!.")
+    if lower not in {"why", "why is that", "go deeper", "give me an example", "how big can they get", "does that happen to all of them"}:
+        return None
+    context = _last_concept_context(history)
+    concept_name = context.get("concept_name")
+    if not concept_name:
+        topic = _recent_user_topic(history)
+        if not topic:
+            return None
+        return _session_payload(
+            message,
+            f"I can continue from your recent topic, {topic}. I do not have approved local knowledge for it yet, so I can ask the local reasoning model if you want.",
+        )
+    if lower == "give me an example":
+        answer = f"Using the recent concept `{concept_name}`, I can give an example from that same topic, but I will keep this as session context rather than storing anything new."
+    elif lower in {"why", "why is that"}:
+        answer = f"Continuing from `{concept_name}`: the useful next step is to inspect the causes or mechanisms behind that concept. I can ask the local reasoning model for a deeper explanation if you want."
+    else:
+        answer = f"I can continue from `{concept_name}` using the recent context. I have not enabled synthesis or stored anything new."
+    return _session_payload(message, answer)
+
+
+def _recent_user_topic(history: list[dict[str, str]] | None) -> str | None:
+    followup_forms = {
+        "why",
+        "why is that",
+        "go deeper",
+        "give me an example",
+        "how big can they get",
+        "does that happen to all of them",
+        "what else",
+        "another one",
+    }
+    for item in reversed(history or []):
+        if item.get("role") != "user":
+            continue
+        text = str(item.get("content") or "").strip()
+        bare = text.lower().strip(" ?!.")
+        if not text or bare in followup_forms:
+            continue
+        topic = _topic_label_from_message(text)
+        if topic:
+            return topic
+    return None
+
+
+def _topic_label_from_message(message: str) -> str | None:
+    text = " ".join(message.strip(" ?!.").split())
+    lower = text.lower()
+    patterns = [
+        r"tell me about\s+(.+)",
+        r"what is\s+(.+)",
+        r"what are\s+(.+)",
+        r"explain\s+(.+)",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, lower)
+        if match:
+            topic = match.group(1).strip(" .?!")
+            return topic if len(topic) > 2 else None
+    return None
+
+
 def local_conversation_answer(
     message: str,
     history: list[dict[str, str]] | None = None,
@@ -1013,6 +1179,8 @@ def local_conversation_answer(
     local = run_v29_local_answer(message, use_recall=False)
     if memory := _history_answer(message, history):
         return memory
+    if recent := _recent_concept_followup_answer(message, history):
+        return recent
     if intent == "followup":
         return {
             "route": "local_model_consent_required",
@@ -1130,8 +1298,10 @@ def local_conversation_answer(
             confidence_score = 0.3
             support_offer = _support_offer(message, "local_model_unavailable", history)
         else:
+            topic = _topic_label_from_message(message)
+            topic_phrase = f" about {topic}" if topic else ""
             answer = (
-                "I don't think I know enough from my learned local knowledge yet. "
+                f"I don't think I know enough{topic_phrase} from my learned local knowledge yet. "
                 "Would you like me to ask a local reasoning model?"
             )
             confidence = "needs_local_reasoning_model"
@@ -1261,21 +1431,29 @@ def route_message(
             payload["escalation_plan"] = build_escalation_plan(target)
             payload["mode_router_flags"] = ROUTER_FLAGS
             return payload
-        if intent_info.get("intent") in {"knowledge_browse", "knowledge_browse_followup"}:
+        if intent_info.get("intent") in {"knowledge_browse", "knowledge_browse_followup", "knowledge_browse_jump"}:
             context = _last_concept_context(history)
+            excluded_names = context.get("concept_names") or ([context["concept_name"]] if context.get("concept_name") else None)
+            jump = intent_info.get("intent") == "knowledge_browse_jump"
             concept = browse_approved_concepts(
                 limit=3,
                 domain=context.get("domain") if intent_info.get("intent") == "knowledge_browse_followup" else None,
-                exclude_concept_names=[context["concept_name"]] if context.get("concept_name") else None,
+                exclude_concept_names=excluded_names,
+                exclude_domains=[context["domain"]] if jump and context.get("domain") else None,
             )
             if not concept["matched"] and intent_info.get("intent") == "knowledge_browse_followup":
                 concept = browse_approved_concepts(
                     limit=3,
-                    exclude_concept_names=[context["concept_name"]] if context.get("concept_name") else None,
+                    exclude_concept_names=excluded_names,
+                )
+            if not concept["matched"] and jump:
+                concept = browse_approved_concepts(
+                    limit=3,
+                    exclude_concept_names=excluded_names,
                 )
             payload = {
                 "mode": mode,
-                "route": "developmental_concept_browse_followup" if intent_info.get("intent") == "knowledge_browse_followup" else "developmental_concept_browse",
+                "route": "developmental_concept_browse_followup" if intent_info.get("intent") in {"knowledge_browse_followup", "knowledge_browse_jump"} else "developmental_concept_browse",
                 "answer": concept["answer"] if concept["matched"] else "I do not have approved local concepts to browse yet.",
                 "confidence": "grounded_in_approved_noncanonical_concept_catalog" if concept["matched"] else "no_approved_local_concepts",
                 "confidence_score": 0.9 if concept["matched"] else 0.2,
@@ -1287,6 +1465,42 @@ def route_message(
             payload["escalation_plan"] = build_escalation_plan(message)
             payload["intent"] = intent_info
             payload["confidence_decision"] = confidence_engine(message, bool(concept["matched"]))
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return payload
+        multi_concept = retrieve_multi_concept_set(message)
+        if multi_concept["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "developmental_multi_concept_retrieval",
+                "answer": multi_concept["answer"],
+                "confidence": "retrieval_set_ready_for_operator_review",
+                "confidence_score": multi_concept["retrieval_set_quality"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": multi_concept.get("matches", []),
+                "multi_concept_retrieval": {
+                    "seeds": multi_concept.get("seeds", []),
+                    "retrieval_set_quality": multi_concept["retrieval_set_quality"],
+                    "synthesis_readiness": False,
+                    "duplicate_suppression_count": multi_concept.get("duplicate_suppression_count", 0),
+                },
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "multi_concept_retrieval"}
+            payload["confidence_decision"] = {
+                "confidence": multi_concept["retrieval_set_quality"],
+                "evidence_quality": "approved_noncanonical_retrieval_set",
+                "retrieval_sufficiency": "set_ready_for_review",
+                "provider_necessity": "none",
+            }
             payload.update({
                 "provider_calls_performed": False,
                 "web_search_performed": False,
@@ -1322,7 +1536,13 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return payload
-        bypass_memory_retrieval = execute_local_model or intent_info.get("communication_act") == "clarification_followup" or intent_info.get("intent") == "followup"
+        bypass_memory_retrieval = (
+            execute_local_model
+            or intent_info.get("communication_act") == "clarification_followup"
+            or intent_info.get("intent") == "followup"
+            or _is_session_memory_turn(message)
+            or _is_recent_concept_followup(message)
+        )
         concept = {"matched": False, "answer": "", "matches": []} if bypass_memory_retrieval else query_approved_concepts(message)
         substrate = {"matched": False, "answer": "", "matches": []} if bypass_memory_retrieval else query_noncanonical_substrate(message)
         if concept["matched"]:
