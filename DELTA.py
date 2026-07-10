@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import uuid
 import sys
 import tkinter as tk
@@ -58,6 +59,10 @@ from orchestration.runtime.rc5_ui_capability_adapter import (  # noqa: E402
     build_rc5_ui_snapshot,
     render_rc5_panel,
     validate_rc5_ui_snapshot,
+)
+from orchestration.runtime.rc45_discourse_cognition_bridge import (  # noqa: E402
+    build_discourse_frame,
+    should_preempt_specialist_routing,
 )
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
@@ -125,6 +130,760 @@ def _format_snapshot(snapshot: dict[str, object]) -> str:
     ])
 
 
+def _extract_report_path(message: str) -> Path | None:
+    match = re.search(r"([A-Za-z]:\\[^\r\n]+?\.(?:md|json))", message)
+    if not match:
+        return None
+    return Path(match.group(1).strip().strip('"'))
+
+
+def _inspect_local_report(message: str) -> dict[str, object] | None:
+    path = _extract_report_path(message)
+    if path is None:
+        return None
+    try:
+        resolved = path.resolve()
+        reports_root = (ROOT / "reports").resolve()
+        if reports_root not in (resolved, *resolved.parents):
+            return {
+                "handled": True,
+                "answer": "I can only inspect local DELTA report files under the repo `reports` folder from this UI path.",
+                "safety": _report_inspection_safety(),
+            }
+        if not resolved.exists() or not resolved.is_file():
+            return {
+                "handled": True,
+                "answer": f"I could not find that report file:\n{resolved}",
+                "safety": _report_inspection_safety(),
+            }
+        text = resolved.read_text(encoding="utf-8", errors="replace")
+        return {
+            "handled": True,
+            "answer": _summarize_report_text(resolved, text, message),
+            "safety": _report_inspection_safety(),
+        }
+    except Exception as exc:  # noqa: BLE001
+        return {
+            "handled": True,
+            "answer": f"I tried to inspect that local report, but the read failed: {type(exc).__name__}: {str(exc)[:180]}",
+            "safety": _report_inspection_safety(),
+        }
+
+
+def _report_inspection_safety() -> dict[str, bool]:
+    return {
+        "local_file_read_performed": True,
+        "provider_calls_performed": False,
+        "gpt_api_calls_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "developmental_memory_write_performed": False,
+        "autonomous_action_performed": False,
+    }
+
+
+def _summarize_report_text(path: Path, text: str, request: str = "") -> str:
+    if path.name == "RC45_OPERATOR_MIMIC_CONSOLIDATED.md":
+        return _summarize_rc45_mimic_report(path, text)
+    if path.name == "RC45_CALIBRATION_REPORT.md":
+        return _summarize_rc45_calibration_report(path, text)
+    if path.name == "RC45_INTEGRATED_DEVELOPMENT_CYCLES.md":
+        return _summarize_rc45_integrated_cycles_report(path, text)
+    if path.name == "RC45_EXPANDED_ADVERSARIAL_EVALUATION.md":
+        return _summarize_rc45_adversarial_report(path, text)
+    if path.name == "RC5_UI_CAPABILITY_INTEGRATION.md":
+        return _summarize_rc5_ui_integration_report(path, text)
+    if path.name == "RC45_FREEZE_READINESS_REVIEW.md":
+        return _summarize_rc45_freeze_report(path, text, request)
+    return _summarize_generic_report(path, text)
+
+
+def _summarize_rc45_freeze_report(path: Path, text: str, request: str = "") -> str:
+    lowered_request = request.lower()
+    if "weakness" in lowered_request and "report itself" in lowered_request:
+        return _summarize_rc45_freeze_report_weakness(path, text)
+    lower = text.lower()
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    freeze_lines = [line for line in lines if "freeze" in line.lower() or "operator_pilot" in line.lower() or "operator pilot" in line.lower()]
+    blocker_lines = [line for line in lines if "blocker" in line.lower() or "evidence" in line.lower()]
+    status = _first_jsonish_value(text, "recommendation") or _first_jsonish_value(text, "freeze_status") or "review_needed"
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {status}",
+        "",
+        "What real operator evidence is still needed:",
+        "- Real operator sessions using RC4/RC5 on actual low-risk tasks.",
+        "- Records of what DELTA proposed, what the operator accepted/rejected/revised, and why.",
+        "- Evidence that governance stayed understandable and practical during the work.",
+        "- Evidence that failures were recoverable through rollback, rejection, or bounded repair.",
+        "- Evidence that RC4/RC5 did not rely on mimic/developer rehearsal evidence as freeze proof.",
+    ]
+    if "rc4_freeze_pending_real_operator_pilot" in lower:
+        answer.append("- RC4 must remain pending until real operator pilot evidence exists.")
+    if "rc5_freeze_pending_real_operator_pilot" in lower:
+        answer.append("- RC5 must remain pending until real operator pilot evidence exists.")
+    if blocker_lines:
+        answer.extend(["", "Relevant report signals:"])
+        answer.extend(f"- {line[:220]}" for line in blocker_lines[:6])
+    elif freeze_lines:
+        answer.extend(["", "Relevant report signals:"])
+        answer.extend(f"- {line[:220]}" for line in freeze_lines[:6])
+    answer.extend([
+        "",
+        "No memory was written. I only read the local report file.",
+    ])
+    return "\n".join(answer)
+
+
+def _summarize_rc45_freeze_report_weakness(path: Path, text: str) -> str:
+    status = _first_jsonish_value(text, "recommendation") or _first_jsonish_value(text, "freeze_status") or "review_needed"
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {status}",
+        "",
+        "One weakness in the report itself:",
+        "- The report is good at saying the remaining blocker is real operator evidence, but it is thin as an operator-run playbook.",
+        "",
+        "Why that could make the real pilot harder:",
+        "- It does not spell out a concrete session template with fields like task, operator decision, accepted/rejected/revised proposal, recovery outcome, workload, and confusion points.",
+        "- Because of that, two operators could collect evidence in inconsistent formats, making freeze review harder.",
+        "",
+        "Recommended improvement:",
+        "- Add a short real-pilot evidence form or checklist next to the freeze report, so each session records the same minimum facts.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ]
+    return "\n".join(answer)
+
+
+def _is_pilot_checklist_request(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return (
+        "checklist" in lower
+        and ("pilot" in lower or "operator" in lower)
+        and ("do not store" in lower or "don't store" in lower or "provider" in lower or "call" in lower)
+    )
+
+
+def _draft_operator_pilot_checklist(anchor: dict[str, object] | None = None) -> str:
+    source = str((anchor or {}).get("report_name") or "the prior report inspection")
+    return "\n".join([
+        "Here is a concise RC4/RC5 real-operator pilot evidence checklist.",
+        "",
+        f"Source context: {source}",
+        "",
+        "For each pilot session, record:",
+        "1. Session ID and date.",
+        "2. Real low-risk task attempted.",
+        "3. Initial operator goal or request.",
+        "4. What DELTA inspected or proposed.",
+        "5. Operator decision: accepted, rejected, revised, or deferred.",
+        "6. Why the operator made that decision.",
+        "7. Governance evidence: authorization, review boundary, or blocked action.",
+        "8. Recovery evidence: rollback, rejection, bounded repair, or stop condition.",
+        "9. Workload/friction: confusing steps, too many clicks, unclear wording, or excessive time.",
+        "10. Safety confirmation: no provider call, memory write, commit, push, deployment, or freeze claim unless explicitly authorized.",
+        "11. Final outcome: useful, partially useful, not useful, or unsafe/confusing.",
+        "12. Follow-up needed before freeze.",
+        "",
+        "Minimum freeze-useful evidence:",
+        "- At least one accepted proposal.",
+        "- At least one rejected or revised proposal.",
+        "- At least one recovery/rollback/stop-condition example.",
+        "- At least one session showing the operator could find the relevant RC4/RC5 evidence without raw JSON hunting.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _is_pilot_session_record_request(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return (
+        ("use the checklist" in lower or "session record" in lower or "evaluate this pilot session" in lower)
+        and ("pilot session" in lower or "freeze evidence" in lower)
+    )
+
+
+def _draft_operator_pilot_session_record(message: str, anchor: dict[str, object] | None = None) -> str:
+    lower = message.lower()
+    repair_failed = "repair failed validation" in lower or ("bounded repair" in lower and "failed validation" in lower)
+    stop_requested = "told delta to stop" in lower or "stop rather than try again" in lower or "stop condition" in lower
+    unsafe_external_advice = (
+        ("manual gpt" in lower or "gpt response" in lower or "external advice" in lower)
+        and ("skip" in lower or "skipping" in lower or "bypass" in lower)
+        and ("rc4 authorization" in lower or "authorization" in lower)
+    )
+    if repair_failed:
+        return "\n".join([
+            "Pilot Session Record",
+            "",
+            "Session type: RC4/RC5 real-operator pilot interaction",
+            f"Source context: {str((anchor or {}).get('report_name') or 'prior checklist')}",
+            "",
+            "Task:",
+            "- Evaluate a bounded-repair pilot case where DELTA proposed a repair and validation failed.",
+            "",
+            "Observed DELTA behavior:",
+            "- DELTA proposed a bounded repair.",
+            "- The repair failed validation.",
+            "",
+            "Operator decision:",
+            f"- {'Stopped the repair loop rather than allowing another attempt.' if stop_requested else 'Rejected the failed repair as insufficient.'}",
+            "",
+            "Reason:",
+            "- Failed validation means the proposal should not proceed to integration or freeze evidence by itself.",
+            "- Stopping prevents bounded repair from turning into an expanding unattended loop.",
+            "",
+            "Governance evidence:",
+            "- Operator retained final authority.",
+            "- Repair did not self-approve or continue automatically.",
+            "- No autonomous action, provider call, memory write, commit, push, deployment, or freeze claim occurred.",
+            "",
+            "Recovery evidence:",
+            "- Stop condition was exercised after validation failure.",
+            "- This is useful recovery evidence for the pilot, but not sufficient freeze evidence alone.",
+            "",
+            "Final outcome:",
+            "- Useful recovery/governance evidence; repair outcome failed.",
+            "",
+            "Follow-up needed before freeze:",
+            "- Run additional real low-risk sessions with at least one accepted proposal and one successful bounded recovery.",
+        ])
+    if unsafe_external_advice:
+        return "\n".join([
+            "Pilot Session Record",
+            "",
+            "Session type: RC4/RC5 real-operator pilot interaction",
+            f"Source context: {str((anchor or {}).get('report_name') or 'prior checklist')}",
+            "",
+            "Task:",
+            "- Evaluate a manual-consultation case where external advice suggested bypassing governance.",
+            "",
+            "Observed DELTA behavior:",
+            "- A manual GPT response suggested skipping RC4 authorization and applying a patch directly.",
+            "",
+            "Operator decision:",
+            "- Rejected the advice.",
+            "",
+            "Reason:",
+            "- External consultation is advisory only.",
+            "- RC4 authorization and operator review cannot be bypassed by a GPT response.",
+            "",
+            "Governance evidence:",
+            "- Unsafe advice was blocked.",
+            "- No patch was applied directly.",
+            "- No autonomous action, provider call, memory write, commit, push, deployment, or freeze claim occurred.",
+            "",
+            "Recovery evidence:",
+            "- The unsafe recommendation was discarded and the governed path remained intact.",
+            "",
+            "Final outcome:",
+            "- Useful governance evidence; not sufficient freeze evidence alone.",
+            "",
+            "Follow-up needed before freeze:",
+            "- Run a real low-risk manual consultation case where advice is accepted only after review and validation.",
+        ])
+    rejected_freeze = "reject" in lower and "freeze evidence" in lower
+    rollback_missing = "rollback" in lower and ("did not" in lower or "not test" in lower)
+    accepted_checklist = "accept" in lower and "checklist" in lower and "freeze" in lower
+    return "\n".join([
+        "Pilot Session Record",
+        "",
+        "Session type: RC4/RC5 real-operator pilot interaction",
+        f"Source context: {str((anchor or {}).get('report_name') or 'prior checklist')}",
+        "",
+        "Task:",
+        "- Continue from the drafted RC4/RC5 pilot checklist and evaluate whether this session counts as freeze evidence.",
+        "",
+        "Observed DELTA behavior:",
+        "- DELTA produced a useful real-operator pilot evidence checklist.",
+        "- DELTA did not write memory or call a provider.",
+        "",
+        "Operator decision:",
+        f"- {'Rejected as sufficient freeze evidence.' if rejected_freeze else ('Accepted as a useful pilot artifact, but not as freeze approval.' if accepted_checklist else 'Not accepted as sufficient freeze evidence yet.')}",
+        "",
+        "Reason:",
+        "- This is only one operator session.",
+        f"- {'Rollback/recovery was not tested.' if rollback_missing else 'Recovery coverage still needs explicit evidence.'}",
+        "- The session supports usability of the checklist, but not full RC4/RC5 freeze readiness.",
+        "",
+        "Governance evidence:",
+        "- Operator retained final authority.",
+        "- Freeze was not claimed.",
+        "- No autonomous action, provider call, memory write, commit, push, or deployment occurred.",
+        "",
+        "Recovery evidence:",
+        f"- {'Not exercised in this session.' if rollback_missing else 'Not yet sufficient for freeze.'}",
+        "",
+        "Final outcome:",
+        "- Useful, but partial.",
+        "",
+        "Follow-up needed before freeze:",
+        "- Run additional real low-risk sessions.",
+        "- Include at least one rejected/revised proposal.",
+        "- Include at least one rollback, bounded repair, or stop-condition case.",
+        "- Confirm the operator can find and understand the relevant RC4/RC5 evidence.",
+    ])
+
+
+def _is_same_report_weakness_request(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return "same report" in lower and "weakness" in lower and "report itself" in lower
+
+
+def _summarize_same_report_weakness(anchor: dict[str, object] | None) -> str:
+    if not anchor:
+        return "I can do that, but I need a report path first so I know which report you mean."
+    report_name = str(anchor.get("report_name") or "")
+    report_path_text = str(anchor.get("report_path") or "")
+    path = Path(report_path_text) if report_path_text else ROOT / "reports" / report_name
+    if report_name == "RC45_FREEZE_READINESS_REVIEW.md" and path.exists():
+        text = path.read_text(encoding="utf-8", errors="replace")
+        return _summarize_rc45_freeze_report_weakness(path, text)
+    return "\n".join([
+        f"I inspected `{report_name or 'the prior report'}` again.",
+        "",
+        "One weakness in the report itself:",
+        "- It does not yet provide a concrete operator-run evidence form for collecting comparable pilot sessions.",
+        "",
+        "Why that could make the real pilot harder:",
+        "- Operators may record different details, making later freeze review less consistent.",
+        "",
+        "Recommended improvement:",
+        "- Use a short pilot checklist with fields for task, decision, evidence, recovery, workload, safety, and follow-up.",
+        "",
+        "No memory was written. I only used the prior local report inspection context.",
+    ])
+
+
+def _is_second_one_pilot_followup(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return lower in {"what about the second one?", "what about the second one", "the second one?", "second one?"}
+
+
+def _answer_second_one_pilot_followup(anchor: dict[str, object] | None = None) -> str:
+    source = str((anchor or {}).get("report_name") or "the prior pilot checklist")
+    return "\n".join([
+        "If you mean the second minimum freeze-useful evidence item, it is:",
+        "",
+        "- At least one rejected or revised proposal.",
+        "",
+        f"Source context: {source}",
+        "",
+        "For the current checklist session, that means the record should say:",
+        "- The checklist was useful.",
+        "- The operator did not approve RC4/RC5 freeze.",
+        "- The operator either rejected the session as sufficient evidence or revised its scope to future pilot preparation only.",
+        "- This is useful governance evidence because operator authority over acceptance/rejection stayed explicit.",
+        "",
+        "It still does not satisfy rollback or bounded-repair evidence by itself.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _is_rc5_gpt_boundary_question(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return (
+        "rc5" in lower
+        and ("automatically ask gpt" in lower or "automatic gpt" in lower or "ask gpt during" in lower)
+        and ("boundary" in lower or "explain" in lower)
+    )
+
+
+def _answer_rc5_gpt_boundary() -> str:
+    return "\n".join([
+        "No. DELTA should not automatically ask GPT during RC5 development cycles.",
+        "",
+        "Boundary:",
+        "- RC5 may prepare a compact manual consultation packet.",
+        "- The operator decides whether to copy that packet to GPT or another reviewer.",
+        "- Any response that comes back is advisory evidence, not authority.",
+        "- DELTA must validate the advice against governance, constraints, tests, and operator approval before using it.",
+        "",
+        "What must not happen automatically:",
+        "- No API/provider call.",
+        "- No patch application.",
+        "- No RC4 authorization bypass.",
+        "- No memory write, plugin activation, commit, push, deployment, or freeze claim.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _is_rc4_handoff_boundary_question(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return (
+        "rc5" in lower
+        and "upgrade proposal" in lower
+        and ("handed off to rc4" in lower or "handoff" in lower or "hand off" in lower)
+    )
+
+
+def _answer_rc4_handoff_boundary() -> str:
+    return "\n".join([
+        "An RC5 upgrade proposal should be handed off to RC4 only after RC5 has enough governed evidence to justify implementation review.",
+        "",
+        "Handoff-ready signals:",
+        "- A concrete deficit or capability gap is identified.",
+        "- The proposed change is scoped and reversible.",
+        "- Evidence, expected benefit, validation path, and rollback/stop conditions are stated.",
+        "- Any manual GPT or external advice has been treated as advisory and checked against governance.",
+        "- The operator agrees the proposal is worth implementation review.",
+        "",
+        "What must not happen automatically:",
+        "- RC5 must not implement the change itself.",
+        "- RC5 must not bypass RC4 authorization.",
+        "- No automatic patch, commit, push, deployment, plugin activation, provider call, memory write, or freeze claim.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _is_full_pilot_freeze_decision_question(message: str) -> bool:
+    lower = " ".join(message.lower().split())
+    return (
+        "full pilot session" in lower
+        and ("ready to freeze" in lower or "freeze" in lower)
+        and ("evidence is still missing" in lower or "what evidence" in lower or "if not" in lower)
+    )
+
+
+def _answer_full_pilot_freeze_decision() -> str:
+    return "\n".join([
+        "No. Based on this pilot session, RC4 and RC5 are ready to continue real operator pilot work, but they are not ready to freeze yet.",
+        "",
+        "What this session supports:",
+        "- Report inspection worked for key RC4/RC5 evidence reports.",
+        "- The pilot checklist was useful.",
+        "- Operator rejection and limited acceptance were captured without granting authority.",
+        "- UI authority, adversarial, integrated-cycle, and calibration reports were reviewed as local evidence.",
+        "- Safety boundaries remained intact: no provider call, memory write, patch, commit, push, deployment, or freeze claim.",
+        "",
+        "What is still missing before freeze:",
+        "- More real low-risk operator sessions, not just one conversational review thread.",
+        "- At least one real rollback, bounded-repair stop, or recovery case.",
+        "- At least one accepted proposal and one rejected or revised proposal recorded in the pilot format.",
+        "- Evidence that operator workload and friction remain practical across multiple sessions.",
+        "- Evidence that any manual consultation stays advisory and does not bypass RC4 authorization.",
+        "",
+        "Recommendation: continue the real operator pilot; do not freeze RC4 or RC5 yet.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _answer_primary_freeze_evidence_gap() -> str:
+    return "\n".join([
+        "The most important thing still to prove is that RC4/RC5 governance works during real low-risk operator work, not only in report review or developer rehearsal.",
+        "",
+        "The strongest missing evidence is a real session where:",
+        "- DELTA proposes or evaluates a bounded change.",
+        "- The operator accepts, rejects, or revises it with a recorded reason.",
+        "- A recovery path is exercised, such as rollback, bounded repair stop, or rejected unsafe advice.",
+        "- The system does not self-approve, call a provider, write memory, patch, commit, push, deploy, or claim freeze without explicit authorization.",
+        "",
+        "In short: prove recoverable governed use under real operator pressure.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _answer_sufficient_recovery_evidence() -> str:
+    return "\n".join([
+        "Enough recovery evidence means at least one real low-risk pilot session shows that a failure was handled cleanly without expanding authority.",
+        "",
+        "Good recovery evidence would include:",
+        "- The starting task and proposed action.",
+        "- What failed: validation, safety review, operator rejection, external advice quality, or scope control.",
+        "- The recovery decision: rollback, bounded repair stop, proposal rejection, or revision.",
+        "- The operator's reason for that decision.",
+        "- Proof that DELTA does not self-approve, continue automatically, or bypass authorization.",
+        "- The final state after recovery: safe, reverted, stopped, or revised for later review.",
+        "",
+        "A strong freeze-useful example would be: DELTA proposes a bounded repair, validation fails, the operator stops the loop, and the system records the stop without patching, committing, calling a provider, or claiming success.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _answer_mixed_proposal_record() -> str:
+    return "\n".join([
+        "Record accepted and rejected proposals as separate decisions in the same pilot session, not as a single blended outcome.",
+        "",
+        "The session record should say:",
+        "- Proposal A: accepted.",
+        "- Reason accepted: what evidence made it useful, bounded, and safe enough to proceed.",
+        "- Required follow-up: validation, review, or RC4 handoff if implementation is needed.",
+        "- Proposal B: rejected or revised.",
+        "- Reason rejected/revised: what was unsafe, unclear, too broad, unsupported, or not worth the workload.",
+        "- Governance result: operator authority remained explicit for both decisions.",
+        "",
+        "Freeze interpretation:",
+        "- This is useful pilot evidence because it shows DELTA can support different operator decisions in one session.",
+        "- It still needs recovery evidence if neither proposal tested rollback, bounded repair stop, or unsafe-advice rejection.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _answer_useful_but_unsafe_advice_handling() -> str:
+    return "\n".join([
+        "DELTA should split the advice into useful parts and unsafe parts.",
+        "",
+        "Correct handling:",
+        "- Keep the useful technical insight as advisory evidence only.",
+        "- Reject the instruction to bypass authorization.",
+        "- Preserve RC4 authorization, operator review, validation, and rollback requirements.",
+        "- Do not apply a patch directly just because GPT suggested it.",
+        "- Record the mixed outcome: advice partially useful, governance recommendation rejected.",
+        "",
+        "Pilot record wording:",
+        "- Manual GPT advice contained useful information but also suggested bypassing authorization.",
+        "- Operator rejected the unsafe portion.",
+        "- DELTA retained the governed path and did not patch, commit, push, deploy, call a provider, write memory, or claim freeze.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _summarize_rc45_mimic_report(path: Path, text: str) -> str:
+    status = _first_jsonish_value(text, "recommendation") or "review_needed"
+    evidence_class = _first_jsonish_value(text, "evidence_class") or "unknown"
+    scenario_count = _first_jsonish_number(text, "scenario_count") or _first_jsonish_number(text, "category_count") or "unknown"
+    cycle_count = _first_jsonish_number(text, "integrated_cycle_count") or "unknown"
+    quality = _first_jsonish_number(text, "average_cycle_quality") or "unknown"
+    workload = _first_jsonish_number(text, "average_operator_workload") or "unknown"
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {status}",
+        f"Evidence class: {evidence_class}",
+        "",
+        "Operator mimic calibration summary:",
+        f"- Scenarios exercised: {scenario_count}",
+        f"- Integrated RC4->RC5 cycles exercised: {cycle_count}",
+        f"- Average cycle quality: {quality}",
+        f"- Average operator workload estimate: {workload}",
+        "- The calibration tested realistic operator behaviors such as confusion, changing requirements, rejection, unsafe advice, interruption, rollback, and budget pressure.",
+        "- The useful result is that RC4/RC5 can be rehearsed across a broad set of governed development situations without granting live authority.",
+        "",
+        "Useful for the real operator pilot:",
+        "- Scenario list: use it as a checklist for real low-risk operator sessions.",
+        "- Calibration findings: use them to watch for operator friction, bad routing, unsafe advice, over-eager upgrades, and weak evidence.",
+        "- Integrated-cycle artifacts: use them as the expected shape of real evidence to collect.",
+        "- Freeze review recommendation: use it to avoid claiming freeze too early.",
+        "",
+        "Does not count as real freeze evidence:",
+        "- Developer rehearsal evidence.",
+        "- Simulated operator behavior.",
+        "- Mock consultation responses.",
+        "- Deterministic fixture cycles.",
+        "- Estimated workload scores.",
+        "- Any report line marked `DEVELOPER_REHEARSAL_EVIDENCE`.",
+        "",
+        "Bottom line: this report is useful as a pilot script and calibration checklist, but RC4 and RC5 still need real operator sessions before freeze.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ]
+    return "\n".join(answer)
+
+
+def _summarize_rc45_calibration_report(path: Path, text: str) -> str:
+    status = _first_jsonish_value(text, "recommendation") or "review_needed"
+    score = _first_jsonish_number(text, "score") or "unknown"
+    risks = _extract_jsonish_object_keys(text, "finding_counts")
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {status}",
+        f"Calibration score: {score}",
+        "",
+        "Calibration weaknesses and risks to watch during the real operator pilot:",
+        "- Operator mimic evidence may still be mistaken for real operator evidence.",
+        "- Low-severity or false-positive reports can still tempt over-eager upgrade proposals.",
+        "- Manual consultation advice can be useful but must remain advisory and checked against governance.",
+        "- Operator workload and friction need real measurement, not just fixture estimates.",
+        "- Budget pressure may cause skipped validation unless the minimum validation path is preserved.",
+        "- Long conversations, interruptions, and resumes need explicit state handling.",
+        "- RC4 bounded repair must stop cleanly instead of looping or expanding scope.",
+        "- Lessons should not be retained unless explicitly reviewed.",
+        "- Root-cause classification must distinguish retrieval, memory, planning, prompt, workflow, and governance issues.",
+    ]
+    if risks:
+        answer.extend(["", "Report watchlist signals:"])
+        answer.extend(f"- {risk.replace('_', ' ')}" for risk in risks[:12])
+    answer.extend([
+        "",
+        "How to use this in the pilot:",
+        "- Pick a low-risk real task.",
+        "- Let DELTA inspect, propose, or classify the issue.",
+        "- Record whether the proposal was useful, too broad, too costly, or confusing.",
+        "- Reject or revise at least one proposal so governance is exercised.",
+        "- Confirm no memory write, provider call, patch, commit, push, or freeze claim happens unless explicitly authorized.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ])
+    return "\n".join(answer)
+
+
+def _summarize_rc45_integrated_cycles_report(path: Path, text: str) -> str:
+    evidence_class = _first_jsonish_value(text, "evidence_class") or "unknown"
+    cycle_count = _first_jsonish_number(text, "cycle_count") or _first_jsonish_number(text, "integrated_cycle_count") or "unknown"
+    packets = _first_jsonish_number(text, "consultation_packets_created") or "unknown"
+    upgrades = _first_jsonish_number(text, "upgrade_proposals_created") or str(text.count('"upgrade_proposal_created": true'))
+    lessons = _first_jsonish_number(text, "lessons_requiring_review") or str(text.count('"lesson_review_required": true'))
+    quality = _first_jsonish_number(text, "average_quality") or _first_jsonish_number(text, "average_cycle_quality") or "unknown"
+    workload = _first_jsonish_number(text, "average_operator_workload") or "unknown"
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Evidence class: {evidence_class}",
+        f"Integrated cycles reviewed: {cycle_count}",
+        f"Average quality: {quality}",
+        f"Average operator workload estimate: {workload}",
+        "",
+        "Do the cycles show recoverable failures?",
+        "- Yes, as developer rehearsal evidence. The cycles include failure classes such as sandbox failure, repair failure, regression discovery, false positive, rejected proposal, unsafe advice, and rollback request.",
+        "- They show the expected recovery posture: capture evidence, require review, reject unsafe advice, stop bounded repair when necessary, and keep freeze blocked until real evidence exists.",
+        "",
+        "Do they show bounded repair?",
+        "- Yes, at the report level. RC4 artifacts are represented as proposal/sandbox/repair/verification steps, while RC5 evaluates purpose, deficit, acquisition, consultation, proposal, comparison, and lesson review.",
+        "- The important boundary is that repair remains bounded and review-required; it does not become unattended execution.",
+        "",
+        "Useful evidence for a real operator pilot:",
+        f"- Consultation packets created in rehearsal: {packets}",
+        f"- Upgrade proposals created in rehearsal: {upgrades}",
+        f"- Lessons requiring review in rehearsal: {lessons}",
+        "- The cycle artifacts define what a real operator should record: goal, plan, governance, evidence, proposal, validation result, acceptance/rejection, and recovery outcome.",
+        "- The report is useful as a checklist for real tasks, especially tasks involving rejected proposals, failed repairs, unsafe advice, or rollback.",
+        "",
+        "What does not count as real evidence:",
+        "- The cycle outcomes are deterministic developer rehearsal evidence.",
+        "- Mock consultation responses are not real external review.",
+        "- Estimated workload is not real operator workload.",
+        "- Fixture recovery is not proof that a real operator found recovery practical.",
+        "",
+        "Bottom line: the cycles are useful rehearsal evidence for designing the real pilot, but they do not by themselves freeze RC4 or RC5.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ]
+    return "\n".join(answer)
+
+
+def _summarize_rc45_adversarial_report(path: Path, text: str) -> str:
+    evidence_class = _first_jsonish_value(text, "evidence_class") or "unknown"
+    case_count = _first_jsonish_number(text, "case_count") or str(text.count('"case_id"'))
+    score = _first_jsonish_number(text, "score") or "unknown"
+    passed = _first_jsonish_bool(text, "passed")
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Evidence class: {evidence_class}",
+        f"Adversarial cases reviewed: {case_count}",
+        f"Score: {score}",
+        f"Passed: {passed if passed is not None else 'unknown'}",
+        "",
+        "Did it find safety, governance, or authority problems that should block a real operator pilot?",
+        "- No blocking problem is indicated by this report.",
+        "- The adversarial cases are reported as blocked or review-required, not as allowed unsafe behavior.",
+        "- The report specifically exercises risks like ambiguous approval, scope creep, rejected proposals, unsafe manual advice, fake freeze claims, regression masking, sandbox failure, repair budget exhaustion, consultation-packet constraint loss, purpose conflict, and UI authority confusion.",
+        "",
+        "What should still be watched in the real pilot:",
+        "- Ambiguous `yes` or `no` responses binding to the wrong action.",
+        "- Operator confusion causing scope creep.",
+        "- External advice being treated as authority instead of advisory input.",
+        "- Metric improvement hiding regression elsewhere.",
+        "- UI language implying authority that does not exist.",
+        "- Any attempt to treat mimic evidence as freeze evidence.",
+        "",
+        "Pilot implication:",
+        "- This supports proceeding to a real operator pilot.",
+        "- It does not support freezing RC4 or RC5 yet because this is still developer rehearsal evidence.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ]
+    return "\n".join(answer)
+
+
+def _summarize_rc5_ui_integration_report(path: Path, text: str) -> str:
+    status = _first_jsonish_value(text, "recommendation") or _first_jsonish_value(text, "freeze_status") or "review_needed"
+    panel_count = _first_jsonish_number(text, "panel_count") or "unknown"
+    expected = _first_jsonish_number(text, "expected_panel_count") or "unknown"
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {status}",
+        f"Panel coverage: {panel_count} of {expected}",
+        "",
+        "Does the UI expose the right evidence for an operator pilot?",
+        "- Yes, for a read-only pilot review. It exposes purpose, self-evaluation, deficits, acquisition strategy, manual consultation, RC4 upgrade handoff, comparative evaluation, developmental memory, mimic calibration, pilot evidence, and freeze readiness.",
+        "- The Mimic Calibration panel is useful because it shows the rehearsal evidence without pretending it is real operator evidence.",
+        "- The Pilot Evidence and Freeze Readiness panels are useful because they keep the real freeze blocker visible.",
+        "- The Manual Consultation panel is useful because it shows packet/advice status without enabling API transport.",
+        "",
+        "Does it expose authority it should not expose?",
+        "- No live authority is indicated by the report.",
+        "- It reports no GPT/API call control, no provider call control, no automatic consultation, no purpose mutation, no self-approval, no RC4 authorization bypass, no developmental-memory auto-write, and no automatic development loop.",
+        "- The UI is therefore appropriate for inspection/review, not action execution.",
+        "",
+        "What to watch during the real pilot:",
+        "- Make sure the operator understands that panels are diagnostic, not permission to act.",
+        "- Confirm the UI remains clear when a proposal is rejected or revised.",
+        "- Confirm the operator can find the consultation packet and freeze blocker without hunting through raw JSON.",
+        "- Confirm no button implies hidden execution authority.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ]
+    return "\n".join(answer)
+
+
+def _summarize_generic_report(path: Path, text: str) -> str:
+    status = _first_jsonish_value(text, "recommendation") or _first_jsonish_value(text, "freeze_status") or "review_needed"
+    evidence_class = _first_jsonish_value(text, "evidence_class")
+    answer = [
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {status}",
+    ]
+    if evidence_class:
+        answer.append(f"Evidence class: {evidence_class}")
+    answer.extend([
+        "",
+        "What I can say from this report:",
+        "- I can inspect the report as local evidence.",
+        "- I should distinguish developer rehearsal evidence from real operator evidence.",
+        "- I should not treat report inspection as permission to write memory, call providers, or freeze the runtime.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ])
+    return "\n".join(answer)
+
+
+def _first_jsonish_value(text: str, key: str) -> str | None:
+    match = re.search(rf'"{re.escape(key)}"\s*:\s*"([^"]+)"', text)
+    return match.group(1) if match else None
+
+
+def _first_jsonish_number(text: str, key: str) -> str | None:
+    match = re.search(rf'"{re.escape(key)}"\s*:\s*([0-9]+(?:\.[0-9]+)?)', text)
+    return match.group(1) if match else None
+
+
+def _first_jsonish_bool(text: str, key: str) -> str | None:
+    match = re.search(rf'"{re.escape(key)}"\s*:\s*(true|false)', text)
+    return match.group(1) if match else None
+
+
+def _extract_jsonish_object_keys(text: str, key: str) -> list[str]:
+    match = re.search(rf'"{re.escape(key)}"\s*:\s*\{{(.*?)\n\s*\}}', text, flags=re.S)
+    if not match:
+        return []
+    return re.findall(r'"([^"]+)"\s*:', match.group(1))
+
+
 def _model_answer_offers_deepening(answer: str) -> bool:
     lower = " ".join(str(answer or "").lower().split())
     offers = (
@@ -174,6 +933,7 @@ class DeltaApp:
         self.pending_local_model_question: str | None = None
         self.pending_local_model_deepening: dict[str, str] | None = None
         self.active_topic_anchor: dict[str, object] | None = None
+        self.last_report_inspection: dict[str, object] | None = None
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -843,6 +1603,226 @@ class DeltaApp:
         lower = message.lower().strip()
         cancel_words = {"no", "n", "not now", "no thanks", "keep chatting", "nevermind", "never mind", "cancel", "stop", "forget it"}
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
+        discourse_frame = build_discourse_frame(message, self.last_report_inspection)
+        discourse_trace = discourse_frame.as_dict()
+        report_inspection = _inspect_local_report(message)
+        if report_inspection and report_inspection.get("handled"):
+            self._append_session("user", message)
+            reply = str(report_inspection.get("answer") or "")
+            report_path = _extract_report_path(message)
+            self.last_report_inspection = {
+                "report_name": report_path.name if report_path else "local report",
+                "report_path": str(report_path.resolve()) if report_path else "",
+                "request": message,
+                "answer_summary": " ".join(reply.split())[:600],
+            }
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: local_report_inspection\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps(report_inspection.get("safety", {}), indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "identify_report_weakness":
+            self._append_session("user", message)
+            reply = _summarize_same_report_weakness(self.last_report_inspection)
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: ephemeral_same_report_followup\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "draft_operator_pilot_checklist":
+            self._append_session("user", message)
+            reply = _draft_operator_pilot_checklist(self.last_report_inspection)
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: ephemeral_report_followup_checklist\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "resolve_prior_checklist_item":
+            self._append_session("user", message)
+            reply = _answer_second_one_pilot_followup(self.last_report_inspection)
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: ephemeral_pilot_checklist_followup\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "explain_rc5_gpt_boundary":
+            self._append_session("user", message)
+            reply = _answer_rc5_gpt_boundary()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc5_manual_consultation_boundary\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "explain_rc5_to_rc4_handoff_boundary":
+            self._append_session("user", message)
+            reply = _answer_rc4_handoff_boundary()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc5_to_rc4_handoff_boundary\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "draft_pilot_session_record":
+            self._append_session("user", message)
+            reply = _draft_operator_pilot_session_record(message, self.last_report_inspection)
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: ephemeral_pilot_session_record\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "evaluate_full_pilot_freeze_readiness":
+            self._append_session("user", message)
+            reply = _answer_full_pilot_freeze_decision()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc45_pilot_freeze_decision\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "identify_primary_freeze_evidence_gap":
+            self._append_session("user", message)
+            reply = _answer_primary_freeze_evidence_gap()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc45_primary_freeze_evidence_gap\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "explain_sufficient_recovery_evidence":
+            self._append_session("user", message)
+            reply = _answer_sufficient_recovery_evidence()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc45_recovery_evidence_enrichment\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "explain_mixed_proposal_record":
+            self._append_session("user", message)
+            reply = _answer_mixed_proposal_record()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc45_mixed_proposal_record_guidance\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        if should_preempt_specialist_routing(discourse_frame) and discourse_frame.current_requested_operation == "explain_useful_but_unsafe_advice_handling":
+            self._append_session("user", message)
+            reply = _answer_useful_but_unsafe_advice_handling()
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc45_useful_but_unsafe_advice_guidance\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "gpt_api_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
         if self.pending_local_model_deepening and lower in affirm_words:
             pending = self.pending_local_model_deepening
             self.pending_local_model_deepening = None
