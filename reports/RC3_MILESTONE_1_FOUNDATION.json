@@ -1,0 +1,465 @@
+{
+  "created_at": "2026-07-10T16:41:42+00:00",
+  "episode": {
+    "arbitration": {
+      "arbitration_id": "rc3-arbitration-264d06c24b71d713",
+      "conflicts": [],
+      "constraint_checks": [
+        "preserved: no execution",
+        "preserved: read-only",
+        "preserved: preserve explicit prohibitions"
+      ],
+      "decision_reason": "The plan is read-only, non-executing, and preserves known prohibitions.",
+      "goal_id": "rc3-goal-264d06c24b71d713",
+      "operator_approval_required_before_action": true,
+      "plan_id": "rc3-plan-264d06c24b71d713",
+      "rejected_reasons": [],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "selected": true,
+      "status": "accepted_read_only"
+    },
+    "capability_gap": {
+      "assessment_id": "rc3-gap-264d06c24b71d713",
+      "existing_capability_matches": [
+        "RC2 cognitive pipeline",
+        "RC3 protocol scaffold"
+      ],
+      "goal_id": "rc3-goal-264d06c24b71d713",
+      "missing_capabilities": [
+        "persistent RC3 project state",
+        "sandbox runtime",
+        "plugin activation workflow"
+      ],
+      "plan_id": "rc3-plan-264d06c24b71d713",
+      "plugin_needed": false,
+      "proposal_needed": true,
+      "recommendation": "Begin with RC3-A goal/planning scaffold before engineering plugins or sandboxes.",
+      "requested_capabilities": [
+        "goals",
+        "planning",
+        "introspection",
+        "progress evaluation",
+        "capability gap"
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "sandbox_needed": false
+    },
+    "created_at": "2026-07-10T16:41:42+00:00",
+    "developer_overlay": {
+      "arbitration_id": "rc3-arbitration-264d06c24b71d713",
+      "execution_authorized": false,
+      "goal_id": "rc3-goal-264d06c24b71d713",
+      "persistence_status": "ephemeral",
+      "plan_id": "rc3-plan-264d06c24b71d713",
+      "rc3_state_model": "docs/RC3_STATE_MODEL.md"
+    },
+    "episode_id": "rc3-rc3-264d06c24b71d713",
+    "goal_frame": {
+      "assumptions": [
+        "RC2 remains frozen and available as the answer-this-turn runtime."
+      ],
+      "child_goals": [],
+      "completion_evidence": [],
+      "confidence": 0.78,
+      "constraints": [
+        "no execution",
+        "read-only",
+        "preserve explicit prohibitions"
+      ],
+      "creation_turn": "rc3-turn-264d06c24b71d713",
+      "dependencies": [],
+      "explicitness": "explicit",
+      "goal_id": "rc3-goal-264d06c24b71d713",
+      "goal_type": "project_objective_with_prohibitions",
+      "last_updated_turn": "rc3-turn-264d06c24b71d713",
+      "normalized_objective": "Design RC3 Milestone 1 with governed goals, read-only planning, introspection, progress evaluation, and capability gap analysis. Do not execute plans or touch DELTA-75.",
+      "operator_confirmation_status": "not_confirmed",
+      "parent_goal": null,
+      "permitted_tools": [],
+      "persistence_status": "ephemeral",
+      "priority": 0.5,
+      "prohibited_actions": [
+        "do not interact with DELTA-75",
+        "do not execute plans"
+      ],
+      "prohibited_tools": [],
+      "provenance": {
+        "extraction": "deterministic_rc3_foundation_scaffold",
+        "source": "operator_text"
+      },
+      "requested_resources": [],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "source_user_text": "Design RC3 Milestone 1 with governed goals, read-only planning, introspection, progress evaluation, and capability gap analysis. Do not execute plans or touch DELTA-75.",
+      "status": "interpreted",
+      "success_criteria": [
+        "operator confirms objective was understood"
+      ],
+      "superseded_goal": null,
+      "uncertainty": "moderate"
+    },
+    "introspection": {
+      "assumptions": [
+        "Source text contains the operator's current objective."
+      ],
+      "claims": [
+        {
+          "claim": "RC3 foundation objects are ephemeral.",
+          "evidence": "docs/RC3_STATE_MODEL.md"
+        },
+        {
+          "claim": "Plan execution is not authorized.",
+          "evidence": "PlanFrame.execution_authorized=false"
+        },
+        {
+          "claim": "RC2 remains the answer-this-turn substrate.",
+          "evidence": "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md"
+        }
+      ],
+      "evidence_sources": [
+        "docs/RC3_STATE_MODEL.md",
+        "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md"
+      ],
+      "fabricated_self_state": false,
+      "hidden_state_detected": false,
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "snapshot_id": "rc3-snapshot-264d06c24b71d713",
+      "uncertainty": [
+        "No operator confirmation has been recorded in this ephemeral episode."
+      ]
+    },
+    "persistence_status": "ephemeral",
+    "plan_frame": {
+      "assumptions": [
+        "RC2 remains frozen and available as the answer-this-turn runtime."
+      ],
+      "confidence": 0.74,
+      "constraints_preserved": [
+        "no execution",
+        "read-only",
+        "preserve explicit prohibitions"
+      ],
+      "dependencies": [
+        "operator_confirmation"
+      ],
+      "execution_authorized": false,
+      "goal_id": "rc3-goal-264d06c24b71d713",
+      "lifecycle_state": "draft",
+      "persistence_status": "ephemeral",
+      "plan_id": "rc3-plan-264d06c24b71d713",
+      "prohibited_actions": [
+        "do not interact with DELTA-75",
+        "do not execute plans"
+      ],
+      "provenance": {
+        "planner": "deterministic_rc3_foundation_scaffold",
+        "source_goal_id": "rc3-goal-264d06c24b71d713"
+      },
+      "risks": [
+        "Premature execution would violate RC3 foundation boundaries."
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "steps": [
+        {
+          "dependency_ids": [],
+          "expected_evidence": [
+            "goal_frame",
+            "constraint_list"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "no execution",
+            "read-only",
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not interact with DELTA-75",
+            "do not execute plans"
+          ],
+          "risk": "low",
+          "step_id": "rc3-step-b0dd02dbb578c46d",
+          "summary": "Interpret the explicit objective and constraints.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-step-b0dd02dbb578c46d"
+          ],
+          "expected_evidence": [
+            "plan_frame",
+            "dependency_notes"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "no execution",
+            "read-only",
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not interact with DELTA-75",
+            "do not execute plans"
+          ],
+          "risk": "low",
+          "step_id": "rc3-step-081bab89293bdd79",
+          "summary": "Create a non-executing plan for operator review.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-step-081bab89293bdd79"
+          ],
+          "expected_evidence": [
+            "progress_evaluation",
+            "missing_evidence"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "no execution",
+            "read-only",
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not interact with DELTA-75",
+            "do not execute plans"
+          ],
+          "risk": "low",
+          "step_id": "rc3-step-5c26172b5abc0112",
+          "summary": "Evaluate progress using evidence before claiming completion.",
+          "uncertainty": "moderate"
+        }
+      ],
+      "strategy": "read_only_goal_planning_foundation",
+      "uncertainty": "moderate"
+    },
+    "progress": {
+      "blockers": [],
+      "completion_evidence": [],
+      "completion_requires_operator_confirmation": true,
+      "completion_score": 0.0,
+      "evaluation_id": "rc3-progress-264d06c24b71d713",
+      "failure_signals": [],
+      "goal_id": "rc3-goal-264d06c24b71d713",
+      "missing_evidence": [
+        "operator_confirmation",
+        "implementation_evidence",
+        "validation_results"
+      ],
+      "plan_id": "rc3-plan-264d06c24b71d713",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "needs_evidence"
+    },
+    "rc2_episode_reference": null,
+    "safety": {
+      "automatic_commit_performed": false,
+      "automatic_push_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hidden_persistence_performed": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
+      "plan_execution_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "replay_write_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "tool_execution_performed": false,
+      "training_performed": false,
+      "web_search_performed": false,
+      "weight_update_performed": false
+    },
+    "source_text": "Design RC3 Milestone 1 with governed goals, read-only planning, introspection, progress evaluation, and capability gap analysis. Do not execute plans or touch DELTA-75."
+  },
+  "legacy_code_classification": {
+    "docs.RC2_COGNITIVE_PIPELINE_SPECIFICATION": "stable_foundation_contract",
+    "docs.RC2_ROUTING_PRECEDENCE": "stable_foundation_contract",
+    "orchestration.agency.goal_system": "legacy_reference_only_for_now",
+    "orchestration.agency.planning_engine": "legacy_reference_only_for_now",
+    "orchestration.runtime.rc3_operator_pilot_freeze_readiness": "reusable_protocol_scaffold"
+  },
+  "recommendation": "READY_FOR_FOCUSED_RC3_A_GOAL_AND_PLANNING_SCAFFOLD_IMPLEMENTATION",
+  "report": "RC3_MILESTONE_1_FOUNDATION",
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "scope": "ephemeral_goal_planning_introspection_foundation",
+  "state_model": "docs/RC3_STATE_MODEL.md",
+  "validation_claims": {
+    "capability_gap_present": true,
+    "developer_overlay_available": true,
+    "no_execution_authorized": true,
+    "objects_ephemeral": true,
+    "safety_all_false": true
+  }
+}

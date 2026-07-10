@@ -34,6 +34,24 @@ Goal
 - RC3-F - Long-Horizon Project Cognition: persistent project goals, multi-session plans, resume behavior, dashboards
 - RC3-G - Adversarial Pilot and Freeze: red-team evaluation, operator pilot, full benchmark, freeze review
 
+## Four Major Checkpoints
+
+The 24 phases should be implemented through four larger checkpoints rather
+than as a mechanically linear sequence:
+
+- RC3 Foundation: goals, plans, arbitration, introspection, progress
+  evaluation, capability-gap assessment. No execution, plugins, sandboxes, or
+  persistence.
+- RC3 Engineering: plugin contracts, coding capability, sandbox runtime, and
+  proposal generation. Still no integration.
+- RC3 Governance: external review, operator approval, controlled merge, plugin
+  activation, and rollback.
+- RC3 Long Horizon: persistent project state, long-running plans, controlled
+  forgetting, multi-session execution, operator pilot, and freeze.
+
+The state model for these checkpoints is defined in
+`docs/RC3_STATE_MODEL.md`.
+
 ## Phase Order
 
 - Phase 0 - Foundation Lock (RC3-A): Freeze RC2 as the stable answer-this-turn substrate.
