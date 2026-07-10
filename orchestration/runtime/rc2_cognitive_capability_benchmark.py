@@ -549,13 +549,22 @@ def review_output_text_pathologies(results: list[dict[str, Any]]) -> dict[str, A
             for hit in contradiction_failures[:8]
         ],
     }
-    review["summary_findings"] = [
-        "Contradiction prompts are usually routed to single-concept memory instead of a contradiction/comparison path.",
-        "Many answers still expose report-like WRS sections; useful for Developer Overlay, too stiff for default conversation.",
-        "Scaffold concepts still surface in recall, analogy, and cross-domain prompts where core factual concepts should win.",
-        "Follow-up memory can attach to the wrong prior topic when the user gives a short command such as 'Give an example.'",
-        "Some local-substrate questions still ask for local model escalation even when repaired concepts exist.",
-    ]
+    findings = []
+    if review["missed_contradiction_signal"]["count"]:
+        findings.append("Some contradiction prompts still lack an explicit contradiction/conflict signal.")
+    if review["report_voice"]["count"]:
+        findings.append("Some normal answers still expose report-like structure that belongs in Developer Overlay.")
+    if review["generic_scaffold"]["count"]:
+        findings.append("Some answers still surface scaffold concepts where core factual concepts should win.")
+    if review["wrong_context"]["count"]:
+        findings.append("Some follow-up turns still attach to the wrong prior topic.")
+    if review["consent_prompt_when_local_substrate_expected"]["count"]:
+        findings.append("Some local-substrate questions still ask for local model escalation even when repaired concepts exist.")
+    if review["internal_leak"]["count"]:
+        findings.append("Some normal answers still expose internal/debug terms.")
+    if not findings:
+        findings.append("No text pathology category exceeded zero in this run; remaining benchmark weakness is score distribution rather than obvious non-human output leakage.")
+    review["summary_findings"] = findings
     return review
 
 

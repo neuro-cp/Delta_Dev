@@ -166,6 +166,12 @@ def should_use_wrs(question: str) -> bool:
         "bridge",
         "similar as systems",
         "common structure",
+        "share a",
+        "share an",
+        "share the",
+        "both use",
+        "both depend",
+        "both reason",
         "change the way you reason",
         "prevents",
         "cannot be concluded",
@@ -201,6 +207,17 @@ def extract_reasoning_seeds(question: str) -> list[str]:
         "orbital motion",
         "battery charging",
         "vascular resistance",
+        "gardening",
+        "software architecture",
+        "home repair",
+        "medicine",
+        "materials science",
+        "psychology",
+        "finance",
+        "biology",
+        "agriculture",
+        "energy transfer",
+        "feedback control",
         "evidence",
         "constraints",
         "tradeoffs",
@@ -238,6 +255,18 @@ def required_topic_families(question: str) -> list[str]:
         ("battery charging", "battery charging"),
         ("charging", "battery charging"),
         ("vascular resistance", "vascular resistance"),
+        ("gardening", "agriculture gardening"),
+        ("agriculture", "agriculture gardening"),
+        ("software architecture", "software architecture"),
+        ("home repair", "home repair"),
+        ("medicine", "medicine health general"),
+        ("medical", "medicine health general"),
+        ("materials science", "materials science"),
+        ("psychology", "psychology"),
+        ("finance", "finance"),
+        ("biology", "biology"),
+        ("energy transfer", "energy transfer"),
+        ("feedback control", "feedback"),
     ]
     for phrase, family in phrase_to_family:
         if phrase in lower and family not in families:
@@ -519,6 +548,26 @@ def _higher_order_bridge(families: list[str], concepts: list[dict[str, Any]], pr
         return (
             "Photosynthesis and battery charging are similar as energy-storage systems: photosynthesis uses light energy to store energy in chemical bonds, while battery charging stores supplied energy electrochemically. The shared structure is energy input, conversion, storage, and later use."
         )
+    if {"agriculture gardening", "software architecture"} <= family_set:
+        return (
+            "Gardening and software architecture can share a planning pattern: both start with goals, constraints, sequencing, feedback, and maintenance. In gardening the plan manages soil, water, light, timing, and growth; in software architecture the plan manages components, interfaces, dependencies, and future change."
+        )
+    if {"home repair", "medicine health general"} <= family_set:
+        return (
+            "Home repair and medicine both depend on diagnostic evidence because action should follow observed symptoms, measurements, history, and likely causes rather than guesses. The shared structure is diagnosis before intervention: collect evidence, narrow causes, choose a safe action, and revise if feedback contradicts the plan."
+        )
+    if {"materials science", "psychology"} <= family_set:
+        return (
+            "Materials science and psychology both use stress as a useful concept for how systems respond to load. In materials, stress describes force distributed through a material; in psychology, stress describes demands or pressure on a person. The bridge is load, response, tolerance, and failure or adaptation under sustained pressure."
+        )
+    if {"finance", "biology"} <= family_set:
+        return (
+            "Finance and biology both reason with feedback loops because outcomes can change future behavior: markets respond to prices, incentives, and risk signals, while biological systems respond to internal and external conditions. The shared pattern is signal, response, adjustment, and possible stabilization or runaway change."
+        )
+    if {"agriculture gardening", "energy transfer", "feedback"} <= family_set:
+        return (
+            "Agriculture, energy transfer, and feedback control connect through managed flows: sunlight, water, nutrients, and labor enter a growing system, feedback indicates whether conditions are working, and control decisions adjust the system toward healthier growth."
+        )
     if {"planning", "feedback"} <= family_set:
         return (
             "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation."
@@ -533,7 +582,24 @@ def _higher_order_bridge(families: list[str], concepts: list[dict[str, Any]], pr
         )
     substantive = _substantive_propositions(propositions)
     if len(substantive) >= 2:
-        return "The bridge should be built from the substantive propositions rather than repeated governance metadata."
+        names = []
+        seen = set()
+        for concept in concepts:
+            family = _topic_family(str(concept.get("concept_name") or ""))
+            name = str(concept.get("concept_name") or "").strip()
+            if family and family not in seen:
+                seen.add(family)
+                names.append(name)
+            elif not family and name and name.lower() not in seen:
+                seen.add(name.lower())
+                names.append(name)
+            if len(names) >= 2:
+                break
+        if len(names) >= 2:
+            return (
+                f"The organizing principle is a shared process pattern rather than a single fact: {names[0]} and {names[1]} can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops."
+            )
+        return "The organizing principle should be built from substantive propositions rather than repeated governance metadata."
     return ""
 
 
@@ -569,6 +635,24 @@ def _topic_family(name: str) -> str:
         return "battery charging"
     if "vascular resistance" in lower:
         return "vascular resistance"
+    if "agriculture" in lower or "gardening" in lower:
+        return "agriculture gardening"
+    if "software architecture" in lower or "software" in lower:
+        return "software architecture"
+    if "home repair" in lower or "appliance" in lower or "troubleshooting" in lower:
+        return "home repair"
+    if "medicine" in lower or "medical" in lower or "health" in lower:
+        return "medicine health general"
+    if "materials science" in lower or "material" in lower:
+        return "materials science"
+    if "psychology" in lower:
+        return "psychology"
+    if "finance" in lower:
+        return "finance"
+    if "biology" in lower or "biological" in lower:
+        return "biology"
+    if "energy transfer" in lower:
+        return "energy transfer"
     return re.sub(r"\([^)]*\)", "", lower).strip().split(" ")[0] if lower.strip() else ""
 
 

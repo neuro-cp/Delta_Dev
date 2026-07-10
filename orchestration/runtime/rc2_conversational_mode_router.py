@@ -176,6 +176,16 @@ DIRECT_LOCAL_ANSWERS = {
         "answer": "Fire is the visible, hot part of combustion. A fuel reacts with oxygen, releasing heat and light, and the flame contains hot gases plus glowing particles or excited molecules.",
         "confidence": 0.82,
     },
+    "normal_assistant_style": {
+        "triggers": (("answer", "normal", "assistant"), ("normal", "assistant")),
+        "answer": "Yes. I can answer in a more natural assistant style: direct first, enough context to be useful, and technical details only when you ask for them.",
+        "confidence": 0.86,
+    },
+    "followup_question_offer": {
+        "triggers": (("ask", "follow", "question"), ("follow", "question"), ("follow-up", "question")),
+        "answer": "Sure. What topic do you want to explore next, and do you want a quick overview or a deeper explanation?",
+        "confidence": 0.84,
+    },
 }
 
 VAGUE_CONCEPT_NAMES = {

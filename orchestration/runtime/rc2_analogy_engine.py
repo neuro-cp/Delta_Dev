@@ -41,7 +41,6 @@ SAFETY = {
 ANALOGY_TRIGGERS = (
     "analogy",
     "analogous",
-    " like ",
     "as a metaphor",
     "is to",
     "where does it break",
@@ -233,7 +232,11 @@ def is_analogy_prompt(message: str, history: list[dict[str, str]] | None = None)
         if "both be true" in lower or "contradict" in lower:
             return False
         return True
-    if re.search(r"\bhow is .+ like .+\b", lower):
+    if re.search(r"\bhow (?:is|are) .+ like .+\b", lower):
+        return True
+    if re.search(r"\b(?:test this analogy:\s*)?.+\s+(?:is|are) like\s+.+\b", lower):
+        if any(style in lower for style in ("like a normal assistant", "like a person", "like chatgpt")):
+            return False
         return True
     if "give me an analogy" in lower or "explain" in lower and "using" in lower and "analogy" in lower:
         return True

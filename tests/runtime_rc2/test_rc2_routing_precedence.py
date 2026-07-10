@@ -98,3 +98,27 @@ def test_developer_overlay_contains_arbitration_and_safety_metadata():
     assert "Safety metadata:" in rendered
     assert "selected_group: analogy_analysis" in rendered
 
+
+def test_recall_key_points_routes_to_substrate_instead_of_model_consent():
+    payload = route_message("Conversation", "What are the key points about photosynthesis?")
+    assert payload["route"] == "developmental_concept_memory"
+    assert "photosynthesis" in payload["answer"].lower()
+    assert "light" in payload["answer"].lower()
+    assert payload.get("local_model_offer") in (None, {})
+
+
+def test_style_request_does_not_trigger_analogy_arbitration():
+    payload = route_message("Conversation", "Can you answer like a normal assistant?")
+    assert payload["route"] == "local_conversation_model_lane"
+    assert "natural assistant" in payload["answer"].lower()
+    arbitration = payload["route_arbitration"]
+    assert arbitration["recommended_group"] == "local_conversation_model_lane"
+
+
+def test_novel_domain_bridge_routes_to_wrs_with_named_domains():
+    payload = route_message("Conversation", "How might gardening and software architecture share a planning pattern?")
+    assert payload["route"] == "working_reasoning_set"
+    answer = payload["answer"].lower()
+    assert "gardening" in answer
+    assert "software" in answer
+    assert "planning" in answer

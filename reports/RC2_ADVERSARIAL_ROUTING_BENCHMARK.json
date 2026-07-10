@@ -11,7 +11,7 @@
     "topic_override": 1.0,
     "working_memory": 1.0
   },
-  "created_at": "2026-07-10T06:42:15+00:00",
+  "created_at": "2026-07-10T15:57:40+00:00",
   "explicit_topic_override_accuracy": 1.0,
   "internal_leak_count": 0,
   "orphan_clarification_accuracy": 1.0,
@@ -78,7 +78,8 @@
             "yielded_to": "contradiction_analysis"
           }
         ],
-        "created_at": "2026-07-10T06:42:05+00:00",
+        "created_at": "2026-07-10T15:57:31+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -127,6 +128,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "contradiction_analysis",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -260,7 +262,8 @@
             "yielded_to": "contradiction_analysis"
           }
         ],
-        "created_at": "2026-07-10T06:42:06+00:00",
+        "created_at": "2026-07-10T15:57:32+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -309,6 +312,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "contradiction_analysis",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -428,7 +432,8 @@
             "yielded_to": "working_memory_reference_resolution"
           }
         ],
-        "created_at": "2026-07-10T06:42:06+00:00",
+        "created_at": "2026-07-10T15:57:32+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -477,6 +482,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -597,7 +603,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:06+00:00",
+        "created_at": "2026-07-10T15:57:32+00:00",
+        "dispatch_aligned_with_arbitration": false,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -646,6 +653,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "analogy_analysis",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -769,7 +777,8 @@
             "yielded_to": "analogy_analysis"
           }
         ],
-        "created_at": "2026-07-10T06:42:07+00:00",
+        "created_at": "2026-07-10T15:57:33+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -818,6 +827,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "analogy_analysis",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -937,7 +947,8 @@
             "yielded_to": "working_reasoning_set"
           }
         ],
-        "created_at": "2026-07-10T06:42:10+00:00",
+        "created_at": "2026-07-10T15:57:36+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -986,6 +997,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_reasoning_set",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -1093,7 +1105,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:39+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -1142,6 +1155,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_reasoning_set",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -1250,7 +1264,8 @@
             "yielded_to": "working_memory_reference_resolution"
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:39+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -1299,6 +1314,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -1405,7 +1421,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:39+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -1454,6 +1471,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -1547,7 +1565,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -1596,6 +1615,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "single_concept_retrieval",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -1693,7 +1713,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -1742,6 +1763,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -1835,7 +1857,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -1884,6 +1907,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -2004,7 +2028,8 @@
             "yielded_to": "working_memory_reference_resolution"
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -2053,6 +2078,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -2185,7 +2211,8 @@
             "yielded_to": "social_conversation"
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -2234,6 +2261,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "social_conversation",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -2341,7 +2369,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:14+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -2390,6 +2419,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "working_memory_reference_resolution",
         "rejected_routes": [
           {
             "confidence": 1.0,
@@ -2485,7 +2515,8 @@
             "yielded_to": null
           }
         ],
-        "created_at": "2026-07-10T06:42:15+00:00",
+        "created_at": "2026-07-10T15:57:40+00:00",
+        "dispatch_aligned_with_arbitration": true,
         "ephemeral": true,
         "precedence_order": [
           {
@@ -2534,6 +2565,7 @@
           }
         ],
         "read_only": true,
+        "recommended_group": "single_concept_retrieval",
         "rejected_routes": [
           {
             "confidence": 1.0,

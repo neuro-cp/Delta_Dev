@@ -124,6 +124,7 @@ def build_route_arbitration_trace(
             context_available=True,
         ))
     candidates = sorted(candidates, key=lambda item: (item.precedence, -item.confidence, item.route))
+    recommended = _recommended_group(candidates, fallback=selected_group)
     selected_precedence = PRECEDENCE_BY_ROUTE.get(selected_group, 99)
     for item in candidates:
         if item.route == selected_group:
@@ -140,6 +141,8 @@ def build_route_arbitration_trace(
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "selected_route": selected_route,
         "selected_group": selected_group,
+        "recommended_group": recommended,
+        "dispatch_aligned_with_arbitration": selected_group == recommended or selected_group == "local_conversation_model_lane",
         "precedence_order": [{"route": route, "precedence": precedence} for route, precedence in PRECEDENCE],
         "candidate_routes": [asdict(item) for item in candidates],
         "rejected_routes": [
@@ -149,6 +152,14 @@ def build_route_arbitration_trace(
         "read_only": True,
         "ephemeral": True,
     }
+
+
+def _recommended_group(candidates: list[RouteCandidate], *, fallback: str) -> str:
+    for item in candidates:
+        if item.route == "safety":
+            continue
+        return item.route
+    return fallback
 
 
 def safety_schema_complete(payload: dict[str, Any]) -> bool:

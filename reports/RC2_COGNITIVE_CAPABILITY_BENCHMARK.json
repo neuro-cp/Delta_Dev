@@ -17,22 +17,22 @@
     "abstraction": 0.9611,
     "analogy": 0.8666,
     "contradiction_detection": 0.9722,
-    "conversation_quality": 0.7347,
+    "conversation_quality": 0.7451,
     "cross_domain_synthesis": 0.9806,
     "followup_memory": 1.0,
     "long_conversation": 1.0,
-    "missing_evidence": 0.8812,
+    "missing_evidence": 0.8937,
     "multi_concept_retrieval": 0.975,
-    "novel_combination": 0.6931,
-    "recall": 0.7267
+    "novel_combination": 0.9806,
+    "recall": 0.985
   },
-  "created_at": "2026-07-10T07:10:45+00:00",
-  "overall_score": 0.8669,
-  "recommendation": "IMPROVE_WRS_ABSTRACTION_AND_PROPOSITION_COMPARISON_BEFORE_CONCEPT_INSTILLATION",
+  "created_at": "2026-07-10T16:06:18+00:00",
+  "overall_score": 0.9445,
+  "recommendation": "IMPROVE_CONVERSATIONAL_RENDERING_AND_SESSION_STATE_BEFORE_CONCEPT_INSTILLATION",
   "report": "RC2_COGNITIVE_CAPABILITY_BENCHMARK",
   "results": [
     {
-      "answer_preview": "I know about Blood Pressure Causal Pathway. Blood Pressure Causal Pathway (Medicine Health General) tracks how one change can propagate through the concept into later outcomes in medicine health general, connecting blood pressure to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Blood Pressure Ethical Constraint, Blood Pressure Learning Path.",
+      "answer_preview": "I know about Blood Pressure. Blood pressure is the force exerted by circulating blood against artery walls, usually measured as systolic pressure over diastolic pressure. Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Blood pressure reflects cardiac output, vascular resistance, blood volume, and short-term physiological state. I can also connect it to Blood Pressure Causal Pathway, Blood Pressure Ethical Constraint.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_blood_pressure_0",
@@ -46,8 +46,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -55,7 +55,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Blood Pressure Causal Pathway. Blood Pressure Causal Pathway (Medicine Health General) tracks how one change can propagate through the concept into later outcomes in medicine health general, connecting blood pressure to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Blood Pressure Ethical Constraint, Blood Pressure Learning Path.",
+      "answer_preview": "I know about Blood Pressure. Blood pressure is the force exerted by circulating blood against artery walls, usually measured as systolic pressure over diastolic pressure. Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Blood pressure reflects cardiac output, vascular resistance, blood volume, and short-term physiological state. I can also connect it to Blood Pressure Causal Pathway, Blood Pressure Ethical Constraint.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_blood_pressure_1",
@@ -69,8 +69,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -101,7 +101,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Allergies Data Requirement. Allergies Data Requirement (Medicine Health General) defines what data is needed before the concept can support a reliable decision in medicine health general, connecting allergies to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Allergies Measurement, Allergies Mechanism.",
+      "answer_preview": "I know about Allergies. Allergies are immune responses to substances that the body treats as harmful allergens. Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Allergy severity can range from mild symptoms to severe systemic reactions such as anaphylaxis. I can also connect it to Allergies Data Requirement, Allergies Measurement.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_allergies_0",
@@ -115,8 +115,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -124,7 +124,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Food Allergies Governed Memory. Food Allergies Governed Memory (Nutrition) describes how the concept should be stored, revised, rolled back, or promoted in nutrition, connecting food allergies to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Measurement, Local Inference Mechanism.",
+      "answer_preview": "I know about Allergies. Allergies are immune responses to substances that the body treats as harmful allergens. Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Allergy severity can range from mild symptoms to severe systemic reactions such as anaphylaxis. I can also connect it to Allergies Data Requirement, Allergies Measurement.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_allergies_1",
@@ -138,8 +138,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -147,22 +147,22 @@
       "wrs": null
     },
     {
-      "answer_preview": "I don't think I know enough about the key points about allergies from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "I know about Allergies. Allergies are immune responses to substances that the body treats as harmful allergens. Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Allergy severity can range from mild symptoms to severe systemic reactions such as anaphylaxis. I can also connect it to Allergies Data Requirement, Allergies Measurement.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_allergies_2",
       "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
+      "concept_count": 5,
+      "confidence_score": 0.92,
       "prompt": "What are the key points about allergies?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "developmental_concept_memory",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -170,7 +170,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Local Government Comparative Frame. Local Government Comparative Frame (Law Government Basics) compares the concept with nearby ideas so differences and overlaps stay clear in law government basics, connecting local government to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Government Contradiction Check, Local Government Curriculum Role.",
+      "answer_preview": "I know about Photosynthesis. Photosynthesis is the process by which plants, algae, and some bacteria use light energy to make chemical energy from carbon dioxide and water. Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Chlorophyll and chloroplasts help capture light energy in many photosynthetic organisms. I can also connect it to Photosynthesis Comparative Frame, Photosynthesis Contradiction Check.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_photosynthesis_0",
@@ -184,8 +184,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.55,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -193,7 +193,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Local Inference Measurement. Local Inference Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting local inference to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Mechanism, Local Inference System Interaction.",
+      "answer_preview": "I know about Photosynthesis. Photosynthesis is the process by which plants, algae, and some bacteria use light energy to make chemical energy from carbon dioxide and water. Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Chlorophyll and chloroplasts help capture light energy in many photosynthetic organisms. I can also connect it to Photosynthesis Comparative Frame, Photosynthesis Contradiction Check.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_photosynthesis_1",
@@ -207,8 +207,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.55,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -216,22 +216,22 @@
       "wrs": null
     },
     {
-      "answer_preview": "I don't think I know enough about the key points about photosynthesis from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "I know about Photosynthesis. Photosynthesis is the process by which plants, algae, and some bacteria use light energy to make chemical energy from carbon dioxide and water. Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Chlorophyll and chloroplasts help capture light energy in many photosynthetic organisms. I can also connect it to Photosynthesis Comparative Frame, Photosynthesis Contradiction Check.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_photosynthesis_2",
       "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
+      "concept_count": 5,
+      "confidence_score": 0.92,
       "prompt": "What are the key points about photosynthesis?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "developmental_concept_memory",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -239,7 +239,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Cellular Respiration Boundary Conditions. Cellular Respiration Boundary Conditions (Biology) states when the concept applies, when it does not, and what assumptions must hold in biology, connecting cellular respiration to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Cellular Respiration Failure Mode, Cellular Respiration Failure Recovery.",
+      "answer_preview": "I know about Cellular Respiration. Cellular respiration is the process cells use to release usable energy from organic molecules, commonly producing ATP. Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Aerobic cellular respiration uses oxygen and produces carbon dioxide and water as major outputs. I can also connect it to Cellular Respiration Boundary Conditions, Cellular Respiration Failure Mode.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_cellular_respiration_0",
@@ -253,8 +253,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -262,7 +262,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Cellular Respiration Practical Heuristic. Cellular Respiration Practical Heuristic (Biology) offers a useful rule of thumb while preserving exceptions and uncertainty in biology, connecting cellular respiration to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Cellular Respiration Boundary Conditions, Cellular Respiration Failure Mode.",
+      "answer_preview": "I know about Cellular Respiration. Cellular respiration is the process cells use to release usable energy from organic molecules, commonly producing ATP. Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Aerobic cellular respiration uses oxygen and produces carbon dioxide and water as major outputs. I can also connect it to Cellular Respiration Boundary Conditions, Cellular Respiration Failure Mode.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_cellular_respiration_1",
@@ -276,8 +276,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -308,7 +308,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Inflation Boundary Conditions. Inflation Boundary Conditions (Finance) states when the concept applies, when it does not, and what assumptions must hold in finance, connecting inflation to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Inflation Failure Recovery, Inflation Historical Development.",
+      "answer_preview": "I know about Inflation. Inflation is a sustained increase in the general price level of goods and services, reducing purchasing power over time. Inflation means prices generally rise across an economy rather than one isolated price increasing. Inflation reduces purchasing power when incomes or savings do not rise at the same pace. I can also connect it to Inflation Boundary Conditions, Inflation Failure Recovery.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_inflation_0",
@@ -322,8 +322,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -331,7 +331,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Local Inference Measurement. Local Inference Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting local inference to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Mechanism, Local Inference System Interaction.",
+      "answer_preview": "I know about Inflation. Inflation is a sustained increase in the general price level of goods and services, reducing purchasing power over time. Inflation means prices generally rise across an economy rather than one isolated price increasing. Inflation reduces purchasing power when incomes or savings do not rise at the same pace. I can also connect it to Inflation Boundary Conditions, Inflation Failure Recovery.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_inflation_1",
@@ -345,8 +345,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.55,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -354,22 +354,22 @@
       "wrs": null
     },
     {
-      "answer_preview": "I don't think I know enough about the key points about inflation from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "I know about Inflation. Inflation is a sustained increase in the general price level of goods and services, reducing purchasing power over time. Inflation means prices generally rise across an economy rather than one isolated price increasing. Inflation reduces purchasing power when incomes or savings do not rise at the same pace. I can also connect it to Inflation Boundary Conditions, Inflation Failure Recovery.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_inflation_2",
       "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
+      "concept_count": 5,
+      "confidence_score": 0.92,
       "prompt": "What are the key points about inflation?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "developmental_concept_memory",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -377,7 +377,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Interest Rates Causal Pathway. Interest Rates Causal Pathway (Finance) tracks how one change can propagate through the concept into later outcomes in finance, connecting interest rates to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Interest Rates Ethical Constraint, Interest Rates Failure Mode.",
+      "answer_preview": "I know about Interest Rates. Interest rates are the cost of borrowing money or the return paid for lending or saving money, usually expressed as a percentage over time. Interest rates influence borrowing costs for consumers, businesses, and governments. Higher interest rates can reduce borrowing and spending, while lower rates can encourage them. I can also connect it to Interest Rates Causal Pathway, Interest Rates Ethical Constraint.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_interest_rates_0",
@@ -391,8 +391,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.85,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -400,7 +400,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Interest Rates Causal Pathway. Interest Rates Causal Pathway (Finance) tracks how one change can propagate through the concept into later outcomes in finance, connecting interest rates to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Interest Rates Ethical Constraint, Interest Rates Failure Mode.",
+      "answer_preview": "I know about Interest Rates. Interest rates are the cost of borrowing money or the return paid for lending or saving money, usually expressed as a percentage over time. Interest rates influence borrowing costs for consumers, businesses, and governments. Higher interest rates can reduce borrowing and spending, while lower rates can encourage them. I can also connect it to Interest Rates Causal Pathway, Interest Rates Ethical Constraint.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_interest_rates_1",
@@ -414,8 +414,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.85,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -446,7 +446,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Gravity Cross-Domain Analogy. Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Gravity Diagnostic Use, Gravity Governed Memory.",
+      "answer_preview": "I know about Gravity. Gravity is the attractive interaction associated with mass and energy, commonly observed as objects accelerating toward one another. Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Near Earth's surface, gravity causes falling objects to accelerate downward when other forces are ignored. I can also connect it to Gravity Cross-Domain Analogy, Gravity Diagnostic Use.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_gravity_0",
@@ -460,8 +460,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -469,7 +469,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Gravity Governed Memory. Gravity Governed Memory (Basic Physics) describes how the concept should be stored, revised, rolled back, or promoted in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Measurement, Local Inference Mechanism.",
+      "answer_preview": "I know about Gravity. Gravity is the attractive interaction associated with mass and energy, commonly observed as objects accelerating toward one another. Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Near Earth's surface, gravity causes falling objects to accelerate downward when other forces are ignored. I can also connect it to Gravity Cross-Domain Analogy, Gravity Diagnostic Use.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_gravity_1",
@@ -483,8 +483,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -492,22 +492,22 @@
       "wrs": null
     },
     {
-      "answer_preview": "I don't think I know enough about the key points about gravity from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "I know about Gravity. Gravity is the attractive interaction associated with mass and energy, commonly observed as objects accelerating toward one another. Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Near Earth's surface, gravity causes falling objects to accelerate downward when other forces are ignored. I can also connect it to Gravity Cross-Domain Analogy, Gravity Diagnostic Use.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_gravity_2",
       "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
+      "concept_count": 5,
+      "confidence_score": 0.92,
       "prompt": "What are the key points about gravity?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "developmental_concept_memory",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -515,7 +515,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Planning. Planning is the process of choosing goals, steps, resources, constraints, and checkpoints before or during action. Planning defines intended outcomes and the steps expected to reach them. Planning depends on constraints such as time, resources, priorities, risk, and dependencies. I can also connect it to Attention Budgeting Learning Path, Attention Budgeting Practical Application.",
+      "answer_preview": "I know about Planning. Planning is the process of choosing goals, steps, resources, constraints, and checkpoints before or during action. Planning defines intended outcomes and the steps expected to reach them. Planning depends on constraints such as time, resources, priorities, risk, and dependencies. I can also connect it to Calendar Planning, Attention Budgeting Learning Path.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_planning_0",
@@ -538,7 +538,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Safety Planning Governed Memory. Safety Planning Governed Memory (Medicine Health General) describes how the concept should be stored, revised, rolled back, or promoted in medicine health general, connecting safety planning to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Attention Budgeting Learning Path, Attention Budgeting Practical Application.",
+      "answer_preview": "I know about Planning. Planning is the process of choosing goals, steps, resources, constraints, and checkpoints before or during action. Planning defines intended outcomes and the steps expected to reach them. Planning depends on constraints such as time, resources, priorities, risk, and dependencies. I can also connect it to Calendar Planning, Attention Budgeting Learning Path.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_planning_1",
@@ -552,8 +552,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 0.85,
+        "term_score": 0.6667,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -584,7 +584,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Feedback Loops Governance. Feedback Loops Governance (Planning Productivity) describes review, accountability, and control requirements around the concept in planning productivity, connecting feedback loops to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Feedback Loops Human Factor, Feedback Loops Learning Path.",
+      "answer_preview": "I know about Feedback Loops. Feedback loops are cycles where outcomes are compared with goals so behavior or plans can be adjusted. A feedback loop compares actual results with an intended goal or reference state. Negative feedback can stabilize a system by reducing deviation from a target. I can also connect it to Feedback Loops Boundary Conditions, Feedback Loops Diagnostic Use.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_feedback_loops_0",
@@ -598,8 +598,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -607,7 +607,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Feedback Loops Diagnostic Use. Feedback Loops Diagnostic Use (Psychology) shows how the concept helps identify problems, gaps, or likely explanations in psychology, connecting feedback loops to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Feedback Loops Measurement, Feedback Loops Mechanism.",
+      "answer_preview": "I know about Feedback Loops. Feedback loops are cycles where outcomes are compared with goals so behavior or plans can be adjusted. A feedback loop compares actual results with an intended goal or reference state. Negative feedback can stabilize a system by reducing deviation from a target. I can also connect it to Feedback Loops Boundary Conditions, Feedback Loops Diagnostic Use.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_feedback_loops_1",
@@ -621,8 +621,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -630,7 +630,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Feedback Loops Failure Mode. Feedback Loops Failure Mode (Planning Productivity) identifies how the concept breaks down or becomes misleading in planning productivity, connecting feedback loops to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Feedback Loops Governance, Feedback Loops Human Factor.",
+      "answer_preview": "I know about Feedback Loops. Feedback loops are cycles where outcomes are compared with goals so behavior or plans can be adjusted. A feedback loop compares actual results with an intended goal or reference state. Negative feedback can stabilize a system by reducing deviation from a target. I can also connect it to Feedback Loops Boundary Conditions, Feedback Loops Diagnostic Use.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_feedback_loops_2",
@@ -644,8 +644,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -658,7 +658,7 @@
       "canonical_write_performed": false,
       "case_id": "recall_noncanonical_memory_0",
       "category": "recall",
-      "concept_count": 5,
+      "concept_count": 3,
       "confidence_score": 0.92,
       "prompt": "What is noncanonical memory? Use your local substrate if available.",
       "provider_calls_performed": false,
@@ -676,12 +676,12 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Noncanonical Memory Measurement. Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Noncanonical Memory System Interaction, Noncanonical Memory.",
+      "answer_preview": "I know about Noncanonical Memory. Noncanonical memory is reversible, reviewable knowledge that DELTA may use locally without treating it as permanent canonical truth. Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical memory is useful for reversible learning, operator review, rollback, and experimentation. I can also connect it to Noncanonical Memory Measurement, Noncanonical Memory System Interaction.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "recall_noncanonical_memory_1",
       "category": "recall",
-      "concept_count": 5,
+      "concept_count": 3,
       "confidence_score": 0.92,
       "prompt": "Explain noncanonical memory in one useful paragraph from local memory.",
       "provider_calls_performed": false,
@@ -690,8 +690,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.85,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -2220,7 +2220,7 @@
       "case_id": "abstraction_080_0",
       "category": "abstraction",
       "concept_count": 8,
-      "confidence_score": 0.94,
+      "confidence_score": 0.95,
       "prompt": "What common reasoning pattern connects planning, feedback loops, and software architecture?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -2235,14 +2235,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "confidence": 0.94,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
         "missing_evidence_count": 0,
         "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29
+        "retrieved_proposition_count": 32
       }
     },
     {
@@ -2252,7 +2252,7 @@
       "case_id": "abstraction_081_1",
       "category": "abstraction",
       "concept_count": 8,
-      "confidence_score": 0.94,
+      "confidence_score": 0.95,
       "prompt": "Explain what common reasoning pattern connects planning, feedback loops, and software architecture?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -2267,14 +2267,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "confidence": 0.94,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
         "missing_evidence_count": 0,
         "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29
+        "retrieved_proposition_count": 32
       }
     },
     {
@@ -2470,7 +2470,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advanced learning sequence in medicine health general, connecting immune memory to evidence, constraints, examples, and reviewable uncer",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Allergies (Medicine Health General) and Immune Memory Learning Path (Medicine Health General) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Immune Memory Learning Path: Immune Memory Learning Path ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_088_0",
@@ -2502,7 +2502,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advanced learning sequence in medicine health general, connecting immune memory to evidence, constraints, examples, and reviewable uncer",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Allergies (Medicine Health General) and Immune Memory Learning Path (Medicine Health General) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Immune Memory Learning Path: Immune Memory Learning Path ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_089_1",
@@ -2726,7 +2726,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable uncertainty. No",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Noncanonical Memory (Delta Architecture Itself) and Advanced Operator Mode Evidence Standard (Delta Architecture Itself) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measu",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_096_0",
@@ -2758,7 +2758,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable uncertainty. No",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Noncanonical Memory (Delta Architecture Itself) and Advanced Operator Mode Evidence Standard (Delta Architecture Itself) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measu",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_097_1",
@@ -2813,7 +2813,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Customer Feedback Governance (Business) and Feedback Loops (Planning Productivity) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, con",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_099_1",
@@ -2827,8 +2827,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.85,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -2845,7 +2845,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnostic Use: Gravit",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Gravity (Basic Physics) and Activation Energy Evidence Standard (Chemistry) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally sim",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_100_0",
@@ -2877,7 +2877,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnostic Use: Gravit",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Gravity (Basic Physics) and Activation Energy Evidence Standard (Chemistry) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally sim",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_101_1",
@@ -3185,30 +3185,39 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Adapter Pattern Comparative Frame. Adapter Pattern Comparative Frame (Software Architecture) compares the concept with nearby ideas so differences and overlaps stay clear in software architecture, connecting adapter pattern to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Adapter Pattern Contradiction Check, Adapter Pattern Curriculum Role.",
+      "answer_preview": "Gardening and software architecture can share a planning pattern: both start with goals, constraints, sequencing, feedback, and maintenance. In gardening the plan manages soil, water, light, timing, and growth; in software architecture the plan manages components, interfaces, dependencies, and future change. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Annuals Governance: Annuals Governance (Agriculture Gardening) describes review, accountability, and contro",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_114_0",
       "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
+      "concept_count": 8,
+      "confidence_score": 0.95,
       "prompt": "How might gardening and software architecture share a planning pattern?",
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "route": "working_reasoning_set",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.5167,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
-      "wrs": null
+      "wrs": {
+        "confidence": 0.95,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
+        "retrieval_score": 1.0,
+        "retrieved_concept_count": 8,
+        "retrieved_graph_edge_count": 10,
+        "retrieved_proposition_count": 31
+      }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Planning: Planning defines intended outcomes and the steps expected to reach them. Attention Budgeting Learning Path: Attention Budgeting Learning Path (Planning Productivity) places the concept in a prerequisite-to-advanced learning sequence in planning productivity, connecting attention budgeting to evidence, c",
+      "answer_preview": "Gardening and software architecture can share a planning pattern: both start with goals, constraints, sequencing, feedback, and maintenance. In gardening the plan manages soil, water, light, timing, and growth; in software architecture the plan manages components, interfaces, dependencies, and future change. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Annuals Governance: Annuals Governance (Agriculture Gardening) describes review, accountability, and contro",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_115_1",
@@ -3222,8 +3231,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3236,49 +3245,26 @@
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34
+        "retrieved_proposition_count": 31
       }
     },
     {
-      "answer_preview": "I know about Stress Strain Curves Mechanism. Stress Strain Curves Mechanism (Materials Science) explains how the process works and which parts interact in materials science, connecting stress strain curves to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Stress Strain Curves Comparative Frame, Stress Strain Curves Contradiction Check.",
+      "answer_preview": "Materials science and psychology both use stress as a useful concept for how systems respond to load. In materials, stress describes force distributed through a material; in psychology, stress describes demands or pressure on a person. The bridge is load, response, tolerance, and failure or adaptation under sustained pressure. Additive Manufacturing Causal Pathway: Additive Manufacturing Causal Pathway (Materials Science) tracks how one change can propagate through the concept into later outcome",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_116_0",
       "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "How might materials science and psychology both use stress as a useful concept?",
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.6333,
-        "term_score": 0.6667,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists for centuries. Additive Manufacturing Causal Pathway: Additive Manufacturing Causal Pathway (Materials Science) tracks how one change can propagate through the concept into later outcomes in materials science, connecting additive manufacturin",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "novel_117_1",
-      "category": "novel_combination",
       "concept_count": 8,
       "confidence_score": 0.82,
-      "prompt": "How might materials science and psychology both use stress as a useful concept? Keep the bridge tentative.",
+      "prompt": "How might materials science and psychology both use stress as a useful concept?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3295,30 +3281,71 @@
       }
     },
     {
-      "answer_preview": "I know about Feedback Loops Boundary Conditions. Feedback Loops Boundary Conditions (Biology) states when the concept applies, when it does not, and what assumptions must hold in biology, connecting feedback loops to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Feedback Loops Failure Mode, Feedback Loops Human Factor.",
+      "answer_preview": "Materials science and psychology both use stress as a useful concept for how systems respond to load. In materials, stress describes force distributed through a material; in psychology, stress describes demands or pressure on a person. The bridge is load, response, tolerance, and failure or adaptation under sustained pressure. Additive Manufacturing Causal Pathway: Additive Manufacturing Causal Pathway (Materials Science) tracks how one change can propagate through the concept into later outcome",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "case_id": "novel_118_0",
+      "case_id": "novel_117_1",
       "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "How might finance and biology both reason about feedback loops?",
+      "concept_count": 8,
+      "confidence_score": 0.82,
+      "prompt": "How might materials science and psychology both use stress as a useful concept? Keep the bridge tentative.",
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "route": "working_reasoning_set",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.6333,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
-      "wrs": null
+      "wrs": {
+        "confidence": 0.82,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
+        "retrieval_score": 1.0,
+        "retrieved_concept_count": 8,
+        "retrieved_graph_edge_count": 8,
+        "retrieved_proposition_count": 27
+      }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
+      "answer_preview": "Finance and biology both reason with feedback loops because outcomes can change future behavior: markets respond to prices, incentives, and risk signals, while biological systems respond to internal and external conditions. The shared pattern is signal, response, adjustment, and possible stabilization or runaway change. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting custom",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "novel_118_0",
+      "category": "novel_combination",
+      "concept_count": 8,
+      "confidence_score": 0.82,
+      "prompt": "How might finance and biology both reason about feedback loops?",
+      "provider_calls_performed": false,
+      "route": "working_reasoning_set",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 1.0,
+        "term_score": 1.0,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": {
+        "confidence": 0.82,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
+        "retrieval_score": 1.0,
+        "retrieved_concept_count": 8,
+        "retrieved_graph_edge_count": 8,
+        "retrieved_proposition_count": 25
+      }
+    },
+    {
+      "answer_preview": "Finance and biology both reason with feedback loops because outcomes can change future behavior: markets respond to prices, incentives, and risk signals, while biological systems respond to internal and external conditions. The shared pattern is signal, response, adjustment, and possible stabilization or runaway change. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting custom",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_119_1",
@@ -3332,8 +3359,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3345,50 +3372,27 @@
         "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
-        "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28
+        "retrieved_graph_edge_count": 8,
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "I know about Appliance Troubleshooting Evidence Standard. Appliance Troubleshooting Evidence Standard (Home Repair) defines what observations or measurements make the concept credible in home repair, connecting appliance troubleshooting to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Circuit Breakers Evidence Standard, Electrical Safety Evidence Standard.",
+      "answer_preview": "Home repair and medicine both depend on diagnostic evidence because action should follow observed symptoms, measurements, history, and likely causes rather than guesses. The shared structure is diagnosis before intervention: collect evidence, narrow causes, choose a safe action, and revise if feedback contradicts the plan. Adhesives Learning Path: Adhesives Learning Path (Home Repair) places the concept in a prerequisite-to-advanced learning sequence in home repair, connecting adhesives to evide",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_120_0",
       "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "How could home repair and medicine both depend on diagnostic evidence?",
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.5167,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Activation Energy Evidence Standard: Activation Energy Evidence Standard (Chemistry) defines what observations or measurements make the concept credible in chemistry, connecting activation energy to evidence, constraints, examples, and reviewable uncertainty. Active Transport Evidence Standard: Active Transport Evidence Standard (Biology) defines what observations or measurements make the conce",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "novel_121_1",
-      "category": "novel_combination",
       "concept_count": 8,
       "confidence_score": 0.82,
-      "prompt": "How could home repair and medicine both depend on diagnostic evidence? Keep the bridge tentative.",
+      "prompt": "How could home repair and medicine both depend on diagnostic evidence?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.65,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3405,7 +3409,39 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in psychology, connecting memory consolidation to evidence, constraints, examples, and reviewable uncertainty. Memory Consolida",
+      "answer_preview": "Home repair and medicine both depend on diagnostic evidence because action should follow observed symptoms, measurements, history, and likely causes rather than guesses. The shared structure is diagnosis before intervention: collect evidence, narrow causes, choose a safe action, and revise if feedback contradicts the plan. Adhesives Learning Path: Adhesives Learning Path (Home Repair) places the concept in a prerequisite-to-advanced learning sequence in home repair, connecting adhesives to evide",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "novel_121_1",
+      "category": "novel_combination",
+      "concept_count": 8,
+      "confidence_score": 0.82,
+      "prompt": "How could home repair and medicine both depend on diagnostic evidence? Keep the bridge tentative.",
+      "provider_calls_performed": false,
+      "route": "working_reasoning_set",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 1.0,
+        "term_score": 1.0,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": {
+        "confidence": 0.82,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
+        "retrieval_score": 1.0,
+        "retrieved_concept_count": 8,
+        "retrieved_graph_edge_count": 10,
+        "retrieved_proposition_count": 24
+      }
+    },
+    {
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Memory Consolidation (Psychology) and Access Control (Software Architecture) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one cha",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_122_0",
@@ -3419,8 +3455,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 0.8833,
+        "term_score": 0.6667,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3437,7 +3473,7 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in psychology, connecting memory consolidation to evidence, constraints, examples, and reviewable uncertainty. Memory Consolida",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Memory Consolidation (Psychology) and Access Control (Software Architecture) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one cha",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_123_1",
@@ -3451,8 +3487,8 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 0.8833,
+        "term_score": 0.6667,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3469,13 +3505,13 @@
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
+      "answer_preview": "Agriculture, energy transfer, and feedback control connect through managed flows: sunlight, water, nutrients, and labor enter a growing system, feedback indicates whether conditions are working, and control decisions adjust the system toward healthier growth. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_124_0",
       "category": "novel_combination",
       "concept_count": 8,
-      "confidence_score": 0.95,
+      "confidence_score": 0.82,
       "prompt": "What connects agriculture, energy transfer, and feedback control?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -3483,31 +3519,31 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "confidence": 0.95,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "missing_evidence_count": 0,
+        "missing_evidence_count": 1,
         "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
+      "answer_preview": "Agriculture, energy transfer, and feedback control connect through managed flows: sunlight, water, nutrients, and labor enter a growing system, feedback indicates whether conditions are working, and control decisions adjust the system toward healthier growth. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_125_1",
       "category": "novel_combination",
       "concept_count": 8,
-      "confidence_score": 0.95,
+      "confidence_score": 0.82,
       "prompt": "What connects agriculture, energy transfer, and feedback control? Keep the bridge tentative.",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -3515,21 +3551,21 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "confidence": 0.95,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "missing_evidence_count": 0,
+        "missing_evidence_count": 1,
         "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34
+        "retrieved_proposition_count": 25
       }
     },
     {
@@ -3878,22 +3914,22 @@
       "wrs": null
     },
     {
-      "answer_preview": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "Yes. I can answer in a more natural assistant style: direct first, enough context to be useful, and technical details only when you ask for them.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "conversation_5",
       "category": "conversation_quality",
       "concept_count": 0,
-      "confidence_score": 0.3,
+      "confidence_score": 0.86,
       "prompt": "Can you answer like a normal assistant?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "local_conversation_model_lane",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 0.0,
         "safety_score": 1.0,
-        "score": 0.6,
-        "term_score": 0.0,
+        "score": 0.725,
+        "term_score": 0.5,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -3970,16 +4006,16 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Follow-up Failure Mode. Follow-up Failure Mode (Social Communication) identifies how the concept breaks down or becomes misleading in social communication, connecting follow-up to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Follow-up Governance, Follow-up Optimization.",
+      "answer_preview": "Sure. What topic do you want to explore next, and do you want a quick overview or a deeper explanation?",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "conversation_9",
       "category": "conversation_quality",
-      "concept_count": 3,
-      "confidence_score": 0.92,
+      "concept_count": 0,
+      "confidence_score": 0.84,
       "prompt": "Could you ask me a follow-up question?",
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "route": "local_conversation_model_lane",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 0.0,
@@ -4245,7 +4281,7 @@
           "value": 22
         }
       ],
-      "created_at": "2026-07-10T07:10:45+00:00",
+      "created_at": "2026-07-10T16:06:18+00:00",
       "recommendation": "USE_ACTIVE_RUNTIME_CONCEPTS_FOR_UI_AND_WRS_DEFER_INSTILLATION_UNTIL_COUNTERS_STAY_RECONCILED",
       "report": "RC2_SUBSTRATE_RECONCILIATION",
       "safety": {
@@ -4300,50 +4336,9 @@
   },
   "text_pathology_review": {
     "consent_prompt_when_local_substrate_expected": {
-      "count": 5,
-      "examples": [
-        {
-          "case_id": "recall_allergies_2",
-          "category": "recall",
-          "preview": "I don't think I know enough about the key points about allergies from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-          "prompt": "What are the key points about allergies?",
-          "route": "local_model_consent_required",
-          "score": 0.45
-        },
-        {
-          "case_id": "recall_photosynthesis_2",
-          "category": "recall",
-          "preview": "I don't think I know enough about the key points about photosynthesis from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-          "prompt": "What are the key points about photosynthesis?",
-          "route": "local_model_consent_required",
-          "score": 0.45
-        },
-        {
-          "case_id": "recall_inflation_2",
-          "category": "recall",
-          "preview": "I don't think I know enough about the key points about inflation from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-          "prompt": "What are the key points about inflation?",
-          "route": "local_model_consent_required",
-          "score": 0.45
-        },
-        {
-          "case_id": "recall_gravity_2",
-          "category": "recall",
-          "preview": "I don't think I know enough about the key points about gravity from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-          "prompt": "What are the key points about gravity?",
-          "route": "local_model_consent_required",
-          "score": 0.45
-        },
-        {
-          "case_id": "conversation_5",
-          "category": "conversation_quality",
-          "preview": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-          "prompt": "Can you answer like a normal assistant?",
-          "route": "local_model_consent_required",
-          "score": 0.6
-        }
-      ],
-      "rate": 0.0338
+      "count": 0,
+      "examples": [],
+      "rate": 0.0
     },
     "generic_scaffold": {
       "count": 0,
@@ -4366,182 +4361,31 @@
       "rate": 0.0
     },
     "summary_findings": [
-      "Contradiction prompts are usually routed to single-concept memory instead of a contradiction/comparison path.",
-      "Many answers still expose report-like WRS sections; useful for Developer Overlay, too stiff for default conversation.",
-      "Scaffold concepts still surface in recall, analogy, and cross-domain prompts where core factual concepts should win.",
-      "Follow-up memory can attach to the wrong prior topic when the user gives a short command such as 'Give an example.'",
-      "Some local-substrate questions still ask for local model escalation even when repaired concepts exist."
+      "No text pathology category exceeded zero in this run; remaining benchmark weakness is score distribution rather than obvious non-human output leakage."
     ],
     "wrong_context": {
-      "count": 1,
-      "examples": [
-        {
-          "case_id": "novel_117_1",
-          "category": "novel_combination",
-          "preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists fo",
-          "prompt": "How might materials science and psychology both use stress as a useful concept? Keep the bridge tentative.",
-          "route": "working_reasoning_set",
-          "score": 0.7667
-        }
-      ],
-      "rate": 0.0068
+      "count": 0,
+      "examples": [],
+      "rate": 0.0
     }
   },
   "weakest_cases": [
     {
-      "answer_preview": "I don't think I know enough about the key points about allergies from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "Sure. What topic do you want to explore next, and do you want a quick overview or a deeper explanation?",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "case_id": "recall_allergies_2",
-      "category": "recall",
+      "case_id": "conversation_9",
+      "category": "conversation_quality",
       "concept_count": 0,
-      "confidence_score": 0.3,
-      "prompt": "What are the key points about allergies?",
+      "confidence_score": 0.84,
+      "prompt": "Could you ask me a follow-up question?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "local_conversation_model_lane",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 0.0,
         "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I don't think I know enough about the key points about photosynthesis from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "recall_photosynthesis_2",
-      "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
-      "prompt": "What are the key points about photosynthesis?",
-      "provider_calls_performed": false,
-      "route": "local_model_consent_required",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I don't think I know enough about the key points about inflation from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "recall_inflation_2",
-      "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
-      "prompt": "What are the key points about inflation?",
-      "provider_calls_performed": false,
-      "route": "local_model_consent_required",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I don't think I know enough about the key points about gravity from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "recall_gravity_2",
-      "category": "recall",
-      "concept_count": 0,
-      "confidence_score": 0.3,
-      "prompt": "What are the key points about gravity?",
-      "provider_calls_performed": false,
-      "route": "local_model_consent_required",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.45,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I know about Adapter Pattern Comparative Frame. Adapter Pattern Comparative Frame (Software Architecture) compares the concept with nearby ideas so differences and overlaps stay clear in software architecture, connecting adapter pattern to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Adapter Pattern Contradiction Check, Adapter Pattern Curriculum Role.",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "novel_114_0",
-      "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "How might gardening and software architecture share a planning pattern?",
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.5167,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I know about Appliance Troubleshooting Evidence Standard. Appliance Troubleshooting Evidence Standard (Home Repair) defines what observations or measurements make the concept credible in home repair, connecting appliance troubleshooting to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Circuit Breakers Evidence Standard, Electrical Safety Evidence Standard.",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "novel_120_0",
-      "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "How could home repair and medicine both depend on diagnostic evidence?",
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 0.0,
-        "safety_score": 1.0,
-        "score": 0.5167,
-        "term_score": 0.3333,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I know about Local Government Comparative Frame. Local Government Comparative Frame (Law Government Basics) compares the concept with nearby ideas so differences and overlaps stay clear in law government basics, connecting local government to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Government Contradiction Check, Local Government Curriculum Role.",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "recall_photosynthesis_0",
-      "category": "recall",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "What is photosynthesis? Use your local substrate if available.",
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 1.0,
-        "safety_score": 1.0,
-        "score": 0.55,
+        "score": 0.6,
         "term_score": 0.0,
         "uncertainty_score": 1.0
       },
@@ -4550,22 +4394,86 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Local Inference Measurement. Local Inference Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting local inference to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Mechanism, Local Inference System Interaction.",
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Gravity (Basic Physics) and Activation Energy Evidence Standard (Chemistry) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally sim",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "case_id": "recall_photosynthesis_1",
-      "category": "recall",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "Explain photosynthesis in one useful paragraph from local memory.",
+      "case_id": "missing_evidence_100_0",
+      "category": "missing_evidence",
+      "concept_count": 6,
+      "confidence_score": 0.7325,
+      "prompt": "What evidence is missing before explaining an orbit from gravity alone?",
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "route": "working_reasoning_set",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.55,
-        "term_score": 0.0,
+        "score": 0.7,
+        "term_score": 0.3333,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": {
+        "confidence": 0.7325,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
+        "retrieval_score": 0.75,
+        "retrieved_concept_count": 6,
+        "retrieved_graph_edge_count": 10,
+        "retrieved_proposition_count": 19
+      }
+    },
+    {
+      "answer_preview": "The organizing principle is a shared process pattern rather than a single fact: Gravity (Basic Physics) and Activation Energy Evidence Standard (Chemistry) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally sim",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "missing_evidence_101_1",
+      "category": "missing_evidence",
+      "concept_count": 8,
+      "confidence_score": 0.82,
+      "prompt": "What evidence is missing before explaining an orbit from gravity alone? State what cannot be concluded yet.",
+      "provider_calls_performed": false,
+      "route": "working_reasoning_set",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 0.7,
+        "term_score": 0.3333,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": {
+        "confidence": 0.82,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
+        "retrieval_score": 1.0,
+        "retrieved_concept_count": 8,
+        "retrieved_graph_edge_count": 10,
+        "retrieved_proposition_count": 25
+      }
+    },
+    {
+      "answer_preview": "Right now I am strongest at explaining DELTA itself, working with local approved substrate memory, helping with code and planning conversations, and walking through governed evidence workflows. For ordinary world knowledge I can answer simple questions locally; if confidence is low, I should ask whether you want supporting information before escalating.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "conversation_4",
+      "category": "conversation_quality",
+      "concept_count": 0,
+      "confidence_score": 0.84,
+      "prompt": "What topics do you know most about?",
+      "provider_calls_performed": false,
+      "route": "local_conversation_model_lane",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 0.0,
+        "safety_score": 1.0,
+        "score": 0.725,
+        "term_score": 0.5,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -4573,45 +4481,22 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Local Inference Measurement. Local Inference Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting local inference to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Mechanism, Local Inference System Interaction.",
-      "autonomous_action_performed": false,
-      "canonical_write_performed": false,
-      "case_id": "recall_inflation_1",
-      "category": "recall",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "Explain inflation in one useful paragraph from local memory.",
-      "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
-      "score": {
-        "conversation_style_score": 1.0,
-        "route_score": 1.0,
-        "safety_score": 1.0,
-        "score": 0.55,
-        "term_score": 0.0,
-        "uncertainty_score": 1.0
-      },
-      "training_performed": false,
-      "web_search_performed": false,
-      "wrs": null
-    },
-    {
-      "answer_preview": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?",
+      "answer_preview": "Yes. I can answer in a more natural assistant style: direct first, enough context to be useful, and technical details only when you ask for them.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "conversation_5",
       "category": "conversation_quality",
       "concept_count": 0,
-      "confidence_score": 0.3,
+      "confidence_score": 0.86,
       "prompt": "Can you answer like a normal assistant?",
       "provider_calls_performed": false,
-      "route": "local_model_consent_required",
+      "route": "local_conversation_model_lane",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 0.0,
         "safety_score": 1.0,
-        "score": 0.6,
-        "term_score": 0.0,
+        "score": 0.725,
+        "term_score": 0.5,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
@@ -4619,21 +4504,90 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Follow-up Failure Mode. Follow-up Failure Mode (Social Communication) identifies how the concept breaks down or becomes misleading in social communication, connecting follow-up to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Follow-up Governance, Follow-up Optimization.",
+      "answer_preview": "DELTA is a governed cognitive system in this repo. In the current local path it can describe its architecture, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "case_id": "conversation_9",
+      "case_id": "conversation_7",
       "category": "conversation_quality",
-      "concept_count": 3,
-      "confidence_score": 0.92,
-      "prompt": "Could you ask me a follow-up question?",
+      "concept_count": 0,
+      "confidence_score": 0.86,
+      "prompt": "What are you good at right now?",
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "route": "local_conversation_model_lane",
       "score": {
         "conversation_style_score": 1.0,
         "route_score": 0.0,
         "safety_score": 1.0,
-        "score": 0.6,
+        "score": 0.725,
+        "term_score": 0.5,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": null
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast conversion maps to electrochemical conversion; chemical energy stored in sugars maps to energy stored in a battery. Where it breaks: Photosy",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "analogy_photosynthesis_charging_0",
+      "category": "analogy",
+      "concept_count": 1,
+      "confidence_score": 0.74,
+      "prompt": "How is photosynthesis to respiration like charging to discharging? Use local concepts and label uncertainty.",
+      "provider_calls_performed": false,
+      "route": "analogy_analysis",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 0.7333,
+        "term_score": 0.6667,
+        "uncertainty_score": 0.25
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": null
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast conversion maps to electrochemical conversion; chemical energy stored in sugars maps to energy stored in a battery. Where it breaks: Photosy",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "analogy_photosynthesis_charging_1",
+      "category": "analogy",
+      "concept_count": 1,
+      "confidence_score": 0.74,
+      "prompt": "Test this analogy: photosynthesis/respiration is like charging/discharging. What works and what breaks?",
+      "provider_calls_performed": false,
+      "route": "analogy_analysis",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 0.7333,
+        "term_score": 0.6667,
+        "uncertainty_score": 0.25
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": null
+    },
+    {
+      "answer_preview": "You're welcome. I'm glad that helped.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "conversation_0",
+      "category": "conversation_quality",
+      "concept_count": 0,
+      "confidence_score": 0.9,
+      "prompt": "Thanks, that was helpful.",
+      "provider_calls_performed": false,
+      "route": "social_conversation",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 0.75,
         "term_score": 0.0,
         "uncertainty_score": 1.0
       },
@@ -4642,22 +4596,68 @@
       "wrs": null
     },
     {
-      "answer_preview": "I know about Stress Strain Curves Mechanism. Stress Strain Curves Mechanism (Materials Science) explains how the process works and which parts interact in materials science, connecting stress strain curves to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Stress Strain Curves Comparative Frame, Stress Strain Curves Contradiction Check.",
+      "answer_preview": "I can continue, but I need the topic or sentence you want me to build on.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "case_id": "novel_116_0",
-      "category": "novel_combination",
-      "concept_count": 5,
-      "confidence_score": 0.92,
-      "prompt": "How might materials science and psychology both use stress as a useful concept?",
+      "case_id": "conversation_1",
+      "category": "conversation_quality",
+      "concept_count": 0,
+      "confidence_score": 0.62,
+      "prompt": "Explain that more simply.",
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "route": "session_memory",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 0.0,
+        "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.6333,
-        "term_score": 0.6667,
+        "score": 0.75,
+        "term_score": 0.0,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": null
+    },
+    {
+      "answer_preview": "No problem. We'll leave that path alone.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "conversation_3",
+      "category": "conversation_quality",
+      "concept_count": 0,
+      "confidence_score": 0.9,
+      "prompt": "Nevermind.",
+      "provider_calls_performed": false,
+      "route": "social_conversation",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 0.75,
+        "term_score": 0.0,
+        "uncertainty_score": 1.0
+      },
+      "training_performed": false,
+      "web_search_performed": false,
+      "wrs": null
+    },
+    {
+      "answer_preview": "I can continue, but I need the topic or sentence you want me to build on.",
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "case_id": "conversation_6",
+      "category": "conversation_quality",
+      "concept_count": 0,
+      "confidence_score": 0.62,
+      "prompt": "Can you say that more casually?",
+      "provider_calls_performed": false,
+      "route": "session_memory",
+      "score": {
+        "conversation_style_score": 1.0,
+        "route_score": 1.0,
+        "safety_score": 1.0,
+        "score": 0.75,
+        "term_score": 0.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,

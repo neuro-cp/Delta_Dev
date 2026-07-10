@@ -638,8 +638,31 @@ def _copy_rank_result(result: dict[str, Any]) -> dict[str, Any]:
     return copied
 
 
+def _recall_search_query(question: str) -> str:
+    normalized = _normalize_text(question).strip()
+    patterns = [
+        r"^what\s+(?:is|are)\s+the\s+key\s+points\s+about\s+(.+?)$",
+        r"^what\s+(?:is|are)\s+(.+?)(?:\s+use\s+your\s+local\s+substrate\s+if\s+available)?$",
+        r"^explain\s+(.+?)\s+in\s+one\s+useful\s+paragraph(?:\s+from\s+local\s+memory)?$",
+        r"^explain\s+(.+?)\s+from\s+local\s+memory$",
+        r"^tell\s+me\s+about\s+(.+?)$",
+        r"^what\s+do\s+you\s+know\s+about\s+(.+?)$",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, normalized)
+        if not match:
+            continue
+        candidate = match.group(1)
+        candidate = re.sub(r"\b(use|using|only|approved|local|substrate|memory|concepts?)\b", " ", candidate)
+        candidate = " ".join(candidate.strip(" ?.!\\/").split())
+        if candidate:
+            return candidate
+    return question
+
+
 def query_approved_concepts(question: str) -> dict[str, Any]:
-    ranked = rank_approved_concepts(question, limit=5)
+    search_query = _recall_search_query(question)
+    ranked = rank_approved_concepts(search_query, limit=5)
     if not ranked["matched"]:
         return {"matched": False, "answer": "", "matches": [], "scores": []}
     matches = ranked["matches"]
@@ -667,6 +690,7 @@ def query_approved_concepts(question: str) -> dict[str, Any]:
         "scores": [item.get("_retrieval_score", {}) for item in matches],
         "retrieval_precision_estimate": ranked["retrieval_precision_estimate"],
         "duplicate_suppression_count": ranked["duplicate_suppression_count"],
+        "search_query": search_query,
     }
 
 

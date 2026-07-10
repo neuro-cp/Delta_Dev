@@ -1,9 +1,9 @@
 # RC2 Cognitive Capability Benchmark
 
-Created: 2026-07-10T07:10:45+00:00
+Created: 2026-07-10T16:06:18+00:00
 Cases: 148
-Overall score: 0.8669
-Recommendation: IMPROVE_WRS_ABSTRACTION_AND_PROPOSITION_COMPARISON_BEFORE_CONCEPT_INSTILLATION
+Overall score: 0.9445
+Recommendation: IMPROVE_CONVERSATIONAL_RENDERING_AND_SESSION_STATE_BEFORE_CONCEPT_INSTILLATION
 Safety passed: True
 
 ## Category Scores
@@ -13,112 +13,112 @@ Safety passed: True
 | abstraction | 12 | 0.9611 |
 | analogy | 12 | 0.8666 |
 | contradiction_detection | 12 | 0.9722 |
-| conversation_quality | 12 | 0.7347 |
+| conversation_quality | 12 | 0.7451 |
 | cross_domain_synthesis | 18 | 0.9806 |
 | followup_memory | 6 | 1.0 |
 | long_conversation | 4 | 1.0 |
-| missing_evidence | 12 | 0.8812 |
+| missing_evidence | 12 | 0.8937 |
 | multi_concept_retrieval | 18 | 0.975 |
-| novel_combination | 12 | 0.6931 |
-| recall | 30 | 0.7267 |
+| novel_combination | 12 | 0.9806 |
+| recall | 30 | 0.985 |
 
 ## Weakest Cases
-
-### recall_allergies_2
-
-- Category: recall
-- Score: 0.45
-- Route: local_model_consent_required
-- Prompt: What are the key points about allergies?
-- Preview: I don't think I know enough about the key points about allergies from my learned local knowledge yet. Would you like me to ask a local reasoning model?
-
-### recall_photosynthesis_2
-
-- Category: recall
-- Score: 0.45
-- Route: local_model_consent_required
-- Prompt: What are the key points about photosynthesis?
-- Preview: I don't think I know enough about the key points about photosynthesis from my learned local knowledge yet. Would you like me to ask a local reasoning model?
-
-### recall_inflation_2
-
-- Category: recall
-- Score: 0.45
-- Route: local_model_consent_required
-- Prompt: What are the key points about inflation?
-- Preview: I don't think I know enough about the key points about inflation from my learned local knowledge yet. Would you like me to ask a local reasoning model?
-
-### recall_gravity_2
-
-- Category: recall
-- Score: 0.45
-- Route: local_model_consent_required
-- Prompt: What are the key points about gravity?
-- Preview: I don't think I know enough about the key points about gravity from my learned local knowledge yet. Would you like me to ask a local reasoning model?
-
-### novel_114_0
-
-- Category: novel_combination
-- Score: 0.5167
-- Route: developmental_concept_memory
-- Prompt: How might gardening and software architecture share a planning pattern?
-- Preview: I know about Adapter Pattern Comparative Frame. Adapter Pattern Comparative Frame (Software Architecture) compares the concept with nearby ideas so differences and overlaps stay clear in software architecture, connecting adapter pattern to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Adapter Pattern Contradiction Check, Adapter Pattern Curriculum Role.
-
-### novel_120_0
-
-- Category: novel_combination
-- Score: 0.5167
-- Route: developmental_concept_memory
-- Prompt: How could home repair and medicine both depend on diagnostic evidence?
-- Preview: I know about Appliance Troubleshooting Evidence Standard. Appliance Troubleshooting Evidence Standard (Home Repair) defines what observations or measurements make the concept credible in home repair, connecting appliance troubleshooting to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Circuit Breakers Evidence Standard, Electrical Safety Evidence Standard.
-
-### recall_photosynthesis_0
-
-- Category: recall
-- Score: 0.55
-- Route: developmental_concept_memory
-- Prompt: What is photosynthesis? Use your local substrate if available.
-- Preview: I know about Local Government Comparative Frame. Local Government Comparative Frame (Law Government Basics) compares the concept with nearby ideas so differences and overlaps stay clear in law government basics, connecting local government to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Government Contradiction Check, Local Government Curriculum Role.
-
-### recall_photosynthesis_1
-
-- Category: recall
-- Score: 0.55
-- Route: developmental_concept_memory
-- Prompt: Explain photosynthesis in one useful paragraph from local memory.
-- Preview: I know about Local Inference Measurement. Local Inference Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting local inference to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Mechanism, Local Inference System Interaction.
-
-### recall_inflation_1
-
-- Category: recall
-- Score: 0.55
-- Route: developmental_concept_memory
-- Prompt: Explain inflation in one useful paragraph from local memory.
-- Preview: I know about Local Inference Measurement. Local Inference Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting local inference to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Local Inference Mechanism, Local Inference System Interaction.
-
-### conversation_5
-
-- Category: conversation_quality
-- Score: 0.6
-- Route: local_model_consent_required
-- Prompt: Can you answer like a normal assistant?
-- Preview: I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?
 
 ### conversation_9
 
 - Category: conversation_quality
 - Score: 0.6
-- Route: developmental_concept_memory
+- Route: local_conversation_model_lane
 - Prompt: Could you ask me a follow-up question?
-- Preview: I know about Follow-up Failure Mode. Follow-up Failure Mode (Social Communication) identifies how the concept breaks down or becomes misleading in social communication, connecting follow-up to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Follow-up Governance, Follow-up Optimization.
+- Preview: Sure. What topic do you want to explore next, and do you want a quick overview or a deeper explanation?
 
-### novel_116_0
+### missing_evidence_100_0
 
-- Category: novel_combination
-- Score: 0.6333
-- Route: developmental_concept_memory
-- Prompt: How might materials science and psychology both use stress as a useful concept?
-- Preview: I know about Stress Strain Curves Mechanism. Stress Strain Curves Mechanism (Materials Science) explains how the process works and which parts interact in materials science, connecting stress strain curves to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Stress Strain Curves Comparative Frame, Stress Strain Curves Contradiction Check.
+- Category: missing_evidence
+- Score: 0.7
+- Route: working_reasoning_set
+- Prompt: What evidence is missing before explaining an orbit from gravity alone?
+- Preview: The organizing principle is a shared process pattern rather than a single fact: Gravity (Basic Physics) and Activation Energy Evidence Standard (Chemistry) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally sim
+
+### missing_evidence_101_1
+
+- Category: missing_evidence
+- Score: 0.7
+- Route: working_reasoning_set
+- Prompt: What evidence is missing before explaining an orbit from gravity alone? State what cannot be concluded yet.
+- Preview: The organizing principle is a shared process pattern rather than a single fact: Gravity (Basic Physics) and Activation Energy Evidence Standard (Chemistry) can be compared by identifying their inputs, constraints, feedback, evidence, and outcomes, then checking where the analogy stops. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally sim
+
+### conversation_4
+
+- Category: conversation_quality
+- Score: 0.725
+- Route: local_conversation_model_lane
+- Prompt: What topics do you know most about?
+- Preview: Right now I am strongest at explaining DELTA itself, working with local approved substrate memory, helping with code and planning conversations, and walking through governed evidence workflows. For ordinary world knowledge I can answer simple questions locally; if confidence is low, I should ask whether you want supporting information before escalating.
+
+### conversation_5
+
+- Category: conversation_quality
+- Score: 0.725
+- Route: local_conversation_model_lane
+- Prompt: Can you answer like a normal assistant?
+- Preview: Yes. I can answer in a more natural assistant style: direct first, enough context to be useful, and technical details only when you ask for them.
+
+### conversation_7
+
+- Category: conversation_quality
+- Score: 0.725
+- Route: local_conversation_model_lane
+- Prompt: What are you good at right now?
+- Preview: DELTA is a governed cognitive system in this repo. In the current local path it can describe its architecture, safety boundaries, reports, and deterministic validation state without provider calls or memory mutation.
+
+### analogy_photosynthesis_charging_0
+
+- Category: analogy
+- Score: 0.7333
+- Route: analogy_analysis
+- Prompt: How is photosynthesis to respiration like charging to discharging? Use local concepts and label uncertainty.
+- Preview: The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast conversion maps to electrochemical conversion; chemical energy stored in sugars maps to energy stored in a battery. Where it breaks: Photosy
+
+### analogy_photosynthesis_charging_1
+
+- Category: analogy
+- Score: 0.7333
+- Route: analogy_analysis
+- Prompt: Test this analogy: photosynthesis/respiration is like charging/discharging. What works and what breaks?
+- Preview: The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast conversion maps to electrochemical conversion; chemical energy stored in sugars maps to energy stored in a battery. Where it breaks: Photosy
+
+### conversation_0
+
+- Category: conversation_quality
+- Score: 0.75
+- Route: social_conversation
+- Prompt: Thanks, that was helpful.
+- Preview: You're welcome. I'm glad that helped.
+
+### conversation_1
+
+- Category: conversation_quality
+- Score: 0.75
+- Route: session_memory
+- Prompt: Explain that more simply.
+- Preview: I can continue, but I need the topic or sentence you want me to build on.
+
+### conversation_3
+
+- Category: conversation_quality
+- Score: 0.75
+- Route: social_conversation
+- Prompt: Nevermind.
+- Preview: No problem. We'll leave that path alone.
+
+### conversation_6
+
+- Category: conversation_quality
+- Score: 0.75
+- Route: session_memory
+- Prompt: Can you say that more casually?
+- Preview: I can continue, but I need the topic or sentence you want me to build on.
 
 
 ## Output Text Pathology Review
@@ -143,27 +143,15 @@ Safety passed: True
 
 ### wrong_context
 
-- Count: 1
-- Rate: 0.0068
+- Count: 0
+- Rate: 0.0
 
-- `novel_117_1` (novel_combination, route=working_reasoning_set, score=0.7667)
-  Prompt: How might materials science and psychology both use stress as a useful concept? Keep the bridge tentative.
-  Preview: The bridge should be built from the substantive propositions rather than repeated governance metadata. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists fo
 
 ### consent_prompt_when_local_substrate_expected
 
-- Count: 5
-- Rate: 0.0338
+- Count: 0
+- Rate: 0.0
 
-- `recall_allergies_2` (recall, route=local_model_consent_required, score=0.45)
-  Prompt: What are the key points about allergies?
-  Preview: I don't think I know enough about the key points about allergies from my learned local knowledge yet. Would you like me to ask a local reasoning model?
-- `recall_photosynthesis_2` (recall, route=local_model_consent_required, score=0.45)
-  Prompt: What are the key points about photosynthesis?
-  Preview: I don't think I know enough about the key points about photosynthesis from my learned local knowledge yet. Would you like me to ask a local reasoning model?
-- `recall_inflation_2` (recall, route=local_model_consent_required, score=0.45)
-  Prompt: What are the key points about inflation?
-  Preview: I don't think I know enough about the key points about inflation from my learned local knowledge yet. Would you like me to ask a local reasoning model?
 
 ### missed_contradiction_signal
 
@@ -173,11 +161,7 @@ Safety passed: True
 
 ### Summary findings
 
-- Contradiction prompts are usually routed to single-concept memory instead of a contradiction/comparison path.
-- Many answers still expose report-like WRS sections; useful for Developer Overlay, too stiff for default conversation.
-- Scaffold concepts still surface in recall, analogy, and cross-domain prompts where core factual concepts should win.
-- Follow-up memory can attach to the wrong prior topic when the user gives a short command such as 'Give an example.'
-- Some local-substrate questions still ask for local model escalation even when repaired concepts exist.
+- No text pathology category exceeded zero in this run; remaining benchmark weakness is score distribution rather than obvious non-human output leakage.
 
 ## Safety
 

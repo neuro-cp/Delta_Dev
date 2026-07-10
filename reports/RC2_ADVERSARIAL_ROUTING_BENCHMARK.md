@@ -1,6 +1,6 @@
 # RC2 Adversarial Routing Benchmark
 
-Created: 2026-07-10T06:42:15+00:00
+Created: 2026-07-10T15:57:40+00:00
 Cases: 16
 Route accuracy: 1.0
 Route-collision accuracy: 1.0

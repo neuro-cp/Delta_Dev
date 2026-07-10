@@ -1,0 +1,172 @@
+{
+  "adversarial_summary": {
+    "route_accuracy": 1.0,
+    "route_collision_accuracy": 1.0,
+    "safety_metadata_completeness": 1.0
+  },
+  "benchmark_summary": {
+    "category_scores": {
+      "abstraction": 0.9611,
+      "analogy": 0.8666,
+      "contradiction_detection": 0.9722,
+      "conversation_quality": 0.7451,
+      "cross_domain_synthesis": 0.9806,
+      "followup_memory": 1.0,
+      "long_conversation": 1.0,
+      "missing_evidence": 0.8937,
+      "multi_concept_retrieval": 0.975,
+      "novel_combination": 0.9806,
+      "recall": 0.985
+    },
+    "overall_score": 0.9445,
+    "recommendation": "IMPROVE_CONVERSATIONAL_RENDERING_AND_SESSION_STATE_BEFORE_CONCEPT_INSTILLATION",
+    "safety_passed": true
+  },
+  "created_at": "2026-07-10T16:07:25+00:00",
+  "live_runtime_probes": [
+    {
+      "answer_preview": "I know about Photosynthesis. Photosynthesis is the process by which plants, algae, and some bacteria use light energy to make chemical energy from carbon dioxide and water. Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Chlorophyll and chloroplasts help capture light energy in many photosynthetic organisms. I can also connect it to Photosynthesis Comparative Frame, Photos",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "single_concept_retrieval",
+      "expected_route": "developmental_concept_memory",
+      "id": "recall_photosynthesis_key_points",
+      "passed": true,
+      "prompt": "What are the key points about photosynthesis?",
+      "route": "developmental_concept_memory",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "I know about Allergies. Allergies are immune responses to substances that the body treats as harmful allergens. Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Allergy severity can range from mild symptoms to severe systemic reactions such as anaphylaxis. I can also connect it to Allergies Data Requirement, Allergies Measurement.",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "single_concept_retrieval",
+      "expected_route": "developmental_concept_memory",
+      "id": "recall_allergies_key_points",
+      "passed": true,
+      "prompt": "What are the key points about allergies?",
+      "route": "developmental_concept_memory",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "Yes. I can answer in a more natural assistant style: direct first, enough context to be useful, and technical details only when you ask for them.",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "local_conversation_model_lane",
+      "expected_route": "local_conversation_model_lane",
+      "id": "conversation_style_request",
+      "passed": true,
+      "prompt": "Can you answer like a normal assistant?",
+      "route": "local_conversation_model_lane",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "Sure. What topic do you want to explore next, and do you want a quick overview or a deeper explanation?",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "local_conversation_model_lane",
+      "expected_route": "local_conversation_model_lane",
+      "id": "followup_question_request",
+      "passed": true,
+      "prompt": "Could you ask me a follow-up question?",
+      "route": "local_conversation_model_lane",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "Gardening and software architecture can share a planning pattern: both start with goals, constraints, sequencing, feedback, and maintenance. In gardening the plan manages soil, water, light, timing, and growth; in software architecture the plan manages components, interfaces, dependencies, and future change. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Annuals Governance: Annuals",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "working_reasoning_set",
+      "expected_route": "working_reasoning_set",
+      "id": "novel_gardening_software_pattern",
+      "passed": true,
+      "prompt": "How might gardening and software architecture share a planning pattern?",
+      "route": "working_reasoning_set",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "Home repair and medicine both depend on diagnostic evidence because action should follow observed symptoms, measurements, history, and likely causes rather than guesses. The shared structure is diagnosis before intervention: collect evidence, narrow causes, choose a safe action, and revise if feedback contradicts the plan. Adhesives Learning Path: Adhesives Learning Path (Home Repair) places the concept in a prerequi",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "working_reasoning_set",
+      "expected_route": "working_reasoning_set",
+      "id": "novel_home_repair_medicine_diagnostics",
+      "passed": true,
+      "prompt": "How could home repair and medicine both depend on diagnostic evidence?",
+      "route": "working_reasoning_set",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast conversion maps to electrochemical conversion; chemical ener",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "analogy_analysis",
+      "expected_route": "analogy_analysis",
+      "id": "analogy_style_boundary",
+      "passed": true,
+      "prompt": "How is photosynthesis like charging a battery?",
+      "route": "analogy_analysis",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    },
+    {
+      "answer_preview": "No. If these claims refer to the same subject, timeframe, and conditions, they conflict.\n\nClaim A: photosynthesis stores chemical energy\nClaim B: photosynthesis never stores energy?\n\nThe conflict comes from mutually exclusive wording, especially absolute or negative language, applied to the same apparent subject.\n\nClassification: direct contradiction.",
+      "arbitration_aligned": true,
+      "arbitration_recommended_group": "contradiction_analysis",
+      "expected_route": "contradiction_analysis",
+      "id": "contradiction_boundary",
+      "passed": true,
+      "prompt": "Can these both be true: photosynthesis stores chemical energy, and photosynthesis never stores energy?",
+      "route": "contradiction_analysis",
+      "route_ok": true,
+      "safety_ok": true,
+      "terms_ok": true
+    }
+  ],
+  "moved_to_rc3": [
+    "goal_framework",
+    "introspection",
+    "long_term_planning",
+    "self_evaluation",
+    "meta_reasoning",
+    "persistent_episodic_cognition"
+  ],
+  "recommendation": "READY_FOR_RC2_REFINEMENT_FREEZE",
+  "report": "RC2_FREEZE_READINESS_REVIEW",
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_push_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "noncanonical_write_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "stabilization_summary": {
+    "gates_passed": true,
+    "readiness_recommendation": "PROCEED_RC2_COGNITIVE_REFINEMENT_FREEZE"
+  },
+  "tier_1_freeze_criteria": {
+    "adversarial_routing_benchmark": true,
+    "recall_routing_repair": true,
+    "routing_arbitration": true,
+    "safety_normalization": true,
+    "wrs_abstraction_layer": true
+  },
+  "tier_2_polish_criteria": {
+    "benchmark_repeatability": true,
+    "conversation_polish": true,
+    "developer_overlay_refinement": true
+  }
+}
