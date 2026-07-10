@@ -1,0 +1,110 @@
+[
+  {
+    "bad_interpretation": "medical recovery concept lookup",
+    "better_interpretation": "Explain minimum practical recovery evidence required for RC4/RC5 freeze readiness.",
+    "case_id": "pc1-case-001",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "evidence_standard_explanation",
+    "utterance": "What would count as enough recovery evidence?",
+    "why_cooperative_interpretation_wins": "Active freeze-readiness context outweighs the recovery homonym."
+  },
+  {
+    "bad_interpretation": "contradiction analysis",
+    "better_interpretation": "Record proposal A and proposal B as separate scoped dispositions.",
+    "case_id": "pc1-case-002",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "pilot_record_guidance",
+    "utterance": "If I accepted one proposal but rejected another, how should that be recorded?",
+    "why_cooperative_interpretation_wins": "Acceptance and rejection apply to different objects, not the same claim."
+  },
+  {
+    "bad_interpretation": "contradiction analysis",
+    "better_interpretation": "Salvage useful advisory content while rejecting the authorization bypass.",
+    "case_id": "pc1-case-003",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "governance_decision_guidance",
+    "utterance": "If GPT gives useful advice but also suggests bypassing authorization, what should DELTA do?",
+    "why_cooperative_interpretation_wins": "Useful and unsafe are different judgment dimensions in one response."
+  },
+  {
+    "bad_interpretation": "single success/failure answer",
+    "better_interpretation": "Treat it as technical success and governance failure; overall disposition is not freeze-ready.",
+    "case_id": "pc1-case-004",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "mixed_judgment_explanation",
+    "utterance": "The repair worked technically, but governance failed. Is that success?",
+    "why_cooperative_interpretation_wins": "Mixed outcomes must preserve dimensions rather than collapsing to one truth value."
+  },
+  {
+    "bad_interpretation": "generic working memory continuation",
+    "better_interpretation": "Identify the primary missing freeze evidence under the current pilot frame.",
+    "case_id": "pc1-case-005",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "freeze_assessment",
+    "utterance": "Given all of that, what matters most before freeze?",
+    "why_cooperative_interpretation_wins": "The operator is seeking practical next evidence, not a generic topic continuation."
+  },
+  {
+    "bad_interpretation": "defend correctness",
+    "better_interpretation": "Plan a more useful response shape while preserving factual correctness.",
+    "case_id": "pc1-case-006",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "response_revision_guidance",
+    "utterance": "This answer is correct but not useful. What should change?",
+    "why_cooperative_interpretation_wins": "The user is judging practical usefulness, not asking whether facts are true."
+  },
+  {
+    "bad_interpretation": "accept or reject whole advice",
+    "better_interpretation": "Split the advice by safety dimension and retain only governed safe content.",
+    "case_id": "pc1-case-007",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "governance_decision_guidance",
+    "utterance": "Use the safe part of that advice, but reject the risky part.",
+    "why_cooperative_interpretation_wins": "Human requests often partition a source into usable and unusable portions."
+  },
+  {
+    "bad_interpretation": "approval granted",
+    "better_interpretation": "Bind approval to the testing scope only and block production authority.",
+    "case_id": "pc1-case-008",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "scope_boundary_explanation",
+    "utterance": "I approved testing, not production.",
+    "why_cooperative_interpretation_wins": "Same operator, different permission scope."
+  },
+  {
+    "bad_interpretation": "contradiction analysis",
+    "better_interpretation": "Explain partial evidentiary value versus sufficiency threshold.",
+    "case_id": "pc1-case-009",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "evidence_standard_explanation",
+    "utterance": "Could this be good evidence but still not enough?",
+    "why_cooperative_interpretation_wins": "Good evidence and insufficient evidence can coexist under different thresholds."
+  },
+  {
+    "bad_interpretation": "reuse prior freeze answer",
+    "better_interpretation": "Update the task frame from freeze decision to pilot-script evaluation.",
+    "case_id": "pc1-case-010",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "pilot_summary",
+    "utterance": "I changed my mind; evaluate it as a pilot script, not freeze proof.",
+    "why_cooperative_interpretation_wins": "Operator goal changes should update the practical response target."
+  },
+  {
+    "bad_interpretation": "domain recall",
+    "better_interpretation": "Prefer active runtime-recovery context over lexical domain match.",
+    "case_id": "pc1-case-011",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "context_boundary_explanation",
+    "utterance": "A medical word appears, but we are still discussing runtime recovery.",
+    "why_cooperative_interpretation_wins": "Task relevance outranks homonym similarity."
+  },
+  {
+    "bad_interpretation": "summarize prior answer",
+    "better_interpretation": "Convert the prior finding into a practical operator recommendation.",
+    "case_id": "pc1-case-012",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "recommendation",
+    "utterance": "What does this imply for my next step?",
+    "why_cooperative_interpretation_wins": "The operator asks for action relevance, not repetition."
+  }
+]
