@@ -45,6 +45,7 @@ from orchestration.runtime.rc2_developmental_concept_memory import (
     query_approved_concepts,
     retrieve_multi_concept_set,
 )
+from orchestration.runtime.rc2_working_reasoning_set import build_working_reasoning_set, should_use_wrs
 from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
 from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
 
@@ -416,6 +417,14 @@ def _domain_browse_request(message: str) -> str | None:
 
 
 def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any]:
+    anchored = resolve_followup_anchor(history)
+    if anchored.get("active_concept_name"):
+        return {
+            "concept_name": anchored.get("active_concept_name"),
+            "concept_names": anchored.get("retrieved_concept_names") or [anchored.get("active_concept_name")],
+            "domain": anchored.get("domain"),
+            "concept_id": anchored.get("active_concept_id"),
+        }
     names = []
     domain = None
     for item in reversed(history or []):
@@ -439,6 +448,224 @@ def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any
             domain = domain_match.group(1).lower() if domain_match else None
     unique_names = list(dict.fromkeys(names))
     return {"concept_name": unique_names[0] if unique_names else None, "concept_names": unique_names, "domain": domain}
+
+
+def resolve_followup_anchor(history: list[dict[str, str]] | None) -> dict[str, Any]:
+    for item in reversed(history or []):
+        if item.get("role") != "anchor":
+            continue
+        try:
+            anchor = json.loads(str(item.get("content") or "{}"))
+        except json.JSONDecodeError:
+            continue
+        if anchor.get("active_concept_id") or anchor.get("active_concept_name"):
+            return anchor
+    return {}
+
+
+def _is_anchor_followup(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    if lower in {
+        "tell me more",
+        "go deeper",
+        "explain more",
+        "why",
+        "why?",
+        "how so",
+        "give me an example",
+        "what else",
+        "another one",
+        "compare that",
+        "expand on that",
+        "elaborate",
+    }:
+        return True
+    return bool(re.match(r"how does (that|this|it) relate to .+", lower))
+
+
+def _is_anchor_browse_followup(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    return lower in {"what else", "another one", "what else do you know", "show me another", "nearby concepts"}
+
+
+def deepen_from_concept_anchor(message: str, anchor: dict[str, Any]) -> dict[str, Any] | None:
+    concept = _anchor_concept(anchor)
+    if not concept:
+        return None
+    answer = _anchored_concept_answer(message, concept)
+    matches = [concept]
+    for concept_id in anchor.get("retrieved_concept_ids", [])[:4]:
+        if concept_id == concept.get("concept_id"):
+            continue
+        nearby = _get_concept(concept_id)
+        if nearby:
+            matches.append(nearby)
+    return {
+        "route": "developmental_concept_anchor_followup",
+        "answer": answer,
+        "confidence": "grounded_in_active_conversation_anchor",
+        "confidence_score": 0.9,
+        "selected_model_lane": select_model_lane(message),
+        "supporting_information_offer": None,
+        "local_model_offer": None,
+        "memory_candidate": None,
+        "concept_matches": matches,
+        "active_topic_anchor": _anchor_from_matches(message, answer, matches),
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+    }
+
+
+def browse_near_active_anchor(message: str, anchor: dict[str, Any]) -> dict[str, Any] | None:
+    concept = _anchor_concept(anchor)
+    if not concept:
+        return None
+    related_terms = [
+        str(item)
+        for item in concept.get("related_concepts", [])
+        if str(item).strip()
+    ][:5]
+    query = " ".join([str(concept.get("concept_name") or ""), *related_terms])
+    matches = []
+    seen = {str(concept.get("concept_id") or "")}
+    try:
+        from orchestration.runtime.rc2_storage_adapter import search_concepts
+
+        result = search_concepts(query, domain=concept.get("domain"), limit=8, exclude_concept_names=[str(concept.get("concept_name") or "")])
+        for row in result.get("matches", []):
+            concept_id = str(row.get("concept_id") or "")
+            if concept_id and concept_id not in seen:
+                seen.add(concept_id)
+                matches.append(row)
+    except Exception:
+        matches = []
+    if not matches:
+        matches = [
+            row
+            for row in (query_approved_concepts(term).get("matches", [None])[0] for term in related_terms)
+            if row and str(row.get("concept_id") or "") not in seen
+        ][:3]
+    if not matches:
+        return deepen_from_concept_anchor(message, anchor)
+    lines = [
+        f"Staying with `{concept.get('concept_name')}`, nearby things I can discuss are:",
+    ]
+    for row in matches[:3]:
+        lines.append(f"- {row.get('concept_name')}: {str(row.get('short_definition') or '').strip()}")
+    answer = "\n".join(lines)
+    return {
+        "route": "developmental_concept_anchor_browse",
+        "answer": answer,
+        "confidence": "grounded_in_active_conversation_anchor",
+        "confidence_score": 0.9,
+        "selected_model_lane": select_model_lane(message),
+        "supporting_information_offer": None,
+        "local_model_offer": None,
+        "memory_candidate": None,
+        "concept_matches": [concept, *matches[:3]],
+        "active_topic_anchor": _anchor_from_matches(message, answer, [concept, *matches[:3]]),
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+    }
+
+
+def _get_concept(concept_id: str) -> dict[str, Any] | None:
+    if not concept_id:
+        return None
+    try:
+        from orchestration.runtime.rc2_storage_adapter import get_concept
+
+        return get_concept(concept_id)
+    except Exception:
+        for row in query_approved_concepts(concept_id).get("matches", []):
+            if str(row.get("concept_id")) == str(concept_id):
+                return row
+    return None
+
+
+def _anchor_concept(anchor: dict[str, Any]) -> dict[str, Any] | None:
+    concept_id = str(anchor.get("active_concept_id") or "")
+    if concept_id:
+        concept = _get_concept(concept_id)
+        if concept:
+            return concept
+    name = str(anchor.get("active_concept_name") or "")
+    if name:
+        matches = query_approved_concepts(name).get("matches", [])
+        if matches:
+            return matches[0]
+    return None
+
+
+def _anchored_concept_answer(message: str, concept: dict[str, Any]) -> str:
+    lower = " ".join(str(message or "").lower().split()).strip(" ?!.")
+    name = str(concept.get("concept_name") or "that concept")
+    definition = str(concept.get("short_definition") or "").strip()
+    propositions = [str(item).strip() for item in concept.get("propositions", []) if str(item).strip()]
+    examples = [str(item).strip() for item in concept.get("examples", []) if str(item).strip()]
+    related = [str(item).strip() for item in concept.get("related_concepts", []) if str(item).strip()]
+    if "example" in lower:
+        if examples:
+            return f"Staying with `{name}`, here's an example:\n{examples[0]}"
+        if propositions:
+            return f"Staying with `{name}`, a concrete way to think about it is: {propositions[0]}"
+    relation_match = re.search(r"how does (?:that|this|it) relate to\s+(.+)", lower)
+    if relation_match:
+        target = relation_match.group(1).strip(" .?!")
+        return (
+            f"Staying with `{name}`, the connection to {target} is through the same stored mechanism: "
+            f"{definition} "
+            f"I can treat that as a tentative relation, but I have not written a new memory or enabled synthesis."
+        ).strip()
+    lines = [f"Staying with `{name}`:"]
+    if definition:
+        lines.append(definition)
+    if propositions:
+        lines.append("")
+        lines.append("A little more detail:")
+        lines.extend(f"- {item}" for item in propositions[:3])
+    if related:
+        lines.append("")
+        lines.append("Related ideas:")
+        lines.extend(f"- {item}" for item in related[:4])
+    lines.append("")
+    lines.append("No memory was written, and I did not need to ask a local model for this follow-up.")
+    return "\n".join(lines)
+
+
+def _anchor_from_matches(question: str, answer: str, matches: list[dict[str, Any]]) -> dict[str, Any]:
+    if not matches:
+        return {}
+    first = matches[0]
+    return {
+        "active_concept_id": first.get("concept_id"),
+        "active_concept_name": first.get("concept_name"),
+        "domain": first.get("domain"),
+        "related_concepts": first.get("related_concepts", [])[:8],
+        "retrieved_concept_ids": [row.get("concept_id") for row in matches if row.get("concept_id")],
+        "retrieved_concept_names": [row.get("concept_name") for row in matches if row.get("concept_name")],
+        "last_user_question": question,
+        "last_answer_summary": " ".join(str(answer or "").split())[:420],
+    }
+
+
+def _sun_blue_correction(message: str) -> str | None:
+    lower = " ".join(str(message or "").lower().split())
+    if "sun" not in lower or "blue" not in lower:
+        return None
+    if "sky" in lower:
+        return None
+    return (
+        "The Sun is not normally blue. It is often perceived as white in space and yellowish from Earth's surface. "
+        "The blue color people usually notice is the sky, which comes from atmospheric scattering of shorter blue wavelengths. "
+        "So the better framing is: the sky appears blue because of scattering, not because the Sun itself is blue."
+    )
 
 
 def select_model_lane(message: str, intent: str | None = None) -> dict[str, Any]:
@@ -1431,6 +1658,7 @@ def route_message(
         mode = "Conversation"
     if mode == "Conversation":
         intent_info = classify_intent(message)
+        anchor = resolve_followup_anchor(history)
         if provider_approved:
             payload = execute_gpt_support_request(message, history, transport=provider_transport)
             payload["intent"] = intent_info
@@ -1456,6 +1684,15 @@ def route_message(
             payload["escalation_plan"] = build_escalation_plan(target)
             payload["mode_router_flags"] = ROUTER_FLAGS
             return payload
+        if _is_anchor_followup(message) and anchor:
+            anchored = browse_near_active_anchor(message, anchor) if _is_anchor_browse_followup(message) else deepen_from_concept_anchor(message, anchor)
+            if anchored:
+                payload = {"mode": mode, **anchored}
+                payload["escalation_plan"] = build_escalation_plan(message)
+                payload["intent"] = intent_info
+                payload["confidence_decision"] = confidence_engine(message, True)
+                payload["mode_router_flags"] = ROUTER_FLAGS
+                return payload
         if intent_info.get("intent") in {"knowledge_browse", "knowledge_browse_followup", "knowledge_browse_jump"}:
             context = _last_concept_context(history)
             excluded_names = context.get("concept_names") or ([context["concept_name"]] if context.get("concept_name") else None)
@@ -1585,6 +1822,51 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return payload
+        wrs_result = build_working_reasoning_set(message) if should_use_wrs(message) else {"matched": False}
+        if wrs_result["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "working_reasoning_set",
+                "answer": wrs_result["answer"],
+                "confidence": "ephemeral_multi_concept_working_reasoning_set",
+                "confidence_score": wrs_result["confidence"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": wrs_result.get("retrieved_concepts", []),
+                "working_reasoning_set": {
+                    "retrieved_concept_count": wrs_result["retrieved_concept_count"],
+                    "retrieved_proposition_count": wrs_result["retrieved_proposition_count"],
+                    "retrieved_graph_edge_count": wrs_result["retrieved_graph_edge_count"],
+                    "retrieval_score": wrs_result["retrieval_score"],
+                    "graph_support_score": wrs_result["graph_support_score"],
+                    "unsupported_inference_count": wrs_result["unsupported_inference_count"],
+                    "hallucination_risk": wrs_result["hallucination_risk"],
+                    "uncertainty_quality": wrs_result["uncertainty_quality"],
+                    "ephemeral": True,
+                    "destroyed_after_response": True,
+                    "synthesis_enabled_by_default": False,
+                    "memory_write_performed": False,
+                    "graph_write_performed": False,
+                },
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "working_reasoning_set"}
+            payload["confidence_decision"] = {
+                "confidence": wrs_result["confidence"],
+                "evidence_quality": "approved_noncanonical_multi_concept_working_set",
+                "retrieval_sufficiency": "sufficient_for_ephemeral_reasoning",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return payload
         multi_concept = retrieve_multi_concept_set(message)
         if multi_concept["matched"]:
             payload = {
@@ -1620,6 +1902,29 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
+            return payload
+        sun_blue = _sun_blue_correction(message)
+        if sun_blue:
+            payload = {
+                "mode": mode,
+                "route": "conversation_clarified_misframed_question",
+                "answer": sun_blue,
+                "confidence": "local_science_clarification",
+                "confidence_score": 0.84,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "memory_candidate": None,
+                "concept_matches": [],
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, True)
+            payload["mode_router_flags"] = ROUTER_FLAGS
             return payload
         domain_browse = _domain_browse_request(message)
         if domain_browse and intent_info.get("intent") not in {"coding"}:
@@ -1667,6 +1972,7 @@ def route_message(
                 "supporting_information_offer": None,
                 "concept_matches": concept["matches"],
             }
+            payload["active_topic_anchor"] = _anchor_from_matches(message, concept["answer"], concept["matches"])
         elif substrate["matched"]:
             payload = {
                 "mode": mode,
@@ -1829,6 +2135,8 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
         boundary = "unknown_seek_provider_or_sources"
     elif route in {"developmental_concept_memory", "substrate_first_conversation"}:
         boundary = "known_from_approved_local_memory"
+    elif route == "working_reasoning_set":
+        boundary = "ephemeral_multi_concept_working_set"
     elif route == "social_conversation":
         boundary = "social_no_knowledge_lookup"
     rejected = lane.get("rejected_models") or []

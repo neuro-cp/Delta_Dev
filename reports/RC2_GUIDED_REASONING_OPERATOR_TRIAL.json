@@ -1,0 +1,430 @@
+{
+  "average_graph_usefulness": 1.0,
+  "average_reasoning_quality": 0.9597,
+  "evidence_chain_quality": 0.8989,
+  "executive_summary": "Guided graph-assisted reasoning is now operator-reviewable through structured payloads, simulated non-mutating review actions, failure taxonomy labels, and cross-domain trial scoring. It remains explicit, read-only, and trial-only.",
+  "explanation_clarity": 1.0,
+  "failure_taxonomy": {
+    "ambiguous_user_question": "The user question does not identify a clear relationship or target.",
+    "generic_concept_substance": "Retrieved concepts are too generic to support reasoning.",
+    "hallucinated_bridge_risk": "The bridge may not be grounded in retrieved concepts or approved graph edges.",
+    "insufficient_evidence_chain": "Evidence chain is absent or too weak for operator confidence.",
+    "low_graph_usefulness": "Graph edges exist but add little explanatory value.",
+    "missing_graph_edge": "No approved graph edge supports the requested bridge.",
+    "operator_rejection": "Operator explicitly rejected the reasoning output.",
+    "overreach_risk": "The tentative inference may claim more than the evidence supports.",
+    "route_mismatch": "The prompt should not have entered graph-assisted reasoning.",
+    "weak_retrieval": "Retrieved concept set is too small or low quality."
+  },
+  "failure_taxonomy_counts": {
+    "generic_concept_substance": 4
+  },
+  "hallucination_risk": 0.1,
+  "operator_review_readiness": 1.0,
+  "overreach_risk": 0.1,
+  "pass_count": 9,
+  "phase": "RC2 Guided Reasoning Operator Trial",
+  "recommendation": "READY_FOR_RC2_ARCHITECTURE_FREEZE",
+  "remaining_blockers": [
+    "operator_review_payload_not_yet_polished_in_ui"
+  ],
+  "safety_invariants": {
+    "automatic_graph_approval_enabled": false,
+    "automatic_graph_growth_enabled": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hyb1_promoted": false,
+    "memory_write_performed": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "sample_review_payload": {
+    "allowed_review_actions": [
+      "add_operator_notes",
+      "approve_reasoning_as_useful",
+      "mark_missing_evidence",
+      "mark_overreach",
+      "reject_reasoning",
+      "request_concept_substance_repair_candidate",
+      "request_deeper_retrieval",
+      "request_graph_expansion_candidate"
+    ],
+    "approved_graph_edges_used": [
+      {
+        "confidence": 0.86,
+        "edge_id": "rc2-expanded-edge-14dcc90a9aa286b7",
+        "relation": "analogy_to",
+        "source": "Cellular Respiration (Biology)",
+        "target": "Cellular Respiration Failure Mode (Biology)",
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "confidence": 0.86,
+        "edge_id": "rc2-expanded-edge-2c0d31bd9d92a464",
+        "relation": "analogy_to",
+        "source": "Cell Signaling Tradeoff (Biology)",
+        "target": "Cellular Respiration Failure Mode (Biology)",
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "confidence": 0.86,
+        "edge_id": "rc2-expanded-edge-396b0bafe1e6df12",
+        "relation": "limits",
+        "source": "Cellular Respiration Failure Mode (Biology)",
+        "target": "Cellular Respiration Optimization (Biology)",
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "confidence": 0.86,
+        "edge_id": "rc2-expanded-edge-52e432f54e98b2a2",
+        "relation": "enables",
+        "source": "Energy Storage (Energy)",
+        "target": "Energy Storage Learning Path (Energy)",
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "confidence": 0.86,
+        "edge_id": "rc2-expanded-edge-61dfe5cad5b35729",
+        "relation": "causes",
+        "source": "Cellular Respiration Failure Mode (Biology)",
+        "target": "Digestion Risk Control (Biology)",
+        "uncertainty": "low_curated_same_domain"
+      }
+    ],
+    "confidence": 0.9605,
+    "evidence_chains": [
+      {
+        "chain_confidence": 0.86,
+        "chain_id": "rc2-chain-6a66c13ef6254f5e",
+        "question": "how photosynthesis relates to respiration",
+        "read_only": true,
+        "steps": [
+          {
+            "node_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+            "node_name": "Cellular Respiration (Biology)",
+            "role": "source_concept"
+          },
+          {
+            "confidence": 0.86,
+            "edge_id": "rc2-expanded-edge-14dcc90a9aa286b7",
+            "from_concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+            "relation_type": "analogy_to",
+            "source_concept_name": "Cellular Respiration (Biology)",
+            "source_type": "same_domain_curriculum_link",
+            "target_concept_name": "Cellular Respiration Failure Mode (Biology)",
+            "to_concept_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "uncertainty": "low_curated_same_domain",
+            "why_followed": "Approved noncanonical edge relates retrieved concept through analogy_to."
+          },
+          {
+            "node_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "node_name": "Cellular Respiration Failure Mode (Biology)",
+            "role": "target_concept"
+          }
+        ],
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "chain_confidence": 0.86,
+        "chain_id": "rc2-chain-b36e8efd9b0546d7",
+        "question": "how photosynthesis relates to respiration",
+        "read_only": true,
+        "steps": [
+          {
+            "node_id": "rc2-expanded-concept-ca19ef2144b51ffb",
+            "node_name": "Cell Signaling Tradeoff (Biology)",
+            "role": "source_concept"
+          },
+          {
+            "confidence": 0.86,
+            "edge_id": "rc2-expanded-edge-2c0d31bd9d92a464",
+            "from_concept_id": "rc2-expanded-concept-ca19ef2144b51ffb",
+            "relation_type": "analogy_to",
+            "source_concept_name": "Cell Signaling Tradeoff (Biology)",
+            "source_type": "same_domain_curriculum_link",
+            "target_concept_name": "Cellular Respiration Failure Mode (Biology)",
+            "to_concept_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "uncertainty": "low_curated_same_domain",
+            "why_followed": "Approved noncanonical edge relates retrieved concept through analogy_to."
+          },
+          {
+            "node_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "node_name": "Cellular Respiration Failure Mode (Biology)",
+            "role": "target_concept"
+          }
+        ],
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "chain_confidence": 0.86,
+        "chain_id": "rc2-chain-8d3459b508c24a15",
+        "question": "how photosynthesis relates to respiration",
+        "read_only": true,
+        "steps": [
+          {
+            "node_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "node_name": "Cellular Respiration Failure Mode (Biology)",
+            "role": "source_concept"
+          },
+          {
+            "confidence": 0.86,
+            "edge_id": "rc2-expanded-edge-396b0bafe1e6df12",
+            "from_concept_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "relation_type": "limits",
+            "source_concept_name": "Cellular Respiration Failure Mode (Biology)",
+            "source_type": "same_domain_curriculum_link",
+            "target_concept_name": "Cellular Respiration Optimization (Biology)",
+            "to_concept_id": "rc2-expanded-concept-7940387ed62af12f",
+            "uncertainty": "low_curated_same_domain",
+            "why_followed": "Approved noncanonical edge relates retrieved concept through limits."
+          },
+          {
+            "node_id": "rc2-expanded-concept-7940387ed62af12f",
+            "node_name": "Cellular Respiration Optimization (Biology)",
+            "role": "target_concept"
+          }
+        ],
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "chain_confidence": 0.86,
+        "chain_id": "rc2-chain-5651615cf48542c4",
+        "question": "how photosynthesis relates to respiration",
+        "read_only": true,
+        "steps": [
+          {
+            "node_id": "rc2-concept-growth-4e972ba1b928506f",
+            "node_name": "Energy Storage (Energy)",
+            "role": "source_concept"
+          },
+          {
+            "confidence": 0.86,
+            "edge_id": "rc2-expanded-edge-52e432f54e98b2a2",
+            "from_concept_id": "rc2-concept-growth-4e972ba1b928506f",
+            "relation_type": "enables",
+            "source_concept_name": "Energy Storage (Energy)",
+            "source_type": "same_domain_curriculum_link",
+            "target_concept_name": "Energy Storage Learning Path (Energy)",
+            "to_concept_id": "rc2-expanded-concept-a66ba85181c298c1",
+            "uncertainty": "low_curated_same_domain",
+            "why_followed": "Approved noncanonical edge relates retrieved concept through enables."
+          },
+          {
+            "node_id": "rc2-expanded-concept-a66ba85181c298c1",
+            "node_name": "Energy Storage Learning Path (Energy)",
+            "role": "target_concept"
+          }
+        ],
+        "uncertainty": "low_curated_same_domain"
+      },
+      {
+        "chain_confidence": 0.86,
+        "chain_id": "rc2-chain-56945f76cfeaf8d5",
+        "question": "how photosynthesis relates to respiration",
+        "read_only": true,
+        "steps": [
+          {
+            "node_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "node_name": "Cellular Respiration Failure Mode (Biology)",
+            "role": "source_concept"
+          },
+          {
+            "confidence": 0.86,
+            "edge_id": "rc2-expanded-edge-61dfe5cad5b35729",
+            "from_concept_id": "rc2-expanded-concept-810b475a8922e3dd",
+            "relation_type": "causes",
+            "source_concept_name": "Cellular Respiration Failure Mode (Biology)",
+            "source_type": "same_domain_curriculum_link",
+            "target_concept_name": "Digestion Risk Control (Biology)",
+            "to_concept_id": "rc2-expanded-concept-bd0758dff4b6bef0",
+            "uncertainty": "low_curated_same_domain",
+            "why_followed": "Approved noncanonical edge relates retrieved concept through causes."
+          },
+          {
+            "node_id": "rc2-expanded-concept-bd0758dff4b6bef0",
+            "node_name": "Digestion Risk Control (Biology)",
+            "role": "target_concept"
+          }
+        ],
+        "uncertainty": "low_curated_same_domain"
+      }
+    ],
+    "hallucination_risk": 0.1,
+    "overreach_risk": 0.1,
+    "retrieved_concepts": [
+      {
+        "concept_id": "rc2-concept-growth-4e972ba1b928506f",
+        "concept_name": "Energy Storage (Energy)",
+        "domain": "energy",
+        "short_definition": "Energy storage preserves energy in a form that can be released later, such as chemical bonds, batteries, heat reservoirs, or elevated water."
+      },
+      {
+        "concept_id": "rc2-concept-growth-5e0dffbe49c4e43d",
+        "concept_name": "Cellular Respiration (Biology)",
+        "domain": "biology",
+        "short_definition": "Cellular respiration is the process cells use to release usable energy from sugars by converting glucose and oxygen into carbon dioxide, water, and ATP."
+      },
+      {
+        "concept_id": "rc2-expanded-concept-7940387ed62af12f",
+        "concept_name": "Cellular Respiration Optimization (Biology)",
+        "domain": "biology",
+        "short_definition": "Cellular Respiration Optimization (Biology) describes improvement criteria and constraints for the concept in biology, connecting cellular respiration to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_id": "rc2-expanded-concept-810b475a8922e3dd",
+        "concept_name": "Cellular Respiration Failure Mode (Biology)",
+        "domain": "biology",
+        "short_definition": "Cellular Respiration Failure Mode (Biology) identifies how the concept breaks down or becomes misleading in biology, connecting cellular respiration to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_id": "rc2-expanded-concept-86614e53d95ed218",
+        "concept_name": "Photosynthesis Abstraction (Biology)",
+        "domain": "biology",
+        "short_definition": "Photosynthesis Abstraction (Biology) extracts a reusable principle from the concept in biology, connecting photosynthesis to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_id": "rc2-expanded-concept-8f054ca28efd3525",
+        "concept_name": "Cellular Respiration Boundary Conditions (Biology)",
+        "domain": "biology",
+        "short_definition": "Cellular Respiration Boundary Conditions (Biology) states when the concept applies, when it does not, and what assumptions must hold in biology, connecting cellular respiration to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_id": "rc2-expanded-concept-9ba84169a4269853",
+        "concept_name": "Photosynthesis Comparative Frame (Biology)",
+        "domain": "biology",
+        "short_definition": "Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clear in biology, connecting photosynthesis to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_id": "rc2-expanded-concept-a66ba85181c298c1",
+        "concept_name": "Energy Storage Learning Path (Energy)",
+        "domain": "energy",
+        "short_definition": "Energy Storage Learning Path (Energy) places the concept in a prerequisite-to-advanced learning sequence in energy, connecting energy storage to evidence, constraints, examples, and operator-reviewable uncertainty."
+      }
+    ],
+    "review_payload_type": "rc2_guided_reasoning_review",
+    "tentative_inference": "Cellular Respiration (Biology) may connect to Cellular Respiration Failure Mode (Biology) through an approved `analogy to` relationship, so the answer should use that edge as support while keeping the conclusion tentative.",
+    "uncertainty": "This is a read-only reasoning trial. The bridge is grounded in approved graph edges, but it remains an inference rather than stored knowledge.",
+    "user_question": "Use graph-assisted reasoning to explain how photosynthesis relates to respiration.",
+    "why_no_memory_or_graph_write": "RC2 guided reasoning is explicit, read-only, trial-only, and operator reviewed. Useful reasoning can be reviewed, but it does not write memory, graph edges, or canonical records automatically.",
+    "why_route_selected": "explicit graph-assisted reasoning request",
+    "writes_performed": {
+      "canonical": false,
+      "graph": false,
+      "memory": false,
+      "provider": false,
+      "training": false
+    }
+  },
+  "simulated_review_actions": [
+    {
+      "action": "approve_reasoning_as_useful",
+      "event_type": "rc2_guided_reasoning_review_event",
+      "failure_codes": [],
+      "operator_notes": "",
+      "review_only": true,
+      "safety": {
+        "automatic_graph_approval_enabled": false,
+        "automatic_graph_growth_enabled": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_replaced": false,
+        "provider_calls_performed": false,
+        "scheduler_started": false,
+        "synthesis_enabled_by_default": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "simulated_review_recorded",
+      "user_question": "Use graph-assisted reasoning to explain how photosynthesis relates to respiration.",
+      "writes_performed": {
+        "canonical": false,
+        "graph": false,
+        "memory": false,
+        "provider": false,
+        "training": false
+      }
+    },
+    {
+      "action": "mark_missing_evidence",
+      "event_type": "rc2_guided_reasoning_review_event",
+      "failure_codes": [
+        "missing_graph_edge"
+      ],
+      "operator_notes": "Need a stronger ATP bridge.",
+      "review_only": true,
+      "safety": {
+        "automatic_graph_approval_enabled": false,
+        "automatic_graph_growth_enabled": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_replaced": false,
+        "provider_calls_performed": false,
+        "scheduler_started": false,
+        "synthesis_enabled_by_default": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "simulated_review_recorded",
+      "user_question": "Use graph-assisted reasoning to explain how photosynthesis relates to respiration.",
+      "writes_performed": {
+        "canonical": false,
+        "graph": false,
+        "memory": false,
+        "provider": false,
+        "training": false
+      }
+    },
+    {
+      "action": "request_deeper_retrieval",
+      "event_type": "rc2_guided_reasoning_review_event",
+      "failure_codes": [],
+      "operator_notes": "",
+      "review_only": true,
+      "safety": {
+        "automatic_graph_approval_enabled": false,
+        "automatic_graph_growth_enabled": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hyb1_promoted": false,
+        "memory_write_performed": false,
+        "model_b_replaced": false,
+        "provider_calls_performed": false,
+        "scheduler_started": false,
+        "synthesis_enabled_by_default": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "simulated_review_recorded",
+      "user_question": "Use graph-assisted reasoning to explain how photosynthesis relates to respiration.",
+      "writes_performed": {
+        "canonical": false,
+        "graph": false,
+        "memory": false,
+        "provider": false,
+        "training": false
+      }
+    }
+  ],
+  "trials_run": 9,
+  "uncertainty_quality": 1.0
+}

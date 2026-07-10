@@ -1,0 +1,219 @@
+{
+  "authoritative_runtime_concept_counter": "active_runtime_concepts",
+  "authoritative_runtime_edge_counter": "active_graph_edges",
+  "backend_health": {
+    "backend": "sqlite",
+    "counts": {
+      "concept_keywords": 385025,
+      "concept_propositions": 26988,
+      "concept_related": 61420,
+      "concepts": 8979,
+      "graph_adjacency": 11010,
+      "graph_edges": 5505,
+      "substrate_replay_events": 14484
+    },
+    "db_path": "G:\\Delta_Dev\\data\\rc2_indexes\\rc2_substrate.sqlite",
+    "fresh": true,
+    "jsonl_backup_audit_source": true,
+    "jsonl_counts": {
+      "concepts": 9963,
+      "graph_edges": 10001
+    },
+    "jsonl_signature_match": true,
+    "replay_coverage": {
+      "concept_replay_coverage": 1.0,
+      "concept_replay_events": 8979,
+      "concept_rows": 8979,
+      "edge_replay_coverage": 1.0,
+      "edge_replay_events": 5505,
+      "edge_rows": 5505,
+      "total_replay_events": 14484
+    },
+    "schema_version": "rc2_sqlite_substrate_v1",
+    "sqlite_available": true
+  },
+  "consistency": {
+    "active_concepts_match_concept_replay_events": true,
+    "active_edges_match_edge_replay_events": true,
+    "database_should_display": "active_runtime_concepts",
+    "runtime_uses_single_authoritative_concept_count": true,
+    "ui_header_should_display": "active_runtime_concepts",
+    "wrs_should_retrieve_from": "storage_adapter_active_runtime_substrate"
+  },
+  "counters": [
+    {
+      "authoritative_for_runtime": true,
+      "counter": "active_runtime_concepts",
+      "excludes": [
+        "canonical memory",
+        "provider knowledge",
+        "training artifacts"
+      ],
+      "includes": [
+        "approved_noncanonical runtime concepts"
+      ],
+      "meaning": "Authoritative active concept rows available to runtime retrieval/WRS.",
+      "source": "SQLite concepts table",
+      "value": 8979
+    },
+    {
+      "authoritative_for_runtime": true,
+      "counter": "active_graph_edges",
+      "excludes": [
+        "candidate edges",
+        "rolled-back edges",
+        "canonical graph writes"
+      ],
+      "includes": [
+        "approved_noncanonical graph edges"
+      ],
+      "meaning": "Approved noncanonical graph edges available to graph-assisted retrieval.",
+      "source": "SQLite graph_edges table",
+      "value": 5505
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "substrate_replay_events",
+      "excludes": [
+        "raw concept rows as separate concepts"
+      ],
+      "includes": [
+        "concept replay review events",
+        "graph edge replay review events"
+      ],
+      "meaning": "Replay-review/audit events derived from indexed concepts and graph edges; not a concept total.",
+      "source": "SQLite substrate_replay_events table",
+      "value": 14484
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "concept_replay_events",
+      "excludes": [
+        "graph-edge replay events"
+      ],
+      "includes": [
+        "one replay-review event per indexed active concept when coverage is complete"
+      ],
+      "meaning": "Replay-review events corresponding to active concept rows.",
+      "source": "SQLite substrate_replay_events where target_type='concept'",
+      "value": 8979
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "graph_edge_replay_events",
+      "excludes": [
+        "concept replay events"
+      ],
+      "includes": [
+        "one replay-review event per indexed active graph edge when coverage is complete"
+      ],
+      "meaning": "Replay-review events corresponding to active graph edge rows.",
+      "source": "SQLite substrate_replay_events where target_type='graph_edge'",
+      "value": 5505
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "legacy_jsonl_concepts",
+      "excludes": [
+        "SQLite-only repaired/cleaned runtime rows"
+      ],
+      "includes": [
+        "approved noncanonical JSONL concepts"
+      ],
+      "meaning": "Historical/audit source records, not the primary runtime count when SQLite is available.",
+      "source": "legacy JSONL approved concept stores",
+      "value": 9963
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "legacy_jsonl_graph_edges",
+      "excludes": [
+        "SQLite-only repaired/cleaned runtime rows"
+      ],
+      "includes": [
+        "approved noncanonical JSONL graph edges"
+      ],
+      "meaning": "Historical/audit source graph edges, not the primary runtime edge count when SQLite is available.",
+      "source": "legacy JSONL graph edge store",
+      "value": 10001
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "developmental_memory_records",
+      "excludes": [
+        "SQLite-only substrate rows"
+      ],
+      "includes": [
+        "local approved developmental-memory records"
+      ],
+      "meaning": "Legacy local developmental memory count. This is diagnostic, not the canonical runtime substrate count.",
+      "source": "developmental memory state",
+      "value": 10000
+    },
+    {
+      "authoritative_for_runtime": false,
+      "counter": "migration_audit_events",
+      "excludes": [
+        "runtime concept rows"
+      ],
+      "includes": [
+        "rebuild",
+        "repair",
+        "duplicate cleanup",
+        "replay sync events"
+      ],
+      "meaning": "Backend migration/repair/cleanup events. This is operational history, not a concept count.",
+      "source": "SQLite migration_audit table",
+      "value": 22
+    }
+  ],
+  "created_at": "2026-07-10T02:18:23+00:00",
+  "recommendation": "USE_ACTIVE_RUNTIME_CONCEPTS_FOR_UI_AND_WRS_DEFER_INSTILLATION_UNTIL_COUNTERS_STAY_RECONCILED",
+  "report": "RC2_SUBSTRATE_RECONCILIATION",
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_push_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_memory_write_performed": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "sqlite_event_breakdown": {
+    "migration_audit_by_type": {
+      "jsonl_to_sqlite_rebuild": 12,
+      "rc2_core_concept_substance_repair": 2,
+      "sqlite_curated_100k_expansion": 3,
+      "sqlite_replay_coverage_sync": 2,
+      "sqlite_template_duplicate_removal": 3
+    },
+    "migration_audit_events": 22,
+    "replay_event_type_counts": {
+      "indexed_concept_replay_review": 8979,
+      "indexed_graph_edge_replay_review": 5505
+    },
+    "replay_status_by_type": {
+      "queued_for_sqlite_replay_review": 14484
+    }
+  },
+  "ui_display": {
+    "active_graph_edges": 5505,
+    "active_runtime_concepts": 8979,
+    "backend": "sqlite",
+    "concept_replay_events": 8979,
+    "graph_edge_replay_events": 5505,
+    "knowledge_available": true,
+    "legacy_jsonl_concepts": 9963,
+    "legacy_jsonl_graph_edges": 10001,
+    "migration_audit_events": 22,
+    "sqlite_available": true,
+    "sqlite_fresh": true,
+    "substrate_replay_events": 14484
+  }
+}

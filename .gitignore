@@ -19,4 +19,6 @@ data/learning/
 data/knowledge/
 data/agency/
 data/runtime/
+data/rc2_indexes/*.sqlite
+data/rc2_indexes/*.sqlite-*
 .tmp/

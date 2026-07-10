@@ -43,6 +43,10 @@ STORE_BY_TYPE = {
     "knowledge": KNOWLEDGE_MEMORY_LOG,
 }
 
+_APPROVED_CONCEPT_CACHE: dict[str, Any] = {"signature": None, "records": []}
+_CONCEPT_INDEX_CACHE: dict[str, Any] = {"signature": None, "index": None}
+_RANK_RESULT_CACHE: dict[str, Any] = {"signature": None, "results": {}}
+
 DOMAIN_ALIASES = {
     "law": "law government basics",
     "legal": "law government basics",
@@ -313,12 +317,67 @@ def merge_concept_enrichment(existing: dict[str, Any], candidate: dict[str, Any]
 
 
 def load_approved_concepts() -> list[dict[str, Any]]:
+    signature = _store_signature(STORE_BY_TYPE)
+    if _APPROVED_CONCEPT_CACHE["signature"] == signature:
+        return [dict(row) for row in _APPROVED_CONCEPT_CACHE["records"]]
     records = []
     for memory_type, path in STORE_BY_TYPE.items():
         for row in _read_jsonl(path):
             if row.get("approval_status") == "approved_noncanonical" and row.get("canonical") is False:
                 records.append({**row, "_store_memory_type": memory_type})
+    _APPROVED_CONCEPT_CACHE["signature"] = signature
+    _APPROVED_CONCEPT_CACHE["records"] = [dict(row) for row in records]
     return records
+
+
+def clear_runtime_concept_caches() -> None:
+    _APPROVED_CONCEPT_CACHE["signature"] = None
+    _APPROVED_CONCEPT_CACHE["records"] = []
+    _CONCEPT_INDEX_CACHE["signature"] = None
+    _CONCEPT_INDEX_CACHE["index"] = None
+    _RANK_RESULT_CACHE["signature"] = None
+    _RANK_RESULT_CACHE["results"] = {}
+
+
+def build_runtime_concept_index() -> dict[str, Any]:
+    signature = _store_signature(STORE_BY_TYPE)
+    if _CONCEPT_INDEX_CACHE["signature"] == signature and _CONCEPT_INDEX_CACHE["index"] is not None:
+        return _CONCEPT_INDEX_CACHE["index"]
+    concepts = load_approved_concepts()
+    by_id = {}
+    by_domain: dict[str, list[dict[str, Any]]] = {}
+    token_index: dict[str, list[dict[str, Any]]] = {}
+    normalized_name = {}
+    for row in concepts:
+        concept_id = str(row.get("concept_id") or "")
+        if concept_id:
+            by_id[concept_id] = row
+        normalized_name[_normalize_compact(row.get("concept_name"))] = row
+        domain = str(row.get("domain") or "").lower().strip()
+        if domain:
+            by_domain.setdefault(domain, []).append(row)
+        text = " ".join([
+            str(row.get("concept_name") or ""),
+            str(row.get("domain") or ""),
+            str(row.get("short_definition") or ""),
+            " ".join(str(item) for item in row.get("propositions", [])),
+            " ".join(str(item) for item in row.get("related_concepts", [])),
+            " ".join(str(item) for item in row.get("keywords", [])),
+            str(row.get("source_question") or ""),
+        ])
+        for token in _meaningful_tokens(text):
+            token_index.setdefault(token, []).append(row)
+    index = {
+        "signature": signature,
+        "concepts": concepts,
+        "by_id": by_id,
+        "by_domain": by_domain,
+        "token_index": token_index,
+        "normalized_name": normalized_name,
+    }
+    _CONCEPT_INDEX_CACHE["signature"] = signature
+    _CONCEPT_INDEX_CACHE["index"] = index
+    return index
 
 
 def retrieval_query_profile(question: str) -> dict[str, Any]:
@@ -358,10 +417,43 @@ def rank_approved_concepts(
     excluded = {_normalize_compact(name) for name in (exclude_concept_names or [])}
     wanted_domain = str(domain or "").lower().strip()
     blocked_domains = {str(item).lower().strip() for item in (exclude_domains or []) if str(item).strip()}
+    if not blocked_domains:
+        try:
+            from orchestration.runtime.rc2_sqlite_substrate import backend_health, search_concepts_sqlite
+
+            health = backend_health()
+            if health.get("sqlite_available"):
+                return search_concepts_sqlite(
+                    question,
+                    domain=domain,
+                    limit=limit,
+                    exclude_concept_names=exclude_concept_names,
+                )
+        except Exception:
+            pass
+    signature = _store_signature(STORE_BY_TYPE)
+    cache_key = json.dumps({
+        "question": profile["normalized"],
+        "limit": limit,
+        "domain": wanted_domain,
+        "excluded": sorted(excluded),
+        "blocked_domains": sorted(blocked_domains),
+    }, sort_keys=True)
+    if _RANK_RESULT_CACHE["signature"] != signature:
+        _RANK_RESULT_CACHE["signature"] = signature
+        _RANK_RESULT_CACHE["results"] = {}
+    if cache_key in _RANK_RESULT_CACHE["results"]:
+        return _copy_rank_result(_RANK_RESULT_CACHE["results"][cache_key])
     scored = []
     duplicate_suppression_count = 0
     seen_names = set()
-    for row in load_approved_concepts():
+    candidate_rows = _candidate_concepts_for_profile(
+        profile,
+        wanted_domain=wanted_domain,
+        blocked_domains=blocked_domains,
+        minimum=max(limit * 8, 25),
+    )
+    for row in candidate_rows:
         name_key = _normalize_compact(row.get("concept_name"))
         if name_key in excluded:
             continue
@@ -384,13 +476,16 @@ def rank_approved_concepts(
     matches = []
     for score, row in scored[:max(1, limit)]:
         matches.append({**row, "_retrieval_score": score})
-    return {
+    result = {
         "matched": bool(matches),
         "matches": matches,
         "query_profile": profile,
         "duplicate_suppression_count": duplicate_suppression_count,
         "retrieval_precision_estimate": _retrieval_precision_estimate(matches, profile),
+        "candidate_pool_size": len(candidate_rows),
     }
+    _RANK_RESULT_CACHE["results"][cache_key] = _copy_rank_result(result)
+    return result
 
 
 def score_concept_for_query(row: dict[str, Any], profile: dict[str, Any], *, forced_domain: str | None = None) -> dict[str, Any]:
@@ -496,6 +591,53 @@ def score_concept_for_query(row: dict[str, Any], profile: dict[str, Any], *, for
     }
 
 
+def _candidate_concepts_for_profile(
+    profile: dict[str, Any],
+    *,
+    wanted_domain: str,
+    blocked_domains: set[str],
+    minimum: int,
+) -> list[dict[str, Any]]:
+    index = build_runtime_concept_index()
+    candidates_by_id: dict[str, dict[str, Any]] = {}
+    if wanted_domain:
+        for row in index["by_domain"].get(wanted_domain, []):
+            candidates_by_id[str(row.get("concept_id"))] = row
+    for domain in profile.get("domains", set()):
+        for row in index["by_domain"].get(str(domain).lower().strip(), []):
+            candidates_by_id[str(row.get("concept_id"))] = row
+    query_terms = set(profile.get("tokens") or set()) | set(profile.get("key_tokens") or set())
+    for phrase in set(profile.get("phrases") or set()) | set(profile.get("aliases") or set()):
+        query_terms.update(_meaningful_tokens(phrase))
+    for token in query_terms:
+        for row in index["token_index"].get(token, []):
+            candidates_by_id[str(row.get("concept_id"))] = row
+    candidates = [
+        row
+        for row in candidates_by_id.values()
+        if not blocked_domains or str(row.get("domain") or "").lower().strip() not in blocked_domains
+    ]
+    if len(candidates) < minimum:
+        fallback = []
+        for row in index["concepts"]:
+            domain = str(row.get("domain") or "").lower().strip()
+            if wanted_domain and domain != wanted_domain:
+                continue
+            if blocked_domains and domain in blocked_domains:
+                continue
+            fallback.append(row)
+        return fallback
+    return candidates
+
+
+def _copy_rank_result(result: dict[str, Any]) -> dict[str, Any]:
+    copied = dict(result)
+    copied["matches"] = [dict(row) for row in result.get("matches", [])]
+    copied["query_profile"] = dict(result.get("query_profile", {}))
+    copied["scores"] = [dict(row) for row in result.get("scores", [])] if "scores" in result else copied.get("scores", [])
+    return copied
+
+
 def query_approved_concepts(question: str) -> dict[str, Any]:
     ranked = rank_approved_concepts(question, limit=5)
     if not ranked["matched"]:
@@ -560,9 +702,14 @@ def parse_multi_concept_query(question: str) -> list[str]:
 def retrieve_multi_concept_set(question: str, *, limit: int = 5) -> dict[str, Any]:
     seeds = parse_multi_concept_query(question)
     expanded: list[str] = []
+    seen_terms = set()
     for seed in seeds:
-        expanded.append(seed)
-        expanded.extend(RELATED_QUERY_HINTS.get(seed.lower(), ()))
+        for term in (seed, *RELATED_QUERY_HINTS.get(seed.lower(), ())):
+            key = _normalize_text(term)
+            if key in seen_terms:
+                continue
+            seen_terms.add(key)
+            expanded.append(term)
     if len(seeds) < 2:
         return {
             "matched": False,
@@ -1352,11 +1499,13 @@ def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(row, sort_keys=True) + "\n")
+    clear_runtime_concept_caches()
 
 
 def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
+    clear_runtime_concept_caches()
 
 
 def _merge_unique_lines(*groups: object) -> list[str]:
@@ -1392,3 +1541,14 @@ def _clean(text: str) -> str:
 
 def _digest(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
+def _store_signature(paths: dict[str, Path]) -> tuple[tuple[str, str, int, int], ...]:
+    signature = []
+    for name, path in sorted(paths.items()):
+        if path.exists():
+            stat = path.stat()
+            signature.append((name, str(path), stat.st_mtime_ns, stat.st_size))
+        else:
+            signature.append((name, str(path), 0, 0))
+    return tuple(signature)

@@ -140,6 +140,28 @@ authority. The conversation layer is the humane operating surface over that
 substrate: simple by default, inspectable when needed, and governed whenever
 state, evidence, memory, or external providers are involved.
 
+## Separation Of Cognition And Presentation
+
+Delta's internal cognitive process must remain fully observable, but it should
+not be exposed by default. The operator experience is layered:
+
+- Conversation is the default surface. It shows natural answers, useful
+  uncertainty, and only the amount of reasoning that helps a regular user.
+- Developer Overlay exposes the complete reasoning process: routing, retrieved
+  concepts, rejected candidates, Working Reasoning Set contents, proposition
+  comparison, graph traversal, confidence, safety gates, local/provider routing,
+  replay decisions, memory decisions, and performance metrics.
+- Database and Diagnostics inspect and repair cognition itself: concept search,
+  graph exploration, replay history, duplicate detection, concept quality,
+  missing-edge detection, substance repair, storage health, and SQLite status.
+
+The invariant is: hide implementation, not capability. Developer-facing
+information must not be deleted merely because it is not appropriate for normal
+conversation. It should move to the layer where it answers the right question:
+Conversation answers "what should I know?", Developer Overlay answers "why did
+Delta answer this way?", and Database/Diagnostics answers "how is Delta built
+internally?"
+
 ## Reasoning Provider Principle
 
 External and local models are reasoning providers, not the substrate.

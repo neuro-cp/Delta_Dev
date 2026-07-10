@@ -1,0 +1,1980 @@
+{
+  "average_edge_confidence": 0.8599,
+  "commit_status": "not_committed_per_prompt",
+  "concept_naming_quality": 1.0,
+  "concept_rejection_samples": [],
+  "concept_substance_average": 0.9961,
+  "concepts_added": 5962,
+  "concepts_rejected": 0,
+  "concepts_repaired": 0,
+  "curriculum_map": {
+    "cross_domain_bridge_targets": [
+      [
+        "feedback loops",
+        [
+          "biology",
+          "control theory",
+          "software architecture",
+          "planning/productivity",
+          "DELTA architecture itself"
+        ]
+      ],
+      [
+        "energy storage",
+        [
+          "chemistry",
+          "biology",
+          "energy systems",
+          "engineering",
+          "materials science"
+        ]
+      ],
+      [
+        "memory consolidation",
+        [
+          "neuroscience",
+          "psychology",
+          "DELTA architecture itself",
+          "education"
+        ]
+      ],
+      [
+        "evidence standards",
+        [
+          "science",
+          "law/government basics",
+          "operator review",
+          "medicine/health"
+        ]
+      ],
+      [
+        "optimization",
+        [
+          "mathematics",
+          "engineering",
+          "business",
+          "computer science"
+        ]
+      ],
+      [
+        "uncertainty",
+        [
+          "statistics",
+          "medicine/health",
+          "reasoning safety",
+          "finance"
+        ]
+      ],
+      [
+        "incentives",
+        [
+          "economics",
+          "psychology",
+          "governance",
+          "organizational behavior"
+        ]
+      ],
+      [
+        "abstraction",
+        [
+          "computer science",
+          "cognition",
+          "philosophy",
+          "software architecture"
+        ]
+      ],
+      [
+        "rollback",
+        [
+          "software architecture",
+          "DELTA architecture itself",
+          "risk management",
+          "governance"
+        ]
+      ],
+      [
+        "provenance",
+        [
+          "history",
+          "law/government basics",
+          "science",
+          "DELTA architecture itself"
+        ]
+      ]
+    ],
+    "domain_count": 25,
+    "domains": {
+      "DELTA architecture itself": {
+        "advanced_concepts": [
+          "quality gates",
+          "concept graph",
+          "replay queue",
+          "safety invariants",
+          "evidence review",
+          "knowledge substrate",
+          "approval workflow",
+          "audit trail",
+          "controlled persistence",
+          "training packets"
+        ],
+        "common_misconceptions": [
+          "Noncanonical Memory is not useful without context and evidence.",
+          "Canonical Memory is not useful without context and evidence.",
+          "Operator Approval is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "noncanonical memory",
+          "canonical memory",
+          "operator approval",
+          "concept replay",
+          "rollback handles",
+          "provenance",
+          "concept catalog",
+          "local model lanes",
+          "provider gates",
+          "developmental learning",
+          "training graduation",
+          "substrate evolution"
+        ],
+        "cross_domain_bridge_concepts": [
+          "feedback loops",
+          "memory consolidation",
+          "rollback",
+          "provenance"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "competency tests",
+          "curriculum",
+          "distillation",
+          "model B default",
+          "HYB1 dormant",
+          "provider consent",
+          "local inference",
+          "catalog export",
+          "operator observations",
+          "RC2 conversational OS"
+        ],
+        "prerequisite_concepts": [
+          "conversation first interface",
+          "advanced operator mode",
+          "concept review",
+          "semantic normalization",
+          "contradiction detection",
+          "short term session memory",
+          "model residency",
+          "lane switching"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "agriculture gardening": {
+        "advanced_concepts": [
+          "water retention",
+          "root development",
+          "plant disease",
+          "harvest timing",
+          "food preservation",
+          "garden planning",
+          "companion planting",
+          "organic matter",
+          "drainage",
+          "germination"
+        ],
+        "common_misconceptions": [
+          "Soil Health is not useful without context and evidence.",
+          "Composting is not useful without context and evidence.",
+          "Crop Rotation is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "soil health",
+          "composting",
+          "crop rotation",
+          "irrigation",
+          "mulching",
+          "seed starting",
+          "pollination",
+          "pest management",
+          "plant nutrients",
+          "pruning",
+          "photosynthesis",
+          "raised beds"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "transplant shock",
+          "crop yield",
+          "microclimates",
+          "perennials",
+          "annuals",
+          "seed saving",
+          "soil texture",
+          "erosion control",
+          "livestock basics",
+          "farm planning"
+        ],
+        "prerequisite_concepts": [
+          "hydroponics",
+          "greenhouses",
+          "season extension",
+          "weed control",
+          "soil pH",
+          "fertilizers",
+          "beneficial insects",
+          "cover crops"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "basic physics": {
+        "advanced_concepts": [
+          "kinetic energy",
+          "potential energy",
+          "heat capacity",
+          "phase change",
+          "resonance",
+          "diffusion",
+          "tension",
+          "elasticity",
+          "terminal velocity",
+          "light scattering"
+        ],
+        "common_misconceptions": [
+          "Force Vectors is not useful without context and evidence.",
+          "Momentum Conservation is not useful without context and evidence.",
+          "Energy Transfer is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "force vectors",
+          "momentum conservation",
+          "energy transfer",
+          "friction",
+          "gravity",
+          "inertia",
+          "wave interference",
+          "electromagnetic induction",
+          "pressure",
+          "buoyancy",
+          "thermal expansion",
+          "simple harmonic motion"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "radiation",
+          "conduction",
+          "convection",
+          "static electricity",
+          "density",
+          "lever mechanics",
+          "pulley systems",
+          "projectile motion",
+          "pressure gradients",
+          "measurement uncertainty"
+        ],
+        "prerequisite_concepts": [
+          "optical refraction",
+          "sound propagation",
+          "electric circuits",
+          "magnetic fields",
+          "work and power",
+          "fluid flow",
+          "rotational torque",
+          "center of mass"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "biology": {
+        "advanced_concepts": [
+          "plant transpiration",
+          "seed germination",
+          "genetic variation",
+          "population dynamics",
+          "biodiversity",
+          "evolutionary fitness",
+          "organ systems",
+          "feedback loops",
+          "biological classification",
+          "ecological niches"
+        ],
+        "common_misconceptions": [
+          "Cell Membrane Transport is not useful without context and evidence.",
+          "Photosynthesis is not useful without context and evidence.",
+          "Cellular Respiration is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "cell membrane transport",
+          "photosynthesis",
+          "cellular respiration",
+          "DNA replication",
+          "protein synthesis",
+          "natural selection",
+          "gene expression",
+          "homeostasis",
+          "immune response",
+          "enzymes",
+          "mitosis",
+          "meiosis"
+        ],
+        "cross_domain_bridge_concepts": [
+          "feedback loops",
+          "energy storage"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "mutation",
+          "protein folding",
+          "osmosis",
+          "active transport",
+          "photosynthetic pigments",
+          "respiratory exchange",
+          "blood circulation",
+          "digestion",
+          "cell differentiation",
+          "reproductive strategies"
+        ],
+        "prerequisite_concepts": [
+          "ecosystem energy flow",
+          "food webs",
+          "symbiosis",
+          "adaptation",
+          "microbiomes",
+          "cell signaling",
+          "hormone regulation",
+          "neural signaling"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "business": {
+        "advanced_concepts": [
+          "contracts",
+          "negotiation",
+          "quality assurance",
+          "forecasting",
+          "inventory",
+          "workflow design",
+          "service design",
+          "business model",
+          "governance",
+          "compliance"
+        ],
+        "common_misconceptions": [
+          "Customer Discovery is not useful without context and evidence.",
+          "Value Proposition is not useful without context and evidence.",
+          "Market Segmentation is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "customer discovery",
+          "value proposition",
+          "market segmentation",
+          "pricing",
+          "unit economics",
+          "sales funnel",
+          "retention",
+          "churn",
+          "operations",
+          "supply chain",
+          "risk management",
+          "stakeholders"
+        ],
+        "cross_domain_bridge_concepts": [
+          "optimization"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "procurement",
+          "team coordination",
+          "strategic planning",
+          "opportunity cost",
+          "decision rights",
+          "change management",
+          "project scope",
+          "delivery risk",
+          "customer feedback",
+          "operational metrics"
+        ],
+        "prerequisite_concepts": [
+          "competitive advantage",
+          "brand positioning",
+          "process improvement",
+          "KPIs",
+          "cash flow",
+          "product market fit",
+          "customer support",
+          "vendor management"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "chemistry": {
+        "advanced_concepts": [
+          "periodic trends",
+          "valence electrons",
+          "chemical polarity",
+          "intermolecular forces",
+          "crystallization",
+          "distillation",
+          "chromatography",
+          "combustion",
+          "corrosion",
+          "alkanes"
+        ],
+        "common_misconceptions": [
+          "Acid Base Reactions is not useful without context and evidence.",
+          "Chemical Equilibrium is not useful without context and evidence.",
+          "Oxidation Reduction is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "acid base reactions",
+          "chemical equilibrium",
+          "oxidation reduction",
+          "covalent bonding",
+          "ionic bonding",
+          "hydrogen bonding",
+          "mole concept",
+          "solution concentration",
+          "pH buffering",
+          "reaction rates",
+          "catalysts",
+          "solubility"
+        ],
+        "cross_domain_bridge_concepts": [
+          "energy storage"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "aromatic compounds",
+          "enzymatic reactions",
+          "chemical safety",
+          "aqueous ions",
+          "titration",
+          "redox potential",
+          "molecular geometry",
+          "activation energy",
+          "Le Chatelier principle",
+          "buffer capacity"
+        ],
+        "prerequisite_concepts": [
+          "precipitation reactions",
+          "gas laws",
+          "thermochemistry",
+          "polymerization",
+          "electrolysis",
+          "organic functional groups",
+          "isomers",
+          "stoichiometry"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "energy": {
+        "advanced_concepts": [
+          "power factor",
+          "microgrids",
+          "electric vehicles",
+          "charging infrastructure",
+          "energy audits",
+          "peak demand",
+          "distributed generation",
+          "inverters",
+          "smart grids",
+          "biofuels"
+        ],
+        "common_misconceptions": [
+          "Renewable Energy is not useful without context and evidence.",
+          "Solar Power is not useful without context and evidence.",
+          "Wind Power is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "renewable energy",
+          "solar power",
+          "wind power",
+          "energy storage",
+          "battery chemistry",
+          "grid stability",
+          "power transmission",
+          "energy efficiency",
+          "heat pumps",
+          "combustion engines",
+          "nuclear fission",
+          "hydroelectric power"
+        ],
+        "cross_domain_bridge_concepts": [
+          "energy storage"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "energy policy",
+          "cost curves",
+          "capacity factor",
+          "baseload",
+          "intermittency",
+          "transmission losses",
+          "battery degradation",
+          "thermal efficiency",
+          "waste heat",
+          "conservation"
+        ],
+        "prerequisite_concepts": [
+          "geothermal energy",
+          "demand response",
+          "load balancing",
+          "fuel cells",
+          "carbon intensity",
+          "energy density",
+          "thermal storage",
+          "insulation"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "engineering": {
+        "advanced_concepts": [
+          "maintenance planning",
+          "reliability",
+          "quality control",
+          "design tradeoffs",
+          "risk analysis",
+          "human factors",
+          "instrumentation",
+          "calibration",
+          "process control",
+          "root cause analysis"
+        ],
+        "common_misconceptions": [
+          "Requirements is not useful without context and evidence.",
+          "Constraints is not useful without context and evidence.",
+          "Tolerances is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "requirements",
+          "constraints",
+          "tolerances",
+          "load paths",
+          "failure modes",
+          "safety factors",
+          "systems engineering",
+          "prototyping",
+          "testing",
+          "manufacturing",
+          "materials selection",
+          "thermal management"
+        ],
+        "cross_domain_bridge_concepts": [
+          "energy storage",
+          "optimization"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "fault trees",
+          "redundancy",
+          "interfaces",
+          "design verification",
+          "validation testing",
+          "systems integration",
+          "lifecycle cost",
+          "environmental conditions",
+          "sustainability",
+          "repairability"
+        ],
+        "prerequisite_concepts": [
+          "control systems",
+          "feedback control",
+          "signal processing",
+          "mechanical advantage",
+          "structural analysis",
+          "fluid systems",
+          "electrical grounding",
+          "power distribution"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "finance": {
+        "advanced_concepts": [
+          "retirement planning",
+          "index funds",
+          "market volatility",
+          "cost basis",
+          "cash reserves",
+          "break even analysis",
+          "profit margins",
+          "operating expenses",
+          "financial controls",
+          "fraud risk"
+        ],
+        "common_misconceptions": [
+          "Budgeting is not useful without context and evidence.",
+          "Cash Flow is not useful without context and evidence.",
+          "Compound Interest is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "budgeting",
+          "cash flow",
+          "compound interest",
+          "risk diversification",
+          "credit",
+          "debt management",
+          "asset allocation",
+          "inflation",
+          "liquidity",
+          "tax planning",
+          "net present value",
+          "return on investment"
+        ],
+        "cross_domain_bridge_concepts": [
+          "uncertainty"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "loan amortization",
+          "working capital",
+          "exchange rates",
+          "budget variance",
+          "financial planning",
+          "expense tracking",
+          "credit utilization",
+          "risk tolerance",
+          "investment horizon",
+          "dividend yield"
+        ],
+        "prerequisite_concepts": [
+          "emergency funds",
+          "financial statements",
+          "balance sheets",
+          "income statements",
+          "capital budgeting",
+          "portfolio risk",
+          "interest rates",
+          "insurance"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "geography": {
+        "advanced_concepts": [
+          "human environment interaction",
+          "agricultural regions",
+          "hazard mapping",
+          "time zones",
+          "soil types",
+          "weather systems",
+          "ocean currents",
+          "topography",
+          "settlement patterns",
+          "resource distribution"
+        ],
+        "common_misconceptions": [
+          "Latitude And Longitude is not useful without context and evidence.",
+          "Climate Zones is not useful without context and evidence.",
+          "Watersheds is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "latitude and longitude",
+          "climate zones",
+          "watersheds",
+          "plate tectonics",
+          "erosion",
+          "urban geography",
+          "population density",
+          "migration patterns",
+          "land use",
+          "natural resources",
+          "biomes",
+          "river systems"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "border regions",
+          "spatial analysis",
+          "urban planning",
+          "rural development",
+          "climate adaptation",
+          "landforms",
+          "cultural regions",
+          "economic corridors",
+          "water scarcity",
+          "map projections"
+        ],
+        "prerequisite_concepts": [
+          "mountain formation",
+          "coastal processes",
+          "desertification",
+          "cartography",
+          "GIS",
+          "regional economies",
+          "transport networks",
+          "geopolitics"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "history": {
+        "advanced_concepts": [
+          "archival evidence",
+          "oral history",
+          "historiography",
+          "political reform",
+          "labor movements",
+          "scientific revolution",
+          "renaissance",
+          "reformation",
+          "nationalism",
+          "globalization"
+        ],
+        "common_misconceptions": [
+          "Primary Sources is not useful without context and evidence.",
+          "Historical Context is not useful without context and evidence.",
+          "Industrial Revolution is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "primary sources",
+          "historical context",
+          "industrial revolution",
+          "agricultural revolution",
+          "trade routes",
+          "colonialism",
+          "revolutions",
+          "world wars",
+          "cold war",
+          "civil rights movements",
+          "urbanization",
+          "migration"
+        ],
+        "cross_domain_bridge_concepts": [
+          "provenance"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "public memory",
+          "historical bias",
+          "source reliability",
+          "chronology",
+          "institutional change",
+          "military logistics",
+          "social movements",
+          "environmental history",
+          "legal history",
+          "comparative history"
+        ],
+        "prerequisite_concepts": [
+          "technological change",
+          "state formation",
+          "empires",
+          "cultural exchange",
+          "economic history",
+          "diplomacy",
+          "historical causation",
+          "periodization"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "home repair": {
+        "advanced_concepts": [
+          "mold prevention",
+          "ventilation",
+          "tool safety",
+          "measuring",
+          "leveling",
+          "wood repair",
+          "sanding",
+          "adhesives",
+          "fixture replacement",
+          "leak detection"
+        ],
+        "common_misconceptions": [
+          "Basic Plumbing is not useful without context and evidence.",
+          "Electrical Safety is not useful without context and evidence.",
+          "Drywall Repair is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "basic plumbing",
+          "electrical safety",
+          "drywall repair",
+          "painting",
+          "insulation",
+          "weather sealing",
+          "HVAC filters",
+          "drain clogs",
+          "water shutoff",
+          "circuit breakers",
+          "stud finding",
+          "fasteners"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "home maintenance schedules",
+          "smoke detectors",
+          "carbon monoxide safety",
+          "pressure washing",
+          "weatherproofing",
+          "patching holes",
+          "basic carpentry",
+          "pipe fittings",
+          "electrical outlets",
+          "filter replacement"
+        ],
+        "prerequisite_concepts": [
+          "caulking",
+          "tile repair",
+          "flooring",
+          "roof leaks",
+          "gutter maintenance",
+          "appliance troubleshooting",
+          "door alignment",
+          "window sealing"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "law government basics": {
+        "advanced_concepts": [
+          "conflict of interest",
+          "open meetings",
+          "policy implementation",
+          "enforcement discretion",
+          "legal precedent",
+          "constitutional limits",
+          "public safety",
+          "emergency powers",
+          "records retention",
+          "licensing"
+        ],
+        "common_misconceptions": [
+          "Separation Of Powers is not useful without context and evidence.",
+          "Due Process is not useful without context and evidence.",
+          "Rule Of Law is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "separation of powers",
+          "due process",
+          "rule of law",
+          "public records",
+          "administrative procedure",
+          "jurisdiction",
+          "statutory interpretation",
+          "contracts",
+          "liability",
+          "privacy",
+          "procurement rules",
+          "public accountability"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "permitting",
+          "tax authority",
+          "criminal procedure",
+          "civil procedure",
+          "agency guidance",
+          "oversight",
+          "transparency",
+          "government procurement",
+          "public comment",
+          "compliance audits"
+        ],
+        "prerequisite_concepts": [
+          "civil rights",
+          "regulatory compliance",
+          "evidence standards",
+          "appeals",
+          "local government",
+          "federalism",
+          "public budgeting",
+          "ethics rules"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "logic": {
+        "advanced_concepts": [
+          "probabilistic reasoning",
+          "Bayesian updating",
+          "hypothesis testing",
+          "disconfirmation",
+          "classification",
+          "definitions",
+          "ambiguity",
+          "category errors",
+          "evidence relevance",
+          "inference chains"
+        ],
+        "common_misconceptions": [
+          "Deductive Validity is not useful without context and evidence.",
+          "Inductive Strength is not useful without context and evidence.",
+          "Abductive Inference is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "deductive validity",
+          "inductive strength",
+          "abductive inference",
+          "conditional reasoning",
+          "contradiction",
+          "fallacies",
+          "syllogisms",
+          "truth tables",
+          "necessary conditions",
+          "sufficient conditions",
+          "causal inference",
+          "counterexamples"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "reasoning gaps",
+          "validity versus soundness",
+          "formal proof",
+          "informal logic",
+          "decision trees",
+          "constraint satisfaction",
+          "edge cases",
+          "truth preservation",
+          "model checking",
+          "uncertainty bounds"
+        ],
+        "prerequisite_concepts": [
+          "burden of proof",
+          "argument mapping",
+          "premises",
+          "conclusions",
+          "logical consistency",
+          "scope",
+          "quantifiers",
+          "analogical reasoning"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "materials science": {
+        "advanced_concepts": [
+          "creep",
+          "thermal conductivity",
+          "electrical conductivity",
+          "surface treatments",
+          "sintering",
+          "casting",
+          "forging",
+          "welding",
+          "additive manufacturing",
+          "material selection"
+        ],
+        "common_misconceptions": [
+          "Crystal Lattice is not useful without context and evidence.",
+          "Grain Boundaries is not useful without context and evidence.",
+          "Dislocations is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "crystal lattice",
+          "grain boundaries",
+          "dislocations",
+          "annealing",
+          "quenching",
+          "hardness",
+          "ductility",
+          "toughness",
+          "fatigue",
+          "corrosion resistance",
+          "composites",
+          "polymers"
+        ],
+        "cross_domain_bridge_concepts": [
+          "energy storage",
+          "evidence standards",
+          "provenance"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "elastic modulus",
+          "plastic deformation",
+          "brittleness",
+          "wear resistance",
+          "oxidation",
+          "grain refinement",
+          "precipitation hardening",
+          "laminates",
+          "nanomaterials",
+          "material testing"
+        ],
+        "prerequisite_concepts": [
+          "ceramics",
+          "alloys",
+          "phase diagrams",
+          "heat treatment",
+          "stress strain curves",
+          "fracture mechanics",
+          "microstructure",
+          "work hardening"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "mathematics": {
+        "advanced_concepts": [
+          "functions",
+          "graphs",
+          "optimization",
+          "combinatorics",
+          "sampling",
+          "confidence intervals",
+          "correlation",
+          "regression",
+          "dimensional analysis",
+          "units"
+        ],
+        "common_misconceptions": [
+          "Linear Equations is not useful without context and evidence.",
+          "Quadratic Functions is not useful without context and evidence.",
+          "Proportions is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "linear equations",
+          "quadratic functions",
+          "proportions",
+          "percentages",
+          "probability",
+          "statistics",
+          "mean and median",
+          "standard deviation",
+          "geometric area",
+          "trigonometry",
+          "vectors",
+          "matrices"
+        ],
+        "cross_domain_bridge_concepts": [
+          "optimization"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "estimation",
+          "proof by contradiction",
+          "mathematical induction",
+          "ratio reasoning",
+          "scale factors",
+          "compound interest",
+          "rate problems",
+          "error propagation",
+          "coordinate geometry",
+          "systems of equations"
+        ],
+        "prerequisite_concepts": [
+          "derivatives",
+          "integrals",
+          "limits",
+          "exponential growth",
+          "logarithms",
+          "number theory",
+          "modular arithmetic",
+          "sets"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "medicine health general": {
+        "advanced_concepts": [
+          "allergies",
+          "fever",
+          "respiratory symptoms",
+          "first aid basics",
+          "health literacy",
+          "clinical uncertainty",
+          "triage",
+          "side effects",
+          "dose timing",
+          "care coordination"
+        ],
+        "common_misconceptions": [
+          "Preventive Care is not useful without context and evidence.",
+          "Hydration is not useful without context and evidence.",
+          "Sleep Hygiene is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "preventive care",
+          "hydration",
+          "sleep hygiene",
+          "blood pressure",
+          "heart rate",
+          "infection control",
+          "vaccination",
+          "inflammation",
+          "wound healing",
+          "medication adherence",
+          "risk factors",
+          "screening tests"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "patient history",
+          "diagnostic testing",
+          "rehabilitation",
+          "mobility",
+          "safety planning",
+          "fall prevention",
+          "hydration status",
+          "sleep cycles",
+          "preventive screening",
+          "medical red flags"
+        ],
+        "prerequisite_concepts": [
+          "chronic disease management",
+          "stress response",
+          "pain signaling",
+          "immune memory",
+          "public health",
+          "nutrition labels",
+          "exercise recovery",
+          "mental health support"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "nutrition": {
+        "advanced_concepts": [
+          "dietary constraints",
+          "nutrient density",
+          "energy balance",
+          "body composition",
+          "meal prep",
+          "snack planning",
+          "breakfast composition",
+          "food safety",
+          "supplement caution",
+          "cooking methods"
+        ],
+        "common_misconceptions": [
+          "Calorie Budgeting is not useful without context and evidence.",
+          "Macronutrient Balance is not useful without context and evidence.",
+          "Protein Intake is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "calorie budgeting",
+          "macronutrient balance",
+          "protein intake",
+          "fiber intake",
+          "micronutrients",
+          "meal planning",
+          "portion control",
+          "hydration",
+          "satiety",
+          "glycemic response",
+          "food variety",
+          "diet sustainability"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "calorie estimation",
+          "protein distribution",
+          "balanced plate",
+          "eating patterns",
+          "food environment",
+          "fiber sources",
+          "hydration cues",
+          "carbohydrate quality",
+          "fat soluble vitamins",
+          "electrolytes"
+        ],
+        "prerequisite_concepts": [
+          "nutrition labels",
+          "meal timing",
+          "sodium intake",
+          "added sugar",
+          "healthy fats",
+          "plant proteins",
+          "whole grains",
+          "food allergies"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "philosophy": {
+        "advanced_concepts": [
+          "argument analysis",
+          "fallibilism",
+          "meaning-making",
+          "moral dilemmas",
+          "value pluralism",
+          "agency",
+          "personhood",
+          "rationality",
+          "knowledge justification",
+          "conceptual analysis"
+        ],
+        "common_misconceptions": [
+          "Epistemology is not useful without context and evidence.",
+          "Ethics is not useful without context and evidence.",
+          "Virtue Ethics is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "epistemology",
+          "ethics",
+          "virtue ethics",
+          "utilitarian reasoning",
+          "deontology",
+          "existential meaning",
+          "personal identity",
+          "free will",
+          "consciousness",
+          "moral responsibility",
+          "truth theories",
+          "skepticism"
+        ],
+        "cross_domain_bridge_concepts": [
+          "abstraction"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "ethical tradeoffs",
+          "political legitimacy",
+          "human flourishing",
+          "responsibility",
+          "interpretation",
+          "reasoning under uncertainty",
+          "worldviews",
+          "normativity",
+          "autonomy",
+          "practical wisdom"
+        ],
+        "prerequisite_concepts": [
+          "logic of belief",
+          "pragmatism",
+          "phenomenology",
+          "social contract",
+          "justice",
+          "rights",
+          "aesthetic judgment",
+          "mind body problem"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "planning productivity": {
+        "advanced_concepts": [
+          "personal productivity",
+          "energy management",
+          "deadline management",
+          "daily planning",
+          "weekly review",
+          "workflow automation",
+          "context switching",
+          "interruptions",
+          "progress tracking",
+          "commitment management"
+        ],
+        "common_misconceptions": [
+          "Prioritization is not useful without context and evidence.",
+          "Time Blocking is not useful without context and evidence.",
+          "Task Decomposition is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "prioritization",
+          "time blocking",
+          "task decomposition",
+          "goal setting",
+          "milestones",
+          "project planning",
+          "habit tracking",
+          "decision logs",
+          "review cycles",
+          "focus management",
+          "kanban",
+          "checklists"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "work breakdown structure",
+          "execution rhythm",
+          "planning horizons",
+          "constraints",
+          "backlog grooming",
+          "decision fatigue",
+          "time estimation",
+          "priority tradeoffs",
+          "operational cadence",
+          "attention budgeting"
+        ],
+        "prerequisite_concepts": [
+          "calendar planning",
+          "risk registers",
+          "dependency mapping",
+          "resource allocation",
+          "scope control",
+          "meeting planning",
+          "feedback loops",
+          "retrospectives"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "programming": {
+        "advanced_concepts": [
+          "configuration",
+          "security basics",
+          "input validation",
+          "error handling",
+          "version control",
+          "code review",
+          "refactoring",
+          "performance profiling",
+          "memory management",
+          "database queries"
+        ],
+        "common_misconceptions": [
+          "Variables is not useful without context and evidence.",
+          "Functions is not useful without context and evidence.",
+          "Loops is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "variables",
+          "functions",
+          "loops",
+          "conditionals",
+          "data structures",
+          "recursion",
+          "debugging",
+          "unit tests",
+          "APIs",
+          "exceptions",
+          "file I/O",
+          "parsing"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "regular expressions",
+          "command line interfaces",
+          "test fixtures",
+          "mocking",
+          "state machines",
+          "event loops",
+          "protocol design",
+          "package structure",
+          "documentation",
+          "integration testing"
+        ],
+        "prerequisite_concepts": [
+          "serialization",
+          "concurrency",
+          "asynchronous programming",
+          "object oriented design",
+          "functional programming",
+          "type systems",
+          "dependency management",
+          "logging"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "psychology": {
+        "advanced_concepts": [
+          "confirmation bias",
+          "loss aversion",
+          "mental models",
+          "intrinsic motivation",
+          "feedback loops",
+          "delayed gratification",
+          "cognitive load",
+          "mindfulness",
+          "communication repair",
+          "active listening"
+        ],
+        "common_misconceptions": [
+          "Working Memory is not useful without context and evidence.",
+          "Attention is not useful without context and evidence.",
+          "Motivation is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "working memory",
+          "attention",
+          "motivation",
+          "habit formation",
+          "cognitive bias",
+          "emotional regulation",
+          "learning reinforcement",
+          "stress coping",
+          "social cognition",
+          "decision fatigue",
+          "metacognition",
+          "goal setting"
+        ],
+        "cross_domain_bridge_concepts": [
+          "memory consolidation",
+          "incentives"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "conflict resolution",
+          "empathy",
+          "group dynamics",
+          "trust formation",
+          "uncertainty tolerance",
+          "learning transfer",
+          "practice effects",
+          "attention switching",
+          "burnout prevention",
+          "behavioral cues"
+        ],
+        "prerequisite_concepts": [
+          "behavior change",
+          "memory consolidation",
+          "self-efficacy",
+          "perception",
+          "attachment",
+          "identity",
+          "resilience",
+          "framing effects"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "social communication": {
+        "advanced_concepts": [
+          "reflective listening",
+          "difficult conversations",
+          "social repair",
+          "shared expectations",
+          "cultural context",
+          "communication channels",
+          "audience adaptation",
+          "public speaking",
+          "written clarity",
+          "emotional signals"
+        ],
+        "common_misconceptions": [
+          "Active Listening is not useful without context and evidence.",
+          "Clarifying Questions is not useful without context and evidence.",
+          "Nonverbal Cues is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "active listening",
+          "clarifying questions",
+          "nonverbal cues",
+          "conflict de-escalation",
+          "assertive communication",
+          "empathy",
+          "feedback",
+          "boundaries",
+          "rapport",
+          "trust",
+          "persuasion",
+          "negotiation"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "follow-up",
+          "commitments",
+          "listening barriers",
+          "question framing",
+          "consensus building",
+          "collaboration",
+          "respectful disagreement",
+          "signal versus noise",
+          "message timing",
+          "relationship maintenance"
+        ],
+        "prerequisite_concepts": [
+          "apologies",
+          "tone",
+          "context",
+          "miscommunication",
+          "group facilitation",
+          "meeting norms",
+          "turn taking",
+          "summarization"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "software architecture": {
+        "advanced_concepts": [
+          "caching",
+          "queue design",
+          "idempotency",
+          "access control",
+          "versioning",
+          "feature flags",
+          "adapter pattern",
+          "plugin systems",
+          "error budgets",
+          "operational readiness"
+        ],
+        "common_misconceptions": [
+          "Modularity is not useful without context and evidence.",
+          "Interfaces is not useful without context and evidence.",
+          "Dependency Inversion is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "modularity",
+          "interfaces",
+          "dependency inversion",
+          "event driven architecture",
+          "message buses",
+          "service boundaries",
+          "state management",
+          "transaction design",
+          "audit logs",
+          "rollback",
+          "capability registry",
+          "pipeline orchestration"
+        ],
+        "cross_domain_bridge_concepts": [
+          "feedback loops",
+          "abstraction",
+          "rollback"
+        ],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "safety gates",
+          "provenance",
+          "replay systems",
+          "validation harnesses",
+          "risk containment",
+          "API boundaries",
+          "domain models",
+          "integration seams",
+          "maintenance costs",
+          "technical debt"
+        ],
+        "prerequisite_concepts": [
+          "configuration gates",
+          "observability",
+          "fault isolation",
+          "data contracts",
+          "schema evolution",
+          "migration planning",
+          "runtime invariants",
+          "test strategy"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      },
+      "vehicles mechanics": {
+        "advanced_concepts": [
+          "differentials",
+          "clutches",
+          "hybrid drivetrains",
+          "electric motors",
+          "regenerative braking",
+          "lubrication",
+          "fluid leaks",
+          "sensor faults",
+          "steering geometry",
+          "vehicle safety"
+        ],
+        "common_misconceptions": [
+          "Internal Combustion is not useful without context and evidence.",
+          "Engine Oil is not useful without context and evidence.",
+          "Braking Systems is not useful without context and evidence."
+        ],
+        "core_concepts": [
+          "internal combustion",
+          "engine oil",
+          "braking systems",
+          "transmissions",
+          "suspension",
+          "tire pressure",
+          "wheel alignment",
+          "battery charging",
+          "cooling systems",
+          "fuel injection",
+          "diagnostic codes",
+          "preventive maintenance"
+        ],
+        "cross_domain_bridge_concepts": [],
+        "likely_graph_relation_types": [
+          "depends_on",
+          "supports",
+          "causes",
+          "part_of",
+          "example_of",
+          "prerequisite_for",
+          "generalizes",
+          "specializes"
+        ],
+        "practical_concepts": [
+          "maintenance intervals",
+          "road friction",
+          "payload",
+          "towing",
+          "fuel economy",
+          "charging cycles",
+          "thermal management",
+          "emissions systems",
+          "wheel bearings",
+          "hydraulics"
+        ],
+        "prerequisite_concepts": [
+          "torque",
+          "bearings",
+          "belts",
+          "alternators",
+          "starters",
+          "spark plugs",
+          "air filters",
+          "exhaust systems"
+        ],
+        "target_concepts": 400,
+        "target_edges": 400
+      }
+    },
+    "target_concepts_per_domain": {
+      "DELTA architecture itself": 400,
+      "agriculture gardening": 400,
+      "basic physics": 400,
+      "biology": 400,
+      "business": 400,
+      "chemistry": 400,
+      "energy": 400,
+      "engineering": 400,
+      "finance": 400,
+      "geography": 400,
+      "history": 400,
+      "home repair": 400,
+      "law government basics": 400,
+      "logic": 400,
+      "materials science": 400,
+      "mathematics": 400,
+      "medicine health general": 400,
+      "nutrition": 400,
+      "philosophy": 400,
+      "planning productivity": 400,
+      "programming": 400,
+      "psychology": 400,
+      "social communication": 400,
+      "software architecture": 400,
+      "vehicles mechanics": 400
+    },
+    "target_edge_count": 10000,
+    "target_new_concepts": 10000
+  },
+  "domain_coverage": {
+    "DELTA architecture itself": 191,
+    "agriculture gardening": 160,
+    "basic physics": 496,
+    "biology": 496,
+    "business": 496,
+    "chemistry": 496,
+    "energy": 160,
+    "engineering": 496,
+    "finance": 496,
+    "geography": 496,
+    "history": 496,
+    "home repair": 160,
+    "law government basics": 496,
+    "logic": 496,
+    "materials science": 410,
+    "mathematics": 496,
+    "medicine health general": 496,
+    "nutrition": 496,
+    "philosophy": 496,
+    "planning productivity": 162,
+    "programming": 496,
+    "psychology": 496,
+    "social communication": 160,
+    "software architecture": 496,
+    "unknown": 5,
+    "vehicles mechanics": 160
+  },
+  "duplicate_rate": 0.0037,
+  "duplicate_suppression_count": 1112,
+  "early_stop_gates": {
+    "concept_substance_floor": 0.8,
+    "duplicate_rate_ceiling": 0.05,
+    "edge_confidence_floor": 0.75,
+    "edge_confidence_gate_passed": true,
+    "generic_new_concept_ceiling": 0,
+    "graph_consistency_floor": 0.8,
+    "graph_consistency_gate_passed": true,
+    "new_concept_substance_floor_passed": true,
+    "new_duplicate_rate_passed": true,
+    "new_generic_concept_gate_passed": true,
+    "related_to_edges": 0,
+    "related_to_edges_allowed": false,
+    "runtime_store_stability": true,
+    "target_is_aspirational": true
+  },
+  "edge_duplicate_suppression": 7,
+  "edge_rejection_samples": [],
+  "edges_added": 1,
+  "edges_rejected": 0,
+  "final_concept_count": 10000,
+  "final_edge_count": 10001,
+  "generic_concept_count": 13,
+  "graph_consistency": 1.0,
+  "graph_density": 0.0017,
+  "isolated_concepts": 6566,
+  "new_concept_substance_average": 1.0,
+  "new_duplicate_rate": 0.0,
+  "new_generic_concept_count": 0,
+  "phase": "RC2 Graph + Concept Substrate Expansion Marathon",
+  "push_status": "not_pushed_per_prompt",
+  "reasoning_utility_metrics": {
+    "average_graph_usefulness": 1.0,
+    "average_hallucination_risk": 0.1,
+    "average_overreach_risk": 0.1,
+    "average_reasoning_quality": 0.9597,
+    "operator_review_readiness": 1.0,
+    "operator_visualization_edges": 5,
+    "operator_workflow_recommendation": "CONTINUE_OPERATOR_EXPERIENCE_POLISH"
+  },
+  "recommendation": "PROCEED_OPERATOR_REVIEW_OF_EXPANDED_SUBSTRATE",
+  "relation_distribution": {
+    "analogy_to": 825,
+    "causes": 872,
+    "contrasts_with": 825,
+    "depends_on": 835,
+    "enables": 825,
+    "example_of": 805,
+    "generalizes": 825,
+    "limits": 824,
+    "part_of": 868,
+    "prerequisite_for": 825,
+    "specializes": 825,
+    "supports": 847
+  },
+  "remaining_blockers": [],
+  "rollback_coverage": 1.0,
+  "safety_invariant_status": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "concept_store_reset_performed": false,
+    "deleted_existing_concepts": false,
+    "deleted_existing_graph_edges": false,
+    "fine_tuning_performed": false,
+    "graph_store_reset_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "provider_calls_performed": false,
+    "scheduler_started": false,
+    "synthesis_enabled_by_default": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "starting_concept_count": 4038,
+  "starting_edge_count": 10000
+}

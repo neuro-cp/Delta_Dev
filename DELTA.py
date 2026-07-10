@@ -36,6 +36,8 @@ from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
     route_message,
     select_model_lane,
 )
+from orchestration.runtime.rc2_storage_adapter import backend_health, load_diverse_concepts, search_concepts, substrate_counts  # noqa: E402
+from orchestration.runtime.rc2_substrate_reconciliation import build_substrate_reconciliation  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -46,10 +48,11 @@ def _format_cognitive_state(state: dict[str, object]) -> str:
         f"Knowledge available: {state['knowledge_available']}",
         f"Noncanonical propositions: {state['noncanonical_propositions']}",
         f"Evidence links: {state['evidence_links']}",
-        f"Concepts: {state['concepts']}",
+        f"Active runtime concepts: {state['concepts']}",
         f"Contradictions: {state['contradictions']}",
         f"Pending review: {state['pending_review']}",
-        f"Replay queue: {state['replay_queue']}",
+        f"Substrate replay events: {state['replay_queue']}",
+        f"Migration audit events: {state.get('migration_audit_events', 0)}",
         f"Canonical records: {state['canonical_records']}",
     ])
 
@@ -59,6 +62,10 @@ def _format_snapshot(snapshot: dict[str, object]) -> str:
     corpus = snapshot["corpus_substrate"]
     replay = snapshot["replay_rollback"]
     queue = snapshot["operator_review_queue"]
+    backend = backend_health()
+    counts = substrate_counts()
+    reconciliation = counts.get("reconciliation") or build_substrate_reconciliation(write_reports=False)
+    developmental = build_developmental_memory_state()
     return "\n".join([
         "DELTA Advanced Operator Console",
         "",
@@ -77,6 +84,23 @@ def _format_snapshot(snapshot: dict[str, object]) -> str:
         f"- review queue references: {len(queue)}",
         f"- rollback records: {replay['rollback_records']}",
         f"- replay report available: {replay['replay_report_available']}",
+        "",
+        "Storage backend:",
+        f"- backend: {backend.get('backend')}",
+        f"- sqlite available: {backend.get('sqlite_available')}",
+        f"- sqlite fresh: {backend.get('fresh')}",
+        f"- active runtime concepts: {counts.get('active_runtime_concepts', counts.get('concepts'))}",
+        f"- active graph edges: {counts.get('active_graph_edges', counts.get('graph_edges'))}",
+        f"- substrate replay events: {counts.get('substrate_replay_events', counts.get('replay_events'))}",
+        f"- concept replay events: {counts.get('concept_replay_events')}",
+        f"- graph edge replay events: {counts.get('graph_edge_replay_events')}",
+        f"- migration audit events: {counts.get('migration_audit_events')}",
+        f"- legacy JSONL concepts: {counts.get('legacy_jsonl_concepts')}",
+        f"- legacy JSONL graph edges: {counts.get('legacy_jsonl_graph_edges')}",
+        f"- developmental memory records: {developmental.get('knowledge_memory_records')}",
+        f"- concept import coverage: {counts.get('concept_replay_coverage')}",
+        f"- edge import coverage: {counts.get('edge_replay_coverage')}",
+        f"- authoritative concept counter: {reconciliation.get('authoritative_runtime_concept_counter')}",
     ])
 
 
@@ -117,7 +141,8 @@ class DeltaApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
         self.root.title("DELTA Cognitive OS")
-        self.root.geometry("1180x780")
+        self.root.geometry("1180x700")
+        self.root.minsize(960, 620)
         self.snapshot = build_operator_snapshot()
         self.extracted: list[dict[str, object]] = []
         self.last_message = ""
@@ -127,11 +152,12 @@ class DeltaApp:
         self.pending_provider_question: str | None = None
         self.pending_local_model_question: str | None = None
         self.pending_local_model_deepening: dict[str, str] | None = None
+        self.active_topic_anchor: dict[str, object] | None = None
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
         self.model_residency_status = "not_warmed"
-        self.developer_overlay_enabled = tk.BooleanVar(value=True)
+        self.developer_overlay_enabled = tk.BooleanVar(value=False)
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
@@ -147,11 +173,14 @@ class DeltaApp:
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
         self.conversation_tab = ttk.Frame(self.notebook, padding=10)
+        self.database_tab = ttk.Frame(self.notebook, padding=10)
         self.advanced_tab = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.conversation_tab, text="Conversation")
+        self.notebook.add(self.database_tab, text="Database")
         self.notebook.add(self.advanced_tab, text="Advanced / Operator Console")
 
         self._build_conversation_tab()
+        self._build_database_tab()
         self._build_advanced_tab()
 
     def _build_conversation_tab(self) -> None:
@@ -162,9 +191,10 @@ class DeltaApp:
             ("Knowledge", "knowledge_available"),
             ("Propositions", "noncanonical_propositions"),
             ("Evidence", "evidence_links"),
-            ("Concepts", "concepts"),
+            ("Active concepts", "concepts"),
             ("Contradictions", "contradictions"),
-            ("Replay", "replay_queue"),
+            ("Replay / audit", "replay_queue"),
+            ("Migration audit", "migration_audit_events"),
         ]):
             card = ttk.Frame(header, padding=6)
             card.grid(row=0, column=index, sticky="ew")
@@ -218,6 +248,64 @@ class DeltaApp:
             text="Default mode is natural conversation. Possible concepts appear in Concept Review and are stored only if you press Accept.",
         )
         hint.pack(anchor=tk.W, pady=(6, 0))
+
+    def _build_database_tab(self) -> None:
+        top = ttk.Frame(self.database_tab)
+        top.pack(fill=tk.X)
+        ttk.Label(top, text="Concept Lookup").pack(side=tk.LEFT)
+        self.database_query = ttk.Entry(top)
+        self.database_query.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(8, 8))
+        self.database_query.bind("<Return>", lambda _event: self._search_database_concepts())
+        ttk.Button(top, text="Search", command=self._search_database_concepts).pack(side=tk.LEFT)
+        ttk.Button(top, text="Browse Diverse", command=self._load_database_concepts).pack(side=tk.LEFT, padx=(8, 0))
+
+        self.database_status = tk.StringVar(value="Read-only concept database.")
+        ttk.Label(self.database_tab, textvariable=self.database_status).pack(anchor=tk.W, pady=(8, 0))
+
+        page_bar = ttk.Frame(self.database_tab)
+        page_bar.pack(fill=tk.X, pady=(4, 0))
+        ttk.Button(page_bar, text="Previous", command=self._database_previous_page).pack(side=tk.LEFT)
+        ttk.Button(page_bar, text="Next", command=self._database_next_page).pack(side=tk.LEFT, padx=(8, 0))
+        self.database_page_status = tk.StringVar(value="")
+        ttk.Label(page_bar, textvariable=self.database_page_status).pack(side=tk.LEFT, padx=(12, 0))
+
+        panes = ttk.PanedWindow(self.database_tab, orient=tk.HORIZONTAL)
+        panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        list_frame = ttk.Frame(panes)
+        detail_frame = ttk.Frame(panes)
+        panes.add(list_frame, weight=3)
+        panes.add(detail_frame, weight=2)
+
+        self.database_concepts = ttk.Treeview(
+            list_frame,
+            columns=("name", "domain", "type", "quality"),
+            show="headings",
+            height=18,
+        )
+        self.database_concepts.heading("name", text="Concept")
+        self.database_concepts.heading("domain", text="Domain")
+        self.database_concepts.heading("type", text="Type")
+        self.database_concepts.heading("quality", text="Quality")
+        self.database_concepts.column("name", width=320)
+        self.database_concepts.column("domain", width=160)
+        self.database_concepts.column("type", width=220)
+        self.database_concepts.column("quality", width=80, anchor=tk.CENTER)
+        self.database_concepts.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = ttk.Scrollbar(list_frame, orient=tk.VERTICAL, command=self.database_concepts.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.database_concepts.configure(yscrollcommand=scrollbar.set)
+        self.database_concepts.bind("<<TreeviewSelect>>", lambda _event: self._show_selected_database_concept())
+
+        ttk.Label(detail_frame, text="Concept Detail").pack(anchor=tk.W)
+        self.database_detail = scrolledtext.ScrolledText(detail_frame, wrap=tk.WORD)
+        self.database_detail.pack(fill=tk.BOTH, expand=True, pady=(6, 0))
+        self.database_detail.configure(state=tk.DISABLED)
+        self.database_items: dict[str, dict[str, object]] = {}
+        self.database_results: list[dict[str, object]] = []
+        self.database_page = 0
+        self.database_page_size = 100
+        self.database_result_status = ""
+        self._load_database_concepts()
 
     def _build_advanced_tab(self) -> None:
         panes = ttk.PanedWindow(self.advanced_tab, orient=tk.HORIZONTAL)
@@ -274,15 +362,143 @@ class DeltaApp:
     def _refresh_state_cards(self) -> None:
         state = build_cognitive_state()
         developmental = build_developmental_memory_state()
+        substrate = substrate_counts()
+        active_concepts = int(substrate.get("active_runtime_concepts", substrate.get("concepts", 0)) or 0)
+        replay_events = int(substrate.get("substrate_replay_events", substrate.get("replay_events", 0)) or 0)
         state = {
             **state,
-            "knowledge_available": state["knowledge_available"] or developmental["knowledge_memory_records"] > 0,
-            "concepts": state["concepts"] + developmental["knowledge_memory_records"],
+            "knowledge_available": state["knowledge_available"] or developmental["knowledge_memory_records"] > 0 or active_concepts > 0,
+            "concepts": active_concepts,
             "contradictions": state["contradictions"] + developmental["concept_contradictions"],
-            "replay_queue": state["replay_queue"] + developmental["concept_replay_queue"],
+            "replay_queue": replay_events,
+            "migration_audit_events": int(substrate.get("migration_audit_events", 0) or 0),
         }
         for key, var in self.state_vars.items():
             var.set(str(state[key]))
+
+    def _load_database_concepts(self) -> None:
+        try:
+            concepts = load_diverse_concepts(limit=1000)
+            self._set_database_results(
+                concepts,
+                f"Showing diversified concepts from {substrate_counts().get('backend')} backend.",
+            )
+        except Exception as exc:  # noqa: BLE001 - UI should remain open if index is unavailable.
+            self._set_database_results([], f"Database lookup failed: {type(exc).__name__}: {str(exc)[:160]}")
+
+    def _search_database_concepts(self) -> None:
+        query = self.database_query.get().strip()
+        if not query:
+            self._load_database_concepts()
+            return
+        try:
+            result = search_concepts(query, limit=1000)
+            concepts = result.get("matches", [])
+            backend = result.get("backend") or substrate_counts().get("backend")
+            self._set_database_results(
+                concepts,
+                f"Search `{query}`: {len(concepts)} result(s), backend={backend}, candidate_pool={result.get('candidate_pool_size', 'n/a')}.",
+            )
+        except Exception as exc:  # noqa: BLE001
+            self._set_database_results([], f"Search failed: {type(exc).__name__}: {str(exc)[:160]}")
+
+    def _set_database_results(self, concepts: list[dict[str, object]], status: str) -> None:
+        self.database_results = list(concepts)
+        self.database_page = 0
+        self.database_result_status = status
+        self._show_database_page()
+
+    def _database_next_page(self) -> None:
+        if (self.database_page + 1) * self.database_page_size >= len(self.database_results):
+            return
+        self.database_page += 1
+        self._show_database_page()
+
+    def _database_previous_page(self) -> None:
+        if self.database_page <= 0:
+            return
+        self.database_page -= 1
+        self._show_database_page()
+
+    def _show_database_page(self) -> None:
+        start = self.database_page * self.database_page_size
+        end = start + self.database_page_size
+        self._populate_database_concepts(self.database_results[start:end], self.database_result_status)
+        total = len(self.database_results)
+        if total:
+            self.database_page_status.set(f"Showing {start + 1}-{min(end, total)} of {total}")
+        else:
+            self.database_page_status.set("No concepts to show")
+
+    def _populate_database_concepts(self, concepts: list[dict[str, object]], status: str) -> None:
+        self.database_items = {}
+        for item in self.database_concepts.get_children():
+            self.database_concepts.delete(item)
+        for concept in concepts:
+            concept_id = str(concept.get("concept_id") or "")
+            if not concept_id:
+                continue
+            self.database_items[concept_id] = concept
+            quality = concept.get("quality_score", concept.get("confidence", ""))
+            self.database_concepts.insert(
+                "",
+                tk.END,
+                iid=concept_id,
+                values=(
+                    str(concept.get("concept_name") or ""),
+                    str(concept.get("domain") or ""),
+                    str(concept.get("concept_type") or ""),
+                    str(quality)[:8],
+                ),
+            )
+        counts = substrate_counts()
+        self.database_status.set(
+            f"{status} Active concepts={counts.get('active_runtime_concepts', counts.get('concepts'))}; "
+            f"active graph edges={counts.get('active_graph_edges', counts.get('graph_edges'))}; "
+            f"replay events={counts.get('substrate_replay_events', counts.get('replay_events'))}."
+        )
+        self._write_database_detail("")
+
+    def _show_selected_database_concept(self) -> None:
+        selected = self.database_concepts.selection()
+        if not selected:
+            return
+        concept = self.database_items.get(str(selected[0]))
+        if not concept:
+            return
+        lines = [
+            str(concept.get("concept_name") or "Unnamed Concept"),
+            "",
+            f"ID: {concept.get('concept_id')}",
+            f"Domain: {concept.get('domain')}",
+            f"Type: {concept.get('concept_type')}",
+            f"Quality: {concept.get('quality_score', concept.get('confidence', ''))}",
+            f"Status: {concept.get('approval_status')}",
+            f"Canonical: {concept.get('canonical')}",
+            f"Source: {concept.get('source_type') or concept.get('_store_memory_type') or ''}",
+            f"Rollback: {concept.get('rollback_handle') or concept.get('rollback_id') or ''}",
+            "",
+            "Definition:",
+            str(concept.get("short_definition") or "").strip(),
+        ]
+        for title, key in [
+            ("Propositions", "propositions"),
+            ("Related Concepts", "related_concepts"),
+            ("Examples", "examples"),
+            ("Misconceptions", "misconceptions"),
+        ]:
+            values = concept.get(key)
+            if isinstance(values, list) and values:
+                lines.extend(["", f"{title}:"])
+                lines.extend(f"- {item}" for item in values[:12])
+        self._write_database_detail("\n".join(lines))
+
+    def _write_database_detail(self, text: str) -> None:
+        self.database_detail.configure(state=tk.NORMAL)
+        self.database_detail.delete("1.0", tk.END)
+        if text:
+            self.database_detail.insert(tk.END, text)
+        self.database_detail.configure(state=tk.DISABLED)
 
     def _append_chat(self, speaker: str, text: str) -> None:
         self.chat_history.configure(state=tk.NORMAL)
@@ -296,7 +512,10 @@ class DeltaApp:
             self.session_history = self.session_history[-24:]
 
     def _recent_history_for_router(self) -> list[dict[str, str]]:
-        return self.session_history[-10:]
+        history = self.session_history[-10:]
+        if self.active_topic_anchor:
+            history = [*history, {"role": "anchor", "content": json.dumps(self.active_topic_anchor, sort_keys=True)}]
+        return history
 
     def _last_substantive_exchange(self) -> dict[str, str] | None:
         last_assistant = ""
@@ -433,6 +652,7 @@ class DeltaApp:
             )
             self.last_message = target
             self.last_payload = payload
+            self._update_active_topic_anchor(payload)
             offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
             self.pending_provider_question = target if isinstance(offer, dict) and offer.get("offered") else None
             rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
@@ -496,6 +716,7 @@ class DeltaApp:
         )
         self.last_message = message
         self.last_payload = payload
+        self._update_active_topic_anchor(payload)
         offer = payload.get("supporting_information_offer") if isinstance(payload, dict) else None
         if isinstance(offer, dict) and offer.get("offered"):
             self.pending_provider_question = message
@@ -535,6 +756,26 @@ class DeltaApp:
         self._append_chat("DELTA", rendered)
         self._append_session("user", message)
         self._append_session("assistant", rendered)
+
+    def _update_active_topic_anchor(self, payload: dict[str, object]) -> None:
+        anchor = payload.get("active_topic_anchor")
+        if isinstance(anchor, dict) and (anchor.get("active_concept_id") or anchor.get("active_concept_name")):
+            self.active_topic_anchor = dict(anchor)
+            return
+        matches = payload.get("concept_matches")
+        if isinstance(matches, list) and matches:
+            first = matches[0]
+            if isinstance(first, dict) and (first.get("concept_id") or first.get("concept_name")):
+                self.active_topic_anchor = {
+                    "active_concept_id": first.get("concept_id"),
+                    "active_concept_name": first.get("concept_name"),
+                    "domain": first.get("domain"),
+                    "related_concepts": first.get("related_concepts", [])[:8] if isinstance(first.get("related_concepts"), list) else [],
+                    "retrieved_concept_ids": [row.get("concept_id") for row in matches if isinstance(row, dict) and row.get("concept_id")],
+                    "retrieved_concept_names": [row.get("concept_name") for row in matches if isinstance(row, dict) and row.get("concept_name")],
+                    "last_user_question": self.last_message,
+                    "last_answer_summary": " ".join(str(payload.get("answer") or "").split())[:420],
+                }
 
     def _set_deepening_offer_if_present(self, question: str, payload: dict[str, object]) -> None:
         answer = str(payload.get("answer") or "")

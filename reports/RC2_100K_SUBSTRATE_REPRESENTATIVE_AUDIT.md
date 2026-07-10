@@ -1,0 +1,225 @@
+# RC2 100K Substrate Representative Audit
+
+Created: 2026-07-09T22:23:29+00:00
+Mode: read_only_representative_audit
+Classification: mostly_usable_substrate_with_localized_cleanup_needed
+Recommendation: KEEP_100K_SUBSTRATE
+
+## Counts
+
+- Total concepts: 8979
+- Unique semantic estimate: 8979
+- Usable concept estimate: 8979
+- Rich concept estimate: 8979
+- Weak/template concept estimate: 0
+- Duplicate ratio estimate: 0.0
+
+## Duplicate Audit
+
+- Exact duplicate name groups: 0
+- Exact duplicate concepts: 0
+- Near-duplicate groups: 0
+- Near-duplicate clone concepts: 0
+
+## Largest Near-Duplicate Groups
+
+## Sample Quality
+
+```json
+{
+  "default_alphabetical_first_page": {
+    "distinct_domains": 8,
+    "example_names": [
+      "1000 Calorie Diet Meal Plan",
+      "Abductive Inference Boundary Conditions (Logic)",
+      "Abductive Inference Failure Mode (Logic)",
+      "Abductive Inference Failure Recovery (Logic)",
+      "Abductive Inference Governance (Logic)",
+      "Abductive Inference Historical Development (Logic)",
+      "Abductive Inference Human Factor (Logic)",
+      "Abductive Inference Learning Path (Logic)"
+    ],
+    "sample_size": 100,
+    "weak_or_template": 0,
+    "weak_or_template_ratio": 0.0
+  },
+  "default_alphabetical_late_page": {
+    "distinct_domains": 8,
+    "example_names": [
+      "Cash Flow Mechanism (Business)",
+      "Cash Flow Modeling Frame (Business)",
+      "Cash Flow Modeling Frame (Finance)",
+      "Cash Flow Risk Control (Finance)",
+      "Cash Flow System Interaction (Business)",
+      "Cash Flow Tradeoff (Finance)",
+      "Cash Flow Verification Method (Business)",
+      "Cash Flow Verification Method (Finance)"
+    ],
+    "sample_size": 100,
+    "weak_or_template": 0,
+    "weak_or_template_ratio": 0.0
+  },
+  "high_degree_sample": {
+    "distinct_domains": 21,
+    "example_names": [
+      "Api Boundaries (Software Architecture)",
+      "Audit Logs (Software Architecture)",
+      "Caching (Software Architecture)",
+      "Adapter Pattern Governance (Software Architecture)",
+      "Regulatory Compliance Tradeoff (Law Government Basics)",
+      "Balance Sheets (Finance)",
+      "Blood Pressure (Medicine Health General)",
+      "Constraints (Engineering)"
+    ],
+    "sample_size": 100,
+    "weak_or_template": 0,
+    "weak_or_template_ratio": 0.0
+  },
+  "keyword_search_samples": {
+    "energy": {
+      "distinct_domains": 4,
+      "example_names": [
+        "Activation Energy Evidence Standard (Chemistry)",
+        "Activation Energy Risk Control (Chemistry)",
+        "Activation Energy Tradeoff (Chemistry)",
+        "Ecosystem Energy Flow Measurement (Biology)",
+        "Ecosystem Energy Flow Mechanism (Biology)",
+        "Ecosystem Energy Flow System Interaction (Biology)",
+        "Energy Balance Failure Mode (Nutrition)",
+        "Energy Balance Governance (Nutrition)"
+      ],
+      "sample_size": 25,
+      "weak_or_template": 0,
+      "weak_or_template_ratio": 0.0
+    },
+    "law": {
+      "distinct_domains": 1,
+      "example_names": [
+        "Administrative Procedure Cross-Domain Analogy (Law Government Basics)",
+        "Administrative Procedure Diagnostic Use (Law Government Basics)",
+        "Administrative Procedure Governed Memory (Law Government Basics)",
+        "Administrative Procedure Measurement (Law Government Basics)",
+        "Administrative Procedure Mechanism (Law Government Basics)",
+        "Administrative Procedure Policy Interface (Law Government Basics)",
+        "Administrative Procedure Resource Constraint (Law Government Basics)",
+        "Administrative Procedure Risk Control (Law Government Basics)"
+      ],
+      "sample_size": 25,
+      "weak_or_template": 0,
+      "weak_or_template_ratio": 0.0
+    },
+    "photosynthesis": {
+      "distinct_domains": 2,
+      "example_names": [
+        "Photosynthesis Abstraction (Biology)",
+        "Photosynthesis Comparative Frame (Biology)",
+        "Photosynthesis Contradiction Check (Biology)",
+        "Photosynthesis Curriculum Role (Biology)",
+        "Photosynthesis Decision Criterion (Biology)",
+        "Photosynthesis Evidence Standard (Biology)",
+        "Photosynthesis Failure Mode (Agriculture Gardening)",
+        "Photosynthesis Governance (Agriculture Gardening)"
+      ],
+      "sample_size": 14,
+      "weak_or_template": 0,
+      "weak_or_template_ratio": 0.0
+    },
+    "planning": {
+      "distinct_domains": 1,
+      "example_names": [
+        "Calendar Planning (Planning Productivity)",
+        "Feedback Loops (Planning Productivity)",
+        "Attention Budgeting Abstraction (Planning Productivity)",
+        "Attention Budgeting Learning Path (Planning Productivity)",
+        "Attention Budgeting Practical Application (Planning Productivity)",
+        "Backlog Grooming Failure Mode (Planning Productivity)",
+        "Backlog Grooming Governance (Planning Productivity)",
+        "Backlog Grooming Optimization (Planning Productivity)"
+      ],
+      "sample_size": 25,
+      "weak_or_template": 0,
+      "weak_or_template_ratio": 0.0
+    },
+    "science": {
+      "distinct_domains": 1,
+      "example_names": [
+        "Additive Manufacturing Causal Pathway (Materials Science)",
+        "Additive Manufacturing Design Pattern (Materials Science)",
+        "Additive Manufacturing Ethical Constraint (Materials Science)",
+        "Additive Manufacturing Longitudinal Tracking (Materials Science)",
+        "Additive Manufacturing Measurement (Materials Science)",
+        "Additive Manufacturing Mechanism (Materials Science)",
+        "Additive Manufacturing Practical Application (Materials Science)",
+        "Additive Manufacturing Scaling Behavior (Materials Science)"
+      ],
+      "sample_size": 25,
+      "weak_or_template": 0,
+      "weak_or_template_ratio": 0.0
+    },
+    "software architecture": {
+      "distinct_domains": 1,
+      "example_names": [
+        "Access Control (Software Architecture)",
+        "Access Control Abstraction (Software Architecture)",
+        "Access Control Causal Pathway (Software Architecture)",
+        "Access Control Design Pattern (Software Architecture)",
+        "Access Control Ethical Constraint (Software Architecture)",
+        "Access Control Evidence Chain (Software Architecture)",
+        "Access Control Learning Path (Software Architecture)",
+        "Access Control Longitudinal Tracking (Software Architecture)"
+      ],
+      "sample_size": 25,
+      "weak_or_template": 0,
+      "weak_or_template_ratio": 0.0
+    }
+  },
+  "per_domain_top_quality_sample": {
+    "distinct_domains": 26,
+    "example_names": [
+      "Annuals Failure Mode (Agriculture Gardening)",
+      "Annuals Governance (Agriculture Gardening)",
+      "Annuals Optimization (Agriculture Gardening)",
+      "Beneficial Insects Failure Mode (Agriculture Gardening)",
+      "Beneficial Insects Governance (Agriculture Gardening)",
+      "Buoyancy Cross-Domain Analogy (Basic Physics)",
+      "Buoyancy Diagnostic Use (Basic Physics)",
+      "Buoyancy Evidence Standard (Basic Physics)"
+    ],
+    "sample_size": 130,
+    "weak_or_template": 0,
+    "weak_or_template_ratio": 0.0
+  },
+  "random_sample": {
+    "distinct_domains": 25,
+    "example_names": [
+      "Systems Engineering Evidence Standard (Engineering)",
+      "Public Safety Abstraction (Law Government Basics)",
+      "Systems Of Equations Governed Memory (Mathematics)",
+      "Attachment Contradiction Check (Psychology)",
+      "Public Safety Curriculum Role (Law Government Basics)",
+      "Tax Planning Diagnostic Use (Finance)",
+      "Replay Systems Practical Heuristic (Software Architecture)",
+      "Oral History Verification Method (History)"
+    ],
+    "sample_size": 250,
+    "weak_or_template": 0,
+    "weak_or_template_ratio": 0.0
+  }
+}
+```
+
+## Graph Audit
+
+```json
+{
+  "duplicate_edge_groups": 0,
+  "edge_contamination_ratio": 0.0,
+  "edges_connected_to_weak_or_template_concepts": 0,
+  "total_graph_edges": 5505,
+  "usable_edge_estimate": 5505
+}
+```
+
+## Safety
+
+No deletion, quarantine, rollback, training, provider call, canonical mutation, or expansion was performed.

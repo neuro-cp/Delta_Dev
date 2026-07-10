@@ -1,0 +1,88 @@
+{
+  "after": {
+    "concept_keywords": 385027,
+    "concept_propositions": 26986,
+    "concept_related": 61445,
+    "concepts": 8979,
+    "graph_adjacency": 11010,
+    "graph_edges": 5505,
+    "substrate_replay_events": 14484
+  },
+  "backup_path": "G:\\Delta_Dev\\data\\rc2_indexes\\rc2_substrate.pre_duplicate_repair_20260709T222304Z.sqlite",
+  "before": {
+    "concept_keywords": 823711,
+    "concept_propositions": 65866,
+    "concept_related": 111269,
+    "concepts": 21939,
+    "graph_adjacency": 20982,
+    "graph_edges": 10491,
+    "substrate_replay_events": 32430
+  },
+  "created_at": "2026-07-09T22:23:17+00:00",
+  "cumulative_cleanup": {
+    "baseline": {
+      "concepts": 100000,
+      "graph_edges": 100000,
+      "substrate_replay_events": 200000
+    },
+    "baseline_backup_path": "data\\rc2_indexes\\rc2_substrate.pre_duplicate_repair_20260709T221801Z.sqlite",
+    "final": {
+      "concepts": 8979,
+      "graph_edges": 5505,
+      "substrate_replay_events": 14484
+    },
+    "jsonl_source_store_mutated": false,
+    "runtime_index_cleaned": true,
+    "total_removed_concepts": 91021,
+    "total_removed_graph_edges": 94495,
+    "total_removed_replay_events": 185516
+  },
+  "deleted_rows_by_table": {
+    "concept_keywords": 438684,
+    "concept_propositions": 38880,
+    "concept_related": 49824,
+    "concept_replay_events": 12960,
+    "concepts": 12960,
+    "edge_replay_events": 4986,
+    "graph_adjacency_removed_concepts": 6838,
+    "graph_adjacency_removed_edges": 3134,
+    "graph_edges": 4986
+  },
+  "duplicate_groups_repaired": 0,
+  "effective_working_substrate": {
+    "concepts": 8979,
+    "graph_edges": 5505,
+    "runtime_duplicates_removed": true,
+    "source_backup_preserved": true
+  },
+  "largest_repaired_groups": [],
+  "recommendation": "READY_FOR_GENERATOR_REBUILD_VALIDATION",
+  "removed_clone_concepts": 0,
+  "removed_concepts": 12960,
+  "removed_graph_edges": 4986,
+  "removed_residual_scaffold_concepts": 12960,
+  "replay_coverage_after": {
+    "concept_replay_coverage": 1.0,
+    "concept_replay_events": 8979,
+    "concept_rows": 8979,
+    "edge_replay_coverage": 1.0,
+    "edge_replay_events": 5505,
+    "edge_rows": 5505,
+    "total_replay_events": 14484
+  },
+  "report": "RC2_100K_SUBSTRATE_DUPLICATE_REPAIR",
+  "representatives_kept": 0,
+  "safety": {
+    "canonical_memory_mutated": false,
+    "canonical_write_performed": false,
+    "delta_75_push_performed": false,
+    "fine_tuning_performed": false,
+    "jsonl_source_store_mutated": false,
+    "provider_calls_performed": false,
+    "substrate_expansion_continued": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "status": "completed"
+}

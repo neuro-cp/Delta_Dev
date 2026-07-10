@@ -40,6 +40,8 @@ REPORTS = ROOT / "reports"
 GRAPH_EDGE_STORE = DATA / "noncanonical_graph_edges.jsonl"
 GRAPH_REVIEW_LOG = DATA / "graph_review_events.jsonl"
 GRAPH_ROLLBACK_LOG = DATA / "graph_rollback_events.jsonl"
+_APPROVED_GRAPH_EDGE_CACHE: dict[str, Any] = {"signature": None, "edges": []}
+_GRAPH_INDEX_CACHE: dict[str, Any] = {"signature": None, "index": None}
 
 LIMITED_STORAGE_BATCH_SIZE = 15
 APPROVAL_EVENT = "RC2.8_LIMITED_OPERATOR_GRAPH_STORAGE_TRIAL"
@@ -115,13 +117,61 @@ def approve_limited_graph_edge_batch(
 
 
 def load_approved_graph_edges() -> list[dict[str, Any]]:
-    return [
+    signature = _path_signature(GRAPH_EDGE_STORE)
+    if _APPROVED_GRAPH_EDGE_CACHE["signature"] == signature:
+        return [dict(edge) for edge in _APPROVED_GRAPH_EDGE_CACHE["edges"]]
+    edges = [
         edge
         for edge in _read_jsonl(GRAPH_EDGE_STORE)
         if edge.get("approval_status") == "approved_noncanonical"
         and edge.get("canonical") is False
         and edge.get("rollback_status") != "rolled_back"
     ]
+    _APPROVED_GRAPH_EDGE_CACHE["signature"] = signature
+    _APPROVED_GRAPH_EDGE_CACHE["edges"] = [dict(edge) for edge in edges]
+    _GRAPH_INDEX_CACHE["signature"] = None
+    _GRAPH_INDEX_CACHE["index"] = None
+    return edges
+
+
+def clear_runtime_graph_caches() -> None:
+    _APPROVED_GRAPH_EDGE_CACHE["signature"] = None
+    _APPROVED_GRAPH_EDGE_CACHE["edges"] = []
+    _GRAPH_INDEX_CACHE["signature"] = None
+    _GRAPH_INDEX_CACHE["index"] = None
+
+
+def build_runtime_graph_index() -> dict[str, Any]:
+    signature = _path_signature(GRAPH_EDGE_STORE)
+    if _GRAPH_INDEX_CACHE["signature"] == signature and _GRAPH_INDEX_CACHE["index"] is not None:
+        return _GRAPH_INDEX_CACHE["index"]
+    edges = load_approved_graph_edges()
+    outgoing: dict[str, list[dict[str, Any]]] = {}
+    incoming: dict[str, list[dict[str, Any]]] = {}
+    concept_edges: dict[str, list[dict[str, Any]]] = {}
+    relation_index: dict[str, list[dict[str, Any]]] = {}
+    for edge in edges:
+        source = str(edge["source_concept_id"])
+        target = str(edge["target_concept_id"])
+        relation = str(edge.get("relation_type") or "")
+        outgoing.setdefault(source, []).append(edge)
+        incoming.setdefault(target, []).append(edge)
+        concept_edges.setdefault(source, []).append(edge)
+        concept_edges.setdefault(target, []).append(edge)
+        relation_index.setdefault(relation, []).append(edge)
+    for bucket in (*outgoing.values(), *incoming.values(), *concept_edges.values(), *relation_index.values()):
+        bucket.sort(key=lambda item: (-float(item.get("confidence") or 0.0), item["edge_id"]))
+    index = {
+        "signature": signature,
+        "edges": edges,
+        "outgoing": outgoing,
+        "incoming": incoming,
+        "concept_edges": concept_edges,
+        "relation_index": relation_index,
+    }
+    _GRAPH_INDEX_CACHE["signature"] = signature
+    _GRAPH_INDEX_CACHE["index"] = index
+    return index
 
 
 def graph_assisted_retrieval(question: str, *, max_edges: int = 5) -> dict[str, Any]:
@@ -129,20 +179,46 @@ def graph_assisted_retrieval(question: str, *, max_edges: int = 5) -> dict[str, 
     concept_ids = {str(item.get("concept_id")) for item in concepts.get("matches", [])}
     edges = []
     if concept_ids:
-        for edge in load_approved_graph_edges():
-            if edge["source_concept_id"] in concept_ids or edge["target_concept_id"] in concept_ids:
-                edges.append(edge)
+        seen_edges = set()
+        try:
+            from orchestration.runtime.rc2_storage_adapter import get_edges_for_concept
+
+            for concept_id in concept_ids:
+                for edge in get_edges_for_concept(concept_id, limit=max_edges * 3):
+                    edge_id = str(edge["edge_id"])
+                    if edge_id in seen_edges:
+                        continue
+                    seen_edges.add(edge_id)
+                    edges.append(edge)
+        except Exception:
+            index = build_runtime_graph_index()
+            for concept_id in concept_ids:
+                for edge in index["concept_edges"].get(concept_id, []):
+                    edge_id = str(edge["edge_id"])
+                    if edge_id in seen_edges:
+                        continue
+                    seen_edges.add(edge_id)
+                    edges.append(edge)
     edges = sorted(edges, key=lambda edge: (-float(edge.get("confidence") or 0.0), edge["edge_id"]))[:max_edges]
     expanded_ids = set(concept_ids)
     for edge in edges:
         expanded_ids.add(edge["source_concept_id"])
         expanded_ids.add(edge["target_concept_id"])
-    concepts_by_id = {concept["concept_id"]: concept for concept in load_approved_concepts()}
-    expanded_concepts = [
-        concepts_by_id[concept_id]
-        for concept_id in sorted(expanded_ids)
-        if concept_id in concepts_by_id
-    ]
+    try:
+        from orchestration.runtime.rc2_storage_adapter import get_concept
+
+        expanded_concepts = [
+            concept
+            for concept in (get_concept(concept_id) for concept_id in sorted(expanded_ids))
+            if concept
+        ]
+    except Exception:
+        concepts_by_id = {concept["concept_id"]: concept for concept in load_approved_concepts()}
+        expanded_concepts = [
+            concepts_by_id[concept_id]
+            for concept_id in sorted(expanded_ids)
+            if concept_id in concepts_by_id
+        ]
     return {
         "phase": "RC2.9 Graph-Assisted Retrieval",
         "question": question,
@@ -160,12 +236,30 @@ def graph_assisted_retrieval(question: str, *, max_edges: int = 5) -> dict[str, 
 
 
 def bounded_graph_traversal(start_concept_id: str, *, max_depth: int = 2) -> dict[str, Any]:
+    try:
+        from orchestration.runtime.rc2_sqlite_substrate import backend_health, traverse_graph_sqlite
+
+        if backend_health().get("sqlite_available"):
+            result = traverse_graph_sqlite(start_concept_id, depth=max_depth)
+            return {
+                "phase": "RC2.9 Bounded Graph Traversal",
+                "start_concept_id": start_concept_id,
+                "max_depth": result["max_depth"],
+                "paths": result["paths"],
+                "path_count": result["path_count"],
+                "visited_node_count": result["visited_node_count"],
+                "visited_edge_count": result["visited_edge_count"],
+                "cycle_prevention": True,
+                "duplicate_expansion_prevention": True,
+                "read_only": True,
+                "graph_write_performed": False,
+                "backend": "sqlite",
+                "safety": _safety(),
+            }
+    except Exception:
+        pass
     max_depth = max(1, min(int(max_depth), 2))
-    edges = load_approved_graph_edges()
-    adjacency: dict[str, list[dict[str, Any]]] = {}
-    for edge in edges:
-        adjacency.setdefault(edge["source_concept_id"], []).append(edge)
-        adjacency.setdefault(edge["target_concept_id"], []).append(edge)
+    adjacency = build_runtime_graph_index()["concept_edges"]
     queue: deque[tuple[str, int, list[dict[str, Any]]]] = deque([(start_concept_id, 0, [])])
     visited_nodes = {start_concept_id}
     visited_edges: set[str] = set()
@@ -174,7 +268,7 @@ def bounded_graph_traversal(start_concept_id: str, *, max_depth: int = 2) -> dic
         node, depth, path = queue.popleft()
         if depth >= max_depth:
             continue
-        for edge in sorted(adjacency.get(node, []), key=lambda item: (-float(item.get("confidence") or 0.0), item["edge_id"])):
+        for edge in adjacency.get(node, []):
             edge_id = str(edge["edge_id"])
             if edge_id in visited_edges:
                 continue
@@ -709,15 +803,26 @@ def _append_jsonl(path: Path, row: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(row, sort_keys=True) + "\n")
+    if path == GRAPH_EDGE_STORE:
+        clear_runtime_graph_caches()
 
 
 def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
+    if path == GRAPH_EDGE_STORE:
+        clear_runtime_graph_caches()
 
 
 def _digest(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
+
+
+def _path_signature(path: Path) -> tuple[str, int, int]:
+    if not path.exists():
+        return (str(path), 0, 0)
+    stat = path.stat()
+    return (str(path), stat.st_mtime_ns, stat.st_size)
 
 
 if __name__ == "__main__":

@@ -1,18 +1,93 @@
-# DELTA-75
+# DELTA
 
-DELTA-75 is an experimental cognitive substrate for structured reasoning,
-episodic experience, replay-driven interpretation, and governed learning.
+DELTA is a Developmental Cognitive Model (DCM) project.
 
-The project is not an LLM wrapper. The runtime is intended to provide explicit
-mechanics for signal propagation, salience, memory, decision pressure,
-arbitration, replay, and inspection. AI models can be attached as plugins or
-interpretive surfaces, but they should not become hidden authority inside the
-substrate.
+A DCM is not a replacement for a foundation language model. It is the complete
+cognitive stack around one or more language engines: a governed developmental
+runtime that grows knowledge through reviewed experience, structured memory,
+evidence, graph reasoning, competency testing, and controlled distillation.
+
+The project is not an LLM wrapper and it is not claiming that day-to-day
+learning currently happens inside model weights. DELTA's learning loop lives in
+the runtime: conversation and evidence produce candidate concepts, operator
+review controls what enters the noncanonical substrate, graph links and replay
+support reasoning, competency tests measure readiness, and neural training is
+reserved as a later graduation event.
+
+The architecture has three layers:
+
+```text
+Foundation Model
+(Language Engine)
+        |
+        v
+Developmental Cognitive Runtime
+(Memory, retrieval, graph reasoning, governance, operator review)
+        |
+        v
+Developmental Cognitive Model Checkpoint
+(A distilled model produced from reviewed curricula and competency tests)
+```
+
+The current checkpoint is primarily Layer 2: the cognitive runtime and
+noncanonical substrate. A future distilled checkpoint may internalize selected
+validated behaviors, but the runtime remains the place where provenance,
+rollback, operator review, and long-term knowledge management stay explicit.
+
+## Developmental Lifecycle
+
+DELTA's day-to-day learning occurs continuously in the runtime. Training is not
+the default learning mechanism; it is a periodic graduation step after enough
+reviewed evidence has accumulated.
+
+```text
+Experience
+        |
+        v
+Review
+        |
+        v
+Structured Memory
+        |
+        v
+Knowledge Graph
+        |
+        v
+Replay
+        |
+        v
+Competency Tests
+        |
+        v
+Curriculum
+        |
+        v
+Training Packet
+        |
+        v
+Distillation
+        |
+        v
+Developmental Cognitive Model
+```
 
 ## Core Principle
 
 Influence pathways should be observable, bounded, deterministic where possible,
 and reversible or inspectable before they are allowed to affect runtime state.
+
+Neural training is a graduation event, not the default learning mechanism.
+DELTA should first learn through governed concept formation, graph expansion,
+replay, review, and competency testing. Only mature, reviewed curricula should
+be packaged for possible distillation.
+
+## Current Scaling Focus
+
+The RC2 substrate expansion moved DELTA into systems-engineering territory:
+large concept and graph stores now need indexes, caches, adjacency maps,
+cluster analysis, retrieval latency checks, and graph analytics before further
+large-scale growth. Future expansion should be gated by usefulness and
+performance, not raw concept count.
 
 ## Main Areas
 

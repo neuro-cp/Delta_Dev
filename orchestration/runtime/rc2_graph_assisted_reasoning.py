@@ -54,6 +54,30 @@ REASONING_TRIAL_PROMPTS = [
     ("agriculture", "Use graph-assisted reasoning to explain how soil quality relates to plant growth."),
 ]
 
+GUIDED_REASONING_FAILURE_TAXONOMY = {
+    "weak_retrieval": "Retrieved concept set is too small or low quality.",
+    "missing_graph_edge": "No approved graph edge supports the requested bridge.",
+    "low_graph_usefulness": "Graph edges exist but add little explanatory value.",
+    "overreach_risk": "The tentative inference may claim more than the evidence supports.",
+    "hallucinated_bridge_risk": "The bridge may not be grounded in retrieved concepts or approved graph edges.",
+    "generic_concept_substance": "Retrieved concepts are too generic to support reasoning.",
+    "insufficient_evidence_chain": "Evidence chain is absent or too weak for operator confidence.",
+    "ambiguous_user_question": "The user question does not identify a clear relationship or target.",
+    "route_mismatch": "The prompt should not have entered graph-assisted reasoning.",
+    "operator_rejection": "Operator explicitly rejected the reasoning output.",
+}
+
+OPERATOR_REVIEW_ACTIONS = {
+    "approve_reasoning_as_useful",
+    "reject_reasoning",
+    "mark_overreach",
+    "mark_missing_evidence",
+    "request_deeper_retrieval",
+    "request_graph_expansion_candidate",
+    "request_concept_substance_repair_candidate",
+    "add_operator_notes",
+}
+
 
 def build_graph_assisted_reasoning_trial(question: str, *, diagnostics: bool = False) -> dict[str, Any]:
     retrieval = graph_assisted_retrieval(_strip_graph_instruction(question), max_edges=5)
@@ -62,6 +86,15 @@ def build_graph_assisted_reasoning_trial(question: str, *, diagnostics: bool = F
     edges = retrieval.get("approved_graph_edges", [])
     answer = _reasoning_answer(question, concepts, edges, chains, diagnostics=diagnostics)
     quality = score_graph_reasoning_trial(retrieval, chains, answer)
+    review_payload = build_guided_reasoning_review_payload(
+        question=question,
+        concepts=concepts,
+        edges=edges,
+        chains=chains,
+        answer=answer,
+        quality=quality,
+        route_reason="explicit graph-assisted reasoning request",
+    )
     return {
         "phase": "RC2.11 Graph-Assisted Reasoning Trial",
         "question": question,
@@ -71,6 +104,8 @@ def build_graph_assisted_reasoning_trial(question: str, *, diagnostics: bool = F
         "approved_graph_edges": _edge_summary(edges),
         "evidence_chains": chains["chains"],
         "reasoning_quality": quality,
+        "operator_review_payload": review_payload,
+        "failure_taxonomy": classify_guided_reasoning_failures(review_payload),
         "read_only": True,
         "trial_only": True,
         "graph_write_performed": False,
@@ -81,6 +116,108 @@ def build_graph_assisted_reasoning_trial(question: str, *, diagnostics: bool = F
         "canonical_write_performed": False,
         "safety": dict(SAFETY),
     }
+
+
+def build_guided_reasoning_review_payload(
+    *,
+    question: str,
+    concepts: list[dict[str, Any]],
+    edges: list[dict[str, Any]],
+    chains: dict[str, Any],
+    answer: str,
+    quality: dict[str, Any],
+    route_reason: str,
+) -> dict[str, Any]:
+    """Create the structured operator-review object for reasoning outputs."""
+
+    return {
+        "review_payload_type": "rc2_guided_reasoning_review",
+        "user_question": question,
+        "retrieved_concepts": _concept_summary(concepts),
+        "approved_graph_edges_used": _edge_summary(edges),
+        "evidence_chains": chains.get("chains", []),
+        "tentative_inference": _extract_answer_section(answer, "Tentative inference"),
+        "uncertainty": _extract_answer_section(answer, "Uncertainty"),
+        "confidence": quality.get("overall_score", 0.0),
+        "overreach_risk": quality.get("overreach_risk", 1.0),
+        "hallucination_risk": quality.get("hallucination_risk", 1.0),
+        "why_route_selected": route_reason,
+        "why_no_memory_or_graph_write": "RC2 guided reasoning is explicit, read-only, trial-only, and operator reviewed. Useful reasoning can be reviewed, but it does not write memory, graph edges, or canonical records automatically.",
+        "allowed_review_actions": sorted(OPERATOR_REVIEW_ACTIONS),
+        "writes_performed": {
+            "memory": False,
+            "graph": False,
+            "canonical": False,
+            "provider": False,
+            "training": False,
+        },
+    }
+
+
+def simulate_guided_reasoning_review_action(
+    review_payload: dict[str, Any],
+    action: str,
+    *,
+    operator_notes: str = "",
+) -> dict[str, Any]:
+    """Return a non-mutating review event for operator reasoning feedback."""
+
+    normalized = str(action or "").strip().lower()
+    if normalized not in OPERATOR_REVIEW_ACTIONS:
+        normalized = "reject_reasoning"
+        status = "invalid_action_rejected"
+    else:
+        status = "simulated_review_recorded"
+    event = {
+        "event_type": "rc2_guided_reasoning_review_event",
+        "action": normalized,
+        "status": status,
+        "user_question": review_payload.get("user_question"),
+        "operator_notes": operator_notes,
+        "failure_codes": classify_guided_reasoning_failures(review_payload),
+        "writes_performed": {
+            "memory": False,
+            "graph": False,
+            "canonical": False,
+            "provider": False,
+            "training": False,
+        },
+        "review_only": True,
+        "safety": dict(SAFETY),
+    }
+    if normalized == "mark_overreach" and "overreach_risk" not in event["failure_codes"]:
+        event["failure_codes"].append("overreach_risk")
+    if normalized == "mark_missing_evidence" and "missing_graph_edge" not in event["failure_codes"]:
+        event["failure_codes"].append("missing_graph_edge")
+    if normalized == "reject_reasoning" and "operator_rejection" not in event["failure_codes"]:
+        event["failure_codes"].append("operator_rejection")
+    return event
+
+
+def classify_guided_reasoning_failures(review_payload: dict[str, Any]) -> list[str]:
+    failures: list[str] = []
+    concepts = review_payload.get("retrieved_concepts", [])
+    edges = review_payload.get("approved_graph_edges_used", [])
+    chains = review_payload.get("evidence_chains", [])
+    confidence = float(review_payload.get("confidence") or 0.0)
+    graph_usefulness = min(len(edges), 3) / 3
+    if len(concepts) < 2 or confidence < 0.55:
+        failures.append("weak_retrieval")
+    if not edges:
+        failures.append("missing_graph_edge")
+    if graph_usefulness < 0.5:
+        failures.append("low_graph_usefulness")
+    if float(review_payload.get("overreach_risk") or 0.0) > 0.25:
+        failures.append("overreach_risk")
+    if float(review_payload.get("hallucination_risk") or 0.0) > 0.25:
+        failures.append("hallucinated_bridge_risk")
+    if any(_is_generic_review_concept(item) for item in concepts):
+        failures.append("generic_concept_substance")
+    if not chains:
+        failures.append("insufficient_evidence_chain")
+    if len(str(review_payload.get("user_question") or "").split()) < 4:
+        failures.append("ambiguous_user_question")
+    return sorted(set(failures))
 
 
 def score_graph_reasoning_trial(retrieval: dict[str, Any], chains: dict[str, Any], answer: str) -> dict[str, Any]:
@@ -124,12 +261,23 @@ def run_cross_domain_reasoning_evaluation() -> dict[str, Any]:
     for domain, prompt in REASONING_TRIAL_PROMPTS:
         trial = build_graph_assisted_reasoning_trial(prompt)
         quality = trial["reasoning_quality"]
+        review_payload = trial["operator_review_payload"]
+        failures = trial["failure_taxonomy"]
+        operator_ready = quality["overall_score"] >= 0.70 and len(failures) <= 2
         results.append({
             "domain": domain,
             "prompt": prompt,
             "concept_count": len(trial["retrieved_concepts"]),
             "edge_count": len(trial["approved_graph_edges"]),
             "reasoning_quality": quality,
+            "operator_review_ready": operator_ready,
+            "failure_codes": failures,
+            "review_payload_summary": {
+                "confidence": review_payload["confidence"],
+                "overreach_risk": review_payload["overreach_risk"],
+                "hallucination_risk": review_payload["hallucination_risk"],
+                "allowed_review_actions": review_payload["allowed_review_actions"],
+            },
             "passed": quality["overall_score"] >= 0.70
             and trial["memory_write_performed"] is False
             and trial["graph_write_performed"] is False
@@ -143,6 +291,10 @@ def run_cross_domain_reasoning_evaluation() -> dict[str, Any]:
         "average_graph_usefulness": _average([item["reasoning_quality"]["graph_usefulness"] for item in results]),
         "average_hallucination_risk": _average([item["reasoning_quality"]["hallucination_risk"] for item in results]),
         "average_overreach_risk": _average([item["reasoning_quality"]["overreach_risk"] for item in results]),
+        "average_explanation_clarity": _average([item["reasoning_quality"]["explanation_quality"] for item in results]),
+        "average_uncertainty_quality": _average([_uncertainty_quality(item) for item in results]),
+        "operator_review_readiness": _average([1.0 if item["operator_review_ready"] else 0.0 for item in results]),
+        "failure_taxonomy_counts": _failure_taxonomy_counts(results),
         "results": results,
         "read_only": True,
         "safety": dict(SAFETY),
@@ -238,6 +390,9 @@ def build_graph_assisted_reasoning_completion_report() -> dict[str, Any]:
             "average_overreach_risk": evaluation["average_overreach_risk"],
             "passed_count": evaluation["passed_count"],
             "trial_count": evaluation["trial_count"],
+            "operator_review_readiness": evaluation["operator_review_readiness"],
+            "average_explanation_clarity": evaluation["average_explanation_clarity"],
+            "average_uncertainty_quality": evaluation["average_uncertainty_quality"],
         },
         "evidence_quality": sample["reasoning_quality"],
         "traversal_metrics": diagnostics,
@@ -255,6 +410,8 @@ def build_graph_assisted_reasoning_completion_report() -> dict[str, Any]:
             "temporary_memory_regression_covered_by_operator_suite": True,
             "graph_traversal_read_only": True,
         },
+        "failure_taxonomy_counts": evaluation["failure_taxonomy_counts"],
+        "guided_reasoning_review_payload": sample["operator_review_payload"],
         "validation": validation,
         "safety_invariants": dict(SAFETY),
         "remaining_blockers": _remaining_blockers(evaluation, diagnostics),
@@ -264,6 +421,49 @@ def build_graph_assisted_reasoning_completion_report() -> dict[str, Any]:
         "commit_hash": "",
         "push_status": "pending",
     }
+
+
+def build_guided_reasoning_operator_trial_report() -> dict[str, Any]:
+    evaluation = run_cross_domain_reasoning_evaluation()
+    sample = build_graph_assisted_reasoning_trial(
+        "Use graph-assisted reasoning to explain how photosynthesis relates to respiration.",
+        diagnostics=True,
+    )
+    review_actions = [
+        simulate_guided_reasoning_review_action(sample["operator_review_payload"], "approve_reasoning_as_useful"),
+        simulate_guided_reasoning_review_action(sample["operator_review_payload"], "mark_missing_evidence", operator_notes="Need a stronger ATP bridge."),
+        simulate_guided_reasoning_review_action(sample["operator_review_payload"], "request_deeper_retrieval"),
+    ]
+    recommendation = _guided_review_recommendation(evaluation)
+    return {
+        "phase": "RC2 Guided Reasoning Operator Trial",
+        "executive_summary": "Guided graph-assisted reasoning is now operator-reviewable through structured payloads, simulated non-mutating review actions, failure taxonomy labels, and cross-domain trial scoring. It remains explicit, read-only, and trial-only.",
+        "trials_run": evaluation["trial_count"],
+        "pass_count": evaluation["passed_count"],
+        "average_reasoning_quality": evaluation["average_reasoning_quality"],
+        "average_graph_usefulness": evaluation["average_graph_usefulness"],
+        "evidence_chain_quality": _average([item["reasoning_quality"]["evidence_chain_quality"] for item in evaluation["results"]]),
+        "explanation_clarity": evaluation["average_explanation_clarity"],
+        "uncertainty_quality": evaluation["average_uncertainty_quality"],
+        "overreach_risk": evaluation["average_overreach_risk"],
+        "hallucination_risk": evaluation["average_hallucination_risk"],
+        "operator_review_readiness": evaluation["operator_review_readiness"],
+        "failure_taxonomy": GUIDED_REASONING_FAILURE_TAXONOMY,
+        "failure_taxonomy_counts": evaluation["failure_taxonomy_counts"],
+        "sample_review_payload": sample["operator_review_payload"],
+        "simulated_review_actions": review_actions,
+        "safety_invariants": dict(SAFETY),
+        "remaining_blockers": _guided_review_blockers(evaluation),
+        "recommendation": recommendation,
+    }
+
+
+def write_guided_reasoning_operator_trial_report() -> dict[str, Any]:
+    REPORTS.mkdir(parents=True, exist_ok=True)
+    report = build_guided_reasoning_operator_trial_report()
+    (REPORTS / "RC2_GUIDED_REASONING_OPERATOR_TRIAL.json").write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
+    (REPORTS / "RC2_GUIDED_REASONING_OPERATOR_TRIAL.md").write_text(_guided_review_report_md(report), encoding="utf-8")
+    return report
 
 
 def write_graph_assisted_reasoning_completion_report() -> dict[str, Any]:
@@ -302,7 +502,8 @@ def _reasoning_answer(question: str, concepts: list[dict[str, Any]], edges: list
         "Uncertainty:",
         uncertainty,
         "",
-        "No memory, graph edge, provider call, training, or canonical write occurred.",
+        "Safety note:",
+        "No memory was written. No graph edge was created. No provider call, training, or canonical write occurred. This is trial-only.",
     ]
     if diagnostics:
         lines.extend([
@@ -313,6 +514,17 @@ def _reasoning_answer(question: str, concepts: list[dict[str, Any]], edges: list
             f"- trial_only: True",
         ])
     return "\n".join(lines)
+
+
+def _extract_answer_section(answer: str, header: str) -> str:
+    marker = f"{header}:"
+    if marker not in answer:
+        return ""
+    rest = answer.split(marker, 1)[1]
+    for next_header in ["Retrieved concepts:", "Approved graph edges:", "Reasoning path:", "Tentative inference:", "Uncertainty:", "Safety note:", "Diagnostics:"]:
+        if next_header != marker and next_header in rest:
+            rest = rest.split(next_header, 1)[0]
+    return " ".join(rest.split()).strip()
 
 
 def _bridge_sentence(edge: dict[str, Any]) -> str:
@@ -397,6 +609,61 @@ def _remaining_blockers(evaluation: dict[str, Any], diagnostics: dict[str, Any])
     return blockers
 
 
+def _guided_review_blockers(evaluation: dict[str, Any]) -> list[str]:
+    blockers = []
+    if evaluation["operator_review_readiness"] < 0.75:
+        blockers.append("operator_review_readiness_below_polish_gate")
+    if evaluation["average_graph_usefulness"] < 0.65:
+        blockers.append("graph_usefulness_still_limited_by_small_approved_edge_store")
+    if evaluation["average_hallucination_risk"] > 0.25:
+        blockers.append("hallucination_risk_above_operator_trial_target")
+    if evaluation["average_overreach_risk"] > 0.25:
+        blockers.append("overreach_risk_above_operator_trial_target")
+    blockers.append("operator_review_payload_not_yet_polished_in_ui")
+    return blockers
+
+
+def _guided_review_recommendation(evaluation: dict[str, Any]) -> str:
+    if evaluation["operator_review_readiness"] >= 0.90 and evaluation["average_graph_usefulness"] >= 0.70:
+        return "READY_FOR_RC2_ARCHITECTURE_FREEZE"
+    if evaluation["operator_review_readiness"] >= 0.75:
+        return "PROCEED_OPERATOR_UI_POLISH"
+    if evaluation["average_graph_usefulness"] < 0.50:
+        return "PROCEED_GRAPH_EXPANSION_REVIEW_TRIAL"
+    return "CONTINUE_GUIDED_REASONING_REVIEW_POLISH"
+
+
+def _failure_taxonomy_counts(results: list[dict[str, Any]]) -> dict[str, int]:
+    counts = {key: 0 for key in GUIDED_REASONING_FAILURE_TAXONOMY}
+    for item in results:
+        for failure in item.get("failure_codes", []):
+            counts[failure] = counts.get(failure, 0) + 1
+    return {key: value for key, value in counts.items() if value}
+
+
+def _uncertainty_quality(item: dict[str, Any]) -> float:
+    risk = max(
+        float(item["reasoning_quality"].get("overreach_risk") or 0.0),
+        float(item["reasoning_quality"].get("hallucination_risk") or 0.0),
+    )
+    if risk <= 0.15:
+        return 1.0
+    if risk <= 0.30:
+        return 0.75
+    return 0.45
+
+
+def _is_generic_review_concept(concept: dict[str, Any]) -> bool:
+    definition = str(concept.get("short_definition") or "").lower()
+    generic_markers = [
+        "reusable concept",
+        "helps explain causes",
+        "practical decisions",
+        "underlying principles",
+    ]
+    return any(marker in definition for marker in generic_markers)
+
+
 def _recommendation(evaluation: dict[str, Any], diagnostics: dict[str, Any]) -> str:
     if evaluation["average_reasoning_quality"] < 0.70:
         return "CONTINUE_REASONING_CALIBRATION"
@@ -430,6 +697,46 @@ def _report_md(report: dict[str, Any]) -> str:
         f"- Average reasoning quality: {report['reasoning_metrics']['average_reasoning_quality']}",
         f"- Average graph usefulness: {report['reasoning_metrics']['average_graph_usefulness']}",
         f"- Evidence quality: {report['evidence_quality']}",
+        "",
+        "## Safety",
+        "",
+        *[f"- {key}: {value}" for key, value in report["safety_invariants"].items()],
+        "",
+        "## Remaining Blockers",
+        "",
+        *[f"- {item}" for item in report["remaining_blockers"]],
+        "",
+        "## Recommendation",
+        "",
+        report["recommendation"],
+    ]
+    return "\n".join(lines) + "\n"
+
+
+def _guided_review_report_md(report: dict[str, Any]) -> str:
+    lines = [
+        "# RC2 Guided Reasoning Operator Trial",
+        "",
+        "## Executive Summary",
+        "",
+        report["executive_summary"],
+        "",
+        "## Trial Metrics",
+        "",
+        f"- Trials run: {report['trials_run']}",
+        f"- Pass count: {report['pass_count']}",
+        f"- Average reasoning quality: {report['average_reasoning_quality']}",
+        f"- Average graph usefulness: {report['average_graph_usefulness']}",
+        f"- Evidence-chain quality: {report['evidence_chain_quality']}",
+        f"- Explanation clarity: {report['explanation_clarity']}",
+        f"- Uncertainty quality: {report['uncertainty_quality']}",
+        f"- Overreach risk: {report['overreach_risk']}",
+        f"- Hallucination risk: {report['hallucination_risk']}",
+        f"- Operator review readiness: {report['operator_review_readiness']}",
+        "",
+        "## Failure Taxonomy Counts",
+        "",
+        *[f"- {key}: {value}" for key, value in report["failure_taxonomy_counts"].items()],
         "",
         "## Safety",
         "",
