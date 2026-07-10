@@ -1,0 +1,47 @@
+{
+  "actions_enabled": {
+    "delta_75_interaction": false,
+    "hidden_persistence": false,
+    "plan_execution": false,
+    "plugin_activation": false,
+    "proposal_execution": false,
+    "provider_call": false,
+    "repository_mutation": false,
+    "sandbox_creation": false
+  },
+  "created_at": "2026-07-10T18:06:39+00:00",
+  "freeze_recommendation": "BLOCKED_BY_UNRESOLVED_OPERATOR_FINDINGS",
+  "freeze_status": "RC3_FREEZE_PENDING_REAL_OPERATOR_PILOT_EVIDENCE",
+  "operator_pilot_evidence_status": "SIMULATED_FIXTURE_EVIDENCE",
+  "panel_coverage": {
+    "all_panels_present": true,
+    "expected_panel_count": 14,
+    "missing_panels": [],
+    "panel_count": 14
+  },
+  "recommendation": "BLOCKED_BY_UNRESOLVED_OPERATOR_FINDINGS",
+  "remaining_ui_gaps": [],
+  "report": "RC3_UI_CAPABILITY_INTEGRATION",
+  "safety": {
+    "delta_75_interaction": false,
+    "hidden_persistence": false,
+    "plan_execution": false,
+    "plugin_activation": false,
+    "proposal_execution": false,
+    "provider_call": false,
+    "repository_mutation": false,
+    "sandbox_creation": false
+  },
+  "validation": {
+    "checks": {
+      "all_panels_present": true,
+      "freeze_not_hardcoded": true,
+      "no_execution_controls": true,
+      "persistence_default_disabled": true,
+      "pilot_evidence_distinguished": true,
+      "rc2_compatibility_visible": true
+    },
+    "passed": true,
+    "recommendation": "BLOCKED_BY_UNRESOLVED_OPERATOR_FINDINGS"
+  }
+}

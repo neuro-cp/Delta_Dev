@@ -1,0 +1,9 @@
+{
+  "actual_operator_pilot_evidence": false,
+  "created_at": "2026-07-10T18:06:39+00:00",
+  "evidence_status": "SIMULATED_FIXTURE_EVIDENCE",
+  "real_operator_sessions_completed": 0,
+  "recommendation": "BLOCKED_BY_UNRESOLVED_OPERATOR_FINDINGS",
+  "report": "RC3_OPERATOR_PILOT_FINAL",
+  "simulated_fixture_scenarios_available": true
+}
