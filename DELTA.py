@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import uuid
 import sys
@@ -64,6 +65,7 @@ from orchestration.runtime.rc45_discourse_cognition_bridge import (  # noqa: E40
     build_discourse_frame,
     should_preempt_specialist_routing,
 )
+from orchestration.runtime.pc1_pragmatic_cognition import build_pragmatic_frame  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -179,6 +181,182 @@ def _report_inspection_safety() -> dict[str, bool]:
         "canonical_write_performed": False,
         "developmental_memory_write_performed": False,
         "autonomous_action_performed": False,
+    }
+
+
+def _pc1_enabled() -> bool:
+    value = os.environ.get("DELTA_PC1_ENABLED", "true").strip().lower()
+    return value not in {"0", "false", "off", "no", "disabled"}
+
+
+def _pc1_context_for_message(last_report_inspection: dict[str, object] | None = None) -> dict[str, object]:
+    if last_report_inspection:
+        return {
+            "active_topic": "RC4/RC5 real operator pilot and freeze readiness",
+            "operator_goal": "evaluate governed RC4/RC5 readiness without overclaiming freeze",
+            "last_report": last_report_inspection.get("report_name"),
+            "last_report_summary": last_report_inspection.get("answer_summary"),
+        }
+    return {
+        "active_topic": "RC4/RC5 governed operator pilot",
+        "operator_goal": "preserve practical intent, scope, and governance boundaries",
+    }
+
+
+def _try_pc1_pragmatic_answer(message: str, last_report_inspection: dict[str, object] | None = None, *, developer_overlay: bool = False) -> str | None:
+    if not _pc1_enabled():
+        return None
+    if not last_report_inspection and not _pc1_has_governance_cue(message):
+        return None
+    frame = build_pragmatic_frame(message, _pc1_context_for_message(last_report_inspection))
+    if frame.confidence.confidence < 0.82:
+        return None
+    route_hint = frame.cooperative_interpretation.route_hint
+    if route_hint not in {
+        "pc1_shadow_mixed_judgment",
+        "pc1_shadow_evidence_standard",
+        "pc1_shadow_scope_boundary",
+        "pc1_shadow_scope_separation",
+        "pc1_shadow_response_planning",
+        "pc1_shadow_recommendation",
+    }:
+        return None
+    reply = _render_pc1_pragmatic_answer(frame)
+    if not reply:
+        return None
+    if developer_overlay:
+        reply += "\n\n--- Developer Overlay ---\n"
+        reply += "Route: pc1_bounded_pragmatic_pre_router\n"
+        reply += f"PC1 enabled: {_pc1_enabled()}\n"
+        reply += "PC1 frame:\n"
+        reply += json.dumps(frame.as_dict(), indent=2, sort_keys=True)
+        reply += "\nSafety:\n"
+        reply += json.dumps(_pc1_safety(), indent=2, sort_keys=True)
+    return reply
+
+
+def _pc1_has_governance_cue(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().split())
+    cues = (
+        "rc4",
+        "rc5",
+        "pilot",
+        "freeze",
+        "operator",
+        "review",
+        "authorization",
+        "governance",
+        "sandbox",
+        "production",
+        "proposal",
+        "provider",
+        "gpt",
+        "rollback",
+        "bounded repair",
+        "patch",
+        "proposed fix",
+        "outside reviewer",
+    )
+    return any(cue in lower for cue in cues)
+
+
+def _render_pc1_pragmatic_answer(frame) -> str:
+    shape = frame.response_shape.shape
+    interpretation = frame.cooperative_interpretation.interpretation
+    if shape == "mixed_judgment_explanation":
+        if "diagnosis" in interpretation and "overbroad" in interpretation:
+            return "\n".join([
+                "Treat that as a mixed pilot judgment, not a contradiction.",
+                "",
+                "Session record:",
+                "- Diagnosis: useful. Keep it as evidence that DELTA identified the right issue.",
+                "- Proposed fix: too broad. Reject or revise that part before any RC4 handoff.",
+                "- Overall disposition: partially useful, not accepted as-is.",
+                "",
+                "Freeze implication: this helps the pilot evidence record, but it is not freeze proof unless the revised proposal stays bounded, reviewable, and validated.",
+                "",
+                "No memory was written. No provider was called.",
+            ])
+        if "Technical success" in frame.cooperative_interpretation.why_preferred or "governance" in interpretation:
+            return "\n".join([
+                "That is technical success, but not governed success.",
+                "",
+                "Record it as:",
+                "- Technical result: the patch worked.",
+                "- Governance result: failed, because operator review was skipped.",
+                "- Overall disposition: not RC4/RC5 freeze-ready until the review gap is repaired.",
+                "",
+                "The useful part is the implementation evidence. The blocking part is the missing operator authorization/review trail.",
+                "",
+                "No memory was written. No provider was called.",
+            ])
+        if frame.mixed_judgments:
+            judgment = frame.mixed_judgments[0]
+            dimensions = [f"- {key.replace('_', ' ').title()}: {value}." for key, value in judgment.dimensions.items()]
+            return "\n".join([
+                "This should be recorded as a mixed judgment with separate dimensions.",
+                "",
+                *dimensions,
+                f"- Overall disposition: {judgment.overall_disposition.replace('_', ' ')}.",
+                "",
+                "Do not collapse the mixed result into a single yes/no success claim.",
+                "",
+                "No memory was written. No provider was called.",
+            ])
+    if shape == "context_boundary_explanation" and "rollback evidence" in interpretation:
+        return "\n".join([
+            "In this RC4/RC5 pilot context, rollback evidence means proof that a bad or unwanted change can be safely reversed or stopped.",
+            "",
+            "Good rollback evidence would show:",
+            "- What change or proposal was being tested.",
+            "- What went wrong or why the operator rejected it.",
+            "- The exact rollback, rejection, bounded repair stop, or restoration path.",
+            "- Confirmation that no unauthorized production mutation, memory write, provider call, commit, push, deployment, or freeze claim occurred.",
+            "- The final recovered state and any remaining follow-up.",
+            "",
+            "So this is governance/recovery evidence, not a medical or domain-recall question.",
+            "",
+            "No memory was written. No provider was called.",
+        ])
+    if shape == "governance_decision_guidance" and "outside reviewer" in interpretation:
+        return "\n".join([
+            "Use the outside reviewer's issue as advisory evidence, but reject the direct-patch instruction.",
+            "",
+            "A good record would say:",
+            "- External review found a useful issue.",
+            "- Direct application was rejected because outside advice does not grant integration authority.",
+            "- Any fix must go through RC4 proposal, operator review, validation, and explicit approval.",
+            "",
+            "That preserves the useful signal without giving the reviewer or the advice itself execution authority.",
+            "",
+            "No memory was written. No provider was called.",
+        ])
+    if shape == "scope_boundary_explanation":
+        return "\n".join([
+            "That approval is scope-limited.",
+            "",
+            "Testing approval means DELTA may treat sandbox/testing work as allowed in the pilot record. It does not authorize production mutation, integration, deployment, commit, push, plugin activation, provider calls, or freeze claims.",
+            "",
+            "No memory was written. No provider was called.",
+        ])
+    if shape == "evidence_standard_explanation":
+        return _answer_sufficient_recovery_evidence()
+    if shape == "recommendation":
+        return _answer_primary_freeze_evidence_gap()
+    return ""
+
+
+def _pc1_safety() -> dict[str, bool]:
+    return {
+        "pc1_enabled": _pc1_enabled(),
+        "provider_calls_performed": False,
+        "gpt_api_calls_performed": False,
+        "developmental_memory_write_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+        "production_authority_expanded": False,
+        "rc4_contract_changed": False,
+        "rc5_contract_changed": False,
     }
 
 
@@ -1822,6 +2000,16 @@ class DeltaApp:
                 }, indent=2, sort_keys=True)
             self._append_chat("DELTA", reply)
             self._append_session("assistant", reply)
+            return
+        pc1_reply = _try_pc1_pragmatic_answer(
+            message,
+            self.last_report_inspection,
+            developer_overlay=self.developer_overlay_enabled.get(),
+        )
+        if pc1_reply:
+            self._append_session("user", message)
+            self._append_chat("DELTA", pc1_reply)
+            self._append_session("assistant", pc1_reply)
             return
         if self.pending_local_model_deepening and lower in affirm_words:
             pending = self.pending_local_model_deepening

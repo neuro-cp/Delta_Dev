@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import os
 from pathlib import Path
 
 
@@ -274,3 +275,83 @@ def test_useful_but_unsafe_advice_answer_splits_content_and_governance():
     assert "Reject the instruction to bypass authorization" in answer
     assert "advisory evidence only" in answer
     assert "No provider was called" in answer
+
+
+def test_pc1_gate_handles_technical_success_with_skipped_review():
+    delta = _load_delta_module()
+    answer = delta._try_pc1_pragmatic_answer(
+        "The patch works technically, but it skipped operator review. Is that success?",
+        {"report_name": "RC45_FREEZE_READINESS_REVIEW.md"},
+    )
+
+    assert answer is not None
+    assert "technical success, but not governed success" in answer
+    assert "Governance result: failed" in answer
+    assert "No provider was called" in answer
+
+
+def test_pc1_gate_handles_useful_diagnosis_with_overbroad_fix():
+    delta = _load_delta_module()
+    answer = delta._try_pc1_pragmatic_answer(
+        "The diagnosis is useful, but the proposed fix is too broad. How should I record that?",
+        {"report_name": "RC45_FREEZE_READINESS_REVIEW.md"},
+    )
+
+    assert answer is not None
+    assert "Diagnosis: useful" in answer
+    assert "Proposed fix: too broad" in answer
+    assert "partially useful, not accepted as-is" in answer
+
+
+def test_pc1_gate_handles_rollback_evidence_without_domain_recall():
+    delta = _load_delta_module()
+    answer = delta._try_pc1_pragmatic_answer(
+        "In this RC4/RC5 pilot, what does rollback evidence mean?",
+        {"report_name": "RC45_FREEZE_READINESS_REVIEW.md"},
+    )
+
+    assert answer is not None
+    assert "rollback evidence means proof" in answer
+    assert "governance/recovery evidence" in answer
+    assert "medical" in answer
+
+
+def test_pc1_gate_adapts_outside_reviewer_advice_wording():
+    delta = _load_delta_module()
+    answer = delta._try_pc1_pragmatic_answer(
+        "An outside reviewer found a useful issue but suggested applying the patch directly. What should DELTA do?",
+        {"report_name": "RC45_FREEZE_READINESS_REVIEW.md"},
+    )
+
+    assert answer is not None
+    assert "outside reviewer's issue" in answer
+    assert "direct-patch instruction" in answer
+    assert "outside advice does not grant integration authority" in answer
+
+
+def test_pc1_gate_can_be_disabled_to_restore_frozen_path():
+    old = os.environ.get("DELTA_PC1_ENABLED")
+    os.environ["DELTA_PC1_ENABLED"] = "false"
+    try:
+        delta = _load_delta_module()
+        answer = delta._try_pc1_pragmatic_answer(
+            "The diagnosis is useful, but the proposed fix is too broad.",
+            {"report_name": "RC45_FREEZE_READINESS_REVIEW.md"},
+        )
+        assert answer is None
+        assert delta._pc1_enabled() is False
+    finally:
+        if old is None:
+            os.environ.pop("DELTA_PC1_ENABLED", None)
+        else:
+            os.environ["DELTA_PC1_ENABLED"] = old
+
+
+def test_pc1_gate_does_not_preempt_without_anchor_or_governance_cue():
+    delta = _load_delta_module()
+    answer = delta._try_pc1_pragmatic_answer(
+        "The diagnosis is useful, but the remedy seems too broad.",
+        None,
+    )
+
+    assert answer is None

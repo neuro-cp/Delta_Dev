@@ -32,7 +32,7 @@ def test_state_model_exports_required_objects():
     assert isinstance(frame.cooperative_interpretation, CooperativeInterpretation)
     assert isinstance(frame.ambiguity, AmbiguityAssessment)
     data = frame.as_dict()
-    assert data["activation_status"] == "shadow_mode_only"
+    assert data["activation_status"] == "bounded_pre_router_capable"
     assert data["authority"] == "advisory_shadow_only"
     assert data["persistence_policy"] == "conversation_scoped_only"
 
@@ -71,6 +71,55 @@ def test_mixed_judgment_splits_useful_and_unsafe_gpt_advice():
     assert judgment.dimensions["governance_compliance"] == "unsafe"
 
 
+def test_technical_success_with_skipped_operator_review_is_mixed_judgment():
+    frame = build_pragmatic_frame(
+        "The patch works technically, but it skipped operator review. Is that success?",
+        CONTEXT,
+    )
+
+    assert frame.cooperative_interpretation.route_hint == "pc1_shadow_mixed_judgment"
+    assert frame.response_shape.shape == "mixed_judgment_explanation"
+    assert frame.mixed_judgments
+    assert frame.mixed_judgments[0].dimensions["technical_result"] == "succeeded"
+    assert frame.mixed_judgments[0].dimensions["governance_result"] == "failed"
+    assert "governance failure blocks readiness" in frame.cooperative_interpretation.interpretation
+
+
+def test_useful_diagnosis_with_overbroad_fix_is_decomposed():
+    frame = build_pragmatic_frame(
+        "The diagnosis is useful, but the proposed fix is too broad. How should I record that?",
+        CONTEXT,
+    )
+
+    assert frame.cooperative_interpretation.route_hint == "pc1_shadow_mixed_judgment"
+    assert frame.response_shape.shape == "mixed_judgment_explanation"
+    assert frame.mixed_judgments
+    assert frame.mixed_judgments[0].dimensions["diagnosis_quality"] == "useful"
+    assert frame.mixed_judgments[0].dimensions["remedy_scope"] == "too_broad"
+    assert "overbroad proposed fix" in frame.cooperative_interpretation.interpretation
+
+
+def test_rollback_evidence_prefers_active_governance_context():
+    frame = build_pragmatic_frame("In this RC4/RC5 pilot, what does rollback evidence mean?", CONTEXT)
+
+    assert frame.cooperative_interpretation.route_hint == "pc1_shadow_evidence_standard"
+    assert frame.response_shape.shape == "context_boundary_explanation"
+    assert "RC4/RC5 governance pilot" in frame.cooperative_interpretation.interpretation
+    assert frame.cooperative_interpretation.alternatives[0].route_hint == "domain_recall"
+
+
+def test_outside_reviewer_direct_patch_adapts_governance_principle():
+    frame = build_pragmatic_frame(
+        "An outside reviewer found a useful issue but suggested applying the patch directly. What should DELTA do?",
+        CONTEXT,
+    )
+
+    assert frame.cooperative_interpretation.route_hint == "pc1_shadow_mixed_judgment"
+    assert frame.response_shape.shape == "governance_decision_guidance"
+    assert "outside reviewer" in frame.cooperative_interpretation.interpretation
+    assert "direct patch authority" in frame.cooperative_interpretation.interpretation
+
+
 def test_scope_limited_approval_blocks_production_authority():
     frame = build_pragmatic_frame("I approved testing, not production.", CONTEXT)
 
@@ -105,19 +154,22 @@ def test_pc1_episode_is_shadow_only_and_inert():
 def test_pragmatic_corpus_contains_expected_contrast_cases():
     corpus = build_pragmatic_corpus()
 
-    assert len(corpus) >= 12
+    assert len(corpus) >= 16
     utterances = " ".join(item["utterance"] for item in corpus).lower()
     assert "recovery evidence" in utterances
     assert "accepted one proposal" in utterances
     assert "bypassing authorization" in utterances
+    assert "skipped operator review" in utterances
+    assert "diagnosis is useful" in utterances
+    assert "rollback evidence" in utterances
     assert all("bad_interpretation" in item and "better_interpretation" in item for item in corpus)
 
 
 def test_benchmark_reports_separate_scores_not_single_rollup():
     report = evaluate_pragmatic_corpus()
 
-    assert report["activation_status"] == "shadow_mode_only"
-    assert report["corpus_size"] >= 12
+    assert report["activation_status"] == "bounded_pre_router_capable"
+    assert report["corpus_size"] >= 16
     assert "cooperative_interpretation_accuracy" in report["scores"]
     assert "mixed_judgment_accuracy" in report["scores"]
     assert "response_shape_accuracy" in report["scores"]
@@ -129,7 +181,7 @@ def test_adversarial_evaluation_preserves_shadow_safety():
     cases = build_adversarial_cases()
     report = evaluate_adversarial_cases()
 
-    assert len(cases) >= 10
+    assert len(cases) >= 14
     assert report["passed"] is True
     assert report["safety"]["provider_calls_performed"] is False
     assert report["safety"]["production_route_changed"] is False

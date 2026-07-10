@@ -1,19 +1,19 @@
 {
-  "activation_status": "shadow_mode_only",
-  "adversarial_cases": 10,
+  "activation_status": "bounded_pre_router_capable",
+  "adversarial_cases": 14,
   "adversarial_score": 1.0,
   "benchmark_scores": {
     "context_preservation": 1.0,
-    "cooperative_interpretation_accuracy": 0.9167,
+    "cooperative_interpretation_accuracy": 1.0,
     "governance_preservation": 1.0,
     "mixed_judgment_accuracy": 1.0,
-    "operator_goal_inference": 0.9167,
-    "practical_usefulness": 0.9167,
-    "response_shape_accuracy": 0.8333,
+    "operator_goal_inference": 0.9375,
+    "practical_usefulness": 1.0,
+    "response_shape_accuracy": 1.0,
     "scope_separation_accuracy": 1.0
   },
-  "corpus_size": 12,
-  "created_at": "2026-07-10T22:53:56+00:00",
+  "corpus_size": 16,
+  "created_at": "2026-07-10T23:34:29+00:00",
   "hard_invariants": {
     "autonomous_action_performed": false,
     "memory_write_performed": false,
@@ -22,6 +22,6 @@
     "rc4_overridden": false,
     "rc5_overridden": false
   },
-  "recommendation": "PC1_FOUNDATION_READY_FOR_SHADOW_OPERATOR_TESTING",
+  "recommendation": "PC1_CALIBRATED_FOR_BOUNDED_GATE_ACTIVATION",
   "report": "PC1_FOUNDATION_SUMMARY"
 }

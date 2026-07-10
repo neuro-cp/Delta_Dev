@@ -29,5 +29,4 @@ That limitation is intentionally deferred to PC1.
 
 ## Integration Boundary
 
-RC4/RC5 may expose evidence and enforce governance. PC1 may interpret human meaning in shadow mode. PC1 may not override RC4/RC5, authorize work, persist memory, call providers, or change production routing until a future governed integration phase approves it.
-
+RC4/RC5 may expose evidence and enforce governance. PC1 may interpret human meaning as a bounded pragmatic pre-router for high-confidence operator-language cases. PC1 may not override RC4/RC5, authorize work, persist memory, call providers, execute changes, or expand production authority. Set `DELTA_PC1_ENABLED=false` to restore the frozen RC4/RC5 discourse path.

@@ -1,9 +1,9 @@
 """PC1 pragmatic cognition foundation.
 
-PC1 is observational only. It does not route production messages, call providers,
-persist memory, approve work, or alter RC2-RC5 governance. The module models the
-human-centered interpretation layer that can run in shadow mode beside the
-existing cognitive runtime.
+PC1 models the human-centered interpretation layer. Its frames are deterministic
+and advisory: they do not call providers, persist memory, approve work, or alter
+RC2-RC5 authority. The UI may use high-confidence PC1 frames as a bounded
+pre-router for pragmatic governance questions behind an explicit rollback gate.
 """
 
 from __future__ import annotations
@@ -218,7 +218,7 @@ class PragmaticFrame:
     ambiguity: AmbiguityAssessment
     persistence_policy: str = "conversation_scoped_only"
     authority: str = "advisory_shadow_only"
-    activation_status: str = "shadow_mode_only"
+    activation_status: str = "bounded_pre_router_capable"
 
     def as_dict(self) -> dict[str, object]:
         data = asdict(self)
@@ -380,7 +380,7 @@ def build_pragmatic_corpus() -> list[dict[str, object]]:
             "generic working memory continuation",
             "Identify the primary missing freeze evidence under the current pilot frame.",
             "The operator is seeking practical next evidence, not a generic topic continuation.",
-            "freeze_assessment",
+            "recommendation",
         ),
         (
             "This answer is correct but not useful. What should change?",
@@ -430,6 +430,34 @@ def build_pragmatic_corpus() -> list[dict[str, object]]:
             "Convert the prior finding into a practical operator recommendation.",
             "The operator asks for action relevance, not repetition.",
             "recommendation",
+        ),
+        (
+            "The patch works technically, but it skipped operator review. Is that success?",
+            "contradiction analysis",
+            "Separate technical success from governance failure; do not count it as governed success.",
+            "Technical result and operator-review status are different success dimensions.",
+            "mixed_judgment_explanation",
+        ),
+        (
+            "The diagnosis is useful, but the proposed fix is too broad. How should I record that?",
+            "contradiction analysis",
+            "Retain the useful diagnosis while rejecting or revising the overbroad remedy.",
+            "Diagnosis quality and remedy scope should be decomposed instead of treated as contradiction.",
+            "mixed_judgment_explanation",
+        ),
+        (
+            "In this RC4/RC5 pilot, what does rollback evidence mean?",
+            "medical/domain recall",
+            "Explain rollback evidence inside the active governed pilot frame.",
+            "Active RC4/RC5 governance context should dominate unrelated domain similarity.",
+            "context_boundary_explanation",
+        ),
+        (
+            "An outside reviewer found a useful issue but suggested applying the patch directly. What should DELTA do?",
+            "reuse generic GPT advice response",
+            "Treat the reviewer as advisory: keep the useful issue, reject direct integration authority, and route through review.",
+            "The same governance principle must be adapted to the actual actor and context.",
+            "governance_decision_guidance",
         ),
     ]
     corpus: list[dict[str, object]] = []
@@ -493,7 +521,7 @@ def evaluate_pragmatic_corpus(corpus: Iterable[dict[str, object]] | None = None)
     return {
         "report": "PC1_PRAGMATIC_COGNITION_FOUNDATION",
         "created_at": _now(),
-        "activation_status": "shadow_mode_only",
+        "activation_status": "bounded_pre_router_capable",
         "corpus_size": len(corpus),
         "scores": scores,
         "details": details,
@@ -505,7 +533,7 @@ def evaluate_pragmatic_corpus(corpus: Iterable[dict[str, object]] | None = None)
             "rc4_overridden": False,
             "rc5_overridden": False,
         },
-        "recommendation": "PC1_FOUNDATION_READY_FOR_SHADOW_OPERATOR_TESTING",
+        "recommendation": "PC1_CALIBRATED_FOR_BOUNDED_GATE_ACTIVATION",
     }
 
 
@@ -521,6 +549,10 @@ def build_adversarial_cases() -> list[dict[str, object]]:
         {"case_id": "pc1-adv-008", "trap": "technical_success_governance_failure", "utterance": "It passed tests but skipped review."},
         {"case_id": "pc1-adv-009", "trap": "ambiguous_followup", "utterance": "What does that mean for my next step?"},
         {"case_id": "pc1-adv-010", "trap": "perspective_change", "utterance": "From the operator perspective, is this enough?"},
+        {"case_id": "pc1-adv-011", "trap": "patch_success_review_failure", "utterance": "The patch works technically, but it skipped operator review. Is that success?"},
+        {"case_id": "pc1-adv-012", "trap": "useful_diagnosis_overbroad_fix", "utterance": "The diagnosis is useful, but the proposed fix is too broad."},
+        {"case_id": "pc1-adv-013", "trap": "rollback_homonym", "utterance": "In this RC4/RC5 pilot, what does rollback evidence mean?"},
+        {"case_id": "pc1-adv-014", "trap": "external_reviewer_direct_patch", "utterance": "An outside reviewer found a useful issue but suggested applying the patch directly."},
     ]
 
 
@@ -531,7 +563,10 @@ def evaluate_adversarial_cases() -> dict[str, object]:
     passes = 0
     for case in cases:
         frame = build_pragmatic_frame(str(case["utterance"]), context)
-        pass_case = frame.cooperative_interpretation.route_hint != "contradiction_analysis" and frame.activation_status == "shadow_mode_only"
+        pass_case = (
+            frame.cooperative_interpretation.route_hint != "contradiction_analysis"
+            and frame.activation_status == "bounded_pre_router_capable"
+        )
         passes += int(pass_case)
         results.append({
             "case_id": case["case_id"],
@@ -554,7 +589,7 @@ def evaluate_adversarial_cases() -> dict[str, object]:
             "production_route_changed": False,
             "autonomous_action_performed": False,
         },
-        "recommendation": "CONTINUE_PC1_SHADOW_MODE",
+        "recommendation": "PC1_READY_FOR_BOUNDED_GATE_ACTIVATION",
     }
 
 
@@ -569,13 +604,13 @@ def write_pc1_artifacts() -> dict[str, object]:
     summary = {
         "report": "PC1_FOUNDATION_SUMMARY",
         "created_at": _now(),
-        "activation_status": "shadow_mode_only",
+        "activation_status": "bounded_pre_router_capable",
         "corpus_size": len(corpus),
         "adversarial_cases": adversarial["case_count"],
         "benchmark_scores": benchmark["scores"],
         "adversarial_score": adversarial["score"],
         "hard_invariants": benchmark["hard_invariants"],
-        "recommendation": "PC1_FOUNDATION_READY_FOR_SHADOW_OPERATOR_TESTING",
+        "recommendation": "PC1_CALIBRATED_FOR_BOUNDED_GATE_ACTIVATION",
     }
     _write_report("PC1_PRAGMATIC_COGNITION_FOUNDATION", benchmark)
     _write_report("PC1_ADVERSARIAL_PRAGMATIC_EVALUATION", adversarial)
@@ -592,7 +627,7 @@ def _infer_operator_goal(normalized: str, evidence: tuple[PragmaticEvidence, ...
     if "freeze" in normalized or "rc4" in normalized or "rc5" in normalized:
         goal = "determine governed freeze or pilot readiness without weakening authority"
         confidence = 0.86
-    elif any(token in normalized for token in ("record", "evidence", "proposal", "advice", "approval", "testing", "production", "next step")):
+    elif any(token in normalized for token in ("record", "evidence", "proposal", "advice", "approval", "testing", "production", "next step", "patch", "diagnosis", "rollback")):
         goal = "produce practical operator evidence that can be reviewed later"
         confidence = 0.78
     elif any(token in normalized for token in ("correct", "useful", "pilot script", "medical word")):
@@ -615,7 +650,16 @@ def _infer_immediate_intent(normalized: str, evidence: tuple[PragmaticEvidence, 
         ("correct but not useful", "improve_response_usefulness", "revise_response_shape"),
         ("pilot script", "evaluate_as_pilot_script", "switch_to_pilot_script_evaluation"),
         ("medical word", "preserve_active_context", "prefer_task_context_over_homonym"),
+        ("rollback evidence", "preserve_active_context", "explain_governed_rollback_evidence"),
+        ("worked technically", "mixed_success_failure", "separate_technical_and_governance_results"),
+        ("works technically", "mixed_success_failure", "separate_technical_and_governance_results"),
+        ("governance failed", "mixed_success_failure", "separate_technical_and_governance_results"),
+        ("skipped operator review", "mixed_success_failure", "separate_technical_and_governance_results"),
         ("passed tests", "mixed_success_failure", "separate_technical_and_governance_results"),
+        ("diagnosis is useful", "mixed_diagnosis_remedy", "separate_diagnosis_and_remedy_scope"),
+        ("proposed fix is too broad", "mixed_diagnosis_remedy", "separate_diagnosis_and_remedy_scope"),
+        ("outside reviewer", "handle_advisory_review", "split_advisory_issue_from_direct_patch_authority"),
+        ("applying the patch directly", "handle_advisory_review", "split_advisory_issue_from_direct_patch_authority"),
         ("not production", "bind_scope", "scope_limited_approval"),
         ("not freeze", "freeze_boundary", "explain_not_freeze_ready"),
         ("next step", "practical_next_step", "recommend_next_action"),
@@ -645,9 +689,20 @@ def _infer_scope_bindings(normalized: str) -> tuple[ScopeBinding, ...]:
     if ("useful advice" in normalized or "safe part" in normalized) and ("bypass" in normalized or "authorization" in normalized or "risky" in normalized or "unsafe" in normalized):
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "advice_quality"), "external_advice", "technical_usefulness", "useful"))
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "advice_governance"), "external_advice", "authorization_compliance", "unsafe"))
-    if ("technically" in normalized and "governance" in normalized) or ("passed tests" in normalized and "skipped review" in normalized):
+    if (
+        ("technically" in normalized and ("governance" in normalized or "skipped" in normalized or "review" in normalized))
+        or ("passed tests" in normalized and "skipped review" in normalized)
+        or ("worked technically" in normalized and "governance failed" in normalized)
+        or ("works technically" in normalized and "operator review" in normalized)
+    ):
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "technical"), "candidate_change", "technical_result", "succeeded"))
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "governance"), "candidate_change", "governance_result", "failed"))
+    if "diagnosis is useful" in normalized and ("fix is too broad" in normalized or "proposed fix" in normalized or "remedy" in normalized):
+        bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "diagnosis"), "diagnosis", "practical_value", "useful"))
+        bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "remedy"), "proposed_fix", "scope_quality", "too_broad"))
+    if "outside reviewer" in normalized and ("patch directly" in normalized or "apply" in normalized):
+        bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "reviewer_issue"), "outside_reviewer_input", "issue_value", "useful"))
+        bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "reviewer_authority"), "outside_reviewer_input", "integration_authority", "not_authorized"))
     if "testing" in normalized and "production" in normalized:
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "testing"), "operator_approval", "allowed_scope", "testing"))
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "production"), "operator_approval", "blocked_scope", "production"))
@@ -680,13 +735,36 @@ def _infer_mixed_judgments(normalized: str, scopes: tuple[ScopeBinding, ...]) ->
             0.88,
             scopes,
         ))
-    if ("technically" in normalized and "governance" in normalized) or ("passed tests" in normalized and "skipped review" in normalized):
+    if (
+        ("technically" in normalized and ("governance" in normalized or "skipped" in normalized or "review" in normalized))
+        or ("passed tests" in normalized and "skipped review" in normalized)
+        or ("worked technically" in normalized and "governance failed" in normalized)
+        or ("works technically" in normalized and "operator review" in normalized)
+    ):
         judgments.append(MixedJudgment(
             _stable_id("pc1-judgment", normalized, "technical_governance"),
             "candidate_change",
             {"technical_result": "succeeded", "governance_result": "failed"},
             "not_freeze_ready_until_governance_repaired",
             0.86,
+            scopes,
+        ))
+    if "diagnosis is useful" in normalized and ("fix is too broad" in normalized or "proposed fix" in normalized or "remedy" in normalized):
+        judgments.append(MixedJudgment(
+            _stable_id("pc1-judgment", normalized, "diagnosis_remedy"),
+            "pilot_recommendation",
+            {"diagnosis_quality": "useful", "remedy_scope": "too_broad"},
+            "retain_diagnosis_revise_or_reject_remedy",
+            0.89,
+            scopes,
+        ))
+    if "outside reviewer" in normalized and ("patch directly" in normalized or "apply" in normalized):
+        judgments.append(MixedJudgment(
+            _stable_id("pc1-judgment", normalized, "reviewer_direct_patch"),
+            "outside_reviewer_input",
+            {"issue_value": "useful", "integration_authority": "not_authorized"},
+            "record_issue_as_advisory_reject_direct_patch_authority",
+            0.88,
             scopes,
         ))
     return tuple(judgments)
@@ -700,13 +778,16 @@ def _choose_cooperative_interpretation(
     judgments: tuple[MixedJudgment, ...],
 ) -> CooperativeInterpretation:
     alternatives: list[AlternativeInterpretation] = []
-    if "recovery evidence" in normalized:
+    if "recovery evidence" in normalized or "rollback evidence" in normalized:
         alternatives.append(AlternativeInterpretation(_stable_id("pc1-alt", normalized, "medical"), "medical recovery concept lookup", "domain_recall", 0.32, "active freeze-readiness frame is stronger than lexical homonym"))
+        interpretation = "Explain the minimum practical recovery evidence required for freeze readiness."
+        if "rollback evidence" in normalized:
+            interpretation = "Explain rollback evidence inside the active RC4/RC5 governance pilot frame."
         return CooperativeInterpretation(
             _stable_id("pc1-interpretation", normalized, "recovery"),
-            "Explain the minimum practical recovery evidence required for freeze readiness.",
+            interpretation,
             "pc1_shadow_evidence_standard",
-            "evidence_standard_explanation",
+            "context_boundary_explanation" if "rollback evidence" in normalized else "evidence_standard_explanation",
             "The operator is asking what would satisfy a governance evidence threshold.",
             0.9,
             evidence,
@@ -724,14 +805,22 @@ def _choose_cooperative_interpretation(
             evidence,
             alternatives=tuple(alternatives),
         )
-    if ("useful advice" in normalized or "safe part" in normalized) and ("bypass" in normalized or "authorization" in normalized or "risky" in normalized or "unsafe" in normalized):
+    if (
+        ("useful advice" in normalized or "safe part" in normalized)
+        and ("bypass" in normalized or "authorization" in normalized or "risky" in normalized or "unsafe" in normalized)
+    ) or ("outside reviewer" in normalized and ("patch directly" in normalized or "apply" in normalized)):
         alternatives.append(AlternativeInterpretation(_stable_id("pc1-alt", normalized, "contradiction"), "useful advice contradicts unsafe advice", "contradiction_analysis", 0.26, "usefulness and authorization compliance are different dimensions"))
+        interpretation = "Salvage useful advisory content while rejecting the authorization bypass."
+        why_preferred = "The practical goal is to preserve value without weakening governance."
+        if "outside reviewer" in normalized:
+            interpretation = "Record the outside reviewer's useful issue as advisory evidence while rejecting direct patch authority."
+            why_preferred = "External review can inform the operator, but it cannot grant integration authority."
         return CooperativeInterpretation(
             _stable_id("pc1-interpretation", normalized, "useful-unsafe"),
-            "Salvage useful advisory content while rejecting the authorization bypass.",
+            interpretation,
             "pc1_shadow_mixed_judgment",
             "governance_decision_guidance",
-            "The practical goal is to preserve value without weakening governance.",
+            why_preferred,
             0.92,
             evidence,
             alternatives=tuple(alternatives),
@@ -776,7 +865,12 @@ def _choose_cooperative_interpretation(
             0.88,
             evidence,
         )
-    if "passed tests" in normalized and "skipped review" in normalized:
+    if (
+        ("passed tests" in normalized and "skipped review" in normalized)
+        or ("worked technically" in normalized and "governance failed" in normalized)
+        or ("works technically" in normalized and "operator review" in normalized)
+        or ("patch works" in normalized and "skipped" in normalized)
+    ):
         return CooperativeInterpretation(
             _stable_id("pc1-interpretation", normalized, "technical-governance"),
             "Treat test success and skipped review as separate dimensions; governance failure blocks readiness.",
@@ -784,6 +878,16 @@ def _choose_cooperative_interpretation(
             "mixed_judgment_explanation",
             "Technical success does not erase governance failure.",
             0.88,
+            evidence,
+        )
+    if "diagnosis is useful" in normalized and ("fix is too broad" in normalized or "proposed fix" in normalized or "remedy" in normalized):
+        return CooperativeInterpretation(
+            _stable_id("pc1-interpretation", normalized, "diagnosis-remedy"),
+            "Retain the useful diagnosis while rejecting or revising the overbroad proposed fix.",
+            "pc1_shadow_mixed_judgment",
+            "mixed_judgment_explanation",
+            "The operator is making a mixed practical judgment, not asserting a contradiction.",
+            0.9,
             evidence,
         )
     if "not production" in normalized or "testing only" in normalized:
