@@ -1,0 +1,13 @@
+{
+  "case_count": 12,
+  "component": "plan_validation",
+  "created_at": "2026-07-10T16:55:45+00:00",
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_B_GOVERNED_PLAN_REVISION",
+  "report": "RC3_PLAN_VALIDATION",
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "false_completion_rejection": 1.0,
+    "goal_plan_alignment": 1.0
+  }
+}

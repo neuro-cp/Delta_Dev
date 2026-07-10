@@ -1,0 +1,12 @@
+{
+  "case_count": 12,
+  "component": "capability_gap",
+  "created_at": "2026-07-10T16:55:45+00:00",
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_B_GOVERNED_PLAN_REVISION",
+  "report": "RC3_CAPABILITY_GAP_ANALYSIS",
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "capability_gap_classification": 1.0
+  }
+}

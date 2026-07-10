@@ -1,0 +1,12 @@
+{
+  "case_count": 12,
+  "component": "introspection",
+  "created_at": "2026-07-10T16:55:45+00:00",
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_B_GOVERNED_PLAN_REVISION",
+  "report": "RC3_INTROSPECTION_SCAFFOLD",
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "introspection_accuracy": 1.0
+  }
+}

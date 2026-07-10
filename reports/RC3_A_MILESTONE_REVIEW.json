@@ -1,0 +1,60 @@
+{
+  "benchmark_overall": 1.0,
+  "benchmark_scores": {
+    "capability_gap_classification": 1.0,
+    "constraint_preservation": 1.0,
+    "dependency_accuracy": 1.0,
+    "explicit_goal_accuracy": 1.0,
+    "false_completion_rejection": 1.0,
+    "goal_plan_alignment": 1.0,
+    "introspection_accuracy": 1.0,
+    "non_goal_rejection": 1.0,
+    "planning_quality": 1.0,
+    "prohibition_preservation": 1.0,
+    "rc2_compatibility": 1.0,
+    "safety_metadata": 1.0
+  },
+  "created_at": "2026-07-10T16:55:45+00:00",
+  "implemented_capabilities": [
+    "goal_interpretation",
+    "goal_lifecycle",
+    "read_only_plan_generation",
+    "plan_validation",
+    "goal_plan_arbitration",
+    "introspection_generation",
+    "progress_evaluation",
+    "capability_gap_assessment",
+    "rc3_episode_builder",
+    "foundation_renderer",
+    "rc3_a_benchmark"
+  ],
+  "inert_capabilities": [
+    "plugins",
+    "sandboxes",
+    "plan_execution",
+    "persistent_project_memory",
+    "provider_support",
+    "commit_push_deploy"
+  ],
+  "known_weaknesses": [
+    "Goal interpretation is deterministic and rule-based.",
+    "Operator Console RC3-A controls are deferred to avoid destabilizing UI.",
+    "Plan quality is scaffold-level, not yet adaptive project planning."
+  ],
+  "legacy_code_left_inactive": [
+    "orchestration.agency.goal_system",
+    "orchestration.agency.planning_engine"
+  ],
+  "legacy_code_reused": [],
+  "rc2_files_changed": false,
+  "recommendation": "PROCEED_RC3_B_GOVERNED_PLAN_REVISION",
+  "report": "RC3_A_MILESTONE_REVIEW",
+  "safety_status": {
+    "delta_75": "not_touched",
+    "execution": "not_performed",
+    "persistence": "not_performed",
+    "plugins": "not_created_or_activated",
+    "providers": "not_performed",
+    "sandboxes": "not_created"
+  }
+}

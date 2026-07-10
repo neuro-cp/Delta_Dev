@@ -38,6 +38,7 @@ SAFETY_DEFAULTS: dict[str, bool] = {
     "scheduler_action_performed": False,
     "plan_execution_performed": False,
     "tool_execution_performed": False,
+    "plugin_creation_performed": False,
     "plugin_activation_performed": False,
     "sandbox_creation_performed": False,
     "automatic_commit_performed": False,
