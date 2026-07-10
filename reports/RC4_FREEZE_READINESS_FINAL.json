@@ -1,0 +1,96 @@
+{
+  "criteria": {
+    "authorization_precision": true,
+    "bounded_repair": true,
+    "candidate_patch_correctness": true,
+    "delta75_isolation": true,
+    "evidence_completeness": true,
+    "expiration_enforcement": true,
+    "operator_pilot_evidence": false,
+    "partial_failure_recovery": true,
+    "permission_separation": true,
+    "prohibition_enforcement": true,
+    "repository_understanding_quality": true,
+    "revocation_enforcement": true,
+    "rollback_reliability": true,
+    "sandbox_or_temporary_workspace_isolation": true,
+    "tool_contract_enforcement": true
+  },
+  "freeze_blockers": [
+    "operator_pilot_evidence"
+  ],
+  "freeze_status": "RC4_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+  "manifest": {
+    "blockers": [
+      "operator_pilot_evidence"
+    ],
+    "created_at": "2026-07-10T18:33:08+00:00",
+    "criteria": {
+      "authorization_precision": true,
+      "bounded_repair": true,
+      "candidate_patch_correctness": true,
+      "delta75_isolation": true,
+      "evidence_completeness": true,
+      "expiration_enforcement": true,
+      "operator_pilot_evidence": false,
+      "partial_failure_recovery": true,
+      "permission_separation": true,
+      "prohibition_enforcement": true,
+      "repository_understanding_quality": true,
+      "revocation_enforcement": true,
+      "rollback_reliability": true,
+      "sandbox_or_temporary_workspace_isolation": true,
+      "tool_contract_enforcement": true
+    },
+    "evidence_class": "DEVELOPER_REHEARSAL_EVIDENCE",
+    "freeze_status": "RC4_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+    "manifest_id": "rc4-freeze-manifest-b5bc03015321d396",
+    "meta": {
+      "audit_requirements": [
+        "provenance",
+        "safety_metadata",
+        "operator_visibility"
+      ],
+      "authority": "readiness_report",
+      "lifecycle": "draft",
+      "operator_visibility": "developer_overlay_and_reports",
+      "owner": "operator",
+      "persistence_status": "ephemeral_or_report_only",
+      "provenance": "rc4_deterministic_runtime",
+      "purpose": "RC4 freeze manifest",
+      "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+      "rollback_behavior": "not_applicable",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "canonical_write_performed": false,
+        "delta75_interaction_performed": false,
+        "deployment_performed": false,
+        "live_repository_mutation_performed": false,
+        "network_access_performed": false,
+        "plugin_activation_performed": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "serialization": "json",
+      "validation": "deterministic"
+    },
+    "recommendation": "RC4_FREEZE_PENDING_REAL_OPERATOR_PILOT"
+  },
+  "operator_pilot_evidence_class": "DEVELOPER_REHEARSAL_EVIDENCE",
+  "passed": true,
+  "recommendation": "RC4_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+  "report": "RC4_FREEZE_READINESS_FINAL",
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "canonical_write_performed": false,
+    "delta75_interaction_performed": false,
+    "deployment_performed": false,
+    "live_repository_mutation_performed": false,
+    "network_access_performed": false,
+    "plugin_activation_performed": false,
+    "provider_calls_performed": false,
+    "training_performed": false
+  }
+}

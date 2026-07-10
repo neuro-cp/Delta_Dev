@@ -1,0 +1,86 @@
+# RC4 FOUNDATION REVIEW
+
+Report: RC4_FOUNDATION_REVIEW
+Passed: True
+Recommendation: PROCEED_RC4_FIXTURE_VALIDATION
+Freeze status: n/a
+
+```json
+{
+  "object_count": 56,
+  "objects": [
+    "ExecutionRequest",
+    "ExecutionAuthorization",
+    "AuthorizationScope",
+    "PermissionGrant",
+    "ExecutionPolicy",
+    "AuthorizationDecision",
+    "RevocationRecord",
+    "RepositorySnapshot",
+    "RepositoryInventory",
+    "CodebaseMap",
+    "SymbolReference",
+    "SymbolGraph",
+    "DependencyGraph",
+    "ImpactAssessment",
+    "ImplementationDesign",
+    "ValidationPlan",
+    "CandidatePatch",
+    "PatchRevision",
+    "PatchValidation",
+    "PatchRiskAssessment",
+    "PatchArtifact",
+    "SandboxExecutionPlan",
+    "SandboxExecutionSession",
+    "CommandAuthorization",
+    "CommandResult",
+    "ExecutionTranscript",
+    "ExecutionArtifact",
+    "ExecutionEvidence",
+    "ExecutionResult",
+    "VerificationResult",
+    "RepairAuthorization",
+    "RepairIteration",
+    "RepairProposal",
+    "RepairEvidence",
+    "RepairResult",
+    "RepositoryApplicationRequest",
+    "RepositoryApplicationResult",
+    "RollbackTicket",
+    "RollbackPlan",
+    "RollbackResult",
+    "PartialMutationRecord",
+    "IntegrationCandidate",
+    "CommitAuthorization",
+    "PushAuthorization",
+    "MergeAuthorization",
+    "DeploymentAuthorization",
+    "ToolContract",
+    "ToolPermission",
+    "ToolInvocationRequest",
+    "ToolInvocationResult",
+    "ToolAuditEvent",
+    "RecoveryPlan",
+    "RecoveryResult",
+    "EnvironmentRestorationRecord",
+    "RC4Episode",
+    "RC4FreezeManifest"
+  ],
+  "passed": true,
+  "recommendation": "PROCEED_RC4_FIXTURE_VALIDATION",
+  "report": "RC4_FOUNDATION_REVIEW",
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "canonical_write_performed": false,
+    "delta75_interaction_performed": false,
+    "deployment_performed": false,
+    "live_repository_mutation_performed": false,
+    "network_access_performed": false,
+    "plugin_activation_performed": false,
+    "provider_calls_performed": false,
+    "training_performed": false
+  },
+  "score": 1.0
+}
+```

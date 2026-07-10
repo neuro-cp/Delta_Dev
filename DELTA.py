@@ -39,11 +39,18 @@ from orchestration.runtime.rc2_conversational_mode_router import (  # noqa: E402
 from orchestration.runtime.rc2_storage_adapter import backend_health, load_diverse_concepts, search_concepts, substrate_counts  # noqa: E402
 from orchestration.runtime.rc2_substrate_reconciliation import build_substrate_reconciliation  # noqa: E402
 from orchestration.runtime.rc3_ui_capability_adapter import (  # noqa: E402
-    PANEL_ORDER,
+    PANEL_ORDER as RC3_PANEL_ORDER,
     build_rc3_ui_integration_report,
     build_rc3_ui_snapshot,
     render_rc3_panel,
     validate_rc3_ui_snapshot,
+)
+from orchestration.runtime.rc4_ui_capability_adapter import (  # noqa: E402
+    RC4_PANEL_ORDER,
+    build_rc4_ui_integration_report,
+    build_rc4_ui_snapshot,
+    render_rc4_panel,
+    validate_rc4_ui_snapshot,
 )
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
@@ -182,15 +189,18 @@ class DeltaApp:
         self.conversation_tab = ttk.Frame(self.notebook, padding=10)
         self.database_tab = ttk.Frame(self.notebook, padding=10)
         self.rc3_tab = ttk.Frame(self.notebook, padding=10)
+        self.rc4_tab = ttk.Frame(self.notebook, padding=10)
         self.advanced_tab = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.conversation_tab, text="Conversation")
         self.notebook.add(self.database_tab, text="Database")
         self.notebook.add(self.rc3_tab, text="RC3")
+        self.notebook.add(self.rc4_tab, text="RC4")
         self.notebook.add(self.advanced_tab, text="Advanced / Operator Console")
 
         self._build_conversation_tab()
         self._build_database_tab()
         self._build_rc3_tab()
+        self._build_rc4_tab()
         self._build_advanced_tab()
 
     def _build_conversation_tab(self) -> None:
@@ -349,6 +359,38 @@ class DeltaApp:
         self.rc3_snapshot: dict[str, object] = {}
         self._refresh_rc3_snapshot()
 
+    def _build_rc4_tab(self) -> None:
+        top = ttk.Frame(self.rc4_tab)
+        top.pack(fill=tk.X)
+        ttk.Label(top, text="RC4 Governed Action Runtime").pack(side=tk.LEFT)
+        ttk.Button(top, text="Refresh", command=self._refresh_rc4_snapshot).pack(side=tk.RIGHT)
+        ttk.Button(top, text="Generate UI Report", command=self._generate_rc4_ui_report).pack(side=tk.RIGHT, padx=(0, 8))
+
+        self.rc4_status = tk.StringVar(value="Read-only RC4 diagnostics. No execution controls are available.")
+        ttk.Label(self.rc4_tab, textvariable=self.rc4_status).pack(anchor=tk.W, pady=(8, 0))
+
+        panes = ttk.PanedWindow(self.rc4_tab, orient=tk.HORIZONTAL)
+        panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        left = ttk.Frame(panes)
+        right = ttk.Frame(panes)
+        panes.add(left, weight=1)
+        panes.add(right, weight=3)
+
+        self.rc4_panels = ttk.Treeview(left, columns=("status",), show="headings", height=18)
+        self.rc4_panels.heading("status", text="Panel")
+        self.rc4_panels.column("status", width=280)
+        self.rc4_panels.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = ttk.Scrollbar(left, orient=tk.VERTICAL, command=self.rc4_panels.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.rc4_panels.configure(yscrollcommand=scrollbar.set)
+        self.rc4_panels.bind("<<TreeviewSelect>>", lambda _event: self._show_selected_rc4_panel())
+
+        self.rc4_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
+        self.rc4_detail.pack(fill=tk.BOTH, expand=True)
+        self.rc4_detail.configure(state=tk.DISABLED)
+        self.rc4_snapshot: dict[str, object] = {}
+        self._refresh_rc4_snapshot()
+
     def _build_advanced_tab(self) -> None:
         panes = ttk.PanedWindow(self.advanced_tab, orient=tk.HORIZONTAL)
         panes.pack(fill=tk.BOTH, expand=True)
@@ -408,7 +450,7 @@ class DeltaApp:
             for item in self.rc3_panels.get_children():
                 self.rc3_panels.delete(item)
             panels = self.rc3_snapshot.get("panels", {})
-            for name in PANEL_ORDER:
+            for name in RC3_PANEL_ORDER:
                 panel = panels.get(name, {}) if isinstance(panels, dict) else {}
                 status = str(panel.get("status", "unknown"))
                 self.rc3_panels.insert("", tk.END, iid=name, values=(f"{name} [{status}]",))
@@ -417,8 +459,8 @@ class DeltaApp:
                 f"RC3 UI validation passed={validation.get('passed')}; recommendation={recommendation}. "
                 "Inspect/review only: no execution, sandbox, plugin activation, provider call, or repository mutation."
             )
-            if PANEL_ORDER:
-                self.rc3_panels.selection_set(PANEL_ORDER[0])
+            if RC3_PANEL_ORDER:
+                self.rc3_panels.selection_set(RC3_PANEL_ORDER[0])
                 self._show_selected_rc3_panel()
         except Exception as exc:  # noqa: BLE001
             self.rc3_status.set(f"RC3 snapshot failed: {type(exc).__name__}: {str(exc)[:180]}")
@@ -442,6 +484,47 @@ class DeltaApp:
         report = build_rc3_ui_integration_report(write_reports=True)
         self._refresh_rc3_snapshot()
         self._write_rc3_detail(json.dumps(report, indent=2, sort_keys=True))
+
+    def _refresh_rc4_snapshot(self) -> None:
+        try:
+            self.rc4_snapshot = build_rc4_ui_snapshot()
+            validation = validate_rc4_ui_snapshot(self.rc4_snapshot)
+            for item in self.rc4_panels.get_children():
+                self.rc4_panels.delete(item)
+            panels = self.rc4_snapshot.get("panels", {})
+            for name in RC4_PANEL_ORDER:
+                panel = panels.get(name, {}) if isinstance(panels, dict) else {}
+                status = str(panel.get("status", "unknown"))
+                self.rc4_panels.insert("", tk.END, iid=name, values=(f"{name} [{status}]",))
+            self.rc4_status.set(
+                f"RC4 UI validation passed={validation.get('passed')}; recommendation={validation.get('recommendation')}. "
+                "Inspect/review only: no live repo mutation, sandbox creation from UI, provider call, plugin activation, push, merge, or deploy."
+            )
+            if RC4_PANEL_ORDER:
+                self.rc4_panels.selection_set(RC4_PANEL_ORDER[0])
+                self._show_selected_rc4_panel()
+        except Exception as exc:  # noqa: BLE001
+            self.rc4_status.set(f"RC4 snapshot failed: {type(exc).__name__}: {str(exc)[:180]}")
+            self._write_rc4_detail("")
+
+    def _show_selected_rc4_panel(self) -> None:
+        selected = self.rc4_panels.selection()
+        if not selected or not self.rc4_snapshot:
+            return
+        panel_name = str(selected[0])
+        self._write_rc4_detail(render_rc4_panel(panel_name, self.rc4_snapshot))
+
+    def _write_rc4_detail(self, text: str) -> None:
+        self.rc4_detail.configure(state=tk.NORMAL)
+        self.rc4_detail.delete("1.0", tk.END)
+        if text:
+            self.rc4_detail.insert(tk.END, text)
+        self.rc4_detail.configure(state=tk.DISABLED)
+
+    def _generate_rc4_ui_report(self) -> None:
+        report = build_rc4_ui_integration_report(write_reports=True)
+        self._refresh_rc4_snapshot()
+        self._write_rc4_detail(json.dumps(report, indent=2, sort_keys=True))
 
     def _refresh_state_cards(self) -> None:
         state = build_cognitive_state()

@@ -1,0 +1,824 @@
+{
+  "application": {
+    "evidence": [
+      "disposable_fixture",
+      "patch_hash_checked",
+      "rollback_ticket_created"
+    ],
+    "live_repository_mutated": false,
+    "meta": {
+      "audit_requirements": [
+        "provenance",
+        "safety_metadata",
+        "operator_visibility"
+      ],
+      "authority": "fixture_result",
+      "lifecycle": "draft",
+      "operator_visibility": "developer_overlay_and_reports",
+      "owner": "operator",
+      "persistence_status": "ephemeral_or_report_only",
+      "provenance": "rc4_deterministic_runtime",
+      "purpose": "repository application result",
+      "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+      "rollback_behavior": "not_applicable",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "canonical_write_performed": false,
+        "delta75_interaction_performed": false,
+        "deployment_performed": false,
+        "live_repository_mutation_performed": false,
+        "network_access_performed": false,
+        "plugin_activation_performed": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "serialization": "json",
+      "validation": "deterministic"
+    },
+    "outcome": "APPLICATION_FAILED_AND_ROLLED_BACK",
+    "result_id": "rc4-repo-application-93c4cd45c89f16e6",
+    "rollback_result": {
+      "exact_restoration": true,
+      "leftover_artifacts": [],
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "rollback result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "ROLLED_BACK",
+      "result_id": "rc4-rollback-result-58a9c7bc36420289",
+      "ticket_id": "rc4-rollback-ticket-09443b2deda50501"
+    },
+    "rollback_ticket": {
+      "created_at": "2026-07-10T18:33:08+00:00",
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "rollback_authority",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "rollback ticket",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "rollback_kind": "workspace_restore",
+      "target": "disposable_git_fixture",
+      "ticket_id": "rc4-rollback-ticket-09443b2deda50501"
+    }
+  },
+  "checks": {
+    "failure_detected": true,
+    "irreversible_not_claimed": true,
+    "partial_failures_reported": true,
+    "repair_bounded": true,
+    "rollback_verified": true
+  },
+  "passed": true,
+  "recovery_results": [
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-1c6784936498fd25",
+      "scenario": "patch_does_not_apply"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-22b9a9ab52ba1f99",
+      "scenario": "validation_command_crashes"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-eda57ff3ce3b7f35",
+      "scenario": "sandbox_process_times_out"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-04815b0e2e8aff7f",
+      "scenario": "workspace_corrupts"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-1d0fe484bb902778",
+      "scenario": "authorization_expires_mid_run"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-5ac29333b6e5e6e1",
+      "scenario": "authorization_revoked_mid_run"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-fd4283569c029692",
+      "scenario": "base_changes"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-4d2ebe20d4fa502d",
+      "scenario": "dirty_tree"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-bec599ca338682fb",
+      "scenario": "patch_differs"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-fc19b4ab99b7a548",
+      "scenario": "validation_fails_after_application"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": false,
+      "result_id": "rc4-recovery-result-305c86e87bc04c65",
+      "scenario": "rollback_fails"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-7b270ece4b4d287c",
+      "scenario": "partial_file_write"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-e4aaff729fbaa25d",
+      "scenario": "partial_commit"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": false,
+      "result_id": "rc4-recovery-result-538647727df9049d",
+      "scenario": "teardown_fails"
+    },
+    {
+      "evidence_preserved": true,
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "recovery result",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "outcome": "RECOVERED_OR_REPORTED",
+      "restoration_complete": true,
+      "result_id": "rc4-recovery-result-8059b7ba2ffdf5e7",
+      "scenario": "evidence_collection_fails"
+    }
+  ],
+  "repair": {
+    "evidence": {
+      "evidence_id": "rc4-repair-evidence-5f1755950a80dc2f",
+      "iterations": [
+        {
+          "failure_evidence_id": "rc4-execution-evidence-21bcf9847135ffd8",
+          "index": 1,
+          "iteration_id": "rc4-repair-iteration-f9bf77094b1dbe56",
+          "meta": {
+            "audit_requirements": [
+              "provenance",
+              "safety_metadata",
+              "operator_visibility"
+            ],
+            "authority": "bounded_repair_only",
+            "lifecycle": "draft",
+            "operator_visibility": "developer_overlay_and_reports",
+            "owner": "operator",
+            "persistence_status": "ephemeral_or_report_only",
+            "provenance": "rc4_deterministic_runtime",
+            "purpose": "repair iteration",
+            "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+            "rollback_behavior": "not_applicable",
+            "safety": {
+              "automatic_commit_performed": false,
+              "automatic_push_performed": false,
+              "canonical_write_performed": false,
+              "delta75_interaction_performed": false,
+              "deployment_performed": false,
+              "live_repository_mutation_performed": false,
+              "network_access_performed": false,
+              "plugin_activation_performed": false,
+              "provider_calls_performed": false,
+              "training_performed": false
+            },
+            "serialization": "json",
+            "validation": "deterministic"
+          },
+          "proposal": {
+            "anti_cheating_status": "passed",
+            "diagnosis": "validation failed in disposable workspace; propose syntax-preserving fixture correction",
+            "meta": {
+              "audit_requirements": [
+                "provenance",
+                "safety_metadata",
+                "operator_visibility"
+              ],
+              "authority": "proposal_only",
+              "lifecycle": "draft",
+              "operator_visibility": "developer_overlay_and_reports",
+              "owner": "operator",
+              "persistence_status": "ephemeral_or_report_only",
+              "provenance": "rc4_deterministic_runtime",
+              "purpose": "repair proposal",
+              "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+              "rollback_behavior": "not_applicable",
+              "safety": {
+                "automatic_commit_performed": false,
+                "automatic_push_performed": false,
+                "canonical_write_performed": false,
+                "delta75_interaction_performed": false,
+                "deployment_performed": false,
+                "live_repository_mutation_performed": false,
+                "network_access_performed": false,
+                "plugin_activation_performed": false,
+                "provider_calls_performed": false,
+                "training_performed": false
+              },
+              "serialization": "json",
+              "validation": "deterministic"
+            },
+            "proposal_id": "rc4-repair-proposal-a3c8673aa7f964a4",
+            "proposed_change": "replace failing fixture body without expanding paths, commands, or permissions"
+          },
+          "revised_patch_id": "rc4-candidate-patch-ba72705ffaa0497d"
+        }
+      ],
+      "meta": {
+        "audit_requirements": [
+          "provenance",
+          "safety_metadata",
+          "operator_visibility"
+        ],
+        "authority": "evidence",
+        "lifecycle": "draft",
+        "operator_visibility": "developer_overlay_and_reports",
+        "owner": "operator",
+        "persistence_status": "ephemeral_or_report_only",
+        "provenance": "rc4_deterministic_runtime",
+        "purpose": "repair evidence",
+        "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+        "rollback_behavior": "not_applicable",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "canonical_write_performed": false,
+          "delta75_interaction_performed": false,
+          "deployment_performed": false,
+          "live_repository_mutation_performed": false,
+          "network_access_performed": false,
+          "plugin_activation_performed": false,
+          "provider_calls_performed": false,
+          "training_performed": false
+        },
+        "serialization": "json",
+        "validation": "deterministic"
+      },
+      "rejected_repairs": []
+    },
+    "meta": {
+      "audit_requirements": [
+        "provenance",
+        "safety_metadata",
+        "operator_visibility"
+      ],
+      "authority": "fixture_result",
+      "lifecycle": "draft",
+      "operator_visibility": "developer_overlay_and_reports",
+      "owner": "operator",
+      "persistence_status": "ephemeral_or_report_only",
+      "provenance": "rc4_deterministic_runtime",
+      "purpose": "repair result",
+      "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+      "rollback_behavior": "not_applicable",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "canonical_write_performed": false,
+        "delta75_interaction_performed": false,
+        "deployment_performed": false,
+        "live_repository_mutation_performed": false,
+        "network_access_performed": false,
+        "plugin_activation_performed": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "serialization": "json",
+      "validation": "deterministic"
+    },
+    "outcome": "REPAIR_SUCCEEDED",
+    "result_id": "rc4-repair-result-91db9d96b0189f45"
+  },
+  "report": "RC4_REPAIR_AND_ROLLBACK_BENCHMARK",
+  "score": 1.0
+}

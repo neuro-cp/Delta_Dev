@@ -1,0 +1,153 @@
+{
+  "checks": {
+    "patch_hash_present": true,
+    "rollback_instructions_present": true,
+    "safe_patch_valid": true,
+    "unified_diff_present": true,
+    "unsafe_patch_rejected": true
+  },
+  "passed": true,
+  "patch": {
+    "affected_symbols": [
+      "fixture_function"
+    ],
+    "assumptions": [
+      "base content matches"
+    ],
+    "base_fingerprint": "fixture-base",
+    "meta": {
+      "audit_requirements": [
+        "provenance",
+        "safety_metadata",
+        "operator_visibility"
+      ],
+      "authority": "artifact_only",
+      "lifecycle": "draft",
+      "operator_visibility": "developer_overlay_and_reports",
+      "owner": "operator",
+      "persistence_status": "ephemeral_or_report_only",
+      "provenance": "rc4_deterministic_runtime",
+      "purpose": "candidate patch artifact",
+      "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+      "rollback_behavior": "discard_artifact",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "canonical_write_performed": false,
+        "delta75_interaction_performed": false,
+        "deployment_performed": false,
+        "live_repository_mutation_performed": false,
+        "network_access_performed": false,
+        "plugin_activation_performed": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "serialization": "json",
+      "validation": "deterministic"
+    },
+    "patch_hash": "95e3f7fbf26532ba63d74ad7f95ec7fe3ddf7886e64a5e8ef85ed8c69de41470",
+    "patch_id": "rc4-candidate-patch-88a659ed7592f83e",
+    "rationale": "Apply a fixture-safe deterministic source edit.",
+    "requirement_mapping": [
+      "single_fixture_requirement"
+    ],
+    "risks": [
+      "fixture validation may fail"
+    ],
+    "rollback_instructions": [
+      "discard disposable workspace"
+    ],
+    "target_files": [
+      "src/example.py"
+    ],
+    "unified_diff": "--- a/src/example.py\n+++ b/src/example.py\n@@ -1,2 +1,2 @@\n def fixture_function():\n-    return 'old'\n+    return 'new'\n",
+    "validation_commands": [
+      "python_compile"
+    ],
+    "version": 1
+  },
+  "report": "RC4_PATCH_GENERATION_BENCHMARK",
+  "safe_validation": {
+    "findings": [
+      "static_validation_passed"
+    ],
+    "meta": {
+      "audit_requirements": [
+        "provenance",
+        "safety_metadata",
+        "operator_visibility"
+      ],
+      "authority": "static_validation",
+      "lifecycle": "draft",
+      "operator_visibility": "developer_overlay_and_reports",
+      "owner": "operator",
+      "persistence_status": "ephemeral_or_report_only",
+      "provenance": "rc4_deterministic_runtime",
+      "purpose": "patch validation",
+      "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+      "rollback_behavior": "not_applicable",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "canonical_write_performed": false,
+        "delta75_interaction_performed": false,
+        "deployment_performed": false,
+        "live_repository_mutation_performed": false,
+        "network_access_performed": false,
+        "plugin_activation_performed": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "serialization": "json",
+      "validation": "deterministic"
+    },
+    "patch_id": "rc4-candidate-patch-88a659ed7592f83e",
+    "prohibited_path_detected": false,
+    "secret_pattern_detected": false,
+    "unsafe_capability_detected": false,
+    "valid": true,
+    "validation_id": "rc4-patch-validation-12a98809920afd5a"
+  },
+  "score": 1.0,
+  "unsafe_validation": {
+    "findings": [
+      "unsafe_capability_detected"
+    ],
+    "meta": {
+      "audit_requirements": [
+        "provenance",
+        "safety_metadata",
+        "operator_visibility"
+      ],
+      "authority": "static_validation",
+      "lifecycle": "draft",
+      "operator_visibility": "developer_overlay_and_reports",
+      "owner": "operator",
+      "persistence_status": "ephemeral_or_report_only",
+      "provenance": "rc4_deterministic_runtime",
+      "purpose": "patch validation",
+      "rc3_relationship": "requires_rc3_proposal_or_operator_goal",
+      "rollback_behavior": "not_applicable",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "canonical_write_performed": false,
+        "delta75_interaction_performed": false,
+        "deployment_performed": false,
+        "live_repository_mutation_performed": false,
+        "network_access_performed": false,
+        "plugin_activation_performed": false,
+        "provider_calls_performed": false,
+        "training_performed": false
+      },
+      "serialization": "json",
+      "validation": "deterministic"
+    },
+    "patch_id": "rc4-candidate-patch-4059b1f5d53009b7",
+    "prohibited_path_detected": false,
+    "secret_pattern_detected": false,
+    "unsafe_capability_detected": true,
+    "valid": false,
+    "validation_id": "rc4-patch-validation-7e1350b68b5fe66c"
+  }
+}
