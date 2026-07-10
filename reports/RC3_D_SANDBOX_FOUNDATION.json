@@ -1,0 +1,1542 @@
+{
+  "created_at": "2026-07-10T17:36:52+00:00",
+  "episode": {
+    "arbitration": {
+      "arbitration_id": "rc3-arbitration-bd5274783ce40b20",
+      "conflicts": [],
+      "constraint_checks": [
+        "preserved: preserve explicit prohibitions"
+      ],
+      "decision_reason": "Selected read-only plan because validation found no execution authority and constraints are preserved.",
+      "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+      "operator_approval_required_before_action": true,
+      "plan_id": "rc3-plan-f9102e9348a68034",
+      "rejected_reasons": [],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "selected": true,
+      "status": "accepted_read_only"
+    },
+    "capability_gap": {
+      "assessment_id": "rc3-gap-a31d321e413c03d1",
+      "existing_capability_matches": [],
+      "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+      "missing_capabilities": [
+        "code execution",
+        "sandbox"
+      ],
+      "plan_id": "rc3-plan-f9102e9348a68034",
+      "plugin_needed": false,
+      "proposal_needed": true,
+      "recommendation": "sandbox_experiment_candidate_deferred_by_operator_prohibition",
+      "requested_capabilities": [
+        "code execution",
+        "sandbox"
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "sandbox_needed": true
+    },
+    "created_at": "2026-07-10T17:36:52+00:00",
+    "developer_overlay": {
+      "arbitration": {
+        "arbitration_id": "rc3-arbitration-bd5274783ce40b20",
+        "conflicts": [],
+        "constraint_checks": [
+          "preserved: preserve explicit prohibitions"
+        ],
+        "decision_reason": "Selected read-only plan because validation found no execution authority and constraints are preserved.",
+        "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+        "operator_approval_required_before_action": true,
+        "plan_id": "rc3-plan-f9102e9348a68034",
+        "rejected_reasons": [],
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "selected": true,
+        "status": "accepted_read_only"
+      },
+      "capability_gap": {
+        "assessment_id": "rc3-gap-a31d321e413c03d1",
+        "existing_capability_matches": [],
+        "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+        "missing_capabilities": [
+          "code execution",
+          "sandbox"
+        ],
+        "plan_id": "rc3-plan-f9102e9348a68034",
+        "plugin_needed": false,
+        "proposal_needed": true,
+        "recommendation": "sandbox_experiment_candidate_deferred_by_operator_prohibition",
+        "requested_capabilities": [
+          "code execution",
+          "sandbox"
+        ],
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "sandbox_needed": true
+      },
+      "capability_registry": [
+        {
+          "dependencies": [
+            "rc2.routing",
+            "rc2.renderer"
+          ],
+          "description": "Frozen RC2 conversational cognitive pipeline.",
+          "identifier": "rc2.conversation",
+          "known_limitations": "Does not execute goals or plans.",
+          "maturity": "stable",
+          "owner": "rc2_runtime",
+          "permissions": [
+            "read_runtime_state"
+          ],
+          "provenance": "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md"
+        },
+        {
+          "dependencies": [
+            "sqlite_index",
+            "concept_store"
+          ],
+          "description": "SQLite-backed concept retrieval and WRS support.",
+          "identifier": "rc2.retrieval",
+          "known_limitations": "Quality depends on concept substance and quarantine state.",
+          "maturity": "stable",
+          "owner": "rc2_substrate",
+          "permissions": [
+            "read_substrate"
+          ],
+          "provenance": "reports/RC2_COGNITIVE_CAPABILITY_BENCHMARK.json"
+        },
+        {
+          "dependencies": [
+            "rc2.conversation"
+          ],
+          "description": "Ephemeral goal interpretation and read-only planning scaffold.",
+          "identifier": "rc3.goal_planning",
+          "known_limitations": "No execution or persistence.",
+          "maturity": "stable_scaffold",
+          "owner": "rc3_a",
+          "permissions": [
+            "read_operator_prompt"
+          ],
+          "provenance": "reports/RC3_A_MILESTONE_REVIEW.json"
+        },
+        {
+          "dependencies": [
+            "rc3.goal_planning"
+          ],
+          "description": "Governed read-only plan revision and revision history scaffold.",
+          "identifier": "rc3.plan_revision",
+          "known_limitations": "Revision history is ephemeral unless externally recorded by operator.",
+          "maturity": "stable_scaffold",
+          "owner": "rc3_b",
+          "permissions": [
+            "read_episode_state"
+          ],
+          "provenance": "reports/RC3_B_MILESTONE_REVIEW.json"
+        }
+      ],
+      "dependency_graph": {
+        "architectural_impacts": [
+          "review impact on rc3_governed_engineering",
+          "review impact on future_sandbox_foundation"
+        ],
+        "compatibility_constraints": [
+          "RC2 cognitive pipeline unchanged",
+          "RC3 state remains ephemeral"
+        ],
+        "external_systems": [],
+        "model_id": "rc3-dependency-model-44a25df1d60f4fb7",
+        "prerequisite_capabilities": [
+          "rc3.goal_planning",
+          "rc3.plan_revision",
+          "future_sandbox_requirements"
+        ],
+        "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "read_only": true,
+        "required_approvals": [
+          "operator_approval",
+          "architecture_review",
+          "security_review"
+        ]
+      },
+      "engineering_arbitration": "sandbox_candidate",
+      "engineering_intent": {
+        "confidence": 0.86,
+        "intent_id": "rc3-engineering-intent-bfdd4a7329f9c85e",
+        "matched_signals": [
+          "sandbox",
+          "approve",
+          "gap.sandbox_needed",
+          "gap.proposal_needed"
+        ],
+        "primary_intent": "sandbox_experiment",
+        "recommendation_boundary": "classify_only",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "secondary_intents": [
+          "operator_decision"
+        ]
+      },
+      "engineering_proposal": {
+        "affected_components": [
+          "rc3_governed_engineering",
+          "future_sandbox_foundation"
+        ],
+        "assumptions": [
+          "Operator wants an advisory engineering proposal only.",
+          "RC2 remains frozen and compatible."
+        ],
+        "confidence": 0.8,
+        "dependencies": [
+          "rc3.goal_planning",
+          "rc3.plan_revision",
+          "future_sandbox_requirements"
+        ],
+        "estimated_complexity": "high",
+        "estimated_risk": "high",
+        "execution_authorized": false,
+        "expected_benefit": "Define how a future approved experiment could be evaluated safely.",
+        "implementation_included": false,
+        "operator_approval_requirements": [
+          "approval required before implementation",
+          "approval required before sandbox or plugin work"
+        ],
+        "originating_capability_gap": "rc3-gap-a31d321e413c03d1",
+        "originating_goal": "rc3-goal-d1efe36d4f9eaf43",
+        "persistence_status": "ephemeral",
+        "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "proposal_only": true,
+        "provenance": {
+          "intent_id": "rc3-engineering-intent-bfdd4a7329f9c85e",
+          "source": "rc3_c_engineering_foundation"
+        },
+        "rationale": "The requested goal exposes a capability gap: code execution, sandbox.",
+        "required_permissions": [
+          "operator_review",
+          "explicit_future_approval_before_any_action"
+        ],
+        "rollback_expectations": [
+          "proposal can be discarded",
+          "no runtime state is mutated by this proposal"
+        ],
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "title": "Sandbox Evaluation Proposal: code execution, sandbox",
+        "uncertainty": "moderate",
+        "validation_requirements": [
+          "operator review",
+          "RC2 compatibility check",
+          "safety metadata check",
+          "permission boundary review",
+          "rollback review"
+        ]
+      },
+      "engineering_review": {
+        "alternatives_considered": [
+          "use_existing_capability",
+          "revise_workflow",
+          "defer_until_RC3_later_phase"
+        ],
+        "natural_language": "Sandbox Evaluation Proposal: code execution, sandbox exists because The requested goal exposes a capability gap: code execution, sandbox. It would affect rc3_governed_engineering, future_sandbox_foundation and should be reviewed by the operator before any future work. Validation status: valid_with_warnings. It is one option in a ranked advisory comparison, not an automatically selected action.",
+        "problem": "The requested goal exposes a capability gap: code execution, sandbox.",
+        "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "recommendation": "review_before_future_work",
+        "remaining_uncertainty": [
+          "moderate"
+        ],
+        "summary_id": "rc3-engineering-review-2c7a228775adbd5f",
+        "tradeoffs": [
+          "Complexity is high.",
+          "Risk is high.",
+          "Proposal remains inert until explicit operator approval."
+        ]
+      },
+      "engineering_validation_for_sandbox": {
+        "architectural_consistency": true,
+        "bounded_scope": true,
+        "constraint_preservation": true,
+        "measurable_outcome": true,
+        "prohibition_preservation": true,
+        "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "rc2_compatibility": true,
+        "rc3_compatibility": true,
+        "rejection_reasons": [],
+        "result": "valid_with_warnings",
+        "review_completeness": true,
+        "rollback_feasibility": true,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "validation_id": "rc3-engineering-validation-2c7a228775adbd5f",
+        "warnings": [
+          "high_complexity_requires_separate_future_review"
+        ]
+      },
+      "entry_point": "build_rc3_sandbox_episode",
+      "execution_authorized": false,
+      "goal_interpretation_trace": {
+        "constraint_conflicts": [],
+        "goal_type": "design_goal",
+        "matched_rules": [
+          "design",
+          "do_not"
+        ],
+        "non_goal_detected": false,
+        "previous_goal_used": null,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        }
+      },
+      "goal_transition": {
+        "accepted": true,
+        "from_status": "interpreted",
+        "provenance": {
+          "hidden_status_change": false,
+          "operator_or_runtime_reason": "RC3-A explicit episode construction"
+        },
+        "reason": "transition accepted",
+        "requires_operator_review": false,
+        "safety_blocked": false,
+        "to_status": "confirmed"
+      },
+      "implementation_performed": false,
+      "introspection": {
+        "assumptions": [
+          "RC3-A remains read-only and non-executing."
+        ],
+        "claims": [
+          {
+            "claim": "Active objective: Design the sandbox requirements for a future approved code-evaluation proposal",
+            "evidence": "GoalFrame.normalized_objective"
+          },
+          {
+            "claim": "Plan strategy: design_only",
+            "evidence": "PlanFrame.strategy"
+          },
+          {
+            "claim": "Plan validation result: valid",
+            "evidence": "PlanValidation.result"
+          },
+          {
+            "claim": "No execution authority is present.",
+            "evidence": "PlanFrame.execution_authorized=false"
+          },
+          {
+            "claim": "RC3-A state is ephemeral.",
+            "evidence": "GoalFrame.persistence_status and PlanFrame.persistence_status"
+          }
+        ],
+        "evidence_sources": [
+          "GoalFrame",
+          "PlanFrame",
+          "PlanValidation",
+          "GoalPlanArbitration",
+          "docs/RC3_STATE_MODEL.md"
+        ],
+        "fabricated_self_state": false,
+        "hidden_state_detected": false,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "snapshot_id": "rc3-snapshot-bd5274783ce40b20",
+        "uncertainty": [
+          "operator confirmation"
+        ]
+      },
+      "isolation_analysis": {
+        "classification": "container_isolation",
+        "justification": "Classified from proposal risk=high, complexity=high.",
+        "no_environment_created": true
+      },
+      "normal_conversation_attached": false,
+      "persistence_status": "ephemeral",
+      "plan_validation": {
+        "blocked_steps": [],
+        "checks_performed": [
+          "goal_alignment",
+          "constraint_preservation",
+          "prohibition_preservation",
+          "dependency_ordering",
+          "measurable_outputs",
+          "validation_coverage",
+          "operator_checkpoint_presence",
+          "hidden_execution_detection",
+          "rc2_contract_compatibility"
+        ],
+        "confidence": 0.92,
+        "failed_checks": [],
+        "passed_checks": [
+          "goal_alignment",
+          "constraint_preservation",
+          "prohibition_preservation",
+          "dependency_ordering",
+          "measurable_outputs",
+          "validation_coverage",
+          "operator_checkpoint_presence",
+          "hidden_execution_detection",
+          "rc2_contract_compatibility"
+        ],
+        "rejected_steps": [],
+        "required_clarification": [],
+        "result": "valid",
+        "trace": {
+          "execution_authorized": false,
+          "rc2_contract_changed": false
+        },
+        "warnings": []
+      },
+      "progress": {
+        "blockers": [
+          "operator_review_outstanding"
+        ],
+        "completion_evidence": [],
+        "completion_requires_operator_confirmation": true,
+        "completion_score": 0.0,
+        "evaluation_id": "rc3-progress-9fff6eb13acd435b",
+        "failure_signals": [],
+        "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+        "missing_evidence": [
+          "operator confirms objective is correctly understood"
+        ],
+        "plan_id": "rc3-plan-f9102e9348a68034",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "status": "awaiting_review"
+      },
+      "proposal_alternatives": [
+        {
+          "affected_components": [
+            "rc3_governed_engineering",
+            "future_sandbox_foundation"
+          ],
+          "assumptions": [
+            "Operator wants an advisory engineering proposal only.",
+            "RC2 remains frozen and compatible."
+          ],
+          "confidence": 0.8,
+          "dependencies": [
+            "rc3.goal_planning",
+            "rc3.plan_revision"
+          ],
+          "estimated_complexity": "low",
+          "estimated_risk": "low",
+          "execution_authorized": false,
+          "expected_benefit": "Reduce operator friction without changing runtime authority.",
+          "implementation_included": false,
+          "operator_approval_requirements": [
+            "approval required before implementation",
+            "approval required before sandbox or plugin work"
+          ],
+          "originating_capability_gap": "rc3-gap-a31d321e413c03d1",
+          "originating_goal": "rc3-goal-d1efe36d4f9eaf43",
+          "persistence_status": "ephemeral",
+          "proposal_id": "rc3-engineering-proposal-9d7ebf4d46295963",
+          "proposal_only": true,
+          "provenance": {
+            "intent_id": "rc3-engineering-intent-alt-94cd1728e9759898",
+            "source": "rc3_c_engineering_foundation"
+          },
+          "rationale": "The requested goal exposes a capability gap: code execution, sandbox.",
+          "required_permissions": [
+            "operator_review",
+            "explicit_future_approval_before_any_action"
+          ],
+          "rollback_expectations": [
+            "proposal can be discarded",
+            "no runtime state is mutated by this proposal"
+          ],
+          "safety": {
+            "automatic_commit_performed": false,
+            "automatic_push_performed": false,
+            "autonomous_action_performed": false,
+            "canonical_write_performed": false,
+            "delta_75_interaction_performed": false,
+            "deployment_performed": false,
+            "fine_tuning_performed": false,
+            "graph_write_performed": false,
+            "hidden_persistence_performed": false,
+            "hyb1_promoted": false,
+            "model_b_replaced": false,
+            "noncanonical_write_performed": false,
+            "plan_execution_performed": false,
+            "plugin_activation_performed": false,
+            "plugin_creation_performed": false,
+            "production_mutation_performed": false,
+            "provider_calls_performed": false,
+            "replay_write_performed": false,
+            "sandbox_creation_performed": false,
+            "scheduler_action_performed": false,
+            "tool_execution_performed": false,
+            "training_performed": false,
+            "web_search_performed": false,
+            "weight_update_performed": false
+          },
+          "title": "Workflow Revision Proposal: code execution, sandbox",
+          "uncertainty": "moderate",
+          "validation_requirements": [
+            "operator review",
+            "RC2 compatibility check",
+            "safety metadata check"
+          ]
+        },
+        {
+          "affected_components": [
+            "rc3_governed_engineering",
+            "future_sandbox_foundation"
+          ],
+          "assumptions": [
+            "Operator wants an advisory engineering proposal only.",
+            "RC2 remains frozen and compatible."
+          ],
+          "confidence": 0.8,
+          "dependencies": [
+            "rc3.goal_planning",
+            "rc3.plan_revision"
+          ],
+          "estimated_complexity": "low",
+          "estimated_risk": "low",
+          "execution_authorized": false,
+          "expected_benefit": "Clarify operator and developer expectations.",
+          "implementation_included": false,
+          "operator_approval_requirements": [
+            "approval required before implementation",
+            "approval required before sandbox or plugin work"
+          ],
+          "originating_capability_gap": "rc3-gap-a31d321e413c03d1",
+          "originating_goal": "rc3-goal-d1efe36d4f9eaf43",
+          "persistence_status": "ephemeral",
+          "proposal_id": "rc3-engineering-proposal-1cf30946a66fdbcb",
+          "proposal_only": true,
+          "provenance": {
+            "intent_id": "rc3-engineering-intent-alt-4ffa8ad2c18ec766",
+            "source": "rc3_c_engineering_foundation"
+          },
+          "rationale": "The requested goal exposes a capability gap: code execution, sandbox.",
+          "required_permissions": [
+            "operator_review",
+            "explicit_future_approval_before_any_action"
+          ],
+          "rollback_expectations": [
+            "proposal can be discarded",
+            "no runtime state is mutated by this proposal"
+          ],
+          "safety": {
+            "automatic_commit_performed": false,
+            "automatic_push_performed": false,
+            "autonomous_action_performed": false,
+            "canonical_write_performed": false,
+            "delta_75_interaction_performed": false,
+            "deployment_performed": false,
+            "fine_tuning_performed": false,
+            "graph_write_performed": false,
+            "hidden_persistence_performed": false,
+            "hyb1_promoted": false,
+            "model_b_replaced": false,
+            "noncanonical_write_performed": false,
+            "plan_execution_performed": false,
+            "plugin_activation_performed": false,
+            "plugin_creation_performed": false,
+            "production_mutation_performed": false,
+            "provider_calls_performed": false,
+            "replay_write_performed": false,
+            "sandbox_creation_performed": false,
+            "scheduler_action_performed": false,
+            "tool_execution_performed": false,
+            "training_performed": false,
+            "web_search_performed": false,
+            "weight_update_performed": false
+          },
+          "title": "Documentation Proposal: code execution, sandbox",
+          "uncertainty": "moderate",
+          "validation_requirements": [
+            "operator review",
+            "RC2 compatibility check",
+            "safety metadata check"
+          ]
+        }
+      ],
+      "proposal_comparison": {
+        "automatically_selected": false,
+        "comparison_id": "rc3-engineering-comparison-aa189d1396bccb03",
+        "operator_review_required": true,
+        "ranked_proposal_ids": [
+          "rc3-engineering-proposal-9d7ebf4d46295963",
+          "rc3-engineering-proposal-1cf30946a66fdbcb",
+          "rc3-engineering-proposal-84321384f25fb0eb"
+        ],
+        "recommendation": "operator_review_ranked_options",
+        "scoring": [
+          {
+            "complexity": "high",
+            "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+            "reason": "ranked for operator review only",
+            "risk": "high",
+            "score": 0.37,
+            "title": "Sandbox Evaluation Proposal: code execution, sandbox"
+          },
+          {
+            "complexity": "low",
+            "proposal_id": "rc3-engineering-proposal-9d7ebf4d46295963",
+            "reason": "ranked for operator review only",
+            "risk": "low",
+            "score": 0.98,
+            "title": "Workflow Revision Proposal: code execution, sandbox"
+          },
+          {
+            "complexity": "low",
+            "proposal_id": "rc3-engineering-proposal-1cf30946a66fdbcb",
+            "reason": "ranked for operator review only",
+            "risk": "low",
+            "score": 0.98,
+            "title": "Documentation Proposal: code execution, sandbox"
+          }
+        ]
+      },
+      "proposal_validation": {
+        "architectural_consistency": true,
+        "bounded_scope": true,
+        "constraint_preservation": true,
+        "measurable_outcome": true,
+        "prohibition_preservation": true,
+        "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "rc2_compatibility": true,
+        "rc3_compatibility": true,
+        "rejection_reasons": [],
+        "result": "valid_with_warnings",
+        "review_completeness": true,
+        "rollback_feasibility": true,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "validation_id": "rc3-engineering-validation-2c7a228775adbd5f",
+        "warnings": [
+          "high_complexity_requires_separate_future_review"
+        ]
+      },
+      "resource_estimates": {
+        "cpu": "2-4 cores",
+        "estimate_id": "rc3-sandbox-resource-4177b4ab9931f3a3",
+        "expected_outputs": [
+          "validation report",
+          "audit log",
+          "operator review packet"
+        ],
+        "external_dependencies": [],
+        "memory": "4-8 GB",
+        "planning_estimate_only": true,
+        "runtime_duration": "hours",
+        "storage": "disposable container volume"
+      },
+      "risk_assessment": {
+        "analysis_id": "rc3-engineering-risk-44a25df1d60f4fb7",
+        "architectural_risk": "high",
+        "automatic_mitigation_performed": false,
+        "compatibility_risk": "low",
+        "findings": [
+          "Proposal is advisory only.",
+          "Operator approval is required before any future implementation.",
+          "Rollback is feasible because no runtime state is mutated.",
+          "High-risk proposals require additional security and architecture review."
+        ],
+        "governance_risk": "moderate",
+        "maintenance_risk": "moderate",
+        "operator_burden": "moderate",
+        "proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "rollback_risk": "low",
+        "uncertainty": "moderate",
+        "validation_risk": "moderate"
+      },
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "safety_findings": {
+        "auditability": "high_review_packet_available",
+        "data_leakage_risk": "low_with_disposable_outputs",
+        "findings": [
+          "Sandbox proposal is design-only.",
+          "No sandbox, process, container, VM, plugin, filesystem mutation, provider call, or execution was created.",
+          "Operator approval is required before any future environment work.",
+          "High isolation has stronger safety margin but higher operational cost."
+        ],
+        "network_exposure_risk": "low",
+        "persistence_risk": "low_no_persistence",
+        "privilege_escalation_risk": "low_in_design_phase",
+        "provider_interaction_risk": "low_providers_disabled",
+        "repository_mutation_risk": "low_no_repository_mutation",
+        "reproducibility": "high_specification_is_structured",
+        "review_id": "rc3-sandbox-safety-c18f8975598d1bfb",
+        "rollback_feasibility": "high_no_runtime_state_changed",
+        "safety_margin": "strong",
+        "sandbox_proposal_id": "rc3-sandbox-proposal-9fb6cdb81aa3103e"
+      },
+      "sandbox_comparison": {
+        "automatically_selected": false,
+        "comparison_id": "rc3-sandbox-comparison-b5cc44c4f4b4a024",
+        "operator_review_required": true,
+        "ranked_sandbox_proposal_ids": [
+          "rc3-sandbox-proposal-9fb6cdb81aa3103e",
+          "rc3-sandbox-proposal-42f9bd55c44590e8"
+        ],
+        "recommendation": "operator_review_ranked_sandbox_designs",
+        "scoring": [
+          {
+            "isolation": "container_isolation",
+            "reason": "ranked for operator review only",
+            "sandbox_proposal_id": "rc3-sandbox-proposal-9fb6cdb81aa3103e",
+            "score": 0.83
+          },
+          {
+            "isolation": "logical_isolation",
+            "reason": "ranked for operator review only",
+            "sandbox_proposal_id": "rc3-sandbox-proposal-42f9bd55c44590e8",
+            "score": 0.615
+          }
+        ]
+      },
+      "sandbox_created": false,
+      "sandbox_proposal": {
+        "confidence": 0.84,
+        "destruction_policy": "destroy disposable workspace after operator-reviewed export",
+        "execution_authorized": false,
+        "expected_artifacts": [
+          "sandbox specification",
+          "safety review",
+          "validation checklist"
+        ],
+        "expected_duration": "hours",
+        "justification": "Classified from proposal risk=high, complexity=high.",
+        "objective": "Define an inert sandbox requirement for Sandbox Evaluation Proposal: code execution, sandbox.",
+        "operator_approval_requirements": [
+          "approval required before any future sandbox creation",
+          "approval required before any future execution"
+        ],
+        "originating_proposal_id": "rc3-engineering-proposal-84321384f25fb0eb",
+        "persistence_status": "ephemeral",
+        "proposal_only": true,
+        "required_isolation_level": "container_isolation",
+        "required_resources": {
+          "cpu": "2-4 cores",
+          "estimate_id": "rc3-sandbox-resource-4177b4ab9931f3a3",
+          "expected_outputs": [
+            "validation report",
+            "audit log",
+            "operator review packet"
+          ],
+          "external_dependencies": [],
+          "memory": "4-8 GB",
+          "planning_estimate_only": true,
+          "runtime_duration": "hours",
+          "storage": "disposable container volume"
+        },
+        "rollback_expectations": [
+          "discard proposal",
+          "no runtime state changed",
+          "no sandbox exists to clean up"
+        ],
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "sandbox_created": false,
+        "sandbox_proposal_id": "rc3-sandbox-proposal-9fb6cdb81aa3103e",
+        "specification": {
+          "destruction_policy": "destroy disposable workspace after operator-reviewed export",
+          "filesystem_policy": "read-only inputs, disposable outputs, no production writes",
+          "logging_policy": "audit logs required for every planned operation",
+          "memory_policy": "no hidden persistence; memory discarded after review packet generation",
+          "network_policy": "disabled_by_default",
+          "persistence_policy": "ephemeral by default; reviewed artifacts only",
+          "plugin_policy": "plugins unavailable unless separately approved and isolated",
+          "provenance_policy": "record proposal id, source prompt, assumptions, and validation evidence",
+          "provider_policy": "providers disabled unless separately consented for a single reviewed request",
+          "runtime_implementation_included": false,
+          "specification_id": "rc3-sandbox-spec-4177b4ab9931f3a3"
+        },
+        "success_criteria": [
+          "operator can review the sandbox design",
+          "all policies are complete",
+          "destruction and rollback are defined"
+        ],
+        "uncertainty": "low",
+        "validation_goals": [
+          "prove isolation requirements are explicit",
+          "prove no execution is authorized"
+        ]
+      },
+      "sandbox_requirement_analysis": {
+        "confidence": 0.84,
+        "isolation_classification": "container_isolation",
+        "justification": "Classified from proposal risk=high, complexity=high.",
+        "no_environment_created": true,
+        "recommendation": "sandbox design required before any future evaluation",
+        "required_capabilities": [
+          "isolated evaluation design",
+          "isolated runtime"
+        ],
+        "requirement_id": "rc3-sandbox-requirement-ccef9d4da3b6af84",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "uncertainty": "low"
+      },
+      "sandbox_review": {
+        "assumptions": [
+          "Future execution, if any, would be separately approved.",
+          "This pass only defines requirements."
+        ],
+        "limitations": [
+          "No sandbox runtime exists in this artifact.",
+          "Resource estimates are planning estimates."
+        ],
+        "natural_language": "A sandbox design is considered because the originating proposal needs container_isolation. The design is valid and remains proposal-only. No environment was created; the operator would still need to approve any future sandbox work.",
+        "operator_decisions_required": [
+          "approval required before any future sandbox creation",
+          "approval required before any future execution"
+        ],
+        "proposed_isolation_model": "container_isolation",
+        "residual_risks": [
+          "Sandbox proposal is design-only.",
+          "No sandbox, process, container, VM, plugin, filesystem mutation, provider call, or execution was created.",
+          "Operator approval is required before any future environment work.",
+          "High isolation has stronger safety margin but higher operational cost."
+        ],
+        "sandbox_proposal_id": "rc3-sandbox-proposal-9fb6cdb81aa3103e",
+        "summary_id": "rc3-sandbox-review-b3fa2bb0fbec68bc",
+        "why_needed": "Classified from proposal risk=high, complexity=high."
+      },
+      "sandbox_validation": {
+        "approval_requirements": true,
+        "architectural_consistency": true,
+        "bounded_scope": true,
+        "complete_specification": true,
+        "defined_entry_conditions": true,
+        "defined_exit_conditions": true,
+        "destruction_policy": true,
+        "rc2_compatibility": true,
+        "rc3_compatibility": true,
+        "rejection_reasons": [],
+        "result": "valid",
+        "rollback_policy": true,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "sandbox_proposal_id": "rc3-sandbox-proposal-9fb6cdb81aa3103e",
+        "validation_id": "rc3-sandbox-validation-b3fa2bb0fbec68bc",
+        "warnings": []
+      }
+    },
+    "episode_id": "rc3-sandbox-episode-7c2146d521189028",
+    "goal_frame": {
+      "assumptions": [
+        "RC3-A remains read-only and non-executing."
+      ],
+      "child_goals": [],
+      "completion_evidence": [],
+      "confidence": 0.86,
+      "constraints": [
+        "preserve explicit prohibitions"
+      ],
+      "creation_turn": "rc3-turn-d1efe36d4f9eaf43",
+      "dependencies": [],
+      "explicitness": "explicit",
+      "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+      "goal_type": "design_goal",
+      "last_updated_turn": "rc3-turn-d1efe36d4f9eaf43",
+      "normalized_objective": "Design the sandbox requirements for a future approved code-evaluation proposal",
+      "operator_confirmation_status": "not_confirmed",
+      "parent_goal": null,
+      "permitted_tools": [],
+      "persistence_status": "ephemeral",
+      "priority": 0.5,
+      "prohibited_actions": [
+        "do not invoke providers",
+        "do not create sandboxes",
+        "do not interact with DELTA-75"
+      ],
+      "prohibited_tools": [
+        "providers",
+        "sandboxes"
+      ],
+      "provenance": {
+        "interpreter": "rc3_goal_interpreter",
+        "mode": "RC3-A",
+        "rc2_episode_reference": null,
+        "source": "operator_text"
+      },
+      "requested_resources": [
+        "ui"
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "source_user_text": "Design the sandbox requirements for a future approved code-evaluation proposal. Do not create a sandbox, run code, mutate files, call providers, or touch DELTA-75.",
+      "status": "interpreted",
+      "success_criteria": [
+        "operator confirms objective is correctly understood"
+      ],
+      "superseded_goal": null,
+      "uncertainty": "moderate"
+    },
+    "introspection": {
+      "assumptions": [
+        "RC3-A remains read-only and non-executing."
+      ],
+      "claims": [
+        {
+          "claim": "Active objective: Design the sandbox requirements for a future approved code-evaluation proposal",
+          "evidence": "GoalFrame.normalized_objective"
+        },
+        {
+          "claim": "Plan strategy: design_only",
+          "evidence": "PlanFrame.strategy"
+        },
+        {
+          "claim": "Plan validation result: valid",
+          "evidence": "PlanValidation.result"
+        },
+        {
+          "claim": "No execution authority is present.",
+          "evidence": "PlanFrame.execution_authorized=false"
+        },
+        {
+          "claim": "RC3-A state is ephemeral.",
+          "evidence": "GoalFrame.persistence_status and PlanFrame.persistence_status"
+        }
+      ],
+      "evidence_sources": [
+        "GoalFrame",
+        "PlanFrame",
+        "PlanValidation",
+        "GoalPlanArbitration",
+        "docs/RC3_STATE_MODEL.md"
+      ],
+      "fabricated_self_state": false,
+      "hidden_state_detected": false,
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "snapshot_id": "rc3-snapshot-bd5274783ce40b20",
+      "uncertainty": [
+        "operator confirmation"
+      ]
+    },
+    "persistence_status": "ephemeral",
+    "plan_frame": {
+      "assumptions": [
+        "RC3-A remains read-only and non-executing."
+      ],
+      "confidence": 0.82,
+      "constraints_preserved": [
+        "preserve explicit prohibitions"
+      ],
+      "dependencies": [
+        "rc3-plan-step-5fbdf34d54ce0c07",
+        "rc3-plan-step-fe7767a13f7a120b",
+        "rc3-plan-step-c765ff699103a08e"
+      ],
+      "execution_authorized": false,
+      "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+      "lifecycle_state": "draft",
+      "persistence_status": "ephemeral",
+      "plan_id": "rc3-plan-f9102e9348a68034",
+      "prohibited_actions": [
+        "do not invoke providers",
+        "do not create sandboxes",
+        "do not interact with DELTA-75"
+      ],
+      "provenance": {
+        "planner": "rc3_plan_generator",
+        "source_goal_id": "rc3-goal-d1efe36d4f9eaf43"
+      },
+      "risks": [
+        "RC3-A plans are descriptive and must not be executed.",
+        "Plan must preserve explicit prohibitions."
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "steps": [
+        {
+          "dependency_ids": [],
+          "expected_evidence": [
+            "operator_review_record"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not invoke providers",
+            "do not create sandboxes",
+            "do not interact with DELTA-75"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-5fbdf34d54ce0c07",
+          "summary": "Review current architecture and constraints.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-plan-step-5fbdf34d54ce0c07"
+          ],
+          "expected_evidence": [
+            "design_artifact"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not invoke providers",
+            "do not create sandboxes",
+            "do not interact with DELTA-75"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-fe7767a13f7a120b",
+          "summary": "Define the design surface and required fields.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-plan-step-fe7767a13f7a120b"
+          ],
+          "expected_evidence": [
+            "operator_review_record"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not invoke providers",
+            "do not create sandboxes",
+            "do not interact with DELTA-75"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-c765ff699103a08e",
+          "summary": "Define validation rules and review gates.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-plan-step-c765ff699103a08e"
+          ],
+          "expected_evidence": [
+            "operator_review_record"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not invoke providers",
+            "do not create sandboxes",
+            "do not interact with DELTA-75"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-9b9ceff312ecb939",
+          "summary": "Write the design artifact for operator review.",
+          "uncertainty": "moderate"
+        }
+      ],
+      "strategy": "design_only",
+      "uncertainty": "moderate"
+    },
+    "progress": {
+      "blockers": [
+        "operator_review_outstanding"
+      ],
+      "completion_evidence": [],
+      "completion_requires_operator_confirmation": true,
+      "completion_score": 0.0,
+      "evaluation_id": "rc3-progress-9fff6eb13acd435b",
+      "failure_signals": [],
+      "goal_id": "rc3-goal-d1efe36d4f9eaf43",
+      "missing_evidence": [
+        "operator confirms objective is correctly understood"
+      ],
+      "plan_id": "rc3-plan-f9102e9348a68034",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "awaiting_review"
+    },
+    "rc2_episode_reference": null,
+    "safety": {
+      "automatic_commit_performed": false,
+      "automatic_push_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hidden_persistence_performed": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
+      "plan_execution_performed": false,
+      "plugin_activation_performed": false,
+      "plugin_creation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "replay_write_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "tool_execution_performed": false,
+      "training_performed": false,
+      "web_search_performed": false,
+      "weight_update_performed": false
+    },
+    "source_text": "Design the sandbox requirements for a future approved code-evaluation proposal. Do not create a sandbox, run code, mutate files, call providers, or touch DELTA-75."
+  },
+  "isolation_classification": "container_isolation",
+  "rc2_compatibility": 1.0,
+  "recommendation": "READY_FOR_RC3_D_SANDBOX_BENCHMARK",
+  "report": "RC3_D_SANDBOX_FOUNDATION",
+  "safety_metadata_completeness": 1.0,
+  "sandbox_validation_result": "valid"
+}

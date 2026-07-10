@@ -1,0 +1,158 @@
+{
+  "case_count": 6,
+  "created_at": "2026-07-10T17:36:32+00:00",
+  "foundation_report": "RC3_C_ENGINEERING_FOUNDATION",
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_D_SANDBOX_FOUNDATION",
+  "report": "RC3_C_ENGINEERING_BENCHMARK",
+  "results": [
+    {
+      "arbitration": "plugin_candidate",
+      "case_id": "plugin_gap",
+      "checks": {
+        "arbitration": true,
+        "architectural_consistency": true,
+        "capability_classification": true,
+        "dependency_modeling": true,
+        "engineering_intent_accuracy": true,
+        "governance_completeness": true,
+        "proposal_comparison": true,
+        "proposal_quality": true,
+        "proposal_validation": true,
+        "rc2_compatibility": true,
+        "risk_analysis": true,
+        "safety": true
+      },
+      "intent": "plugin",
+      "passed": true,
+      "proposal_title": "Plugin Capability Proposal: plugin",
+      "validation": "valid_with_warnings"
+    },
+    {
+      "arbitration": "sandbox_candidate",
+      "case_id": "sandbox_gap",
+      "checks": {
+        "arbitration": true,
+        "architectural_consistency": true,
+        "capability_classification": true,
+        "dependency_modeling": true,
+        "engineering_intent_accuracy": true,
+        "governance_completeness": true,
+        "proposal_comparison": true,
+        "proposal_quality": true,
+        "proposal_validation": true,
+        "rc2_compatibility": true,
+        "risk_analysis": true,
+        "safety": true
+      },
+      "intent": "sandbox_experiment",
+      "passed": true,
+      "proposal_title": "Sandbox Evaluation Proposal: code execution, sandbox",
+      "validation": "valid_with_warnings"
+    },
+    {
+      "arbitration": "engineering_proposal",
+      "case_id": "docs_gap",
+      "checks": {
+        "arbitration": true,
+        "architectural_consistency": true,
+        "capability_classification": true,
+        "dependency_modeling": true,
+        "engineering_intent_accuracy": true,
+        "governance_completeness": true,
+        "proposal_comparison": true,
+        "proposal_quality": true,
+        "proposal_validation": true,
+        "rc2_compatibility": true,
+        "risk_analysis": true,
+        "safety": true
+      },
+      "intent": "documentation",
+      "passed": true,
+      "proposal_title": "Documentation Proposal: documentation",
+      "validation": "valid"
+    },
+    {
+      "arbitration": "revise_workflow",
+      "case_id": "workflow_gap",
+      "checks": {
+        "arbitration": true,
+        "architectural_consistency": true,
+        "capability_classification": true,
+        "dependency_modeling": true,
+        "engineering_intent_accuracy": true,
+        "governance_completeness": true,
+        "proposal_comparison": true,
+        "proposal_quality": true,
+        "proposal_validation": true,
+        "rc2_compatibility": true,
+        "risk_analysis": true,
+        "safety": true
+      },
+      "intent": "workflow_change",
+      "passed": true,
+      "proposal_title": "Workflow Revision Proposal: workflow change",
+      "validation": "valid"
+    },
+    {
+      "arbitration": "engineering_proposal",
+      "case_id": "testing_gap",
+      "checks": {
+        "arbitration": true,
+        "architectural_consistency": true,
+        "capability_classification": true,
+        "dependency_modeling": true,
+        "engineering_intent_accuracy": true,
+        "governance_completeness": true,
+        "proposal_comparison": true,
+        "proposal_quality": true,
+        "proposal_validation": true,
+        "rc2_compatibility": true,
+        "risk_analysis": true,
+        "safety": true
+      },
+      "intent": "testing",
+      "passed": true,
+      "proposal_title": "Testing Proposal: testing",
+      "validation": "valid"
+    },
+    {
+      "arbitration": "engineering_proposal",
+      "case_id": "dependency_gap",
+      "checks": {
+        "arbitration": true,
+        "architectural_consistency": true,
+        "capability_classification": true,
+        "dependency_modeling": true,
+        "engineering_intent_accuracy": true,
+        "governance_completeness": true,
+        "proposal_comparison": true,
+        "proposal_quality": true,
+        "proposal_validation": true,
+        "rc2_compatibility": true,
+        "risk_analysis": true,
+        "safety": true
+      },
+      "intent": "external_dependency",
+      "passed": true,
+      "proposal_title": "External Dependency Proposal: external dependency",
+      "validation": "valid"
+    }
+  ],
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "arbitration": 1.0,
+    "architectural_consistency": 1.0,
+    "capability_classification": 1.0,
+    "dependency_modeling": 1.0,
+    "engineering_intent_accuracy": 1.0,
+    "governance_completeness": 1.0,
+    "proposal_comparison": 1.0,
+    "proposal_quality": 1.0,
+    "proposal_validation": 1.0,
+    "rc2_compatibility": 1.0,
+    "risk_analysis": 1.0,
+    "safety": 1.0
+  }
+}
