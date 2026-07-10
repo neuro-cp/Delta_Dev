@@ -1,0 +1,58 @@
+# RC5 CONSOLIDATED BENCHMARK
+
+Report: RC5_CONSOLIDATED_BENCHMARK
+
+Passed: n/a
+
+Recommendation: RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT
+
+Freeze status: RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT
+
+```json
+{
+  "created_at": "2026-07-10T21:04:47+00:00",
+  "freeze_status": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+  "recommendation": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+  "report": "RC5_CONSOLIDATED_BENCHMARK",
+  "safety": {
+    "automatic_consultation_performed": false,
+    "canonical_write_performed": false,
+    "developmental_memory_auto_write": false,
+    "gpt_api_calls_performed": false,
+    "protected_repository_interaction": false,
+    "provider_calls_performed": false,
+    "purpose_mutation_performed": false,
+    "rc4_authorization_bypassed": false,
+    "training_performed": false,
+    "upgrade_self_approved": false
+  },
+  "stage_passed": {
+    "RC5_ACQUISITION_STRATEGY_BENCHMARK": true,
+    "RC5_ADVERSARIAL_EVALUATION": true,
+    "RC5_CONSULTATION_COMPRESSION_BENCHMARK": true,
+    "RC5_DEFICIT_DETECTION_BENCHMARK": true,
+    "RC5_DEVELOPMENTAL_MEMORY_AUDIT": true,
+    "RC5_FOUNDATION_REVIEW": true,
+    "RC5_FREEZE_READINESS_FINAL": false,
+    "RC5_OPERATOR_PILOT_READINESS": true,
+    "RC5_POST_UPGRADE_EVALUATION_BENCHMARK": true,
+    "RC5_PURPOSE_CONSTITUTION_BENCHMARK": true,
+    "RC5_SELF_EVALUATION_BENCHMARK": true,
+    "RC5_UPGRADE_HANDOFF_BENCHMARK": true
+  },
+  "stage_scores": {
+    "RC5_ACQUISITION_STRATEGY_BENCHMARK": 1.0,
+    "RC5_ADVERSARIAL_EVALUATION": 1.0,
+    "RC5_CONSULTATION_COMPRESSION_BENCHMARK": 1.0,
+    "RC5_DEFICIT_DETECTION_BENCHMARK": 1.0,
+    "RC5_DEVELOPMENTAL_MEMORY_AUDIT": 1.0,
+    "RC5_FOUNDATION_REVIEW": 1.0,
+    "RC5_FREEZE_READINESS_FINAL": 0.0,
+    "RC5_OPERATOR_PILOT_READINESS": 1.0,
+    "RC5_POST_UPGRADE_EVALUATION_BENCHMARK": 1.0,
+    "RC5_PURPOSE_CONSTITUTION_BENCHMARK": 1.0,
+    "RC5_SELF_EVALUATION_BENCHMARK": 1.0,
+    "RC5_UPGRADE_HANDOFF_BENCHMARK": 1.0
+  }
+}
+```

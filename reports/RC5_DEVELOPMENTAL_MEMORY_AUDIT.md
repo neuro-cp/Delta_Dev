@@ -1,0 +1,115 @@
+# RC5 DEVELOPMENTAL MEMORY AUDIT
+
+Report: RC5_DEVELOPMENTAL_MEMORY_AUDIT
+
+Passed: True
+
+Recommendation: n/a
+
+Freeze status: n/a
+
+```json
+{
+  "checks": {
+    "no_auto_write": true,
+    "review_required": true,
+    "scope_present": true,
+    "supersession_supported": true
+  },
+  "lessons": [
+    {
+      "evidence": [
+        "rc5-comparison-5509357057cb6c6d"
+      ],
+      "lesson_id": "rc5-lesson-cf7022e6aaf63f03",
+      "meta": {
+        "authority": "review_required_memory",
+        "cost_metadata": {
+          "estimated_cost_usd": 0.0
+        },
+        "lifecycle": "draft",
+        "operator_visibility": "reports_and_ui",
+        "owner": "operator",
+        "persistence_policy": "ephemeral_or_report_only",
+        "provenance": "rc5_deterministic_developmental_cognition",
+        "purpose": "developmental lesson",
+        "rc2_relationship": "evaluates_conversation_and_cognition_without_mutating_rc2",
+        "rc3_relationship": "uses_goals_plans_governance_as_evidence",
+        "rc4_relationship": "hands_off_upgrade_proposals_to_governed_action_runtime",
+        "rollback_or_revocation": "discard_artifact_or_operator_revoke",
+        "safety": {
+          "automatic_consultation_performed": false,
+          "canonical_write_performed": false,
+          "developmental_memory_auto_write": false,
+          "gpt_api_calls_performed": false,
+          "protected_repository_interaction": false,
+          "provider_calls_performed": false,
+          "purpose_mutation_performed": false,
+          "rc4_authorization_bypassed": false,
+          "training_performed": false,
+          "upgrade_self_approved": false
+        },
+        "serialization": "json",
+        "token_budget": {
+          "default_packet_tokens": 1000,
+          "max_packet_tokens": 2000
+        },
+        "validation": "deterministic"
+      },
+      "retention_decision": "retain_candidate",
+      "review_status": "operator_review_required",
+      "scope": "fixture_developmental_cycle",
+      "statement": "retrieval_precision changed by 0.19; disposition RETAIN_AFTER_REVIEW.",
+      "superseded_by": null
+    },
+    {
+      "evidence": [
+        "fixture"
+      ],
+      "lesson_id": "rc5-lesson-62ac8c5d5e3b041b",
+      "meta": {
+        "authority": "review_required_memory",
+        "cost_metadata": {
+          "estimated_cost_usd": 0.0
+        },
+        "lifecycle": "draft",
+        "operator_visibility": "reports_and_ui",
+        "owner": "operator",
+        "persistence_policy": "ephemeral_or_report_only",
+        "provenance": "rc5_deterministic_developmental_cognition",
+        "purpose": "developmental lesson",
+        "rc2_relationship": "evaluates_conversation_and_cognition_without_mutating_rc2",
+        "rc3_relationship": "uses_goals_plans_governance_as_evidence",
+        "rc4_relationship": "hands_off_upgrade_proposals_to_governed_action_runtime",
+        "rollback_or_revocation": "discard_artifact_or_operator_revoke",
+        "safety": {
+          "automatic_consultation_performed": false,
+          "canonical_write_performed": false,
+          "developmental_memory_auto_write": false,
+          "gpt_api_calls_performed": false,
+          "protected_repository_interaction": false,
+          "provider_calls_performed": false,
+          "purpose_mutation_performed": false,
+          "rc4_authorization_bypassed": false,
+          "training_performed": false,
+          "upgrade_self_approved": false
+        },
+        "serialization": "json",
+        "token_budget": {
+          "default_packet_tokens": 1000,
+          "max_packet_tokens": 2000
+        },
+        "validation": "deterministic"
+      },
+      "retention_decision": "superseded",
+      "review_status": "operator_review_required",
+      "scope": "fixture",
+      "statement": "Old threshold was too low.",
+      "superseded_by": "rc5-lesson-cf7022e6aaf63f03"
+    }
+  ],
+  "passed": true,
+  "report": "RC5_DEVELOPMENTAL_MEMORY_AUDIT",
+  "score": 1.0
+}
+```

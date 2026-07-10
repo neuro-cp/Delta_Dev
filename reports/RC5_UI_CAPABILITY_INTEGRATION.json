@@ -1,0 +1,46 @@
+{
+  "actions_enabled": {
+    "automatic_consultation": false,
+    "automatic_development_loop": false,
+    "developmental_memory_auto_write": false,
+    "gpt_api_call": false,
+    "protected_repository_interaction": false,
+    "provider_call": false,
+    "purpose_mutation": false,
+    "rc4_authorization_bypass": false,
+    "upgrade_self_approval": false
+  },
+  "created_at": "2026-07-10T21:04:47+00:00",
+  "freeze_status": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+  "panel_coverage": {
+    "all_panels_present": true,
+    "expected_panel_count": 10,
+    "missing_panels": [],
+    "panel_count": 10
+  },
+  "recommendation": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT",
+  "report": "RC5_UI_CAPABILITY_INTEGRATION",
+  "safety": {
+    "automatic_consultation": false,
+    "automatic_development_loop": false,
+    "developmental_memory_auto_write": false,
+    "gpt_api_call": false,
+    "protected_repository_interaction": false,
+    "provider_call": false,
+    "purpose_mutation": false,
+    "rc4_authorization_bypass": false,
+    "upgrade_self_approval": false
+  },
+  "validation": {
+    "checks": {
+      "all_panels_present": true,
+      "freeze_not_overstated": true,
+      "manual_transport_visible": true,
+      "no_action_controls": true,
+      "pilot_evidence_distinguished": true,
+      "rc4_handoff_required": true
+    },
+    "passed": true,
+    "recommendation": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT"
+  }
+}

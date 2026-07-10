@@ -1,0 +1,97 @@
+# RC5 FOUNDATION REVIEW
+
+Report: RC5_FOUNDATION_REVIEW
+
+Passed: True
+
+Recommendation: n/a
+
+Freeze status: n/a
+
+```json
+{
+  "object_count": 65,
+  "objects": [
+    "PurposeConstitution",
+    "PurposeVersion",
+    "PurposeCriterion",
+    "ProtectedInvariant",
+    "ProhibitedPurposeMutation",
+    "OperatorRelationshipContract",
+    "PurposeSuccessDimension",
+    "BehaviorObservation",
+    "BehaviorTraceReference",
+    "OutcomeEvidence",
+    "PerformanceObservation",
+    "PerformanceMetricDefinition",
+    "MetricObservation",
+    "MetricCoverageAssessment",
+    "PurposeAlignmentEvaluation",
+    "BehaviorQualityAssessment",
+    "CoherenceAssessment",
+    "EfficiencyAssessment",
+    "GovernanceAlignmentAssessment",
+    "CommunicationQualityAssessment",
+    "DeficitHypothesis",
+    "DeficitEvidence",
+    "DeficitCounterevidence",
+    "DeficitClassification",
+    "RootCauseCandidate",
+    "DiscriminatingTest",
+    "DeficitValidationResult",
+    "AcquisitionStrategy",
+    "AcquisitionDecision",
+    "ImprovementOpportunity",
+    "ImprovementPriority",
+    "ExpectedBenefitAssessment",
+    "UpgradeCostAssessment",
+    "DevelopmentConsultationPacket",
+    "ConsultationContextTier",
+    "ConsultationEvidenceReference",
+    "ConsultationBudget",
+    "ConsultationExportArtifact",
+    "ConsultationResponse",
+    "ConsultationProvenance",
+    "ExternalRecommendation",
+    "RecommendationValidation",
+    "UpgradeProposal",
+    "UpgradeAlternative",
+    "UpgradeRiskAssessment",
+    "UpgradeGovernanceReview",
+    "UpgradeImplementationHandoff",
+    "BaselineEvaluation",
+    "PostUpgradeEvaluation",
+    "ComparativeEvaluation",
+    "CausalConfidenceAssessment",
+    "RegressionAssessment",
+    "UpgradeDisposition",
+    "DevelopmentalLesson",
+    "LessonEvidence",
+    "LessonScope",
+    "LessonReview",
+    "LessonRetentionDecision",
+    "DevelopmentalMemoryRecord",
+    "DevelopmentCycle",
+    "DevelopmentCycleState",
+    "DevelopmentCycleBudget",
+    "DevelopmentCycleStopReason",
+    "RC5Episode",
+    "RC5FreezeManifest"
+  ],
+  "passed": true,
+  "report": "RC5_FOUNDATION_REVIEW",
+  "safety": {
+    "automatic_consultation_performed": false,
+    "canonical_write_performed": false,
+    "developmental_memory_auto_write": false,
+    "gpt_api_calls_performed": false,
+    "protected_repository_interaction": false,
+    "provider_calls_performed": false,
+    "purpose_mutation_performed": false,
+    "rc4_authorization_bypassed": false,
+    "training_performed": false,
+    "upgrade_self_approved": false
+  },
+  "score": 1.0
+}
+```

@@ -52,6 +52,13 @@ from orchestration.runtime.rc4_ui_capability_adapter import (  # noqa: E402
     render_rc4_panel,
     validate_rc4_ui_snapshot,
 )
+from orchestration.runtime.rc5_ui_capability_adapter import (  # noqa: E402
+    RC5_PANEL_ORDER,
+    build_rc5_ui_integration_report,
+    build_rc5_ui_snapshot,
+    render_rc5_panel,
+    validate_rc5_ui_snapshot,
+)
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -190,17 +197,20 @@ class DeltaApp:
         self.database_tab = ttk.Frame(self.notebook, padding=10)
         self.rc3_tab = ttk.Frame(self.notebook, padding=10)
         self.rc4_tab = ttk.Frame(self.notebook, padding=10)
+        self.rc5_tab = ttk.Frame(self.notebook, padding=10)
         self.advanced_tab = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.conversation_tab, text="Conversation")
         self.notebook.add(self.database_tab, text="Database")
         self.notebook.add(self.rc3_tab, text="RC3")
         self.notebook.add(self.rc4_tab, text="RC4")
+        self.notebook.add(self.rc5_tab, text="RC5")
         self.notebook.add(self.advanced_tab, text="Advanced / Operator Console")
 
         self._build_conversation_tab()
         self._build_database_tab()
         self._build_rc3_tab()
         self._build_rc4_tab()
+        self._build_rc5_tab()
         self._build_advanced_tab()
 
     def _build_conversation_tab(self) -> None:
@@ -391,6 +401,38 @@ class DeltaApp:
         self.rc4_snapshot: dict[str, object] = {}
         self._refresh_rc4_snapshot()
 
+    def _build_rc5_tab(self) -> None:
+        top = ttk.Frame(self.rc5_tab)
+        top.pack(fill=tk.X)
+        ttk.Label(top, text="RC5 Purpose-Aligned Developmental Cognition").pack(side=tk.LEFT)
+        ttk.Button(top, text="Refresh", command=self._refresh_rc5_snapshot).pack(side=tk.RIGHT)
+        ttk.Button(top, text="Generate UI Report", command=self._generate_rc5_ui_report).pack(side=tk.RIGHT, padx=(0, 8))
+
+        self.rc5_status = tk.StringVar(value="Read-only RC5 diagnostics. Manual consultation is packet-only; no API calls are available.")
+        ttk.Label(self.rc5_tab, textvariable=self.rc5_status).pack(anchor=tk.W, pady=(8, 0))
+
+        panes = ttk.PanedWindow(self.rc5_tab, orient=tk.HORIZONTAL)
+        panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        left = ttk.Frame(panes)
+        right = ttk.Frame(panes)
+        panes.add(left, weight=1)
+        panes.add(right, weight=3)
+
+        self.rc5_panels = ttk.Treeview(left, columns=("status",), show="headings", height=18)
+        self.rc5_panels.heading("status", text="Panel")
+        self.rc5_panels.column("status", width=300)
+        self.rc5_panels.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = ttk.Scrollbar(left, orient=tk.VERTICAL, command=self.rc5_panels.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.rc5_panels.configure(yscrollcommand=scrollbar.set)
+        self.rc5_panels.bind("<<TreeviewSelect>>", lambda _event: self._show_selected_rc5_panel())
+
+        self.rc5_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
+        self.rc5_detail.pack(fill=tk.BOTH, expand=True)
+        self.rc5_detail.configure(state=tk.DISABLED)
+        self.rc5_snapshot: dict[str, object] = {}
+        self._refresh_rc5_snapshot()
+
     def _build_advanced_tab(self) -> None:
         panes = ttk.PanedWindow(self.advanced_tab, orient=tk.HORIZONTAL)
         panes.pack(fill=tk.BOTH, expand=True)
@@ -525,6 +567,48 @@ class DeltaApp:
         report = build_rc4_ui_integration_report(write_reports=True)
         self._refresh_rc4_snapshot()
         self._write_rc4_detail(json.dumps(report, indent=2, sort_keys=True))
+
+    def _refresh_rc5_snapshot(self) -> None:
+        try:
+            self.rc5_snapshot = build_rc5_ui_snapshot()
+            validation = validate_rc5_ui_snapshot(self.rc5_snapshot)
+            for item in self.rc5_panels.get_children():
+                self.rc5_panels.delete(item)
+            panels = self.rc5_snapshot.get("panels", {})
+            for name in RC5_PANEL_ORDER:
+                panel = panels.get(name, {}) if isinstance(panels, dict) else {}
+                status = str(panel.get("status", "unknown"))
+                self.rc5_panels.insert("", tk.END, iid=name, values=(f"{name} [{status}]",))
+            self.rc5_status.set(
+                f"RC5 UI validation passed={validation.get('passed')}; recommendation={validation.get('recommendation')}. "
+                "Inspect/review only: no GPT/API call, provider call, purpose mutation, automatic development loop, "
+                "developmental memory write, self-approval, or RC4 bypass."
+            )
+            if RC5_PANEL_ORDER:
+                self.rc5_panels.selection_set(RC5_PANEL_ORDER[0])
+                self._show_selected_rc5_panel()
+        except Exception as exc:  # noqa: BLE001
+            self.rc5_status.set(f"RC5 snapshot failed: {type(exc).__name__}: {str(exc)[:180]}")
+            self._write_rc5_detail("")
+
+    def _show_selected_rc5_panel(self) -> None:
+        selected = self.rc5_panels.selection()
+        if not selected or not self.rc5_snapshot:
+            return
+        panel_name = str(selected[0])
+        self._write_rc5_detail(render_rc5_panel(panel_name, self.rc5_snapshot))
+
+    def _write_rc5_detail(self, text: str) -> None:
+        self.rc5_detail.configure(state=tk.NORMAL)
+        self.rc5_detail.delete("1.0", tk.END)
+        if text:
+            self.rc5_detail.insert(tk.END, text)
+        self.rc5_detail.configure(state=tk.DISABLED)
+
+    def _generate_rc5_ui_report(self) -> None:
+        report = build_rc5_ui_integration_report(write_reports=True)
+        self._refresh_rc5_snapshot()
+        self._write_rc5_detail(json.dumps(report, indent=2, sort_keys=True))
 
     def _refresh_state_cards(self) -> None:
         state = build_cognitive_state()

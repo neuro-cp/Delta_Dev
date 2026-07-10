@@ -1,0 +1,54 @@
+{
+  "decision": "DESIGN_NEXT_DO_NOT_ACTIVATE",
+  "options": [
+    {
+      "name": "Governed GPT API Gateway",
+      "rank": 1,
+      "status": "design_candidate",
+      "why": "Manual packets are already transport-neutral; an operator-authorized gateway could reduce friction without redesigning RC5.",
+      "activation_gate": "real operator-pilot evidence that manual consultation packets are useful, bounded, and worth automating",
+      "must_preserve": [
+        "operator authorization",
+        "budget controls",
+        "compact packets",
+        "advisory-only external responses",
+        "RC4 handoff for implementation",
+        "audit logs"
+      ]
+    },
+    {
+      "name": "Long-Horizon Developmental Project Management",
+      "rank": 2,
+      "status": "future_candidate",
+      "why": "Useful after RC5 proves it can identify deficits and manage improvements across sessions.",
+      "activation_gate": "stable RC5 developmental cycles under real operator use",
+      "must_preserve": [
+        "no unattended execution",
+        "explicit project goals",
+        "reviewable evidence",
+        "operator-controlled persistence"
+      ]
+    },
+    {
+      "name": "Multi-Specialist Governed Cognition",
+      "rank": 3,
+      "status": "future_candidate",
+      "why": "Could improve advice quality by routing consultation packets to specialist roles, but increases governance complexity.",
+      "activation_gate": "gateway and project-management controls proven first",
+      "must_preserve": [
+        "specialist advice remains advisory",
+        "source separation",
+        "conflict handling",
+        "operator review"
+      ]
+    }
+  ],
+  "recommendation": "Complete RC5 real operator pilot first. If manual consultation proves useful, design a governed GPT API gateway as an infrastructure transport change, not as autonomous development.",
+  "safety": {
+    "api_activation": false,
+    "automatic_provider_calls": false,
+    "automatic_development_loop": false,
+    "self_approval": false,
+    "rc4_bypass": false
+  }
+}

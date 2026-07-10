@@ -1,0 +1,224 @@
+{
+  "checks": {
+    "budgets_respected": true,
+    "manual_transport": true,
+    "packets_created": true,
+    "prohibitions_retained": true,
+    "requested_output_clear": true
+  },
+  "packets": [
+    {
+      "architecture_summary": "RC2 conversation, RC3 governance, RC4 action runtime; RC5 consultation is manual transport only.",
+      "constraints": [
+        "manual_transport_only",
+        "advisory_only",
+        "operator_transfer_required",
+        "rc4_handoff_required"
+      ],
+      "counterevidence": [
+        "rc5-evidence-7a886ec79249ff49"
+      ],
+      "estimated_tokens": 74,
+      "evidence": [
+        "rc5-evidence-7a886ec79249ff49"
+      ],
+      "meta": {
+        "authority": "manual_transfer_only",
+        "cost_metadata": {
+          "estimated_cost_usd": 0.0
+        },
+        "lifecycle": "draft",
+        "operator_visibility": "reports_and_ui",
+        "owner": "operator",
+        "persistence_policy": "ephemeral_or_report_only",
+        "provenance": "rc5_deterministic_developmental_cognition",
+        "purpose": "manual consultation packet",
+        "rc2_relationship": "evaluates_conversation_and_cognition_without_mutating_rc2",
+        "rc3_relationship": "uses_goals_plans_governance_as_evidence",
+        "rc4_relationship": "hands_off_upgrade_proposals_to_governed_action_runtime",
+        "rollback_or_revocation": "discard_artifact_or_operator_revoke",
+        "safety": {
+          "automatic_consultation_performed": false,
+          "canonical_write_performed": false,
+          "developmental_memory_auto_write": false,
+          "gpt_api_calls_performed": false,
+          "protected_repository_interaction": false,
+          "provider_calls_performed": false,
+          "purpose_mutation_performed": false,
+          "rc4_authorization_bypassed": false,
+          "training_performed": false,
+          "upgrade_self_approved": false
+        },
+        "serialization": "json",
+        "token_budget": {
+          "default_packet_tokens": 1000,
+          "max_packet_tokens": 2000
+        },
+        "validation": "deterministic"
+      },
+      "observed_deficit": "retrieval selected unrelated concept",
+      "omitted_context": [],
+      "packet_id": "rc5-consultation-packet-00c56dec2089e896",
+      "prohibited_changes": [
+        "automatic_api_call",
+        "self_approval",
+        "purpose_mutation",
+        "hidden_persistence"
+      ],
+      "purpose_criterion": "target metric improves without protected regression",
+      "requested_output": [
+        "root_cause_assessment",
+        "candidate_remedies",
+        "recommended_implementation",
+        "risks",
+        "tests",
+        "rollback_conditions"
+      ],
+      "token_budget": 500,
+      "transport": "manual_chatgpt_relay"
+    },
+    {
+      "architecture_summary": "RC2 conversation, RC3 governance, RC4 action runtime; RC5 consultation is manual transport only.",
+      "constraints": [
+        "manual_transport_only",
+        "advisory_only",
+        "operator_transfer_required",
+        "rc4_handoff_required"
+      ],
+      "counterevidence": [
+        "rc5-evidence-7a886ec79249ff49"
+      ],
+      "estimated_tokens": 74,
+      "evidence": [
+        "rc5-evidence-7a886ec79249ff49"
+      ],
+      "meta": {
+        "authority": "manual_transfer_only",
+        "cost_metadata": {
+          "estimated_cost_usd": 0.0
+        },
+        "lifecycle": "draft",
+        "operator_visibility": "reports_and_ui",
+        "owner": "operator",
+        "persistence_policy": "ephemeral_or_report_only",
+        "provenance": "rc5_deterministic_developmental_cognition",
+        "purpose": "manual consultation packet",
+        "rc2_relationship": "evaluates_conversation_and_cognition_without_mutating_rc2",
+        "rc3_relationship": "uses_goals_plans_governance_as_evidence",
+        "rc4_relationship": "hands_off_upgrade_proposals_to_governed_action_runtime",
+        "rollback_or_revocation": "discard_artifact_or_operator_revoke",
+        "safety": {
+          "automatic_consultation_performed": false,
+          "canonical_write_performed": false,
+          "developmental_memory_auto_write": false,
+          "gpt_api_calls_performed": false,
+          "protected_repository_interaction": false,
+          "provider_calls_performed": false,
+          "purpose_mutation_performed": false,
+          "rc4_authorization_bypassed": false,
+          "training_performed": false,
+          "upgrade_self_approved": false
+        },
+        "serialization": "json",
+        "token_budget": {
+          "default_packet_tokens": 1000,
+          "max_packet_tokens": 2000
+        },
+        "validation": "deterministic"
+      },
+      "observed_deficit": "retrieval selected unrelated concept",
+      "omitted_context": [],
+      "packet_id": "rc5-consultation-packet-6ed29d59fa7cf3ba",
+      "prohibited_changes": [
+        "automatic_api_call",
+        "self_approval",
+        "purpose_mutation",
+        "hidden_persistence"
+      ],
+      "purpose_criterion": "target metric improves without protected regression",
+      "requested_output": [
+        "root_cause_assessment",
+        "candidate_remedies",
+        "recommended_implementation",
+        "risks",
+        "tests",
+        "rollback_conditions"
+      ],
+      "token_budget": 1000,
+      "transport": "manual_chatgpt_relay"
+    },
+    {
+      "architecture_summary": "RC2 conversation, RC3 governance, RC4 action runtime; RC5 consultation is manual transport only.",
+      "constraints": [
+        "manual_transport_only",
+        "advisory_only",
+        "operator_transfer_required",
+        "rc4_handoff_required"
+      ],
+      "counterevidence": [
+        "rc5-evidence-7a886ec79249ff49"
+      ],
+      "estimated_tokens": 74,
+      "evidence": [
+        "rc5-evidence-7a886ec79249ff49"
+      ],
+      "meta": {
+        "authority": "manual_transfer_only",
+        "cost_metadata": {
+          "estimated_cost_usd": 0.0
+        },
+        "lifecycle": "draft",
+        "operator_visibility": "reports_and_ui",
+        "owner": "operator",
+        "persistence_policy": "ephemeral_or_report_only",
+        "provenance": "rc5_deterministic_developmental_cognition",
+        "purpose": "manual consultation packet",
+        "rc2_relationship": "evaluates_conversation_and_cognition_without_mutating_rc2",
+        "rc3_relationship": "uses_goals_plans_governance_as_evidence",
+        "rc4_relationship": "hands_off_upgrade_proposals_to_governed_action_runtime",
+        "rollback_or_revocation": "discard_artifact_or_operator_revoke",
+        "safety": {
+          "automatic_consultation_performed": false,
+          "canonical_write_performed": false,
+          "developmental_memory_auto_write": false,
+          "gpt_api_calls_performed": false,
+          "protected_repository_interaction": false,
+          "provider_calls_performed": false,
+          "purpose_mutation_performed": false,
+          "rc4_authorization_bypassed": false,
+          "training_performed": false,
+          "upgrade_self_approved": false
+        },
+        "serialization": "json",
+        "token_budget": {
+          "default_packet_tokens": 1000,
+          "max_packet_tokens": 2000
+        },
+        "validation": "deterministic"
+      },
+      "observed_deficit": "retrieval selected unrelated concept",
+      "omitted_context": [],
+      "packet_id": "rc5-consultation-packet-69c11510b8146cbe",
+      "prohibited_changes": [
+        "automatic_api_call",
+        "self_approval",
+        "purpose_mutation",
+        "hidden_persistence"
+      ],
+      "purpose_criterion": "target metric improves without protected regression",
+      "requested_output": [
+        "root_cause_assessment",
+        "candidate_remedies",
+        "recommended_implementation",
+        "risks",
+        "tests",
+        "rollback_conditions"
+      ],
+      "token_budget": 2000,
+      "transport": "manual_chatgpt_relay"
+    }
+  ],
+  "passed": true,
+  "report": "RC5_CONSULTATION_COMPRESSION_BENCHMARK",
+  "score": 1.0
+}
