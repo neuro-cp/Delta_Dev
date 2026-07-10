@@ -43,9 +43,12 @@ STAGE_RECOMMENDATIONS = {
     "G": "PROCEED_RC3_H_PROJECT_COGNITION",
     "H": "PROCEED_RC3_I_PERSISTENT_PROJECT_STATE",
     "I": "PROCEED_RC3_J_OPERATOR_PILOT",
-    "J": "PROCEED_RC3_K_FREEZE",
-    "K": "RC3_FROZEN_READY_FOR_POST_FREEZE_CALIBRATION_REVIEW",
+    "J": "PROCEED_RC3_K_FREEZE_READINESS_REVIEW_WITH_REAL_OPERATOR_EVIDENCE_PENDING",
+    "K": "READY_FOR_COMPREHENSIVE_TESTING_AND_CALIBRATION",
 }
+
+FINAL_RC3_RECOMMENDATION = "READY_FOR_COMPREHENSIVE_TESTING_AND_CALIBRATION"
+FREEZE_STATUS = "RC3_FREEZE_PENDING_REAL_OPERATOR_PILOT_EVIDENCE"
 
 
 @dataclass(frozen=True)
@@ -62,6 +65,19 @@ class GovernanceCase:
 
 
 @dataclass(frozen=True)
+class ReviewRequest:
+    request_id: str
+    candidate_id: str
+    candidate_type: str
+    requested_review: str
+    intake_status: str
+    rejection_reasons: tuple[str, ...]
+    casual_or_hypothetical: bool
+    provenance_complete: bool
+    self_authorizing: bool
+
+
+@dataclass(frozen=True)
 class EvidenceBundle:
     evidence_id: str
     relevance: str
@@ -71,6 +87,38 @@ class EvidenceBundle:
     contradictions: tuple[str, ...]
     missing_validation: tuple[str, ...]
     findings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class RiskEscalation:
+    escalation_id: str
+    risk_classes: tuple[str, ...]
+    highest_level: str
+    stronger_review_required: tuple[str, ...]
+    low_confidence_masked_by_aggregate: bool
+    findings: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ApprovalStep:
+    step_id: str
+    order: int
+    reviewer: str
+    required_evidence: tuple[str, ...]
+    terminal_states: tuple[str, ...]
+    current_state: str
+    automatically_completed: bool = False
+
+
+@dataclass(frozen=True)
+class RollbackRequirement:
+    rollback_id: str
+    feasibility: str
+    required_snapshots: tuple[str, ...]
+    restoration_evidence: tuple[str, ...]
+    irreversible_effects: tuple[str, ...]
+    operator_responsibilities: tuple[str, ...]
+    absent_or_dishonest: bool = False
 
 
 @dataclass(frozen=True)
@@ -150,6 +198,41 @@ class PluginValidation:
 
 
 @dataclass(frozen=True)
+class PluginInterfaceContract:
+    interface_id: str
+    request_envelope: tuple[str, ...]
+    response_envelope: tuple[str, ...]
+    error_contracts: tuple[str, ...]
+    timeout_expectations: str
+    deterministic_expectations: tuple[str, ...]
+    audit_events: tuple[str, ...]
+    failure_isolation: tuple[str, ...]
+    live_execution_connected: bool = False
+
+
+@dataclass(frozen=True)
+class PluginPermissionContract:
+    contract_id: str
+    manifest_id: str
+    data_scopes: tuple[str, ...]
+    filesystem_scopes: tuple[str, ...]
+    network_scopes: tuple[str, ...]
+    provider_scopes: tuple[str, ...]
+    repository_scopes: tuple[str, ...]
+    operator_approvals: tuple[str, ...]
+    default_policy: str = "deny"
+
+
+@dataclass(frozen=True)
+class PluginComparison:
+    comparison_id: str
+    ranked_manifest_ids: tuple[str, ...]
+    criteria: tuple[str, ...]
+    recommendation: str
+    automatically_selected: bool = False
+
+
+@dataclass(frozen=True)
 class IntegrationPackage:
     package_id: str
     governance_reference: str
@@ -196,6 +279,33 @@ class ProjectFrame:
 
 
 @dataclass(frozen=True)
+class ProjectObjective:
+    objective_id: str
+    summary: str
+    priority: str
+    status: str
+    evidence: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class Milestone:
+    milestone_id: str
+    summary: str
+    deliverables: tuple[str, ...]
+    dependencies: tuple[str, ...]
+    confidence: float
+
+
+@dataclass(frozen=True)
+class ContextSegment:
+    segment_id: str
+    status: str
+    content_summary: str
+    provenance: str
+    uncertainty: str
+
+
+@dataclass(frozen=True)
 class ProjectHealth:
     health_id: str
     progress: str
@@ -223,6 +333,18 @@ class ProjectPersistenceRecord:
 
 
 @dataclass(frozen=True)
+class PersistenceContract:
+    contract_id: str
+    allowed_objects: tuple[str, ...]
+    excluded_fields: tuple[str, ...]
+    retention_expectations: str
+    owner: str
+    schema_version: str
+    write_authority: str
+    default_policy: str = "deny_unlisted_objects"
+
+
+@dataclass(frozen=True)
 class PilotScenarioResult:
     scenario_id: str
     workflow: str
@@ -231,6 +353,21 @@ class PilotScenarioResult:
     failure_class: str | None
     safety_violation: bool
     operator_burden: str
+    evidence_type: str = "simulated_fixture"
+
+
+@dataclass(frozen=True)
+class PilotProtocol:
+    protocol_id: str
+    operator_role: str
+    environment: str
+    entry_criteria: tuple[str, ...]
+    permitted_workflows: tuple[str, ...]
+    prohibited_workflows: tuple[str, ...]
+    session_boundaries: tuple[str, ...]
+    reset_procedure: tuple[str, ...]
+    escalation_path: tuple[str, ...]
+    real_operator_evidence_collected: bool = False
 
 
 @dataclass(frozen=True)
@@ -245,6 +382,9 @@ class FreezeManifest:
     deferred_features: tuple[str, ...]
     authority_boundaries: tuple[str, ...]
     recommendation: str
+    freeze_status: str
+    real_operator_evidence_required: bool
+    comprehensive_calibration_required: bool
     created_at: str
 
 
@@ -404,6 +544,86 @@ def build_governance_case(candidate: EngineeringProposal | SandboxProposal | dic
     return case, evidence, permission, decision, audit
 
 
+def build_review_request(candidate: EngineeringProposal | SandboxProposal | dict[str, Any]) -> ReviewRequest:
+    candidate_id = getattr(candidate, "proposal_id", None) or getattr(candidate, "sandbox_proposal_id", None) or candidate.get("id", "unknown-candidate")  # type: ignore[union-attr]
+    candidate_type = candidate.__class__.__name__ if not isinstance(candidate, dict) else candidate.get("type", "dict_candidate")
+    data = asdict(candidate) if not isinstance(candidate, dict) else candidate
+    rejection: list[str] = []
+    if not candidate_id or candidate_id == "unknown-candidate":
+        rejection.append("missing_candidate_id")
+    if not data.get("provenance") and candidate_type == "EngineeringProposal":
+        rejection.append("missing_provenance")
+    if data.get("execution_authorized") or data.get("sandbox_created") or data.get("active_or_executing"):
+        rejection.append("candidate_attempts_self_authorization")
+    return ReviewRequest(
+        request_id=_stable_id("review-request", candidate_type, candidate_id),
+        candidate_id=candidate_id,
+        candidate_type=candidate_type,
+        requested_review="governance_eligibility",
+        intake_status="rejected" if rejection else "reviewable",
+        rejection_reasons=tuple(rejection),
+        casual_or_hypothetical=False,
+        provenance_complete="missing_provenance" not in rejection,
+        self_authorizing="candidate_attempts_self_authorization" in rejection,
+    )
+
+
+def build_risk_escalation(candidate_type: str, evidence: EvidenceBundle) -> RiskEscalation:
+    risks = ["architectural", "governance", "rollback", "operator_burden"]
+    if "Sandbox" in candidate_type:
+        risks.extend(["sandbox", "security", "persistence"])
+    if "Plugin" in candidate_type or "Engineering" in candidate_type:
+        risks.extend(["plugin", "repository"])
+    if evidence.contradictions:
+        risks.append("unknown")
+    high = any(item in risks for item in ("sandbox", "plugin", "security", "repository"))
+    return RiskEscalation(
+        escalation_id=_stable_id("risk-escalation", candidate_type, ",".join(risks)),
+        risk_classes=tuple(dict.fromkeys(risks)),
+        highest_level="high" if high else "moderate",
+        stronger_review_required=("operator_review", "security_review", "rollback_review") if high else ("operator_review", "rollback_review"),
+        low_confidence_masked_by_aggregate=False,
+        findings=("risk classes are explicit", "low confidence cannot be converted into approval"),
+    )
+
+
+def build_approval_chain(evidence: EvidenceBundle, escalation: RiskEscalation) -> tuple[ApprovalStep, ...]:
+    steps = [
+        ApprovalStep(
+            step_id=_stable_id("approval-step", evidence.evidence_id, "operator"),
+            order=1,
+            reviewer="operator",
+            required_evidence=evidence.missing_validation or ("candidate_packet",),
+            terminal_states=("approved", "rejected", "needs_revision", "deferred", "blocked", "expired"),
+            current_state="awaiting_operator_review",
+        )
+    ]
+    if "security_review" in escalation.stronger_review_required:
+        steps.append(
+            ApprovalStep(
+                step_id=_stable_id("approval-step", evidence.evidence_id, "security"),
+                order=2,
+                reviewer="security_review",
+                required_evidence=("risk_escalation", "permission_requirement", "rollback_requirement"),
+                terminal_states=("approved", "rejected", "needs_revision", "blocked"),
+                current_state="not_started",
+            )
+        )
+    return tuple(steps)
+
+
+def build_rollback_requirement(candidate_id: str) -> RollbackRequirement:
+    return RollbackRequirement(
+        rollback_id=_stable_id("rollback-requirement", candidate_id),
+        feasibility="high_for_review_only_candidate",
+        required_snapshots=("pre_change_repository_reference", "pre_change_runtime_report"),
+        restoration_evidence=("validation rerun", "operator confirmation"),
+        irreversible_effects=(),
+        operator_responsibilities=("review rollback plan before future implementation", "reject proposals with missing rollback"),
+        absent_or_dishonest=False,
+    )
+
+
 def build_plugin_manifest(identifier: str = "rc3.future.operator.review.plugin") -> PluginManifest:
     return PluginManifest(
         manifest_id=_stable_id("plugin-manifest", identifier, "0.1.0"),
@@ -421,6 +641,42 @@ def build_plugin_manifest(identifier: str = "rc3.future.operator.review.plugin")
         provenance={"source": "rc3_f_plugin_architecture"},
         rollback_expectations=("manifest can be rejected or superseded",),
         lifecycle_state="proposed",
+    )
+
+
+def build_plugin_interface_contract(manifest: PluginManifest) -> PluginInterfaceContract:
+    return PluginInterfaceContract(
+        interface_id=_stable_id("plugin-interface", manifest.manifest_id),
+        request_envelope=("request_id", "capability_id", "operator_context_reference", "input_payload"),
+        response_envelope=("response_id", "status", "output_payload", "audit_events", "safety"),
+        error_contracts=("invalid_request", "permission_denied", "timeout", "capability_unavailable"),
+        timeout_expectations="declared_by_manifest_and_enforced_by_future_runtime",
+        deterministic_expectations=("same input and fixture state yields same metadata",),
+        audit_events=("request_received", "permission_checked", "response_emitted", "failure_isolated"),
+        failure_isolation=("no caller state mutation", "error returned as data", "operator-visible audit"),
+    )
+
+
+def build_plugin_permission_contract(manifest: PluginManifest) -> PluginPermissionContract:
+    return PluginPermissionContract(
+        contract_id=_stable_id("plugin-permission-contract", manifest.manifest_id),
+        manifest_id=manifest.manifest_id,
+        data_scopes=manifest.inputs,
+        filesystem_scopes=("none",),
+        network_scopes=("none",),
+        provider_scopes=("none",),
+        repository_scopes=("none",),
+        operator_approvals=("approval_before_sandbox_design", "approval_before_activation_in_future_stage"),
+    )
+
+
+def compare_plugin_manifests(manifests: tuple[PluginManifest, ...]) -> PluginComparison:
+    ranked = tuple(sorted((item.manifest_id for item in manifests)))
+    return PluginComparison(
+        comparison_id=_stable_id("plugin-comparison", *ranked),
+        ranked_manifest_ids=ranked,
+        criteria=("capability_coverage", "permission_minimization", "dependency_coherence", "operator_burden"),
+        recommendation="ranked_for_review_only",
     )
 
 
@@ -483,6 +739,48 @@ def build_integration_package(governance_decision: GovernanceDecision) -> tuple[
     return package, validation
 
 
+def build_project_details(frame: ProjectFrame) -> dict[str, Any]:
+    objectives = tuple(
+        ProjectObjective(
+            objective_id=_stable_id("project-objective", frame.project_id, item),
+            summary=item,
+            priority="operator_defined",
+            status="active" if idx == 0 else "background",
+            evidence=("project_frame", "operator_prompt_or_fixture"),
+        )
+        for idx, item in enumerate(frame.objectives)
+    )
+    milestones = tuple(
+        Milestone(
+            milestone_id=_stable_id("milestone", frame.project_id, item),
+            summary=item,
+            deliverables=frame.deliverables,
+            dependencies=frame.dependencies,
+            confidence=0.82,
+        )
+        for item in frame.milestones
+    )
+    context = tuple(
+        ContextSegment(
+            segment_id=_stable_id("context", frame.project_id, item),
+            status="active" if item == "active_objective" else "background",
+            content_summary=item,
+            provenance="rc3_h_project_cognition_fixture",
+            uncertainty="low",
+        )
+        for item in frame.context_segments
+    )
+    return {
+        "objectives": tuple(asdict(item) for item in objectives),
+        "milestones": tuple(asdict(item) for item in milestones),
+        "context_segments": tuple(asdict(item) for item in context),
+        "scope_drift_detected": False,
+        "duplicate_milestones_detected": False,
+        "orphan_work_detected": False,
+        "autonomous_reprioritization_performed": False,
+    }
+
+
 def build_project_frame(text: str = "DELTA RC3 governed cognitive runtime") -> tuple[ProjectFrame, ProjectHealth]:
     project_id = _stable_id("project", text)
     frame = ProjectFrame(
@@ -514,6 +812,33 @@ def build_project_frame(text: str = "DELTA RC3 governed cognitive runtime") -> t
     return frame, health
 
 
+def build_persistence_contract() -> PersistenceContract:
+    return PersistenceContract(
+        contract_id=_stable_id("persistence-contract", ProjectStateStore.schema_version),
+        allowed_objects=("ProjectFrame", "ProjectPersistenceRecord"),
+        excluded_fields=("credentials", "private_keys", "raw_unbounded_transcripts", "environment_secrets"),
+        retention_expectations="operator_visible_explicit_project_state_only",
+        owner="operator",
+        schema_version=ProjectStateStore.schema_version,
+        write_authority="explicit_method_invocation_with_actor_reason_and_source_episode",
+    )
+
+
+def build_pilot_protocol() -> PilotProtocol:
+    return PilotProtocol(
+        protocol_id=_stable_id("pilot-protocol", "rc3-j"),
+        operator_role="human_operator_or_fixture_operator",
+        environment="local_controlled_runtime",
+        entry_criteria=("RC3-A through RC3-I reports present", "safety metadata complete", "no DELTA-75 interaction"),
+        permitted_workflows=("goal interpretation", "plan revision", "proposal review", "sandbox design review", "project-state fixture recovery"),
+        prohibited_workflows=("unattended execution", "plugin activation", "provider calls", "production mutation", "automatic commits"),
+        session_boundaries=("single controlled session", "explicit reset between scenarios"),
+        reset_procedure=("clear ephemeral fixture state", "verify no runtime authority granted"),
+        escalation_path=("operator review", "block on safety violation", "record unresolved defect"),
+        real_operator_evidence_collected=False,
+    )
+
+
 def run_operator_pilot() -> tuple[PilotScenarioResult, ...]:
     return (
         PilotScenarioResult("short_goal", "goal_to_plan", True, ("goal interpreted", "plan remained read-only"), None, False, "low"),
@@ -543,6 +868,9 @@ def build_freeze_manifest() -> FreezeManifest:
         deferred_features=("plugin runtime", "sandbox runtime", "controlled integration execution", "autonomous project work", "RC4"),
         authority_boundaries=("no self-authorization", "no hidden persistence", "no DELTA-75", "no provider calls", "no training"),
         recommendation=STAGE_RECOMMENDATIONS["K"],
+        freeze_status=FREEZE_STATUS,
+        real_operator_evidence_required=True,
+        comprehensive_calibration_required=True,
         created_at=datetime.now(UTC).isoformat(timespec="seconds"),
     )
 
@@ -552,22 +880,38 @@ def run_stage(stage: str, *, write_reports: bool = True, persistence_root: Path 
     if stage == "E":
         engineering = build_rc3_engineering_episode("Propose governed review of a future plugin capability.")
         proposal = EngineeringProposal(**engineering.developer_overlay["engineering_proposal"])
+        review = build_review_request(proposal)
         case, evidence, permission, decision, audit = build_governance_case(proposal)
+        escalation = build_risk_escalation(case.candidate_type, evidence)
+        approvals = build_approval_chain(evidence, escalation)
+        rollback = build_rollback_requirement(case.candidate_id)
         result = {
+            "review_request": asdict(review),
             "governance_case": asdict(case),
             "evidence_bundle": asdict(evidence),
             "permission_requirement": asdict(permission),
+            "risk_escalation": asdict(escalation),
+            "approval_chain": tuple(asdict(item) for item in approvals),
+            "rollback_requirement": asdict(rollback),
             "governance_decision": asdict(decision),
             "audit_record": asdict(audit),
-            "scores": _perfect_scores("eligibility", "evidence_review", "least_privilege", "approval_chain", "rollback_governance", "decision_provenance"),
+            "limitations": ("approval is modeled only", "no review decision grants execution authority"),
+            "scores": _readiness_scores("eligibility", "evidence_review", "least_privilege", "approval_chain", "rollback_governance", "decision_provenance"),
         }
     elif stage == "F":
         manifest = build_plugin_manifest()
+        interface = build_plugin_interface_contract(manifest)
+        permission = build_plugin_permission_contract(manifest)
+        comparison = compare_plugin_manifests((manifest,))
         validation = validate_plugin_manifest(manifest)
         result = {
             "manifest": asdict(manifest),
+            "interface_contract": asdict(interface),
+            "permission_contract": asdict(permission),
+            "comparison": asdict(comparison),
             "validation": asdict(validation),
-            "scores": _perfect_scores("manifest_completeness", "permission_minimization", "lifecycle_correctness", "dependency_validation", "governance_linkage"),
+            "limitations": ("plugin architecture only", "no plugin creation, import, loading, execution, activation, or filesystem discovery"),
+            "scores": _readiness_scores("manifest_completeness", "permission_minimization", "lifecycle_correctness", "dependency_validation", "governance_linkage"),
         }
     elif stage == "G":
         decision = GovernanceDecision(
@@ -583,37 +927,78 @@ def run_stage(stage: str, *, write_reports: bool = True, persistence_root: Path 
         result = {
             "integration_package": asdict(package),
             "validation": asdict(validation),
-            "scores": _perfect_scores("candidate_intake", "change_set_model", "impact_analysis", "rollback_plan", "operator_checklist"),
+            "merge_release_plan": {
+                "branch_strategy": "operator_selected_future_branch",
+                "review_requirements": ("governance_reference", "operator_review", "test_evidence"),
+                "commit_boundaries": ("one reviewed change set per future integration",),
+                "deployment_eligibility": "not_eligible_in_rc3_g",
+                "git_mutation_performed": False,
+            },
+            "migration_plan": {
+                "preflight_checks": ("schema_version_check", "backup_reference_check"),
+                "dry_run_required": True,
+                "migration_executed": False,
+                "reverse_migration_defined": True,
+            },
+            "limitations": ("integration package only", "no patch application, merge, commit, push, migration, activation, or deployment"),
+            "scores": _readiness_scores("candidate_intake", "change_set_model", "impact_analysis", "rollback_plan", "operator_checklist"),
         }
     elif stage == "H":
         frame, health = build_project_frame()
+        details = build_project_details(frame)
         result = {
             "project_frame": asdict(frame),
+            "project_details": details,
             "project_health": asdict(health),
-            "scores": _perfect_scores("project_recognition", "hierarchy", "dependency_model", "context_selection", "project_health"),
+            "project_introspection": {
+                "current_objective": frame.objectives[0],
+                "why_active": "first operator-defined objective in fixture",
+                "missing_evidence": ("real multi-session operator trace",),
+                "operator_attention": ("confirm project scope", "confirm milestone evidence"),
+            },
+            "limitations": ("project cognition is ephemeral", "no cross-session restoration or scheduler"),
+            "scores": _readiness_scores("project_recognition", "hierarchy", "dependency_model", "context_selection", "project_health"),
         }
     elif stage == "I":
         frame, _health = build_project_frame()
         frame = replace(frame, persistence_status="explicit_project_state")
         root = persistence_root or (ROOT / "tmp_rc3_project_state_validation")
         store = ProjectStateStore(root)
+        contract = build_persistence_contract()
         preview = store.preview_write(frame, actor="operator_fixture", reason="rc3_i_round_trip_test", source_episode="rc3_i")
         record = store.write(frame, actor="operator_fixture", reason="rc3_i_round_trip_test", source_episode="rc3_i")
         exported = store.export(frame.project_id)
         archived = store.archive(frame.project_id, actor="operator_fixture", reason="rc3_i_archive_test")
         result = {
+            "persistence_contract": asdict(contract),
             "preview": preview,
             "record": asdict(record),
             "export": exported,
             "archive": asdict(archived),
-            "scores": _perfect_scores("authorized_writes", "versioning", "provenance", "export_import", "archive_behavior", "secret_exclusion"),
+            "recovery_model": {
+                "snapshot_policy": "caller_managed_fixture_snapshot",
+                "partial_write_handling": "write_single_json_record_then_audit_event",
+                "schema_migration_policy": "explicit_versioned_future_migration_only",
+                "corruption_recovery_claimed": False,
+            },
+            "limitations": ("controlled local fixture write only", "not attached to conversation", "no hidden memory or scheduler"),
+            "scores": _readiness_scores("authorized_writes", "versioning", "provenance", "export_import", "archive_behavior", "secret_exclusion"),
         }
     elif stage == "J":
+        protocol = build_pilot_protocol()
         scenarios = run_operator_pilot()
         result = {
+            "pilot_protocol": asdict(protocol),
             "pilot_scenarios": tuple(asdict(item) for item in scenarios),
             "failure_taxonomy": ("interpretation_error", "permission_confusion", "persistence_failure", "false_completion"),
-            "scores": _perfect_scores("scenario_coverage", "operator_controls", "recovery_drills", "pilot_metrics", "safety"),
+            "operator_findings": {
+                "real_operator_sessions_completed": 0,
+                "fixture_scenarios_completed": len(scenarios),
+                "operator_workload_assessed_from_real_use": False,
+                "real_operator_evidence_required_before_freeze": True,
+            },
+            "limitations": ("pilot evidence is simulated fixture evidence", "no claim of real operator pilot completion"),
+            "scores": _readiness_scores("scenario_coverage", "operator_controls", "recovery_drills", "pilot_metrics", "safety", real_evidence=False),
         }
     elif stage == "K":
         manifest = build_freeze_manifest()
@@ -626,7 +1011,15 @@ def run_stage(stage: str, *, write_reports: bool = True, persistence_root: Path 
                 "persistence": "project_state_only_explicit_path",
                 "safety": "no_runtime_authority_expansion_detected",
             },
-            "scores": _perfect_scores("architecture_audit", "state_schema_audit", "governance_audit", "persistence_audit", "safety_audit", "freeze_manifest"),
+            "operator_freeze_review": {
+                "real_operator_review_completed": False,
+                "unresolved_risks": ("real operator pilot evidence missing", "full post-RC3 calibration campaign pending"),
+                "freeze_declaration_performed": False,
+            },
+            "final_recommendation": FINAL_RC3_RECOMMENDATION,
+            "freeze_status": FREEZE_STATUS,
+            "limitations": ("freeze readiness synthesis only", "RC3 is not formally frozen without real operator review"),
+            "scores": _readiness_scores("architecture_audit", "state_schema_audit", "governance_audit", "persistence_audit", "safety_audit", "freeze_manifest", real_evidence=False),
         }
     else:
         raise ValueError(f"unknown RC3 stage: {stage}")
@@ -644,6 +1037,10 @@ def run_all_stages(*, write_reports: bool = True, persistence_root: Path | None 
         "stages": tuple(item["stage"] for item in reports),
         "overall": round(sum(item["overall"] for item in reports) / len(reports), 4),
         "recommendations": {item["stage"]: item["recommendation"] for item in reports},
+        "final_recommendation": FINAL_RC3_RECOMMENDATION,
+        "freeze_status": FREEZE_STATUS,
+        "real_operator_evidence_collected": False,
+        "fixture_evidence_only": True,
         "safety_metadata_completeness": 1.0,
         "rc2_compatibility": 1.0,
         "delta_75_interaction_performed": False,
@@ -669,6 +1066,7 @@ def _stage_report(stage: str, result: dict[str, Any]) -> dict[str, Any]:
         "safety": dict(SAFETY_DEFAULTS),
         "delta_75_interaction_performed": False,
         "recommendation": STAGE_RECOMMENDATIONS[stage],
+        "limitations": result.get("limitations", ()),
     }
 
 
@@ -686,6 +1084,9 @@ def _write_stage_report(stage: str, report: dict[str, Any]) -> None:
         "",
     ]
     lines.extend(f"- {key}: {value}" for key, value in report["scores"].items())
+    if report.get("limitations"):
+        lines.extend(["", "## Limitations", ""])
+        lines.extend(f"- {item}" for item in report["limitations"])
     lines.extend(["", "Safety: no execution authority, provider calls, hidden persistence, plugin activation, sandbox runtime, training, deployment, or DELTA-75 interaction."])
     (REPORT_DIR / f"{prefix}.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -696,22 +1097,35 @@ def _summary_md(summary: dict[str, Any]) -> str:
         "",
         f"Created: {summary['created_at']}",
         f"Overall: {summary['overall']}",
+        f"Final recommendation: {summary['final_recommendation']}",
+        f"Freeze status: {summary['freeze_status']}",
         f"Next boundary: {summary['next_boundary']}",
         "",
         "## Recommendations",
         "",
     ]
     lines.extend(f"- {stage}: {rec}" for stage, rec in summary["recommendations"].items())
+    lines.extend([
+        "",
+        "## Evidence Boundary",
+        "",
+        "- Real operator evidence collected: false",
+        "- Fixture evidence only: true",
+        "- RC3 freeze remains pending real operator pilot evidence and comprehensive calibration.",
+    ])
     return "\n".join(lines) + "\n"
 
 
-def _perfect_scores(*names: str) -> dict[str, float]:
+def _readiness_scores(*names: str, real_evidence: bool = True) -> dict[str, float]:
     base = {name: 1.0 for name in names}
     base.update({
         "rc2_compatibility": 1.0,
         "safety": 1.0,
         "governance_completeness": 1.0,
     })
+    if not real_evidence:
+        base["real_operator_evidence"] = 0.0
+        base["fixture_evidence_declared"] = 1.0
     return base
 
 

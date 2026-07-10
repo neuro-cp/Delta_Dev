@@ -1,9 +1,13 @@
 {
-  "created_at": "2026-07-10T17:42:03+00:00",
+  "created_at": "2026-07-10T17:48:05+00:00",
   "delta_75_interaction_performed": false,
-  "overall": 1.0,
+  "limitations": [
+    "freeze readiness synthesis only",
+    "RC3 is not formally frozen without real operator review"
+  ],
+  "overall": 0.9091,
   "rc2_compatibility": 1.0,
-  "recommendation": "RC3_FROZEN_READY_FOR_POST_FREEZE_CALIBRATION_REVIEW",
+  "recommendation": "READY_FOR_COMPREHENSIVE_TESTING_AND_CALIBRATION",
   "report": "RC3_K_MILESTONE_REVIEW",
   "result": {
     "audits": {
@@ -13,6 +17,7 @@
       "safety": "no_runtime_authority_expansion_detected",
       "state_schema": "rc3_objects_serializable"
     },
+    "final_recommendation": "READY_FOR_COMPREHENSIVE_TESTING_AND_CALIBRATION",
     "freeze_manifest": {
       "authority_boundaries": [
         "no self-authorization",
@@ -34,7 +39,8 @@
         "RC3_J",
         "RC3_K"
       ],
-      "created_at": "2026-07-10T17:42:03+00:00",
+      "comprehensive_calibration_required": true,
+      "created_at": "2026-07-10T17:48:05+00:00",
       "deferred_features": [
         "plugin runtime",
         "sandbox runtime",
@@ -42,6 +48,7 @@
         "autonomous project work",
         "RC4"
       ],
+      "freeze_status": "RC3_FREEZE_PENDING_REAL_OPERATOR_PILOT_EVIDENCE",
       "frozen_modules": [
         "rc3_foundation_state",
         "rc3_plan_revision",
@@ -54,8 +61,9 @@
         "RC4 execution is not implemented.",
         "Full post-freeze calibration remains separate."
       ],
-      "manifest_id": "rc3-rc3-freeze-f5d1b6b10721c778",
-      "recommendation": "RC3_FROZEN_READY_FOR_POST_FREEZE_CALIBRATION_REVIEW",
+      "manifest_id": "rc3-rc3-freeze-447b7c82a152b728",
+      "real_operator_evidence_required": true,
+      "recommendation": "READY_FOR_COMPREHENSIVE_TESTING_AND_CALIBRATION",
       "reports": [
         "RC3_A_MILESTONE_REVIEW.json",
         "RC3_B_MILESTONE_REVIEW.json",
@@ -69,6 +77,7 @@
         "RC3_D_SANDBOX_BENCHMARK.json",
         "RC3_D_SANDBOX_FOUNDATION.json",
         "RC3_E_MILESTONE_REVIEW.json",
+        "RC3_E_THROUGH_K_SEQUENTIAL_COMPLETION.json",
         "RC3_F_MILESTONE_REVIEW.json",
         "RC3_GOAL_INTERPRETATION.json",
         "RC3_GOAL_PLANNING_BENCHMARK.json",
@@ -77,6 +86,7 @@
         "RC3_INTROSPECTION_SCAFFOLD.json",
         "RC3_I_MILESTONE_REVIEW.json",
         "RC3_J_MILESTONE_REVIEW.json",
+        "RC3_K_MILESTONE_REVIEW.json",
         "RC3_MILESTONE_1_FOUNDATION.json",
         "RC3_OPERATOR_PILOT_FREEZE_READINESS.json",
         "RC3_PLAN_GENERATION.json",
@@ -96,13 +106,28 @@
         "scripts/rc2_fast_validate.py"
       ]
     },
+    "freeze_status": "RC3_FREEZE_PENDING_REAL_OPERATOR_PILOT_EVIDENCE",
+    "limitations": [
+      "freeze readiness synthesis only",
+      "RC3 is not formally frozen without real operator review"
+    ],
+    "operator_freeze_review": {
+      "freeze_declaration_performed": false,
+      "real_operator_review_completed": false,
+      "unresolved_risks": [
+        "real operator pilot evidence missing",
+        "full post-RC3 calibration campaign pending"
+      ]
+    },
     "scores": {
       "architecture_audit": 1.0,
+      "fixture_evidence_declared": 1.0,
       "freeze_manifest": 1.0,
       "governance_audit": 1.0,
       "governance_completeness": 1.0,
       "persistence_audit": 1.0,
       "rc2_compatibility": 1.0,
+      "real_operator_evidence": 0.0,
       "safety": 1.0,
       "safety_audit": 1.0,
       "state_schema_audit": 1.0
@@ -137,11 +162,13 @@
   "safety_metadata_completeness": 1.0,
   "scores": {
     "architecture_audit": 1.0,
+    "fixture_evidence_declared": 1.0,
     "freeze_manifest": 1.0,
     "governance_audit": 1.0,
     "governance_completeness": 1.0,
     "persistence_audit": 1.0,
     "rc2_compatibility": 1.0,
+    "real_operator_evidence": 0.0,
     "safety": 1.0,
     "safety_audit": 1.0,
     "state_schema_audit": 1.0

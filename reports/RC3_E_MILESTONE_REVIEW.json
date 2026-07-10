@@ -1,18 +1,60 @@
 {
-  "created_at": "2026-07-10T17:42:03+00:00",
+  "created_at": "2026-07-10T17:48:05+00:00",
   "delta_75_interaction_performed": false,
+  "limitations": [
+    "approval is modeled only",
+    "no review decision grants execution authority"
+  ],
   "overall": 1.0,
   "rc2_compatibility": 1.0,
   "recommendation": "PROCEED_RC3_F_PLUGIN_ARCHITECTURE",
   "report": "RC3_E_MILESTONE_REVIEW",
   "result": {
+    "approval_chain": [
+      {
+        "automatically_completed": false,
+        "current_state": "awaiting_operator_review",
+        "order": 1,
+        "required_evidence": [
+          "operator_terminal_approval"
+        ],
+        "reviewer": "operator",
+        "step_id": "rc3-approval-step-c7307339617925f3",
+        "terminal_states": [
+          "approved",
+          "rejected",
+          "needs_revision",
+          "deferred",
+          "blocked",
+          "expired"
+        ]
+      },
+      {
+        "automatically_completed": false,
+        "current_state": "not_started",
+        "order": 2,
+        "required_evidence": [
+          "risk_escalation",
+          "permission_requirement",
+          "rollback_requirement"
+        ],
+        "reviewer": "security_review",
+        "step_id": "rc3-approval-step-ad4d022f1d4e35c2",
+        "terminal_states": [
+          "approved",
+          "rejected",
+          "needs_revision",
+          "blocked"
+        ]
+      }
+    ],
     "audit_record": {
       "audit_id": "rc3-governance-audit-32a6ea9dbfdab949",
       "constraints": [
         "no approval object is execution permission",
         "least privilege review only"
       ],
-      "created_at": "2026-07-10T17:42:03+00:00",
+      "created_at": "2026-07-10T17:48:05+00:00",
       "decision_id": "rc3-governance-decision-6702b7ff02ad8ad1",
       "evidence_id": "rc3-evidence-32a6ea9dbfdab949",
       "permission_id": "rc3-permission-32a6ea9dbfdab949",
@@ -93,6 +135,10 @@
       },
       "status": "awaiting_operator_review"
     },
+    "limitations": [
+      "approval is modeled only",
+      "no review decision grants execution authority"
+    ],
     "permission_requirement": {
       "allowed_operation": "inspect_and_decide",
       "descriptive_only": true,
@@ -111,6 +157,57 @@
       "revocation": "automatic_after_review",
       "scope": "review_only",
       "target": "rc3-engineering-proposal-619348f55dd4dcd5"
+    },
+    "review_request": {
+      "candidate_id": "rc3-engineering-proposal-619348f55dd4dcd5",
+      "candidate_type": "EngineeringProposal",
+      "casual_or_hypothetical": false,
+      "intake_status": "reviewable",
+      "provenance_complete": true,
+      "rejection_reasons": [],
+      "request_id": "rc3-review-request-a721a20749538428",
+      "requested_review": "governance_eligibility",
+      "self_authorizing": false
+    },
+    "risk_escalation": {
+      "escalation_id": "rc3-risk-escalation-e7147fa8813b6d50",
+      "findings": [
+        "risk classes are explicit",
+        "low confidence cannot be converted into approval"
+      ],
+      "highest_level": "high",
+      "low_confidence_masked_by_aggregate": false,
+      "risk_classes": [
+        "architectural",
+        "governance",
+        "rollback",
+        "operator_burden",
+        "plugin",
+        "repository"
+      ],
+      "stronger_review_required": [
+        "operator_review",
+        "security_review",
+        "rollback_review"
+      ]
+    },
+    "rollback_requirement": {
+      "absent_or_dishonest": false,
+      "feasibility": "high_for_review_only_candidate",
+      "irreversible_effects": [],
+      "operator_responsibilities": [
+        "review rollback plan before future implementation",
+        "reject proposals with missing rollback"
+      ],
+      "required_snapshots": [
+        "pre_change_repository_reference",
+        "pre_change_runtime_report"
+      ],
+      "restoration_evidence": [
+        "validation rerun",
+        "operator confirmation"
+      ],
+      "rollback_id": "rc3-rollback-requirement-43480f64d7fba431"
     },
     "scores": {
       "approval_chain": 1.0,

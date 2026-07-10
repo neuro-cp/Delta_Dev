@@ -1,0 +1,13 @@
+{
+  "canonical_memory_mutated": false,
+  "created_at": "2026-07-10T17:54:53+00:00",
+  "fixture_persistence_only": true,
+  "governance_score": 1.0,
+  "graph_writes_performed": false,
+  "hidden_persistence_detected": false,
+  "noncanonical_substrate_mutated": false,
+  "persistence_boundary_score": 1.0,
+  "recommendation": "READY_FOR_REAL_OPERATOR_PILOT",
+  "replay_writes_performed": false,
+  "report": "RC3_GOVERNANCE_AND_PERSISTENCE_AUDIT"
+}

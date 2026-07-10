@@ -1,6 +1,11 @@
 {
-  "created_at": "2026-07-10T17:42:03+00:00",
+  "created_at": "2026-07-10T17:48:05+00:00",
   "delta_75_interaction_performed": false,
+  "limitations": [
+    "controlled local fixture write only",
+    "not attached to conversation",
+    "no hidden memory or scheduler"
+  ],
   "overall": 1.0,
   "rc2_compatibility": 1.0,
   "recommendation": "PROCEED_RC3_J_OPERATOR_PILOT",
@@ -9,7 +14,7 @@
     "archive": {
       "actor": "operator_fixture",
       "archived": true,
-      "created_at": "2026-07-10T17:42:03+00:00",
+      "created_at": "2026-07-10T17:48:05+00:00",
       "prior_version": null,
       "project_frame": {
         "authority": "represent_only_no_execution",
@@ -89,7 +94,7 @@
     "export": {
       "actor": "operator_fixture",
       "archived": false,
-      "created_at": "2026-07-10T17:42:03+00:00",
+      "created_at": "2026-07-10T17:48:05+00:00",
       "prior_version": null,
       "project_frame": {
         "authority": "represent_only_no_execution",
@@ -165,6 +170,29 @@
       },
       "schema_version": "rc3_project_state_v1",
       "source_episode": "rc3_i"
+    },
+    "limitations": [
+      "controlled local fixture write only",
+      "not attached to conversation",
+      "no hidden memory or scheduler"
+    ],
+    "persistence_contract": {
+      "allowed_objects": [
+        "ProjectFrame",
+        "ProjectPersistenceRecord"
+      ],
+      "contract_id": "rc3-persistence-contract-0e7073f797fca2ca",
+      "default_policy": "deny_unlisted_objects",
+      "excluded_fields": [
+        "credentials",
+        "private_keys",
+        "raw_unbounded_transcripts",
+        "environment_secrets"
+      ],
+      "owner": "operator",
+      "retention_expectations": "operator_visible_explicit_project_state_only",
+      "schema_version": "rc3_project_state_v1",
+      "write_authority": "explicit_method_invocation_with_actor_reason_and_source_episode"
     },
     "preview": {
       "actor": "operator_fixture",
@@ -180,7 +208,7 @@
     "record": {
       "actor": "operator_fixture",
       "archived": false,
-      "created_at": "2026-07-10T17:42:03+00:00",
+      "created_at": "2026-07-10T17:48:05+00:00",
       "prior_version": null,
       "project_frame": {
         "authority": "represent_only_no_execution",
@@ -256,6 +284,12 @@
       },
       "schema_version": "rc3_project_state_v1",
       "source_episode": "rc3_i"
+    },
+    "recovery_model": {
+      "corruption_recovery_claimed": false,
+      "partial_write_handling": "write_single_json_record_then_audit_event",
+      "schema_migration_policy": "explicit_versioned_future_migration_only",
+      "snapshot_policy": "caller_managed_fixture_snapshot"
     },
     "scores": {
       "archive_behavior": 1.0,

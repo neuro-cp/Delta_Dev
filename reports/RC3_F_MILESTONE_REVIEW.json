@@ -1,11 +1,71 @@
 {
-  "created_at": "2026-07-10T17:42:03+00:00",
+  "created_at": "2026-07-10T17:48:05+00:00",
   "delta_75_interaction_performed": false,
+  "limitations": [
+    "plugin architecture only",
+    "no plugin creation, import, loading, execution, activation, or filesystem discovery"
+  ],
   "overall": 1.0,
   "rc2_compatibility": 1.0,
   "recommendation": "PROCEED_RC3_G_CONTROLLED_INTEGRATION_PLANNING",
   "report": "RC3_F_MILESTONE_REVIEW",
   "result": {
+    "comparison": {
+      "automatically_selected": false,
+      "comparison_id": "rc3-plugin-comparison-0581530f0594c813",
+      "criteria": [
+        "capability_coverage",
+        "permission_minimization",
+        "dependency_coherence",
+        "operator_burden"
+      ],
+      "ranked_manifest_ids": [
+        "rc3-plugin-manifest-cec46e3ccc61e687"
+      ],
+      "recommendation": "ranked_for_review_only"
+    },
+    "interface_contract": {
+      "audit_events": [
+        "request_received",
+        "permission_checked",
+        "response_emitted",
+        "failure_isolated"
+      ],
+      "deterministic_expectations": [
+        "same input and fixture state yields same metadata"
+      ],
+      "error_contracts": [
+        "invalid_request",
+        "permission_denied",
+        "timeout",
+        "capability_unavailable"
+      ],
+      "failure_isolation": [
+        "no caller state mutation",
+        "error returned as data",
+        "operator-visible audit"
+      ],
+      "interface_id": "rc3-plugin-interface-0581530f0594c813",
+      "live_execution_connected": false,
+      "request_envelope": [
+        "request_id",
+        "capability_id",
+        "operator_context_reference",
+        "input_payload"
+      ],
+      "response_envelope": [
+        "response_id",
+        "status",
+        "output_payload",
+        "audit_events",
+        "safety"
+      ],
+      "timeout_expectations": "declared_by_manifest_and_enforced_by_future_runtime"
+    },
+    "limitations": [
+      "plugin architecture only",
+      "no plugin creation, import, loading, execution, activation, or filesystem discovery"
+    ],
     "manifest": {
       "active_or_executing": false,
       "compatibility": [
@@ -38,6 +98,30 @@
       ],
       "verified_capabilities": [],
       "version": "0.1.0"
+    },
+    "permission_contract": {
+      "contract_id": "rc3-plugin-permission-contract-0581530f0594c813",
+      "data_scopes": [
+        "structured_request"
+      ],
+      "default_policy": "deny",
+      "filesystem_scopes": [
+        "none"
+      ],
+      "manifest_id": "rc3-plugin-manifest-cec46e3ccc61e687",
+      "network_scopes": [
+        "none"
+      ],
+      "operator_approvals": [
+        "approval_before_sandbox_design",
+        "approval_before_activation_in_future_stage"
+      ],
+      "provider_scopes": [
+        "none"
+      ],
+      "repository_scopes": [
+        "none"
+      ]
     },
     "scores": {
       "dependency_validation": 1.0,

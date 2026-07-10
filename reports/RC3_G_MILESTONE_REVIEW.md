@@ -1,6 +1,6 @@
 # RC3-G Milestone Review
 
-Created: 2026-07-10T17:42:03+00:00
+Created: 2026-07-10T17:48:05+00:00
 Overall: 1.0
 Recommendation: PROCEED_RC3_H_PROJECT_COGNITION
 
@@ -14,5 +14,10 @@ Recommendation: PROCEED_RC3_H_PROJECT_COGNITION
 - rc2_compatibility: 1.0
 - safety: 1.0
 - governance_completeness: 1.0
+
+## Limitations
+
+- integration package only
+- no patch application, merge, commit, push, migration, activation, or deployment
 
 Safety: no execution authority, provider calls, hidden persistence, plugin activation, sandbox runtime, training, deployment, or DELTA-75 interaction.

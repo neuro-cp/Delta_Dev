@@ -1,11 +1,128 @@
 {
-  "created_at": "2026-07-10T17:42:03+00:00",
+  "created_at": "2026-07-10T17:48:05+00:00",
   "delta_75_interaction_performed": false,
+  "limitations": [
+    "project cognition is ephemeral",
+    "no cross-session restoration or scheduler"
+  ],
   "overall": 1.0,
   "rc2_compatibility": 1.0,
   "recommendation": "PROCEED_RC3_I_PERSISTENT_PROJECT_STATE",
   "report": "RC3_H_MILESTONE_REVIEW",
   "result": {
+    "limitations": [
+      "project cognition is ephemeral",
+      "no cross-session restoration or scheduler"
+    ],
+    "project_details": {
+      "autonomous_reprioritization_performed": false,
+      "context_segments": [
+        {
+          "content_summary": "active_objective",
+          "provenance": "rc3_h_project_cognition_fixture",
+          "segment_id": "rc3-context-2b086ddb8c6a204a",
+          "status": "active",
+          "uncertainty": "low"
+        },
+        {
+          "content_summary": "governance_constraints",
+          "provenance": "rc3_h_project_cognition_fixture",
+          "segment_id": "rc3-context-ae21f7d1eaa8cbc5",
+          "status": "background",
+          "uncertainty": "low"
+        },
+        {
+          "content_summary": "stage_boundaries",
+          "provenance": "rc3_h_project_cognition_fixture",
+          "segment_id": "rc3-context-fab51aebb5c2c6b1",
+          "status": "background",
+          "uncertainty": "low"
+        }
+      ],
+      "duplicate_milestones_detected": false,
+      "milestones": [
+        {
+          "confidence": 0.82,
+          "deliverables": [
+            "stage reports",
+            "focused tests",
+            "operator review artifacts"
+          ],
+          "dependencies": [
+            "RC2 frozen pipeline",
+            "RC3-A through RC3-D scaffolds"
+          ],
+          "milestone_id": "rc3-milestone-4da3d4e732a2ef6a",
+          "summary": "RC3-E governance"
+        },
+        {
+          "confidence": 0.82,
+          "deliverables": [
+            "stage reports",
+            "focused tests",
+            "operator review artifacts"
+          ],
+          "dependencies": [
+            "RC2 frozen pipeline",
+            "RC3-A through RC3-D scaffolds"
+          ],
+          "milestone_id": "rc3-milestone-a26056bc5d7cc8bc",
+          "summary": "RC3-F plugin architecture"
+        },
+        {
+          "confidence": 0.82,
+          "deliverables": [
+            "stage reports",
+            "focused tests",
+            "operator review artifacts"
+          ],
+          "dependencies": [
+            "RC2 frozen pipeline",
+            "RC3-A through RC3-D scaffolds"
+          ],
+          "milestone_id": "rc3-milestone-8605679d5b5e5e82",
+          "summary": "RC3-G integration planning"
+        },
+        {
+          "confidence": 0.82,
+          "deliverables": [
+            "stage reports",
+            "focused tests",
+            "operator review artifacts"
+          ],
+          "dependencies": [
+            "RC2 frozen pipeline",
+            "RC3-A through RC3-D scaffolds"
+          ],
+          "milestone_id": "rc3-milestone-e3ada77f123cddcb",
+          "summary": "RC3-H project cognition"
+        }
+      ],
+      "objectives": [
+        {
+          "evidence": [
+            "project_frame",
+            "operator_prompt_or_fixture"
+          ],
+          "objective_id": "rc3-project-objective-f0847ba0ab49da3c",
+          "priority": "operator_defined",
+          "status": "active",
+          "summary": "stabilize governed objective cognition"
+        },
+        {
+          "evidence": [
+            "project_frame",
+            "operator_prompt_or_fixture"
+          ],
+          "objective_id": "rc3-project-objective-812bde4ab3056915",
+          "priority": "operator_defined",
+          "status": "background",
+          "summary": "preserve RC2 compatibility"
+        }
+      ],
+      "orphan_work_detected": false,
+      "scope_drift_detected": false
+    },
     "project_frame": {
       "authority": "represent_only_no_execution",
       "context_segments": [
@@ -58,6 +175,17 @@
       "risk_concentration": "moderate_operator_review_needed",
       "stale_decisions": [],
       "unresolved_contradictions": []
+    },
+    "project_introspection": {
+      "current_objective": "stabilize governed objective cognition",
+      "missing_evidence": [
+        "real multi-session operator trace"
+      ],
+      "operator_attention": [
+        "confirm project scope",
+        "confirm milestone evidence"
+      ],
+      "why_active": "first operator-defined objective in fixture"
     },
     "scores": {
       "context_selection": 1.0,

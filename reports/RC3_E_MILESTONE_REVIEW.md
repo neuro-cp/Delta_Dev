@@ -1,6 +1,6 @@
 # RC3-E Milestone Review
 
-Created: 2026-07-10T17:42:03+00:00
+Created: 2026-07-10T17:48:05+00:00
 Overall: 1.0
 Recommendation: PROCEED_RC3_F_PLUGIN_ARCHITECTURE
 
@@ -15,5 +15,10 @@ Recommendation: PROCEED_RC3_F_PLUGIN_ARCHITECTURE
 - rc2_compatibility: 1.0
 - safety: 1.0
 - governance_completeness: 1.0
+
+## Limitations
+
+- approval is modeled only
+- no review decision grants execution authority
 
 Safety: no execution authority, provider calls, hidden persistence, plugin activation, sandbox runtime, training, deployment, or DELTA-75 interaction.

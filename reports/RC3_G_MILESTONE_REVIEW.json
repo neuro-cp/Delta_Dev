@@ -1,6 +1,10 @@
 {
-  "created_at": "2026-07-10T17:42:03+00:00",
+  "created_at": "2026-07-10T17:48:05+00:00",
   "delta_75_interaction_performed": false,
+  "limitations": [
+    "integration package only",
+    "no patch application, merge, commit, push, migration, activation, or deployment"
+  ],
   "overall": 1.0,
   "rc2_compatibility": 1.0,
   "recommendation": "PROCEED_RC3_H_PROJECT_COGNITION",
@@ -45,6 +49,32 @@
         "secret scan",
         "rc2_fast_validate"
       ]
+    },
+    "limitations": [
+      "integration package only",
+      "no patch application, merge, commit, push, migration, activation, or deployment"
+    ],
+    "merge_release_plan": {
+      "branch_strategy": "operator_selected_future_branch",
+      "commit_boundaries": [
+        "one reviewed change set per future integration"
+      ],
+      "deployment_eligibility": "not_eligible_in_rc3_g",
+      "git_mutation_performed": false,
+      "review_requirements": [
+        "governance_reference",
+        "operator_review",
+        "test_evidence"
+      ]
+    },
+    "migration_plan": {
+      "dry_run_required": true,
+      "migration_executed": false,
+      "preflight_checks": [
+        "schema_version_check",
+        "backup_reference_check"
+      ],
+      "reverse_migration_defined": true
     },
     "scores": {
       "candidate_intake": 1.0,
