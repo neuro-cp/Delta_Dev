@@ -274,3 +274,27 @@ from this direction.
 The long-term objective is not autonomous evolution. The objective is a
 governed engineering collaborator whose proposals are evidence-backed,
 isolated, externally reviewable, operator-approved, and reversible.
+
+The initial RC3 pilot and freeze protocol is recorded in
+`docs/RC3_OPERATOR_PILOT_AND_FREEZE_PROTOCOL.md`. That protocol keeps RC3 on
+the governed path:
+
+```text
+Goal
+-> Plan
+-> Introspection
+-> Sandbox experiment
+-> Evidence
+-> Proposal
+-> External review
+-> Operator approval
+-> Controlled integration
+```
+
+It explicitly rejects:
+
+```text
+Goal
+-> Self-authorized action
+-> Production mutation
+```

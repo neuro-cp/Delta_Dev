@@ -1,0 +1,705 @@
+{
+  "controlled_forgetting_boundary": {
+    "allowed_in_rc3_design": true,
+    "enabled_now": false,
+    "must_preserve": [
+      "provenance",
+      "operator_reason",
+      "affected_records",
+      "rollback_or_recovery_path",
+      "benchmark_impact",
+      "developer_overlay_visibility"
+    ],
+    "required_forms": [
+      "working_memory_expiration",
+      "concept_quarantine",
+      "concept_deprecation",
+      "edge_deactivation",
+      "curriculum_exclusion",
+      "operator_approved_noncanonical_cleanup"
+    ]
+  },
+  "created_at": "2026-07-10T16:32:17+00:00",
+  "freeze_criteria": [
+    {
+      "category": "Goals",
+      "criterion": "Goal extraction reliable.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_goal_benchmark",
+      "required": true
+    },
+    {
+      "category": "Goals",
+      "criterion": "Goal conflict handling reliable.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_goal_benchmark",
+      "required": true
+    },
+    {
+      "category": "Goals",
+      "criterion": "No hidden goals.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Goals",
+      "criterion": "Goal persistence governed.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Planning",
+      "criterion": "Plans preserve constraints.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_planning_benchmark",
+      "required": true
+    },
+    {
+      "category": "Planning",
+      "criterion": "Dependencies are valid.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_planning_benchmark",
+      "required": true
+    },
+    {
+      "category": "Planning",
+      "criterion": "Revisions are bounded.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_revision_benchmark",
+      "required": true
+    },
+    {
+      "category": "Planning",
+      "criterion": "No execution during planning.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Introspection",
+      "criterion": "Introspection is evidence-based.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_introspection_benchmark",
+      "required": true
+    },
+    {
+      "category": "Introspection",
+      "criterion": "Assumptions and uncertainty are visible.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_introspection_benchmark",
+      "required": true
+    },
+    {
+      "category": "Introspection",
+      "criterion": "No fabricated self-state.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Self-evaluation",
+      "criterion": "Completion requires evidence.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_progress_benchmark",
+      "required": true
+    },
+    {
+      "category": "Self-evaluation",
+      "criterion": "Failure is surfaced.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_progress_benchmark",
+      "required": true
+    },
+    {
+      "category": "Self-evaluation",
+      "criterion": "Regressions are detected.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_benchmark_suite",
+      "required": true
+    },
+    {
+      "category": "Plugins",
+      "criterion": "Plugin contracts stable.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_plugin_contract_tests",
+      "required": true
+    },
+    {
+      "category": "Plugins",
+      "criterion": "Permissions explicit.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Plugins",
+      "criterion": "Activation governed.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Plugins",
+      "criterion": "Failures isolated.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_plugin_failure_tests",
+      "required": true
+    },
+    {
+      "category": "Sandboxes",
+      "criterion": "Production isolation proven.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_sandbox_tests",
+      "required": true
+    },
+    {
+      "category": "Sandboxes",
+      "criterion": "Network isolation proven.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_sandbox_tests",
+      "required": true
+    },
+    {
+      "category": "Sandboxes",
+      "criterion": "Resource limits proven.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_sandbox_tests",
+      "required": true
+    },
+    {
+      "category": "Sandboxes",
+      "criterion": "Cleanup reliable.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_sandbox_tests",
+      "required": true
+    },
+    {
+      "category": "Self-engineering",
+      "criterion": "Code proposals reviewable.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_proposal_tests",
+      "required": true
+    },
+    {
+      "category": "Self-engineering",
+      "criterion": "Tests reproducible.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_proposal_tests",
+      "required": true
+    },
+    {
+      "category": "Self-engineering",
+      "criterion": "No autonomous integration.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Self-engineering",
+      "criterion": "External review supported.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_review_tests",
+      "required": true
+    },
+    {
+      "category": "Safety",
+      "criterion": "No permission escalation.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Safety",
+      "criterion": "No self-approval.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Safety",
+      "criterion": "No unauthorized writes.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Safety",
+      "criterion": "No hidden persistence.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Safety",
+      "criterion": "No DELTA-75 interaction.",
+      "current_status": "design_guarded",
+      "evidence_source": "this_protocol",
+      "required": true
+    },
+    {
+      "category": "Safety",
+      "criterion": "Audit trail complete.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc3_audit_tests",
+      "required": true
+    },
+    {
+      "category": "RC2 preservation",
+      "criterion": "RC2 benchmark does not materially regress.",
+      "current_status": "not_started",
+      "evidence_source": "future_rc2_regression_gate",
+      "required": true
+    },
+    {
+      "category": "RC2 preservation",
+      "criterion": "RC2 routing contract remains intact.",
+      "current_status": "design_guarded",
+      "evidence_source": "docs/RC2_ROUTING_PRECEDENCE.md",
+      "required": true
+    },
+    {
+      "category": "RC2 preservation",
+      "criterion": "RC2 cognitive pipeline remains intact.",
+      "current_status": "design_guarded",
+      "evidence_source": "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md",
+      "required": true
+    },
+    {
+      "category": "RC2 preservation",
+      "criterion": "RC2 safety remains intact.",
+      "current_status": "design_guarded",
+      "evidence_source": "reports/RC2_FREEZE_READINESS_REVIEW.json",
+      "required": true
+    }
+  ],
+  "freeze_criteria_summary": {
+    "currently_passed": 0,
+    "design_guarded": 15,
+    "not_started": 21,
+    "total": 36
+  },
+  "freeze_recommendation": "NOT_READY_FOR_RC3_FREEZE_IMPLEMENT_RC3_A_THROUGH_RC3_G_FIRST",
+  "phase_count": 24,
+  "phases": [
+    {
+      "authority": "read_only",
+      "exit_gate": "RC2 pipeline contract referenced and unchanged.",
+      "milestone": "RC3-A",
+      "name": "Foundation Lock",
+      "objective": "Freeze RC2 as the stable answer-this-turn substrate.",
+      "phase": 0
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Goal extraction evidence is inspectable.",
+      "milestone": "RC3-A",
+      "name": "Goals",
+      "objective": "Extract explicit operator goals without hidden goals.",
+      "phase": 1
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Plans contain dependencies, risks, and no execution dispatch.",
+      "milestone": "RC3-A",
+      "name": "Planning",
+      "objective": "Create non-executing plans that preserve constraints.",
+      "phase": 2
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Arbitration trace explains selection and rejection.",
+      "milestone": "RC3-A",
+      "name": "Goal / Plan Arbitration",
+      "objective": "Resolve conflicts between goals, constraints, and plans.",
+      "phase": 3
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Every self-claim cites observable state.",
+      "milestone": "RC3-A",
+      "name": "Introspection",
+      "objective": "Report evidence-based runtime state without fabricating self-state.",
+      "phase": 4
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Completion claims require artifacts or operator confirmation.",
+      "milestone": "RC3-A",
+      "name": "Progress Evaluation",
+      "objective": "Assess completion using evidence rather than intention.",
+      "phase": 5
+    },
+    {
+      "authority": "operator_reviewed",
+      "exit_gate": "Revisions preserve original constraints and diff cleanly.",
+      "milestone": "RC3-B",
+      "name": "Plan Revision",
+      "objective": "Revise plans in bounded ways when evidence changes.",
+      "phase": 6
+    },
+    {
+      "authority": "operator_reviewed",
+      "exit_gate": "Forgetting keeps provenance, reason, and rollback path.",
+      "milestone": "RC3-B",
+      "name": "Controlled Forgetting",
+      "objective": "Design reversible deactivation, quarantine, and curriculum exclusion.",
+      "phase": 7
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Plugin contracts are validateable before activation.",
+      "milestone": "RC3-C",
+      "name": "Plugin Contract",
+      "objective": "Define plugin manifests, permissions, tests, and rollback.",
+      "phase": 8
+    },
+    {
+      "authority": "sandbox_only",
+      "exit_gate": "Code remains proposal-only until operator approval.",
+      "milestone": "RC3-D",
+      "name": "Coding Capability",
+      "objective": "Generate code proposals in isolation.",
+      "phase": 9
+    },
+    {
+      "authority": "sandbox_only",
+      "exit_gate": "Production isolation, network isolation, and cleanup are proven.",
+      "milestone": "RC3-D",
+      "name": "Sandbox Runtime",
+      "objective": "Run experiments outside production.",
+      "phase": 10
+    },
+    {
+      "authority": "sandbox_only",
+      "exit_gate": "Loop emits evidence and cannot mutate production.",
+      "milestone": "RC3-D",
+      "name": "Experimental Revision Loop",
+      "objective": "Iterate code/tests inside the sandbox.",
+      "phase": 11
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Proposal is understandable without reading source.",
+      "milestone": "RC3-D",
+      "name": "Proposal System",
+      "objective": "Package objective, diff, validation, risks, and rollback.",
+      "phase": 12
+    },
+    {
+      "authority": "operator_reviewed",
+      "exit_gate": "External review is advisory and cannot merge.",
+      "milestone": "RC3-E",
+      "name": "External Review",
+      "objective": "Export proposal for independent review and import review feedback.",
+      "phase": 13
+    },
+    {
+      "authority": "operator_approved",
+      "exit_gate": "Commit/push occurs only by explicit operator approval.",
+      "milestone": "RC3-E",
+      "name": "Controlled Integration",
+      "objective": "Apply operator-approved changes only through governed integration.",
+      "phase": 14
+    },
+    {
+      "authority": "operator_approved",
+      "exit_gate": "Activation is explicit, reversible, and logged.",
+      "milestone": "RC3-E",
+      "name": "Plugin Activation",
+      "objective": "Activate plugins only after permission and rollback checks.",
+      "phase": 15
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Selection remains recommendation-only.",
+      "milestone": "RC3-E",
+      "name": "Goal-Driven Plugin Selection",
+      "objective": "Recommend plugins from goals without activating them.",
+      "phase": 16
+    },
+    {
+      "authority": "operator_reviewed",
+      "exit_gate": "No hidden persistence; every project record is inspectable.",
+      "milestone": "RC3-F",
+      "name": "Persistent Project Memory",
+      "objective": "Persist project goals and decisions under governance.",
+      "phase": 17
+    },
+    {
+      "authority": "operator_reviewed",
+      "exit_gate": "Continuation requires project state and operator visibility.",
+      "milestone": "RC3-F",
+      "name": "Long-Horizon Execution",
+      "objective": "Continue governed projects across sessions.",
+      "phase": 18
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Safety gates pass with no unauthorized mutation.",
+      "milestone": "RC3-G",
+      "name": "Adversarial Safety Evaluation",
+      "objective": "Stress permissions, self-approval, persistence, and rollback.",
+      "phase": 19
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Benchmark is repeatable and reports limitations.",
+      "milestone": "RC3-G",
+      "name": "RC3 Benchmark Suite",
+      "objective": "Measure goals, plans, introspection, plugins, sandboxes, and RC2 preservation.",
+      "phase": 20
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Console does not execute by itself.",
+      "milestone": "RC3-G",
+      "name": "Operator Console",
+      "objective": "Expose project, goal, plugin, sandbox, and proposal state.",
+      "phase": 21
+    },
+    {
+      "authority": "operator_reviewed",
+      "exit_gate": "Governance remains practical and failures recover.",
+      "milestone": "RC3-G",
+      "name": "Real Operator Pilot",
+      "objective": "Test controlled real projects without autonomy.",
+      "phase": 22
+    },
+    {
+      "authority": "read_only",
+      "exit_gate": "Freeze recommendation, limitations, rollback, and checkpoint are ready.",
+      "milestone": "RC3-G",
+      "name": "RC3 Freeze Readiness",
+      "objective": "Decide whether RC3 is stable enough to freeze.",
+      "phase": 23
+    }
+  ],
+  "pilot_constraints": {
+    "automatic_commit_allowed": false,
+    "automatic_deployment_allowed": false,
+    "automatic_plugin_activation_allowed": false,
+    "automatic_push_allowed": false,
+    "canonical_writes_allowed": false,
+    "hidden_persistence_allowed": false,
+    "production_secret_access_allowed": false,
+    "unattended_execution_allowed": false
+  },
+  "pilot_sequence": [
+    {
+      "allowed": true,
+      "evidence_required": [
+        "goal_trace",
+        "constraint_list"
+      ],
+      "mutates_production": false,
+      "name": "Read-only goal interpretation",
+      "objective": "Extract the operator's explicit objective and constraints.",
+      "requires_operator_review": false,
+      "step": 1
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "plan_record",
+        "dependency_check"
+      ],
+      "mutates_production": false,
+      "name": "Read-only planning",
+      "objective": "Produce a non-executing plan.",
+      "requires_operator_review": false,
+      "step": 2
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "plan_diff",
+        "review_decision"
+      ],
+      "mutates_production": false,
+      "name": "Operator-reviewed plan revision",
+      "objective": "Revise plan after operator feedback.",
+      "requires_operator_review": true,
+      "step": 3
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "sandbox_id",
+        "isolation_report",
+        "test_log"
+      ],
+      "mutates_production": false,
+      "name": "Sandbox coding task",
+      "objective": "Run code work in an isolated sandbox only.",
+      "requires_operator_review": true,
+      "step": 4
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "proposal_package",
+        "validation_summary"
+      ],
+      "mutates_production": false,
+      "name": "Proposal generation",
+      "objective": "Package changes, evidence, risks, and rollback.",
+      "requires_operator_review": false,
+      "step": 5
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "review_export",
+        "review_feedback"
+      ],
+      "mutates_production": false,
+      "name": "External review",
+      "objective": "Export proposal for independent review.",
+      "requires_operator_review": true,
+      "step": 6
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "operator_approval",
+        "integration_plan"
+      ],
+      "mutates_production": false,
+      "name": "Operator-approved integration",
+      "objective": "Integrate only after explicit operator approval.",
+      "requires_operator_review": true,
+      "step": 7
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "plugin_manifest",
+        "permission_review",
+        "rollback_plan"
+      ],
+      "mutates_production": false,
+      "name": "Plugin activation",
+      "objective": "Activate plugin only through explicit approval.",
+      "requires_operator_review": true,
+      "step": 8
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "project_state",
+        "continuation_trace"
+      ],
+      "mutates_production": false,
+      "name": "Multi-session project continuation",
+      "objective": "Resume project state with visible context.",
+      "requires_operator_review": true,
+      "step": 9
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "forgetting_reason",
+        "affected_records",
+        "recovery_path"
+      ],
+      "mutates_production": false,
+      "name": "Controlled forgetting test",
+      "objective": "Quarantine/deactivate under governance.",
+      "requires_operator_review": true,
+      "step": 10
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "rollback_handle",
+        "rollback_result"
+      ],
+      "mutates_production": false,
+      "name": "Rollback test",
+      "objective": "Prove proposal/plugin/project rollback.",
+      "requires_operator_review": true,
+      "step": 11
+    },
+    {
+      "allowed": true,
+      "evidence_required": [
+        "disable_switch",
+        "rc2_integrity_check"
+      ],
+      "mutates_production": false,
+      "name": "Emergency disable test",
+      "objective": "Disable RC3 extensions without harming RC2.",
+      "requires_operator_review": true,
+      "step": 12
+    }
+  ],
+  "pilot_sequence_safe_by_design": true,
+  "rc2_preservation_contracts": [
+    "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md",
+    "docs/RC2_ROUTING_PRECEDENCE.md",
+    "reports/RC2_FREEZE_READINESS_REVIEW.json"
+  ],
+  "recommendation": "READY_TO_BEGIN_RC3_A_GOAL_AND_PLANNING_SCAFFOLD",
+  "release_milestones": [
+    {
+      "milestone": "RC3-A",
+      "name": "Goal and Planning Scaffold",
+      "scope": "goals, plans, introspection, progress evaluation; no execution"
+    },
+    {
+      "milestone": "RC3-B",
+      "name": "Governed Plan Revision",
+      "scope": "monitoring, self-evaluation, revision, controlled forgetting; no production action"
+    },
+    {
+      "milestone": "RC3-C",
+      "name": "Plugin Architecture",
+      "scope": "plugin manifests, capability registry, permissions, operator activation"
+    },
+    {
+      "milestone": "RC3-D",
+      "name": "Sandbox Engineering",
+      "scope": "coding plugin, sandbox runtime, test-observe-revise loop, proposal generation"
+    },
+    {
+      "milestone": "RC3-E",
+      "name": "External Review and Integration",
+      "scope": "review export/import, operator approval, controlled integration, rollback"
+    },
+    {
+      "milestone": "RC3-F",
+      "name": "Long-Horizon Project Cognition",
+      "scope": "persistent project goals, multi-session plans, resume behavior, dashboards"
+    },
+    {
+      "milestone": "RC3-G",
+      "name": "Adversarial Pilot and Freeze",
+      "scope": "red-team evaluation, operator pilot, full benchmark, freeze review"
+    }
+  ],
+  "report": "RC3_OPERATOR_PILOT_FREEZE_READINESS",
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_deployment_performed": false,
+    "automatic_plugin_activation_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "production_secret_access_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "scope": "report_only_protocol"
+}
