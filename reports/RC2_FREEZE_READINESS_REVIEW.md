@@ -1,7 +1,8 @@
 # RC2 Freeze Readiness Review
 
-Created: 2026-07-10T16:07:25+00:00
+Created: 2026-07-10T16:15:24+00:00
 Recommendation: READY_FOR_RC2_REFINEMENT_FREEZE
+Pipeline specification: docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md
 
 ## Tier 1 Freeze Criteria
 

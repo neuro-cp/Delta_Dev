@@ -115,6 +115,7 @@ def build_freeze_readiness_review(write_reports: bool = True) -> dict[str, Any]:
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "tier_1_freeze_criteria": tier_1,
         "tier_2_polish_criteria": tier_2,
+        "pipeline_specification": "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md",
         "moved_to_rc3": moved_to_rc3,
         "live_runtime_probes": probes,
         "benchmark_summary": {
@@ -195,6 +196,7 @@ def _write_reports(report: dict[str, Any]) -> None:
         "",
         f"Created: {report['created_at']}",
         f"Recommendation: {report['recommendation']}",
+        f"Pipeline specification: {report['pipeline_specification']}",
         "",
         "## Tier 1 Freeze Criteria",
         "",

@@ -22,7 +22,7 @@
     "recommendation": "IMPROVE_CONVERSATIONAL_RENDERING_AND_SESSION_STATE_BEFORE_CONCEPT_INSTILLATION",
     "safety_passed": true
   },
-  "created_at": "2026-07-10T16:07:25+00:00",
+  "created_at": "2026-07-10T16:15:24+00:00",
   "live_runtime_probes": [
     {
       "answer_preview": "I know about Photosynthesis. Photosynthesis is the process by which plants, algae, and some bacteria use light energy to make chemical energy from carbon dioxide and water. Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Chlorophyll and chloroplasts help capture light energy in many photosynthetic organisms. I can also connect it to Photosynthesis Comparative Frame, Photos",
@@ -137,6 +137,7 @@
     "meta_reasoning",
     "persistent_episodic_cognition"
   ],
+  "pipeline_specification": "docs/RC2_COGNITIVE_PIPELINE_SPECIFICATION.md",
   "recommendation": "READY_FOR_RC2_REFINEMENT_FREEZE",
   "report": "RC2_FREEZE_READINESS_REVIEW",
   "safety": {
