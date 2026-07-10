@@ -10,13 +10,13 @@
     "rc4_authorization_bypass": false,
     "upgrade_self_approval": false
   },
-  "created_at": "2026-07-10T21:04:47+00:00",
+  "created_at": "2026-07-10T21:23:01+00:00",
   "freeze_status": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT",
   "panel_coverage": {
     "all_panels_present": true,
-    "expected_panel_count": 10,
+    "expected_panel_count": 11,
     "missing_panels": [],
-    "panel_count": 10
+    "panel_count": 11
   },
   "recommendation": "RC5_FREEZE_PENDING_REAL_OPERATOR_PILOT",
   "report": "RC5_UI_CAPABILITY_INTEGRATION",
@@ -36,6 +36,7 @@
       "all_panels_present": true,
       "freeze_not_overstated": true,
       "manual_transport_visible": true,
+      "mimic_not_real_pilot": true,
       "no_action_controls": true,
       "pilot_evidence_distinguished": true,
       "rc4_handoff_required": true

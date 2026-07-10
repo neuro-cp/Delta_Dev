@@ -25,6 +25,7 @@ RC5_PANEL_ORDER = (
     "Upgrade Handoff",
     "Comparative Evaluation",
     "Developmental Memory",
+    "Mimic Calibration",
     "Pilot Evidence",
     "Freeze Readiness",
 )
@@ -48,6 +49,7 @@ def build_rc5_ui_snapshot(*, refresh_reports: bool = False) -> dict[str, Any]:
         "Upgrade Handoff": _panel("RC4 Upgrade Handoff", reports["RC5_UPGRADE_HANDOFF_BENCHMARK"], "rc4_handoff_required"),
         "Comparative Evaluation": _panel("Comparative Evaluation", reports["RC5_POST_UPGRADE_EVALUATION_BENCHMARK"], "fixture_evaluation_only"),
         "Developmental Memory": _panel("Developmental Memory Audit", reports["RC5_DEVELOPMENTAL_MEMORY_AUDIT"], "review_required"),
+        "Mimic Calibration": _mimic_panel(),
         "Pilot Evidence": _pilot_panel(reports),
         "Freeze Readiness": _freeze_panel(reports),
     }
@@ -111,6 +113,7 @@ def validate_rc5_ui_snapshot(snapshot: dict[str, Any] | None = None) -> dict[str
         "freeze_not_overstated": panels["Freeze Readiness"]["detail"].get("freeze_status") != "RC5_FROZEN",
         "pilot_evidence_distinguished": panels["Pilot Evidence"]["detail"].get("actual_operator_pilot_evidence") is False,
         "rc4_handoff_required": "rc4_handoff" in json.dumps(panels["Upgrade Handoff"]).lower(),
+        "mimic_not_real_pilot": panels["Mimic Calibration"]["detail"].get("evidence_class") in {None, "DEVELOPER_REHEARSAL_EVIDENCE"},
     }
     recommendation = panels["Freeze Readiness"]["detail"].get("recommendation", "CONTINUE_RC5_CALIBRATION")
     return {"checks": checks, "passed": all(checks.values()), "recommendation": recommendation}
@@ -179,6 +182,27 @@ def _pilot_panel(reports: dict[str, Any]) -> dict[str, Any]:
             f"Recommendation: {report.get('recommendation')}",
         ),
         "warnings": ("Developer rehearsal evidence is not real operator-pilot evidence.",),
+        "detail": report,
+    }
+
+
+def _mimic_panel() -> dict[str, Any]:
+    path = REPORT_DIR / "RC45_OPERATOR_MIMIC_CONSOLIDATED.json"
+    if path.exists():
+        report = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        report = {"report": "RC45_OPERATOR_MIMIC_CONSOLIDATED", "evidence_class": "not_generated", "recommendation": "RUN_OPERATOR_MIMIC_CALIBRATION"}
+    return {
+        "title": "Operator Mimic Calibration",
+        "status": report.get("recommendation", "not_generated"),
+        "authority": "developer_rehearsal_only",
+        "summary": (
+            f"Evidence class: {report.get('evidence_class')}",
+            f"Scenarios: {report.get('scenario_count', 'n/a')}",
+            f"Integrated cycles: {report.get('integrated_cycle_count', 'n/a')}",
+            f"Recommendation: {report.get('recommendation')}",
+        ),
+        "warnings": ("Mimic calibration is not real operator-pilot evidence and cannot freeze RC4 or RC5.",),
         "detail": report,
     }
 
