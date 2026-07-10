@@ -397,6 +397,7 @@ def run_case(case: BenchmarkCase) -> dict[str, Any]:
     payload = route_message("Conversation", case.prompt, history=list(case.history))
     score = _score_case(case, payload)
     answer = str(payload.get("answer") or "")
+    wrs = payload.get("working_reasoning_set") if isinstance(payload.get("working_reasoning_set"), dict) else {}
     return {
         "case_id": case.case_id,
         "category": case.category,
@@ -406,7 +407,16 @@ def run_case(case: BenchmarkCase) -> dict[str, Any]:
         "score": score,
         "answer_preview": answer[:500],
         "concept_count": len(payload.get("concept_matches", []) or []),
-        "wrs": payload.get("working_reasoning_set"),
+        "wrs": {
+            "retrieved_concept_count": len(wrs.get("retrieved_concepts", []) or []),
+            "retrieved_proposition_count": len(wrs.get("retrieved_propositions", []) or []),
+            "retrieved_graph_edge_count": len(wrs.get("retrieved_graph_edges", []) or []),
+            "possible_connection_count": len(wrs.get("possible_connections", []) or []),
+            "missing_evidence_count": len(wrs.get("missing_evidence", []) or []),
+            "confidence": wrs.get("confidence"),
+            "retrieval_score": wrs.get("retrieval_score"),
+            "graph_support_score": wrs.get("graph_support_score"),
+        } if wrs else None,
         "provider_calls_performed": payload.get("provider_calls_performed"),
         "web_search_performed": payload.get("web_search_performed"),
         "training_performed": payload.get("training_performed"),

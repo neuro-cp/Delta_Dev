@@ -49,6 +49,7 @@ from orchestration.runtime.rc2_analogy_engine import build_analogy_analysis, is_
 from orchestration.runtime.rc2_cognitive_episode import attach_episode, resolve_working_memory_followup
 from orchestration.runtime.rc2_contradiction_engine import build_contradiction_analysis, is_contradiction_prompt
 from orchestration.runtime.rc2_natural_conversation_renderer import apply_natural_renderer
+from orchestration.runtime.rc2_route_arbitration import build_route_arbitration_trace, normalize_safety_payload
 from orchestration.runtime.rc2_working_reasoning_set import build_working_reasoning_set, should_use_wrs
 from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
 from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
@@ -1647,6 +1648,13 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
 
 
 def _finish_conversation_payload(payload: dict[str, Any], message: str, history: list[dict[str, str]] | None) -> dict[str, Any]:
+    normalize_safety_payload(payload)
+    payload["route_arbitration"] = build_route_arbitration_trace(
+        message,
+        history,
+        str(payload.get("route") or ""),
+        payload.get("intent") if isinstance(payload.get("intent"), dict) else None,
+    )
     attach_episode(payload, message, history)
     return apply_natural_renderer(payload, message)
 
@@ -1762,6 +1770,146 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return _finish_conversation_payload(payload, message, history)
+        if execute_local_model:
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
+            return _finish_conversation_payload(payload, message, history)
+        early_episode_followup = resolve_working_memory_followup(message, history)
+        if early_episode_followup:
+            payload = {"mode": mode, **early_episode_followup}
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "working_memory_followup"}
+            payload["confidence_decision"] = {
+                "confidence": payload.get("confidence_score", 0.0),
+                "evidence_quality": "ephemeral_cognitive_episode",
+                "retrieval_sufficiency": "resolved_from_short_horizon_dialogue_state",
+                "provider_necessity": "none",
+            }
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            return _finish_conversation_payload(payload, message, history)
+        early_analogy = build_analogy_analysis(message, history=history) if is_analogy_prompt(message, history) else {"matched": False}
+        if early_analogy["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "analogy_analysis",
+                "answer": early_analogy["answer"],
+                "confidence": early_analogy["confidence"],
+                "confidence_score": early_analogy["confidence_score"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": early_analogy.get("concept_matches", []),
+                "analogy_analysis": early_analogy["analogy_analysis"],
+                "memory_candidate": None,
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "analogy_analysis"}
+            payload["confidence_decision"] = {
+                "confidence": early_analogy["confidence_score"],
+                "evidence_quality": "approved_noncanonical_concepts_plus_ephemeral_structural_mapping",
+                "retrieval_sufficiency": "structural_mapping_ready",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return _finish_conversation_payload(payload, message, history)
+        early_wrs = build_working_reasoning_set(message) if should_use_wrs(message) else {"matched": False}
+        if early_wrs["matched"]:
+            wrs_payload = dict(early_wrs.get("working_reasoning_set") or {})
+            wrs_payload.update({
+                "ephemeral": True,
+                "destroyed_after_response": True,
+                "synthesis_enabled_by_default": False,
+                "memory_write_performed": False,
+                "graph_write_performed": False,
+            })
+            payload = {
+                "mode": mode,
+                "route": "working_reasoning_set",
+                "answer": early_wrs["answer"],
+                "confidence": "ephemeral_multi_concept_working_reasoning_set",
+                "confidence_score": early_wrs["confidence"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": early_wrs.get("retrieved_concepts", []),
+                "working_reasoning_set": wrs_payload,
+            }
+            payload["memory_candidate"] = None
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "working_reasoning_set"}
+            payload["confidence_decision"] = {
+                "confidence": early_wrs["confidence"],
+                "evidence_quality": "approved_noncanonical_multi_concept_working_set",
+                "retrieval_sufficiency": "sufficient_for_ephemeral_reasoning",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return _finish_conversation_payload(payload, message, history)
+        if _is_anchor_followup(message) and anchor:
+            anchored = browse_near_active_anchor(message, anchor) if _is_anchor_browse_followup(message) else deepen_from_concept_anchor(message, anchor)
+            if anchored:
+                payload = {"mode": mode, **anchored}
+                payload["escalation_plan"] = build_escalation_plan(message)
+                payload["intent"] = intent_info
+                payload["confidence_decision"] = confidence_engine(message, True)
+                payload["mode_router_flags"] = ROUTER_FLAGS
+                return _finish_conversation_payload(payload, message, history)
+        if execute_local_model:
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
+            return _finish_conversation_payload(payload, message, history)
+        if intent_info.get("intent") in {"coding", "external_knowledge_request", "image"} or _direct_answer(message):
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
+            return _finish_conversation_payload(payload, message, history)
         episode_followup = resolve_working_memory_followup(message, history)
         if episode_followup:
             payload = {"mode": mode, **episode_followup}
@@ -1775,15 +1923,6 @@ def route_message(
             }
             payload["mode_router_flags"] = ROUTER_FLAGS
             return _finish_conversation_payload(payload, message, history)
-        if _is_anchor_followup(message) and anchor:
-            anchored = browse_near_active_anchor(message, anchor) if _is_anchor_browse_followup(message) else deepen_from_concept_anchor(message, anchor)
-            if anchored:
-                payload = {"mode": mode, **anchored}
-                payload["escalation_plan"] = build_escalation_plan(message)
-                payload["intent"] = intent_info
-                payload["confidence_decision"] = confidence_engine(message, True)
-                payload["mode_router_flags"] = ROUTER_FLAGS
-                return _finish_conversation_payload(payload, message, history)
         if intent_info.get("intent") in {"knowledge_browse", "knowledge_browse_followup", "knowledge_browse_jump"}:
             context = _last_concept_context(history)
             excluded_names = context.get("concept_names") or ([context["concept_name"]] if context.get("concept_name") else None)
@@ -1977,6 +2116,14 @@ def route_message(
             return _finish_conversation_payload(payload, message, history)
         wrs_result = build_working_reasoning_set(message) if should_use_wrs(message) else {"matched": False}
         if wrs_result["matched"]:
+            wrs_payload = dict(wrs_result.get("working_reasoning_set") or {})
+            wrs_payload.update({
+                "ephemeral": True,
+                "destroyed_after_response": True,
+                "synthesis_enabled_by_default": False,
+                "memory_write_performed": False,
+                "graph_write_performed": False,
+            })
             payload = {
                 "mode": mode,
                 "route": "working_reasoning_set",
@@ -1986,21 +2133,7 @@ def route_message(
                 "selected_model_lane": select_model_lane(message),
                 "supporting_information_offer": None,
                 "concept_matches": wrs_result.get("retrieved_concepts", []),
-                "working_reasoning_set": {
-                    "retrieved_concept_count": wrs_result["retrieved_concept_count"],
-                    "retrieved_proposition_count": wrs_result["retrieved_proposition_count"],
-                    "retrieved_graph_edge_count": wrs_result["retrieved_graph_edge_count"],
-                    "retrieval_score": wrs_result["retrieval_score"],
-                    "graph_support_score": wrs_result["graph_support_score"],
-                    "unsupported_inference_count": wrs_result["unsupported_inference_count"],
-                    "hallucination_risk": wrs_result["hallucination_risk"],
-                    "uncertainty_quality": wrs_result["uncertainty_quality"],
-                    "ephemeral": True,
-                    "destroyed_after_response": True,
-                    "synthesis_enabled_by_default": False,
-                    "memory_write_performed": False,
-                    "graph_write_performed": False,
-                },
+                "working_reasoning_set": wrs_payload,
             }
             payload["memory_candidate"] = None
             payload["escalation_plan"] = build_escalation_plan(message)
@@ -2403,6 +2536,34 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
                 f"  - {item.get('reference')}: {item.get('reason')}"
                 for item in rejected_refs[:4]
             )
+    arbitration = payload.get("route_arbitration")
+    if isinstance(arbitration, dict):
+        candidates = arbitration.get("candidate_routes") or []
+        rejected_routes = arbitration.get("rejected_routes") or []
+        lines.extend([
+            "",
+            "Route arbitration:",
+            f"- selected_route: {arbitration.get('selected_route')}",
+            f"- selected_group: {arbitration.get('selected_group')}",
+            f"- candidate_count: {len(candidates)}",
+            f"- rejected_count: {len(rejected_routes)}",
+            "- candidates:",
+        ])
+        for item in candidates[:8]:
+            marker = "selected" if item.get("selected") else (f"yielded_to={item.get('yielded_to')}" if item.get("yielded_to") else item.get("rejection_reason") or "rejected")
+            evidence = ", ".join(item.get("trigger_evidence") or []) or "none"
+            lines.append(
+                f"  - {item.get('route')} p={item.get('precedence')} c={item.get('confidence')} {marker}; trigger={evidence}"
+            )
+    safety = payload.get("safety_metadata")
+    if isinstance(safety, dict):
+        lines.extend([
+            "",
+            "Safety metadata:",
+            f"- complete: {safety.get('complete')}",
+            f"- behavioral_safety_passed: {safety.get('behavioral_safety_passed')}",
+            f"- missing_fields_filled: {', '.join(safety.get('missing_fields_filled') or []) or 'none'}",
+        ])
     renderer = payload.get("natural_renderer") or {}
     if renderer:
         lines.extend([

@@ -39,6 +39,9 @@ SAFETY = {
 
 CONTRADICTION_TRIGGERS = (
     "can these both be true",
+    "can both of those be true",
+    "can both of these be true",
+    "can both be true",
     "are these statements contradictory",
     "check for contradiction",
     "do these claims conflict",

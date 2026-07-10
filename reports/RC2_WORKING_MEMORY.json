@@ -1,32 +1,9 @@
 {
   "cases_tested": 6,
   "created_at": "2026-07-10T06:25:29+00:00",
-  "episode_schema": [
-    "episode_id",
-    "active_topic",
-    "active_entities",
-    "active_question",
-    "active_answer",
-    "active_route",
-    "active_wrs",
-    "active_contradiction",
-    "active_analogy",
-    "active_examples",
-    "active_limits",
-    "unresolved_questions",
-    "last_summary",
-    "conversation_branch",
-    "resolved_references",
-    "rejected_references",
-    "episode_confidence",
-    "turn_number",
-    "created_at",
-    "ephemeral",
-    "read_only"
-  ],
   "followup_resolution_accuracy": 1.0,
   "recommendation": "PROCEED_ADVERSARIAL_BENCHMARK_EXPANSION_AFTER_MEMORY_CALIBRATION",
-  "report": "RC2_WORKING_MEMORY_EPISODE",
+  "report": "RC2_WORKING_MEMORY",
   "results": [
     {
       "answer_preview": "Continuing with blood pressure: blood pressure is the force exerted by circulating blood against artery walls.",

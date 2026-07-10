@@ -196,8 +196,11 @@ def extract_reasoning_seeds(question: str) -> list[str]:
         "feedback loops",
         "memory consolidation",
         "noncanonical memory",
+        "immune memory",
         "gravity",
         "orbital motion",
+        "battery charging",
+        "vascular resistance",
         "evidence",
         "constraints",
         "tradeoffs",
@@ -229,8 +232,12 @@ def required_topic_families(question: str) -> list[str]:
         ("feedback", "feedback"),
         ("memory consolidation", "memory consolidation"),
         ("noncanonical memory", "noncanonical memory"),
+        ("immune memory", "immune memory"),
         ("gravity", "gravity"),
         ("orbital motion", "orbital motion"),
+        ("battery charging", "battery charging"),
+        ("charging", "battery charging"),
+        ("vascular resistance", "vascular resistance"),
     ]
     for phrase, family in phrase_to_family:
         if phrase in lower and family not in families:
@@ -488,6 +495,30 @@ def _higher_order_bridge(families: list[str], concepts: list[dict[str, Any]], pr
         return (
             "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure."
         )
+    if {"inflation", "blood pressure"} <= family_set:
+        return (
+            "Inflation and blood pressure are similar as systems because both describe pressure inside a larger context: inflation is pressure across prices in an economy, while blood pressure is force in the cardiovascular system. In both cases, interpretation depends on system context, flows, constraints, and whether the pressure is temporary or persistent."
+        )
+    if {"feedback", "allergies"} <= family_set:
+        return (
+            "Feedback loops and allergies are similar as systems because both involve response patterns: feedback uses outcomes to adjust future behavior, while allergies involve immune responses to exposures. The cautious bridge is response plus adjustment inside a system, not identical mechanisms."
+        )
+    if {"planning", "respiration"} <= family_set:
+        return (
+            "Planning and cellular respiration can be compared as constrained process systems: planning allocates actions toward goals under time and resource constraints, while cellular respiration converts stored chemical energy into ATP for cellular work under biological constraints."
+        )
+    if {"noncanonical memory", "immune memory"} <= family_set:
+        return (
+            "Noncanonical memory and immune memory both preserve history for future response, but at different levels: noncanonical memory keeps reversible reviewed knowledge for later reasoning, while immune memory reflects prior exposures that shape later immune response."
+        )
+    if {"interest rates", "vascular resistance"} <= family_set:
+        return (
+            "Interest rates and vascular resistance can be bridged through flow control: interest rates influence the flow of borrowing and spending, while vascular resistance influences blood flow and pressure. In both systems, resistance-like constraints can change downstream movement and pressure."
+        )
+    if {"photosynthesis", "battery charging"} <= family_set:
+        return (
+            "Photosynthesis and battery charging are similar as energy-storage systems: photosynthesis uses light energy to store energy in chemical bonds, while battery charging stores supplied energy electrochemically. The shared structure is energy input, conversion, storage, and later use."
+        )
     if {"planning", "feedback"} <= family_set:
         return (
             "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation."
@@ -528,10 +559,16 @@ def _topic_family(name: str) -> str:
         return "memory consolidation"
     if "noncanonical memory" in lower:
         return "noncanonical memory"
+    if "immune memory" in lower:
+        return "immune memory"
     if "gravity" in lower:
         return "gravity"
     if "orbital" in lower:
         return "orbital motion"
+    if "battery charging" in lower or "charging" in lower:
+        return "battery charging"
+    if "vascular resistance" in lower:
+        return "vascular resistance"
     return re.sub(r"\([^)]*\)", "", lower).strip().split(" ")[0] if lower.strip() else ""
 
 

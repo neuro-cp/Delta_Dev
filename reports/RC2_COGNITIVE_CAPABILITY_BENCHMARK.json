@@ -14,20 +14,20 @@
     "recall": 30
   },
   "category_scores": {
-    "abstraction": 0.8778,
+    "abstraction": 0.9611,
     "analogy": 0.8666,
     "contradiction_detection": 0.9722,
     "conversation_quality": 0.7347,
-    "cross_domain_synthesis": 0.7667,
+    "cross_domain_synthesis": 0.9806,
     "followup_memory": 1.0,
     "long_conversation": 1.0,
-    "missing_evidence": 0.8438,
-    "multi_concept_retrieval": 0.925,
+    "missing_evidence": 0.8812,
+    "multi_concept_retrieval": 0.975,
     "novel_combination": 0.6931,
     "recall": 0.7267
   },
-  "created_at": "2026-07-10T04:39:44+00:00",
-  "overall_score": 0.8251,
+  "created_at": "2026-07-10T07:10:45+00:00",
+  "overall_score": 0.8669,
   "recommendation": "IMPROVE_WRS_ABSTRACTION_AND_PROPOSITION_COMPARISON_BEFORE_CONCEPT_INSTILLATION",
   "report": "RC2_COGNITIVE_CAPABILITY_BENCHMARK",
   "results": [
@@ -722,7 +722,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change",
+      "answer_preview": "Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_blood_pressure_allergies_0",
@@ -743,23 +743,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 8,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change",
+      "answer_preview": "Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_blood_pressure_allergies_1",
@@ -780,23 +775,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 8,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change",
+      "answer_preview": "Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_blood_pressure_allergies_2",
@@ -817,23 +807,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clea",
+      "answer_preview": "Photosynthesis stores light energy in sugars and other chemical bonds; cellular respiration breaks down fuel molecules such as glucose to produce ATP. Together they form complementary parts of biological energy flow: one process stores usable chemical energy, and the other releases that energy for cellular work. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_photosynthesis_cellular_respiration_0",
@@ -854,23 +839,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 8,
-        "retrieved_proposition_count": 27,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 27
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clea",
+      "answer_preview": "Photosynthesis stores light energy in sugars and other chemical bonds; cellular respiration breaks down fuel molecules such as glucose to produce ATP. Together they form complementary parts of biological energy flow: one process stores usable chemical energy, and the other releases that energy for cellular work. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_photosynthesis_cellular_respiration_1",
@@ -891,23 +871,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 7,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clea",
+      "answer_preview": "Photosynthesis stores light energy in sugars and other chemical bonds; cellular respiration breaks down fuel molecules such as glucose to produce ATP. Together they form complementary parts of biological energy flow: one process stores usable chemical energy, and the other releases that energy for cellular work. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_photosynthesis_cellular_respiration_2",
@@ -928,23 +903,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) describes how to recover when the concept-guided process produces a bad result in finance, connecting infla",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) descr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_inflation_interest_rates_0",
@@ -965,23 +935,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.796,
         "graph_support_score": 0.8,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 4,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) describes how to recover when the concept-guided process produces a bad result in finance, connecting infla",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) descr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_inflation_interest_rates_1",
@@ -1002,23 +967,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.796,
         "graph_support_score": 0.8,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 4,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) describes how to recover when the concept-guided process produces a bad result in finance, connecting infla",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) descr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_inflation_interest_rates_2",
@@ -1039,23 +999,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Planning: Planning defines intended outcomes a",
+      "answer_preview": "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples,",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_planning_feedback_loops_0",
@@ -1076,23 +1031,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Planning: Planning defines intended outcomes a",
+      "answer_preview": "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples,",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_planning_feedback_loops_1",
@@ -1113,23 +1063,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Planning: Planning defines intended outcomes a",
+      "answer_preview": "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples,",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_planning_feedback_loops_2",
@@ -1150,23 +1095,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in ",
+      "answer_preview": "Memory consolidation and noncanonical memory connect as stages of governed learning: noncanonical memory can hold reversible candidate knowledge, while consolidation evaluates whether that knowledge is stable enough to become more durable. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memor",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_memory_consolidation_noncanonical_memory_0",
@@ -1187,23 +1127,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 6,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in ",
+      "answer_preview": "Memory consolidation and noncanonical memory connect as stages of governed learning: noncanonical memory can hold reversible candidate knowledge, while consolidation evaluates whether that knowledge is stable enough to become more durable. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memor",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_memory_consolidation_noncanonical_memory_1",
@@ -1224,23 +1159,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 6,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in ",
+      "answer_preview": "Memory consolidation and noncanonical memory connect as stages of governed learning: noncanonical memory can hold reversible candidate knowledge, while consolidation evaluates whether that knowledge is stable enough to become more durable. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memor",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_memory_consolidation_noncanonical_memory_2",
@@ -1261,23 +1191,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "Gravity and orbital motion connect through constraint and motion: gravity supplies the attractive force or curvature context, while orbital motion is the resulting path when that influence combines with velocity. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, con",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_gravity_orbital_motion_0",
@@ -1291,30 +1216,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 9,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "Gravity and orbital motion connect through constraint and motion: gravity supplies the attractive force or curvature context, while orbital motion is the resulting path when that influence combines with velocity. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, con",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_gravity_orbital_motion_1",
@@ -1328,30 +1248,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 9,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 28
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "Gravity and orbital motion connect through constraint and motion: gravity supplies the attractive force or curvature context, while orbital motion is the resulting path when that influence combines with velocity. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, con",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "multi_gravity_orbital_motion_2",
@@ -1365,30 +1280,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 25,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change can propagate through the c",
+      "answer_preview": "Inflation and blood pressure are similar as systems because both describe pressure inside a larger context: inflation is pressure across prices in an economy, while blood pressure is force in the cardiovascular system. In both cases, interpretation depends on system context, flows, constraints, and whether the pressure is temporary or persistent. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Inflation: Inf",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_inflation_blood_pressure_0",
@@ -1402,30 +1312,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.916,
         "graph_support_score": 0.8,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 4,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change can propagate through the c",
+      "answer_preview": "Inflation and blood pressure are similar as systems because both describe pressure inside a larger context: inflation is pressure across prices in an economy, while blood pressure is force in the cardiovascular system. In both cases, interpretation depends on system context, flows, constraints, and whether the pressure is temporary or persistent. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Inflation: Inf",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_inflation_blood_pressure_1",
@@ -1439,30 +1344,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 8,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change can propagate through the c",
+      "answer_preview": "Inflation and blood pressure are similar as systems because both describe pressure inside a larger context: inflation is pressure across prices in an economy, while blood pressure is force in the cardiovascular system. In both cases, interpretation depends on system context, flows, constraints, and whether the pressure is temporary or persistent. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Inflation: Inf",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_inflation_blood_pressure_2",
@@ -1476,30 +1376,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.916,
         "graph_support_score": 0.8,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 4,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable unce",
+      "answer_preview": "Feedback loops and allergies are similar as systems because both involve response patterns: feedback uses outcomes to adjust future behavior, while allergies involve immune responses to exposures. The cautious bridge is response plus adjustment inside a system, not identical mechanisms. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Customer Feedback Governance: Customer Feedback Governance (Business) desc",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_feedback_loops_allergies_0",
@@ -1513,30 +1408,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable unce",
+      "answer_preview": "Feedback loops and allergies are similar as systems because both involve response patterns: feedback uses outcomes to adjust future behavior, while allergies involve immune responses to exposures. The cautious bridge is response plus adjustment inside a system, not identical mechanisms. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Customer Feedback Governance: Customer Feedback Governance (Business) desc",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_feedback_loops_allergies_1",
@@ -1550,30 +1440,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable unce",
+      "answer_preview": "Feedback loops and allergies are similar as systems because both involve response patterns: feedback uses outcomes to adjust future behavior, while allergies involve immune responses to exposures. The cautious bridge is response plus adjustment inside a system, not identical mechanisms. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Customer Feedback Governance: Customer Feedback Governance (Business) desc",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_feedback_loops_allergies_2",
@@ -1587,30 +1472,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Cellular Respiration Boundary Conditions: Cellular Respiration Boundary Conditions (Biology) states when the concept applies, when it does not, and what assumptions must hold in b",
+      "answer_preview": "Planning and cellular respiration can be compared as constrained process systems: planning allocates actions toward goals under time and resource constraints, while cellular respiration converts stored chemical energy into ATP for cellular work under biological constraints. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Cellular Respiration ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_planning_cellular_respiration_0",
@@ -1624,30 +1504,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.8833,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Cellular Respiration Boundary Conditions: Cellular Respiration Boundary Conditions (Biology) states when the concept applies, when it does not, and what assumptions must hold in b",
+      "answer_preview": "Planning and cellular respiration can be compared as constrained process systems: planning allocates actions toward goals under time and resource constraints, while cellular respiration converts stored chemical energy into ATP for cellular work under biological constraints. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Cellular Respiration ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_planning_cellular_respiration_1",
@@ -1661,30 +1536,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.8833,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Cellular Respiration Boundary Conditions: Cellular Respiration Boundary Conditions (Biology) states when the concept applies, when it does not, and what assumptions must hold in b",
+      "answer_preview": "Planning and cellular respiration can be compared as constrained process systems: planning allocates actions toward goals under time and resource constraints, while cellular respiration converts stored chemical energy into ATP for cellular work under biological constraints. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Cellular Respiration ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_planning_cellular_respiration_2",
@@ -1698,30 +1568,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.8833,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable u",
+      "answer_preview": "Noncanonical memory and immune memory both preserve history for future response, but at different levels: noncanonical memory keeps reversible reviewed knowledge for later reasoning, while immune memory reflects prior exposures that shape later immune response. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advan",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_noncanonical_memory_immune_memory_0",
@@ -1735,30 +1600,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
-        "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_graph_edge_count": 9,
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable u",
+      "answer_preview": "Noncanonical memory and immune memory both preserve history for future response, but at different levels: noncanonical memory keeps reversible reviewed knowledge for later reasoning, while immune memory reflects prior exposures that shape later immune response. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advan",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_noncanonical_memory_immune_memory_1",
@@ -1772,30 +1632,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
-        "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_graph_edge_count": 9,
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable u",
+      "answer_preview": "Noncanonical memory and immune memory both preserve history for future response, but at different levels: noncanonical memory keeps reversible reviewed knowledge for later reasoning, while immune memory reflects prior exposures that shape later immune response. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advan",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_noncanonical_memory_immune_memory_2",
@@ -1809,30 +1664,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 5,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Interest Rates Causal Pathway: Interest Rates Causal Pathway (Finance) tracks how one change can propagate through the concept into later outcomes in finance, connecting interest rates to evidence, constraints, examples, and reviewable uncertainty. Interest Rates Ethical Constraint",
+      "answer_preview": "Interest rates and vascular resistance can be bridged through flow control: interest rates influence the flow of borrowing and spending, while vascular resistance influences blood flow and pressure. In both systems, resistance-like constraints can change downstream movement and pressure. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Interest Rates Causal Pathway: Interest Rates Causal Pathway (Finance) tracks how one change can propagate thr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_interest_rates_vascular_resistance_0",
@@ -1846,36 +1696,31 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.65,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.88,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 8,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Interest Rates Causal Pathway: Interest Rates Causal Pathway (Finance) tracks how one change can propagate through the concept into later outcomes in finance, connecting interest rates to evidence, constraints, examples, and reviewable uncertainty. Interest Rates Ethical Constraint",
+      "answer_preview": "Interest rates and vascular resistance can be bridged through flow control: interest rates influence the flow of borrowing and spending, while vascular resistance influences blood flow and pressure. In both systems, resistance-like constraints can change downstream movement and pressure. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Interest Rates Causal Pathway: Interest Rates Causal Pathway (Finance) tracks how one change can propagate thr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_interest_rates_vascular_resistance_1",
       "category": "cross_domain_synthesis",
       "concept_count": 8,
-      "confidence_score": 0.82,
+      "confidence_score": 0.88,
       "prompt": "What common structure might connect interest rates and vascular resistance?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -1883,36 +1728,31 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.65,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.88,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Interest Rates Causal Pathway: Interest Rates Causal Pathway (Finance) tracks how one change can propagate through the concept into later outcomes in finance, connecting interest rates to evidence, constraints, examples, and reviewable uncertainty. Interest Rates Ethical Constraint",
+      "answer_preview": "Interest rates and vascular resistance can be bridged through flow control: interest rates influence the flow of borrowing and spending, while vascular resistance influences blood flow and pressure. In both systems, resistance-like constraints can change downstream movement and pressure. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Interest Rates Causal Pathway: Interest Rates Causal Pathway (Finance) tracks how one change can propagate thr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_interest_rates_vascular_resistance_2",
       "category": "cross_domain_synthesis",
       "concept_count": 8,
-      "confidence_score": 0.796,
+      "confidence_score": 0.88,
       "prompt": "Build a cautious bridge between interest rates and vascular resistance using only local substrate knowledge.",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -1920,30 +1760,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.65,
-        "term_score": 0.0,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
-        "graph_support_score": 0.8,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "confidence": 0.88,
+        "graph_support_score": 1.0,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
-        "retrieved_graph_edge_count": 4,
-        "retrieved_proposition_count": 25,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_graph_edge_count": 8,
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clear in biology, connecting photosynthesis to evidence, constraints, examples, and reviewable uncertainty. Photosynthesis Co",
+      "answer_preview": "Photosynthesis and battery charging are similar as energy-storage systems: photosynthesis uses light energy to store energy in chemical bonds, while battery charging stores supplied energy electrochemically. The shared structure is energy input, conversion, storage, and later use. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Battery Charging Learning Path: Battery Charging Learning Path (Vehicles Mechanics) places the concept in a p",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_photosynthesis_battery_charging_0",
@@ -1957,30 +1792,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 0.8833,
+        "term_score": 0.6667,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 25,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clear in biology, connecting photosynthesis to evidence, constraints, examples, and reviewable uncertainty. Photosynthesis Co",
+      "answer_preview": "Photosynthesis and battery charging are similar as energy-storage systems: photosynthesis uses light energy to store energy in chemical bonds, while battery charging stores supplied energy electrochemically. The shared structure is energy input, conversion, storage, and later use. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Battery Charging Learning Path: Battery Charging Learning Path (Vehicles Mechanics) places the concept in a p",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_photosynthesis_battery_charging_1",
@@ -1994,30 +1824,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 0.8833,
+        "term_score": 0.6667,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clear in biology, connecting photosynthesis to evidence, constraints, examples, and reviewable uncertainty. Photosynthesis Co",
+      "answer_preview": "Photosynthesis and battery charging are similar as energy-storage systems: photosynthesis uses light energy to store energy in chemical bonds, while battery charging stores supplied energy electrochemically. The shared structure is energy input, conversion, storage, and later use. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Battery Charging Learning Path: Battery Charging Learning Path (Vehicles Mechanics) places the concept in a p",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "cross_photosynthesis_battery_charging_2",
@@ -2031,26 +1856,21 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.7667,
-        "term_score": 0.3333,
+        "score": 0.8833,
+        "term_score": 0.6667,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
-        "retrieved_graph_edge_count": 7,
-        "retrieved_proposition_count": 25,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_graph_edge_count": 9,
+        "retrieved_proposition_count": 25
       }
     },
     {
@@ -2330,7 +2150,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen.",
+      "answer_preview": "Blood pressure is a cardiovascular measurement shaped by cardiac output, vascular resistance, blood volume, and context; allergy history can constrain medication choices and clinical interpretation. Photosynthesis stores light energy in chemical bonds, while cellular respiration releases stored chemical energy as ATP. The biological pair is an energy transformation relationship, and the shared higher-order pattern is relational interpretation: one concept supplies context for understanding the r",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_078_0",
@@ -2344,30 +2164,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.6167,
-        "term_score": 0.3333,
-        "uncertainty_score": 0.25
+        "score": 1.0,
+        "term_score": 1.0,
+        "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 28
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen.",
+      "answer_preview": "Blood pressure is a cardiovascular measurement shaped by cardiac output, vascular resistance, blood volume, and context; allergy history can constrain medication choices and clinical interpretation. Photosynthesis stores light energy in chemical bonds, while cellular respiration releases stored chemical energy as ATP. The biological pair is an energy transformation relationship, and the shared higher-order pattern is relational interpretation: one concept supplies context for understanding the r",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_079_1",
@@ -2381,30 +2196,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.6167,
-        "term_score": 0.3333,
-        "uncertainty_score": 0.25
+        "score": 1.0,
+        "term_score": 1.0,
+        "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 28
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Planning: Planning defines intended outcomes a",
+      "answer_preview": "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples,",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_080_0",
@@ -2425,23 +2235,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Planning: Planning defines intended outcomes a",
+      "answer_preview": "Planning and feedback loops connect through adaptive control: a plan sets intended action, while feedback supplies information that can revise the plan when reality diverges from expectation. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples,",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_081_1",
@@ -2462,23 +2267,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 29,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 29
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting ",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Customer Feedback Governance: Customer Feedback Governance (Business) ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_082_0",
@@ -2499,23 +2299,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting ",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Customer Feedback Governance: Customer Feedback Governance (Business) ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_083_1",
@@ -2536,23 +2331,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in ",
+      "answer_preview": "Memory consolidation and noncanonical memory connect as stages of governed learning: noncanonical memory can hold reversible candidate knowledge, while consolidation evaluates whether that knowledge is stable enough to become more durable. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memor",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_084_0",
@@ -2573,23 +2363,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in ",
+      "answer_preview": "Memory consolidation and noncanonical memory connect as stages of governed learning: noncanonical memory can hold reversible candidate knowledge, while consolidation evaluates whether that knowledge is stable enough to become more durable. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Memory Consolidation Causal Pathway: Memor",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_085_1",
@@ -2610,23 +2395,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 32,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 32
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "Gravity and orbital motion connect through constraint and motion: gravity supplies the attractive force or curvature context, while orbital motion is the resulting path when that influence combines with velocity. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, con",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_086_0",
@@ -2640,30 +2420,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.8833,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 31,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 31
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "Gravity and orbital motion connect through constraint and motion: gravity supplies the attractive force or curvature context, while orbital motion is the resulting path when that influence combines with velocity. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, con",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_087_1",
@@ -2677,36 +2452,31 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.8833,
-        "term_score": 0.6667,
+        "score": 1.0,
+        "term_score": 1.0,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 34
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Allergies Data Requirement: Allergies Data Requirement (Medicine Health General) defines what data is needed before the concept can support a reliable decision in medicine health general, connecting allergies to evidence, constraints, examples, ",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advanced learning sequence in medicine health general, connecting immune memory to evidence, constraints, examples, and reviewable uncer",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_088_0",
       "category": "abstraction",
       "concept_count": 8,
-      "confidence_score": 0.95,
+      "confidence_score": 0.82,
       "prompt": "What common structure connects allergies, immune memory, and contradiction detection?",
       "provider_calls_performed": false,
       "route": "working_reasoning_set",
@@ -2721,23 +2491,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 31,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 25
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Allergies Data Requirement: Allergies Data Requirement (Medicine Health General) defines what data is needed before the concept can support a reliable decision in medicine health general, connecting allergies to evidence, constraints, examples, ",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Immune Memory Learning Path: Immune Memory Learning Path (Medicine Health General) places the concept in a prerequisite-to-advanced learning sequence in medicine health general, connecting immune memory to evidence, constraints, examples, and reviewable uncer",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "abstraction_089_1",
@@ -2758,23 +2523,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 31
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change",
+      "answer_preview": "Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_090_0",
@@ -2788,30 +2548,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.6625,
-        "term_score": 0.25,
+        "score": 0.8875,
+        "term_score": 0.75,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 27,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 27
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathway: Blood Pressure Causal Pathway (Medicine Health General) tracks how one change",
+      "answer_preview": "Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_091_1",
@@ -2825,30 +2580,25 @@
         "conversation_style_score": 1.0,
         "route_score": 1.0,
         "safety_score": 1.0,
-        "score": 0.6625,
-        "term_score": 0.25,
+        "score": 0.8875,
+        "term_score": 0.75,
         "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 2,
+        "possible_connection_count": 4,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 27,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 27
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) describes how to recover when the concept-guided process produces a bad result in finance, connecting infla",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) descr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_092_0",
@@ -2869,23 +2619,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) describes how to recover when the concept-guided process produces a bad result in finance, connecting infla",
+      "answer_preview": "Inflation and interest rates connect through economic feedback: inflation describes price-level pressure, while interest rates are a policy or market mechanism that can influence borrowing, spending, and that pressure. Inflation: Inflation means prices generally rise across an economy rather than one isolated price increasing. Interest Rates: Interest rates influence borrowing costs for consumers, businesses, and governments. Inflation Failure Recovery: Inflation Failure Recovery (Finance) descr",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_093_1",
@@ -2906,23 +2651,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clea",
+      "answer_preview": "Photosynthesis stores light energy in sugars and other chemical bonds; cellular respiration breaks down fuel molecules such as glucose to produce ATP. Together they form complementary parts of biological energy flow: one process stores usable chemical energy, and the other releases that energy for cellular work. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_094_0",
@@ -2943,23 +2683,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.88,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 27,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 27
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel molecules to produce ATP for cellular work. Photosynthesis Comparative Frame: Photosynthesis Comparative Frame (Biology) compares the concept with nearby ideas so differences and overlaps stay clea",
+      "answer_preview": "Photosynthesis stores light energy in sugars and other chemical bonds; cellular respiration breaks down fuel molecules such as glucose to produce ATP. Together they form complementary parts of biological energy flow: one process stores usable chemical energy, and the other releases that energy for cellular work. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen. Cellular Respiration: Cellular respiration breaks down glucose or other fuel ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_095_1",
@@ -2980,23 +2715,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.88,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 27,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 27
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable u",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable uncertainty. No",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_096_0",
@@ -3017,23 +2747,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 6,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable u",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Noncanonical Memory: Noncanonical memory stores approved but provisional knowledge outside canonical records. Noncanonical Memory Measurement: Noncanonical Memory Measurement (Delta Architecture Itself) describes how the concept can be observed, quantified, or compared in DELTA architecture itself, connecting noncanonical memory to evidence, constraints, examples, and reviewable uncertainty. No",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_097_1",
@@ -3054,19 +2779,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 6,
-        "retrieved_proposition_count": 26,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 26
       }
     },
     {
@@ -3093,7 +2813,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misle",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_099_1",
@@ -3114,23 +2834,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.94,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 32,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 32
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnostic Use: Gravit",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_100_0",
@@ -3151,23 +2866,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.7325,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 0.75,
         "retrieved_concept_count": 6,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 19,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 19
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnost",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Gravity: Gravity pulls masses toward one another and gives weight to objects near a planet or moon. Gravity Cross-Domain Analogy: Gravity Cross-Domain Analogy (Basic Physics) maps the concept to a structurally similar idea in another field without claiming identity in basic physics, connecting gravity to evidence, constraints, examples, and reviewable uncertainty. Gravity Diagnostic Use: Gravit",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "missing_evidence_101_1",
@@ -3188,19 +2898,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 25,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 25
       }
     },
     {
@@ -3503,7 +3208,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Planning: Planning defines intended outcomes and the steps expected to reach them. Attention Budgeting Learning Path: Attention Budgeting Learning Path (Planning Productivity) places the concept in a prerequisite-to-advanced learning sequence in planning productivity, connecting attention budgeting ",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Calendar Planning: Calendar planning turns priorities into time-bound commitments. Planning: Planning defines intended outcomes and the steps expected to reach them. Attention Budgeting Learning Path: Attention Budgeting Learning Path (Planning Productivity) places the concept in a prerequisite-to-advanced learning sequence in planning productivity, connecting attention budgeting to evidence, c",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_115_1",
@@ -3524,19 +3229,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 34
       }
     },
     {
@@ -3563,7 +3263,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists for centuries. Additive Manufacturing Causal Pathway: Additive Manufacturing Causal Pathway (Materials Science) tracks how one change can propagate through the concept into later outcomes in materials science, connecting additiv",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists for centuries. Additive Manufacturing Causal Pathway: Additive Manufacturing Causal Pathway (Materials Science) tracks how one change can propagate through the concept into later outcomes in materials science, connecting additive manufacturin",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_117_1",
@@ -3584,19 +3284,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 8,
-        "retrieved_proposition_count": 27,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 27
       }
     },
     {
@@ -3623,7 +3318,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misle",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_119_1",
@@ -3644,19 +3339,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 28
       }
     },
     {
@@ -3683,7 +3373,7 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Activation Energy Evidence Standard: Activation Energy Evidence Standard (Chemistry) defines what observations or measurements make the concept credible in chemistry, connecting activation energy to evidence, constraints, examples, and reviewable uncertainty. Active Transport Evidence Standard: Active Transport Evidence Standard (Biology) defines what observations or measurements ",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Activation Energy Evidence Standard: Activation Energy Evidence Standard (Chemistry) defines what observations or measurements make the concept credible in chemistry, connecting activation energy to evidence, constraints, examples, and reviewable uncertainty. Active Transport Evidence Standard: Active Transport Evidence Standard (Biology) defines what observations or measurements make the conce",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_121_1",
@@ -3704,23 +3394,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.82,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 1,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 24,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.5,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 24
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in psychology, connecting memory consolidation to evidence, constraints, examples, and reviewable uncertainty. Me",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in psychology, connecting memory consolidation to evidence, constraints, examples, and reviewable uncertainty. Memory Consolida",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_122_0",
@@ -3741,23 +3426,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 34
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in psychology, connecting memory consolidation to evidence, constraints, examples, and reviewable uncertainty. Me",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Memory Consolidation: Memory consolidation can stabilize fragile new memories after learning or experience. Memory Consolidation Causal Pathway: Memory Consolidation Causal Pathway (Psychology) tracks how one change can propagate through the concept into later outcomes in psychology, connecting memory consolidation to evidence, constraints, examples, and reviewable uncertainty. Memory Consolida",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_123_1",
@@ -3778,23 +3458,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 34
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misle",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_124_0",
@@ -3815,23 +3490,18 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 34
       }
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misle",
+      "answer_preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Customer Feedback Governance: Customer Feedback Governance (Business) describes review, accountability, and control requirements around the concept in business, connecting customer feedback to evidence, constraints, examples, and reviewable uncertainty. Customer Feedback Failure Mode: Customer Feedback Failure Mode (Business) identifies how the concept breaks down or becomes misleading in busin",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
       "case_id": "novel_125_1",
@@ -3852,19 +3522,14 @@
       "training_performed": false,
       "web_search_performed": false,
       "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
+        "confidence": 0.95,
         "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
+        "missing_evidence_count": 0,
+        "possible_connection_count": 3,
         "retrieval_score": 1.0,
         "retrieved_concept_count": 8,
         "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 34,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 0.0,
-        "unsupported_inference_count": 0
+        "retrieved_proposition_count": 34
       }
     },
     {
@@ -4580,7 +4245,7 @@
           "value": 22
         }
       ],
-      "created_at": "2026-07-10T04:39:45+00:00",
+      "created_at": "2026-07-10T07:10:45+00:00",
       "recommendation": "USE_ACTIVE_RUNTIME_CONCEPTS_FOR_UI_AND_WRS_DEFER_INSTILLATION_UNTIL_COUNTERS_STAY_RECONCILED",
       "report": "RC2_SUBSTRATE_RECONCILIATION",
       "safety": {
@@ -4713,7 +4378,7 @@
         {
           "case_id": "novel_117_1",
           "category": "novel_combination",
-          "preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and",
+          "preview": "The bridge should be built from the substantive propositions rather than repeated governance metadata. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists fo",
           "prompt": "How might materials science and psychology both use stress as a useful concept? Keep the bridge tentative.",
           "route": "working_reasoning_set",
           "score": 0.7667
@@ -4977,41 +4642,27 @@
       "wrs": null
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen.",
+      "answer_preview": "I know about Stress Strain Curves Mechanism. Stress Strain Curves Mechanism (Materials Science) explains how the process works and which parts interact in materials science, connecting stress strain curves to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Stress Strain Curves Comparative Frame, Stress Strain Curves Contradiction Check.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "case_id": "abstraction_078_0",
-      "category": "abstraction",
-      "concept_count": 8,
-      "confidence_score": 0.94,
-      "prompt": "What higher-order pattern connects blood pressure, allergies, photosynthesis, and cellular respiration?",
+      "case_id": "novel_116_0",
+      "category": "novel_combination",
+      "concept_count": 5,
+      "confidence_score": 0.92,
+      "prompt": "How might materials science and psychology both use stress as a useful concept?",
       "provider_calls_performed": false,
-      "route": "working_reasoning_set",
+      "route": "developmental_concept_memory",
       "score": {
         "conversation_style_score": 1.0,
-        "route_score": 1.0,
+        "route_score": 0.0,
         "safety_score": 1.0,
-        "score": 0.6167,
-        "term_score": 0.3333,
-        "uncertainty_score": 0.25
+        "score": 0.6333,
+        "term_score": 0.6667,
+        "uncertainty_score": 1.0
       },
       "training_performed": false,
       "web_search_performed": false,
-      "wrs": {
-        "destroyed_after_response": true,
-        "ephemeral": true,
-        "graph_support_score": 1.0,
-        "graph_write_performed": false,
-        "hallucination_risk": 0.1,
-        "memory_write_performed": false,
-        "retrieval_score": 1.0,
-        "retrieved_concept_count": 8,
-        "retrieved_graph_edge_count": 10,
-        "retrieved_proposition_count": 28,
-        "synthesis_enabled_by_default": false,
-        "uncertainty_quality": 1.0,
-        "unsupported_inference_count": 0
-      }
+      "wrs": null
     }
   ]
 }

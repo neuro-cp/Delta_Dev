@@ -1,12 +1,12 @@
 # RC2 Natural Conversation Renderer
 
-Created: 2026-07-10T03:43:02+00:00
+Created: 2026-07-10T06:48:00+00:00
 Cases rendered: 6
 Report-voice rate: 0.0
 Scaffold exposure rate: 0.0
 False-consent rate: 0.0
 Internal leaks: 0
-Recommendation: PROCEED_FOLLOWUP_MEMORY_REPAIR
+Recommendation: READY_FOR_RC2_REFINEMENT_FREEZE
 
 ## Cases
 
@@ -22,7 +22,7 @@ Recommendation: PROCEED_FOLLOWUP_MEMORY_REPAIR
 - Report voice: False
 - Scaffold exposure: False
 - Internal leak: False
-- Preview: These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathwa
+- Preview: Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens suc
 
 ### Can these both be true: exercise raises blood pressure, and exercise lowers blood pressure?
 - Route: contradiction_analysis
@@ -46,9 +46,9 @@ Recommendation: PROCEED_FOLLOWUP_MEMORY_REPAIR
 - Preview: Right now I am strongest at explaining DELTA itself, working with local approved substrate memory, helping with code and planning conversations, and walking through governed evidence workflows. For ordinary world knowledge I can answer simple questions locally; if confidence is low, I should ask whether you want supporting information before escalating.
 
 ### What is the relation between Avogadro's number and quantum field theory?
-- Route: developmental_concept_memory
+- Route: local_conversation_model_lane
 - Report voice: False
 - Scaffold exposure: False
 - Internal leak: False
-- Preview: I know about Number Theory Boundary Conditions. Number Theory Boundary Conditions (Mathematics) states when the concept applies, when it does not, and what assumptions must hold in mathematics, connecting number theory to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Number Theory Evidence Standard, Number Theory Failure Mode.
+- Preview: I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?
 

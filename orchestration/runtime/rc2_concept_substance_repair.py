@@ -268,6 +268,78 @@ def _loads(raw: str) -> dict[str, Any]:
     return data if isinstance(data, dict) else {}
 
 
+def repair_concept_substance(store_path: Path) -> dict[str, Any]:
+    """Repair generic JSONL concepts in a caller-provided store.
+
+    This compatibility helper is intentionally path-scoped for tests and small
+    operator utilities. It does not touch SQLite, canonical memory, providers,
+    training, graph records, or replay.
+    """
+    rows = []
+    for line in store_path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            rows.append(json.loads(line))
+    repaired = []
+    skipped = []
+    output = []
+    for row in rows:
+        target = _jsonl_repair_target(row)
+        if not target:
+            skipped.append({"concept_id": row.get("concept_id"), "reason": "already_substantive"})
+            output.append(row)
+            continue
+        spec = CORE_REPAIRS[target]
+        updated = {
+            **row,
+            "concept_name": row.get("concept_name") or spec["concept_name"],
+            "short_definition": spec["definition"],
+            "propositions": spec["propositions"],
+            "related_concepts": spec["related"],
+            "examples": spec["examples"],
+            "misconceptions": spec["misconceptions"],
+            "quality_repair_reason": "rc2_5a_concept_substance_repair",
+            "substance_repair_version_handle": f"rc2-5a-substance-repair-{row.get('concept_id', target).replace(' ', '-')}",
+            "training_performed": False,
+            "provider_calls_performed": False,
+            "canonical": False,
+        }
+        repaired.append({"concept_id": updated.get("concept_id"), "target": target, "reason": "generic_scaffold_repaired"})
+        output.append(updated)
+    store_path.write_text("\n".join(json.dumps(row, sort_keys=True) for row in output) + ("\n" if output else ""), encoding="utf-8")
+    return {
+        "report": "RC2_CONCEPT_SUBSTANCE_REPAIR_JSONL_COMPAT",
+        "created_at": _now(),
+        "store_path": str(store_path),
+        "repaired_count": len(repaired),
+        "skipped_count": len(skipped),
+        "repaired": repaired,
+        "skipped": skipped,
+        "safety": {
+            **SAFETY,
+            "jsonl_source_store_mutated": True,
+            "jsonl_mutation_scope": "caller_provided_store_path_only",
+        },
+    }
+
+
+def _jsonl_repair_target(row: dict[str, Any]) -> str | None:
+    name = str(row.get("concept_name") or "").lower()
+    definition = str(row.get("short_definition") or "").lower()
+    propositions = " ".join(str(item) for item in row.get("propositions") or []).lower()
+    generic = any(phrase in f"{definition} {propositions}" for phrase in (
+        "reusable",
+        "causes, constraints, tradeoffs",
+        "connects observable situations",
+        "underlying biology principles",
+    ))
+    if not generic:
+        return None
+    for target in CORE_REPAIRS:
+        if target in name:
+            return target
+    return None
+
+
 def _select_repair_row(conn: sqlite3.Connection, target: str) -> sqlite3.Row | None:
     spec = CORE_REPAIRS[target]
     exact = conn.execute(

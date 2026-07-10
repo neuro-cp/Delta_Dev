@@ -104,6 +104,7 @@ def build_natural_renderer_report(write_reports: bool = True) -> dict[str, Any]:
     scaffold = sum(1 for item in rendered if item["scaffold_exposure"])
     leaks = sum(1 for item in rendered if item["internal_leak"])
     false_consent = sum(1 for item in rendered if item["false_consent"])
+    gates_clean = report_voice == 0 and scaffold == 0 and leaks == 0 and false_consent == 0
     report = {
         "report": "RC2_NATURAL_CONVERSATION_RENDERER",
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
@@ -123,7 +124,7 @@ def build_natural_renderer_report(write_reports: bool = True) -> dict[str, Any]:
             "web_search_performed": False,
             "autonomous_action_performed": False,
         },
-        "recommendation": "PROCEED_FOLLOWUP_MEMORY_REPAIR",
+        "recommendation": "READY_FOR_RC2_REFINEMENT_FREEZE" if gates_clean else "CONTINUE_NATURAL_CONVERSATION_CALIBRATION",
     }
     if write_reports:
         REPORT_JSON.parent.mkdir(parents=True, exist_ok=True)

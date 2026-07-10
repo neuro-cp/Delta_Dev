@@ -1,11 +1,11 @@
 {
   "cases_rendered": 6,
   "conversation_quality_estimate": 1.0,
-  "created_at": "2026-07-10T03:43:02+00:00",
+  "created_at": "2026-07-10T06:48:00+00:00",
   "false_consent_rate": 0.0,
   "normal_output_internal_leak_count": 0,
   "overlay_completeness": 1.0,
-  "recommendation": "PROCEED_FOLLOWUP_MEMORY_REPAIR",
+  "recommendation": "READY_FOR_RC2_REFINEMENT_FREEZE",
   "report": "RC2_NATURAL_CONVERSATION_RENDERER",
   "report_voice_rate": 0.0,
   "results": [
@@ -20,7 +20,7 @@
       "scaffold_exposure": false
     },
     {
-      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathwa",
+      "answer_preview": "Blood pressure supplies a measurable cardiovascular state, while allergy history can affect medication choices, emergency planning, and what clinical evidence must be checked before interpreting or acting on that state. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens suc",
       "false_consent": false,
       "internal_leak": false,
       "kind": "wrs",
@@ -60,13 +60,13 @@
       "scaffold_exposure": false
     },
     {
-      "answer_preview": "I know about Number Theory Boundary Conditions. Number Theory Boundary Conditions (Mathematics) states when the concept applies, when it does not, and what assumptions must hold in mathematics, connecting number theory to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Number Theory Evidence Standard, Number Theory Failure Mode.",
+      "answer_preview": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
       "false_consent": false,
       "internal_leak": false,
       "kind": "insufficient",
       "prompt": "What is the relation between Avogadro's number and quantum field theory?",
       "report_voice": false,
-      "route": "developmental_concept_memory",
+      "route": "local_conversation_model_lane",
       "scaffold_exposure": false
     }
   ],

@@ -1,0 +1,304 @@
+{
+  "created_at": "2026-07-10T06:25:29+00:00",
+  "ephemeral": true,
+  "episode_schema": [
+    "episode_id",
+    "active_topic",
+    "active_entities",
+    "active_question",
+    "active_answer",
+    "active_route",
+    "active_wrs",
+    "active_contradiction",
+    "active_analogy",
+    "active_examples",
+    "active_limits",
+    "unresolved_questions",
+    "last_summary",
+    "conversation_branch",
+    "resolved_references",
+    "rejected_references",
+    "episode_confidence",
+    "turn_number",
+    "created_at",
+    "ephemeral",
+    "read_only"
+  ],
+  "read_only": true,
+  "recommendation": "PROCEED_ADVERSARIAL_BENCHMARK_EXPANSION_AFTER_MEMORY_CALIBRATION",
+  "report": "RC2_COGNITIVE_EPISODE",
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_memory_write_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "sample_episodes": [
+    {
+      "active_analogy": null,
+      "active_answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+      "active_contradiction": null,
+      "active_entities": [
+        "blood pressure"
+      ],
+      "active_examples": [],
+      "active_limits": [],
+      "active_question": "What is blood pressure?",
+      "active_route": "developmental_concept_memory",
+      "active_topic": "blood pressure",
+      "active_wrs": null,
+      "conversation_branch": [
+        {
+          "answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+          "entities": [
+            "blood pressure"
+          ],
+          "question": "What is blood pressure?",
+          "route": "developmental_concept_memory",
+          "summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+          "topic": "blood pressure"
+        }
+      ],
+      "created_at": "2026-07-10T06:25:29+00:00",
+      "ephemeral": true,
+      "episode_confidence": 0.88,
+      "episode_id": "rc2-episode-b8f6a21918ac12ff",
+      "last_summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+      "read_only": true,
+      "rejected_references": [],
+      "resolved_references": [],
+      "turn_number": 2,
+      "unresolved_questions": []
+    },
+    {
+      "active_analogy": null,
+      "active_answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+      "active_contradiction": null,
+      "active_entities": [
+        "blood pressure"
+      ],
+      "active_examples": [],
+      "active_limits": [],
+      "active_question": "What is blood pressure?",
+      "active_route": "developmental_concept_memory",
+      "active_topic": "blood pressure",
+      "active_wrs": null,
+      "conversation_branch": [
+        {
+          "answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+          "entities": [
+            "blood pressure"
+          ],
+          "question": "What is blood pressure?",
+          "route": "developmental_concept_memory",
+          "summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+          "topic": "blood pressure"
+        }
+      ],
+      "created_at": "2026-07-10T06:25:29+00:00",
+      "ephemeral": true,
+      "episode_confidence": 0.88,
+      "episode_id": "rc2-episode-9cf839be7f05552e",
+      "last_summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+      "read_only": true,
+      "rejected_references": [],
+      "resolved_references": [],
+      "turn_number": 2,
+      "unresolved_questions": []
+    },
+    {
+      "active_analogy": null,
+      "active_answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+      "active_contradiction": null,
+      "active_entities": [
+        "blood pressure"
+      ],
+      "active_examples": [],
+      "active_limits": [],
+      "active_question": "What is blood pressure?",
+      "active_route": "developmental_concept_memory",
+      "active_topic": "blood pressure",
+      "active_wrs": null,
+      "conversation_branch": [
+        {
+          "answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+          "entities": [
+            "blood pressure"
+          ],
+          "question": "What is blood pressure?",
+          "route": "developmental_concept_memory",
+          "summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+          "topic": "blood pressure"
+        }
+      ],
+      "created_at": "2026-07-10T06:25:29+00:00",
+      "ephemeral": true,
+      "episode_confidence": 0.88,
+      "episode_id": "rc2-episode-9c9227528cc7cdab",
+      "last_summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+      "read_only": true,
+      "rejected_references": [],
+      "resolved_references": [],
+      "turn_number": 2,
+      "unresolved_questions": []
+    },
+    {
+      "active_analogy": null,
+      "active_answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+      "active_contradiction": null,
+      "active_entities": [
+        "allergies"
+      ],
+      "active_examples": [],
+      "active_limits": [],
+      "active_question": "What is blood pressure?",
+      "active_route": "developmental_concept_memory",
+      "active_topic": "blood pressure",
+      "active_wrs": null,
+      "conversation_branch": [
+        {
+          "answer": "Blood pressure is the force exerted by circulating blood against artery walls.",
+          "entities": [
+            "blood pressure"
+          ],
+          "question": "What is blood pressure?",
+          "route": "developmental_concept_memory",
+          "summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+          "topic": "blood pressure"
+        }
+      ],
+      "created_at": "2026-07-10T06:25:29+00:00",
+      "ephemeral": true,
+      "episode_confidence": 0.88,
+      "episode_id": "rc2-episode-917464a80ab774f8",
+      "last_summary": "Question: What is blood pressure? | Answer: Blood pressure is the force exerted by circulating blood against artery walls.",
+      "read_only": true,
+      "rejected_references": [],
+      "resolved_references": [
+        {
+          "reference": "that",
+          "resolved_to": "blood pressure"
+        }
+      ],
+      "turn_number": 2,
+      "unresolved_questions": []
+    },
+    {
+      "active_analogy": null,
+      "active_answer": "Photosynthesis stores light energy in chemical bonds.",
+      "active_contradiction": null,
+      "active_entities": [
+        "photosynthesis"
+      ],
+      "active_examples": [],
+      "active_limits": [],
+      "active_question": "Let's discuss photosynthesis.",
+      "active_route": "developmental_concept_memory",
+      "active_topic": "photosynthesis",
+      "active_wrs": null,
+      "conversation_branch": [
+        {
+          "answer": "Photosynthesis stores light energy in chemical bonds.",
+          "entities": [
+            "photosynthesis"
+          ],
+          "question": "Let's discuss photosynthesis.",
+          "route": "developmental_concept_memory",
+          "summary": "Question: Let's discuss photosynthesis. | Answer: Photosynthesis stores light energy in chemical bonds.",
+          "topic": "photosynthesis"
+        },
+        {
+          "answer": "Planning organizes actions toward goals.",
+          "entities": [
+            "planning"
+          ],
+          "question": "Now switch to planning.",
+          "route": "session_history",
+          "summary": "Question: Now switch to planning. | Answer: Planning organizes actions toward goals.",
+          "topic": "planning"
+        },
+        {
+          "answer": "Allergies involve immune responses to allergens.",
+          "entities": [
+            "allergies"
+          ],
+          "question": "Talk about allergies.",
+          "route": "session_history",
+          "summary": "Question: Talk about allergies. | Answer: Allergies involve immune responses to allergens.",
+          "topic": "allergies"
+        }
+      ],
+      "created_at": "2026-07-10T06:25:29+00:00",
+      "ephemeral": true,
+      "episode_confidence": 0.88,
+      "episode_id": "rc2-episode-b5c9614b21671daf",
+      "last_summary": "Question: Let's discuss photosynthesis. | Answer: Photosynthesis stores light energy in chemical bonds.",
+      "read_only": true,
+      "rejected_references": [],
+      "resolved_references": [
+        {
+          "reference": "first",
+          "resolved_to": "photosynthesis"
+        }
+      ],
+      "turn_number": 4,
+      "unresolved_questions": []
+    },
+    {
+      "active_analogy": null,
+      "active_answer": "The shared pattern is energy input, conversion, storage, and later use. Where it breaks: photosynthesis is biochemical and a battery is electrochemical.",
+      "active_contradiction": null,
+      "active_entities": [
+        "photosynthesis"
+      ],
+      "active_examples": [],
+      "active_limits": [
+        "The shared pattern is energy input, conversion, storage, and later use. Where it breaks: photosynthesis is biochemical and a battery is electrochemical."
+      ],
+      "active_question": "How is photosynthesis like charging a battery?",
+      "active_route": "analogy_analysis",
+      "active_topic": "photosynthesis",
+      "active_wrs": null,
+      "conversation_branch": [
+        {
+          "answer": "The shared pattern is energy input, conversion, storage, and later use. Where it breaks: photosynthesis is biochemical and a battery is electrochemical.",
+          "entities": [
+            "photosynthesis"
+          ],
+          "question": "How is photosynthesis like charging a battery?",
+          "route": "analogy_analysis",
+          "summary": "Question: How is photosynthesis like charging a battery? | Answer: The shared pattern is energy input, conversion, storage, and later use. Where it breaks: photosynthesis is biochemical and a battery is electrochemical.",
+          "topic": "photosynthesis"
+        }
+      ],
+      "created_at": "2026-07-10T06:25:29+00:00",
+      "ephemeral": true,
+      "episode_confidence": 0.88,
+      "episode_id": "rc2-episode-bd0b90836a21e7d7",
+      "last_summary": "Question: How is photosynthesis like charging a battery? | Answer: The shared pattern is energy input, conversion, storage, and later use. Where it breaks: photosynthesis is biochemical and a battery is electrochemical.",
+      "read_only": true,
+      "rejected_references": [],
+      "resolved_references": [
+        {
+          "reference": "that",
+          "resolved_to": "photosynthesis"
+        },
+        {
+          "reference": "analogy",
+          "resolved_to": "photosynthesis"
+        }
+      ],
+      "turn_number": 2,
+      "unresolved_questions": []
+    }
+  ]
+}

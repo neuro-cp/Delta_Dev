@@ -21,6 +21,10 @@ if str(ROOT) not in sys.path:
 
 REPORT_JSON = ROOT / "reports" / "RC2_WORKING_MEMORY_EPISODE.json"
 REPORT_MD = ROOT / "reports" / "RC2_WORKING_MEMORY_EPISODE.md"
+WORKING_MEMORY_JSON = ROOT / "reports" / "RC2_WORKING_MEMORY.json"
+WORKING_MEMORY_MD = ROOT / "reports" / "RC2_WORKING_MEMORY.md"
+COGNITIVE_EPISODE_JSON = ROOT / "reports" / "RC2_COGNITIVE_EPISODE.json"
+COGNITIVE_EPISODE_MD = ROOT / "reports" / "RC2_COGNITIVE_EPISODE.md"
 
 SAFETY = {
     "training_performed": False,
@@ -75,6 +79,7 @@ FOLLOWUP_FORMS = {
     "what evidence is missing",
     "compare those",
     "what changed",
+    "continue",
 }
 
 
@@ -229,11 +234,12 @@ def build_working_memory_episode_report(write_reports: bool = True) -> dict[str,
         REPORT_JSON.parent.mkdir(parents=True, exist_ok=True)
         REPORT_JSON.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         _write_md(report)
+        _write_alias_reports(report)
     return report
 
 
 def _norm(text: str) -> str:
-    text = str(text or "").lower().replace("-", " ")
+    text = str(text or "").lower().replace("-", " ").replace(",", " ")
     return re.sub(r"\s+", " ", text).strip(" ?!.")
 
 
@@ -422,7 +428,9 @@ def _episode_confidence(message: str, active: dict[str, Any], entities: list[str
 def _is_followup(lower: str) -> bool:
     if lower in FOLLOWUP_FORMS:
         return True
-    if lower.startswith("return to "):
+    if lower.startswith(("return to ", "go back to ")):
+        return True
+    if lower.startswith(("continue ", "okay continue", "ok continue")):
         return True
     return bool(re.search(r"\b(that|this|those|it|first one|second one|earlier)\b", lower))
 
@@ -545,6 +553,62 @@ def _write_md(report: dict[str, Any]) -> None:
             "",
         ])
     REPORT_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_alias_reports(report: dict[str, Any]) -> None:
+    working_memory = {
+        "report": "RC2_WORKING_MEMORY",
+        "created_at": report["created_at"],
+        "cases_tested": report["cases_tested"],
+        "followup_resolution_accuracy": report["followup_resolution_accuracy"],
+        "results": report["results"],
+        "safety": report["safety"],
+        "recommendation": report["recommendation"],
+    }
+    cognitive_episode = {
+        "report": "RC2_COGNITIVE_EPISODE",
+        "created_at": report["created_at"],
+        "episode_schema": report["episode_schema"],
+        "ephemeral": True,
+        "read_only": True,
+        "sample_episodes": [item.get("episode") for item in report["results"][:6]],
+        "safety": report["safety"],
+        "recommendation": report["recommendation"],
+    }
+    WORKING_MEMORY_JSON.write_text(json.dumps(working_memory, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    COGNITIVE_EPISODE_JSON.write_text(json.dumps(cognitive_episode, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    WORKING_MEMORY_MD.write_text(_alias_md(working_memory, "RC2 Working Memory"), encoding="utf-8")
+    COGNITIVE_EPISODE_MD.write_text(_alias_md(cognitive_episode, "RC2 Cognitive Episode"), encoding="utf-8")
+
+
+def _alias_md(report: dict[str, Any], title: str) -> str:
+    lines = [
+        f"# {title}",
+        "",
+        f"Created: {report['created_at']}",
+        f"Recommendation: {report['recommendation']}",
+        "",
+    ]
+    if "cases_tested" in report:
+        lines.extend([
+            f"Cases tested: {report['cases_tested']}",
+            f"Follow-up resolution accuracy: {report['followup_resolution_accuracy']}",
+            "",
+        ])
+    if "episode_schema" in report:
+        lines.extend([
+            "Ephemeral: true",
+            "Read only: true",
+            "",
+            "## Episode Schema",
+            "",
+        ])
+        lines.extend(f"- {item}" for item in report["episode_schema"])
+        lines.append("")
+    lines.extend(["## Safety", ""])
+    for key, value in report["safety"].items():
+        lines.append(f"- {key}: {value}")
+    return "\n".join(lines) + "\n"
 
 
 def main() -> None:

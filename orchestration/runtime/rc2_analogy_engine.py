@@ -359,6 +359,8 @@ def _extract_pair(message: str, history: list[dict[str, str]] | None = None) -> 
     patterns = [
         r"how is (.+?) to (.+?) like (.+?) to (.+)",
         r"test this analogy:\s*(.+?)/(.+?)\s+is like\s+(.+?)/(.+)",
+        r"test this analogy:\s*(.+?)\s+and\s+(.+?)\s+are like\s+(.+?)\s+and\s+(.+)",
+        r"(.+?)\s+and\s+(.+?)\s+are like\s+(.+?)\s+and\s+(.+)",
         r"how are (.+?) like (.+)",
         r"how is (.+?) like (.+)",
         r"what is the analogy between (.+?) and (.+)",

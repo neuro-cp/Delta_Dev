@@ -1,8 +1,8 @@
 # RC2 Cognitive Capability Benchmark
 
-Created: 2026-07-10T04:39:44+00:00
+Created: 2026-07-10T07:10:45+00:00
 Cases: 148
-Overall score: 0.8251
+Overall score: 0.8669
 Recommendation: IMPROVE_WRS_ABSTRACTION_AND_PROPOSITION_COMPARISON_BEFORE_CONCEPT_INSTILLATION
 Safety passed: True
 
@@ -10,15 +10,15 @@ Safety passed: True
 
 | Capability | Cases | Score |
 | --- | ---: | ---: |
-| abstraction | 12 | 0.8778 |
+| abstraction | 12 | 0.9611 |
 | analogy | 12 | 0.8666 |
 | contradiction_detection | 12 | 0.9722 |
 | conversation_quality | 12 | 0.7347 |
-| cross_domain_synthesis | 18 | 0.7667 |
+| cross_domain_synthesis | 18 | 0.9806 |
 | followup_memory | 6 | 1.0 |
 | long_conversation | 4 | 1.0 |
-| missing_evidence | 12 | 0.8438 |
-| multi_concept_retrieval | 18 | 0.925 |
+| missing_evidence | 12 | 0.8812 |
+| multi_concept_retrieval | 18 | 0.975 |
 | novel_combination | 12 | 0.6931 |
 | recall | 30 | 0.7267 |
 
@@ -112,13 +112,13 @@ Safety passed: True
 - Prompt: Could you ask me a follow-up question?
 - Preview: I know about Follow-up Failure Mode. Follow-up Failure Mode (Social Communication) identifies how the concept breaks down or becomes misleading in social communication, connecting follow-up to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Follow-up Governance, Follow-up Optimization.
 
-### abstraction_078_0
+### novel_116_0
 
-- Category: abstraction
-- Score: 0.6167
-- Route: working_reasoning_set
-- Prompt: What higher-order pattern connects blood pressure, allergies, photosynthesis, and cellular respiration?
-- Preview: These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Photosynthesis: Photosynthesis uses light energy to convert carbon dioxide and water into sugars and oxygen.
+- Category: novel_combination
+- Score: 0.6333
+- Route: developmental_concept_memory
+- Prompt: How might materials science and psychology both use stress as a useful concept?
+- Preview: I know about Stress Strain Curves Mechanism. Stress Strain Curves Mechanism (Materials Science) explains how the process works and which parts interact in materials science, connecting stress strain curves to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Stress Strain Curves Comparative Frame, Stress Strain Curves Contradiction Check.
 
 
 ## Output Text Pathology Review
@@ -148,7 +148,7 @@ Safety passed: True
 
 - `novel_117_1` (novel_combination, route=working_reasoning_set, score=0.7667)
   Prompt: How might materials science and psychology both use stress as a useful concept? Keep the bridge tentative.
-  Preview: These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and
+  Preview: The bridge should be built from the substantive propositions rather than repeated governance metadata. Meaning of Life Perspectives: The meaning of life is a profound and subjective question that has been debated by philosophers, theologians, and scientists fo
 
 ### consent_prompt_when_local_substrate_expected
 
