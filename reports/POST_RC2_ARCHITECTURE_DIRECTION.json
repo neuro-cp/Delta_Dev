@@ -1,0 +1,43 @@
+{
+  "report": "POST_RC2_ARCHITECTURE_DIRECTION",
+  "status": "documented",
+  "runtime_changed": false,
+  "primary_artifact": "docs/POST_RC2_ARCHITECTURE_DIRECTION.md",
+  "captured_direction": [
+    "operator_governed_recursive_engineering",
+    "plugin_based_growth",
+    "sandbox_engineering_workflow",
+    "evidence_backed_proposal_packages",
+    "external_review_loop",
+    "controlled_forgetting_design",
+    "distillation_as_graduation_event"
+  ],
+  "rc2_boundary": "RC2 remains the stable answer-this-turn cognitive pipeline.",
+  "rc3_candidates": [
+    "goal_directed_cognition",
+    "planning",
+    "introspection",
+    "self_evaluation",
+    "meta_reasoning",
+    "controlled_forgetting",
+    "operator_governed_self_engineering",
+    "plugin_architecture",
+    "sandbox_experimentation"
+  ],
+  "safety": {
+    "training_performed": false,
+    "fine_tuning_performed": false,
+    "weight_update_performed": false,
+    "provider_calls_performed": false,
+    "canonical_write_performed": false,
+    "noncanonical_write_performed": false,
+    "graph_write_performed": false,
+    "replay_write_performed": false,
+    "autonomous_action_performed": false,
+    "scheduler_action_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "delta_75_push_performed": false
+  },
+  "recommendation": "PROCEED_FINAL_RC2_VALIDATION_AND_FREEZE_DOCUMENTATION"
+}

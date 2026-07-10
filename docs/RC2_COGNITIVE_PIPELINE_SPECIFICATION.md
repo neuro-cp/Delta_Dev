@@ -327,6 +327,10 @@ The following capabilities belong in RC3 and should attach above RC2 rather than
 - long-term planning
 - self-evaluation
 - meta-reasoning
+- controlled forgetting design
+- operator-governed self-engineering
+- plugin architecture
+- sandbox experimentation
 - persistent episodic cognition
 - curriculum/graduation workflows
 
@@ -341,6 +345,9 @@ flowchart TD
 ```
 
 RC3 may call the RC2 pipeline repeatedly, but RC2 should remain stable as the answer-this-turn contract.
+
+The long-term post-RC2 architecture direction is recorded in
+`docs/POST_RC2_ARCHITECTURE_DIRECTION.md`.
 
 ## Non-Negotiable Invariants
 
