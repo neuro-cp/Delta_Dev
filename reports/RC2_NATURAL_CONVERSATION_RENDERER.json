@@ -1,0 +1,82 @@
+{
+  "cases_rendered": 6,
+  "conversation_quality_estimate": 1.0,
+  "created_at": "2026-07-10T03:43:02+00:00",
+  "false_consent_rate": 0.0,
+  "normal_output_internal_leak_count": 0,
+  "overlay_completeness": 1.0,
+  "recommendation": "PROCEED_FOLLOWUP_MEMORY_REPAIR",
+  "report": "RC2_NATURAL_CONVERSATION_RENDERER",
+  "report_voice_rate": 0.0,
+  "results": [
+    {
+      "answer_preview": "I know about Blood Pressure. Blood pressure is the force exerted by circulating blood against artery walls, usually measured as systolic pressure over diastolic pressure. Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Blood pressure reflects cardiac output, vascular resistance, blood volume, and short-term physiological state. I can also connec",
+      "false_consent": false,
+      "internal_leak": false,
+      "kind": "factual",
+      "prompt": "What is blood pressure?",
+      "report_voice": false,
+      "route": "developmental_concept_memory",
+      "scaffold_exposure": false
+    },
+    {
+      "answer_preview": "These ideas can be connected, but the strongest bridge comes from their concrete facts rather than the labels alone. Blood Pressure: Blood pressure is measured as systolic pressure during heart contraction and diastolic pressure during heart relaxation. Allergies: Allergies involve immune reactivity to allergens such as foods, medications, insect stings, latex, or environmental exposures. Blood Pressure Causal Pathwa",
+      "false_consent": false,
+      "internal_leak": false,
+      "kind": "wrs",
+      "prompt": "How could allergies influence blood pressure interpretation?",
+      "report_voice": false,
+      "route": "working_reasoning_set",
+      "scaffold_exposure": false
+    },
+    {
+      "answer_preview": "Yes. They can both be true if they describe different conditions or timeframes.\n\nClaim A: exercise raises blood pressure\nClaim B: exercise lowers blood pressure?\n\nThe key is condition and timeframe: a short-term effect can differ from a long-term effect, or one condition can differ from another.\n\nClassification: conditional compatibility.",
+      "false_consent": false,
+      "internal_leak": false,
+      "kind": "contradiction",
+      "prompt": "Can these both be true: exercise raises blood pressure, and exercise lowers blood pressure?",
+      "report_voice": false,
+      "route": "contradiction_analysis",
+      "scaffold_exposure": false
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast conversion maps to electrochemical conversion; chemical ener",
+      "false_consent": false,
+      "internal_leak": false,
+      "kind": "analogy",
+      "prompt": "How is photosynthesis like charging a battery?",
+      "report_voice": false,
+      "route": "analogy_analysis",
+      "scaffold_exposure": false
+    },
+    {
+      "answer_preview": "Right now I am strongest at explaining DELTA itself, working with local approved substrate memory, helping with code and planning conversations, and walking through governed evidence workflows. For ordinary world knowledge I can answer simple questions locally; if confidence is low, I should ask whether you want supporting information before escalating.",
+      "false_consent": false,
+      "internal_leak": false,
+      "kind": "browse",
+      "prompt": "What topics do you know most about?",
+      "report_voice": false,
+      "route": "local_conversation_model_lane",
+      "scaffold_exposure": false
+    },
+    {
+      "answer_preview": "I know about Number Theory Boundary Conditions. Number Theory Boundary Conditions (Mathematics) states when the concept applies, when it does not, and what assumptions must hold in mathematics, connecting number theory to evidence, constraints, examples, and reviewable uncertainty. I can also connect it to Number Theory Evidence Standard, Number Theory Failure Mode.",
+      "false_consent": false,
+      "internal_leak": false,
+      "kind": "insufficient",
+      "prompt": "What is the relation between Avogadro's number and quantum field theory?",
+      "report_voice": false,
+      "route": "developmental_concept_memory",
+      "scaffold_exposure": false
+    }
+  ],
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "provider_calls_performed": false,
+    "training_performed": false,
+    "web_search_performed": false
+  },
+  "scaffold_exposure_rate": 0.0,
+  "wrong_context_rate": 0.0
+}

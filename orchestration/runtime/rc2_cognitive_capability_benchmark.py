@@ -201,7 +201,7 @@ def build_benchmark_cases() -> list[BenchmarkCase]:
                 category="analogy",
                 prompt=prompt,
                 expected_terms=terms,
-                expected_routes=("working_reasoning_set", "developmental_multi_concept_retrieval"),
+                expected_routes=("analogy_analysis", "working_reasoning_set", "developmental_multi_concept_retrieval"),
             ))
     for prompt, terms in ABSTRACTION_PROMPTS:
         for variant, phrasing in enumerate([
@@ -237,7 +237,7 @@ def build_benchmark_cases() -> list[BenchmarkCase]:
                 category="contradiction_detection",
                 prompt=phrasing,
                 expected_terms=terms,
-                expected_routes=("working_reasoning_set", "developmental_multi_concept_retrieval", "local_model_consent_required"),
+                expected_routes=("contradiction_analysis", "working_reasoning_set", "developmental_multi_concept_retrieval", "local_model_consent_required"),
             ))
     for prompt, terms in NOVEL_COMBINATIONS:
         for variant, phrasing in enumerate([
@@ -311,7 +311,7 @@ def build_benchmark_cases() -> list[BenchmarkCase]:
             category="conversation_quality",
             prompt=prompt,
             expected_terms=terms,
-            expected_routes=("social_intent", "local_conversation_scaffold", "developmental_concept_domain_browse", "provider_policy_answer"),
+            expected_routes=("social_intent", "social_conversation", "session_memory", "local_conversation_scaffold", "developmental_concept_domain_browse", "provider_policy_answer"),
         ))
     return cases
 

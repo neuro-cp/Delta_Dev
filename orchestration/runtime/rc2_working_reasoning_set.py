@@ -164,6 +164,12 @@ def should_use_wrs(question: str) -> bool:
         "unified explanation",
         "compare",
         "bridge",
+        "similar as systems",
+        "common structure",
+        "change the way you reason",
+        "prevents",
+        "cannot be concluded",
+        "missing before",
     )
     return any(cue in lower for cue in cues)
 

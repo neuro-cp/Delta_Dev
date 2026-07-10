@@ -1,0 +1,192 @@
+{
+  "cases_tested": 18,
+  "created_at": "2026-07-10T03:42:53+00:00",
+  "followup_analogy_continuity": 0.8,
+  "limitation_quality": 1.0,
+  "local_model_avoidance": 1.0,
+  "misleading_analogy_rejection": 1.0,
+  "recommendation": "PROCEED_NATURAL_CONVERSATION_RENDERER",
+  "report": "RC2_ANALOGY_ENGINE",
+  "results": [
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, energy input becomes stored chemical potential. In the target side, electrical input becomes stored electrochemical potential. The shared pattern is: energy input -> conversion -> storage -> later use. Role mapping: light input maps to electrical input; chloroplast ",
+      "classification": "process_analogy",
+      "confidence": 0.94,
+      "expected": "process_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is photosynthesis like charging a battery?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, stored chemical energy is released and converted into ATP. In the target side, stored electrochemical energy is released as electrical output. The shared pattern is: stored energy -> controlled release -> usable work. Role mapping: fuel molecule maps to charged batt",
+      "classification": "process_analogy",
+      "confidence": 0.82,
+      "expected": "process_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is cellular respiration like discharging a battery?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, information is held temporarily so it can be used. In the target side, data is kept available while a task is being performed. The shared pattern is: temporary active workspace for manipulation. Role mapping: temporary active information maps to open workspace; atte",
+      "classification": "functional_analogy",
+      "confidence": 0.82,
+      "expected": "functional_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is working memory like a computer workspace?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, outcomes are compared against a target and used to adjust behavior. In the target side, temperature is compared with a set point and controls heating or cooling. The shared pattern is: measurement -> comparison -> corrective adjustment. Role mapping: current output ",
+      "classification": "strong_structural_analogy",
+      "confidence": 0.78,
+      "expected": "strong_structural_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How are feedback loops like thermostatic control?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, constraints and flows can increase systemic pressure. In the target side, constraints and force over area can increase physical pressure. The shared pattern is: a constrained system can accumulate pressure that changes behavior. Role mapping: price pressure maps to ",
+      "classification": "partial_structural_analogy",
+      "confidence": 0.82,
+      "expected": "partial_structural_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is inflation pressure like pressure in a constrained system?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, following edges moves through connected concepts. In the target side, following roads moves through connected locations. The shared pattern is: connected points + paths + constraints on movement. Role mapping: nodes maps to places; edges maps to roads; path maps to ",
+      "classification": "relational_analogy",
+      "confidence": 0.58,
+      "expected": "relational_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is graph traversal like following roads through a map?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, temporary information is reviewed and stabilized. In the target side, notes are cleaned up and made easier to reuse. The shared pattern is: raw material -> review/organization -> durable reference. Role mapping: recent experience maps to rough notes; review maps to ",
+      "classification": "functional_analogy",
+      "confidence": 0.9,
+      "expected": "functional_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is memory consolidation like organizing notes into durable reference material?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, permissions decide whether a resource can be used. In the target side, locks and keys decide whether a room can be entered. The shared pattern is: credential -> gate -> protected thing. Role mapping: identity/permission maps to key/authorization; protected resource ",
+      "classification": "functional_analogy",
+      "confidence": 0.82,
+      "expected": "functional_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is access control like physical locks and permissions?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, variants are filtered by performance in an environment. In the target side, hypotheses are filtered by evidence and predictive success. The shared pattern is: candidate variation -> selection pressure -> retention. Role mapping: variation maps to candidate hypothese",
+      "classification": "relational_analogy",
+      "confidence": 0.82,
+      "expected": "relational_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is evolutionary selection like hypothesis testing?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, recognition triggers defense and can involve memory. In the target side, detection triggers response and can improve future filtering. The shared pattern is: threat detection -> response -> future readiness. Role mapping: pathogen maps to threat; immune recognition ",
+      "classification": "functional_analogy",
+      "confidence": 0.58,
+      "expected": "functional_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is immune defense like cybersecurity?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, pumping and resistance shape flow and pressure. In the target side, pump output and pipe resistance shape flow and pressure. The shared pattern is: pump + conduit + resistance -> flow/pressure. Role mapping: heart maps to pump; blood vessels maps to pipes; blood flo",
+      "classification": "causal_analogy",
+      "confidence": 0.74,
+      "expected": "causal_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is blood circulation like a pump and pipe network?"
+    },
+    {
+      "answer_preview": "The analogy works if you focus on structure rather than literal identity. In the source side, evidence is gathered to narrow causes. In the target side, clinical evidence is gathered to narrow explanations. The shared pattern is: symptoms -> evidence -> hypothesis narrowing -> intervention. Role mapping: symptom/error maps to symptom; logs/tests maps to exam",
+      "classification": "process_analogy",
+      "confidence": 0.82,
+      "expected": "process_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "How is software debugging like medical diagnosis?"
+    },
+    {
+      "answer_preview": "That analogy is weak as stated. They share a medical domain, but that alone is not a structural analogy.\n\nIt may still be useful as a loose metaphor, but I would not treat blood pressure and allergies as structurally equivalent. The limit is important: They share a medical domain, but that alone is not a structural analogy.",
+      "classification": "misleading_analogy",
+      "confidence": 0.72,
+      "expected": "misleading_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "Is blood pressure and allergies a good analogy merely because both are medical?"
+    },
+    {
+      "answer_preview": "That analogy is weak as stated. The word growth is too superficial; the underlying processes are different.\n\nIt may still be useful as a loose metaphor, but I would not treat photosynthesis and inflation as structurally equivalent. The limit is important: The word growth is too superficial; the underlying processes are different.",
+      "classification": "superficial_similarity",
+      "confidence": 0.72,
+      "expected": "superficial_similarity",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "Is photosynthesis and inflation a good analogy merely because both involve growth?"
+    },
+    {
+      "answer_preview": "That analogy is weak as stated. Storage is useful, but memory is not perfectly equivalent to static storage.\n\nIt may still be useful as a loose metaphor, but I would not treat memory and storage as structurally equivalent. The limit is important: Storage is useful, but memory is not perfectly equivalent to static storage.",
+      "classification": "misleading_analogy",
+      "confidence": 0.72,
+      "expected": "misleading_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "Is memory and storage a perfect equivalent analogy?"
+    },
+    {
+      "answer_preview": "That analogy is weak as stated. The analogy can help with information processing, but the physical mechanisms are not identical.\n\nIt may still be useful as a loose metaphor, but I would not treat the brain and a computer as structurally equivalent. The limit is important: The analogy can help with information processing, but the physical mechanisms are not i",
+      "classification": "misleading_analogy",
+      "confidence": 0.72,
+      "expected": "misleading_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "Is the brain and a computer physically identical?"
+    },
+    {
+      "answer_preview": "That analogy is weak as stated. DNA contains encoded biological information, but it is not a complete software program in the ordinary engineering sense.\n\nIt may still be useful as a loose metaphor, but I would not treat dna and software program as structurally equivalent. The limit is important: DNA contains encoded biological information, but it is not a c",
+      "classification": "misleading_analogy",
+      "confidence": 0.72,
+      "expected": "misleading_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "Is DNA a complete software program?"
+    },
+    {
+      "answer_preview": "That analogy is weak as stated. This can be a partial metaphor, but it becomes misleading if treated as a literal physical equivalence.\n\nIt may still be useful as a loose metaphor, but I would not treat economic pressure and fluid pressure as structurally equivalent. The limit is important: This can be a partial metaphor, but it becomes misleading if treated",
+      "classification": "misleading_analogy",
+      "confidence": 0.72,
+      "expected": "misleading_analogy",
+      "has_limits": true,
+      "passed": true,
+      "prompt": "Is economic pressure exactly the same as fluid pressure?"
+    }
+  ],
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_memory_write_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "strong_analogy_accuracy": 1.0,
+  "structural_mapping_accuracy": 1.0,
+  "unsupported_mapping_count": 6
+}

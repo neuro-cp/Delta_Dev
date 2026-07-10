@@ -45,6 +45,10 @@ from orchestration.runtime.rc2_developmental_concept_memory import (
     query_approved_concepts,
     retrieve_multi_concept_set,
 )
+from orchestration.runtime.rc2_analogy_engine import build_analogy_analysis, is_analogy_prompt
+from orchestration.runtime.rc2_cognitive_episode import attach_episode, resolve_working_memory_followup
+from orchestration.runtime.rc2_contradiction_engine import build_contradiction_analysis, is_contradiction_prompt
+from orchestration.runtime.rc2_natural_conversation_renderer import apply_natural_renderer
 from orchestration.runtime.rc2_working_reasoning_set import build_working_reasoning_set, should_use_wrs
 from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
 from orchestration.runtime.v29_local_answer_engine import run_v29_local_answer
@@ -1642,6 +1646,11 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
     }
 
 
+def _finish_conversation_payload(payload: dict[str, Any], message: str, history: list[dict[str, str]] | None) -> dict[str, Any]:
+    attach_episode(payload, message, history)
+    return apply_natural_renderer(payload, message)
+
+
 def route_message(
     mode: str,
     message: str,
@@ -1669,7 +1678,7 @@ def route_message(
                 "provider_necessity": "approved_by_user_for_this_turn",
             }
             payload["escalation_plan"] = build_escalation_plan(message)
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         if message.strip().lower() in {"ask gpt", "ask gpt for supporting information", "yes ask gpt"}:
             prior_user = [item.get("content", "") for item in (history or []) if item.get("role") == "user" and item.get("content")]
             target = prior_user[-1] if prior_user else message
@@ -1683,7 +1692,89 @@ def route_message(
             }
             payload["escalation_plan"] = build_escalation_plan(target)
             payload["mode_router_flags"] = ROUTER_FLAGS
-            return payload
+            return _finish_conversation_payload(payload, message, history)
+        if intent_info.get("intent") in SOCIAL_INTENT_RESPONSES and intent_info.get("safe_no_route", True):
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["memory_candidate"] = None
+            payload["autonomous_action_performed"] = False
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            return _finish_conversation_payload(payload, message, history)
+        if intent_info.get("communication_act") == "clarification_followup" and not history:
+            payload = {
+                "mode": mode,
+                "route": "session_memory",
+                "answer": "I can explain it more simply, but I need the thing you want simplified. Send the sentence or topic and I’ll restate it plainly.",
+                "confidence": "needs_recent_context",
+                "confidence_score": 0.72,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "escalation_plan": build_escalation_plan(message),
+                "intent": intent_info,
+                "confidence_decision": confidence_engine(message, False),
+                "mode_router_flags": ROUTER_FLAGS,
+            }
+            return _finish_conversation_payload(payload, message, history)
+        early_contradiction = build_contradiction_analysis(message, history=history) if is_contradiction_prompt(message, history) else {"matched": False}
+        if early_contradiction["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "contradiction_analysis",
+                "answer": early_contradiction["answer"],
+                "confidence": early_contradiction["confidence"],
+                "confidence_score": early_contradiction["confidence_score"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": early_contradiction.get("concept_matches", []),
+                "contradiction_analysis": early_contradiction["contradiction_analysis"],
+                "memory_candidate": None,
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "contradiction_analysis"}
+            payload["confidence_decision"] = {
+                "confidence": early_contradiction["confidence_score"],
+                "evidence_quality": "approved_noncanonical_claim_evidence_plus_ephemeral_comparison",
+                "retrieval_sufficiency": "balanced_claim_comparison",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return _finish_conversation_payload(payload, message, history)
+        episode_followup = resolve_working_memory_followup(message, history)
+        if episode_followup:
+            payload = {"mode": mode, **episode_followup}
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "working_memory_followup"}
+            payload["confidence_decision"] = {
+                "confidence": payload.get("confidence_score", 0.0),
+                "evidence_quality": "ephemeral_cognitive_episode",
+                "retrieval_sufficiency": "resolved_from_short_horizon_dialogue_state",
+                "provider_necessity": "none",
+            }
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            return _finish_conversation_payload(payload, message, history)
         if _is_anchor_followup(message) and anchor:
             anchored = browse_near_active_anchor(message, anchor) if _is_anchor_browse_followup(message) else deepen_from_concept_anchor(message, anchor)
             if anchored:
@@ -1692,7 +1783,7 @@ def route_message(
                 payload["intent"] = intent_info
                 payload["confidence_decision"] = confidence_engine(message, True)
                 payload["mode_router_flags"] = ROUTER_FLAGS
-                return payload
+                return _finish_conversation_payload(payload, message, history)
         if intent_info.get("intent") in {"knowledge_browse", "knowledge_browse_followup", "knowledge_browse_jump"}:
             context = _last_concept_context(history)
             excluded_names = context.get("concept_names") or ([context["concept_name"]] if context.get("concept_name") else None)
@@ -1735,7 +1826,7 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         if _is_graph_assisted_reasoning_request(message):
             from orchestration.runtime.rc2_graph_assisted_reasoning import build_graph_assisted_reasoning_trial
 
@@ -1777,7 +1868,7 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         synthesis_trial = build_read_only_synthesis_trial(message) if _is_synthesis_trial_request(message) else {"matched": False}
         if synthesis_trial["matched"]:
             payload = {
@@ -1821,7 +1912,69 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
-            return payload
+            return _finish_conversation_payload(payload, message, history)
+        analogy_result = build_analogy_analysis(message, history=history) if is_analogy_prompt(message, history) else {"matched": False}
+        if analogy_result["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "analogy_analysis",
+                "answer": analogy_result["answer"],
+                "confidence": analogy_result["confidence"],
+                "confidence_score": analogy_result["confidence_score"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": analogy_result.get("concept_matches", []),
+                "analogy_analysis": analogy_result["analogy_analysis"],
+                "memory_candidate": None,
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "analogy_analysis"}
+            payload["confidence_decision"] = {
+                "confidence": analogy_result["confidence_score"],
+                "evidence_quality": "approved_noncanonical_concepts_plus_ephemeral_structural_mapping",
+                "retrieval_sufficiency": "structural_mapping_ready",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return _finish_conversation_payload(payload, message, history)
+        contradiction_result = build_contradiction_analysis(message, history=history) if is_contradiction_prompt(message, history) else {"matched": False}
+        if contradiction_result["matched"]:
+            payload = {
+                "mode": mode,
+                "route": "contradiction_analysis",
+                "answer": contradiction_result["answer"],
+                "confidence": contradiction_result["confidence"],
+                "confidence_score": contradiction_result["confidence_score"],
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "concept_matches": contradiction_result.get("concept_matches", []),
+                "contradiction_analysis": contradiction_result["contradiction_analysis"],
+                "memory_candidate": None,
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "contradiction_analysis"}
+            payload["confidence_decision"] = {
+                "confidence": contradiction_result["confidence_score"],
+                "evidence_quality": "approved_noncanonical_claim_evidence_plus_ephemeral_comparison",
+                "retrieval_sufficiency": "balanced_claim_comparison",
+                "provider_necessity": "none",
+            }
+            payload.update({
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "mode_router_flags": ROUTER_FLAGS,
+            })
+            return _finish_conversation_payload(payload, message, history)
         wrs_result = build_working_reasoning_set(message) if should_use_wrs(message) else {"matched": False}
         if wrs_result["matched"]:
             payload = {
@@ -1866,7 +2019,7 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         multi_concept = retrieve_multi_concept_set(message)
         if multi_concept["matched"]:
             payload = {
@@ -1902,7 +2055,7 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         sun_blue = _sun_blue_correction(message)
         if sun_blue:
             payload = {
@@ -1925,7 +2078,7 @@ def route_message(
             payload["intent"] = intent_info
             payload["confidence_decision"] = confidence_engine(message, True)
             payload["mode_router_flags"] = ROUTER_FLAGS
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         domain_browse = _domain_browse_request(message)
         if domain_browse and intent_info.get("intent") not in {"coding"}:
             concept = browse_approved_concepts(limit=3, domain=domain_browse)
@@ -1951,7 +2104,7 @@ def route_message(
                 "autonomous_action_performed": False,
                 "mode_router_flags": ROUTER_FLAGS,
             })
-            return payload
+            return _finish_conversation_payload(payload, message, history)
         bypass_memory_retrieval = (
             execute_local_model
             or intent_info.get("communication_act") == "clarification_followup"
@@ -2046,7 +2199,7 @@ def route_message(
         "autonomous_action_performed": False,
         "mode_router_flags": ROUTER_FLAGS,
     })
-    return payload
+    return _finish_conversation_payload(payload, message, history)
 
 
 def render_route(payload: dict[str, Any], *, developer_overlay: bool = False) -> str:
@@ -2137,6 +2290,10 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
         boundary = "known_from_approved_local_memory"
     elif route == "working_reasoning_set":
         boundary = "ephemeral_multi_concept_working_set"
+    elif route == "contradiction_analysis":
+        boundary = "ephemeral_claim_comparison"
+    elif route == "analogy_analysis":
+        boundary = "ephemeral_structural_mapping"
     elif route == "social_conversation":
         boundary = "social_no_knowledge_lookup"
     rejected = lane.get("rejected_models") or []
@@ -2169,6 +2326,92 @@ def render_developer_overlay(payload: dict[str, Any]) -> str:
         f"Provider need: {confidence.get('provider_necessity', 'none')}",
         "Safety: no training, canonical write, autonomous action, or automatic provider call.",
     ]
+    if route == "contradiction_analysis" and isinstance(payload.get("contradiction_analysis"), dict):
+        analysis = payload["contradiction_analysis"]
+        lines.extend([
+            "",
+            "Contradiction analysis:",
+            f"- classification: {analysis.get('compatibility_classification')}",
+            f"- confidence: {analysis.get('confidence')}",
+            f"- ephemeral: {analysis.get('ephemeral')}",
+            f"- read_only: {analysis.get('read_only')}",
+            "- claims:",
+        ])
+        for claim in analysis.get("claims", [])[:4]:
+            lines.extend([
+                f"  - {claim.get('source')}: {claim.get('text')}",
+                f"    subjects: {', '.join(claim.get('normalized_subjects') or []) or 'none'}",
+                f"    polarity: {claim.get('polarity')}; timeframes: {', '.join(claim.get('timeframes') or []) or 'none'}",
+            ])
+        missing = analysis.get("missing_evidence") or []
+        if missing:
+            lines.append("- missing evidence:")
+            lines.extend(f"  - {item}" for item in missing[:4])
+        trace = analysis.get("reasoning_trace") or []
+        if trace:
+            lines.append("- trace:")
+            lines.extend(f"  - {item}" for item in trace[:6])
+    if route == "analogy_analysis" and isinstance(payload.get("analogy_analysis"), dict):
+        analysis = payload["analogy_analysis"]
+        lines.extend([
+            "",
+            "Analogy analysis:",
+            f"- classification: {analysis.get('analogy_classification')}",
+            f"- confidence: {analysis.get('confidence')}",
+            f"- source domain: {analysis.get('source_domain')}",
+            f"- target domain: {analysis.get('target_domain')}",
+            f"- shared structure: {analysis.get('shared_structure')}",
+            "- mapped roles:",
+        ])
+        lines.extend(f"  - {item}" for item in (analysis.get("mapped_roles") or [])[:5])
+        if analysis.get("limits_of_analogy"):
+            lines.append("- limits:")
+            lines.extend(f"  - {item}" for item in analysis.get("limits_of_analogy", [])[:4])
+        if analysis.get("reasoning_trace"):
+            lines.append("- trace:")
+            lines.extend(f"  - {item}" for item in analysis.get("reasoning_trace", [])[:6])
+    episode = payload.get("cognitive_episode")
+    if isinstance(episode, dict):
+        branches = episode.get("conversation_branch") or []
+        resolved = episode.get("resolved_references") or []
+        rejected_refs = episode.get("rejected_references") or []
+        lines.extend([
+            "",
+            "Cognitive episode:",
+            f"- episode_id: {episode.get('episode_id') or 'none'}",
+            f"- active_topic: {episode.get('active_topic') or 'none'}",
+            f"- active_entities: {', '.join(episode.get('active_entities') or []) or 'none'}",
+            f"- active_route: {episode.get('active_route') or 'none'}",
+            f"- turn_number: {episode.get('turn_number')}",
+            f"- episode_confidence: {episode.get('episode_confidence')}",
+            f"- resolved_references: {len(resolved)}",
+            f"- rejected_references: {len(rejected_refs)}",
+            f"- branch_count: {len(branches)}",
+            f"- has_wrs: {bool(episode.get('active_wrs'))}",
+            f"- has_contradiction: {bool(episode.get('active_contradiction'))}",
+            f"- has_analogy: {bool(episode.get('active_analogy'))}",
+        ])
+        if resolved:
+            lines.append("- resolved:")
+            lines.extend(
+                f"  - {item.get('reference')} -> {item.get('resolved_to')}"
+                for item in resolved[:4]
+            )
+        if rejected_refs:
+            lines.append("- rejected:")
+            lines.extend(
+                f"  - {item.get('reference')}: {item.get('reason')}"
+                for item in rejected_refs[:4]
+            )
+    renderer = payload.get("natural_renderer") or {}
+    if renderer:
+        lines.extend([
+            "",
+            "Natural renderer:",
+            f"- applied: {renderer.get('applied')}",
+            f"- report_voice_removed: {renderer.get('report_voice_removed')}",
+            f"- scaffold_removed: {renderer.get('scaffold_removed')}",
+        ])
     return "\n".join(lines)
 
 

@@ -1,0 +1,200 @@
+{
+  "accuracy": 1.0,
+  "case_count": 20,
+  "classification_metrics": {
+    "conditional_compatibility": 1.0,
+    "definition_difference": 1.0,
+    "direct_contradiction": 1.0,
+    "insufficient_information": 1.0,
+    "mutually_compatible": 1.0,
+    "population_difference": 1.0,
+    "scope_difference": 1.0,
+    "timeframe_difference": 1.0,
+    "unrelated_claims": 1.0
+  },
+  "created_at": "2026-07-10T03:08:44.480164+00:00",
+  "ephemeral": true,
+  "false_positive_rate": 0.0,
+  "missed_contradiction_rate": 0.0,
+  "read_only": true,
+  "recommendation": "MOVE_TO_ANALOGY_ENGINE_IF_FULL_BENCHMARK_PRESERVES_SYNTHESIS_AND_MEMORY",
+  "report": "RC2_CONTRADICTION_ENGINE",
+  "results": [
+    {
+      "answer_preview": "No. If these claims refer to the same subject, timeframe, and conditions, they conflict.\n\nClaim A: blood pressure is always constant\nClaim B: blood pressure varies with activity and stress?\n\nThe conflict comes from mutually exclusive wording, especially absolute or negative language, applied to the same apparent subjec",
+      "classification": "direct_contradiction",
+      "confidence": 0.9,
+      "expected": "direct_contradiction",
+      "passed": true,
+      "prompt": "Can these both be true: blood pressure is always constant, and blood pressure varies with activity and stress?"
+    },
+    {
+      "answer_preview": "No. If these claims refer to the same subject, timeframe, and conditions, they conflict.\n\nClaim A: photosynthesis consumes stored glucose\nClaim B: photosynthesis stores energy in sugars?\n\nThe conflict comes from mutually exclusive wording, especially absolute or negative language, applied to the same apparent subject.\n",
+      "classification": "direct_contradiction",
+      "confidence": 0.9,
+      "expected": "direct_contradiction",
+      "passed": true,
+      "prompt": "Can these both be true: photosynthesis consumes stored glucose, and photosynthesis stores energy in sugars?"
+    },
+    {
+      "answer_preview": "No. If these claims refer to the same subject, timeframe, and conditions, they conflict.\n\nClaim A: all allergies are harmless\nClaim B: severe allergies can require emergency treatment?\n\nThe conflict comes from mutually exclusive wording, especially absolute or negative language, applied to the same apparent subject.\n\nC",
+      "classification": "direct_contradiction",
+      "confidence": 0.9,
+      "expected": "direct_contradiction",
+      "passed": true,
+      "prompt": "Can these both be true: all allergies are harmless, and severe allergies can require emergency treatment?"
+    },
+    {
+      "answer_preview": "Yes. They can both be true if they describe different conditions or timeframes.\n\nClaim A: exercise raises blood pressure\nClaim B: exercise lowers blood pressure?\n\nThe key is condition and timeframe: a short-term effect can differ from a long-term effect, or one condition can differ from another.\n\nClassification: condit",
+      "classification": "conditional_compatibility",
+      "confidence": 0.88,
+      "expected": "conditional_compatibility",
+      "passed": true,
+      "prompt": "Can these both be true: exercise raises blood pressure, and exercise lowers blood pressure?"
+    },
+    {
+      "answer_preview": "Yes. They can both be true if they describe different conditions or timeframes.\n\nClaim A: stress can raise blood pressure\nClaim B: rest can lower blood pressure?\n\nThe key is condition and timeframe: a short-term effect can differ from a long-term effect, or one condition can differ from another.\n\nClassification: condit",
+      "classification": "conditional_compatibility",
+      "confidence": 0.88,
+      "expected": "conditional_compatibility",
+      "passed": true,
+      "prompt": "Can these both be true: stress can raise blood pressure, and rest can lower blood pressure?"
+    },
+    {
+      "answer_preview": "Yes. They can both be true if they describe different conditions or timeframes.\n\nClaim A: plants release oxygen\nClaim B: plants consume oxygen during respiration?\n\nThe key is condition and timeframe: a short-term effect can differ from a long-term effect, or one condition can differ from another.\n\nClassification: condi",
+      "classification": "conditional_compatibility",
+      "confidence": 0.88,
+      "expected": "conditional_compatibility",
+      "passed": true,
+      "prompt": "Can these both be true: plants release oxygen, and plants consume oxygen during respiration?"
+    },
+    {
+      "answer_preview": "They are not necessarily contradictory; one claim is broader or narrower than the other.\n\nClaim A: allergies are immune reactions\nClaim B: not every adverse drug reaction is an allergy?\n\nThe narrower claim can be true inside the broader category without defining the whole category.\n\nClassification: scope difference.",
+      "classification": "scope_difference",
+      "confidence": 0.84,
+      "expected": "scope_difference",
+      "passed": true,
+      "prompt": "Can these both be true: allergies are immune reactions, and not every adverse drug reaction is an allergy?"
+    },
+    {
+      "answer_preview": "They are not necessarily contradictory; one claim is broader or narrower than the other.\n\nClaim A: all clinical evidence matters\nClaim B: allergy evidence only matters for medication choices?\n\nThe narrower claim can be true inside the broader category without defining the whole category.\n\nClassification: scope differen",
+      "classification": "scope_difference",
+      "confidence": 0.84,
+      "expected": "scope_difference",
+      "passed": true,
+      "prompt": "Can these both be true: all clinical evidence matters, and allergy evidence only matters for medication choices?"
+    },
+    {
+      "answer_preview": "They are not necessarily contradictory; the likely difference is timeframe.\n\nClaim A: inflation is falling\nClaim B: prices remain high shortly afterward?\n\nOne claim can describe a trend or cause, while the other describes a later or still-elevated state.\n\nClassification: timeframe difference.",
+      "classification": "timeframe_difference",
+      "confidence": 0.82,
+      "expected": "timeframe_difference",
+      "passed": true,
+      "prompt": "Can these both be true: inflation is falling, and prices remain high shortly afterward?"
+    },
+    {
+      "answer_preview": "They are not necessarily contradictory; the likely difference is timeframe.\n\nClaim A: interest rates slow inflation\nClaim B: inflation remains elevated shortly afterward?\n\nOne claim can describe a trend or cause, while the other describes a later or still-elevated state.\n\nClassification: timeframe difference.",
+      "classification": "timeframe_difference",
+      "confidence": 0.82,
+      "expected": "timeframe_difference",
+      "passed": true,
+      "prompt": "Can these both be true: interest rates slow inflation, and inflation remains elevated shortly afterward?"
+    },
+    {
+      "answer_preview": "They are not necessarily contradictory; they appear to describe different populations.\n\nClaim A: this treatment helps adults\nClaim B: this treatment does not help children?\n\nA claim about one population does not automatically transfer to a different population.\n\nClassification: population difference.",
+      "classification": "population_difference",
+      "confidence": 0.82,
+      "expected": "population_difference",
+      "passed": true,
+      "prompt": "Can these both be true: this treatment helps adults, and this treatment does not help children?"
+    },
+    {
+      "answer_preview": "They may differ because the key term is being used in different ways.\n\nClaim A: memory means stored information\nClaim B: working memory means active temporary processing?\n\nThe words overlap, but the definitions point to different levels of the concept.\n\nClassification: definition difference.",
+      "classification": "definition_difference",
+      "confidence": 0.82,
+      "expected": "definition_difference",
+      "passed": true,
+      "prompt": "Can these both be true: memory means stored information, and working memory means active temporary processing?"
+    },
+    {
+      "answer_preview": "I do not see a direct contradiction in those two claims.\n\nClaim A: blood pressure affects clinical interpretation\nClaim B: allergies affect medication choice?\n\nThe claims need matching subject, predicate, timeframe, population, and condition before a contradiction can be established.\n\nClassification: mutually compatibl",
+      "classification": "mutually_compatible",
+      "confidence": 0.78,
+      "expected": "mutually_compatible",
+      "passed": true,
+      "prompt": "Can these both be true: blood pressure affects clinical interpretation, and allergies affect medication choice?"
+    },
+    {
+      "answer_preview": "These do not look like a direct contradiction because they appear to discuss different subjects.\n\nClaim A: gravity shapes orbital motion\nClaim B: allergies involve immune responses?\n\nThe claims need matching subject, predicate, timeframe, population, and condition before a contradiction can be established.\n\nClassificat",
+      "classification": "unrelated_claims",
+      "confidence": 0.66,
+      "expected": "unrelated_claims",
+      "passed": true,
+      "prompt": "Can these both be true: gravity shapes orbital motion, and allergies involve immune responses?"
+    },
+    {
+      "answer_preview": "I do not have enough information to decide whether those claims contradict each other.\n\nClaim A: the patient has symptoms\nClaim B: the patient has a diagnosis?\n\nThe claims need matching subject, predicate, timeframe, population, and condition before a contradiction can be established.\n\nWhat would clarify it:\n- Whether ",
+      "classification": "insufficient_information",
+      "confidence": 0.62,
+      "expected": "insufficient_information",
+      "passed": true,
+      "prompt": "Does this evidence contradict the conclusion: the patient has symptoms, and the patient has a diagnosis?"
+    },
+    {
+      "answer_preview": "No. If these claims refer to the same subject, timeframe, and conditions, they conflict.\n\nClaim A: a patient has no medication allergies\nClaim B: a patient has a severe penicillin allergy?\n\nThe conflict comes from mutually exclusive wording, especially absolute or negative language, applied to the same apparent subject",
+      "classification": "direct_contradiction",
+      "confidence": 0.9,
+      "expected": "direct_contradiction",
+      "passed": true,
+      "prompt": "Check for contradiction: a patient has no medication allergies, and the same patient has a severe penicillin allergy?"
+    },
+    {
+      "answer_preview": "No. If these claims refer to the same subject, timeframe, and conditions, they conflict.\n\nClaim A: blood pressure varies with stress\nClaim B: blood pressure never changes with context\n\nThe conflict comes from mutually exclusive wording, especially absolute or negative language, applied to the same apparent subject.\n\nCl",
+      "classification": "direct_contradiction",
+      "confidence": 0.9,
+      "expected": "direct_contradiction",
+      "passed": true,
+      "prompt": "Are these statements contradictory: blood pressure varies with stress; blood pressure never changes with context."
+    },
+    {
+      "answer_preview": "Yes. They can both be true if they describe different conditions or timeframes.\n\nClaim A: regular exercise lowers resting blood pressure\nClaim B: exercise raises blood pressure during activity?\n\nThe key is condition and timeframe: a short-term effect can differ from a long-term effect, or one condition can differ from ",
+      "classification": "conditional_compatibility",
+      "confidence": 0.88,
+      "expected": "conditional_compatibility",
+      "passed": true,
+      "prompt": "How can both be correct: regular exercise lowers resting blood pressure, and exercise raises blood pressure during activity?"
+    },
+    {
+      "answer_preview": "They are not necessarily contradictory; the likely difference is timeframe.\n\nClaim A: inflation is falling\nClaim B: prices are still higher than last year?\n\nOne claim can describe a trend or cause, while the other describes a later or still-elevated state.\n\nClassification: timeframe difference.",
+      "classification": "timeframe_difference",
+      "confidence": 0.82,
+      "expected": "timeframe_difference",
+      "passed": true,
+      "prompt": "Can these both be true: inflation is falling, and prices are still higher than last year?"
+    },
+    {
+      "answer_preview": "I do not see a direct contradiction in those two claims.\n\nClaim A: allergies can constrain medication choices\nClaim B: blood pressure supplies cardiovascular evidence?\n\nThe claims need matching subject, predicate, timeframe, population, and condition before a contradiction can be established.\n\nClassification: mutually ",
+      "classification": "mutually_compatible",
+      "confidence": 0.78,
+      "expected": "mutually_compatible",
+      "passed": true,
+      "prompt": "Can these both be true: allergies can constrain medication choices, and blood pressure supplies cardiovascular evidence?"
+    }
+  ],
+  "route": "contradiction_analysis",
+  "safety": {
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_memory_write_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "scheduler_started": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  }
+}
