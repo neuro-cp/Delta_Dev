@@ -1,0 +1,227 @@
+{
+  "case_count": 6,
+  "created_at": "2026-07-10T17:22:57+00:00",
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_C_ENGINEERING_FOUNDATION",
+  "report": "RC3_B_REVISION_BENCHMARK",
+  "results": [
+    {
+      "case_id": "operator_correction_revises",
+      "checks": {
+        "arbitration_correctness": true,
+        "constraint_preservation": true,
+        "false_revision_rejection": true,
+        "monitoring_accuracy": true,
+        "plan_diff_accuracy": true,
+        "prohibition_preservation": true,
+        "rc2_compatibility": true,
+        "revision_quality": true,
+        "revision_validation": true,
+        "safety": true,
+        "self_evaluation_quality": true,
+        "trigger_detection": true
+      },
+      "decision": "revise_existing_plan",
+      "diff": [
+        "Added 2 step(s): Review new evidence and update validation expectations.; Verify the revised plan preserves updated constraints."
+      ],
+      "monitoring": [
+        "progress evaluation still has missing evidence",
+        "goal is not complete"
+      ],
+      "passed": true,
+      "prompt": "Design an RC3 plugin manifest, but do not implement plugins.",
+      "revision_applied": true,
+      "self_evaluation": {
+        "confidence": 0.86,
+        "missing_information": [
+          "progress evidence"
+        ],
+        "revision_quality": 0.9533
+      }
+    },
+    {
+      "case_id": "no_justification_rejected",
+      "checks": {
+        "arbitration_correctness": true,
+        "constraint_preservation": true,
+        "false_revision_rejection": true,
+        "monitoring_accuracy": true,
+        "plan_diff_accuracy": true,
+        "prohibition_preservation": true,
+        "rc2_compatibility": true,
+        "revision_quality": true,
+        "revision_validation": true,
+        "safety": true,
+        "self_evaluation_quality": true,
+        "trigger_detection": true
+      },
+      "decision": "continue_current_plan",
+      "diff": [
+        "No material plan changes detected."
+      ],
+      "monitoring": [],
+      "passed": true,
+      "prompt": "Design RC3 docs.",
+      "revision_applied": false,
+      "self_evaluation": {
+        "confidence": 0.2,
+        "missing_information": [],
+        "revision_quality": 0.5667
+      }
+    },
+    {
+      "case_id": "unsupported_trigger_requires_clarification",
+      "checks": {
+        "arbitration_correctness": true,
+        "constraint_preservation": true,
+        "false_revision_rejection": true,
+        "monitoring_accuracy": true,
+        "plan_diff_accuracy": true,
+        "prohibition_preservation": true,
+        "rc2_compatibility": true,
+        "revision_quality": true,
+        "revision_validation": true,
+        "safety": true,
+        "self_evaluation_quality": true,
+        "trigger_detection": true
+      },
+      "decision": "require_clarification",
+      "diff": [
+        "No material plan changes detected."
+      ],
+      "monitoring": [],
+      "passed": true,
+      "prompt": "Design RC3 docs.",
+      "revision_applied": false,
+      "self_evaluation": {
+        "confidence": 0.2,
+        "missing_information": [],
+        "revision_quality": 0.5667
+      }
+    },
+    {
+      "case_id": "assumption_invalidated",
+      "checks": {
+        "arbitration_correctness": true,
+        "constraint_preservation": true,
+        "false_revision_rejection": true,
+        "monitoring_accuracy": true,
+        "plan_diff_accuracy": true,
+        "prohibition_preservation": true,
+        "rc2_compatibility": true,
+        "revision_quality": true,
+        "revision_validation": true,
+        "safety": true,
+        "self_evaluation_quality": true,
+        "trigger_detection": true
+      },
+      "decision": "revise_existing_plan",
+      "diff": [
+        "Added 1 step(s): Review new evidence and update validation expectations.",
+        "Changed assumptions: legacy planner cannot be activated"
+      ],
+      "monitoring": [
+        "progress evaluation still has missing evidence",
+        "goal is not complete"
+      ],
+      "passed": true,
+      "prompt": "Design a read-only RC3 plan.",
+      "revision_applied": true,
+      "self_evaluation": {
+        "confidence": 0.86,
+        "missing_information": [
+          "progress evidence"
+        ],
+        "revision_quality": 0.9533
+      }
+    },
+    {
+      "case_id": "scope_expansion",
+      "checks": {
+        "arbitration_correctness": true,
+        "constraint_preservation": true,
+        "false_revision_rejection": true,
+        "monitoring_accuracy": true,
+        "plan_diff_accuracy": true,
+        "prohibition_preservation": true,
+        "rc2_compatibility": true,
+        "revision_quality": true,
+        "revision_validation": true,
+        "safety": true,
+        "self_evaluation_quality": true,
+        "trigger_detection": true
+      },
+      "decision": "revise_existing_plan",
+      "diff": [
+        "Added 2 step(s): Review new evidence and update validation expectations.; Verify the revised plan preserves updated constraints."
+      ],
+      "monitoring": [
+        "progress evaluation still has missing evidence",
+        "goal is not complete"
+      ],
+      "passed": true,
+      "prompt": "Design validation reports.",
+      "revision_applied": true,
+      "self_evaluation": {
+        "confidence": 0.86,
+        "missing_information": [
+          "progress evidence"
+        ],
+        "revision_quality": 0.9533
+      }
+    },
+    {
+      "case_id": "conflicting_goal_replace",
+      "checks": {
+        "arbitration_correctness": true,
+        "constraint_preservation": true,
+        "false_revision_rejection": true,
+        "monitoring_accuracy": true,
+        "plan_diff_accuracy": true,
+        "prohibition_preservation": true,
+        "rc2_compatibility": true,
+        "revision_quality": true,
+        "revision_validation": true,
+        "safety": true,
+        "self_evaluation_quality": true,
+        "trigger_detection": true
+      },
+      "decision": "replace_plan_entirely",
+      "diff": [
+        "Added 2 step(s): Incorporate operator clarification before further review.; Review new evidence and update validation expectations."
+      ],
+      "monitoring": [
+        "progress evaluation still has missing evidence",
+        "goal is not complete"
+      ],
+      "passed": true,
+      "prompt": "Design RC3-A reports.",
+      "revision_applied": true,
+      "self_evaluation": {
+        "confidence": 0.86,
+        "missing_information": [
+          "progress evidence"
+        ],
+        "revision_quality": 0.9533
+      }
+    }
+  ],
+  "revision_report": "RC3_B_PLAN_REVISION",
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "arbitration_correctness": 1.0,
+    "constraint_preservation": 1.0,
+    "false_revision_rejection": 1.0,
+    "monitoring_accuracy": 1.0,
+    "plan_diff_accuracy": 1.0,
+    "prohibition_preservation": 1.0,
+    "rc2_compatibility": 1.0,
+    "revision_quality": 1.0,
+    "revision_trigger_detection": 1.0,
+    "revision_validation": 1.0,
+    "safety": 1.0,
+    "self_evaluation_quality": 1.0
+  }
+}

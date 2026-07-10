@@ -302,3 +302,7 @@ Goal
 RC3 state objects are defined in `docs/RC3_STATE_MODEL.md`. The state model is
 the shared vocabulary for goals, plans, arbitration, introspection, progress,
 capability gaps, proposals, reviews, plugins, and projects.
+
+Bounded governed plan revision is defined in
+`docs/RC3_PLAN_REVISION_CONTRACT.md`. Revision remains an evidence-backed,
+operator-governed planning activity, not execution.

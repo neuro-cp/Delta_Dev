@@ -100,6 +100,13 @@ Controlled forgetting belongs in RC3 design but is not enabled by this protocol.
 
 Valid future forms include working-memory expiration, concept quarantine, concept deprecation, edge deactivation, curriculum exclusion, and operator-approved noncanonical cleanup.
 
+## RC3-B Plan Revision
+
+The governed revision contract is recorded in
+`docs/RC3_PLAN_REVISION_CONTRACT.md`. RC3-B may decide that a plan should
+continue, be revised, be replaced, be abandoned, or require clarification. It
+may not execute the revised plan.
+
 ## Freeze Gate
 
 RC3 is not freeze-ready until all freeze criteria have implementation evidence, RC2 preservation gates pass, rollback is verified, and a stable checkpoint is operator-approved.

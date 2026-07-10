@@ -1,0 +1,1319 @@
+{
+  "controlled_forgetting_hook": {
+    "abandoned_plans": [],
+    "archived_alternatives": [
+      "rc3-plan-632cd382554c3370"
+    ],
+    "deletes_anything": false,
+    "obsolete_assumptions": [],
+    "persists_anything": false,
+    "superseded_revisions": [
+      "rc3-plan-632cd382554c3370"
+    ]
+  },
+  "created_at": "2026-07-10T17:22:57+00:00",
+  "episode": {
+    "arbitration": {
+      "arbitration_id": "rc3-arbitration-f04158b6f299d234",
+      "conflicts": [],
+      "constraint_checks": [
+        "preserved: preserve explicit prohibitions"
+      ],
+      "decision_reason": "Selected read-only plan because validation found no execution authority and constraints are preserved.",
+      "goal_id": "rc3-goal-417de4f088584cfb",
+      "operator_approval_required_before_action": true,
+      "plan_id": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+      "rejected_reasons": [],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "selected": true,
+      "status": "accepted_read_only"
+    },
+    "capability_gap": {
+      "assessment_id": "rc3-gap-ed74f66fce3d7f89",
+      "existing_capability_matches": [],
+      "goal_id": "rc3-goal-417de4f088584cfb",
+      "missing_capabilities": [
+        "plugin"
+      ],
+      "plan_id": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+      "plugin_needed": true,
+      "proposal_needed": true,
+      "recommendation": "plugin_candidate_deferred_by_operator_prohibition",
+      "requested_capabilities": [
+        "plugin"
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "sandbox_needed": false
+    },
+    "created_at": "2026-07-10T17:22:57+00:00",
+    "developer_overlay": {
+      "arbitration": {
+        "arbitration_id": "rc3-arbitration-070f39f4054c8781",
+        "conflicts": [],
+        "constraint_checks": [
+          "preserved: preserve explicit prohibitions"
+        ],
+        "decision_reason": "Selected read-only plan because validation found no execution authority and constraints are preserved.",
+        "goal_id": "rc3-goal-417de4f088584cfb",
+        "operator_approval_required_before_action": true,
+        "plan_id": "rc3-plan-632cd382554c3370",
+        "rejected_reasons": [],
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "selected": true,
+        "status": "accepted_read_only"
+      },
+      "capability_gap": {
+        "assessment_id": "rc3-gap-df30b3afffc2ed70",
+        "existing_capability_matches": [],
+        "goal_id": "rc3-goal-417de4f088584cfb",
+        "missing_capabilities": [
+          "plugin"
+        ],
+        "plan_id": "rc3-plan-632cd382554c3370",
+        "plugin_needed": true,
+        "proposal_needed": true,
+        "recommendation": "plugin_candidate_deferred_by_operator_prohibition",
+        "requested_capabilities": [
+          "plugin"
+        ],
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "sandbox_needed": false
+      },
+      "controlled_forgetting_hook": {
+        "abandoned_plans": [],
+        "archived_alternatives": [
+          "rc3-plan-632cd382554c3370"
+        ],
+        "deletes_anything": false,
+        "obsolete_assumptions": [],
+        "persists_anything": false,
+        "superseded_revisions": [
+          "rc3-plan-632cd382554c3370"
+        ]
+      },
+      "entry_point": "build_rc3_revision_episode",
+      "execution_authorized": false,
+      "goal_interpretation_trace": {
+        "constraint_conflicts": [],
+        "goal_type": "design_goal",
+        "matched_rules": [
+          "design",
+          "implement",
+          "do_not"
+        ],
+        "non_goal_detected": false,
+        "previous_goal_used": null,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        }
+      },
+      "goal_transition": {
+        "accepted": true,
+        "from_status": "interpreted",
+        "provenance": {
+          "hidden_status_change": false,
+          "operator_or_runtime_reason": "RC3-A explicit episode construction"
+        },
+        "reason": "transition accepted",
+        "requires_operator_review": false,
+        "safety_blocked": false,
+        "to_status": "confirmed"
+      },
+      "introspection": {
+        "assumptions": [
+          "RC3-A remains read-only and non-executing."
+        ],
+        "claims": [
+          {
+            "claim": "Active objective: Design an RC3 plugin interface",
+            "evidence": "GoalFrame.normalized_objective"
+          },
+          {
+            "claim": "Plan strategy: design_only",
+            "evidence": "PlanFrame.strategy"
+          },
+          {
+            "claim": "Plan validation result: valid",
+            "evidence": "PlanValidation.result"
+          },
+          {
+            "claim": "No execution authority is present.",
+            "evidence": "PlanFrame.execution_authorized=false"
+          },
+          {
+            "claim": "RC3-A state is ephemeral.",
+            "evidence": "GoalFrame.persistence_status and PlanFrame.persistence_status"
+          }
+        ],
+        "evidence_sources": [
+          "GoalFrame",
+          "PlanFrame",
+          "PlanValidation",
+          "GoalPlanArbitration",
+          "docs/RC3_STATE_MODEL.md"
+        ],
+        "fabricated_self_state": false,
+        "hidden_state_detected": false,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "snapshot_id": "rc3-snapshot-070f39f4054c8781",
+        "uncertainty": [
+          "operator confirmation"
+        ]
+      },
+      "normal_conversation_attached": false,
+      "persistence_status": "ephemeral",
+      "plan_validation": {
+        "blocked_steps": [],
+        "checks_performed": [
+          "goal_alignment",
+          "constraint_preservation",
+          "prohibition_preservation",
+          "dependency_ordering",
+          "measurable_outputs",
+          "validation_coverage",
+          "operator_checkpoint_presence",
+          "hidden_execution_detection",
+          "rc2_contract_compatibility"
+        ],
+        "confidence": 0.92,
+        "failed_checks": [],
+        "passed_checks": [
+          "goal_alignment",
+          "constraint_preservation",
+          "prohibition_preservation",
+          "dependency_ordering",
+          "measurable_outputs",
+          "validation_coverage",
+          "operator_checkpoint_presence",
+          "hidden_execution_detection",
+          "rc2_contract_compatibility"
+        ],
+        "rejected_steps": [],
+        "required_clarification": [],
+        "result": "valid",
+        "trace": {
+          "execution_authorized": false,
+          "rc2_contract_changed": false
+        },
+        "warnings": []
+      },
+      "progress": {
+        "blockers": [
+          "operator_review_outstanding"
+        ],
+        "completion_evidence": [],
+        "completion_requires_operator_confirmation": true,
+        "completion_score": 0.0,
+        "evaluation_id": "rc3-progress-a99308f4b566a00f",
+        "failure_signals": [],
+        "goal_id": "rc3-goal-417de4f088584cfb",
+        "missing_evidence": [
+          "operator confirms objective is correctly understood"
+        ],
+        "plan_id": "rc3-plan-632cd382554c3370",
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "status": "awaiting_review"
+      },
+      "revision_diff": {
+        "added_steps": [
+          "Review new evidence and update validation expectations.",
+          "Verify the revised plan preserves updated constraints."
+        ],
+        "human_readable": [
+          "Added 2 step(s): Review new evidence and update validation expectations.; Verify the revised plan preserves updated constraints.",
+          "Changed assumptions: implementation is deferred"
+        ],
+        "modified_assumptions": [
+          "implementation is deferred"
+        ],
+        "modified_dependencies": [],
+        "modified_outputs": [],
+        "modified_permissions": [],
+        "modified_validation": [],
+        "removed_steps": [],
+        "reordered_steps": []
+      },
+      "revision_history": [
+        {
+          "confidence": 0.86,
+          "operator_notes": "Keep this as a design-only revision.",
+          "previous_plan_reference": "rc3-plan-632cd382554c3370",
+          "revised_plan_reference": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+          "revision_number": 1,
+          "revision_summary": "operator_correction: valid; Added 2 step(s): Review new evidence and update validation expectations.; Verify the revised plan preserves updated constraints. Changed assumptions: implementation is deferred",
+          "safety": {
+            "automatic_commit_performed": false,
+            "automatic_push_performed": false,
+            "autonomous_action_performed": false,
+            "canonical_write_performed": false,
+            "delta_75_interaction_performed": false,
+            "deployment_performed": false,
+            "fine_tuning_performed": false,
+            "graph_write_performed": false,
+            "hidden_persistence_performed": false,
+            "hyb1_promoted": false,
+            "model_b_replaced": false,
+            "noncanonical_write_performed": false,
+            "plan_execution_performed": false,
+            "plugin_activation_performed": false,
+            "plugin_creation_performed": false,
+            "production_mutation_performed": false,
+            "provider_calls_performed": false,
+            "replay_write_performed": false,
+            "sandbox_creation_performed": false,
+            "scheduler_action_performed": false,
+            "tool_execution_performed": false,
+            "training_performed": false,
+            "web_search_performed": false,
+            "weight_update_performed": false
+          },
+          "timestamp": "2026-07-10T17:22:57+00:00",
+          "trigger": "operator_correction"
+        }
+      ],
+      "revision_monitoring": {
+        "contradictory_revisions": false,
+        "diagnostics": [
+          "progress evaluation still has missing evidence",
+          "goal is not complete"
+        ],
+        "incomplete_goal": true,
+        "missing_evidence": true,
+        "observational_only": true,
+        "oscillation": false,
+        "repeated_revisions": false,
+        "stagnation": false,
+        "stale_plan": false
+      },
+      "revision_self_evaluation": {
+        "certainty_claimed": false,
+        "confidence": 0.86,
+        "consistency": 1.0,
+        "evidence_quality": 0.85,
+        "missing_information": [
+          "progress evidence"
+        ],
+        "remaining_risks": [
+          "progress evaluation still has missing evidence",
+          "goal is not complete"
+        ],
+        "revision_quality": 0.9533,
+        "uncertainty": "moderate"
+      },
+      "revision_trace": {
+        "arbitration_status": "accepted_read_only_revision",
+        "controlled_forgetting_hook": {
+          "abandoned_plans": [],
+          "archived_alternatives": [
+            "rc3-plan-632cd382554c3370"
+          ],
+          "deletes_anything": false,
+          "obsolete_assumptions": [],
+          "persists_anything": false,
+          "superseded_revisions": [
+            "rc3-plan-632cd382554c3370"
+          ]
+        },
+        "decision": "revise_existing_plan",
+        "diff": {
+          "added_steps": [
+            "Review new evidence and update validation expectations.",
+            "Verify the revised plan preserves updated constraints."
+          ],
+          "human_readable": [
+            "Added 2 step(s): Review new evidence and update validation expectations.; Verify the revised plan preserves updated constraints.",
+            "Changed assumptions: implementation is deferred"
+          ],
+          "modified_assumptions": [
+            "implementation is deferred"
+          ],
+          "modified_dependencies": [],
+          "modified_outputs": [],
+          "modified_permissions": [],
+          "modified_validation": [],
+          "removed_steps": [],
+          "reordered_steps": []
+        },
+        "history": [
+          {
+            "confidence": 0.86,
+            "operator_notes": "Keep this as a design-only revision.",
+            "previous_plan_reference": "rc3-plan-632cd382554c3370",
+            "revised_plan_reference": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+            "revision_number": 1,
+            "revision_summary": "operator_correction: valid; Added 2 step(s): Review new evidence and update validation expectations.; Verify the revised plan preserves updated constraints. Changed assumptions: implementation is deferred",
+            "safety": {
+              "automatic_commit_performed": false,
+              "automatic_push_performed": false,
+              "autonomous_action_performed": false,
+              "canonical_write_performed": false,
+              "delta_75_interaction_performed": false,
+              "deployment_performed": false,
+              "fine_tuning_performed": false,
+              "graph_write_performed": false,
+              "hidden_persistence_performed": false,
+              "hyb1_promoted": false,
+              "model_b_replaced": false,
+              "noncanonical_write_performed": false,
+              "plan_execution_performed": false,
+              "plugin_activation_performed": false,
+              "plugin_creation_performed": false,
+              "production_mutation_performed": false,
+              "provider_calls_performed": false,
+              "replay_write_performed": false,
+              "sandbox_creation_performed": false,
+              "scheduler_action_performed": false,
+              "tool_execution_performed": false,
+              "training_performed": false,
+              "web_search_performed": false,
+              "weight_update_performed": false
+            },
+            "timestamp": "2026-07-10T17:22:57+00:00",
+            "trigger": "operator_correction"
+          }
+        ],
+        "monitoring": {
+          "contradictory_revisions": false,
+          "diagnostics": [
+            "progress evaluation still has missing evidence",
+            "goal is not complete"
+          ],
+          "incomplete_goal": true,
+          "missing_evidence": true,
+          "observational_only": true,
+          "oscillation": false,
+          "repeated_revisions": false,
+          "stagnation": false,
+          "stale_plan": false
+        },
+        "reasoning": {
+          "assumptions_changed": [
+            "implementation is deferred"
+          ],
+          "confidence": 0.86,
+          "constraints_affected": [
+            "operator review required"
+          ],
+          "evidence_used": [
+            "operator clarified that only schema documentation is in scope"
+          ],
+          "inspectable": true,
+          "revision_cause": "operator_correction",
+          "risks_introduced": [],
+          "risks_removed": [
+            "unsafe scope reduced"
+          ],
+          "uncertainty": "moderate"
+        },
+        "revised_plan": {
+          "assumptions": [
+            "RC3-A remains read-only and non-executing.",
+            "implementation is deferred"
+          ],
+          "confidence": 0.85,
+          "constraints_preserved": [
+            "preserve explicit prohibitions",
+            "operator review required"
+          ],
+          "dependencies": [
+            "rc3-plan-step-c2a2a45fa5566a65",
+            "rc3-plan-step-0431b6d45a5860bf",
+            "rc3-plan-step-c1e3adcab60a1f5c",
+            "rc3-revision-step-b9a8edc4c05955e6",
+            "rc3-revision-step-37f2576a4be3462e"
+          ],
+          "execution_authorized": false,
+          "goal_id": "rc3-goal-417de4f088584cfb",
+          "lifecycle_state": "reviewable_revision",
+          "persistence_status": "ephemeral",
+          "plan_id": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "provenance": {
+            "planner": "rc3_plan_generator",
+            "revision_engine": "rc3_plan_revision",
+            "revision_trigger": "operator_correction",
+            "source_goal_id": "rc3-goal-417de4f088584cfb"
+          },
+          "risks": [
+            "RC3-A plans are descriptive and must not be executed.",
+            "Plan must preserve explicit prohibitions.",
+            "Revision may drift from the original plan if operator review is skipped."
+          ],
+          "safety": {
+            "automatic_commit_performed": false,
+            "automatic_push_performed": false,
+            "autonomous_action_performed": false,
+            "canonical_write_performed": false,
+            "delta_75_interaction_performed": false,
+            "deployment_performed": false,
+            "fine_tuning_performed": false,
+            "graph_write_performed": false,
+            "hidden_persistence_performed": false,
+            "hyb1_promoted": false,
+            "model_b_replaced": false,
+            "noncanonical_write_performed": false,
+            "plan_execution_performed": false,
+            "plugin_activation_performed": false,
+            "plugin_creation_performed": false,
+            "production_mutation_performed": false,
+            "provider_calls_performed": false,
+            "replay_write_performed": false,
+            "sandbox_creation_performed": false,
+            "scheduler_action_performed": false,
+            "tool_execution_performed": false,
+            "training_performed": false,
+            "web_search_performed": false,
+            "weight_update_performed": false
+          },
+          "steps": [
+            {
+              "dependency_ids": [],
+              "expected_evidence": [
+                "operator_review_record"
+              ],
+              "non_executing": true,
+              "preserves_constraints": [
+                "preserve explicit prohibitions"
+              ],
+              "prohibited_actions": [
+                "do not implement",
+                "do not create or activate plugins"
+              ],
+              "risk": "low",
+              "step_id": "rc3-plan-step-c2a2a45fa5566a65",
+              "summary": "Review current architecture and constraints.",
+              "uncertainty": "moderate"
+            },
+            {
+              "dependency_ids": [
+                "rc3-plan-step-c2a2a45fa5566a65"
+              ],
+              "expected_evidence": [
+                "design_artifact"
+              ],
+              "non_executing": true,
+              "preserves_constraints": [
+                "preserve explicit prohibitions"
+              ],
+              "prohibited_actions": [
+                "do not implement",
+                "do not create or activate plugins"
+              ],
+              "risk": "low",
+              "step_id": "rc3-plan-step-0431b6d45a5860bf",
+              "summary": "Define the design surface and required fields.",
+              "uncertainty": "moderate"
+            },
+            {
+              "dependency_ids": [
+                "rc3-plan-step-0431b6d45a5860bf"
+              ],
+              "expected_evidence": [
+                "operator_review_record"
+              ],
+              "non_executing": true,
+              "preserves_constraints": [
+                "preserve explicit prohibitions"
+              ],
+              "prohibited_actions": [
+                "do not implement",
+                "do not create or activate plugins"
+              ],
+              "risk": "low",
+              "step_id": "rc3-plan-step-c1e3adcab60a1f5c",
+              "summary": "Define validation rules and review gates.",
+              "uncertainty": "moderate"
+            },
+            {
+              "dependency_ids": [
+                "rc3-plan-step-c1e3adcab60a1f5c"
+              ],
+              "expected_evidence": [
+                "operator_review_record"
+              ],
+              "non_executing": true,
+              "preserves_constraints": [
+                "preserve explicit prohibitions"
+              ],
+              "prohibited_actions": [
+                "do not implement",
+                "do not create or activate plugins"
+              ],
+              "risk": "low",
+              "step_id": "rc3-plan-step-6b7c6d6abf1dbfde",
+              "summary": "Write the design artifact for operator review.",
+              "uncertainty": "moderate"
+            },
+            {
+              "dependency_ids": [],
+              "expected_evidence": [
+                "evidence_review"
+              ],
+              "non_executing": true,
+              "preserves_constraints": [
+                "preserve explicit prohibitions"
+              ],
+              "prohibited_actions": [
+                "do not implement",
+                "do not create or activate plugins"
+              ],
+              "risk": "low",
+              "step_id": "rc3-revision-step-b9a8edc4c05955e6",
+              "summary": "Review new evidence and update validation expectations.",
+              "uncertainty": "moderate"
+            },
+            {
+              "dependency_ids": [],
+              "expected_evidence": [
+                "constraint_review"
+              ],
+              "non_executing": true,
+              "preserves_constraints": [
+                "preserve explicit prohibitions"
+              ],
+              "prohibited_actions": [
+                "do not implement",
+                "do not create or activate plugins"
+              ],
+              "risk": "low",
+              "step_id": "rc3-revision-step-37f2576a4be3462e",
+              "summary": "Verify the revised plan preserves updated constraints.",
+              "uncertainty": "moderate"
+            }
+          ],
+          "strategy": "design_only",
+          "uncertainty": "moderate"
+        },
+        "revision_applied": true,
+        "safety": {
+          "automatic_commit_performed": false,
+          "automatic_push_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "fine_tuning_performed": false,
+          "graph_write_performed": false,
+          "hidden_persistence_performed": false,
+          "hyb1_promoted": false,
+          "model_b_replaced": false,
+          "noncanonical_write_performed": false,
+          "plan_execution_performed": false,
+          "plugin_activation_performed": false,
+          "plugin_creation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "replay_write_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "tool_execution_performed": false,
+          "training_performed": false,
+          "web_search_performed": false,
+          "weight_update_performed": false
+        },
+        "self_evaluation": {
+          "certainty_claimed": false,
+          "confidence": 0.86,
+          "consistency": 1.0,
+          "evidence_quality": 0.85,
+          "missing_information": [
+            "progress evidence"
+          ],
+          "remaining_risks": [
+            "progress evaluation still has missing evidence",
+            "goal is not complete"
+          ],
+          "revision_quality": 0.9533,
+          "uncertainty": "moderate"
+        },
+        "validation": {
+          "blocked_steps": [],
+          "checks_performed": [
+            "goal_alignment",
+            "constraint_preservation",
+            "prohibition_preservation",
+            "dependency_ordering",
+            "measurable_outputs",
+            "validation_coverage",
+            "operator_checkpoint_presence",
+            "hidden_execution_detection",
+            "rc2_contract_compatibility"
+          ],
+          "confidence": 0.92,
+          "failed_checks": [],
+          "passed_checks": [
+            "goal_alignment",
+            "constraint_preservation",
+            "prohibition_preservation",
+            "dependency_ordering",
+            "measurable_outputs",
+            "validation_coverage",
+            "operator_checkpoint_presence",
+            "hidden_execution_detection",
+            "rc2_contract_compatibility"
+          ],
+          "rejected_steps": [],
+          "required_clarification": [],
+          "result": "valid",
+          "trace": {
+            "execution_authorized": false,
+            "rc2_contract_changed": false
+          },
+          "warnings": []
+        }
+      },
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      }
+    },
+    "episode_id": "rc3-revision-episode-4988e2d830f16770",
+    "goal_frame": {
+      "assumptions": [
+        "RC3-A remains read-only and non-executing."
+      ],
+      "child_goals": [],
+      "completion_evidence": [],
+      "confidence": 0.86,
+      "constraints": [
+        "preserve explicit prohibitions"
+      ],
+      "creation_turn": "rc3-turn-417de4f088584cfb",
+      "dependencies": [],
+      "explicitness": "explicit",
+      "goal_id": "rc3-goal-417de4f088584cfb",
+      "goal_type": "design_goal",
+      "last_updated_turn": "rc3-turn-417de4f088584cfb",
+      "normalized_objective": "Design an RC3 plugin interface",
+      "operator_confirmation_status": "not_confirmed",
+      "parent_goal": null,
+      "permitted_tools": [],
+      "persistence_status": "ephemeral",
+      "priority": 0.5,
+      "prohibited_actions": [
+        "do not implement",
+        "do not create or activate plugins"
+      ],
+      "prohibited_tools": [
+        "plugins"
+      ],
+      "provenance": {
+        "interpreter": "rc3_goal_interpreter",
+        "mode": "RC3-A",
+        "rc2_episode_reference": null,
+        "source": "operator_text"
+      },
+      "requested_resources": [],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "source_user_text": "Design an RC3 plugin interface, but do not implement or activate plugins.",
+      "status": "interpreted",
+      "success_criteria": [
+        "operator confirms objective is correctly understood"
+      ],
+      "superseded_goal": null,
+      "uncertainty": "moderate"
+    },
+    "introspection": {
+      "assumptions": [
+        "RC3-A remains read-only and non-executing."
+      ],
+      "claims": [
+        {
+          "claim": "Active objective: Design an RC3 plugin interface",
+          "evidence": "GoalFrame.normalized_objective"
+        },
+        {
+          "claim": "Plan strategy: design_only",
+          "evidence": "PlanFrame.strategy"
+        },
+        {
+          "claim": "Plan validation result: valid",
+          "evidence": "PlanValidation.result"
+        },
+        {
+          "claim": "No execution authority is present.",
+          "evidence": "PlanFrame.execution_authorized=false"
+        },
+        {
+          "claim": "RC3-A state is ephemeral.",
+          "evidence": "GoalFrame.persistence_status and PlanFrame.persistence_status"
+        }
+      ],
+      "evidence_sources": [
+        "GoalFrame",
+        "PlanFrame",
+        "PlanValidation",
+        "GoalPlanArbitration",
+        "docs/RC3_STATE_MODEL.md"
+      ],
+      "fabricated_self_state": false,
+      "hidden_state_detected": false,
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "snapshot_id": "rc3-snapshot-f04158b6f299d234",
+      "uncertainty": [
+        "operator confirmation"
+      ]
+    },
+    "persistence_status": "ephemeral",
+    "plan_frame": {
+      "assumptions": [
+        "RC3-A remains read-only and non-executing.",
+        "implementation is deferred"
+      ],
+      "confidence": 0.85,
+      "constraints_preserved": [
+        "preserve explicit prohibitions",
+        "operator review required"
+      ],
+      "dependencies": [
+        "rc3-plan-step-c2a2a45fa5566a65",
+        "rc3-plan-step-0431b6d45a5860bf",
+        "rc3-plan-step-c1e3adcab60a1f5c",
+        "rc3-revision-step-b9a8edc4c05955e6",
+        "rc3-revision-step-37f2576a4be3462e"
+      ],
+      "execution_authorized": false,
+      "goal_id": "rc3-goal-417de4f088584cfb",
+      "lifecycle_state": "reviewable_revision",
+      "persistence_status": "ephemeral",
+      "plan_id": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+      "prohibited_actions": [
+        "do not implement",
+        "do not create or activate plugins"
+      ],
+      "provenance": {
+        "planner": "rc3_plan_generator",
+        "revision_engine": "rc3_plan_revision",
+        "revision_trigger": "operator_correction",
+        "source_goal_id": "rc3-goal-417de4f088584cfb"
+      },
+      "risks": [
+        "RC3-A plans are descriptive and must not be executed.",
+        "Plan must preserve explicit prohibitions.",
+        "Revision may drift from the original plan if operator review is skipped."
+      ],
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "steps": [
+        {
+          "dependency_ids": [],
+          "expected_evidence": [
+            "operator_review_record"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-c2a2a45fa5566a65",
+          "summary": "Review current architecture and constraints.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-plan-step-c2a2a45fa5566a65"
+          ],
+          "expected_evidence": [
+            "design_artifact"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-0431b6d45a5860bf",
+          "summary": "Define the design surface and required fields.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-plan-step-0431b6d45a5860bf"
+          ],
+          "expected_evidence": [
+            "operator_review_record"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-c1e3adcab60a1f5c",
+          "summary": "Define validation rules and review gates.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [
+            "rc3-plan-step-c1e3adcab60a1f5c"
+          ],
+          "expected_evidence": [
+            "operator_review_record"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "risk": "low",
+          "step_id": "rc3-plan-step-6b7c6d6abf1dbfde",
+          "summary": "Write the design artifact for operator review.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [],
+          "expected_evidence": [
+            "evidence_review"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "risk": "low",
+          "step_id": "rc3-revision-step-b9a8edc4c05955e6",
+          "summary": "Review new evidence and update validation expectations.",
+          "uncertainty": "moderate"
+        },
+        {
+          "dependency_ids": [],
+          "expected_evidence": [
+            "constraint_review"
+          ],
+          "non_executing": true,
+          "preserves_constraints": [
+            "preserve explicit prohibitions"
+          ],
+          "prohibited_actions": [
+            "do not implement",
+            "do not create or activate plugins"
+          ],
+          "risk": "low",
+          "step_id": "rc3-revision-step-37f2576a4be3462e",
+          "summary": "Verify the revised plan preserves updated constraints.",
+          "uncertainty": "moderate"
+        }
+      ],
+      "strategy": "design_only",
+      "uncertainty": "moderate"
+    },
+    "progress": {
+      "blockers": [
+        "operator_review_outstanding"
+      ],
+      "completion_evidence": [],
+      "completion_requires_operator_confirmation": true,
+      "completion_score": 0.0,
+      "evaluation_id": "rc3-progress-c39dcb6bce291a21",
+      "failure_signals": [],
+      "goal_id": "rc3-goal-417de4f088584cfb",
+      "missing_evidence": [
+        "operator confirms objective is correctly understood"
+      ],
+      "plan_id": "rc3-revised-plan-4fec9cf2d3ac0d5c",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "awaiting_review"
+    },
+    "rc2_episode_reference": null,
+    "safety": {
+      "automatic_commit_performed": false,
+      "automatic_push_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hidden_persistence_performed": false,
+      "hyb1_promoted": false,
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
+      "plan_execution_performed": false,
+      "plugin_activation_performed": false,
+      "plugin_creation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "replay_write_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "tool_execution_performed": false,
+      "training_performed": false,
+      "web_search_performed": false,
+      "weight_update_performed": false
+    },
+    "source_text": "Design an RC3 plugin interface, but do not implement or activate plugins."
+  },
+  "history_count": 1,
+  "monitoring": {
+    "contradictory_revisions": false,
+    "diagnostics": [
+      "progress evaluation still has missing evidence",
+      "goal is not complete"
+    ],
+    "incomplete_goal": true,
+    "missing_evidence": true,
+    "observational_only": true,
+    "oscillation": false,
+    "repeated_revisions": false,
+    "stagnation": false,
+    "stale_plan": false
+  },
+  "recommendation": "READY_FOR_RC3_B_REVISION_BENCHMARK",
+  "report": "RC3_B_PLAN_REVISION",
+  "revision_applied": true,
+  "revision_decision": "revise_existing_plan",
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "self_evaluation": {
+    "certainty_claimed": false,
+    "confidence": 0.86,
+    "consistency": 1.0,
+    "evidence_quality": 0.85,
+    "missing_information": [
+      "progress evidence"
+    ],
+    "remaining_risks": [
+      "progress evaluation still has missing evidence",
+      "goal is not complete"
+    ],
+    "revision_quality": 0.9533,
+    "uncertainty": "moderate"
+  }
+}
