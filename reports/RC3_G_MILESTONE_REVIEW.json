@@ -1,0 +1,110 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_H_PROJECT_COGNITION",
+  "report": "RC3_G_MILESTONE_REVIEW",
+  "result": {
+    "integration_package": {
+      "change_set": [
+        "abstract_component_contract",
+        "documentation_update_reference",
+        "focused_test_reference"
+      ],
+      "execution_performed": false,
+      "governance_reference": "rc3-decision-eb92cc52a766c500",
+      "impact_analysis": [
+        "RC2 unchanged",
+        "RC3 advisory contract extended",
+        "no production mutation"
+      ],
+      "integration_steps": [
+        "operator verifies governance reference",
+        "operator reviews change set references",
+        "operator runs validation plan in future controlled path",
+        "operator decides whether to integrate"
+      ],
+      "operator_checklist": [
+        "review scope",
+        "review rollback",
+        "review validation",
+        "approve or reject manually"
+      ],
+      "package_id": "rc3-integration-package-ca515e8b014fb2d1",
+      "repository_mutation_performed": false,
+      "rollback_plan": [
+        "discard package",
+        "restore prior reviewed artifact",
+        "verify no runtime state changed"
+      ],
+      "validation_plan": [
+        "py_compile",
+        "focused stage tests",
+        "JSON validation",
+        "secret scan",
+        "rc2_fast_validate"
+      ]
+    },
+    "scores": {
+      "candidate_intake": 1.0,
+      "change_set_model": 1.0,
+      "governance_completeness": 1.0,
+      "impact_analysis": 1.0,
+      "operator_checklist": 1.0,
+      "rc2_compatibility": 1.0,
+      "rollback_plan": 1.0,
+      "safety": 1.0
+    },
+    "validation": {
+      "bounded_scope": true,
+      "complete_validation": true,
+      "governance_approved": true,
+      "hidden_execution": false,
+      "package_id": "rc3-integration-package-ca515e8b014fb2d1",
+      "permission_covered": true,
+      "rejection_reasons": [],
+      "result": "valid",
+      "rollback_sufficient": true,
+      "validation_id": "rc3-integration-validation-e884eecb54f0e517"
+    }
+  },
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "candidate_intake": 1.0,
+    "change_set_model": 1.0,
+    "governance_completeness": 1.0,
+    "impact_analysis": 1.0,
+    "operator_checklist": 1.0,
+    "rc2_compatibility": 1.0,
+    "rollback_plan": 1.0,
+    "safety": 1.0
+  },
+  "stage": "RC3-G"
+}

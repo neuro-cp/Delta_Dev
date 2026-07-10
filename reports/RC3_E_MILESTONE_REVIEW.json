@@ -1,0 +1,166 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_F_PLUGIN_ARCHITECTURE",
+  "report": "RC3_E_MILESTONE_REVIEW",
+  "result": {
+    "audit_record": {
+      "audit_id": "rc3-governance-audit-32a6ea9dbfdab949",
+      "constraints": [
+        "no approval object is execution permission",
+        "least privilege review only"
+      ],
+      "created_at": "2026-07-10T17:42:03+00:00",
+      "decision_id": "rc3-governance-decision-6702b7ff02ad8ad1",
+      "evidence_id": "rc3-evidence-32a6ea9dbfdab949",
+      "permission_id": "rc3-permission-32a6ea9dbfdab949",
+      "policy": "RC3-E governance foundation policy",
+      "reviewed_object": "rc3-engineering-proposal-619348f55dd4dcd5",
+      "summary": "Governance case is reviewable and bounded; execution remains prohibited."
+    },
+    "evidence_bundle": {
+      "contradictions": [],
+      "evidence_id": "rc3-evidence-32a6ea9dbfdab949",
+      "findings": [
+        "candidate has structured provenance",
+        "evidence supports review only"
+      ],
+      "missing_validation": [
+        "operator_terminal_approval"
+      ],
+      "recency": "current_episode",
+      "relevance": "relevant",
+      "source_class": "structured_rc3_candidate",
+      "sufficiency": "sufficient_for_review_not_execution"
+    },
+    "governance_case": {
+      "authority": "review_only_no_execution_permission",
+      "candidate_id": "rc3-engineering-proposal-619348f55dd4dcd5",
+      "candidate_type": "EngineeringProposal",
+      "case_id": "rc3-governance-case-a721a20749538428",
+      "ephemeral_or_report_only": "report_only",
+      "lifetime": "ephemeral_report_only_rc3_e",
+      "operator_visible": true,
+      "owner": "operator",
+      "provenance": {
+        "candidate_id": "rc3-engineering-proposal-619348f55dd4dcd5",
+        "source": "rc3_e_governance_foundation"
+      }
+    },
+    "governance_decision": {
+      "approval_steps": [
+        "operator_review",
+        "evidence_check",
+        "risk_review"
+      ],
+      "decision_id": "rc3-governance-decision-6702b7ff02ad8ad1",
+      "evidence_required": [
+        "operator_terminal_approval"
+      ],
+      "execution_permission_granted": false,
+      "rationale": "Candidate is eligible for operator review but receives no execution authority.",
+      "risk_escalations": [
+        "sandbox_or_plugin_requires_stronger_review"
+      ],
+      "rollback_required": true,
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "status": "awaiting_operator_review"
+    },
+    "permission_requirement": {
+      "allowed_operation": "inspect_and_decide",
+      "descriptive_only": true,
+      "duration": "single_review_case",
+      "expiration": "end_of_episode",
+      "grant_source": "operator_future_explicit_approval_required",
+      "permission_id": "rc3-permission-32a6ea9dbfdab949",
+      "prohibited_operations": [
+        "execute",
+        "activate",
+        "persist_authority",
+        "commit",
+        "push",
+        "deploy"
+      ],
+      "revocation": "automatic_after_review",
+      "scope": "review_only",
+      "target": "rc3-engineering-proposal-619348f55dd4dcd5"
+    },
+    "scores": {
+      "approval_chain": 1.0,
+      "decision_provenance": 1.0,
+      "eligibility": 1.0,
+      "evidence_review": 1.0,
+      "governance_completeness": 1.0,
+      "least_privilege": 1.0,
+      "rc2_compatibility": 1.0,
+      "rollback_governance": 1.0,
+      "safety": 1.0
+    }
+  },
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "approval_chain": 1.0,
+    "decision_provenance": 1.0,
+    "eligibility": 1.0,
+    "evidence_review": 1.0,
+    "governance_completeness": 1.0,
+    "least_privilege": 1.0,
+    "rc2_compatibility": 1.0,
+    "rollback_governance": 1.0,
+    "safety": 1.0
+  },
+  "stage": "RC3-E"
+}

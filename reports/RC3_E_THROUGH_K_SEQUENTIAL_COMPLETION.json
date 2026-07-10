@@ -1,0 +1,27 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "next_boundary": "pause_feature_development_for_post_rc3_k_calibration_campaign",
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendations": {
+    "RC3-E": "PROCEED_RC3_F_PLUGIN_ARCHITECTURE",
+    "RC3-F": "PROCEED_RC3_G_CONTROLLED_INTEGRATION_PLANNING",
+    "RC3-G": "PROCEED_RC3_H_PROJECT_COGNITION",
+    "RC3-H": "PROCEED_RC3_I_PERSISTENT_PROJECT_STATE",
+    "RC3-I": "PROCEED_RC3_J_OPERATOR_PILOT",
+    "RC3-J": "PROCEED_RC3_K_FREEZE",
+    "RC3-K": "RC3_FROZEN_READY_FOR_POST_FREEZE_CALIBRATION_REVIEW"
+  },
+  "report": "RC3_E_THROUGH_K_SEQUENTIAL_COMPLETION",
+  "safety_metadata_completeness": 1.0,
+  "stages": [
+    "RC3-E",
+    "RC3-F",
+    "RC3-G",
+    "RC3-H",
+    "RC3-I",
+    "RC3-J",
+    "RC3-K"
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "RC3_FROZEN_READY_FOR_POST_FREEZE_CALIBRATION_REVIEW",
+  "report": "RC3_K_MILESTONE_REVIEW",
+  "result": {
+    "audits": {
+      "architecture": "rc2_layering_preserved",
+      "governance": "authority_boundaries_explicit",
+      "persistence": "project_state_only_explicit_path",
+      "safety": "no_runtime_authority_expansion_detected",
+      "state_schema": "rc3_objects_serializable"
+    },
+    "freeze_manifest": {
+      "authority_boundaries": [
+        "no self-authorization",
+        "no hidden persistence",
+        "no DELTA-75",
+        "no provider calls",
+        "no training"
+      ],
+      "benchmarks": [
+        "RC3_A",
+        "RC3_B",
+        "RC3_C",
+        "RC3_D",
+        "RC3_E",
+        "RC3_F",
+        "RC3_G",
+        "RC3_H",
+        "RC3_I",
+        "RC3_J",
+        "RC3_K"
+      ],
+      "created_at": "2026-07-10T17:42:03+00:00",
+      "deferred_features": [
+        "plugin runtime",
+        "sandbox runtime",
+        "controlled integration execution",
+        "autonomous project work",
+        "RC4"
+      ],
+      "frozen_modules": [
+        "rc3_foundation_state",
+        "rc3_plan_revision",
+        "rc3_engineering_foundation",
+        "rc3_sandbox_foundation",
+        "rc3_e_to_k_foundations"
+      ],
+      "known_limitations": [
+        "RC3-K is not operator final approval.",
+        "RC4 execution is not implemented.",
+        "Full post-freeze calibration remains separate."
+      ],
+      "manifest_id": "rc3-rc3-freeze-f5d1b6b10721c778",
+      "recommendation": "RC3_FROZEN_READY_FOR_POST_FREEZE_CALIBRATION_REVIEW",
+      "reports": [
+        "RC3_A_MILESTONE_REVIEW.json",
+        "RC3_B_MILESTONE_REVIEW.json",
+        "RC3_B_PLAN_REVISION.json",
+        "RC3_B_REVISION_BENCHMARK.json",
+        "RC3_CAPABILITY_GAP_ANALYSIS.json",
+        "RC3_C_ENGINEERING_BENCHMARK.json",
+        "RC3_C_ENGINEERING_FOUNDATION.json",
+        "RC3_C_MILESTONE_REVIEW.json",
+        "RC3_D_MILESTONE_REVIEW.json",
+        "RC3_D_SANDBOX_BENCHMARK.json",
+        "RC3_D_SANDBOX_FOUNDATION.json",
+        "RC3_E_MILESTONE_REVIEW.json",
+        "RC3_F_MILESTONE_REVIEW.json",
+        "RC3_GOAL_INTERPRETATION.json",
+        "RC3_GOAL_PLANNING_BENCHMARK.json",
+        "RC3_G_MILESTONE_REVIEW.json",
+        "RC3_H_MILESTONE_REVIEW.json",
+        "RC3_INTROSPECTION_SCAFFOLD.json",
+        "RC3_I_MILESTONE_REVIEW.json",
+        "RC3_J_MILESTONE_REVIEW.json",
+        "RC3_MILESTONE_1_FOUNDATION.json",
+        "RC3_OPERATOR_PILOT_FREEZE_READINESS.json",
+        "RC3_PLAN_GENERATION.json",
+        "RC3_PLAN_VALIDATION.json",
+        "RC3_PROGRESS_EVALUATION.json"
+      ],
+      "schemas": [
+        "GoalFrame",
+        "PlanFrame",
+        "EngineeringProposal",
+        "SandboxProposal",
+        "GovernanceCase",
+        "ProjectFrame"
+      ],
+      "tests": [
+        "tests/runtime_rc3",
+        "scripts/rc2_fast_validate.py"
+      ]
+    },
+    "scores": {
+      "architecture_audit": 1.0,
+      "freeze_manifest": 1.0,
+      "governance_audit": 1.0,
+      "governance_completeness": 1.0,
+      "persistence_audit": 1.0,
+      "rc2_compatibility": 1.0,
+      "safety": 1.0,
+      "safety_audit": 1.0,
+      "state_schema_audit": 1.0
+    }
+  },
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "architecture_audit": 1.0,
+    "freeze_manifest": 1.0,
+    "governance_audit": 1.0,
+    "governance_completeness": 1.0,
+    "persistence_audit": 1.0,
+    "rc2_compatibility": 1.0,
+    "safety": 1.0,
+    "safety_audit": 1.0,
+    "state_schema_audit": 1.0
+  },
+  "stage": "RC3-K"
+}

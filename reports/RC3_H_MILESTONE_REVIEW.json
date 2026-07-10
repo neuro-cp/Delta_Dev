@@ -1,0 +1,111 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_I_PERSISTENT_PROJECT_STATE",
+  "report": "RC3_H_MILESTONE_REVIEW",
+  "result": {
+    "project_frame": {
+      "authority": "represent_only_no_execution",
+      "context_segments": [
+        "active_objective",
+        "governance_constraints",
+        "stage_boundaries"
+      ],
+      "decisions": [
+        "project state remains ephemeral until RC3-I"
+      ],
+      "deliverables": [
+        "stage reports",
+        "focused tests",
+        "operator review artifacts"
+      ],
+      "dependencies": [
+        "RC2 frozen pipeline",
+        "RC3-A through RC3-D scaffolds"
+      ],
+      "health": "stable_with_review_required",
+      "milestones": [
+        "RC3-E governance",
+        "RC3-F plugin architecture",
+        "RC3-G integration planning",
+        "RC3-H project cognition"
+      ],
+      "name": "DELTA RC3 governed cognitive runtime",
+      "objectives": [
+        "stabilize governed objective cognition",
+        "preserve RC2 compatibility"
+      ],
+      "persistence_status": "ephemeral_project_state",
+      "project_id": "rc3-project-888538e7e3dfc2c2",
+      "provenance": {
+        "source": "rc3_h_project_cognition"
+      },
+      "risks": [
+        "scope creep",
+        "operator burden",
+        "hidden authority expansion"
+      ],
+      "snapshot_id": "rc3-project-snapshot-aa4ffb74fb4102bc"
+    },
+    "project_health": {
+      "blocked_work": [],
+      "evidence_sufficiency": "sufficient_for_ephemeral_project_reasoning",
+      "health_id": "rc3-project-health-aa4ffb74fb4102bc",
+      "milestone_confidence": 0.86,
+      "progress": "multi_stage_scaffold_complete_when_reports_pass",
+      "risk_concentration": "moderate_operator_review_needed",
+      "stale_decisions": [],
+      "unresolved_contradictions": []
+    },
+    "scores": {
+      "context_selection": 1.0,
+      "dependency_model": 1.0,
+      "governance_completeness": 1.0,
+      "hierarchy": 1.0,
+      "project_health": 1.0,
+      "project_recognition": 1.0,
+      "rc2_compatibility": 1.0,
+      "safety": 1.0
+    }
+  },
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "context_selection": 1.0,
+    "dependency_model": 1.0,
+    "governance_completeness": 1.0,
+    "hierarchy": 1.0,
+    "project_health": 1.0,
+    "project_recognition": 1.0,
+    "rc2_compatibility": 1.0,
+    "safety": 1.0
+  },
+  "stage": "RC3-H"
+}

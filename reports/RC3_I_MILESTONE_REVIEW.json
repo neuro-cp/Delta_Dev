@@ -1,0 +1,311 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_J_OPERATOR_PILOT",
+  "report": "RC3_I_MILESTONE_REVIEW",
+  "result": {
+    "archive": {
+      "actor": "operator_fixture",
+      "archived": true,
+      "created_at": "2026-07-10T17:42:03+00:00",
+      "prior_version": null,
+      "project_frame": {
+        "authority": "represent_only_no_execution",
+        "context_segments": [
+          "active_objective",
+          "governance_constraints",
+          "stage_boundaries"
+        ],
+        "decisions": [
+          "project state remains ephemeral until RC3-I"
+        ],
+        "deliverables": [
+          "stage reports",
+          "focused tests",
+          "operator review artifacts"
+        ],
+        "dependencies": [
+          "RC2 frozen pipeline",
+          "RC3-A through RC3-D scaffolds"
+        ],
+        "health": "stable_with_review_required",
+        "milestones": [
+          "RC3-E governance",
+          "RC3-F plugin architecture",
+          "RC3-G integration planning",
+          "RC3-H project cognition"
+        ],
+        "name": "DELTA RC3 governed cognitive runtime",
+        "objectives": [
+          "stabilize governed objective cognition",
+          "preserve RC2 compatibility"
+        ],
+        "persistence_status": "explicit_project_state",
+        "project_id": "rc3-project-888538e7e3dfc2c2",
+        "provenance": {
+          "source": "rc3_h_project_cognition"
+        },
+        "risks": [
+          "scope creep",
+          "operator burden",
+          "hidden authority expansion"
+        ],
+        "snapshot_id": "rc3-project-snapshot-aa4ffb74fb4102bc"
+      },
+      "reason": "rc3_i_round_trip_test",
+      "record_id": "rc3-project-record-956ec46ada6890c4",
+      "resulting_version": "d2b54488c7b9666e",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "schema_version": "rc3_project_state_v1",
+      "source_episode": "rc3_i"
+    },
+    "export": {
+      "actor": "operator_fixture",
+      "archived": false,
+      "created_at": "2026-07-10T17:42:03+00:00",
+      "prior_version": null,
+      "project_frame": {
+        "authority": "represent_only_no_execution",
+        "context_segments": [
+          "active_objective",
+          "governance_constraints",
+          "stage_boundaries"
+        ],
+        "decisions": [
+          "project state remains ephemeral until RC3-I"
+        ],
+        "deliverables": [
+          "stage reports",
+          "focused tests",
+          "operator review artifacts"
+        ],
+        "dependencies": [
+          "RC2 frozen pipeline",
+          "RC3-A through RC3-D scaffolds"
+        ],
+        "health": "stable_with_review_required",
+        "milestones": [
+          "RC3-E governance",
+          "RC3-F plugin architecture",
+          "RC3-G integration planning",
+          "RC3-H project cognition"
+        ],
+        "name": "DELTA RC3 governed cognitive runtime",
+        "objectives": [
+          "stabilize governed objective cognition",
+          "preserve RC2 compatibility"
+        ],
+        "persistence_status": "explicit_project_state",
+        "project_id": "rc3-project-888538e7e3dfc2c2",
+        "provenance": {
+          "source": "rc3_h_project_cognition"
+        },
+        "risks": [
+          "scope creep",
+          "operator burden",
+          "hidden authority expansion"
+        ],
+        "snapshot_id": "rc3-project-snapshot-aa4ffb74fb4102bc"
+      },
+      "reason": "rc3_i_round_trip_test",
+      "record_id": "rc3-project-record-956ec46ada6890c4",
+      "resulting_version": "d2b54488c7b9666e",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "schema_version": "rc3_project_state_v1",
+      "source_episode": "rc3_i"
+    },
+    "preview": {
+      "actor": "operator_fixture",
+      "operation": "project_state_write_preview",
+      "prior_version": null,
+      "project_id": "rc3-project-888538e7e3dfc2c2",
+      "reason": "rc3_i_round_trip_test",
+      "resulting_version": "d2b54488c7b9666e",
+      "secrets_detected": false,
+      "source_episode": "rc3_i",
+      "write_authorized": true
+    },
+    "record": {
+      "actor": "operator_fixture",
+      "archived": false,
+      "created_at": "2026-07-10T17:42:03+00:00",
+      "prior_version": null,
+      "project_frame": {
+        "authority": "represent_only_no_execution",
+        "context_segments": [
+          "active_objective",
+          "governance_constraints",
+          "stage_boundaries"
+        ],
+        "decisions": [
+          "project state remains ephemeral until RC3-I"
+        ],
+        "deliverables": [
+          "stage reports",
+          "focused tests",
+          "operator review artifacts"
+        ],
+        "dependencies": [
+          "RC2 frozen pipeline",
+          "RC3-A through RC3-D scaffolds"
+        ],
+        "health": "stable_with_review_required",
+        "milestones": [
+          "RC3-E governance",
+          "RC3-F plugin architecture",
+          "RC3-G integration planning",
+          "RC3-H project cognition"
+        ],
+        "name": "DELTA RC3 governed cognitive runtime",
+        "objectives": [
+          "stabilize governed objective cognition",
+          "preserve RC2 compatibility"
+        ],
+        "persistence_status": "explicit_project_state",
+        "project_id": "rc3-project-888538e7e3dfc2c2",
+        "provenance": {
+          "source": "rc3_h_project_cognition"
+        },
+        "risks": [
+          "scope creep",
+          "operator burden",
+          "hidden authority expansion"
+        ],
+        "snapshot_id": "rc3-project-snapshot-aa4ffb74fb4102bc"
+      },
+      "reason": "rc3_i_round_trip_test",
+      "record_id": "rc3-project-record-956ec46ada6890c4",
+      "resulting_version": "d2b54488c7b9666e",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "schema_version": "rc3_project_state_v1",
+      "source_episode": "rc3_i"
+    },
+    "scores": {
+      "archive_behavior": 1.0,
+      "authorized_writes": 1.0,
+      "export_import": 1.0,
+      "governance_completeness": 1.0,
+      "provenance": 1.0,
+      "rc2_compatibility": 1.0,
+      "safety": 1.0,
+      "secret_exclusion": 1.0,
+      "versioning": 1.0
+    }
+  },
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "archive_behavior": 1.0,
+    "authorized_writes": 1.0,
+    "export_import": 1.0,
+    "governance_completeness": 1.0,
+    "provenance": 1.0,
+    "rc2_compatibility": 1.0,
+    "safety": 1.0,
+    "secret_exclusion": 1.0,
+    "versioning": 1.0
+  },
+  "stage": "RC3-I"
+}

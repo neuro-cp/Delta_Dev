@@ -1,0 +1,130 @@
+{
+  "created_at": "2026-07-10T17:42:03+00:00",
+  "delta_75_interaction_performed": false,
+  "overall": 1.0,
+  "rc2_compatibility": 1.0,
+  "recommendation": "PROCEED_RC3_G_CONTROLLED_INTEGRATION_PLANNING",
+  "report": "RC3_F_MILESTONE_REVIEW",
+  "result": {
+    "manifest": {
+      "active_or_executing": false,
+      "compatibility": [
+        "rc3_plugin_architecture_v1"
+      ],
+      "declared_capabilities": [
+        "review_packet_generation"
+      ],
+      "dependencies": [],
+      "description": "Inert future plugin capability contract for operator review.",
+      "identifier": "rc3.future.operator.review.plugin",
+      "inputs": [
+        "structured_request"
+      ],
+      "lifecycle_state": "proposed",
+      "manifest_id": "rc3-plugin-manifest-cec46e3ccc61e687",
+      "outputs": [
+        "structured_response",
+        "audit_event"
+      ],
+      "permissions": [
+        "read_explicit_input"
+      ],
+      "provenance": {
+        "source": "rc3_f_plugin_architecture"
+      },
+      "risk_class": "medium",
+      "rollback_expectations": [
+        "manifest can be rejected or superseded"
+      ],
+      "verified_capabilities": [],
+      "version": "0.1.0"
+    },
+    "scores": {
+      "dependency_validation": 1.0,
+      "governance_completeness": 1.0,
+      "governance_linkage": 1.0,
+      "lifecycle_correctness": 1.0,
+      "manifest_completeness": 1.0,
+      "permission_minimization": 1.0,
+      "rc2_compatibility": 1.0,
+      "safety": 1.0
+    },
+    "validation": {
+      "completeness": true,
+      "dependency_coherent": true,
+      "duplicate_identifier": false,
+      "governance_linked": true,
+      "lifecycle_correct": true,
+      "manifest_id": "rc3-plugin-manifest-cec46e3ccc61e687",
+      "permission_minimized": true,
+      "rejection_reasons": [],
+      "result": "valid",
+      "safety": {
+        "automatic_commit_performed": false,
+        "automatic_push_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "fine_tuning_performed": false,
+        "graph_write_performed": false,
+        "hidden_persistence_performed": false,
+        "hyb1_promoted": false,
+        "model_b_replaced": false,
+        "noncanonical_write_performed": false,
+        "plan_execution_performed": false,
+        "plugin_activation_performed": false,
+        "plugin_creation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "replay_write_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "tool_execution_performed": false,
+        "training_performed": false,
+        "web_search_performed": false,
+        "weight_update_performed": false
+      },
+      "supply_chain_metadata_present": true,
+      "validation_id": "rc3-plugin-validation-728516230e201291"
+    }
+  },
+  "safety": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "fine_tuning_performed": false,
+    "graph_write_performed": false,
+    "hidden_persistence_performed": false,
+    "hyb1_promoted": false,
+    "model_b_replaced": false,
+    "noncanonical_write_performed": false,
+    "plan_execution_performed": false,
+    "plugin_activation_performed": false,
+    "plugin_creation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "replay_write_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "tool_execution_performed": false,
+    "training_performed": false,
+    "web_search_performed": false,
+    "weight_update_performed": false
+  },
+  "safety_metadata_completeness": 1.0,
+  "scores": {
+    "dependency_validation": 1.0,
+    "governance_completeness": 1.0,
+    "governance_linkage": 1.0,
+    "lifecycle_correctness": 1.0,
+    "manifest_completeness": 1.0,
+    "permission_minimization": 1.0,
+    "rc2_compatibility": 1.0,
+    "safety": 1.0
+  },
+  "stage": "RC3-F"
+}
