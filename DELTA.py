@@ -66,6 +66,7 @@ from orchestration.runtime.rc45_discourse_cognition_bridge import (  # noqa: E40
     should_preempt_specialist_routing,
 )
 from orchestration.runtime.pc1_pragmatic_cognition import build_pragmatic_frame  # noqa: E402
+from orchestration.runtime.integrated_cognitive_runtime import build_integrated_cognitive_trace  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -230,6 +231,16 @@ def _try_pc1_pragmatic_answer(message: str, last_report_inspection: dict[str, ob
         reply += f"PC1 enabled: {_pc1_enabled()}\n"
         reply += "PC1 frame:\n"
         reply += json.dumps(frame.as_dict(), indent=2, sort_keys=True)
+        reply += "\nIntegrated cognitive trace:\n"
+        reply += json.dumps(
+            build_integrated_cognitive_trace(
+                message,
+                last_report_inspection,
+                include_rc2_route_preview=False,
+            ),
+            indent=2,
+            sort_keys=True,
+        )
         reply += "\nSafety:\n"
         reply += json.dumps(_pc1_safety(), indent=2, sort_keys=True)
     return reply

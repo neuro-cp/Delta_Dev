@@ -1,0 +1,163 @@
+{
+  "created_at": "2026-07-10T23:58:58+00:00",
+  "global_boundaries": {
+    "automatic_commit_performed": false,
+    "automatic_push_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta75_interaction_performed": false,
+    "developmental_memory_write_performed": false,
+    "gpt_api_calls_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "rc6_created": false,
+    "sandbox_creation_performed": false,
+    "training_performed": false,
+    "web_search_performed": false
+  },
+  "layers": [
+    {
+      "boundaries": [
+        "no automatic provider call",
+        "no autonomous memory write",
+        "canonical writes disabled"
+      ],
+      "inputs": [
+        "operator message",
+        "mode",
+        "recent session history",
+        "approved concepts"
+      ],
+      "known_limitations": [
+        "local model availability can vary",
+        "conversation rendering can still sound structured under diagnostics"
+      ],
+      "layer": "RC2 Conversation Runtime",
+      "outputs": [
+        "route payload",
+        "answer text",
+        "memory candidate",
+        "local/provider offer metadata"
+      ],
+      "responsibility": "Classify dialogue, route ordinary conversation, retrieve local substrate knowledge, and preserve short-term session context."
+    },
+    {
+      "boundaries": [
+        "ephemeral only",
+        "no memory write",
+        "no provider or execution authority"
+      ],
+      "inputs": [
+        "operator message",
+        "ephemeral report-inspection anchor"
+      ],
+      "known_limitations": [
+        "narrow report/pilot pattern coverage by design"
+      ],
+      "layer": "Discourse Cognition Bridge",
+      "outputs": [
+        "DiscourseFrame",
+        "preemption decision",
+        "requested operation"
+      ],
+      "responsibility": "Resolve local report follow-ups and context-dependent operator requests before specialist routing."
+    },
+    {
+      "boundaries": [
+        "bounded by DELTA_PC1_ENABLED",
+        "no RC4/RC5 authority expansion",
+        "no hidden persistence"
+      ],
+      "inputs": [
+        "operator message",
+        "active topic",
+        "operator goal context"
+      ],
+      "known_limitations": [
+        "calibrated to current pragmatic classes; broader social/pragmatic maturity remains future work"
+      ],
+      "layer": "PC1 Pragmatic Cognition",
+      "outputs": [
+        "PragmaticFrame",
+        "cooperative interpretation",
+        "response shape",
+        "bounded pre-router hint"
+      ],
+      "responsibility": "Interpret human-pragmatic meaning such as mixed judgments, scope limits, and active governance-context homonyms."
+    },
+    {
+      "boundaries": [
+        "read-only",
+        "non-executing",
+        "operator confirmation required before action"
+      ],
+      "inputs": [
+        "operator objective",
+        "constraints",
+        "previous goal reference"
+      ],
+      "known_limitations": [
+        "goal interpretation is deterministic and conservative; ambiguous goals can require clarification"
+      ],
+      "layer": "RC3 Goal and Planning",
+      "outputs": [
+        "GoalFrame",
+        "PlanFrame",
+        "PlanValidation"
+      ],
+      "responsibility": "Build ephemeral goal, plan, validation, and progress frames without execution."
+    },
+    {
+      "boundaries": [
+        "no unattended execution",
+        "no automatic commit/push/deploy",
+        "no production mutation"
+      ],
+      "inputs": [
+        "execution request",
+        "permission grant",
+        "authorization scope"
+      ],
+      "known_limitations": [
+        "real operator pilot evidence remains required for freeze claims"
+      ],
+      "layer": "RC4 Governed Action",
+      "outputs": [
+        "AuthorizationDecision",
+        "action/proposal evidence",
+        "rollback evidence"
+      ],
+      "responsibility": "Model authorization, action proposals, disposable-fixture execution, rollback, and evidence capture."
+    },
+    {
+      "boundaries": [
+        "manual consultation only",
+        "proposal-only",
+        "no self-approval",
+        "no automatic integration"
+      ],
+      "inputs": [
+        "behavior evidence",
+        "purpose constitution",
+        "metric observations"
+      ],
+      "known_limitations": [
+        "mimic evidence is not real operator evidence",
+        "freeze remains blocked without pilot records"
+      ],
+      "layer": "RC5 Development",
+      "outputs": [
+        "DevelopmentCycle",
+        "deficit hypothesis",
+        "acquisition decision",
+        "upgrade proposal",
+        "RC4 handoff"
+      ],
+      "responsibility": "Evaluate behavior, detect deficits, choose cheapest remedies, prepare consultation packets and RC4 handoffs."
+    }
+  ],
+  "purpose": "Audit existing layer responsibilities and boundaries before integrated validation.",
+  "recommendation": "PROCEED_INTEGRATED_VALIDATION_WITHOUT_NEW_ARCHITECTURE",
+  "report": "INTEGRATED_RUNTIME_ARCHITECTURE"
+}

@@ -3,20 +3,20 @@
 ```json
 {
   "activation_status": "bounded_pre_router_capable",
-  "adversarial_cases": 14,
+  "adversarial_cases": 15,
   "adversarial_score": 1.0,
   "benchmark_scores": {
     "context_preservation": 1.0,
     "cooperative_interpretation_accuracy": 1.0,
     "governance_preservation": 1.0,
     "mixed_judgment_accuracy": 1.0,
-    "operator_goal_inference": 0.9375,
+    "operator_goal_inference": 0.9412,
     "practical_usefulness": 1.0,
     "response_shape_accuracy": 1.0,
     "scope_separation_accuracy": 1.0
   },
-  "corpus_size": 16,
-  "created_at": "2026-07-10T23:34:29+00:00",
+  "corpus_size": 17,
+  "created_at": "2026-07-10T23:59:00+00:00",
   "hard_invariants": {
     "autonomous_action_performed": false,
     "memory_write_performed": false,

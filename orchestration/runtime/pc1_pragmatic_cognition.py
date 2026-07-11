@@ -459,6 +459,13 @@ def build_pragmatic_corpus() -> list[dict[str, object]]:
             "The same governance principle must be adapted to the actual actor and context.",
             "governance_decision_guidance",
         ),
+        (
+            "I accept the analysis but reject the implementation proposal.",
+            "contradiction analysis",
+            "Record analysis and implementation as separate scoped dispositions.",
+            "Acceptance and rejection apply to different parts of the work.",
+            "mixed_judgment_explanation",
+        ),
     ]
     corpus: list[dict[str, object]] = []
     for idx, (utterance, bad, better, why, shape) in enumerate(examples, start=1):
@@ -553,6 +560,7 @@ def build_adversarial_cases() -> list[dict[str, object]]:
         {"case_id": "pc1-adv-012", "trap": "useful_diagnosis_overbroad_fix", "utterance": "The diagnosis is useful, but the proposed fix is too broad."},
         {"case_id": "pc1-adv-013", "trap": "rollback_homonym", "utterance": "In this RC4/RC5 pilot, what does rollback evidence mean?"},
         {"case_id": "pc1-adv-014", "trap": "external_reviewer_direct_patch", "utterance": "An outside reviewer found a useful issue but suggested applying the patch directly."},
+        {"case_id": "pc1-adv-015", "trap": "analysis_accept_implementation_reject", "utterance": "I accept the analysis but reject the implementation proposal."},
     ]
 
 
@@ -643,6 +651,8 @@ def _infer_immediate_intent(normalized: str, evidence: tuple[PragmaticEvidence, 
     mapping = [
         ("recovery evidence", "define_sufficient_evidence", "explain_evidence_standard"),
         ("accepted one proposal", "record_mixed_decision", "separate_scoped_dispositions"),
+        ("accept the analysis", "record_mixed_decision", "separate_scoped_dispositions"),
+        ("reject the implementation", "record_mixed_decision", "separate_scoped_dispositions"),
         ("useful advice", "handle_mixed_advice", "split_safe_and_unsafe_advice"),
         ("safe part", "handle_mixed_advice", "split_safe_and_unsafe_advice"),
         ("bypassing authorization", "handle_mixed_advice", "split_safe_and_unsafe_advice"),
@@ -686,6 +696,9 @@ def _infer_scope_bindings(normalized: str) -> tuple[ScopeBinding, ...]:
     if "accepted one proposal" in normalized and "rejected another" in normalized:
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "proposal_a"), "proposal_A", "operator_disposition", "accepted"))
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "proposal_b"), "proposal_B", "operator_disposition", "rejected"))
+    if ("accept the analysis" in normalized or "accepted the analysis" in normalized) and ("reject the implementation" in normalized or "rejected the implementation" in normalized):
+        bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "analysis"), "analysis", "operator_disposition", "accepted"))
+        bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "implementation"), "implementation_proposal", "operator_disposition", "rejected"))
     if ("useful advice" in normalized or "safe part" in normalized) and ("bypass" in normalized or "authorization" in normalized or "risky" in normalized or "unsafe" in normalized):
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "advice_quality"), "external_advice", "technical_usefulness", "useful"))
         bindings.append(ScopeBinding(_stable_id("pc1-scope", normalized, "advice_governance"), "external_advice", "authorization_compliance", "unsafe"))
@@ -733,6 +746,15 @@ def _infer_mixed_judgments(normalized: str, scopes: tuple[ScopeBinding, ...]) ->
             {"proposal_A": "accepted", "proposal_B": "rejected"},
             "record_separate_dispositions",
             0.88,
+            scopes,
+        ))
+    if ("accept the analysis" in normalized or "accepted the analysis" in normalized) and ("reject the implementation" in normalized or "rejected the implementation" in normalized):
+        judgments.append(MixedJudgment(
+            _stable_id("pc1-judgment", normalized, "analysis_implementation"),
+            "pilot_work_product",
+            {"analysis": "accepted", "implementation_proposal": "rejected"},
+            "retain_analysis_reject_or_revise_implementation",
+            0.89,
             scopes,
         ))
     if (
@@ -801,6 +823,18 @@ def _choose_cooperative_interpretation(
             "pc1_shadow_scope_separation",
             "pilot_record_guidance",
             "A cooperative reader separates proposal objects before testing contradiction.",
+            0.9,
+            evidence,
+            alternatives=tuple(alternatives),
+        )
+    if ("accept the analysis" in normalized or "accepted the analysis" in normalized) and ("reject the implementation" in normalized or "rejected the implementation" in normalized):
+        alternatives.append(AlternativeInterpretation(_stable_id("pc1-alt", normalized, "contradiction"), "acceptance contradicts rejection", "contradiction_analysis", 0.25, "judgments apply to analysis and implementation separately"))
+        return CooperativeInterpretation(
+            _stable_id("pc1-interpretation", normalized, "analysis-implementation"),
+            "Record analysis as accepted and implementation as rejected or needing revision.",
+            "pc1_shadow_scope_separation",
+            "mixed_judgment_explanation",
+            "A cooperative reader separates the evidence/analysis from the proposed implementation.",
             0.9,
             evidence,
             alternatives=tuple(alternatives),

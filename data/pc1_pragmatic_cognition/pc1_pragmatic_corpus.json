@@ -142,5 +142,14 @@
     "expected_response_shape": "governance_decision_guidance",
     "utterance": "An outside reviewer found a useful issue but suggested applying the patch directly. What should DELTA do?",
     "why_cooperative_interpretation_wins": "The same governance principle must be adapted to the actual actor and context."
+  },
+  {
+    "bad_interpretation": "contradiction analysis",
+    "better_interpretation": "Record analysis and implementation as separate scoped dispositions.",
+    "case_id": "pc1-case-017",
+    "evidence_class": "PC1_DETERMINISTIC_PRAGMATIC_CONTRAST",
+    "expected_response_shape": "mixed_judgment_explanation",
+    "utterance": "I accept the analysis but reject the implementation proposal.",
+    "why_cooperative_interpretation_wins": "Acceptance and rejection apply to different parts of the work."
   }
 ]
