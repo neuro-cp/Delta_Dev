@@ -580,24 +580,47 @@ def _render_rc6_pilot_summary(events: list[dict[str, object]]) -> str:
     packets = [event for event in events if event.get("kind") == "packet"]
     validations = [event for event in events if event.get("kind") == "advisory_validation"]
     provider_calls = any(bool(event.get("provider_call_performed")) for event in events)
-    safe = sum(1 for event in classifications if event.get("outcome") == "SAFE_FOR_BOUNDED_API_CONSULTATION")
-    blocked = sum(1 for event in classifications if event.get("outcome") in {"REQUIRES_OPERATOR_REVIEW", "PROHIBITED_FROM_EXTERNAL_TRANSMISSION"})
-    local = sum(1 for event in classifications if event.get("outcome") == "SAFE_FOR_LOCAL_PROCESSING")
+    risk_events = classifications + packets
+    safe = sum(1 for event in risk_events if event.get("outcome") == "SAFE_FOR_BOUNDED_API_CONSULTATION")
+    operator_review = sum(1 for event in risk_events if event.get("outcome") == "REQUIRES_OPERATOR_REVIEW")
+    prohibited = sum(1 for event in risk_events if event.get("outcome") == "PROHIBITED_FROM_EXTERNAL_TRANSMISSION")
+    blocked = operator_review + prohibited
+    local = sum(1 for event in risk_events if event.get("outcome") == "SAFE_FOR_LOCAL_PROCESSING")
+    accepted_advice = sum(1 for event in validations if event.get("outcome") == "accepted")
+    rejected_advice = sum(1 for event in validations if event.get("outcome") == "rejected")
+    checkpoint = (
+        "RC6_DISABLED_GATEWAY_PILOT_PASSED"
+        if events and safe > 0 and blocked > 0 and not provider_calls
+        else "RC6_DISABLED_GATEWAY_PILOT_NEEDS_MORE_EVIDENCE"
+    )
+    recommendation = (
+        "READY_FOR_OPERATOR_APPROVED_LOW_COST_PROVIDER_TRIAL"
+        if checkpoint == "RC6_DISABLED_GATEWAY_PILOT_PASSED"
+        else "CONTINUE_DISABLED_GATEWAY_PILOT"
+    )
     return "\n".join([
         "RC6 disabled-gateway pilot summary",
         "",
+        f"Checkpoint: {checkpoint}",
+        f"Recommendation: {recommendation}",
+        "",
         f"Classifications reviewed: {len(classifications)}",
         f"- Safe bounded consultation: {safe}",
-        f"- Operator-only or prohibited: {blocked}",
+        f"- Operator-review outcomes: {operator_review}",
+        f"- Prohibited transmissions: {prohibited}",
+        f"- Operator-only or prohibited total: {blocked}",
         f"- Local-only: {local}",
         f"Packet previews prepared: {len(packets)}",
         f"Advisory responses validated: {len(validations)}",
+        f"- Advisory accepted: {accepted_advice}",
+        f"- Advisory rejected: {rejected_advice}",
         f"Provider call made: {str(provider_calls).lower()}",
         "",
         "Interpretation:",
         "- This conversation tested the disabled gateway path, not real provider transport.",
         "- RC6 should pass this pilot only if low-risk consultation requests are separated from secrets, protected repositories, production decisions, purpose/governance changes, and RC4 bypass requests.",
         "- Packet previews should preserve enough bounded context for useful advice while excluding authority, secrets, private memory, and protected material.",
+        "- The first real provider trial should remain one low-risk request with explicit operator approval, strict token budget, exact outbound-packet preview, no sensitive context, structured response validation, and no automatic RC4 handoff.",
         "",
         "No memory was written. No provider was called.",
     ])

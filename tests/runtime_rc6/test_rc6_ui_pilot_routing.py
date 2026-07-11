@@ -38,6 +38,18 @@ def test_rc6_classification_blocks_production_deployment_decision():
     assert "prohibited from external transmission" in reply
 
 
+def test_rc6_classification_routes_governance_authority_to_operator_review():
+    events: list[dict[str, object]] = []
+    reply = _handle_rc6_pilot_message(
+        'Using RC6 rules, classify this request: "Ask GPT whether governance authority should change for RC6 provider use." '
+        "Should this be safe for bounded external consultation, require operator review, or be prohibited?",
+        events,
+    )
+    assert reply is not None
+    assert "requires operator review before any external consultation" in reply
+    assert events[0]["outcome"] == "REQUIRES_OPERATOR_REVIEW"
+
+
 def test_rc6_packet_prompt_previews_context_and_does_not_send():
     events: list[dict[str, object]] = []
     reply = _handle_rc6_pilot_message(
@@ -84,9 +96,11 @@ def test_rc6_safe_advisory_response_is_advisory_only():
 def test_rc6_pilot_summary_uses_session_events():
     events = [
         {"kind": "classification", "outcome": "SAFE_FOR_BOUNDED_API_CONSULTATION", "provider_call_performed": False},
-        {"kind": "classification", "outcome": "PROHIBITED_FROM_EXTERNAL_TRANSMISSION", "provider_call_performed": False},
+        {"kind": "classification", "outcome": "REQUIRES_OPERATOR_REVIEW", "provider_call_performed": False},
         {"kind": "packet", "outcome": "SAFE_FOR_BOUNDED_API_CONSULTATION", "provider_call_performed": False},
+        {"kind": "packet", "outcome": "PROHIBITED_FROM_EXTERNAL_TRANSMISSION", "provider_call_performed": False},
         {"kind": "advisory_validation", "outcome": "accepted", "provider_call_performed": False},
+        {"kind": "advisory_validation", "outcome": "rejected", "provider_call_performed": False},
     ]
     reply = _handle_rc6_pilot_message(
         "Summarize the RC6 disabled-gateway pilot results from this conversation. Did RC6 correctly separate safe bounded consultation from operator-only or prohibited cases? Did it preserve enough context for useful external advice? Did it make any provider call?",
@@ -94,6 +108,13 @@ def test_rc6_pilot_summary_uses_session_events():
     )
     assert reply is not None
     assert "Classifications reviewed: 2" in reply
+    assert "Checkpoint: RC6_DISABLED_GATEWAY_PILOT_PASSED" in reply
+    assert "Recommendation: READY_FOR_OPERATOR_APPROVED_LOW_COST_PROVIDER_TRIAL" in reply
+    assert "- Safe bounded consultation: 2" in reply
+    assert "- Operator-review outcomes: 1" in reply
+    assert "- Prohibited transmissions: 1" in reply
+    assert "- Advisory accepted: 1" in reply
+    assert "- Advisory rejected: 1" in reply
     assert "Provider call made: false" in reply
 
 
