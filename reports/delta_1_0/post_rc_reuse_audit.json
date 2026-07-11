@@ -1,0 +1,52 @@
+{
+  "boundaries": {
+    "authority": "operator_governed_inert_foundation",
+    "automatic_code_modification": false,
+    "automatic_commit_push": false,
+    "automatic_execution": false,
+    "delta_75_scope": false,
+    "hidden_persistence": false,
+    "name": "DELTA_1_0_REUSE_AUDIT",
+    "network_calls": false,
+    "provider_calls": false,
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    }
+  },
+  "new_delta_1_0_layer": "operator pilot evidence, gated capability activation, governed module attachment, Python proposal preparation, and governed learning loop",
+  "reused_components": {
+    "Discourse Bridge": "contextual routing and report-inspection follow-up behavior",
+    "PC1": "bounded pragmatic pre-routing, shadow/gated activation behavior",
+    "RC10": "specialist cognition remains advisory/shadow",
+    "RC11_RC12": "systems plateau readiness and integrated trace inventory",
+    "RC2": "conversation runtime, substrate recall, WRS, renderer, fast validation",
+    "RC3": "goal, plan, progress, introspection, capability-gap frames",
+    "RC4": "governed action, authorization, sandbox/rollback semantics",
+    "RC5": "developmental cognition, deficit, consultation, upgrade handoff, lessons",
+    "RC6": "external intelligence gateway remains disabled; risk classification reused",
+    "RC7": "shadow developmental campaigns inform governed learning loop boundaries",
+    "RC8": "external retrieval gate remains disabled pending operator trial",
+    "RC9": "real campaign operations remain prepare-only and operator-governed"
+  },
+  "status": "REUSE_AUDIT_COMPLETE"
+}

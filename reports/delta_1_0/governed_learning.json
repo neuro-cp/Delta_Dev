@@ -1,0 +1,268 @@
+{
+  "lesson_statuses": [
+    "PROPOSED",
+    "APPROVED_NONCANONICAL",
+    "REJECTED",
+    "DEFERRED",
+    "SUPERSEDED",
+    "REVOKED"
+  ],
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "sample_loop": {
+    "adaptation_proposal": {
+      "adaptation_type": "rule_or_benchmark_update",
+      "authority": "proposal_only",
+      "expected_benefit": "better behavior on observed gap without expanding authority",
+      "proposal_id": "delta10-adaptation-36d1eaed6807053d",
+      "required_review": [
+        "operator_review",
+        "focused_tests",
+        "regression_checks"
+      ],
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "summary": "Prepare a small calibration proposal; do not apply automatically."
+    },
+    "assessment": {
+      "assessment_id": "delta10-assessment-1950d478ed56484e",
+      "baseline_score": 0.72,
+      "capability": "PYTHON_CODING_MODULE_V1",
+      "evidence_refs": [
+        "focused-test"
+      ],
+      "gaps": [
+        "import_failure_classification"
+      ],
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      }
+    },
+    "capability": "PYTHON_CODING_MODULE_V1",
+    "created_at": "2026-07-11T04:26:52+00:00",
+    "error_analysis": {
+      "analysis_id": "delta10-error-36d1eaed6807053d",
+      "error_classes": [
+        "classification_gap"
+      ],
+      "evidence_needed": [
+        "focused_regression",
+        "operator_review",
+        "before_after_comparison"
+      ],
+      "root_cause_hypothesis": "bounded capability calibration needed",
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      }
+    },
+    "evaluations": [
+      {
+        "evaluation_id": "delta10-learning-eval-b7b19cd6d7be8c3e",
+        "evidence_refs": [
+          "practice-fixture"
+        ],
+        "passed": false,
+        "regressions": [],
+        "safety": {
+          "automatic_approval_performed": false,
+          "automatic_code_modification_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "developmental_memory_write_performed": false,
+          "external_retrieval_performed": false,
+          "fine_tuning_performed": false,
+          "hidden_persistence_performed": false,
+          "network_calls_performed": false,
+          "noncanonical_write_performed": false,
+          "plugin_activation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "runtime_commit_performed": false,
+          "runtime_push_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "training_performed": false,
+          "weight_update_performed": false
+        },
+        "score": 0.76
+      }
+    ],
+    "lesson_candidate": {
+      "canonical": false,
+      "lesson_id": "delta10-lesson-7e988fa58fc930e9",
+      "operator_disposition_required": true,
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "source_evidence": [
+        "practice-fixture"
+      ],
+      "status": "PROPOSED",
+      "summary": "ModuleNotFoundError fixtures need import-path evidence before repair proposals."
+    },
+    "loop_id": "delta10-learning-loop-ee5905b8dc87632e",
+    "objective_id": "delta10-objective-4d6349f674fe4276",
+    "practice_artifacts": [
+      {
+        "artifact_id": "delta10-practice-9d26ebed87b167fe",
+        "artifact_type": "python_module_practice",
+        "executable": false,
+        "expected_behavior": "return import_failure without executing commands",
+        "produced_output_summary": "practice artifact prepared for operator review",
+        "prompt_or_task": "Classify ModuleNotFoundError fixture",
+        "safety": {
+          "automatic_approval_performed": false,
+          "automatic_code_modification_performed": false,
+          "autonomous_action_performed": false,
+          "canonical_write_performed": false,
+          "delta_75_interaction_performed": false,
+          "deployment_performed": false,
+          "developmental_memory_write_performed": false,
+          "external_retrieval_performed": false,
+          "fine_tuning_performed": false,
+          "hidden_persistence_performed": false,
+          "network_calls_performed": false,
+          "noncanonical_write_performed": false,
+          "plugin_activation_performed": false,
+          "production_mutation_performed": false,
+          "provider_calls_performed": false,
+          "runtime_commit_performed": false,
+          "runtime_push_performed": false,
+          "sandbox_creation_performed": false,
+          "scheduler_action_performed": false,
+          "training_performed": false,
+          "weight_update_performed": false
+        }
+      }
+    ],
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "state": "AWAITING_OPERATOR_DISPOSITION"
+  },
+  "status": "GOVERNED_LEARNING_LOOP_READY_OPERATOR_REVIEW_REQUIRED"
+}

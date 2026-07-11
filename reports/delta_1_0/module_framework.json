@@ -1,0 +1,144 @@
+{
+  "negative_control": {
+    "allowed": false,
+    "audit": {
+      "created_at": "2026-07-11T04:26:50+00:00",
+      "fail_closed": true,
+      "module_id": "PYTHON_CODING_MODULE_V1"
+    },
+    "effective_permissions": [
+      "proposal_prepare",
+      "repo_read"
+    ],
+    "reasons": [
+      "requested_permission_not_effective",
+      "prohibited_permission_requested"
+    ],
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    }
+  },
+  "python_module_entry": {
+    "attached_at": "2026-07-11T04:26:50+00:00",
+    "manifest": {
+      "declared_inputs": [
+        "approved_repo_root",
+        "change_request",
+        "test_failure",
+        "python_source"
+      ],
+      "declared_outputs": [
+        "repo_index",
+        "implementation_proposal",
+        "patch_proposal",
+        "failure_interpretation",
+        "validation_plan"
+      ],
+      "declared_permissions": [
+        "repo_read",
+        "proposal_prepare",
+        "validation_plan_prepare"
+      ],
+      "module_id": "PYTHON_CODING_MODULE_V1",
+      "name": "Python Coding Module v1",
+      "owner": "operator",
+      "rollback_strategy": "rollback by detaching module; proposals are inert and unapplied",
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "side_effects": [
+        "none"
+      ],
+      "version": "1.0.0"
+    },
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "state": "ATTACHED",
+    "validation_errors": []
+  },
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "status": "MODULE_ATTACHMENT_FRAMEWORK_READY"
+}
