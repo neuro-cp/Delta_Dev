@@ -67,6 +67,17 @@ from orchestration.runtime.rc45_discourse_cognition_bridge import (  # noqa: E40
 )
 from orchestration.runtime.pc1_pragmatic_cognition import build_pragmatic_frame  # noqa: E402
 from orchestration.runtime.integrated_cognitive_runtime import build_integrated_cognitive_trace  # noqa: E402
+from orchestration.runtime.rc5_developmental_cognition import DevelopmentConsultationPacket  # noqa: E402
+from orchestration.runtime.rc6_governed_external_intelligence import (  # noqa: E402
+    build_consultation_request_from_rc5,
+    classify_provider_risk,
+    execute_gateway,
+    parse_external_advisory_response,
+    prepare_provider_request,
+    safety_metadata as rc6_safety_metadata,
+    stable_id as rc6_stable_id,
+    validate_advisory_response,
+)
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -371,7 +382,230 @@ def _pc1_safety() -> dict[str, bool]:
     }
 
 
+def _is_rc6_pilot_message(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().split())
+    return (
+        "rc6" in lower
+        or "external provider" in lower
+        or "external consultation" in lower
+        or "bounded external consultation" in lower
+        or "mock external advisory response" in lower
+        or "provider call" in lower
+    ) and any(term in lower for term in ("classify", "consultation packet", "validate", "disabled-gateway pilot", "provider transport"))
+
+
+def _handle_rc6_pilot_message(message: str, events: list[dict[str, object]] | None = None) -> str | None:
+    if not _is_rc6_pilot_message(message):
+        return None
+    lower = " ".join(message.lower().split())
+    events = events if events is not None else []
+    if "classify this request" in lower:
+        target = _extract_rc6_embedded_text(message) or message
+        risk = classify_provider_risk(target)
+        event = {
+            "kind": "classification",
+            "target": target,
+            "outcome": risk.provider_outcome,
+            "reasons": list(risk.reasons),
+            "provider_call_performed": False,
+        }
+        events.append(event)
+        return _render_rc6_classification(target, risk)
+    if "consultation packet" in lower and "do not send" in lower:
+        target = _extract_rc6_embedded_text(message) or message
+        packet = _build_rc6_ui_packet(target)
+        request = build_consultation_request_from_rc5(packet, extra_context=target)
+        provider_request = prepare_provider_request(request)
+        result = execute_gateway(request, env={})
+        event = {
+            "kind": "packet",
+            "target": target,
+            "outcome": request.risk.provider_outcome,
+            "gateway_status": result.decision.status,
+            "provider_call_performed": result.decision.provider_call_performed,
+        }
+        events.append(event)
+        return _render_rc6_packet_result(target, request, provider_request, result)
+    if "mock external advisory response" in lower or ("validate it under rc6 rules" in lower and "advisory response" in lower):
+        target = _extract_rc6_embedded_text(message) or message
+        response = parse_external_advisory_response(_mock_advisory_payload_from_text(target))
+        validation = validate_advisory_response(response)
+        event = {
+            "kind": "advisory_validation",
+            "target": target,
+            "outcome": "accepted" if validation.valid else "rejected",
+            "findings": list(validation.findings),
+            "provider_call_performed": False,
+        }
+        events.append(event)
+        return _render_rc6_advisory_validation(target, validation)
+    if "summarize" in lower and "disabled-gateway pilot" in lower:
+        return _render_rc6_pilot_summary(events)
+    return None
+
+
+def _extract_rc6_embedded_text(message: str) -> str:
+    patterns = (
+        r"[“\"]([^”\"]+)[”\"]",
+        r"â€œ(.+?)â€\u009d",
+        r"â€œ(.+?)â€",
+        r"classify this request:\s*(.+?)\s*Should this",
+        r"do not send it:\s*(.+?)\s*Show",
+        r"response,\s*validate it under RC6 rules:\s*(.+?)\s*Should RC6",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, message, flags=re.IGNORECASE | re.DOTALL)
+        if match:
+            return " ".join(match.group(1).strip().strip(" .").split())
+    return ""
+
+
+def _build_rc6_ui_packet(target: str) -> DevelopmentConsultationPacket:
+    return DevelopmentConsultationPacket(
+        packet_id=rc6_stable_id("ui-rc6-packet", target),
+        purpose_criterion="Evaluate whether a bounded external consultation is useful without granting authority.",
+        observed_deficit=target,
+        evidence=("Operator supplied an RC6 disabled-gateway pilot prompt.",),
+        counterevidence=("No live provider transport has been approved.",),
+        architecture_summary="RC6 is a disabled-by-default governed gateway over RC5 manual consultation packets.",
+        constraints=("advisory_only", "operator_review_required", "provider_disabled_by_default", "stateless_packet_only"),
+        prohibited_changes=("automatic_api_call", "self_approval", "purpose_mutation", "hidden_persistence", "rc4_bypass"),
+        requested_output=("root_cause_assessment", "candidate_remedies", "tests", "rollback_conditions"),
+        token_budget=1000,
+        estimated_tokens=max(1, len(target.split()) * 4 // 3),
+        omitted_context=(),
+        transport="rc6_disabled_gateway_preview",
+    )
+
+
+def _render_rc6_classification(target: str, risk) -> str:
+    label = {
+        "SAFE_FOR_LOCAL_PROCESSING": "safe for local processing; no external consultation needed",
+        "SAFE_FOR_BOUNDED_API_CONSULTATION": "safe for bounded external consultation after operator approval",
+        "REQUIRES_OPERATOR_REVIEW": "requires operator review before any external consultation",
+        "PROHIBITED_FROM_EXTERNAL_TRANSMISSION": "prohibited from external transmission",
+    }.get(risk.provider_outcome, risk.provider_outcome)
+    return "\n".join([
+        "RC6 classification",
+        "",
+        f"Request: {target}",
+        f"Outcome: {label}",
+        f"Risk level: {risk.risk_level}",
+        f"Authority class: {risk.authority_class}",
+        f"Sensitivity class: {risk.sensitivity_class}",
+        "",
+        "Reasons:",
+        *[f"- {reason}" for reason in risk.reasons],
+        "",
+        "Provider call: false",
+        "No memory was written.",
+    ])
+
+
+def _render_rc6_packet_result(target: str, request, provider_request, result) -> str:
+    included = [
+        "purpose criterion",
+        "observed deficit",
+        "bounded evidence/counterevidence",
+        "architecture summary",
+        "constraints",
+        "prohibited changes",
+        "requested output schema",
+    ]
+    excluded = [
+        "raw private memory",
+        "secrets or credentials",
+        "protected repositories",
+        "production execution authority",
+        "operator identity data unless approved",
+        "hidden conversation history",
+    ]
+    signals = tuple(request.redaction.findings or ()) + tuple(request.sensitivity.findings or ()) + tuple(request.risk.reasons or ())
+    return "\n".join([
+        "RC6 disabled-gateway consultation packet preview",
+        "",
+        f"Task: {target}",
+        f"Risk outcome: {request.risk.provider_outcome}",
+        f"Gateway status: {result.decision.status}",
+        f"Transport permitted now: {provider_request.transport_permitted and result.decision.provider_call_performed}",
+        f"Provider call: {str(result.decision.provider_call_performed).lower()}",
+        "",
+        "Included context:",
+        *[f"- {item}" for item in included],
+        "",
+        "Excluded context:",
+        *[f"- {item}" for item in excluded],
+        "",
+        "Redaction / blocking signals:",
+        *([f"- {finding}" for finding in signals] or ["- none"]),
+        "",
+        "Preview payload authority: advisory_only",
+        "No memory was written. No provider was called.",
+    ])
+
+
+def _mock_advisory_payload_from_text(text: str) -> dict[str, object]:
+    return {
+        "diagnosis": text[:240] or "No diagnosis supplied.",
+        "alternative_causes": ["route_precedence", "insufficient_context"],
+        "remedies": [text],
+        "assumptions": ["mock_response_supplied_by_operator"],
+        "risks": ["external_advice_may_be_wrong"],
+        "tests": ["focused_regression_test"] if any(term in text.lower() for term in ("test", "regression")) else [],
+        "rollback": ["operator_can_reject_advice"] if any(term in text.lower() for term in ("rollback", "bounded", "operator review", "reject")) else [],
+        "missing_info": ["real_provider_metadata"],
+        "confidence": 0.7,
+    }
+
+
+def _render_rc6_advisory_validation(target: str, validation) -> str:
+    disposition = "accept as advisory-only input" if validation.valid else "reject"
+    return "\n".join([
+        "RC6 advisory response validation",
+        "",
+        f"Mock response: {target}",
+        f"Decision: {disposition}",
+        f"Authority: {validation.authority}",
+        "",
+        "Findings:",
+        *[f"- {finding}" for finding in validation.findings],
+        "",
+        "Provider call: false",
+        "No memory was written.",
+    ])
+
+
+def _render_rc6_pilot_summary(events: list[dict[str, object]]) -> str:
+    classifications = [event for event in events if event.get("kind") == "classification"]
+    packets = [event for event in events if event.get("kind") == "packet"]
+    validations = [event for event in events if event.get("kind") == "advisory_validation"]
+    provider_calls = any(bool(event.get("provider_call_performed")) for event in events)
+    safe = sum(1 for event in classifications if event.get("outcome") == "SAFE_FOR_BOUNDED_API_CONSULTATION")
+    blocked = sum(1 for event in classifications if event.get("outcome") in {"REQUIRES_OPERATOR_REVIEW", "PROHIBITED_FROM_EXTERNAL_TRANSMISSION"})
+    local = sum(1 for event in classifications if event.get("outcome") == "SAFE_FOR_LOCAL_PROCESSING")
+    return "\n".join([
+        "RC6 disabled-gateway pilot summary",
+        "",
+        f"Classifications reviewed: {len(classifications)}",
+        f"- Safe bounded consultation: {safe}",
+        f"- Operator-only or prohibited: {blocked}",
+        f"- Local-only: {local}",
+        f"Packet previews prepared: {len(packets)}",
+        f"Advisory responses validated: {len(validations)}",
+        f"Provider call made: {str(provider_calls).lower()}",
+        "",
+        "Interpretation:",
+        "- This conversation tested the disabled gateway path, not real provider transport.",
+        "- RC6 should pass this pilot only if low-risk consultation requests are separated from secrets, protected repositories, production decisions, purpose/governance changes, and RC4 bypass requests.",
+        "- Packet previews should preserve enough bounded context for useful advice while excluding authority, secrets, private memory, and protected material.",
+        "",
+        "No memory was written. No provider was called.",
+    ])
+
+
 def _summarize_report_text(path: Path, text: str, request: str = "") -> str:
+    if path.name == "RC6_PROVIDER_GATEWAY_READINESS.md":
+        return _summarize_rc6_gateway_readiness(path, text)
     if path.name == "RC45_OPERATOR_MIMIC_CONSOLIDATED.md":
         return _summarize_rc45_mimic_report(path, text)
     if path.name == "RC45_CALIBRATION_REPORT.md":
@@ -385,6 +619,33 @@ def _summarize_report_text(path: Path, text: str, request: str = "") -> str:
     if path.name == "RC45_FREEZE_READINESS_REVIEW.md":
         return _summarize_rc45_freeze_report(path, text, request)
     return _summarize_generic_report(path, text)
+
+
+def _summarize_rc6_gateway_readiness(path: Path, text: str) -> str:
+    json_path = path.with_suffix(".json")
+    data: dict[str, object] = {}
+    if json_path.exists():
+        try:
+            data = json.loads(json_path.read_text(encoding="utf-8"))
+        except Exception:
+            data = {}
+    recommendation = str(data.get("recommendation") or _first_jsonish_value(text, "recommendation") or "review_needed")
+    enabled = bool(data.get("provider_enabled_default")) if data else False
+    live_calls = bool(data.get("live_calls_performed")) if data else False
+    return "\n".join([
+        f"I inspected `{path.name}`.",
+        "",
+        f"Status: {recommendation}",
+        f"External provider transport enabled: {str(enabled).lower()}",
+        f"Live provider calls performed: {str(live_calls).lower()}",
+        "",
+        "RC6 state:",
+        "- The gateway is ready for disabled-gateway pilot testing.",
+        "- External models remain advisory only.",
+        "- Operator approval, risk classification, redaction, budget checks, and response validation are required before any future low-cost provider trial.",
+        "",
+        "No memory was written. I only read the local report file.",
+    ])
 
 
 def _summarize_rc45_freeze_report(path: Path, text: str, request: str = "") -> str:
@@ -1123,6 +1384,7 @@ class DeltaApp:
         self.pending_local_model_deepening: dict[str, str] | None = None
         self.active_topic_anchor: dict[str, object] | None = None
         self.last_report_inspection: dict[str, object] | None = None
+        self.rc6_pilot_events: list[dict[str, object]] = []
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1811,6 +2073,19 @@ class DeltaApp:
                 reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
                 reply += "\nSafety:\n"
                 reply += json.dumps(report_inspection.get("safety", {}), indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            return
+        rc6_reply = _handle_rc6_pilot_message(message, self.rc6_pilot_events)
+        if rc6_reply:
+            self._append_session("user", message)
+            reply = rc6_reply
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: rc6_disabled_gateway_pilot\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps(rc6_safety_metadata(), indent=2, sort_keys=True)
             self._append_chat("DELTA", reply)
             self._append_session("assistant", reply)
             return

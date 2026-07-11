@@ -34,9 +34,10 @@
       "authority_class": "external_transmission_prohibited",
       "provider_outcome": "PROHIBITED_FROM_EXTERNAL_TRANSMISSION",
       "reasons": [
-        "prohibited_marker:deploy_this_to_production"
+        "prohibited_marker:deploy_this_to_production",
+        "prohibited_marker:production_deployment_decision"
       ],
-      "risk_id": "rc6-4c93d92c156b1328d634",
+      "risk_id": "rc6-bb746d373192499022be",
       "risk_level": "high",
       "sensitivity_class": "sensitive_or_protected"
     },

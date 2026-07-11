@@ -77,6 +77,7 @@ PROHIBITED_MARKERS = (
     "push to production",
     "self approve",
     "self-approve",
+    "self-approval",
     "bypass rc4",
     "ignore governance",
     "purpose mutation",
@@ -114,6 +115,12 @@ LOW_VALUE_MARKERS = (
 BOUNDED_CONSULTATION_MARKERS = (
     "bounded",
     "test proposal",
+    "possible causes",
+    "failing deterministic unit test",
+    "ui wording",
+    "button label",
+    "clearer wording",
+    "wording and tests",
     "log summary",
     "candidate remedy",
     "root cause",
@@ -490,12 +497,19 @@ def classify_provider_risk(
 ) -> ProviderRiskClass:
     combined = f"{text}\n{context}".lower()
     reasons: list[str] = []
-    if any(marker in combined for marker in PROHIBITED_MARKERS) or any(p.search(text + context) for p in SECRET_PATTERNS):
-        for marker in PROHIBITED_MARKERS:
-            if marker in combined:
-                reasons.append(f"prohibited_marker:{marker.replace(' ', '_')}")
-        if any(p.search(text + context) for p in SECRET_PATTERNS):
+    production_decision = "deploy" in combined and "production" in combined
+    active_prohibited_markers = [
+        marker for marker in PROHIBITED_MARKERS
+        if marker in combined and not _marker_is_exclusion_constraint(combined, marker)
+    ]
+    secret_pattern_present = any(p.search(text + context) for p in SECRET_PATTERNS)
+    if active_prohibited_markers or secret_pattern_present:
+        for marker in active_prohibited_markers:
+            reasons.append(f"prohibited_marker:{marker.replace(' ', '_')}")
+        if secret_pattern_present:
             reasons.append("prohibited_marker:secret_or_credential_pattern")
+        if production_decision:
+            reasons.append("prohibited_marker:production_deployment_decision")
         return ProviderRiskClass(
             risk_id=stable_id("risk", "prohibited", tuple(reasons)),
             risk_level="high",
@@ -504,12 +518,25 @@ def classify_provider_risk(
             authority_class="external_transmission_prohibited",
             sensitivity_class="sensitive_or_protected",
         )
-    if any(marker in combined for marker in OPERATOR_REVIEW_MARKERS):
+    if production_decision:
+        return ProviderRiskClass(
+            risk_id=stable_id("risk", "prohibited-production", text, context),
+            risk_level="high",
+            provider_outcome="PROHIBITED_FROM_EXTERNAL_TRANSMISSION",
+            reasons=("prohibited_marker:production_deployment_decision",),
+            authority_class="external_transmission_prohibited",
+            sensitivity_class="protected_execution_decision",
+        )
+    active_operator_markers = [
+        marker for marker in OPERATOR_REVIEW_MARKERS
+        if marker in combined and not _marker_is_exclusion_constraint(combined, marker)
+    ]
+    if active_operator_markers:
         return ProviderRiskClass(
             risk_id=stable_id("risk", "operator", text, context),
             risk_level="medium_high",
             provider_outcome="REQUIRES_OPERATOR_REVIEW",
-            reasons=("operator_review_marker_detected",),
+            reasons=tuple(f"operator_review_marker:{marker.replace(' ', '_')}" for marker in active_operator_markers),
             authority_class="operator_review_required",
             sensitivity_class="review_before_transmission",
         )
@@ -548,6 +575,22 @@ def classify_provider_risk(
         authority_class="operator_review_required",
         sensitivity_class="normal",
     )
+
+
+def _marker_is_exclusion_constraint(text: str, marker: str) -> bool:
+    exclusion_stems = (
+        "do not include",
+        "don't include",
+        "without",
+        "exclude",
+        "redact",
+        "omit",
+    )
+    marker_index = text.find(marker)
+    if marker_index < 0:
+        return False
+    window = text[max(0, marker_index - 80):marker_index + len(marker) + 40]
+    return any(stem in window for stem in exclusion_stems)
 
 
 def estimate_tokens(text: str) -> int:

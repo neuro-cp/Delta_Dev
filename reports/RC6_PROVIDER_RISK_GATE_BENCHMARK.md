@@ -1,6 +1,6 @@
 # RC6_PROVIDER_RISK_GATE_BENCHMARK
 
-- Generated: 2026-07-11T02:05:22+00:00
+- Generated: 2026-07-11T02:30:01+00:00
 - Passed: True
 - Score: 1.0
 - Recommendation: n/a
@@ -55,9 +55,10 @@
       "authority_class": "external_transmission_prohibited",
       "provider_outcome": "PROHIBITED_FROM_EXTERNAL_TRANSMISSION",
       "reasons": [
-        "prohibited_marker:deploy_this_to_production"
+        "prohibited_marker:deploy_this_to_production",
+        "prohibited_marker:production_deployment_decision"
       ],
-      "risk_id": "rc6-4c93d92c156b1328d634",
+      "risk_id": "rc6-bb746d373192499022be",
       "risk_level": "high",
       "sensitivity_class": "sensitive_or_protected"
     },

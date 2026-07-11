@@ -1,6 +1,6 @@
 # RC6_PROVIDER_GATEWAY_READINESS
 
-- Generated: 2026-07-11T02:05:22+00:00
+- Generated: 2026-07-11T02:30:01+00:00
 - Passed: True
 - Score: n/a
 - Recommendation: RC6_READY_FOR_DISABLED_GATEWAY_PILOT
@@ -20,7 +20,7 @@
 ## Summary
 ```json
 {
-  "generated_at": "2026-07-11T02:05:22+00:00",
+  "generated_at": "2026-07-11T02:30:01+00:00",
   "live_calls_performed": false,
   "provider_enabled_default": false,
   "recommendation": "RC6_READY_FOR_DISABLED_GATEWAY_PILOT",
@@ -187,7 +187,7 @@
           "training_performed": false
         },
         "usage": {
-          "created_at": "2026-07-11T02:05:22+00:00",
+          "created_at": "2026-07-11T02:30:01+00:00",
           "estimated_cost_usd": 0.0,
           "prompt_tokens": 0,
           "provider_call_performed": false,
@@ -217,7 +217,7 @@
           "max_calls_per_session": 3,
           "max_estimated_cost_usd": 0.01
         },
-        "created_at": "2026-07-11T02:05:22+00:00",
+        "created_at": "2026-07-11T02:30:01+00:00",
         "estimate": {
           "estimate_id": "rc6-e55c68b334b216467dc7",
           "estimated_cost_usd": 0.000118,
@@ -278,10 +278,10 @@
           "decision_id": "rc6-82c02d2a684fcbc70137",
           "outcome": "PROHIBITED_FROM_EXTERNAL_TRANSMISSION",
           "reasons": [
-            "prohibited_marker:api_key",
-            "prohibited_marker:secret"
+            "prohibited_marker:api_key"
           ]
         },
         "compact_context": "Purpose criterion: Improve recall routing without weakening governance.\nObserved deficit: Need advice with an API key placeholder in context.\nEvidence: Focused benchmark shows recall misroute.\nCounterevidence: Safety and governance tests remain green.\nArchitecture: RC2 conversation, PC1 pragmatics, RC3 planning, RC4 governed action, RC5 development.\nConstraints: advisory_only; operator_review_required; no_provider_authority\nProhibited changes: automatic_api_call; self_approval; purpose_mutation; hidden_persistence\nRequested output: root_cause_assessment; candidate_remedies; tests; rollback_conditions\nAdditional context: OPENAI_[REDACTED_SECRET]",
-        "
+        "constraints": [
+          "advisory_only
 ```

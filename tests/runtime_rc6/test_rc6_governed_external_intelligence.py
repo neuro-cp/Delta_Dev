@@ -63,6 +63,14 @@ def test_risk_gate_allows_bounded_low_risk_consultation():
     assert risk.authority_class == "advisory_consultation_allowed"
 
 
+def test_risk_gate_treats_negated_sensitive_terms_as_exclusion_constraints():
+    risk = classify_provider_risk(
+        "Ask GPT for possible causes of a failing deterministic unit test. "
+        "Do not include secrets, private memory, protected repos, or production details."
+    )
+    assert risk.provider_outcome == "SAFE_FOR_BOUNDED_API_CONSULTATION"
+
+
 def test_redaction_removes_secrets_and_local_paths():
     redacted = redact_context("OPENAI_" + "API" + "_KEY=" + fake_secret_token() + r" at G:\Delta_Dev\file.py")
     assert "[REDACTED_SECRET]" in redacted.redacted_text
