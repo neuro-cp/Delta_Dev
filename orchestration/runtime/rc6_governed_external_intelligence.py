@@ -20,7 +20,7 @@ import os
 from pathlib import Path
 import re
 import sys
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Mapping, Protocol
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -327,6 +327,88 @@ class GatewayResult:
     raw_response: Mapping[str, Any] | None
     usage: UsageRecord
     safety: Mapping[str, bool]
+
+
+@dataclass(frozen=True)
+class RetryPolicy:
+    max_attempts: int
+    retryable_statuses: tuple[str, ...]
+    backoff_seconds: float
+
+
+@dataclass(frozen=True)
+class FailurePolicy:
+    fail_closed: bool
+    malformed_response_status: str
+    timeout_status: str
+    budget_status: str
+    operator_escalation_status: str
+
+
+@dataclass(frozen=True)
+class TransportMetrics:
+    attempted: bool
+    attempts: int
+    succeeded: bool
+    failed_closed: bool
+    latency_ms: float
+    prompt_tokens: int
+    response_tokens: int
+    estimated_cost_usd: float
+
+
+@dataclass(frozen=True)
+class TransportResult:
+    result_id: str
+    status: str
+    raw_response: Mapping[str, Any] | None
+    metrics: TransportMetrics
+    failure_reason: str
+    provider_call_performed: bool
+
+
+class ProviderTransportAdapter(Protocol):
+    adapter_id: str
+    enabled: bool
+
+    def send(self, provider_request: ExternalProviderRequest) -> TransportResult:
+        ...
+
+
+@dataclass(frozen=True)
+class MockTransport:
+    adapter_id: str = "rc6_mock_transport"
+    enabled: bool = False
+    response: Mapping[str, Any] = field(default_factory=lambda: {
+        "diagnosis": "Mock transport response; no real provider was contacted.",
+        "alternative_causes": ["fixture_only"],
+        "remedies": ["Use this only to test schema handling."],
+        "assumptions": ["operator supplied a mock transport"],
+        "risks": ["mistaking mock evidence for live provider evidence"],
+        "tests": ["validate transport result status"],
+        "rollback": ["disable mock transport"],
+        "missing_info": ["real provider response"],
+        "confidence": 0.5,
+    })
+
+    def send(self, provider_request: ExternalProviderRequest) -> TransportResult:
+        if not self.enabled:
+            return TransportResult(
+                result_id=stable_id("transport-result", self.adapter_id, provider_request.request_id, "disabled"),
+                status="provider_disabled",
+                raw_response=None,
+                metrics=TransportMetrics(False, 0, False, True, 0.0, 0, 0, 0.0),
+                failure_reason="mock_transport_disabled",
+                provider_call_performed=False,
+            )
+        return TransportResult(
+            result_id=stable_id("transport-result", self.adapter_id, provider_request.request_id, "mock-succeeded"),
+            status="succeeded",
+            raw_response=dict(self.response),
+            metrics=TransportMetrics(True, 1, True, False, 0.0, 0, 0, 0.0),
+            failure_reason="",
+            provider_call_performed=True,
+        )
 
 
 @dataclass(frozen=True)
@@ -826,6 +908,113 @@ def execute_gateway(
     )
 
 
+def default_retry_policy() -> RetryPolicy:
+    return RetryPolicy(max_attempts=1, retryable_statuses=("timed_out", "provider_unavailable"), backoff_seconds=0.0)
+
+
+def default_failure_policy() -> FailurePolicy:
+    return FailurePolicy(
+        fail_closed=True,
+        malformed_response_status="schema_failed",
+        timeout_status="timed_out",
+        budget_status="budget_blocked",
+        operator_escalation_status="operator_required",
+    )
+
+
+def run_transport_adapter(
+    request: DevelopmentConsultationRequest,
+    adapter: ProviderTransportAdapter,
+    *,
+    env: Mapping[str, str] | None = None,
+    operator_approved: bool = False,
+    retry_policy: RetryPolicy | None = None,
+    failure_policy: FailurePolicy | None = None,
+) -> tuple[GatewayResult, TransportResult, AdvisoryValidation]:
+    retry_policy = retry_policy or default_retry_policy()
+    failure_policy = failure_policy or default_failure_policy()
+    provider_request = prepare_provider_request(request)
+    permission = provider_permission_from_env(env, operator_approved=operator_approved)
+    gate_reasons: list[str] = []
+    gate_status = "succeeded"
+    if not provider_request.transport_permitted:
+        gate_status = "operator_required" if request.risk.provider_outcome == "REQUIRES_OPERATOR_REVIEW" else "rejected"
+        gate_reasons.extend(request.risk.reasons or (request.budget_decision.outcome,))
+    elif not request.budget_decision.allowed:
+        gate_status = "budget_blocked"
+        gate_reasons.extend(request.budget_decision.reasons)
+    elif not permission.provider_enabled or not permission.live_call_enabled:
+        gate_status = "provider_disabled"
+        gate_reasons.append(permission.reason)
+    elif not permission.operator_approved:
+        gate_status = "operator_required"
+        gate_reasons.append("operator_approval_required")
+    elif not adapter.enabled:
+        gate_status = "provider_disabled"
+        gate_reasons.append("transport_adapter_disabled")
+    else:
+        gate_reasons.append("transport_adapter_authorized")
+
+    gateway_decision = GatewayDecision(
+        decision_id=stable_id("gateway-decision", request.request_id, "adapter", gate_status, tuple(gate_reasons)),
+        status=gate_status,
+        transport_permitted=gate_status == "succeeded",
+        reasons=tuple(gate_reasons),
+        provider_call_performed=False,
+    )
+    gateway = GatewayResult(
+        result_id=stable_id("gateway-result", request.request_id, gateway_decision.decision_id),
+        request_id=request.request_id,
+        decision=gateway_decision,
+        provider_request=provider_request,
+        raw_response=None,
+        usage=UsageRecord(stable_id("usage", request.request_id, "adapter-gate"), False, 0, 0, 0.0, _now()),
+        safety=safety_metadata(),
+    )
+
+    if gate_status != "succeeded":
+        status = failure_policy.budget_status if gate_status == "budget_blocked" else gate_status
+        transport = TransportResult(
+            result_id=stable_id("transport-result", provider_request.request_id, status),
+            status=status,
+            raw_response=None,
+            metrics=TransportMetrics(False, 0, False, True, 0.0, 0, 0, 0.0),
+            failure_reason="gateway_rejected_before_transport",
+            provider_call_performed=False,
+        )
+        return gateway, transport, validate_advisory_response(None)
+
+    attempts = 0
+    last_result: TransportResult | None = None
+    while attempts < retry_policy.max_attempts:
+        attempts += 1
+        last_result = adapter.send(provider_request)
+        if last_result.status == "succeeded":
+            break
+        if last_result.status not in retry_policy.retryable_statuses:
+            break
+    transport = last_result or TransportResult(
+        result_id=stable_id("transport-result", provider_request.request_id, "no-attempt"),
+        status=failure_policy.operator_escalation_status,
+        raw_response=None,
+        metrics=TransportMetrics(False, attempts, False, True, 0.0, 0, 0, 0.0),
+        failure_reason="no_transport_attempted",
+        provider_call_performed=False,
+    )
+    response = parse_external_advisory_response(transport.raw_response or {})
+    validation = validate_advisory_response(response)
+    if transport.status == "succeeded" and not validation.valid and failure_policy.fail_closed:
+        transport = TransportResult(
+            result_id=stable_id("transport-result", provider_request.request_id, "schema-failed", transport.result_id),
+            status=failure_policy.malformed_response_status,
+            raw_response=transport.raw_response,
+            metrics=transport.metrics,
+            failure_reason="advisory_response_validation_failed",
+            provider_call_performed=transport.provider_call_performed,
+        )
+    return gateway, transport, validation
+
+
 def parse_external_advisory_response(raw: Mapping[str, Any]) -> ExternalAdvisoryResponse | None:
     required = ("diagnosis", "alternative_causes", "remedies", "assumptions", "risks", "tests", "rollback", "missing_info", "confidence")
     if not all(key in raw for key in required):
@@ -1007,11 +1196,58 @@ def rc6_risk_gate_benchmark() -> dict[str, Any]:
     }
 
 
+def rc6_transport_scaffold_benchmark() -> dict[str, Any]:
+    packet = _sample_rc5_packet()
+    request = build_consultation_request_from_rc5(packet)
+    disabled_gateway, disabled_transport, disabled_validation = run_transport_adapter(
+        request,
+        MockTransport(enabled=False),
+        env={DEFAULT_PROVIDER_ENABLED_ENV: "true", DEFAULT_LIVE_CALL_ENV: "true"},
+        operator_approved=True,
+    )
+    enabled_gateway, enabled_transport, enabled_validation = run_transport_adapter(
+        request,
+        MockTransport(enabled=True),
+        env={DEFAULT_PROVIDER_ENABLED_ENV: "true", DEFAULT_LIVE_CALL_ENV: "true"},
+        operator_approved=True,
+    )
+    malformed_gateway, malformed_transport, malformed_validation = run_transport_adapter(
+        request,
+        MockTransport(enabled=True, response={"diagnosis": "missing required fields"}),
+        env={DEFAULT_PROVIDER_ENABLED_ENV: "true", DEFAULT_LIVE_CALL_ENV: "true"},
+        operator_approved=True,
+    )
+    no_approval_gateway, no_approval_transport, _ = run_transport_adapter(
+        request,
+        MockTransport(enabled=True),
+        env={DEFAULT_PROVIDER_ENABLED_ENV: "true", DEFAULT_LIVE_CALL_ENV: "true"},
+        operator_approved=False,
+    )
+    checks = {
+        "disabled_adapter_no_call": disabled_transport.provider_call_performed is False and disabled_transport.status == "provider_disabled",
+        "operator_approval_required": no_approval_transport.provider_call_performed is False and no_approval_gateway.decision.status == "operator_required",
+        "enabled_mock_succeeds_only_with_gates": enabled_transport.status == "succeeded" and enabled_validation.valid is True,
+        "malformed_response_fails_closed": malformed_transport.status == "schema_failed" and malformed_validation.valid is False,
+        "gateway_remains_advisory": enabled_gateway.safety["external_authority_granted"] is False,
+    }
+    return {
+        "report": "RC6_TRANSPORT_SCAFFOLD_BENCHMARK",
+        "passed": all(checks.values()),
+        "score": round(sum(checks.values()) / len(checks), 4),
+        "checks": checks,
+        "disabled_transport": asdict(disabled_transport),
+        "enabled_transport": asdict(enabled_transport),
+        "malformed_transport": asdict(malformed_transport),
+        "recommendation": "RC6_TRANSPORT_SCAFFOLD_READY_DISABLED_BY_DEFAULT" if all(checks.values()) else "CONTINUE_RC6_TRANSPORT_CALIBRATION",
+    }
+
+
 def write_reports() -> dict[str, Any]:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
     reports = {
         "RC6_GOVERNED_EXTERNAL_INTELLIGENCE_FOUNDATION": rc6_gateway_benchmark(),
         "RC6_PROVIDER_RISK_GATE_BENCHMARK": rc6_risk_gate_benchmark(),
+        "RC6_TRANSPORT_SCAFFOLD_BENCHMARK": rc6_transport_scaffold_benchmark(),
     }
     readiness = {
         "report": "RC6_PROVIDER_GATEWAY_READINESS",

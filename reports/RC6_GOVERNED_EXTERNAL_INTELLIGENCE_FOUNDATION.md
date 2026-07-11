@@ -1,6 +1,6 @@
 # RC6_GOVERNED_EXTERNAL_INTELLIGENCE_FOUNDATION
 
-- Generated: 2026-07-11T02:30:01+00:00
+- Generated: 2026-07-11T02:43:52+00:00
 - Passed: True
 - Score: 1.0
 - Recommendation: RC6_READY_FOR_DISABLED_GATEWAY_PILOT
@@ -180,7 +180,7 @@
       "training_performed": false
     },
     "usage": {
-      "created_at": "2026-07-11T02:30:01+00:00",
+      "created_at": "2026-07-11T02:43:52+00:00",
       "estimated_cost_usd": 0.0,
       "prompt_tokens": 0,
       "provider_call_performed": false,
@@ -210,7 +210,7 @@
       "max_calls_per_session": 3,
       "max_estimated_cost_usd": 0.01
     },
-    "created_at": "2026-07-11T02:30:01+00:00",
+    "created_at": "2026-07-11T02:43:52+00:00",
     "estimate": {
       "estimate_id": "rc6-e55c68b334b216467dc7",
       "estimated_cost_usd": 0.000118,
@@ -284,7 +284,7 @@
       "max_calls_per_session": 3,
       "max_estimated_cost_usd": 0.01
     },
-    "created_at": "2026-07-11T02:30:01+00:00",
+    "created_at": "2026-07-11T02:43:52+00:00",
     "estimate": {
       "estimate_id": "rc6-e55c68b334b216467dc7",
       "estimated_cost_usd": 0.000118,

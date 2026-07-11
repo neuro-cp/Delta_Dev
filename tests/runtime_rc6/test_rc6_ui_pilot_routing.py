@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from DELTA import _handle_rc6_pilot_message, _summarize_rc6_gateway_readiness
+from DELTA import _handle_rc6_pilot_message, _rc7_developer_overlay_text, _summarize_rc6_gateway_readiness
 
 
 def test_rc6_classification_prompt_routes_to_gateway_classifier():
@@ -128,3 +128,10 @@ def test_rc6_gateway_report_summary_states_disabled_transport(tmp_path):
     reply = _summarize_rc6_gateway_readiness(report, report.read_text(encoding="utf-8"))
     assert "External provider transport enabled: false" in reply
     assert "Live provider calls performed: false" in reply
+
+
+def test_rc7_dashboard_overlay_is_observational_only():
+    overlay = _rc7_developer_overlay_text()
+    assert "RC7 Development Dashboard" in overlay
+    assert "Authority: observational dashboard only" in overlay
+    assert '"campaign_execution_performed": false' in overlay

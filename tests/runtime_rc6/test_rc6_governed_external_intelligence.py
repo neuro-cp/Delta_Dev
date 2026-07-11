@@ -5,6 +5,7 @@ from dataclasses import asdict
 
 from orchestration.runtime.rc6_governed_external_intelligence import (
     CostBudget,
+    MockTransport,
     TokenBudget,
     build_consultation_request_from_rc5,
     build_provider_constitution,
@@ -15,7 +16,9 @@ from orchestration.runtime.rc6_governed_external_intelligence import (
     prepare_provider_request,
     rc6_gateway_benchmark,
     rc6_risk_gate_benchmark,
+    rc6_transport_scaffold_benchmark,
     redact_context,
+    run_transport_adapter,
     stable_id,
     validate_advisory_response,
     write_reports,
@@ -134,6 +137,45 @@ def test_operator_and_env_gates_required_before_supplied_transport_runs():
     assert allowed.raw_response is not None
 
 
+def test_transport_adapter_remains_disabled_without_explicit_enablement():
+    request = build_consultation_request_from_rc5(sample_packet())
+    gateway, transport, validation = run_transport_adapter(
+        request,
+        MockTransport(enabled=False),
+        env={"RC6_PROVIDER_ENABLED": "true", "RC6_PROVIDER_ALLOW_LIVE_CALL": "true"},
+        operator_approved=True,
+    )
+    assert gateway.decision.status == "provider_disabled"
+    assert transport.provider_call_performed is False
+    assert validation.valid is False
+
+
+def test_transport_adapter_mock_runs_only_when_all_gates_open():
+    request = build_consultation_request_from_rc5(sample_packet())
+    gateway, transport, validation = run_transport_adapter(
+        request,
+        MockTransport(enabled=True),
+        env={"RC6_PROVIDER_ENABLED": "true", "RC6_PROVIDER_ALLOW_LIVE_CALL": "true"},
+        operator_approved=True,
+    )
+    assert gateway.decision.status == "succeeded"
+    assert transport.status == "succeeded"
+    assert transport.provider_call_performed is True
+    assert validation.valid is True
+
+
+def test_transport_adapter_malformed_response_fails_closed():
+    request = build_consultation_request_from_rc5(sample_packet())
+    _gateway, transport, validation = run_transport_adapter(
+        request,
+        MockTransport(enabled=True, response={"diagnosis": "missing required fields"}),
+        env={"RC6_PROVIDER_ENABLED": "true", "RC6_PROVIDER_ALLOW_LIVE_CALL": "true"},
+        operator_approved=True,
+    )
+    assert transport.status == "schema_failed"
+    assert validation.valid is False
+
+
 def test_budget_blocks_large_context_before_transport():
     packet = sample_packet(observed_deficit="Need bounded root cause and test proposal " + ("word " * 2000))
     request = build_consultation_request_from_rc5(
@@ -191,10 +233,13 @@ def test_malformed_response_schema_fails():
 def test_benchmarks_and_reports_are_json_serializable():
     gateway = rc6_gateway_benchmark()
     risk = rc6_risk_gate_benchmark()
+    transport = rc6_transport_scaffold_benchmark()
     assert gateway["passed"] is True
     assert risk["passed"] is True
+    assert transport["passed"] is True
     json.dumps(gateway)
     json.dumps(risk)
+    json.dumps(transport)
 
     reports = write_reports()
     assert reports["RC6_PROVIDER_GATEWAY_READINESS"]["recommendation"] == "RC6_READY_FOR_DISABLED_GATEWAY_PILOT"

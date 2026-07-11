@@ -78,6 +78,10 @@ from orchestration.runtime.rc6_governed_external_intelligence import (  # noqa: 
     stable_id as rc6_stable_id,
     validate_advisory_response,
 )
+from orchestration.runtime.rc7_governed_development_loop import (  # noqa: E402
+    build_operator_dashboard_snapshot as build_rc7_operator_dashboard_snapshot,
+    render_operator_dashboard as render_rc7_operator_dashboard,
+)
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -380,6 +384,11 @@ def _pc1_safety() -> dict[str, bool]:
         "rc4_contract_changed": False,
         "rc5_contract_changed": False,
     }
+
+
+def _rc7_developer_overlay_text() -> str:
+    snapshot = build_rc7_operator_dashboard_snapshot()
+    return render_rc7_operator_dashboard(snapshot) + "\nSnapshot:\n" + json.dumps(snapshot, indent=2, sort_keys=True)
 
 
 def _is_rc6_pilot_message(message: str) -> bool:
@@ -2107,6 +2116,8 @@ class DeltaApp:
                 reply += "\n\n--- Developer Overlay ---\nRoute: rc6_disabled_gateway_pilot\n"
                 reply += "Discourse frame:\n"
                 reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nRC7 Development Dashboard:\n"
+                reply += _rc7_developer_overlay_text()
                 reply += "\nSafety:\n"
                 reply += json.dumps(rc6_safety_metadata(), indent=2, sort_keys=True)
             self._append_chat("DELTA", reply)
