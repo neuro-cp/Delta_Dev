@@ -1,0 +1,82 @@
+{
+  "checks": {
+    "allowlist_present": true,
+    "blocked_methods_declared": true,
+    "disabled_by_default": true,
+    "evidence_authority_only": true,
+    "https_get_only": true,
+    "private_targets_rejected": true
+  },
+  "generated_at": "2026-07-11T03:38:08+00:00",
+  "live_network_calls_performed": false,
+  "passed": true,
+  "policy": {
+    "authority": "evidence_only",
+    "budget": {
+      "max_bytes": 250000,
+      "max_queries": 2,
+      "max_redirects": 3,
+      "max_requests": 3,
+      "max_sources": 3,
+      "timeout_seconds": 8.0
+    },
+    "content_type_policy": {
+      "allowed_content_types": [
+        "text/html",
+        "text/plain",
+        "application/pdf"
+      ],
+      "blocked_content_types": [
+        "application/octet-stream",
+        "application/x-msdownload"
+      ]
+    },
+    "default_enabled": false,
+    "domain_policy": {
+      "allowlist": [
+        "docs.python.org",
+        "developer.mozilla.org",
+        "pypi.org",
+        "www.w3.org",
+        "www.rfc-editor.org",
+        "openai.com"
+      ],
+      "denylist": [
+        "localhost",
+        "127.0.0.1",
+        "0.0.0.0",
+        "delta-75"
+      ],
+      "protected_repository_exclusion": true,
+      "subdomains_allowed": true
+    },
+    "method_policy": {
+      "allowed_methods": [
+        "GET"
+      ],
+      "blocked_methods": [
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE"
+      ]
+    },
+    "policy_id": "rc8-b0325eeb22c8a0acaa8a",
+    "redirect_policy": {
+      "max_redirects": 3,
+      "validate_each_target": true
+    }
+  },
+  "recommendation": "RC8_FOUNDATION_COMPLETE",
+  "report": "RC8_GOVERNED_EXTERNAL_RETRIEVAL_FOUNDATION",
+  "retrieval_enabled_default": false,
+  "safety": {
+    "authentication_used": false,
+    "autonomous_browsing_enabled": false,
+    "external_authority_granted": false,
+    "live_network_call_performed": false,
+    "retrieved_content_executed": false,
+    "unrestricted_internet_enabled": false,
+    "upload_performed": false
+  }
+}

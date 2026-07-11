@@ -1,0 +1,155 @@
+# RC12_CAPABILITY_MATRIX
+
+- Generated: 2026-07-11T03:38:08+00:00
+- Passed: True
+- Recommendation: CAPABILITY_MATRIX_COMPLETE
+
+## Safety
+- provider_calls_performed: False
+- network_calls_performed: False
+- external_content_retrieved: False
+- persistent_writes_performed: False
+- automatic_scheduling_enabled: False
+- automatic_implementation_enabled: False
+- automatic_runtime_commits_or_pushes: False
+- production_mutation_enabled: False
+- purpose_mutation_enabled: False
+- specialist_authority_granted: False
+- campaign_self_approval_enabled: False
+- delta75_interaction: False
+
+## Payload
+```json
+{
+  "generated_at": "2026-07-11T03:38:08+00:00",
+  "matrix": [
+    {
+      "activation_gate": "operator use",
+      "authority": "runtime_response",
+      "capability": "Conversation",
+      "evidence_class": "operator/live use",
+      "known_limitations": "conversation regressions possible",
+      "operator_control": "none",
+      "rollback": "operator correction",
+      "status": "ACTIVE"
+    },
+    {
+      "activation_gate": "operator use",
+      "authority": "routing_context",
+      "capability": "Discourse Bridge",
+      "evidence_class": "operator/live use",
+      "known_limitations": "context overreach watch",
+      "operator_control": "none",
+      "rollback": "disable bridge route",
+      "status": "ACTIVE"
+    },
+    {
+      "activation_gate": "A/B/operator validation",
+      "authority": "pre_router",
+      "capability": "PC1 Pragmatics",
+      "evidence_class": "operator A/B evidence",
+      "known_limitations": "over-interpretation risk",
+      "operator_control": "operator control",
+      "rollback": "PC1_ENABLED=false",
+      "status": "ACTIVE_BEHIND_GATE"
+    },
+    {
+      "activation_gate": "governance gate",
+      "authority": "read_only_planning",
+      "capability": "RC3 Goals/Planning",
+      "evidence_class": "operator/governance evidence",
+      "known_limitations": "no execution during planning",
+      "operator_control": "operator approval",
+      "rollback": "plan rejection",
+      "status": "ACTIVE"
+    },
+    {
+      "activation_gate": "explicit operator authorization",
+      "authority": "proposal_or_authorized_action",
+      "capability": "RC4 Action",
+      "evidence_class": "operator authorization evidence",
+      "known_limitations": "no autonomous integration",
+      "operator_control": "operator approval",
+      "rollback": "rollback plan",
+      "status": "OPERATOR_ONLY"
+    },
+    {
+      "activation_gate": "operator review",
+      "authority": "advisory_development",
+      "capability": "RC5 Development",
+      "evidence_class": "developer rehearsal and operator review",
+      "known_limitations": "advice not authority",
+      "operator_control": "operator disposition",
+      "rollback": "reject recommendation",
+      "status": "ACTIVE_BEHIND_GATE"
+    },
+    {
+      "activation_gate": "provider env + operator approval",
+      "authority": "advisory_external_intelligence",
+      "capability": "RC6 Provider",
+      "evidence_class": "deterministic disabled-gateway evidence",
+      "known_limitations": "no live provider evidence",
+      "operator_control": "operator approval",
+      "rollback": "gateway disabled",
+      "status": "DISABLED"
+    },
+    {
+      "activation_gate": "operator pilot",
+      "authority": "organizational",
+      "capability": "RC7 Campaigns",
+      "evidence_class": "deterministic fixture evidence",
+      "known_limitations": "fixture evidence only",
+      "operator_control": "operator disposition",
+      "rollback": "campaign stop",
+      "status": "SHADOW_ONLY"
+    },
+    {
+      "activation_gate": "retrieval env + operator approval",
+      "authority": "evidence_candidate",
+      "capability": "RC8 Retrieval",
+      "evidence_class": "deterministic mock retrieval evidence",
+      "known_limitations": "no live retrieval evidence",
+      "operator_control": "operator approval",
+      "rollback": "retrieval disabled",
+      "status": "DISABLED"
+    },
+    {
+      "activation_gate": "operator session",
+      "authority": "workflow_support",
+      "capability": "RC9 Campaign Ops",
+      "evidence_class": "developer rehearsal evidence",
+      "known_limitations": "real evidence needed",
+      "operator_control": "operator disposition",
+      "rollback": "cancel/abandon",
+      "status": "OPERATOR_ONLY"
+    },
+    {
+      "activation_gate": "operator review",
+      "authority": "advisory_only",
+      "capability": "RC10 Specialists",
+      "evidence_class": "deterministic specialist fixture evidence",
+      "known_limitations": "conflict handling watch",
+      "operator_control": "operator review",
+      "rollback": "ignore specialist output",
+      "status": "SHADOW_ONLY"
+    }
+  ],
+  "passed": true,
+  "recommendation": "CAPABILITY_MATRIX_COMPLETE",
+  "report": "RC12_CAPABILITY_MATRIX",
+  "safety": {
+    "automatic_implementation_enabled": false,
+    "automatic_runtime_commits_or_pushes": false,
+    "automatic_scheduling_enabled": false,
+    "campaign_self_approval_enabled": false,
+    "delta75_interaction": false,
+    "external_content_retrieved": false,
+    "network_calls_performed": false,
+    "persistent_writes_performed": false,
+    "production_mutation_enabled": false,
+    "provider_calls_performed": false,
+    "purpose_mutation_enabled": false,
+    "specialist_authority_granted": false
+  }
+}
+```

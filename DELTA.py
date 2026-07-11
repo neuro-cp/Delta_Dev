@@ -82,6 +82,10 @@ from orchestration.runtime.rc7_governed_development_loop import (  # noqa: E402
     build_operator_dashboard_snapshot as build_rc7_operator_dashboard_snapshot,
     render_operator_dashboard as render_rc7_operator_dashboard,
 )
+from orchestration.runtime.rc11_rc12_systems_plateau import (  # noqa: E402
+    build_plateau_operator_dashboard,
+    render_plateau_operator_dashboard,
+)
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -145,6 +149,9 @@ def _format_snapshot(snapshot: dict[str, object]) -> str:
         f"- concept import coverage: {counts.get('concept_replay_coverage')}",
         f"- edge import coverage: {counts.get('edge_replay_coverage')}",
         f"- authoritative concept counter: {reconciliation.get('authoritative_runtime_concept_counter')}",
+        "",
+        "Systems plateau:",
+        _plateau_developer_overlay_text(),
     ])
 
 
@@ -389,6 +396,11 @@ def _pc1_safety() -> dict[str, bool]:
 def _rc7_developer_overlay_text() -> str:
     snapshot = build_rc7_operator_dashboard_snapshot()
     return render_rc7_operator_dashboard(snapshot) + "\nSnapshot:\n" + json.dumps(snapshot, indent=2, sort_keys=True)
+
+
+def _plateau_developer_overlay_text() -> str:
+    snapshot = build_plateau_operator_dashboard()
+    return render_plateau_operator_dashboard(snapshot) + "\nSnapshot:\n" + json.dumps(snapshot, indent=2, sort_keys=True)
 
 
 def _is_rc6_pilot_message(message: str) -> bool:

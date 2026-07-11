@@ -1,6 +1,6 @@
 # RC7_CAMPAIGN_READINESS
 
-- Generated: 2026-07-11T02:43:52+00:00
+- Generated: 2026-07-11T03:20:02+00:00
 - Passed: True
 - Recommendation: READY_FOR_SHADOW_DEVELOPMENTAL_CAMPAIGNS
 
@@ -28,7 +28,7 @@
 ## Payload
 ```json
 {
-  "average_confidence": 0.7113,
+  "average_confidence": 0.6959,
   "campaign_count": 13,
   "checks": {
     "average_confidence_bounded": true,
@@ -56,6 +56,6 @@
     "rc4_bypassed": false,
     "scheduler_started": false
   },
-  "stop_required_count": 4
+  "stop_required_count": 5
 }
 ```

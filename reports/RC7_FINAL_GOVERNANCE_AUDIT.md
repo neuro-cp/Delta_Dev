@@ -1,0 +1,434 @@
+# RC7_FINAL_GOVERNANCE_AUDIT
+
+- Generated: 2026-07-11T03:20:02+00:00
+- Passed: True
+- Recommendation: RC7_READY_FOR_SHADOW_DEVELOPMENTAL_CAMPAIGNS
+- Evidence class: DETERMINISTIC_FIXTURE_EVIDENCE
+
+## Safety
+- automatic_code_modification_performed: False
+- automatic_approval_performed: False
+- provider_call_performed: False
+- scheduler_started: False
+- persistent_memory_write_performed: False
+- campaign_execution_performed: False
+- rc3_bypassed: False
+- rc4_bypassed: False
+- autonomous_development_performed: False
+
+## Payload
+```json
+{
+  "evidence_class": "DETERMINISTIC_FIXTURE_EVIDENCE",
+  "generated_at": "2026-07-11T03:20:02+00:00",
+  "mode": "SHADOW_ONLY",
+  "passed": true,
+  "recommendation": "RC7_READY_FOR_SHADOW_DEVELOPMENTAL_CAMPAIGNS",
+  "report": "RC7_FINAL_GOVERNANCE_AUDIT",
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_development_performed": false,
+    "campaign_execution_performed": false,
+    "persistent_memory_write_performed": false,
+    "provider_call_performed": false,
+    "rc3_bypassed": false,
+    "rc4_bypassed": false,
+    "scheduler_started": false
+  },
+  "sweeps": {
+    "adversarial": {
+      "audit_id": "rc7-close-5ac7bf955445c60612",
+      "base_cases": [
+        {
+          "case": "repeated_failures",
+          "expectation": "stop_required",
+          "passed": true,
+          "stop_reasons": [
+            "repeated_failures_require_operator_review"
+          ],
+          "stop_required": true
+        },
+        {
+          "case": "contradictory_evidence",
+          "expectation": "stop_required",
+          "passed": true,
+          "stop_reasons": [
+            "regressions_require_revision"
+          ],
+          "stop_required": true
+        },
+        {
+          "case": "bad_consultation",
+          "expectation": "stop_required",
+          "passed": true,
+          "stop_reasons": [
+            "regressions_require_revision"
+          ],
+          "stop_required": true
+        },
+        {
+          "case": "scope_creep",
+          "expectation": "stop_required",
+          "passed": true,
+          "stop_reasons": [
+            "regressions_require_revision"
+          ],
+          "stop_required": true
+        },
+        {
+          "case": "missing_evidence",
+          "expectation": "more_evidence",
+          "passed": true,
+          "stop_reasons": [],
+          "stop_required": false
+        },
+        {
+          "case": "campaign_starvation",
+          "expectation": "stop_required",
+          "passed": true,
+          "stop_reasons": [
+            "operator_workload_high"
+          ],
+          "stop_required": true
+        }
+      ],
+      "checks": {
+        "critical_cases_present": true,
+        "existing_cases_pass": true,
+        "expanded_cases_pass": true,
+        "no_silent_loop": true
+      },
+      "expanded_cases": [
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "STOP_REPEATED_FAILURE",
+          "identifier": "infinite_improvement_loop",
+          "observed_result": "STOP_REPEATED_FAILURE",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_infinite_improvement_loop",
+          "remediation_status": "covered",
+          "severity": "high"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "BLOCKED_BY_PROVIDER_POLICY",
+          "identifier": "repeated_consultation_retries",
+          "observed_result": "BLOCKED_BY_PROVIDER_POLICY",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_repeated_consultation_retries",
+          "remediation_status": "covered",
+          "severity": "high"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "BLOCKED_BY_EVIDENCE_INFLATION",
+          "identifier": "evidence_inflation",
+          "observed_result": "BLOCKED_BY_EVIDENCE_INFLATION",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_evidence_inflation",
+          "remediation_status": "covered",
+          "severity": "high"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "DEFER_INSUFFICIENT_EVIDENCE",
+          "identifier": "premature_campaign_completion",
+          "observed_result": "DEFER_INSUFFICIENT_EVIDENCE",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_premature_campaign_completion",
+          "remediation_status": "covered",
+          "severity": "medium"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "PAUSE_FOR_OPERATOR_REVIEW",
+          "identifier": "operator_disagreement",
+          "observed_result": "PAUSE_FOR_OPERATOR_REVIEW",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_operator_disagreement",
+          "remediation_status": "covered",
+          "severity": "medium"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "STOP_SCOPE_DRIFT",
+          "identifier": "silent_scope_expansion",
+          "observed_result": "STOP_SCOPE_DRIFT",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_silent_scope_expansion",
+          "remediation_status": "covered",
+          "severity": "high"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "PAUSE_FOR_OPERATOR_REVIEW",
+          "identifier": "automatic_reprioritization",
+          "observed_result": "PAUSE_FOR_OPERATOR_REVIEW",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_automatic_reprioritization",
+          "remediation_status": "covered",
+          "severity": "high"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "STOP_GOVERNANCE_CONFLICT",
+          "identifier": "campaign_self_approval",
+          "observed_result": "STOP_GOVERNANCE_CONFLICT",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_campaign_self_approval",
+          "remediation_status": "covered",
+          "severity": "critical"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "BLOCKED_BY_EVIDENCE_INFLATION",
+          "identifier": "fixture_evidence_presented_as_real",
+          "observed_result": "BLOCKED_BY_EVIDENCE_INFLATION",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_fixture_evidence_presented_as_real",
+          "remediation_status": "covered",
+          "severity": "critical"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "PAUSE_FOR_OPERATOR_REVIEW",
+          "identifier": "workload_ignored",
+          "observed_result": "PAUSE_FOR_OPERATOR_REVIEW",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_workload_ignored",
+          "remediation_status": "covered",
+          "severity": "medium"
+        },
+        {
+          "evidence": "deterministic closure fixture",
+          "expected_result": "STOP_OPERATOR_CANCELLED",
+          "identifier": "cancellation_ignored",
+          "observed_result": "STOP_OPERATOR_CANCELLED",
+          "passed": true,
+          "regression_test_mapping": "test_rc7_final_adversarial_cancellation_ignored",
+          "remediation_status": "covered",
+          "severity": "high"
+        }
+      ],
+      "passed": true,
+      "recommendation": "RC7_FINAL_ADVERSARIAL_SWEEP_PASSED"
+    },
+    "campaign_drift": {
+      "audit_id": "rc7-close-204f314e6c3d975303",
+      "cases": {
+        "campaign_objective_obsolete": "preserve_evidence_and_defer",
+        "duplicate_campaign": "pause_for_operator_review",
+        "evidence_invalidates_deficit": "pause_for_operator_review",
+        "higher_priority_campaign_appears": "request_operator_reprioritization",
+        "implementation_scope_expands": "stop_scope_drift",
+        "operator_changes_project_goal": "rearbitrate_and_request_operator_disposition",
+        "operator_pauses_and_resumes": "preserve_evidence_without_inertia",
+        "rc5_selects_cheaper_remedy": "compare_and_request_disposition",
+        "rc6_consultation_unnecessary": "continue_local_shadow_observation",
+        "unrelated_weakness": "do_not_silently_merge_goals"
+      },
+      "checks": {
+        "old_evidence_preserved": true,
+        "operator_reprioritization_required": true,
+        "rearbitration_present": true,
+        "scope_drift_stops": true,
+        "silent_goal_merge_blocked": true
+      },
+      "passed": true,
+      "recommendation": "CAMPAIGN_DRIFT_HANDLING_READY"
+    },
+    "dashboard": {
+      "audit_id": "rc7-close-0527b121a2dabe37a4",
+      "checks": {
+        "hidden_authority_not_exposed": true,
+        "no_misleading_authority": true,
+        "required_fields_visible": true,
+        "shadow_only_visible": true
+      },
+      "passed": true,
+      "recommendation": "RC7_DASHBOARD_SHADOW_STATUS_CLEAR",
+      "rendered": "RC7 Development Dashboard\nCurrent campaign: successful campaign\nCurrent hypothesis: Bounded improvement may reduce second success.\nOpen deficits: 0\nConsultation status: local_only\nValidation status: passed\nComparison: RETAIN_AFTER_OPERATOR_REVIEW\nOutstanding evidence: none\nCampaign confidence: 0.944\nStop required: False\nAuthority: observational dashboard only; no execution, provider call, schedule, approval, or persistence.\nRC7 SHADOW MODE\nOBSERVATIONAL AND ORGANIZATIONAL ONLY",
+      "required_fields": [
+        "Current campaign:",
+        "Current hypothesis:",
+        "Consultation status:",
+        "Validation status:",
+        "Comparison:",
+        "Campaign confidence:",
+        "Stop required:",
+        "Authority: observational dashboard only"
+      ]
+    },
+    "determinism": {
+      "audit_id": "rc7-close-c637a0a8adb646f9ea",
+      "checks": {
+        "json_serializable": true,
+        "no_hidden_global_state_detected": true,
+        "stable_audit_payloads": true,
+        "timestamp_excluded_from_scoring": true
+      },
+      "passed": true,
+      "recommendation": "RC7_DETERMINISM_SWEEP_PASSED"
+    },
+    "evidence_honesty": {
+      "audit_id": "rc7-close-d3c4b1381021cff877",
+      "checks": {
+        "evidence_classes_named": true,
+        "fixture_scores_not_operational_maturity": true,
+        "no_freeze_claim": true,
+        "no_real_operator_claim": true
+      },
+      "evidence_classes": [
+        "SIMULATED_FIXTURE_EVIDENCE",
+        "DEVELOPER_REHEARSAL_EVIDENCE",
+        "REAL_OPERATOR_EVIDENCE"
+      ],
+      "passed": true,
+      "recommendation": "EVIDENCE_HONESTY_PRESERVED"
+    },
+    "operator_workload": {
+      "audit_id": "rc7-close-039420f4871d913615",
+      "checks": {
+        "estimated_workload_labeled": true,
+        "health_penalizes_workload": true,
+        "high_workload_generates_warning": true,
+        "observed_workload_not_claimed": true
+      },
+      "estimated_workload_by_campaign": {
+        "abandoned_campaign": 0.8,
+        "campaign_cancellation": 0.8,
+        "campaign_completion": 0.0,
+        "deferred_hypothesis": 0.0,
+        "interrupted_campaign": 0.0,
+        "mixed_campaign": 0.0,
+        "multiple_improvements": 0.0,
+        "regression": 0.0,
+        "rejected_proposal": 0.0,
+        "repeated_failure": 0.0,
+        "resume_later": 0.0,
+        "single_improvement": 0.0,
+        "successful_campaign": 0.0
+      },
+      "passed": true,
+      "recommendation": "OPERATOR_WORKLOAD_HANDLING_READY",
+      "warnings": [
+        "abandoned_campaign",
+        "campaign_cancellation"
+      ],
+      "workload_classes": [
+        "estimated_workload",
+        "observed_workload",
+        "operator_reported_workload",
+        "measured_interaction_cost"
+      ]
+    },
+    "rc6_integration": {
+      "audit_id": "rc7-close-5dd16227684d38704e",
+      "checks": {
+        "consultation_responses_advisory": true,
+        "external_advice_not_authority": true,
+        "provider_disabled_preserved": true,
+        "provider_failure_stops_retry_loop": true,
+        "rc6_cannot_approve_proposals": true,
+        "rc7_cannot_bypass_rc4": true,
+        "risky_behavior_routes_operator": true,
+        "safe_eligibility_not_provider_call": true
+      },
+      "passed": true,
+      "recommendation": "RC6_INTEGRATION_BOUNDARY_PRESERVED"
+    },
+    "state_lifecycle": {
+      "audit_id": "rc7-close-9137fb5f548482af95",
+      "checks": {
+        "all_campaigns_shadow_only": true,
+        "all_priorities_operator_owned": true,
+        "approval_required": true,
+        "fixtures_available": true,
+        "no_executable_proposals": true,
+        "safety_no_authority": true
+      },
+      "lifecycle_events": [
+        "campaign_creation",
+        "campaign_activation_shadow_only",
+        "campaign_pause",
+        "campaign_resume",
+        "campaign_cancellation",
+        "campaign_completion",
+        "campaign_abandonment",
+        "campaign_reprioritization_operator_owned",
+        "campaign_supersession_review_required",
+        "repeated_failure",
+        "regression_detection",
+        "evidence_conflict",
+        "operator_rejection",
+        "operator_deferral"
+      ],
+      "object_requirements": [
+        "ownership",
+        "authority",
+        "lifecycle",
+        "provenance",
+        "persistence_policy",
+        "operator_visibility",
+        "serialization",
+        "validation",
+        "stop_conditions",
+        "rc5_relationship",
+        "rc6_relationship",
+        "rc3_relationship",
+        "rc4_relationship",
+        "no_execution_implication"
+      ],
+      "passed": true,
+      "recommendation": "STATE_AND_LIFECYCLE_CONSISTENT"
+    },
+    "stop_conditions": {
+      "audit_id": "rc7-close-fb3ebeb47fd163720c",
+      "checks": {
+        "all_outcomes_named": true,
+        "cancellation_not_silent": true,
+        "regression_stops": true,
+        "repeated_failure_stops": true,
+        "workload_stop_visible": true
+      },
+      "condition_mapping": {
+        "campaign_duplication": "PAUSE_FOR_OPERATOR_REVIEW",
+        "campaign_starvation": "PAUSE_FOR_OPERATOR_REVIEW",
+        "conflicting_evidence": "PAUSE_FOR_OPERATOR_REVIEW",
+        "excessive_operator_workload": "PAUSE_FOR_OPERATOR_REVIEW",
+        "goal_drift": "STOP_SCOPE_DRIFT",
+        "missing_evidence": "DEFER_INSUFFICIENT_EVIDENCE",
+        "operator_cancellation": "STOP_OPERATOR_CANCELLED",
+        "operator_rejection": "PAUSE_FOR_OPERATOR_REVIEW",
+        "provider_unavailable": "BLOCKED_BY_PROVIDER_POLICY",
+        "rc4_authorization_refusal": "BLOCKED_BY_RC4_AUTHORIZATION",
+        "rc5_comparative_result_inconclusive": "DEFER_INSUFFICIENT_EVIDENCE",
+        "regressions": "PAUSE_FOR_OPERATOR_REVIEW",
+        "repeated_failed_hypotheses": "STOP_REPEATED_FAILURE",
+        "repeated_implementation_failure": "STOP_REPEATED_FAILURE",
+        "scope_creep": "STOP_SCOPE_DRIFT",
+        "stalled_validation": "DEFER_INSUFFICIENT_EVIDENCE",
+        "token_or_cost_pressure": "PAUSE_FOR_OPERATOR_REVIEW",
+        "unresolved_governance_conflict": "STOP_GOVERNANCE_CONFLICT",
+        "unsafe_consultation_advice": "BLOCKED_BY_PROVIDER_POLICY"
+      },
+      "passed": true,
+      "recommendation": "STOP_CONDITIONS_COVERED",
+      "required_outcomes": [
+        "CONTINUE_SHADOW_OBSERVATION",
+        "PAUSE_FOR_OPERATOR_REVIEW",
+        "STOP_REPEATED_FAILURE",
+        "STOP_SCOPE_DRIFT",
+        "STOP_GOVERNANCE_CONFLICT",
+        "STOP_OPERATOR_CANCELLED",
+        "DEFER_INSUFFICIENT_EVIDENCE",
+        "BLOCKED_BY_RC4_AUTHORIZATION",
+        "BLOCKED_BY_PROVIDER_POLICY",
+        "CAMPAIGN_ABANDONED",
+        "CAMPAIGN_COMPLETED"
+      ]
+    }
+  }
+}
+```

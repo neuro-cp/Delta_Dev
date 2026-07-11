@@ -1,0 +1,601 @@
+{
+  "checks": {
+    "all_advisory_only": true,
+    "all_initial_classes_present": true,
+    "contracts_require_authority": true,
+    "no_autonomous_agents": true,
+    "operator_review_required": true
+  },
+  "generated_at": "2026-07-11T03:21:13+00:00",
+  "passed": true,
+  "profiles": {
+    "architecture": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-c47e3cf9f977f5a2cc3b",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-b0d15b25c1ce8d22536a",
+        "helps_with": [
+          "architecture",
+          "design",
+          "boundary",
+          "integration",
+          "contract"
+        ],
+        "name": "architecture"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-b91eed3bc8b089496ab4",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "architecture",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-7b4ab8d26ab165a7fe26",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-1abc5035aeeae259cde9"
+    },
+    "coding": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-349cce74603ee1fb62ae",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-dbaab3e9982478bac779",
+        "helps_with": [
+          "code",
+          "implementation",
+          "patch",
+          "bug",
+          "function"
+        ],
+        "name": "coding"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-4dc9c8665e5dc55febe7",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "coding",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-9180344ec59730ed2fce",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-8abfed5953a8a63f8ba5"
+    },
+    "evidence_quality": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-301ada43f983fd6073d6",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-717e6103ca5b3efa2746",
+        "helps_with": [
+          "evidence",
+          "citation",
+          "source",
+          "quality",
+          "confidence"
+        ],
+        "name": "evidence_quality"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-419f836fb31809dd14f4",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "evidence_quality",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-dd080300df5f60919590",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-681a751ba6bb5cd3b008"
+    },
+    "governance": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-d94628d9a1d35f894449",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-36f1a93896b25b088469",
+        "helps_with": [
+          "approval",
+          "permission",
+          "authority",
+          "operator",
+          "governance"
+        ],
+        "name": "governance"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-db6757df34e7731e5c26",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "governance",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-4af243cabc835ed3380c",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-fac7ed5e6162ed9b1775"
+    },
+    "memory_retrieval": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-08e092400ac94d9f60b6",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-80c3744f802945b97173",
+        "helps_with": [
+          "memory",
+          "retrieval",
+          "concept",
+          "substrate",
+          "recall"
+        ],
+        "name": "memory_retrieval"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-aa2ce9210e1c2fb19b2a",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "memory_retrieval",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-9c7a3615899184dc6806",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-3ccef7db4a7363e55445"
+    },
+    "performance": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-beb4e1a0aba06b69c244",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-60a1166172df45c89ea5",
+        "helps_with": [
+          "latency",
+          "speed",
+          "memory footprint",
+          "cost",
+          "slow"
+        ],
+        "name": "performance"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-3d6902ec690bed4f53b4",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "performance",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-6570cf5c7686f385bf47",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-ecac80ac51d00ece1ede"
+    },
+    "security": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-e7bebe62b13c085a1910",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-a96dbc6c7c813aae892b",
+        "helps_with": [
+          "secret",
+          "credential",
+          "exploit",
+          "protected",
+          "injection",
+          "unsafe"
+        ],
+        "name": "security"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-e684acaf770adbf7cd09",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "security",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-620e8da4bbb9dba2dae6",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-ec18e4cb6db8075ddc10"
+    },
+    "testing_evaluation": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-a552124d0444e8c17a5e",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-367efe6345992d7a138f",
+        "helps_with": [
+          "test",
+          "benchmark",
+          "validation",
+          "regression",
+          "metric"
+        ],
+        "name": "testing_evaluation"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-ac51bd687eaf9cb234d9",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "testing_evaluation",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-2bf55e7903ffc88120bf",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-bb89a262060550f87b35"
+    },
+    "user_experience": {
+      "boundary": {
+        "authority": "advisory_only",
+        "boundary_id": "rc10-c0ca5db7e42c61e0de93",
+        "operator_review_required": true,
+        "prohibited_authority": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ]
+      },
+      "capability": {
+        "cannot_do": [
+          "approve_implementation",
+          "authorize_provider_calls",
+          "authorize_retrieval",
+          "redefine_purpose",
+          "change_governance",
+          "commit",
+          "push",
+          "deploy",
+          "modify_production"
+        ],
+        "capability_id": "rc10-4e8df3a19816393ca928",
+        "helps_with": [
+          "ui",
+          "wording",
+          "operator workload",
+          "confusing",
+          "conversation"
+        ],
+        "name": "user_experience"
+      },
+      "input_contract": {
+        "compact_shared_context": true,
+        "contract_id": "rc10-8b35f6d1960f5674bde8",
+        "max_context_items": 8,
+        "required_fields": [
+          "task",
+          "evidence",
+          "constraints"
+        ]
+      },
+      "name": "user_experience",
+      "output_contract": {
+        "authority_field_required": true,
+        "contract_id": "rc10-aec3a381a8146189cc19",
+        "evidence_required": true,
+        "required_fields": [
+          "recommendation",
+          "rationale",
+          "evidence",
+          "confidence",
+          "authority"
+        ]
+      },
+      "profile_id": "rc10-8f6d9982510c0bf8475c"
+    }
+  },
+  "recommendation": "RC10_FOUNDATION_COMPLETE",
+  "report": "RC10_SPECIALIST_COGNITION_FOUNDATION",
+  "safety": {
+    "autonomous_agents_created": false,
+    "purpose_or_governance_changed": false,
+    "specialist_authority_granted": false,
+    "specialist_commit_or_push_authorized": false,
+    "specialist_implementation_authorized": false,
+    "specialist_provider_call_authorized": false,
+    "specialist_retrieval_authorized": false
+  }
+}

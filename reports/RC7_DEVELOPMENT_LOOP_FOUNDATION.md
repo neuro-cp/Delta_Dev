@@ -1,6 +1,6 @@
 # RC7_DEVELOPMENT_LOOP_FOUNDATION
 
-- Generated: 2026-07-11T02:43:52+00:00
+- Generated: 2026-07-11T03:20:02+00:00
 - Passed: True
 - Recommendation: READY_FOR_SHADOW_DEVELOPMENTAL_CAMPAIGNS
 
@@ -177,7 +177,7 @@
       "confidence_id": "rc7-2ff020a4716b5093c7d6",
       "value": 0.944
     },
-    "created_at": "2026-07-11T02:43:52+00:00",
+    "created_at": "2026-07-11T03:20:02+00:00",
     "cycles": [
       {
         "comparison": {
@@ -201,7 +201,7 @@
           "provider_call_performed": false,
           "rationale": "local evidence sufficient"
         },
-        "created_at": "2026-07-11T02:43:52+00:00",
+        "created_at": "2026-07-11T03:20:02+00:00",
         "cycle_id": "rc7-76f2feb302c03a20921b",
         "deficit": {
           "deficit_id": "rc7-af401470e694faa3321a",
@@ -300,7 +300,7 @@
           "provider_call_performed": false,
           "rationale": "local evidence sufficient"
         },
-        "created_at": "2026-07-11T02:43:52+00:00",
+        "created_at": "2026-07-11T03:20:02+00:00",
         "cycle_id": "rc7-b8695520d02c4d3a9437",
         "deficit": {
           "deficit_id": "rc7-fefa56388151d9c6e234",

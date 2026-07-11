@@ -448,7 +448,7 @@ def benchmark_fixtures() -> dict[str, DevelopmentCampaign]:
         "interrupted_campaign": build_campaign("interrupted campaign", (build_cycle("interruption_recorded", validation_passed=False, decision="deferred"),)),
         "resume_later": build_campaign("resume later", (build_cycle("resume_context_preserved"),)),
         "campaign_completion": build_campaign("campaign completion", (build_cycle("completion_evidence"),)),
-        "campaign_cancellation": build_campaign("campaign cancellation", (build_cycle("cancellation", validation_passed=False, decision="abandoned"),)),
+        "campaign_cancellation": build_campaign("campaign cancellation", (build_cycle("cancellation", validation_passed=False, decision="abandoned", workload_delta=0.8),)),
     }
 
 

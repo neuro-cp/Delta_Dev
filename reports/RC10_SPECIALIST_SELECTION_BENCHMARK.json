@@ -1,0 +1,464 @@
+{
+  "checks": {
+    "architecture_selects_architecture": true,
+    "conflict_detected": true,
+    "context_mass_bounded": true,
+    "evidence_selects_evidence_quality": true,
+    "governance_selects_governance": true,
+    "memory_selects_memory_retrieval": true,
+    "security_sensitive_selects_security": true,
+    "slow_retrieval_selects_performance": true,
+    "test_regression_selects_testing_evaluation": true,
+    "ui_wording_selects_user_experience": true
+  },
+  "conflict_portfolio": {
+    "authority": "advisory_only",
+    "conflicts": [
+      {
+        "assumptions": [
+          "security prioritizes blocking risky ambiguity",
+          "user experience prioritizes reducing friction"
+        ],
+        "conflict_id": "rc10-5192d08b4e3470505382",
+        "conflict_type": "different_risk_tolerance",
+        "resolution_policy": "resolve using evidence, scope, and governance rather than majority vote",
+        "specialists": [
+          "security",
+          "user_experience"
+        ]
+      }
+    ],
+    "operator_review_required": true,
+    "recommendations": [
+      {
+        "authority": "advisory_only",
+        "confidence": 0.76,
+        "evidence": [
+          {
+            "evidence_class": "DETERMINISTIC_SPECIALIST_FIXTURE",
+            "evidence_id": "rc10-58a1596563e7f527aacb",
+            "quality": 0.78,
+            "specialist": "security",
+            "summary": "security specialist reviewed compact task context"
+          }
+        ],
+        "rationale": "specialist output is scoped to evidence and governance constraints",
+        "recommendation": "Use security perspective as advisory input; preserve operator review.",
+        "recommendation_id": "rc10-48331fcc93b382b26333",
+        "specialist": "security"
+      },
+      {
+        "authority": "advisory_only",
+        "confidence": 0.76,
+        "evidence": [
+          {
+            "evidence_class": "DETERMINISTIC_SPECIALIST_FIXTURE",
+            "evidence_id": "rc10-dca4aeef22b60785a923",
+            "quality": 0.78,
+            "specialist": "governance",
+            "summary": "governance specialist reviewed compact task context"
+          }
+        ],
+        "rationale": "specialist output is scoped to evidence and governance constraints",
+        "recommendation": "Use governance perspective as advisory input; preserve operator review.",
+        "recommendation_id": "rc10-2884924fff3bf405c85e",
+        "specialist": "governance"
+      },
+      {
+        "authority": "advisory_only",
+        "confidence": 0.76,
+        "evidence": [
+          {
+            "evidence_class": "DETERMINISTIC_SPECIALIST_FIXTURE",
+            "evidence_id": "rc10-34b8ba92617111a747c3",
+            "quality": 0.78,
+            "specialist": "user_experience",
+            "summary": "user_experience specialist reviewed compact task context"
+          }
+        ],
+        "rationale": "specialist output is scoped to evidence and governance constraints",
+        "recommendation": "Use user experience perspective as advisory input; preserve operator review.",
+        "recommendation_id": "rc10-d0ab3f6b8f4b682b28e0",
+        "specialist": "user_experience"
+      }
+    ],
+    "selection": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 46,
+      "decision_id": "rc10-dbeb93ee3abfe5d04355",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=2",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=3",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=1"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "memory_retrieval",
+        "performance",
+        "evidence_quality"
+      ],
+      "selected": [
+        "security",
+        "governance",
+        "user_experience"
+      ],
+      "task": "Make the security warning less confusing without reducing injection safety"
+    },
+    "synthesized_recommendation": "Use selected specialist findings as advisory evidence; unresolved conflicts require operator review.",
+    "task": "Make the security warning less confusing without reducing injection safety"
+  },
+  "generated_at": "2026-07-11T03:21:13+00:00",
+  "passed": true,
+  "recommendation": "RC10_SPECIALIST_SELECTION_READY",
+  "report": "RC10_SPECIALIST_SELECTION_BENCHMARK",
+  "results": {
+    "architecture": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 19,
+      "decision_id": "rc10-b5c11b36040ca68ba719",
+      "reasons": {
+        "architecture": "score=1",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=0",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=0",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=0"
+      },
+      "rejected": [
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "selected": [
+        "architecture"
+      ],
+      "task": "Audit the boundary between RC6 and RC8"
+    },
+    "evidence": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 19,
+      "decision_id": "rc10-b9e01c34158e394ad9dc",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=5",
+        "governance": "score=0",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=0",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=0"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience"
+      ],
+      "selected": [
+        "evidence_quality"
+      ],
+      "task": "Check citation evidence quality and source confidence"
+    },
+    "governance": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 31,
+      "decision_id": "rc10-a55555e8e65805de1b70",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=3",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=0",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=1"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "performance",
+        "evidence_quality"
+      ],
+      "selected": [
+        "governance",
+        "user_experience"
+      ],
+      "task": "Does this proposal require operator approval authority"
+    },
+    "memory": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 19,
+      "decision_id": "rc10-fe456d430b0cae8c1a5f",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=0",
+        "memory_retrieval": "score=4",
+        "performance": "score=0",
+        "security": "score=0",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=0"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "selected": [
+        "memory_retrieval"
+      ],
+      "task": "Concept recall from substrate retrieval is wrong"
+    },
+    "security_sensitive": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 31,
+      "decision_id": "rc10-05c7189806de4ac7065b",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=2",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=4",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=0"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "memory_retrieval",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "selected": [
+        "security",
+        "governance"
+      ],
+      "task": "Review this credential redaction and injection risk"
+    },
+    "slow_retrieval": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 33,
+      "decision_id": "rc10-a64b38f8da6f76802755",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=0",
+        "memory_retrieval": "score=2",
+        "performance": "score=3",
+        "security": "score=0",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=0"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "governance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "selected": [
+        "performance",
+        "memory_retrieval"
+      ],
+      "task": "Retrieval latency is slow and memory footprint is high"
+    },
+    "test_regression": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 32,
+      "decision_id": "rc10-2dddb00067a4053e6a68",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=1",
+        "evidence_quality": "score=0",
+        "governance": "score=0",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=0",
+        "testing_evaluation": "score=2",
+        "user_experience": "score=0"
+      },
+      "rejected": [
+        "architecture",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "selected": [
+        "testing_evaluation",
+        "coding"
+      ],
+      "task": "A regression benchmark failed after a routing patch"
+    },
+    "ui_wording": {
+      "considered": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "governance",
+        "performance",
+        "user_experience",
+        "evidence_quality"
+      ],
+      "context_mass": 34,
+      "decision_id": "rc10-68729f4989ddb80fa5b6",
+      "reasons": {
+        "architecture": "score=0",
+        "coding": "score=0",
+        "evidence_quality": "score=0",
+        "governance": "score=1",
+        "memory_retrieval": "score=0",
+        "performance": "score=0",
+        "security": "score=0",
+        "testing_evaluation": "score=0",
+        "user_experience": "score=4"
+      },
+      "rejected": [
+        "architecture",
+        "coding",
+        "testing_evaluation",
+        "security",
+        "memory_retrieval",
+        "performance",
+        "evidence_quality"
+      ],
+      "selected": [
+        "user_experience",
+        "governance"
+      ],
+      "task": "The UI wording is confusing and operator workload is high"
+    }
+  },
+  "safety": {
+    "autonomous_agents_created": false,
+    "purpose_or_governance_changed": false,
+    "specialist_authority_granted": false,
+    "specialist_commit_or_push_authorized": false,
+    "specialist_implementation_authorized": false,
+    "specialist_provider_call_authorized": false,
+    "specialist_retrieval_authorized": false
+  },
+  "score": 1.0
+}
