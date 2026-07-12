@@ -1,0 +1,54 @@
+# DELTA 1.1 Observation Model
+
+## Observation Types
+- "behavioral_failure"
+- "repeated_regression"
+- "operator_correction"
+- "failed_validation"
+- "repair_group"
+- "conversation_pathology"
+- "implementation_weakness"
+
+## Observations
+- {"affected_runtime_areas": ["rc2_contradiction_engine", "rc2_conversational_mode_router"], "conclusion": "evidence_only", "confidence": 0.9, "created_at": "2026-07-12T01:00:09+00:00", "evidence_refs": ["PID-005", "reports/DELTA_STAGE_A_A2_REPAIR_GROUP_CLOSURE.md"], "frequency": 2, "observation_id": "delta11-observation-2c8d9fd129aa44d0", "observation_type": "conversation_pathology", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "severity": 0.78, "summary": "Natural topic drift with 'but now' was misclassified as contradiction."}
+- {"affected_runtime_areas": ["rc2_render_correction", "rc2_conversational_mode_router"], "conclusion": "evidence_only", "confidence": 0.88, "created_at": "2026-07-12T01:00:09+00:00", "evidence_refs": ["PID-003", "reports/DELTA_LIVE_BEHAVIORAL_VALIDATION_A_A2.md"], "frequency": 2, "observation_id": "delta11-observation-c19c5aa4e504943c", "observation_type": "conversation_pathology", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "severity": 0.72, "summary": "Render correction and summarize-previous requests needed explicit previous-answer scoping."}
+- {"affected_runtime_areas": ["rc2_cognitive_episode", "rc2_conversational_mode_router"], "conclusion": "evidence_only", "confidence": 0.91, "created_at": "2026-07-12T01:00:09+00:00", "evidence_refs": ["PID-B04", "PID-B03", "reports/DELTA_STAGE_B_LIVE_CONTINUITY_TEST.md"], "frequency": 3, "observation_id": "delta11-observation-945aa85ae0d42a6b", "observation_type": "conversation_pathology", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "severity": 0.82, "summary": "Ambiguous referents and follow-ups selected or repeated context instead of asking clarification."}
+- {"affected_runtime_areas": ["delta_1_1_development_loop", "wikipedia_readiness"], "conclusion": "evidence_only", "confidence": 0.86, "created_at": "2026-07-12T01:00:09+00:00", "evidence_refs": ["operator-grounding-wikipedia-text-only"], "frequency": 1, "observation_id": "delta11-observation-13f7794a45d5cf97", "observation_type": "operator_correction", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "severity": 0.66, "summary": "Operator requested governed introspective loop before external retrieval and Wikipedia only after operator inquiry."}
+
+## Evidence Packet
+- **evidence_id**: "delta11-evidence-d3d0aca07d896c07"
+- **sources**: ["PID-003", "PID-005", "PID-B03", "PID-B04", "operator-grounding-wikipedia-text-only", "reports/DELTA_LIVE_BEHAVIORAL_VALIDATION_A_A2.md", "reports/DELTA_STAGE_A_A2_REPAIR_GROUP_CLOSURE.md", "reports/DELTA_STAGE_B_LIVE_CONTINUITY_TEST.md"]
+- **observations**: ["delta11-observation-2c8d9fd129aa44d0", "delta11-observation-c19c5aa4e504943c", "delta11-observation-945aa85ae0d42a6b", "delta11-observation-13f7794a45d5cf97"]
+- **tests**: []
+- **operator_comments**: []
+- **repository_inspection**: []
+- **local_only**: true
+- **provider_used**: false
+- **web_used**: false
+- **safety**: {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}
+
+## Observations Are Conclusions
+False
+
+## Safety
+- **provider_calls_performed**: false
+- **network_calls_performed**: false
+- **external_retrieval_performed**: false
+- **training_performed**: false
+- **fine_tuning_performed**: false
+- **weight_update_performed**: false
+- **canonical_write_performed**: false
+- **noncanonical_write_performed**: false
+- **developmental_memory_write_performed**: false
+- **hidden_persistence_performed**: false
+- **scheduler_action_performed**: false
+- **autonomous_action_performed**: false
+- **automatic_approval_performed**: false
+- **automatic_code_modification_performed**: false
+- **runtime_commit_performed**: false
+- **runtime_push_performed**: false
+- **deployment_performed**: false
+- **plugin_activation_performed**: false
+- **sandbox_creation_performed**: false
+- **production_mutation_performed**: false
+- **delta_75_interaction_performed**: false

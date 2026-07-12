@@ -1,0 +1,38 @@
+# DELTA 1.1 Objective Lifecycle
+
+## Objectives
+- {"affected_runtime_areas": ["rc2_cognitive_episode", "rc2_contradiction_engine", "rc2_conversational_mode_router", "rc2_render_correction"], "completion_requirements": ["focused_tests_pass", "no_governance_regression", "before_after_evidence_recorded"], "confidence": 0.897, "created_at": "2026-07-12T01:00:09+00:00", "dependencies": ["operator_approval", "focused_tests", "local_evidence_only"], "description": "Address recurring discourse boundary arbitration deficit using local evidence: Natural topic drift with 'but now' was misclassified as contradiction.; Render correction and summarize-previous requests needed explicit previous-answer scoping.; Ambiguous referents and follow-ups selected or repeated context instead of asking clarification.", "estimated_benefit": 0.611, "estimated_effort": 0.7, "estimated_implementation_risk": 0.61, "estimated_regression_risk": 0.54, "objective_id": "delta11-objective-31bc1f8c899202d5", "operator_approved": false, "originating_evidence": ["PID-003", "PID-005", "PID-B03", "PID-B04", "reports/DELTA_LIVE_BEHAVIORAL_VALIDATION_A_A2.md", "reports/DELTA_STAGE_A_A2_REPAIR_GROUP_CLOSURE.md", "reports/DELTA_STAGE_B_LIVE_CONTINUITY_TEST.md"], "rollback_conditions": ["focused_regression", "governance_regression", "scope_creep", "operator_rejection"], "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "state": "PROPOSED", "title": "Improve conversational correction, topic-shift, and contradiction boundary arbitration", "validation_requirements": ["focused_unit_tests", "behavioral_validation", "governance_validation", "failure_path_validation"]}
+- {"affected_runtime_areas": ["delta_1_1_development_loop", "wikipedia_readiness"], "completion_requirements": ["focused_tests_pass", "no_governance_regression", "before_after_evidence_recorded"], "confidence": 0.86, "created_at": "2026-07-12T01:00:09+00:00", "dependencies": ["operator_approval", "focused_tests", "local_evidence_only"], "description": "Address recurring wikipedia readiness deficit using local evidence: Operator requested governed introspective loop before external retrieval and Wikipedia only after operator inquiry.", "estimated_benefit": 0.416, "estimated_effort": 0.45, "estimated_implementation_risk": 0.37, "estimated_regression_risk": 0.38, "objective_id": "delta11-objective-b9ab7f533c7fb75a", "operator_approved": false, "originating_evidence": ["operator-grounding-wikipedia-text-only"], "rollback_conditions": ["focused_regression", "governance_regression", "scope_creep", "operator_rejection"], "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "state": "PROPOSED", "title": "Prepare disabled Wikipedia text-only readiness gate", "validation_requirements": ["focused_unit_tests", "behavioral_validation", "governance_validation", "failure_path_validation"]}
+
+## Priorities
+- {"architectural_leverage": 0.95, "confidence": 0.897, "frequency": 0.875, "implementation_effort_inverse": 0.3, "objective_id": "delta11-objective-31bc1f8c899202d5", "operator_impact": 0.611, "rank": 1, "rationale": "Score combines operator impact 0.61, frequency 0.88, severity 0.77, leverage 0.95, effort inverse 0.30, and confidence 0.90.", "regression_severity": 0.773, "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.7323}
+- {"architectural_leverage": 0.65, "confidence": 0.86, "frequency": 0.125, "implementation_effort_inverse": 0.55, "objective_id": "delta11-objective-b9ab7f533c7fb75a", "operator_impact": 0.416, "rank": 2, "rationale": "Score combines operator impact 0.42, frequency 0.12, severity 0.66, leverage 0.65, effort inverse 0.55, and confidence 0.86.", "regression_severity": 0.66, "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.4834}
+
+## Selected Objective Id
+delta11-objective-31bc1f8c899202d5
+
+## Operator Approval Required
+True
+
+## Safety
+- **provider_calls_performed**: false
+- **network_calls_performed**: false
+- **external_retrieval_performed**: false
+- **training_performed**: false
+- **fine_tuning_performed**: false
+- **weight_update_performed**: false
+- **canonical_write_performed**: false
+- **noncanonical_write_performed**: false
+- **developmental_memory_write_performed**: false
+- **hidden_persistence_performed**: false
+- **scheduler_action_performed**: false
+- **autonomous_action_performed**: false
+- **automatic_approval_performed**: false
+- **automatic_code_modification_performed**: false
+- **runtime_commit_performed**: false
+- **runtime_push_performed**: false
+- **deployment_performed**: false
+- **plugin_activation_performed**: false
+- **sandbox_creation_performed**: false
+- **production_mutation_performed**: false
+- **delta_75_interaction_performed**: false
