@@ -1,0 +1,50 @@
+{
+  "future_capability": [
+    "real timer/wake service",
+    "OS or app notifications",
+    "operator UI for inquiry queue",
+    "Wikipedia retrieval remains disabled"
+  ],
+  "implemented": [
+    "live runtime state machine",
+    "event queue",
+    "observation engine",
+    "attention manager",
+    "curiosity engine",
+    "development signal engine",
+    "goal arbitration",
+    "bounded reflection worker",
+    "operator inquiry queue",
+    "notification policy",
+    "activity journal",
+    "sleep cycle abstraction",
+    "runtime identity",
+    "integrated workflow",
+    "disabled wikipedia readiness registration"
+  ],
+  "maturity_claim": "persistent_governed_cognitive_runtime_without_external_senses",
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "validated": true
+}

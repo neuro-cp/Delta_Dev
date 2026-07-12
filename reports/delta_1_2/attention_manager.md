@@ -1,0 +1,45 @@
+# DELTA 1.2 Attention Manager
+
+## Levels
+- "IGNORE"
+- "LOW_VALUE"
+- "INTERESTING"
+- "DEVELOPMENTAL_SIGNAL"
+- "HIGH_PRIORITY"
+- "OPERATOR_REQUIRED"
+
+## Decisions
+- {"decision_id": "delta12-attention-2d97506ecc8125c1", "expires_after_cycles": 12, "level": "DEVELOPMENTAL_SIGNAL", "observation_id": "delta12-observation-d4c14fdcccf8e071", "rationale": "severity=0.42; confidence=0.90; novelty=0.50", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.596}
+- {"decision_id": "delta12-attention-ea4fc3e4fa2e3f2c", "expires_after_cycles": 12, "level": "HIGH_PRIORITY", "observation_id": "delta12-observation-64ff75cf09d5c16e", "rationale": "severity=0.82; confidence=0.90; novelty=0.72", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.838}
+- {"decision_id": "delta12-attention-db54ba9391a89e4c", "expires_after_cycles": 12, "level": "HIGH_PRIORITY", "observation_id": "delta12-observation-6eb17b3453f625e2", "rationale": "severity=0.82; confidence=0.90; novelty=0.72", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.838}
+- {"decision_id": "delta12-attention-f8681b0a0bb87215", "expires_after_cycles": 12, "level": "HIGH_PRIORITY", "observation_id": "delta12-observation-1497952ff5425b8a", "rationale": "severity=0.74; confidence=0.90; novelty=0.85", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.807}
+- {"decision_id": "delta12-attention-8b861955777515ed", "expires_after_cycles": 12, "level": "DEVELOPMENTAL_SIGNAL", "observation_id": "delta12-observation-e7c66e576f9e13c8", "rationale": "severity=0.58; confidence=0.90; novelty=0.85", "safety": {"automatic_approval_performed": false, "automatic_code_modification_performed": false, "autonomous_action_performed": false, "canonical_write_performed": false, "delta_75_interaction_performed": false, "deployment_performed": false, "developmental_memory_write_performed": false, "external_retrieval_performed": false, "fine_tuning_performed": false, "hidden_persistence_performed": false, "network_calls_performed": false, "noncanonical_write_performed": false, "plugin_activation_performed": false, "production_mutation_performed": false, "provider_calls_performed": false, "runtime_commit_performed": false, "runtime_push_performed": false, "sandbox_creation_performed": false, "scheduler_action_performed": false, "training_performed": false, "weight_update_performed": false}, "score": 0.719}
+
+## Continued Count
+5
+
+## Expires Naturally
+True
+
+## Safety
+- **provider_calls_performed**: false
+- **network_calls_performed**: false
+- **external_retrieval_performed**: false
+- **training_performed**: false
+- **fine_tuning_performed**: false
+- **weight_update_performed**: false
+- **canonical_write_performed**: false
+- **noncanonical_write_performed**: false
+- **developmental_memory_write_performed**: false
+- **hidden_persistence_performed**: false
+- **scheduler_action_performed**: false
+- **autonomous_action_performed**: false
+- **automatic_approval_performed**: false
+- **automatic_code_modification_performed**: false
+- **runtime_commit_performed**: false
+- **runtime_push_performed**: false
+- **deployment_performed**: false
+- **plugin_activation_performed**: false
+- **sandbox_creation_performed**: false
+- **production_mutation_performed**: false
+- **delta_75_interaction_performed**: false

@@ -1,0 +1,79 @@
+{
+  "governance_status": "operator_governed_no_external_senses",
+  "identity": {
+    "active_observations": [
+      "delta12-observation-d4c14fdcccf8e071",
+      "delta12-observation-64ff75cf09d5c16e",
+      "delta12-observation-6eb17b3453f625e2",
+      "delta12-observation-1497952ff5425b8a",
+      "delta12-observation-e7c66e576f9e13c8"
+    ],
+    "chat_history": [],
+    "current_objectives": [
+      "delta12-goal-f96cb7d7dcb15a95",
+      "delta12-goal-6419a8238da78bbc",
+      "delta12-goal-83a88518fa59383a"
+    ],
+    "governance_status": "operator_governed_no_external_senses",
+    "identity_id": "delta12-identity-5cee8e4c06fcf282",
+    "open_questions": [
+      "delta12-inquiry-ebee3ab7eaf82f79",
+      "delta12-inquiry-f6787e63f86de85c",
+      "delta12-inquiry-966c756c72fe0c01"
+    ],
+    "recent_lessons": [],
+    "runtime_health": "healthy",
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "unresolved_curiosity": [
+      "delta12-curiosity-5372cbf1422e44bd",
+      "delta12-curiosity-3173f8f722036ccd",
+      "delta12-curiosity-1bac7292af6f0783"
+    ]
+  },
+  "operational_continuity_not_chat_history": true,
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  }
+}
