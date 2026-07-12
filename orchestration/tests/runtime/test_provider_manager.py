@@ -122,3 +122,15 @@ def test_provider_manager_uses_capability_database_gpu_layers(tmp_path):
     assert state.n_gpu_layers == 36
     assert state.metadata["recommended_gpu_layers"] == 36
     assert state.metadata["backend_tokens_per_second"] == 16.0
+
+
+def test_provider_manager_reports_process_scoped_gpu_layer_override(monkeypatch):
+    monkeypatch.setenv("DELTA_N_GPU_LAYERS", "-1")
+    manager = ProviderManager(
+        available_models={"llama": _spec("llama", "llama")},
+        runner_factory=lambda spec: FakeRunner(spec.name),
+    )
+
+    state = manager.load("llama")
+
+    assert state.n_gpu_layers == -1

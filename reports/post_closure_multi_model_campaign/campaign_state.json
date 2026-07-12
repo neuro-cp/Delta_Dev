@@ -1,0 +1,32 @@
+{
+  "campaign": "DELTA post-closure single-model campaign",
+  "execution_mode": "TERRA-led one-cycle execution",
+  "role_model_limit": "SOL and LUNA are internal review roles, not independently switched models",
+  "branch": "codex/delta-cognitive-core",
+  "baseline_head": "b7dd1187d2ae4ec5883c3807cd5b7c7ae8df0ecb",
+  "baseline_recommendation": "LIVE_RUNTIME_BEHAVIORAL_CLOSURE_READY_FOR_OPERATOR_PILOT",
+  "phase": "COMPLETE",
+  "delta_75_scope": "excluded",
+  "preexisting_dirty_tree_preserved": true,
+  "findings": [
+    "SOL-001 live local-model execution unreachable",
+    "SOL-002 UI thread blocked by live retrieval or inference",
+    "SOL-003 effective GPU layer configuration not reported",
+    "SOL-004 full deterministic campaign still has no real model calls",
+    "SOL-005 no multi-hour human operator evidence",
+    "SOL-006 duplicate local-model consent wording in UI",
+    "SOL-007 registry entry count includes aliases and unusable files"
+  ],
+  "repairs": [
+    "SOL-001 CONFIRMED_AND_REPAIRED",
+    "SOL-002 CONFIRMED_AND_REPAIRED",
+    "SOL-003 CONFIRMED_AND_REPAIRED"
+  ],
+  "validation": {
+    "focused_tests": "97 passed",
+    "continuous_runtime_tests": "9 passed",
+    "full_behavioral_campaign": "373 scenarios / 1500 turns / 0 pathologies",
+    "real_model_pilot": "Llama -> Mistral -> Llama passed",
+    "live_ui_smoke": "retrieval pause, inference suspend, shutdown passed"
+  }
+}

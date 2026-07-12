@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import os
+import queue
 import re
+import threading
 import uuid
 import sys
 import tkinter as tk
@@ -1444,6 +1446,9 @@ class DeltaApp:
         self.rc6_pilot_events: list[dict[str, object]] = []
         self.live_runtime_session: LiveWikipediaRuntimeSession | None = None
         self.live_runtime_status = tk.StringVar(value="Live runtime: stopped")
+        self.live_runtime_worker_results: queue.Queue[dict[str, object]] = queue.Queue()
+        self.live_runtime_request_in_flight = False
+        self.pending_live_runtime_controls: list[str] = []
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1452,6 +1457,7 @@ class DeltaApp:
         if not validate_console_safe(self.snapshot):
             raise RuntimeError("DELTA console safety validation failed")
         self._build()
+        self.root.after(50, self._poll_live_runtime_worker_results)
         self._refresh_state_cards()
         self._warm_default_model()
         self._show_welcome()
@@ -2114,6 +2120,9 @@ class DeltaApp:
             self.model_residency_status = f"switch_failed:{type(exc).__name__}:{str(exc)[:120]}"
 
     def _start_live_runtime(self) -> None:
+        if self.live_runtime_request_in_flight:
+            self.live_runtime_status.set("Live runtime is completing an operator turn; start is unavailable until it finishes.")
+            return
         if self.live_runtime_session and self.live_runtime_session.active:
             self.live_runtime_status.set(self._live_status_text())
             return
@@ -2134,6 +2143,8 @@ class DeltaApp:
             messagebox.showerror("Live Runtime", f"Could not start live runtime:\n{type(exc).__name__}: {str(exc)[:240]}")
 
     def _stop_live_runtime(self) -> None:
+        if self._queue_live_runtime_control("stop"):
+            return
         if not self.live_runtime_session:
             self.live_runtime_status.set("Live runtime: stopped")
             return
@@ -2146,6 +2157,8 @@ class DeltaApp:
             messagebox.showerror("Live Runtime", f"Could not stop live runtime:\n{type(exc).__name__}: {str(exc)[:240]}")
 
     def _pause_live_initiative(self) -> None:
+        if self._queue_live_runtime_control("pause"):
+            return
         if not self.live_runtime_session:
             self.live_runtime_status.set("Live runtime: stopped")
             return
@@ -2153,6 +2166,8 @@ class DeltaApp:
         self.live_runtime_status.set(self._live_status_text())
 
     def _resume_live_initiative(self) -> None:
+        if self._queue_live_runtime_control("resume"):
+            return
         if not self.live_runtime_session:
             self.live_runtime_status.set("Live runtime: stopped")
             return
@@ -2160,11 +2175,108 @@ class DeltaApp:
         self.live_runtime_status.set(self._live_status_text())
 
     def _suspend_live_initiative(self) -> None:
+        if self._queue_live_runtime_control("suspend"):
+            return
         if not self.live_runtime_session:
             self.live_runtime_status.set("Live runtime: stopped")
             return
         self.live_runtime_session = suspend_live_runtime_initiative(self.live_runtime_session)
         self.live_runtime_status.set(self._live_status_text())
+
+    def _queue_live_runtime_control(self, control: str) -> bool:
+        if not self.live_runtime_request_in_flight:
+            return False
+        if control not in {"stop", "pause", "resume", "suspend"}:
+            raise ValueError(f"unknown live runtime control: {control}")
+        if not self.pending_live_runtime_controls or self.pending_live_runtime_controls[-1] != control:
+            self.pending_live_runtime_controls.append(control)
+        self.live_runtime_status.set(f"Runtime=PROCESSING_OPERATOR_TURN; {control} queued after the current turn.")
+        return True
+
+    def _apply_queued_live_runtime_controls(self) -> None:
+        pending = tuple(self.pending_live_runtime_controls)
+        self.pending_live_runtime_controls.clear()
+        for control in pending:
+            if control == "stop":
+                self._stop_live_runtime()
+            elif control == "pause":
+                self._pause_live_initiative()
+            elif control == "resume":
+                self._resume_live_initiative()
+            elif control == "suspend":
+                self._suspend_live_initiative()
+
+    def _begin_live_runtime_turn(self, message: str) -> None:
+        session = self.live_runtime_session
+        if session is None:
+            return
+        self.live_runtime_request_in_flight = True
+        self.chat_input.configure(state=tk.DISABLED)
+        self.live_runtime_status.set("Runtime=PROCESSING_OPERATOR_TURN; lifecycle controls can be queued.")
+        history = self._recent_history_for_router()
+        developer_overlay = self.developer_overlay_enabled.get()
+
+        def run_turn() -> None:
+            try:
+                updated_session, response = handle_live_chat(
+                    session,
+                    message,
+                    history=history,
+                    developer_overlay=developer_overlay,
+                    provider_manager=self.provider_manager,
+                )
+                self.live_runtime_worker_results.put({
+                    "kind": "response",
+                    "message": message,
+                    "session": updated_session,
+                    "response": response,
+                })
+            except Exception as exc:  # noqa: BLE001 - retain UI control when a worker turn fails unexpectedly.
+                self.live_runtime_worker_results.put({
+                    "kind": "error",
+                    "message": message,
+                    "exception_type": type(exc).__name__,
+                    "exception_message": str(exc)[:500],
+                })
+
+        threading.Thread(target=run_turn, name="delta-live-runtime-turn", daemon=True).start()
+
+    def _poll_live_runtime_worker_results(self) -> None:
+        try:
+            while True:
+                result = self.live_runtime_worker_results.get_nowait()
+                self._complete_live_runtime_turn(result)
+        except queue.Empty:
+            pass
+        self.root.after(50, self._poll_live_runtime_worker_results)
+
+    def _complete_live_runtime_turn(self, result: dict[str, object]) -> None:
+        self.live_runtime_request_in_flight = False
+        if result.get("kind") == "response":
+            session = result.get("session")
+            response = result.get("response")
+            if isinstance(session, LiveWikipediaRuntimeSession) and response is not None:
+                self.live_runtime_session = session
+                self.last_message = str(result.get("message") or "")
+                payload = getattr(response, "payload", {})
+                self.last_payload = payload if isinstance(payload, dict) else None
+                if isinstance(payload, dict):
+                    self._queue_concept_candidate(payload)
+                self._append_chat("DELTA", str(getattr(response, "answer", "")))
+                self._append_session("assistant", str(getattr(response, "answer", "")))
+            else:
+                self._append_chat("DELTA", "Live runtime returned an invalid worker result. No state was committed.")
+        else:
+            self._append_chat(
+                "DELTA",
+                "Live runtime turn failed safely. "
+                + f"Reason: {result.get('exception_type')}: {result.get('exception_message')}",
+            )
+        self._apply_queued_live_runtime_controls()
+        self.live_runtime_status.set(self._live_status_text())
+        self._refresh_state_cards()
+        self.chat_input.configure(state=tk.NORMAL)
+        self.chat_input.focus_set()
 
     def _live_status_text(self) -> str:
         session = self.live_runtime_session
@@ -2200,19 +2312,7 @@ class DeltaApp:
         discourse_trace = discourse_frame.as_dict()
         if self.live_runtime_session and self.live_runtime_session.active:
             self._append_session("user", message)
-            self.live_runtime_session, live_response = handle_live_chat(
-                self.live_runtime_session,
-                message,
-                history=self._recent_history_for_router(),
-                developer_overlay=self.developer_overlay_enabled.get(),
-            )
-            self.last_message = message
-            self.last_payload = live_response.payload
-            self._queue_concept_candidate(live_response.payload)
-            self._append_chat("DELTA", live_response.answer)
-            self._append_session("assistant", live_response.answer)
-            self.live_runtime_status.set(self._live_status_text())
-            self._refresh_state_cards()
+            self._begin_live_runtime_turn(message)
             return
         if is_render_correction_request(message):
             self._append_session("user", message)

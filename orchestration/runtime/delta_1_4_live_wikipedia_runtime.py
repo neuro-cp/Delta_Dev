@@ -114,6 +114,7 @@ class LiveWikipediaRuntimeSession:
     promotion_candidates: tuple[dict[str, Any], ...] = ()
     prepared_review_proposals: tuple[dict[str, Any], ...] = ()
     operator_inquiries: tuple[dict[str, Any], ...] = ()
+    pending_local_model_request: dict[str, Any] | None = None
     operational_self_model: OperationalSelfModel | None = None
     initiatives: tuple[Initiative, ...] = ()
     authority_decisions: tuple[AuthorityDecision, ...] = ()
@@ -204,6 +205,7 @@ def handle_live_chat(
     history: list[dict[str, str]] | None = None,
     developer_overlay: bool = False,
     wikipedia_transport: WikipediaTransport | None = None,
+    provider_manager: Any | None = None,
 ) -> tuple[LiveWikipediaRuntimeSession, LiveChatResponse]:
     if not session.active:
         payload = route_message("Conversation", message, history=history, execute_local_model=False)
@@ -231,6 +233,60 @@ def handle_live_chat(
         answer, payload = _render_pending_inquiries(session)
         response = _response(answer, "live_pending_inquiries", payload, None, runtime.state, safety_metadata())
         return replace(session, turns=session.turns + (response,)), response
+
+    if _has_pending_local_model_request(session) and _is_explicit_local_model_cancellation(message):
+        request = session.pending_local_model_request or {}
+        answer = "The pending local-model request was cancelled. No model was called, no provider was called, and no memory was written."
+        payload = _base_live_payload("live_local_model_request_cancelled", answer)
+        payload.update({
+            "local_model_request": request,
+            "provider_calls_performed": False,
+            "memory_candidate": None,
+        })
+        updated = _advance_continuous_controller(
+            replace(session, pending_local_model_request=None),
+            "OPERATOR_REJECTION",
+            {"summary": "operator cancelled pending local model request", "request_id": str(request.get("request_id") or "")},
+            priority=65,
+            correlation_id=str(request.get("request_id") or ""),
+        )
+        response = _response(answer, "live_local_model_request_cancelled", payload, None, updated.runtime.state, safety_metadata())
+        return replace(updated, turns=updated.turns + (response,)), response
+
+    if _has_pending_local_model_request(session) and _is_explicit_local_model_request(message):
+        if session.autonomy_status == "PAUSED":
+            answer = "I heard the local-model approval, but live initiative processing is paused. Resume the live runtime before I run the approved local inference turn."
+            payload = _base_live_payload("live_runtime_paused", answer)
+            payload["pending_local_model_request"] = session.pending_local_model_request
+            response = _response(answer, "live_runtime_paused", payload, None, runtime.state, safety_metadata())
+            return replace(session, turns=session.turns + (response,)), response
+        return _run_approved_local_model_request(
+            session,
+            message,
+            history=history,
+            developer_overlay=developer_overlay,
+            provider_manager=provider_manager,
+        )
+
+    if _has_pending_local_model_request(session) and _has_pending_promotion_inquiry(session) and _is_unqualified_affirmation(message):
+        answer, payload = _render_ambiguous_live_action(session)
+        response = _response(answer, "live_operator_action_ambiguous", payload, None, runtime.state, safety_metadata())
+        return replace(session, turns=session.turns + (response,)), response
+
+    if _has_pending_local_model_request(session) and not _has_pending_promotion_inquiry(session) and _is_affirmative(message):
+        if session.autonomy_status == "PAUSED":
+            answer = "I heard the local-model approval, but live initiative processing is paused. Resume the live runtime before I run the approved local inference turn."
+            payload = _base_live_payload("live_runtime_paused", answer)
+            payload["pending_local_model_request"] = session.pending_local_model_request
+            response = _response(answer, "live_runtime_paused", payload, None, runtime.state, safety_metadata())
+            return replace(session, turns=session.turns + (response,)), response
+        return _run_approved_local_model_request(
+            session,
+            message,
+            history=history,
+            developer_overlay=developer_overlay,
+            provider_manager=provider_manager,
+        )
 
     if _is_affirmative(message) and _has_pending_promotion_inquiry(session):
         selected_inquiry, ambiguity = _select_pending_promotion_inquiry(session, message)
@@ -436,8 +492,16 @@ def handle_live_chat(
         updated = _advance_continuous_controller(replace(session, runtime=runtime), "RESOURCE_LIMIT_REACHED", {"summary": "Wikipedia session query budget exhausted"}, priority=65)
         return replace(updated, turns=updated.turns + (response,)), response
 
+    pending_request = session.pending_local_model_request
+    if pending_request is not None:
+        session = replace(session, pending_local_model_request=None)
     payload = route_message("Conversation", message, history=history, execute_local_model=False)
     answer = render_route(payload, developer_overlay=developer_overlay)
+    local_offer = payload.get("local_model_offer")
+    if str(payload.get("route") or "") == "local_model_consent_required" and isinstance(local_offer, dict) and local_offer.get("offered"):
+        request = _new_local_model_request(session, message, payload)
+        payload = {**payload, "live_runtime_local_model_request": request}
+        session = replace(session, pending_local_model_request=request)
     response = _response(answer, str(payload.get("route") or "conversation_fallback"), payload, None, runtime.state, safety_metadata())
     updated = _advance_continuous_controller(replace(session, runtime=runtime), "VALIDATION_RESULT", {"summary": "ordinary chat routed without continuous work"}, priority=20)
     return replace(updated, turns=updated.turns + (response,)), response
@@ -713,6 +777,265 @@ def _is_rejection(message: str) -> bool:
         "never mind",
         "nevermind",
         "defer this",
+    }
+
+
+def _has_pending_local_model_request(session: LiveWikipediaRuntimeSession) -> bool:
+    request = session.pending_local_model_request
+    return bool(isinstance(request, dict) and str(request.get("status") or "").upper() == "PENDING_OPERATOR_APPROVAL")
+
+
+def _normalized_operator_text(message: str) -> str:
+    text = " ".join(str(message or "").lower().strip(" ?.! ").split())
+    text = re.sub(r"[,;:]+", " ", text)
+    return " ".join(text.split())
+
+
+def _is_explicit_local_model_request(message: str) -> bool:
+    text = _normalized_operator_text(message)
+    return any(marker in text for marker in (
+        "ask local model",
+        "ask the local model",
+        "use local model",
+        "use the local model",
+        "run local model",
+        "run the local model",
+        "ask llama",
+        "ask mistral",
+        "use llama",
+        "use mistral",
+    ))
+
+
+def _is_explicit_local_model_cancellation(message: str) -> bool:
+    text = _normalized_operator_text(message)
+    return any(marker in text for marker in (
+        "cancel local model",
+        "cancel the local model",
+        "do not ask local model",
+        "dont ask local model",
+        "do not use local model",
+        "dont use local model",
+    ))
+
+
+def _is_unqualified_affirmation(message: str) -> bool:
+    return _normalized_operator_text(message) in {
+        "yes",
+        "y",
+        "yes please",
+        "yeah",
+        "yep",
+        "approve",
+        "approved",
+        "go ahead",
+        "do it",
+        "proceed",
+        "okay",
+        "ok",
+        "sure",
+    }
+
+
+def _new_local_model_request(
+    session: LiveWikipediaRuntimeSession,
+    message: str,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    lane = dict(payload.get("selected_model_lane") or {})
+    offer = dict(payload.get("local_model_offer") or {})
+    created_at = utc_now()
+    return {
+        "request_id": stable_id("delta14-local-model-request", session.session_id, message, len(session.turns), created_at),
+        "status": "PENDING_OPERATOR_APPROVAL",
+        "message": message,
+        "lane": str(lane.get("lane") or ""),
+        "selected_model": str(lane.get("selected_model") or ""),
+        "selected_model_id": str(lane.get("selected_model_id") or ""),
+        "prompt": str(offer.get("prompt") or "Ask the selected local model for this one question?"),
+        "created_at": created_at,
+        "expires_after_unrelated_turns": 1,
+        "authority_class": "OPERATOR_APPROVAL_REQUIRED",
+        "provider_calls_performed": False,
+        "memory_write_performed": False,
+    }
+
+
+def _render_ambiguous_live_action(session: LiveWikipediaRuntimeSession) -> tuple[str, dict[str, Any]]:
+    request = session.pending_local_model_request or {}
+    candidates = [
+        _promotion_title_for_inquiry(session, inquiry) or "unnamed promotion candidate"
+        for inquiry in _pending_promotion_inquiries(session)
+    ]
+    candidate_text = "; ".join(candidates[:3]) or "a promotion candidate"
+    answer = "\n".join([
+        "There are multiple pending operator actions, so I will not guess what this approval means.",
+        f"Promotion review: {candidate_text}.",
+        f"Local inference request: {request.get('selected_model_id') or request.get('selected_model') or 'selected local model'} for the queued question.",
+        "Say `ask the local model` to run the local inference turn, or name the promotion candidate you want reviewed.",
+        "No model was called and no memory was written.",
+    ])
+    payload = _base_live_payload("live_operator_action_ambiguous", answer)
+    payload.update({
+        "pending_local_model_request": request,
+        "pending_promotion_titles": candidates,
+        "provider_calls_performed": False,
+        "memory_candidate": None,
+    })
+    return answer, payload
+
+
+def _run_approved_local_model_request(
+    session: LiveWikipediaRuntimeSession,
+    approval_message: str,
+    *,
+    history: list[dict[str, str]] | None,
+    developer_overlay: bool,
+    provider_manager: Any | None,
+) -> tuple[LiveWikipediaRuntimeSession, LiveChatResponse]:
+    request = dict(session.pending_local_model_request or {})
+    target = str(request.get("message") or "").strip()
+    if not target:
+        answer = "The pending local-model request was invalid, so it was cleared without calling a model."
+        payload = _base_live_payload("live_local_model_request_invalid", answer)
+        response = _response(answer, "live_local_model_request_invalid", payload, None, session.runtime.state, safety_metadata())
+        return replace(session, pending_local_model_request=None, turns=session.turns + (response,)), response
+
+    local_payload = route_message(
+        "Conversation",
+        target,
+        history=history,
+        execute_local_model=True,
+        provider_manager=provider_manager,
+    )
+    model_result = dict(local_payload.get("local_model_result") or {})
+    lane = dict(local_payload.get("selected_model_lane") or request)
+    executed = bool(model_result.get("executed"))
+    model_id = str(model_result.get("model_id") or lane.get("selected_model_id") or lane.get("selected_model") or "")
+    latency_seconds = float(model_result.get("latency_seconds") or 0.0)
+    updated = replace(session, pending_local_model_request=None)
+
+    if executed:
+        updated = _record_local_model_residency(updated, lane, model_result, provider_manager)
+        updated = _advance_continuous_controller(
+            updated,
+            "MODEL_READY",
+            {
+                "model_id": model_id,
+                "lane": str(lane.get("lane") or request.get("lane") or ""),
+                "local_model_call_performed": True,
+                "latency_seconds": latency_seconds,
+                "operator_request_id": str(request.get("request_id") or ""),
+            },
+            priority=70,
+            correlation_id=str(request.get("request_id") or ""),
+        )
+        answer = str(local_payload.get("answer") or "").strip()
+        answer += "\n\nThis was one explicitly approved local inference turn. No provider, external retrieval, or memory write was performed."
+        route = "live_local_model_inference"
+    else:
+        reason = str(model_result.get("reason") or "local_model_execution_failed")
+        updated = _record_local_model_residency(updated, lane, model_result, provider_manager, failure_reason=reason)
+        updated = _advance_continuous_controller(
+            updated,
+            "MODEL_UNAVAILABLE",
+            {
+                "model_id": model_id,
+                "lane": str(lane.get("lane") or request.get("lane") or ""),
+                "attempted": True,
+                "reason": reason,
+                "operator_request_id": str(request.get("request_id") or ""),
+            },
+            priority=70,
+            correlation_id=str(request.get("request_id") or ""),
+        )
+        answer = "\n".join([
+            "The explicitly approved local inference turn did not complete.",
+            f"Reason: {reason}",
+            "No provider was called, no external retrieval occurred, and no memory was written. The request was cleared rather than retried automatically.",
+        ])
+        route = "live_local_model_unavailable"
+
+    payload = {
+        **local_payload,
+        "mode": "Live Runtime",
+        "route": route,
+        "answer": answer,
+        "live_runtime_local_model_execution": True,
+        "operator_approval_request_id": str(request.get("request_id") or ""),
+        "local_model_request": request,
+        "model_execution": {
+            "executed": executed,
+            "model_id": model_id,
+            "lane": str(lane.get("lane") or request.get("lane") or ""),
+            "latency_seconds": latency_seconds,
+        },
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "external_retrieval_performed": False,
+        "network_calls_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+        "memory_candidate": None,
+        "supporting_information_offer": None,
+        "local_model_offer": None,
+        "continuous_controller": controller_snapshot(updated.continuous_controller) if updated.continuous_controller else {},
+    }
+    if developer_overlay:
+        payload["developer_overlay"] = {
+            "approval_message": approval_message,
+            "target_question": target,
+            "request_id": request.get("request_id"),
+            "executed": executed,
+            "model_id": model_id,
+        }
+    response = _response(answer, route, payload, None, updated.runtime.state, safety_metadata())
+    return replace(updated, turns=updated.turns + (response,)), response
+
+
+def _record_local_model_residency(
+    session: LiveWikipediaRuntimeSession,
+    lane: dict[str, Any],
+    model_result: dict[str, Any],
+    provider_manager: Any | None,
+    *,
+    failure_reason: str = "",
+) -> LiveWikipediaRuntimeSession:
+    controller = session.continuous_controller
+    if controller is None:
+        return session
+    status = _provider_residency_status(provider_manager)
+    executed = bool(model_result.get("executed"))
+    selected_model = str(model_result.get("model_id") or lane.get("selected_model_id") or lane.get("selected_model") or "")
+    resident_model = str(status.get("active_model") or selected_model) if executed and status.get("loaded", True) else ""
+    if failure_reason:
+        residency_status = f"unavailable:{failure_reason[:120]}"
+    elif status.get("loaded", False):
+        residency_status = "warm"
+    else:
+        residency_status = "completed_not_resident"
+    residency = replace(
+        controller.model_residency,
+        resident_model_id=resident_model,
+        resident_lane=str(lane.get("lane") or ""),
+        residency_status=residency_status,
+        model_calls_this_cycle=controller.model_residency.model_calls_this_cycle + (1 if executed else 0),
+    )
+    return replace(session, continuous_controller=replace(controller, model_residency=residency))
+
+
+def _provider_residency_status(provider_manager: Any | None) -> dict[str, Any]:
+    status_method = getattr(provider_manager, "status", None)
+    if not callable(status_method):
+        return {}
+    try:
+        status = status_method()
+    except Exception:  # noqa: BLE001 - status reporting cannot interfere with an already-completed inference turn.
+        return {}
+    return {
+        "active_model": str(getattr(status, "active_model", "") or ""),
+        "loaded": bool(getattr(status, "loaded", False)),
     }
 
 

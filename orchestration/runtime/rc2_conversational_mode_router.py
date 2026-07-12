@@ -1107,7 +1107,9 @@ def execute_local_model_answer(
             "available": True,
             "answer": clean_answer,
             "confidence_score": max(0.0, min(1.0, confidence)),
-            "model_id": model_name,
+            "model_id": str(result.model_id or model_name),
+            "latency_seconds": float(result.latency_seconds or 0.0),
+            "response_tokens": int(result.response_tokens or 0),
             "prompt_sent": prompt,
             "provider_calls_performed": False,
         }

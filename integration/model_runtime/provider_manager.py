@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import gc
 import json
+import os
 import time
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -228,7 +229,13 @@ class ProviderManager:
             return None
         value = self._profile_for(spec).get("recommended_gpu_layers")
         if value is None:
-            return None
+            configured = os.getenv("DELTA_N_GPU_LAYERS", "").strip()
+            if not configured:
+                return None
+            try:
+                return int(configured)
+            except ValueError:
+                return 0
         try:
             return int(value)
         except (TypeError, ValueError):

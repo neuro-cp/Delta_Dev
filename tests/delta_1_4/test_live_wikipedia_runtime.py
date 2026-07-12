@@ -1,3 +1,6 @@
+from types import SimpleNamespace
+
+from integration.model_runtime.inference_types import CanonicalInferenceResult
 from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (
     handle_live_chat,
     retrieve_wikipedia_text,
@@ -16,6 +19,32 @@ def _fake_transport(url: str, max_chars: int):
         "timestamp": "2026-01-01T00:00:00Z",
         "content_urls": {"desktop": {"page": "https://en.wikipedia.org/wiki/Ada_Lovelace"}},
     }
+
+
+class _FakeLocalModelManager:
+    def __init__(self, *, fail: bool = False):
+        self.fail = fail
+        self.calls: list[dict[str, object]] = []
+
+    def infer(self, *, model_name, prompt, task_type="open_ended", metadata=None):
+        self.calls.append({"model_name": model_name, "prompt": prompt, "task_type": task_type, "metadata": metadata})
+        if self.fail:
+            raise RuntimeError("synthetic local inference outage")
+        return CanonicalInferenceResult(
+            provider="local_gguf",
+            model_id="fake-llama-8b",
+            answer="A bounded local answer.",
+            raw_output="A bounded local answer.",
+            confidence=0.81,
+            latency_seconds=0.125,
+            prompt_tokens=8,
+            response_tokens=5,
+            evidence=[],
+            metadata={},
+        )
+
+    def status(self):
+        return SimpleNamespace(active_model="fake-llama-8b" if not self.fail else None, loaded=not self.fail)
 
 
 def test_wikipedia_query_extraction_is_bounded():
@@ -217,6 +246,71 @@ def test_live_chat_falls_back_to_router_without_retrieval_for_ordinary_turn():
     assert response.payload["provider_calls_performed"] is False
     assert session.retrieval_count == 0
     assert "debugging partner" in response.answer.lower()
+
+
+def test_live_local_model_turn_requires_consent_and_synchronizes_controller_residency():
+    manager = _FakeLocalModelManager()
+    session = start_live_wikipedia_runtime(runtime_id="live-local-model")
+
+    session, offer = handle_live_chat(session, "Explain the concept of octarine in practical terms.")
+    assert offer.route == "local_model_consent_required"
+    assert session.pending_local_model_request is not None
+    assert not manager.calls
+
+    session, response = handle_live_chat(session, "yes", provider_manager=manager)
+
+    assert response.route == "live_local_model_inference"
+    assert "explicitly approved local inference turn" in response.answer
+    assert session.pending_local_model_request is None
+    assert manager.calls and manager.calls[-1]["model_name"] == "llama"
+    assert response.payload["model_execution"]["model_id"] == "fake-llama-8b"
+    assert response.payload["model_execution"]["latency_seconds"] == 0.125
+    assert response.payload["provider_calls_performed"] is False
+    assert response.payload["external_retrieval_performed"] is False
+    assert response.payload["memory_candidate"] is None
+    assert session.continuous_controller is not None
+    assert session.continuous_controller.model_residency.resident_model_id == "fake-llama-8b"
+    assert session.continuous_controller.model_residency.residency_status == "warm"
+    assert any(cycle.model_calls == 1 for cycle in session.continuous_controller.cycles)
+
+
+def test_live_model_and_promotion_approval_are_not_cross_correlated():
+    manager = _FakeLocalModelManager()
+    session = start_live_wikipedia_runtime(runtime_id="live-cross-approval")
+    session, _evidence = handle_live_chat(session, "Wikipedia: Ada Lovelace", wikipedia_transport=_fake_transport)
+    session, offer = handle_live_chat(session, "Explain the concept of octarine in practical terms.")
+
+    assert offer.route == "local_model_consent_required"
+    assert session.pending_local_model_request is not None
+    assert session.operator_inquiries
+
+    session, ambiguous = handle_live_chat(session, "yes", provider_manager=manager)
+    assert ambiguous.route == "live_operator_action_ambiguous"
+    assert not manager.calls
+    assert not session.prepared_review_proposals
+    assert session.pending_local_model_request is not None
+
+    session, response = handle_live_chat(session, "ask the local model", provider_manager=manager)
+    assert response.route == "live_local_model_inference"
+    assert manager.calls
+    assert not session.prepared_review_proposals
+
+
+def test_live_local_model_failure_clears_request_and_fails_closed():
+    manager = _FakeLocalModelManager(fail=True)
+    session = start_live_wikipedia_runtime(runtime_id="live-local-model-failure")
+    session, _offer = handle_live_chat(session, "Explain the concept of octarine in practical terms.")
+
+    session, response = handle_live_chat(session, "yes", provider_manager=manager)
+
+    assert response.route == "live_local_model_unavailable"
+    assert "did not complete" in response.answer
+    assert session.pending_local_model_request is None
+    assert response.payload["provider_calls_performed"] is False
+    assert response.payload["external_retrieval_performed"] is False
+    assert response.payload["memory_candidate"] is None
+    assert session.continuous_controller is not None
+    assert session.continuous_controller.model_residency.residency_status.startswith("unavailable:")
 
 
 def test_stop_live_runtime_disables_session():

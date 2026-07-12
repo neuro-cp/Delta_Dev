@@ -1,0 +1,39 @@
+{
+  "role": "TERRA-led implementation and validation",
+  "independent_model_switch_confirmed": false,
+  "repairs": {
+    "SOL-001": "CONFIRMED_AND_REPAIRED",
+    "SOL-002": "CONFIRMED_AND_REPAIRED",
+    "SOL-003": "CONFIRMED_AND_REPAIRED",
+    "SOL-004": "CONFIRMED_BY_PILOT",
+    "SOL-005": "CONFIRMED_AND_DEFERRED",
+    "SOL-006": "CONFIRMED_AND_DEFERRED",
+    "SOL-007": "CONFIRMED_AND_DEFERRED"
+  },
+  "tests": {
+    "focused": {"passed": 97, "duration_seconds": 40.35},
+    "continuous_runtime": {"passed": 9, "duration_seconds": 2.03, "dirty_tree_context_only": true},
+    "full_behavioral_campaign": {"passed": true, "scenarios": 373, "turns": 1500, "families": 20, "pathologies": 0, "governance_violations": 0, "duration_seconds": 198.8827},
+    "py_compile": true,
+    "secret_scan": "no credential assignment patterns",
+    "unsafe_authority_scan": "no runtime commit/push path"
+  },
+  "real_model_pilot": {
+    "passed": true,
+    "sequence": ["llama", "mistral", "llama"],
+    "latency_seconds": [6.6103, 4.5331, 6.4359],
+    "manager_before_cleanup": {"load_count": 3, "unload_count": 2, "resident_provider_count": 1},
+    "manager_after_cleanup": {"load_count": 3, "unload_count": 3, "resident_provider_count": 0},
+    "gpu_working_memory_mb": {"idle": 1070, "observed_range": [6903, 7209]},
+    "provider_calls_performed": false,
+    "memory_write_performed": false
+  },
+  "ui_runtime_pilot": {
+    "passed": true,
+    "real_wikipedia_request": true,
+    "queued_pause": true,
+    "real_llama_inference": true,
+    "queued_suspend": true,
+    "clean_shutdown": true
+  }
+}

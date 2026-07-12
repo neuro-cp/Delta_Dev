@@ -1,0 +1,22 @@
+{
+  "role": "SOL-style adversarial audit performed by TERRA in a single-model cycle",
+  "independent_model_switch_confirmed": false,
+  "verdict": "TARGETED_REPAIRS_REQUIRED",
+  "governance_blocker_found": false,
+  "findings": [
+    {"id": "SOL-001", "severity": "HIGH", "classification": "runtime_defect", "confidence": "HIGH", "terra_action": "IMPLEMENT_NOW"},
+    {"id": "SOL-002", "severity": "HIGH", "classification": "runtime_defect_operator_ux", "confidence": "HIGH", "terra_action": "IMPLEMENT_NOW"},
+    {"id": "SOL-003", "severity": "MEDIUM", "classification": "reporting_overclaim", "confidence": "HIGH", "terra_action": "IMPLEMENT_NOW"},
+    {"id": "SOL-004", "severity": "MEDIUM", "classification": "model_integration_limitation", "confidence": "HIGH", "terra_action": "VALIDATE_NOW"},
+    {"id": "SOL-005", "severity": "MEDIUM", "classification": "long_horizon_limit", "confidence": "HIGH", "terra_action": "DEFER_TO_OPERATOR_PILOT"},
+    {"id": "SOL-006", "severity": "LOW", "classification": "operator_ux", "confidence": "HIGH", "terra_action": "DEFER"},
+    {"id": "SOL-007", "severity": "LOW", "classification": "architecture_reporting", "confidence": "HIGH", "terra_action": "DEFER"}
+  ],
+  "rejected_suspicions": [
+    "unrestricted_web_access",
+    "automatic_memory_write",
+    "approval_bypass",
+    "runtime_commit_or_push_authority",
+    "suspended_state_retrieval"
+  ]
+}
