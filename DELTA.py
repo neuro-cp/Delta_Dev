@@ -90,8 +90,11 @@ from orchestration.runtime.rc11_rc12_systems_plateau import (  # noqa: E402
 from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E402
     LiveWikipediaRuntimeSession,
     handle_live_chat,
+    pause_live_initiative,
+    resume_live_initiative,
     start_live_wikipedia_runtime,
     stop_live_wikipedia_runtime,
+    suspend_live_runtime_initiative,
 )
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
@@ -1512,6 +1515,9 @@ class DeltaApp:
         live_bar.pack(fill=tk.X, pady=(8, 0))
         ttk.Button(live_bar, text="Start Live Runtime", command=self._start_live_runtime).pack(side=tk.LEFT)
         ttk.Button(live_bar, text="Stop", command=self._stop_live_runtime).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Button(live_bar, text="Pause Initiative", command=self._pause_live_initiative).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Button(live_bar, text="Resume", command=self._resume_live_initiative).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Button(live_bar, text="Suspend", command=self._suspend_live_initiative).pack(side=tk.LEFT, padx=(8, 0))
         ttk.Label(live_bar, textvariable=self.live_runtime_status).pack(side=tk.LEFT, padx=(12, 0))
 
         self.chat_history = scrolledtext.ScrolledText(self.conversation_tab, wrap=tk.WORD, height=24)
@@ -2111,12 +2117,13 @@ class DeltaApp:
             self.live_runtime_status.set(
                 f"Live runtime: {self.live_runtime_session.runtime.state}; "
                 f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-                f"inquiries={len(self.live_runtime_session.operator_inquiries)}"
+                f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
+                f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
             )
             return
         try:
             self.live_runtime_session = start_live_wikipedia_runtime(runtime_id="ui")
-            self.live_runtime_status.set("Live runtime: started; Wikipedia text enabled; inquiries=0")
+            self.live_runtime_status.set("Live runtime: started; Wikipedia text enabled; inquiries=0; initiatives=0; autonomy=ACTIVE")
             self._append_chat(
                 "DELTA",
                 "Live runtime started. Wikipedia text retrieval is enabled for this session only; no provider calls or memory writes are enabled. Retrieved text will be compared against local concepts and surfaced as a gated review candidate when useful.",
@@ -2136,6 +2143,42 @@ class DeltaApp:
         except Exception as exc:  # noqa: BLE001
             self.live_runtime_status.set(f"Live runtime stop failed: {type(exc).__name__}")
             messagebox.showerror("Live Runtime", f"Could not stop live runtime:\n{type(exc).__name__}: {str(exc)[:240]}")
+
+    def _pause_live_initiative(self) -> None:
+        if not self.live_runtime_session:
+            self.live_runtime_status.set("Live runtime: stopped")
+            return
+        self.live_runtime_session = pause_live_initiative(self.live_runtime_session)
+        self.live_runtime_status.set(
+            f"Live runtime: {self.live_runtime_session.runtime.state}; "
+            f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
+            f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
+            f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
+        )
+
+    def _resume_live_initiative(self) -> None:
+        if not self.live_runtime_session:
+            self.live_runtime_status.set("Live runtime: stopped")
+            return
+        self.live_runtime_session = resume_live_initiative(self.live_runtime_session)
+        self.live_runtime_status.set(
+            f"Live runtime: {self.live_runtime_session.runtime.state}; "
+            f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
+            f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
+            f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
+        )
+
+    def _suspend_live_initiative(self) -> None:
+        if not self.live_runtime_session:
+            self.live_runtime_status.set("Live runtime: stopped")
+            return
+        self.live_runtime_session = suspend_live_runtime_initiative(self.live_runtime_session)
+        self.live_runtime_status.set(
+            f"Live runtime: {self.live_runtime_session.runtime.state}; "
+            f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
+            f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
+            f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
+        )
 
     def _send_chat(self) -> None:
         message = self.chat_input.get().strip()
@@ -2163,7 +2206,8 @@ class DeltaApp:
             self.live_runtime_status.set(
                 f"Live runtime: {self.live_runtime_session.runtime.state}; "
                 f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-                f"inquiries={len(self.live_runtime_session.operator_inquiries)}"
+                f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
+                f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
             )
             self._refresh_state_cards()
             return

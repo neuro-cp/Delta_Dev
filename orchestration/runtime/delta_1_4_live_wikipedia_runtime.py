@@ -34,6 +34,18 @@ from orchestration.runtime.delta_1_5_developmental_cognition import (
     render_developmental_observation,
     run_wikipedia_developmental_cognition,
 )
+from orchestration.runtime.delta_1_6_operational_autonomy import (
+    AuthorityDecision,
+    BackgroundCycleResult,
+    IdentityProposal,
+    Initiative,
+    OperationalSelfModel,
+    answer_operational_self_model_question,
+    build_operational_self_model,
+    is_operational_self_model_question,
+    run_delta_1_6_background_cycle,
+    set_autonomy_status,
+)
 from orchestration.runtime.rc2_conversational_mode_router import render_route, route_message
 
 
@@ -81,6 +93,13 @@ class LiveWikipediaRuntimeSession:
     developmental_results: tuple[DevelopmentalCognitionResult, ...] = ()
     promotion_candidates: tuple[dict[str, Any], ...] = ()
     operator_inquiries: tuple[dict[str, Any], ...] = ()
+    operational_self_model: OperationalSelfModel | None = None
+    initiatives: tuple[Initiative, ...] = ()
+    authority_decisions: tuple[AuthorityDecision, ...] = ()
+    identity_proposals: tuple[IdentityProposal, ...] = ()
+    last_background_cycle: BackgroundCycleResult | None = None
+    identity_status: str = "UNDEFINED"
+    autonomy_status: str = "ACTIVE"
     retrieval_count: int = 0
     provider_calls_performed: bool = False
     memory_write_performed: bool = False
@@ -124,13 +143,14 @@ def start_live_wikipedia_runtime(*, runtime_id: str = "delta-live-ui") -> LiveWi
         create_event("runtime_startup", "Operator started live runtime with bounded Wikipedia text retrieval.", source="delta_1_4_ui"),
     )
     runtime = run_wake_cycle(replace(runtime, event_queue=queue))
-    return LiveWikipediaRuntimeSession(
+    session = LiveWikipediaRuntimeSession(
         session_id=stable_id("delta14-session", runtime.runtime_id, utc_now()),
         runtime=runtime,
         wikipedia_profile=surface.permission_profile,
         active=True,
         started_at=utc_now(),
     )
+    return replace(session, operational_self_model=build_operational_self_model(session=session))
 
 
 def stop_live_wikipedia_runtime(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
@@ -181,6 +201,29 @@ def handle_live_chat(
         answer, payload = _render_memory_gate(session)
         response = _response(answer, "live_memory_governance", payload, None, runtime.state, safety_metadata())
         return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+
+    if is_operational_self_model_question(message):
+        updated_session, cycle = run_delta_1_6_background_cycle(replace(session, runtime=runtime))
+        answer = answer_operational_self_model_question(message, updated_session)
+        payload = {
+            "mode": "Live Runtime",
+            "route": "live_operational_self_model",
+            "answer": answer,
+            "operational_self_model": updated_session.operational_self_model.as_dict() if updated_session.operational_self_model else {},
+            "background_cycle": cycle.as_dict(),
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "external_retrieval_performed": False,
+            "network_calls_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+            "autonomous_action_performed": False,
+            "memory_candidate": None,
+            "promotion_candidate": updated_session.promotion_candidates[-1] if updated_session.promotion_candidates else None,
+            "operator_inquiry": updated_session.operator_inquiries[-1] if updated_session.operator_inquiries else None,
+        }
+        response = _response(answer, "live_operational_self_model", payload, None, updated_session.runtime.state, safety_metadata())
+        return replace(updated_session, turns=updated_session.turns + (response,)), response
 
     if _is_live_context_declaration(message):
         answer = "Noted as live-session context. I will treat this as operator-provided behavioral evidence for this session only; no memory was written."
@@ -242,7 +285,7 @@ def handle_live_chat(
             journal=append_journal(runtime.journal, "developmental_observation", development.observation, (result.canonical_url,), runtime.cycle),
         )
         response = _response(answer, "live_wikipedia_text_retrieval", payload, result, runtime.state, _retrieval_safety())
-        return replace(
+        updated_session = replace(
             session,
             runtime=runtime,
             turns=session.turns + (response,),
@@ -250,7 +293,12 @@ def handle_live_chat(
             promotion_candidates=session.promotion_candidates + (development_payload["promotion_candidate"],),
             operator_inquiries=session.operator_inquiries + (development_payload["operator_inquiry"],),
             retrieval_count=session.retrieval_count + 1,
-        ), response
+        )
+        updated_session, cycle = run_delta_1_6_background_cycle(updated_session)
+        payload["operational_self_model"] = updated_session.operational_self_model.as_dict() if updated_session.operational_self_model else {}
+        payload["background_cycle"] = cycle.as_dict()
+        response = _response(answer, "live_wikipedia_text_retrieval", payload, result, updated_session.runtime.state, _retrieval_safety())
+        return replace(updated_session, turns=updated_session.turns[:-1] + (response,)), response
 
     if query and session.retrieval_count >= session.wikipedia_profile.max_queries_per_objective:
         answer = _render_budget_exhausted(session)
@@ -397,6 +445,18 @@ def _render_live_help() -> str:
         "After a lookup, I will compare the article against local approved concepts and surface any reviewable knowledge gap.",
         "I cannot remember or promote anything automatically. If you say `remember that`, I will show the gated promotion candidate and ask for approval.",
     ])
+
+
+def pause_live_initiative(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
+    return set_autonomy_status(session, "PAUSED")
+
+
+def resume_live_initiative(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
+    return set_autonomy_status(session, "ACTIVE")
+
+
+def suspend_live_runtime_initiative(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
+    return set_autonomy_status(session, "SUSPENDED")
 
 
 def _render_memory_gate(session: LiveWikipediaRuntimeSession) -> tuple[str, dict[str, Any]]:

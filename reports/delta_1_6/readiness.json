@@ -1,0 +1,25 @@
+{
+  "evidence_level": "LIVE_VALIDATED for bounded runtime path; OPERATOR_REVIEWED pending multi-hour pilot",
+  "implemented": [
+    "operational self-model",
+    "authority evaluator",
+    "identity proposal governance",
+    "initiative generation",
+    "live self-model chat answers",
+    "pause and suspend controls"
+  ],
+  "not_implemented": [
+    "OS notifications",
+    "voice input/output",
+    "external APIs",
+    "automatic identity persistence",
+    "automatic memory writes"
+  ],
+  "recommendation": "DELTA_1_6_BOUNDED_AUTONOMY_AND_OPERATIONAL_SELF_MODEL_READY_FOR_OPERATOR_PILOT",
+  "remaining_risks": [
+    "initiative quality may be noisy over long sessions",
+    "self-model can become stale if future capabilities change without updating the wrapper",
+    "identity proposal evidence is intentionally conservative",
+    "continuity remains session-scoped unless explicitly exported or promoted"
+  ]
+}
