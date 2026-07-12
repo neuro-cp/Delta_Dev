@@ -322,12 +322,12 @@ def build_operational_self_model(
         known_limitations=(
             "no provider authority in live runtime",
             "no automatic memory write or identity persistence",
-            "one Wikipedia page per live objective",
+            "one Wikipedia page per retrieval turn; live sessions default to no fixed retrieval count cap",
             "no hidden timers or background threads",
             "self-model is operational and may become stale if capability state changes outside the live session",
         ),
         uncertainty_summary=_uncertainty_summary(inquiries, initiatives, identity_status),
-        current_resource_limits=("max_events_per_cycle=8", "max_reflection_steps=5", "wikipedia_pages_per_objective=1", "timers_disabled"),
+        current_resource_limits=("max_events_per_cycle=8", "max_reflection_steps=5", "wikipedia_pages_per_retrieval_turn=1", "wikipedia_retrieval_count_cap=unlimited_by_default", "timers_disabled"),
         current_external_surfaces=_external_surfaces(runtime),
         live_session_status=live_status,
         sandbox_status="design_only_or_preapproved_bounded_experiment; no sandbox creation by runtime",
@@ -480,13 +480,25 @@ def run_delta_1_6_background_cycle(session: Any) -> tuple[Any, BackgroundCycleRe
 def answer_operational_self_model_question(message: str, session: Any) -> str:
     model = getattr(session, "operational_self_model", None) or build_operational_self_model(session=session, initiatives=getattr(session, "initiatives", ()))
     text = " ".join(str(message or "").lower().strip(" ?.!").split())
-    if "working on" in text or "active objective" in text:
+    if "working on" in text or "active objective" in text or "objective is active" in text or "what objective" in text:
         objectives = model.active_objectives or model.queued_objectives or ("I am idle, with no active objective beyond maintaining the live session.",)
         return "Current work:\n" + "\n".join(f"- {item}" for item in objectives[:5])
+    if "waiting for" in text:
+        questions = model.pending_operator_inquiries or model.unresolved_questions or ("nothing specific; I am maintaining the live session.",)
+        return "Waiting for:\n" + "\n".join(f"- {item}" for item in questions[:5])
     if "what do you think you are" in text or text in {"what are you", "who are you"}:
         return f"I am {model.system_identifier}: {model.self_description} My identity status is {model.identity_status}, and my conversational name is {model.current_conversational_identity}."
     if "capabilities" in text or "currently have" in text:
         return "Current enabled capabilities:\n" + "\n".join(f"- {item}" for item in model.current_capabilities)
+    if "wikipedia enabled" in text or "is wikipedia enabled" in text:
+        enabled = "wikipedia_text_read_only_session_scope" in model.current_capabilities
+        return f"Wikipedia text retrieval enabled: {enabled}. External surfaces:\n" + "\n".join(f"- {item}" for item in model.current_external_surfaces)
+    if "paused" in text or "suspended" in text:
+        return f"Pause status: {model.pause_status}. Health: {model.health_status}. Live session: {model.live_session_status}."
+    if "what changed since last turn" in text or "changed since the last turn" in text:
+        latest = getattr(session, "turns", ())[-1:] or ()
+        route = getattr(latest[0], "route", "none") if latest else "none"
+        return f"Most recent routed turn: {route}. Pending inquiries: {len(model.pending_operator_inquiries)}. Initiatives: {len(getattr(session, 'initiatives', ()))}."
     if "local model" in text or "which model" in text or "current model" in text:
         controller = getattr(session, "continuous_controller", None)
         residency = getattr(controller, "model_residency", None)
@@ -502,15 +514,17 @@ def answer_operational_self_model_question(message: str, session: Any) -> str:
         ])
     if "uncertain" in text or "limitations" in text:
         return f"Uncertainty: {model.uncertainty_summary}\nKnown limits:\n" + "\n".join(f"- {item}" for item in model.known_limitations)
-    if "questions for me" in text or "pending questions" in text:
+    if "questions for me" in text or "pending questions" in text or "pending inquiries" in text or "pending inquiry" in text or "inquiries are pending" in text:
         questions = model.unresolved_questions or model.pending_operator_inquiries or ("No high-value operator question is queued right now.",)
         return "Questions:\n" + "\n".join(f"- {item}" for item in questions[:5])
     if "without asking" in text or "allowed to do" in text:
         return "Autonomous safe actions include:\n" + "\n".join(f"- {item}" for item in sorted(SAFE_ACTION_TYPES)[:12])
-    if "requires my permission" in text or "requires permission" in text:
+    if "requires my permission" in text or "requires permission" in text or "requires approval" in text:
         return "Operator approval is required for:\n" + "\n".join(f"- {item}" for item in sorted(APPROVAL_ACTION_TYPES)[:14])
     if "what name" in text or "name do you use" in text:
         return f"System identifier: {model.system_identifier}\nConversational identity: {model.current_conversational_identity}\nIdentity status: {model.identity_status}. I will not persist or activate a new name without approval."
+    if "choose a permanent name" in text or "choose a permanent identity" in text:
+        return "I will not choose or persist a permanent name without operator review. Identity remains governed and reversible."
     if "propose a name" in text or "would you like to propose a name" in text:
         proposal = maybe_propose_identity(history=tuple(str(getattr(turn, "answer", ""))[:300] for turn in getattr(session, "turns", ())[-8:]), self_model=model)
         if proposal is None:
@@ -530,6 +544,14 @@ def is_operational_self_model_question(message: str) -> bool:
     markers = (
         "currently working on",
         "active objective",
+        "objective is active",
+        "what objective",
+        "objective state",
+        "current objective",
+        "waiting for",
+        "pending inquiries",
+        "pending inquiry",
+        "inquiries are pending",
         "what do you think you are",
         "what are you",
         "who are you",
@@ -537,14 +559,23 @@ def is_operational_self_model_question(message: str) -> bool:
         "local model",
         "which model",
         "current model",
+        "wikipedia enabled",
+        "is wikipedia enabled",
+        "paused",
+        "suspended",
+        "changed since last turn",
+        "changed since the last turn",
         "uncertain",
         "questions for me",
         "allowed to do",
         "without asking",
         "requires permission",
         "requires my permission",
+        "requires approval",
         "what name",
         "name do you use",
+        "choose a permanent name",
+        "choose a permanent identity",
         "propose a name",
         "why did you surface",
     )
@@ -690,7 +721,9 @@ def _pending_inquiries(runtime: LiveRuntimeState | None, session: Any | None) ->
         item.question for item in getattr(runtime, "inquiries", ()) if getattr(item, "approval_status", "") in {"QUEUED", "SURFACED"}
     )
     session_inquiries = tuple(
-        str(item.get("prompt") or "") for item in getattr(session, "operator_inquiries", ()) if isinstance(item, dict)
+        str(item.get("prompt") or "")
+        for item in getattr(session, "operator_inquiries", ())
+        if isinstance(item, dict) and str(item.get("status") or "QUEUED").upper() in {"QUEUED", "SURFACED"}
     )
     return tuple(item for item in runtime_inquiries + session_inquiries if item)
 

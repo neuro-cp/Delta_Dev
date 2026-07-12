@@ -118,7 +118,7 @@ def test_remember_that_uses_governed_promotion_gate_not_memory_write():
 
 
 def test_budget_exhaustion_does_not_fall_through_to_concept_router():
-    session = start_live_wikipedia_runtime(runtime_id="delta15-budget")
+    session = start_live_wikipedia_runtime(runtime_id="delta15-budget", max_wikipedia_queries=1)
     session, _first = handle_live_chat(session, "Wikipedia: Acid-base reaction", wikipedia_transport=_acid_base_transport)
     session, second = handle_live_chat(session, "Look up acid-base reaction on Wikipedia", wikipedia_transport=_acid_base_transport)
 

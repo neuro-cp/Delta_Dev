@@ -107,6 +107,16 @@ def test_self_model_chat_questions_are_grounded_in_live_state():
     assert response.payload["provider_calls_performed"] is False
 
 
+def test_self_model_recognizes_waiting_objective_inquiry_and_approval_phrases():
+    session = start_live_wikipedia_runtime(runtime_id="delta16-self-model-phrases")
+    session, _first = handle_live_chat(session, "Wikipedia: Acid-base reaction", wikipedia_transport=_acid_base_transport)
+
+    for prompt in ("What objective is active?", "What inquiries are pending?", "What requires approval?"):
+        session, response = handle_live_chat(session, prompt)
+        assert response.route == "live_operational_self_model"
+        assert response.answer.strip()
+
+
 def test_name_question_does_not_force_identity_generation():
     session = start_live_wikipedia_runtime(runtime_id="delta16-name")
     session, response = handle_live_chat(session, "Would you like to propose a name?")

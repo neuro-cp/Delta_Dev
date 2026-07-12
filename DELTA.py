@@ -2176,7 +2176,8 @@ class DeltaApp:
         objective_title = (active_objective or {}).get("title") if isinstance(active_objective, dict) else ""
         recent = controller.get("recent_initiative") if isinstance(controller, dict) else None
         recent_text = (recent or {}).get("outcome") if isinstance(recent, dict) else "none"
-        wiki_budget = f"{session.retrieval_count}/{session.wikipedia_profile.max_queries_per_objective}"
+        wiki_limit = int(session.wikipedia_profile.max_queries_per_objective or 0)
+        wiki_budget = f"{session.retrieval_count}/unlimited" if wiki_limit <= 0 else f"{session.retrieval_count}/{wiki_limit}"
         return (
             f"Runtime={controller.get('lifecycle_state', session.runtime.state)}; "
             f"health={(controller.get('health') or {}).get('health_state', 'unknown')}; "
@@ -2207,6 +2208,7 @@ class DeltaApp:
             )
             self.last_message = message
             self.last_payload = live_response.payload
+            self._queue_concept_candidate(live_response.payload)
             self._append_chat("DELTA", live_response.answer)
             self._append_session("assistant", live_response.answer)
             self.live_runtime_status.set(self._live_status_text())
