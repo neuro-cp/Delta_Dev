@@ -1,0 +1,48 @@
+{
+  "pathologies": [
+    {
+      "classification": "REAL_INTEGRATION_GAP",
+      "id": "PID-CR01",
+      "repair": "continuous controller normalizes events and owns service lifecycle while reusing 1.2 internals",
+      "status": "REPAIRED",
+      "summary": "Milestone runtimes had separate queues and status surfaces."
+    },
+    {
+      "classification": "REAL_CAPABILITY_AWARENESS_GAP",
+      "id": "PID-CR02",
+      "repair": "model residency policy reads actual registry and lane selection",
+      "status": "REPAIRED",
+      "summary": "Self-model did not include resource-aware model residency."
+    },
+    {
+      "classification": "VALIDATION_GAP",
+      "id": "PID-CR03",
+      "repair": "bounded long-run records queue size, duplicate initiatives, retrieval/model calls, and final health",
+      "status": "REPAIRED",
+      "summary": "Continuous idle behavior lacked long-run duplicate suppression evidence."
+    }
+  ],
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  }
+}

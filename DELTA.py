@@ -96,6 +96,7 @@ from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E4
     stop_live_wikipedia_runtime,
     suspend_live_runtime_initiative,
 )
+from orchestration.runtime.continuous_runtime_controller import controller_snapshot  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -2114,16 +2115,16 @@ class DeltaApp:
 
     def _start_live_runtime(self) -> None:
         if self.live_runtime_session and self.live_runtime_session.active:
-            self.live_runtime_status.set(
-                f"Live runtime: {self.live_runtime_session.runtime.state}; "
-                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-                f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
-                f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
-            )
+            self.live_runtime_status.set(self._live_status_text())
             return
         try:
-            self.live_runtime_session = start_live_wikipedia_runtime(runtime_id="ui")
-            self.live_runtime_status.set("Live runtime: started; Wikipedia text enabled; inquiries=0; initiatives=0; autonomy=ACTIVE")
+            self.live_runtime_session = start_live_wikipedia_runtime(
+                runtime_id="ui",
+                resident_model_id=self.resident_model_id,
+                resident_lane=self.resident_lane,
+                residency_status=self.model_residency_status,
+            )
+            self.live_runtime_status.set(self._live_status_text())
             self._append_chat(
                 "DELTA",
                 "Live runtime started. Wikipedia text retrieval is enabled for this session only; no provider calls or memory writes are enabled. Retrieved text will be compared against local concepts and surfaced as a gated review candidate when useful.",
@@ -2138,7 +2139,7 @@ class DeltaApp:
             return
         try:
             self.live_runtime_session = stop_live_wikipedia_runtime(self.live_runtime_session)
-            self.live_runtime_status.set("Live runtime: stopped")
+            self.live_runtime_status.set(self._live_status_text())
             self._append_chat("DELTA", "Live runtime stopped.")
         except Exception as exc:  # noqa: BLE001
             self.live_runtime_status.set(f"Live runtime stop failed: {type(exc).__name__}")
@@ -2149,35 +2150,40 @@ class DeltaApp:
             self.live_runtime_status.set("Live runtime: stopped")
             return
         self.live_runtime_session = pause_live_initiative(self.live_runtime_session)
-        self.live_runtime_status.set(
-            f"Live runtime: {self.live_runtime_session.runtime.state}; "
-            f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-            f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
-            f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
-        )
+        self.live_runtime_status.set(self._live_status_text())
 
     def _resume_live_initiative(self) -> None:
         if not self.live_runtime_session:
             self.live_runtime_status.set("Live runtime: stopped")
             return
         self.live_runtime_session = resume_live_initiative(self.live_runtime_session)
-        self.live_runtime_status.set(
-            f"Live runtime: {self.live_runtime_session.runtime.state}; "
-            f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-            f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
-            f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
-        )
+        self.live_runtime_status.set(self._live_status_text())
 
     def _suspend_live_initiative(self) -> None:
         if not self.live_runtime_session:
             self.live_runtime_status.set("Live runtime: stopped")
             return
         self.live_runtime_session = suspend_live_runtime_initiative(self.live_runtime_session)
-        self.live_runtime_status.set(
-            f"Live runtime: {self.live_runtime_session.runtime.state}; "
-            f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-            f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
-            f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
+        self.live_runtime_status.set(self._live_status_text())
+
+    def _live_status_text(self) -> str:
+        session = self.live_runtime_session
+        if not session:
+            return "Live runtime: stopped"
+        controller = controller_snapshot(session.continuous_controller) if session.continuous_controller else {}
+        model = controller.get("current_model", {}) if isinstance(controller, dict) else {}
+        active_objective = controller.get("active_objective") if isinstance(controller, dict) else None
+        objective_title = (active_objective or {}).get("title") if isinstance(active_objective, dict) else ""
+        recent = controller.get("recent_initiative") if isinstance(controller, dict) else None
+        recent_text = (recent or {}).get("outcome") if isinstance(recent, dict) else "none"
+        wiki_budget = f"{session.retrieval_count}/{session.wikipedia_profile.max_queries_per_objective}"
+        return (
+            f"Runtime={controller.get('lifecycle_state', session.runtime.state)}; "
+            f"health={(controller.get('health') or {}).get('health_state', 'unknown')}; "
+            f"model={model.get('resident_model_id') or model.get('default_model') or 'none'}; "
+            f"objective={(objective_title or 'none')[:42]}; "
+            f"inquiries={len(session.operator_inquiries)}; promotions={len(session.promotion_candidates)}; "
+            f"wiki={wiki_budget}; initiative={recent_text}; autonomy={session.autonomy_status}"
         )
 
     def _send_chat(self) -> None:
@@ -2203,12 +2209,7 @@ class DeltaApp:
             self.last_payload = live_response.payload
             self._append_chat("DELTA", live_response.answer)
             self._append_session("assistant", live_response.answer)
-            self.live_runtime_status.set(
-                f"Live runtime: {self.live_runtime_session.runtime.state}; "
-                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
-                f"inquiries={len(self.live_runtime_session.operator_inquiries)}; "
-                f"initiatives={len(self.live_runtime_session.initiatives)}; autonomy={self.live_runtime_session.autonomy_status}"
-            )
+            self.live_runtime_status.set(self._live_status_text())
             self._refresh_state_cards()
             return
         if is_render_correction_request(message):

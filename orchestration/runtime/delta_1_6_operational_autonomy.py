@@ -487,6 +487,19 @@ def answer_operational_self_model_question(message: str, session: Any) -> str:
         return f"I am {model.system_identifier}: {model.self_description} My identity status is {model.identity_status}, and my conversational name is {model.current_conversational_identity}."
     if "capabilities" in text or "currently have" in text:
         return "Current enabled capabilities:\n" + "\n".join(f"- {item}" for item in model.current_capabilities)
+    if "local model" in text or "which model" in text or "current model" in text:
+        controller = getattr(session, "continuous_controller", None)
+        residency = getattr(controller, "model_residency", None)
+        if residency is None:
+            return "I do not have a continuous-runtime model residency snapshot yet."
+        return "\n".join([
+            f"Available local model entries: {residency.available_model_count}.",
+            f"Resident model: {residency.resident_model_id or 'none recorded in controller'}.",
+            f"Default conversation model: {residency.selected_default_model or 'unavailable'}.",
+            f"Planning model: {residency.selected_planning_model or 'unavailable'}.",
+            f"Development-analysis model: {residency.selected_development_model or 'unavailable'}.",
+            f"Residency policy: {residency.keep_loaded_policy}.",
+        ])
     if "uncertain" in text or "limitations" in text:
         return f"Uncertainty: {model.uncertainty_summary}\nKnown limits:\n" + "\n".join(f"- {item}" for item in model.known_limitations)
     if "questions for me" in text or "pending questions" in text:
@@ -521,6 +534,9 @@ def is_operational_self_model_question(message: str) -> bool:
         "what are you",
         "who are you",
         "capabilities",
+        "local model",
+        "which model",
+        "current model",
         "uncertain",
         "questions for me",
         "allowed to do",

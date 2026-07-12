@@ -1,0 +1,33 @@
+# Continuous Runtime Readiness
+
+## Recommendation
+CONTINUOUS_RUNTIME_READY_FOR_CONTROLLED_OPERATOR_PILOT
+
+## Evidence
+LIVE_VALIDATED and LONG_RUN_VALIDATED for event-driven in-process controller; controlled multi-hour operator pilot still recommended.
+
+## Implemented
+- "managed lifecycle"
+- "unified event envelope"
+- "event-driven wake policy"
+- "bounded idle reflection"
+- "resource-aware model residency inventory"
+- "in-app notification readiness"
+- "continuous self-model sync"
+- "health/degraded/suspend handling"
+- "restart reconciliation policy"
+- "sandbox proposal boundary"
+
+## Disabled
+- "external notifications"
+- "provider authority"
+- "automatic memory persistence"
+- "runtime commit/push"
+- "unrestricted web"
+
+## Remaining Risks
+- "multi-hour UI pilot still needed"
+- "OS-level CPU/RSS counters unavailable in this validation environment"
+- "local model long inference was not stress-tested; model execution remains consent-gated"
+- "Wikipedia retrieval remains synchronous and can block briefly on network latency"
+- "controller is in-process rather than a separate daemon service"

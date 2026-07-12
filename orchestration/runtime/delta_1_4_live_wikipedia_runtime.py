@@ -29,6 +29,18 @@ from orchestration.runtime.delta_1_2_live_runtime import (
     enqueue_event,
     run_wake_cycle,
 )
+from orchestration.runtime.continuous_runtime_controller import (
+    ContinuousRuntimeController,
+    controller_snapshot,
+    enqueue_continuous_event,
+    make_continuous_event,
+    pause_controller,
+    resume_controller,
+    run_controller_cycle,
+    shutdown_controller,
+    start_continuous_runtime_controller,
+    suspend_controller,
+)
 from orchestration.runtime.delta_1_5_developmental_cognition import (
     DevelopmentalCognitionResult,
     render_developmental_observation,
@@ -100,6 +112,7 @@ class LiveWikipediaRuntimeSession:
     last_background_cycle: BackgroundCycleResult | None = None
     identity_status: str = "UNDEFINED"
     autonomy_status: str = "ACTIVE"
+    continuous_controller: ContinuousRuntimeController | None = None
     retrieval_count: int = 0
     provider_calls_performed: bool = False
     memory_write_performed: bool = False
@@ -119,7 +132,13 @@ def activated_wikipedia_profile() -> WikipediaPermissionProfile:
     )
 
 
-def start_live_wikipedia_runtime(*, runtime_id: str = "delta-live-ui") -> LiveWikipediaRuntimeSession:
+def start_live_wikipedia_runtime(
+    *,
+    runtime_id: str = "delta-live-ui",
+    resident_model_id: str | None = None,
+    resident_lane: str | None = None,
+    residency_status: str = "unknown",
+) -> LiveWikipediaRuntimeSession:
     config = LiveRuntimeConfig(
         runtime_id=stable_id("delta14-live-runtime", runtime_id),
         mode="DEVELOPMENT_SESSION",
@@ -150,7 +169,13 @@ def start_live_wikipedia_runtime(*, runtime_id: str = "delta-live-ui") -> LiveWi
         active=True,
         started_at=utc_now(),
     )
-    return replace(session, operational_self_model=build_operational_self_model(session=session))
+    controller = start_continuous_runtime_controller(
+        session_id=session.session_id,
+        resident_model_id=resident_model_id,
+        resident_lane=resident_lane,
+        residency_status=residency_status,
+    )
+    return replace(session, operational_self_model=build_operational_self_model(session=session), continuous_controller=controller)
 
 
 def stop_live_wikipedia_runtime(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
@@ -158,7 +183,8 @@ def stop_live_wikipedia_runtime(session: LiveWikipediaRuntimeSession) -> LiveWik
     queue = enqueue_event(session.runtime.event_queue, event)
     runtime = run_wake_cycle(replace(session.runtime, event_queue=queue))
     journal = append_journal(runtime.journal, "live_runtime_stop", "Live Wikipedia runtime stopped by operator.", (), runtime.cycle)
-    return replace(session, runtime=replace(runtime, journal=journal, state="IDLE"), active=False)
+    controller = shutdown_controller(session.continuous_controller) if session.continuous_controller else None
+    return replace(session, runtime=replace(runtime, journal=journal, state="IDLE"), active=False, continuous_controller=controller)
 
 
 def handle_live_chat(
@@ -177,6 +203,8 @@ def handle_live_chat(
 
     event = create_event("operator_message", message, source="ui_live_chat", payload={"live_runtime": True})
     runtime = run_wake_cycle(replace(session.runtime, event_queue=enqueue_event(session.runtime.event_queue, event)))
+    session = _advance_continuous_controller(replace(session, runtime=runtime), "OPERATOR_MESSAGE", {"message": message}, priority=70)
+    runtime = session.runtime
 
     if _is_live_help_request(message):
         answer = _render_live_help()
@@ -246,7 +274,8 @@ def handle_live_chat(
             journal=append_journal(runtime.journal, "live_context_declaration", message[:500], (), runtime.cycle),
         )
         response = _response(answer, "live_context_declaration", payload, None, runtime.state, safety_metadata())
-        return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+        updated = _advance_continuous_controller(replace(session, runtime=runtime), "DEVELOPMENTAL_SIGNAL", {"summary": "operator live context declaration", "title": "Live context declaration"}, priority=40)
+        return replace(updated, turns=updated.turns + (response,)), response
 
     query = wikipedia_query_from_message(message)
     if query and session.retrieval_count < session.wikipedia_profile.max_queries_per_objective:
@@ -284,6 +313,22 @@ def handle_live_chat(
             runtime,
             journal=append_journal(runtime.journal, "developmental_observation", development.observation, (result.canonical_url,), runtime.cycle),
         )
+        session = _advance_continuous_controller(
+            replace(session, runtime=runtime),
+            "WIKIPEDIA_RESULT",
+            {"title": result.title, "url": result.canonical_url, "classification": development.comparison.classification},
+            priority=75,
+            correlation_id=development.cycle_id,
+        )
+        session = _advance_continuous_controller(
+            session,
+            "PROMOTION_CANDIDATE",
+            {"title": development.promotion_candidate.title, "prompt": development.operator_inquiry.prompt},
+            priority=72,
+            correlation_id=development.promotion_candidate.candidate_id,
+            objective_id=development.objective.objective_id,
+        )
+        runtime = session.runtime
         response = _response(answer, "live_wikipedia_text_retrieval", payload, result, runtime.state, _retrieval_safety())
         updated_session = replace(
             session,
@@ -295,8 +340,10 @@ def handle_live_chat(
             retrieval_count=session.retrieval_count + 1,
         )
         updated_session, cycle = run_delta_1_6_background_cycle(updated_session)
+        updated_session = replace(updated_session, continuous_controller=run_controller_cycle(updated_session.continuous_controller, session=updated_session) if updated_session.continuous_controller else None)
         payload["operational_self_model"] = updated_session.operational_self_model.as_dict() if updated_session.operational_self_model else {}
         payload["background_cycle"] = cycle.as_dict()
+        payload["continuous_controller"] = controller_snapshot(updated_session.continuous_controller) if updated_session.continuous_controller else {}
         response = _response(answer, "live_wikipedia_text_retrieval", payload, result, updated_session.runtime.state, _retrieval_safety())
         return replace(updated_session, turns=updated_session.turns[:-1] + (response,)), response
 
@@ -318,12 +365,14 @@ def handle_live_chat(
             "operator_inquiry": session.operator_inquiries[-1] if session.operator_inquiries else None,
         }
         response = _response(answer, "live_wikipedia_budget_exhausted", payload, None, runtime.state, safety_metadata())
-        return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+        updated = _advance_continuous_controller(replace(session, runtime=runtime), "RESOURCE_LIMIT_REACHED", {"summary": "Wikipedia session query budget exhausted"}, priority=65)
+        return replace(updated, turns=updated.turns + (response,)), response
 
     payload = route_message("Conversation", message, history=history, execute_local_model=False)
     answer = render_route(payload, developer_overlay=developer_overlay)
     response = _response(answer, str(payload.get("route") or "conversation_fallback"), payload, None, runtime.state, safety_metadata())
-    return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+    updated = _advance_continuous_controller(replace(session, runtime=runtime), "VALIDATION_RESULT", {"summary": "ordinary chat routed without continuous work"}, priority=20)
+    return replace(updated, turns=updated.turns + (response,)), response
 
 
 def wikipedia_query_from_message(message: str) -> str:
@@ -448,15 +497,46 @@ def _render_live_help() -> str:
 
 
 def pause_live_initiative(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
-    return set_autonomy_status(session, "PAUSED")
+    updated = set_autonomy_status(session, "PAUSED")
+    controller = pause_controller(updated.continuous_controller) if updated.continuous_controller else None
+    return replace(updated, continuous_controller=controller)
 
 
 def resume_live_initiative(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
-    return set_autonomy_status(session, "ACTIVE")
+    updated = set_autonomy_status(session, "ACTIVE")
+    controller = resume_controller(updated.continuous_controller) if updated.continuous_controller else None
+    return replace(updated, continuous_controller=controller)
 
 
 def suspend_live_runtime_initiative(session: LiveWikipediaRuntimeSession) -> LiveWikipediaRuntimeSession:
-    return set_autonomy_status(session, "SUSPENDED")
+    updated = set_autonomy_status(session, "SUSPENDED")
+    controller = suspend_controller(updated.continuous_controller) if updated.continuous_controller else None
+    return replace(updated, continuous_controller=controller)
+
+
+def _advance_continuous_controller(
+    session: LiveWikipediaRuntimeSession,
+    event_type: str,
+    payload: dict[str, Any],
+    *,
+    priority: int = 50,
+    correlation_id: str = "",
+    objective_id: str = "",
+) -> LiveWikipediaRuntimeSession:
+    if not session.continuous_controller:
+        return session
+    event = make_continuous_event(
+        event_type,
+        source="live_wikipedia_runtime",
+        session_id=session.session_id,
+        payload=payload,
+        priority=priority,
+        correlation_id=correlation_id,
+        objective_id=objective_id,
+    )
+    controller = enqueue_continuous_event(session.continuous_controller, event)
+    controller = run_controller_cycle(controller, session=session)
+    return replace(session, continuous_controller=controller)
 
 
 def _render_memory_gate(session: LiveWikipediaRuntimeSession) -> tuple[str, dict[str, Any]]:

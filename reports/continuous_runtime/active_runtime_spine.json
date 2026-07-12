@@ -1,0 +1,372 @@
+{
+  "capability_classification": {
+    "approved_local_concept_memory": "LIVE",
+    "behavioral_maturation_infrastructure": "CALLABLE_BUT_NOT_INTEGRATED",
+    "bounded_autonomy_classification": "LIVE",
+    "delta_1_1_development_loop": "CALLABLE_BUT_NOT_INTEGRATED",
+    "delta_1_2_live_runtime": "LIVE",
+    "developmental_observations": "LIVE",
+    "external_provider_evaluator_env": "DISABLED",
+    "governed_objectives": "PARTIALLY_CONNECTED",
+    "live_conversation_runtime": "LIVE",
+    "local_approved_concept_comparison": "LIVE",
+    "local_models": "PARTIALLY_CONNECTED",
+    "operational_self_model": "LIVE",
+    "operator_inquiries": "LIVE",
+    "operator_ui": "LIVE",
+    "promotion_candidates": "LIVE",
+    "sandbox_experimental_repair": "PARTIALLY_CONNECTED",
+    "wikipedia_text_retrieval": "LIVE"
+  },
+  "chat_submission": "DELTA._send_chat forwards live messages to handle_live_chat.",
+  "developmental_cognition": "DELTA 1.5 compares Wikipedia evidence against local concepts and creates gated promotion candidates.",
+  "duplicates_or_disconnected": {
+    "blocking_calls": "Wikipedia call is synchronous and bounded; no background thread introduced.",
+    "duplicate_queues": "DELTA 1.2 queue remains runtime-local; continuous controller normalizes UI/service events and does not replace 1.2 internals.",
+    "duplicated_state": "self-model fields are derived snapshots; authoritative lifecycle is controller.lifecycle_state.",
+    "stale_rc_paths": "RC3 sandbox foundation remains design/proposal-only and is not allowed to mutate primary tree.",
+    "ui_runtime_mismatch": "UI status now includes controller state, health, objective, model, inquiry, promotion, and budget."
+  },
+  "initiative_generation": "continuous controller and DELTA 1.6 background cycle queue bounded initiatives with duplicate suppression.",
+  "local_model_invocation": "consent-gated through rc2 local model lane; controller does not call models for deterministic state.",
+  "model_residency": {
+    "available_model_count": 15,
+    "keep_loaded_policy": "serial_provider_manager_one_resident_model_max",
+    "lanes": {
+      "coding_technical": {
+        "cost_latency_class": "medium_local",
+        "display_name": "Coding / Technical Lane",
+        "expected_strength": "programming, debugging, architecture, CLI, repo reasoning",
+        "expected_weakness": "may need repo file context or tests for correctness",
+        "fallback_priority": 2,
+        "preferred_task_lanes": [
+          "coding",
+          "technical_explanation"
+        ]
+      },
+      "concept_extraction": {
+        "cost_latency_class": "low_local_scaffold",
+        "display_name": "Concept Extraction Lane",
+        "expected_strength": "turn useful answers into reusable concepts",
+        "expected_weakness": "first pass is deterministic and operator-reviewed",
+        "fallback_priority": 6,
+        "preferred_task_lanes": [
+          "memory_request"
+        ]
+      },
+      "contradiction_detection": {
+        "cost_latency_class": "low_local_scaffold",
+        "display_name": "Contradiction Detection Lane",
+        "expected_strength": "first-pass deterministic contradiction checks",
+        "expected_weakness": "semantic contradiction detection remains conservative",
+        "fallback_priority": 7,
+        "preferred_task_lanes": [
+          "contradiction_check"
+        ]
+      },
+      "everyday_conversation": {
+        "cost_latency_class": "low_to_medium_local",
+        "display_name": "Everyday Conversation Lane",
+        "expected_strength": "casual chat, common explanations, companionship, low-stakes brainstorming",
+        "expected_weakness": "specialized factual lookup and high-stakes reasoning require support",
+        "fallback_priority": 1,
+        "preferred_task_lanes": [
+          "conversation",
+          "question",
+          "self_description"
+        ]
+      },
+      "planning": {
+        "cost_latency_class": "medium_local",
+        "display_name": "Planning Lane",
+        "expected_strength": "strategy, schedules, staged workflows",
+        "expected_weakness": "cannot execute actions from RC2",
+        "fallback_priority": 4,
+        "preferred_task_lanes": [
+          "planning"
+        ]
+      },
+      "reasoning_analysis": {
+        "cost_latency_class": "medium_to_high_local",
+        "display_name": "Reasoning / Analysis Lane",
+        "expected_strength": "multi-step reasoning, comparison, science, synthesis, uncertainty",
+        "expected_weakness": "external facts need gated supporting information",
+        "fallback_priority": 3,
+        "preferred_task_lanes": [
+          "analysis",
+          "research",
+          "investigation",
+          "external_knowledge_request"
+        ]
+      },
+      "vision": {
+        "cost_latency_class": "high_local_if_enabled",
+        "display_name": "Vision Lane",
+        "expected_strength": "image-capable model selection when a vision GGUF is available",
+        "expected_weakness": "RC2 UI does not execute vision inference",
+        "fallback_priority": 5,
+        "preferred_task_lanes": [
+          "image"
+        ]
+      }
+    },
+    "max_resident_models": 1,
+    "model_calls_this_cycle": 0,
+    "models": [
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_4",
+        "display_name": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "family": "llama",
+        "model_id": "llama",
+        "provider": "local_gguf",
+        "tier": 4
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_4",
+        "display_name": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "family": "llama",
+        "model_id": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 4
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
+        "family": "ministral",
+        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
+        "family": "ministral",
+        "model_id": "ministral-3-3b-instruct-2512-gguf-ministral-3-3b-instruct-2512-q6-k",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+        "family": "mistral",
+        "model_id": "mistral",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+        "family": "mistral",
+        "model_id": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 4096,
+        "cost_latency_class": "local_gguf_tier_1",
+        "display_name": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
+        "family": "phi3",
+        "model_id": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 1
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 4096,
+        "cost_latency_class": "local_gguf_tier_1",
+        "display_name": "phi-3-mini-4k-instruct-gguf-phi-3-mini-4k-instruct-q4",
+        "family": "phi3",
+        "model_id": "phi-3-mini-4k-instruct-gguf-phi-3-mini-4k-instruct-q4",
+        "provider": "local_gguf",
+        "tier": 1
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+        "family": "phi4",
+        "model_id": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 4096,
+        "cost_latency_class": "local_gguf_tier_1",
+        "display_name": "phi-3-1-mini-4k-instruct-gguf-phi-3-1-mini-4k-instruct-q4-k-m",
+        "family": "phi3",
+        "model_id": "phi3",
+        "provider": "local_gguf",
+        "tier": 1
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 8192,
+        "cost_latency_class": "local_gguf_tier_2",
+        "display_name": "phi-4-mini-reasoning-gguf-phi-4-mini-reasoning-q4-k-m",
+        "family": "phi4",
+        "model_id": "phi4",
+        "provider": "local_gguf",
+        "tier": 2
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen2-5-7b-instruct-gguf-qwen2-5-7b-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen2-5-vl-7b-instruct-gguf-qwen2-5-vl-7b-instruct-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      },
+      {
+        "capabilities": [
+          "text",
+          "vision"
+        ],
+        "context_size": 32768,
+        "cost_latency_class": "local_gguf_tier_3",
+        "display_name": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "family": "qwen",
+        "model_id": "qwen3-5-9b-gguf-qwen3-5-9b-q4-k-m",
+        "provider": "local_gguf",
+        "tier": 3
+      }
+    ],
+    "no_model_needed_for": [
+      "state_lookup",
+      "capability_reporting",
+      "authority_classification",
+      "budget_exhaustion",
+      "lifecycle_transition",
+      "cached_wikipedia_discussion"
+    ],
+    "residency_status": "unknown",
+    "resident_lane": "",
+    "resident_model_id": "",
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    },
+    "selected_default_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+    "selected_development_model": "meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m",
+    "selected_planning_model": "mistral-7b-instruct-v0-3-gguf-mistral-7b-instruct-v0-3-q4-k-m",
+    "serial_residency": true
+  },
+  "operator_inquiry": "in-app inquiry records; no external notification integration.",
+  "route_selection": "deterministic live handlers first; rc2 router fallback for ordinary conversation.",
+  "runtime_creation": "start_live_wikipedia_runtime boots DELTA 1.2 LiveRuntimeState and attaches ContinuousRuntimeController.",
+  "safety": {
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "scheduler_action_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "self_model_update": "DELTA 1.6 operational self-model syncs from session/controller state.",
+  "shutdown": "controller supports explicit SHUTTING_DOWN->SHUTDOWN and queue clearing.",
+  "status": "CONNECTED",
+  "ui_startup": "DELTA.py creates ProviderManager, warms default local model, and starts LiveWikipediaRuntimeSession on operator request.",
+  "wikipedia_invocation": "session-scoped text-only Wikipedia bridge; no media or link following."
+}
