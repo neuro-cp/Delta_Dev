@@ -36,3 +36,10 @@ This campaign was requested as a single TERRA-led cycle after the operator deter
 - Real-model pilot: Llama -> Mistral -> Llama executed successfully with serial residency, no provider calls, no external retrieval, and no memory writes.
 - Live UI smoke: real Wikipedia retrieval accepted a queued pause; real Llama inference accepted a queued suspend; clean shutdown succeeded.
 - LUNA-style review found no reason for a broad rewrite. It recommends consolidation of the live-turn coordinator, pending-action abstractions, and model-aware campaign coverage before larger autonomy work.
+
+## Implementation Commit
+
+- Commit: `4e5484f9`
+- Message: `strengthen DELTA runtime after systems audit`
+- Included: live runtime repair, UI worker bridge, provider telemetry repair, focused tests, and campaign artifacts.
+- Excluded: all pre-existing dirty documentation, controller, RC report, continuity report, and unrelated test changes.

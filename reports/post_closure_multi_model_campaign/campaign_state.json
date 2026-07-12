@@ -4,6 +4,7 @@
   "role_model_limit": "SOL and LUNA are internal review roles, not independently switched models",
   "branch": "codex/delta-cognitive-core",
   "baseline_head": "b7dd1187d2ae4ec5883c3807cd5b7c7ae8df0ecb",
+  "implementation_commit": "4e5484f9",
   "baseline_recommendation": "LIVE_RUNTIME_BEHAVIORAL_CLOSURE_READY_FOR_OPERATOR_PILOT",
   "phase": "COMPLETE",
   "delta_75_scope": "excluded",
