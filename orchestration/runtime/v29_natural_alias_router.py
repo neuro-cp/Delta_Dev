@@ -127,6 +127,11 @@ def _alias_map() -> dict[str, tuple[str, ...]]:
         "knowledge_write_status": ("can delta write knowledge yet", "write knowledge yet"),
         "provider_call_status": ("can delta call providers yet", "call providers yet"),
         "live_activation_blockers": ("what remains blocked before live activation", "blocked before live activation"),
+        "module_permission_boundary": ("module permission boundary", "permission boundary"),
+        "capability_activation": ("capability activation", "activation gates", "gated capability activation"),
+        "operator_approval": ("operator approval", "operator-approved", "operator approved"),
+        "module_manifest": ("module manifest", "manifest with declared", "module attachment manifest"),
+        "rollback_governance": ("how does rollback work", "rollback work", "rollback strategy", "rollback validation"),
         "integrated_what_know": ("what do you know", "what does delta know"),
         "integrated_belief_reason": ("why do you believe this", "why believe this"),
         "integrated_supporting_records": ("which semantic records support this", "semantic records support"),
@@ -218,6 +223,29 @@ def _answer_for(topic_id: str, inventory: dict[str, object]) -> str:
         return "No. Provider evidence remains simulated/advisory only. Real provider calls and provider authority remain disabled until a future explicit gate."
     if topic_id == "live_activation_blockers":
         return "Before live activation, DELTA still needs manual RC1 review, live adapter approval, corpus allowlisting, secret-scan enforcement, rollback validation, overwatch gates, and explicit owner/admin approval."
+    if topic_id == "module_permission_boundary":
+        return (
+            "The module permission boundary is the governed intersection between a module manifest and the current session permissions. "
+            "A module can use only declared, effective permissions, and prohibited permissions such as provider calls, network calls, production writes, automatic commit/push, deployment, hidden persistence, and DELTA-75 access are denied."
+        )
+    if topic_id == "capability_activation":
+        return (
+            "Capability activation is fail-closed: a capability can move state only through allowed transitions with operator approval, enough evidence, a bounded scope, and authority no higher than its maximum. "
+            "Self-activation, missing approval, insufficient evidence, and excessive authority keep the capability in its prior state."
+        )
+    if topic_id == "operator_approval":
+        return (
+            "Operator approval is an explicit gate, not a conversational guess. It is required before bounded trials, module attachment, governed calls, or integration steps, and the audit record keeps approval, scope, evidence, and fail-closed status reviewable."
+        )
+    if topic_id == "module_manifest":
+        return (
+            "A module manifest declares the module id, version, permissions, inputs, outputs, side effects, rollback strategy, and owner. "
+            "Validation rejects prohibited permissions, non-none side effects in DELTA 1.0, missing declared inputs or outputs, and missing rollback strategy."
+        )
+    if topic_id == "rollback_governance":
+        return (
+            "Rollback works as a required governance boundary: modules must declare a rollback strategy, simulated integration records carry rollback tokens, and many current paths roll back by discarding fixture outputs or detaching an inert module rather than mutating canonical state."
+        )
     if topic_id == "integrated_what_know":
         return "DELTA knows the committed RC1 fixture corpus as noncanonical semantic records, including provenance failures, contradiction examples, evidence boundaries, rollback requirements, and activation blockers."
     if topic_id == "integrated_belief_reason":

@@ -111,6 +111,31 @@ def test_given_all_that_freeze_followup_stays_in_pilot_frame():
     assert should_preempt_specialist_routing(frame)
 
 
+def test_retry_format_directive_does_not_become_freeze_gap_shortcut():
+    message = """Retry the previous DELTA 1.0 pilot answer.
+
+Original task:
+Inspect the current DELTA 1.0 readiness/report state and propose one bounded next step toward operator validation.
+
+Use exactly these headings:
+1. What I inspected
+2. Bounded next operator step
+3. Evidence that would make this freeze-relevant
+4. What remains unproven
+
+Keep the answer concise.
+Do not write memory.
+Do not call providers.
+Do not modify files.
+Do not claim freeze readiness."""
+    frame = build_discourse_frame(message, ANCHOR)
+
+    assert frame.active_task == "render_correction"
+    assert frame.current_requested_operation == "render_correction"
+    assert frame.expected_output_form == "requested_rendering_constraints"
+    assert not should_preempt_specialist_routing(frame)
+
+
 def test_recovery_evidence_followup_stays_in_pilot_frame():
     frame = build_discourse_frame("What would count as enough recovery evidence?", ANCHOR)
 

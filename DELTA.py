@@ -65,6 +65,7 @@ from orchestration.runtime.rc45_discourse_cognition_bridge import (  # noqa: E40
     build_discourse_frame,
     should_preempt_specialist_routing,
 )
+from orchestration.runtime.rc2_render_correction import is_render_correction_request  # noqa: E402
 from orchestration.runtime.pc1_pragmatic_cognition import build_pragmatic_frame  # noqa: E402
 from orchestration.runtime.integrated_cognitive_runtime import build_integrated_cognitive_trace  # noqa: E402
 from orchestration.runtime.rc5_developmental_cognition import DevelopmentConsultationPacket  # noqa: E402
@@ -228,6 +229,8 @@ def _pc1_context_for_message(last_report_inspection: dict[str, object] | None = 
 
 def _try_pc1_pragmatic_answer(message: str, last_report_inspection: dict[str, object] | None = None, *, developer_overlay: bool = False) -> str | None:
     if not _pc1_enabled():
+        return None
+    if is_render_correction_request(message):
         return None
     if not last_report_inspection and not _pc1_has_governance_cue(message):
         return None
@@ -2100,6 +2103,22 @@ class DeltaApp:
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
         discourse_trace = discourse_frame.as_dict()
+        if is_render_correction_request(message):
+            self._append_session("user", message)
+            payload = route_message(
+                self.mode.get(),
+                message,
+                self.paste.get("1.0", tk.END) if hasattr(self, "paste") else "",
+                history=self._recent_history_for_router(),
+                execute_local_model=False,
+            )
+            self.last_message = message
+            self.last_payload = payload
+            rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
+            self._append_chat("DELTA", rendered)
+            self._append_session("assistant", rendered)
+            self._refresh_state_cards()
+            return
         report_inspection = _inspect_local_report(message)
         if report_inspection and report_inspection.get("handled"):
             self._append_session("user", message)

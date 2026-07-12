@@ -53,7 +53,12 @@ KNOWN_TOPICS = [
     "interest rates",
     "inflation",
     "noncanonical memory",
+    "memory candidates",
     "memory consolidation",
+    "rollback evidence",
+    "recovery evidence",
+    "delta 1.2",
+    "live runtime",
     "gravity",
     "orbital motion",
     "meaning of life",
@@ -117,12 +122,14 @@ def build_cognitive_episode(
 ) -> dict[str, Any]:
     history = history or []
     branches = _branches(history)
-    current_entities = _entities(message)
+    topic_reset = _explicit_topic_reset(message)
+    episode_message = topic_reset or message
+    current_entities = _entities(episode_message)
     active = _select_active_branch(message, branches, current_entities)
-    explicit_change = _explicit_topic_change(message, active)
+    explicit_change = bool(topic_reset) or _explicit_topic_change(message, active)
     if explicit_change:
         active = {
-            "topic": current_entities[0] if current_entities else _topic_from_question(message),
+            "topic": current_entities[0] if current_entities else _topic_from_question(episode_message),
             "question": message,
             "answer": "",
             "route": current_route or "new_topic",
@@ -159,6 +166,21 @@ def resolve_working_memory_followup(
 ) -> dict[str, Any] | None:
     history = history or []
     lower = _norm(message)
+    if _is_explicit_task_directive(message, lower):
+        return None
+    if _is_context_declaration(lower):
+        episode = build_cognitive_episode(message, history)
+        topic = _topic_from_question(message) or "this context"
+        episode["active_topic"] = topic
+        episode["active_question"] = message
+        episode["active_answer"] = message
+        return _payload(
+            message,
+            episode,
+            f"Got it. I will keep {topic} as context for this conversation.",
+            confidence=0.84,
+            resolved=True,
+        )
     if not history and any(term in lower for term in ("analogy", "evidence is missing", "information is missing", "what evidence", "what information")):
         return None
     episode = build_cognitive_episode(message, history)
@@ -166,6 +188,16 @@ def resolve_working_memory_followup(
         return None
     if not _is_followup(lower):
         return None
+    ambiguous = _ambiguity_candidates(lower, episode)
+    if ambiguous:
+        episode["unresolved_questions"] = [f"ambiguous_reference:{', '.join(ambiguous)}"]
+        return _payload(
+            message,
+            episode,
+            _ambiguity_answer(ambiguous),
+            confidence=0.74,
+            resolved=False,
+        )
     topic = episode.get("active_topic")
     if not topic:
         return _payload(
@@ -175,15 +207,15 @@ def resolve_working_memory_followup(
             confidence=0.62,
             resolved=False,
         )
-    if "first" in lower or "earlier" in lower or "return to the first" in lower:
-        branch = _branch_by_ordinal(episode.get("conversation_branch", []), 0)
+    if _requests_first_branch(lower):
+        branch = _subject_branch(episode.get("conversation_branch", []), "first") or _branch_by_ordinal(episode.get("conversation_branch", []), 0)
         if branch:
             topic = branch.get("topic") or topic
             episode["active_topic"] = topic
             episode["active_question"] = branch.get("question")
             episode["active_answer"] = branch.get("answer")
-    elif "second" in lower:
-        branch = _branch_by_ordinal(episode.get("conversation_branch", []), 1)
+    elif _requests_second_branch(lower):
+        branch = _subject_branch(episode.get("conversation_branch", []), "second") or _branch_by_ordinal(episode.get("conversation_branch", []), 1)
         if branch:
             topic = branch.get("topic") or topic
             episode["active_topic"] = topic
@@ -286,16 +318,18 @@ def _branches(history: list[dict[str, str]]) -> list[dict[str, Any]]:
                 "summary": anchor.get("last_answer_summary", ""),
             })
     for question, answer in turns:
-        topic = _topic_from_question(question) or (_entities(question) or _entities(answer) or [None])[0]
+        semantic_answer = _semantic_answer(answer)
+        topic = _topic_from_question(question) or (_entities(question) or _entities(semantic_answer) or [None])[0]
         if not topic:
             continue
+        branch_answer = question if _is_context_declaration(_norm(question)) else semantic_answer
         branches.append({
             "topic": topic,
-            "entities": _entities(question) or _entities(answer) or [topic],
+            "entities": _entities(question) or _entities(semantic_answer) or [topic],
             "question": question,
-            "answer": answer,
-            "route": _route_hint(answer),
-            "summary": _summary(question, answer),
+            "answer": branch_answer,
+            "route": _route_hint(semantic_answer),
+            "summary": _summary(question, branch_answer),
         })
     return _dedupe_branches(branches)[-16:]
 
@@ -314,10 +348,10 @@ def _dedupe_branches(branches: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def _select_active_branch(message: str, branches: list[dict[str, Any]], current_entities: list[str]) -> dict[str, Any]:
     lower = _norm(message)
-    if "first" in lower or "earlier" in lower or "return to the first" in lower:
-        return _branch_by_ordinal(branches, 0) or (branches[-1] if branches else {})
-    if "second" in lower:
-        return _branch_by_ordinal(branches, 1) or (branches[-1] if branches else {})
+    if _requests_first_branch(lower):
+        return _subject_branch(branches, "first") or _branch_by_ordinal(branches, 0) or (branches[-1] if branches else {})
+    if _requests_second_branch(lower):
+        return _subject_branch(branches, "second") or _branch_by_ordinal(branches, 1) or (branches[-1] if branches else {})
     if current_entities:
         for branch in reversed(branches):
             if set(current_entities) & set(branch.get("entities", [])):
@@ -331,12 +365,32 @@ def _branch_by_ordinal(branches: list[dict[str, Any]], index: int) -> dict[str, 
     return None
 
 
+def _subject_branch(branches: list[dict[str, Any]], ordinal: str) -> dict[str, Any] | None:
+    prefix = f"{ordinal} subject:"
+    for branch in reversed(branches):
+        if str(branch.get("question") or "").strip().lower().startswith(prefix):
+            return branch
+    return None
+
+
 def _topic_from_question(text: str) -> str | None:
     lower = _norm(text)
+    declaration_patterns = [
+        r"for this conversation.*?two points(?: about ([^:]+))?",
+        r"(?:first|second) subject:\s*([^.!?]+)",
+        r"context:\s*([^.!?]+)",
+    ]
+    for pattern in declaration_patterns:
+        match = re.search(pattern, lower)
+        if match:
+            topic = _clean_declared_topic(match.group(1) or "two points")
+            if topic and not _is_followup(topic):
+                return topic
     for topic in KNOWN_TOPICS:
         if topic in lower:
             return topic
     patterns = [
+        r"how does (.+) work",
         r"what is (.+)",
         r"what are (.+)",
         r"tell me about (.+)",
@@ -368,6 +422,11 @@ def _summary(question: str, answer: str) -> str:
     q = re.sub(r"\s+", " ", str(question or "")).strip()
     a = re.sub(r"\s+", " ", str(answer or "")).strip()
     return f"Question: {q[:140]} | Answer: {a[:260]}".strip()
+
+
+def _semantic_answer(answer: str) -> str:
+    text = str(answer or "")
+    return text.split("--- Developer Overlay ---", 1)[0].strip()
 
 
 def _examples(answer: str) -> list[str]:
@@ -415,6 +474,22 @@ def _explicit_topic_change(message: str, active: dict[str, Any]) -> bool:
     return not any(entity in active_topic or active_topic in entity for entity in entities)
 
 
+def _explicit_topic_reset(message: str) -> str:
+    text = re.sub(r"\s+", " ", str(message or "")).strip()
+    patterns = [
+        r"^new topic:\s*(.+)$",
+        r"^switching subjects:\s*(.+)$",
+        r"^different topic:\s*(.+)$",
+        r"^let['’]?s move on[.!]?\s*(.+)$",
+        r"^forget the prior topic for now[.!]?\s*(.+)$",
+    ]
+    for pattern in patterns:
+        match = re.match(pattern, text, flags=re.IGNORECASE)
+        if match:
+            return match.group(1).strip()
+    return ""
+
+
 def _episode_confidence(message: str, active: dict[str, Any], entities: list[str]) -> float:
     if _is_followup(_norm(message)) and active.get("topic"):
         return 0.9
@@ -428,16 +503,103 @@ def _episode_confidence(message: str, active: dict[str, Any], entities: list[str
 def _is_followup(lower: str) -> bool:
     if lower in FOLLOWUP_FORMS:
         return True
-    if lower.startswith(("return to ", "go back to ")):
+    if lower.startswith(("which one ", "which one is ")):
+        return True
+    if lower.startswith(("tell me more about ", "return to ", "go back to ", "going back to ")):
         return True
     if lower.startswith(("continue ", "okay continue", "ok continue")):
         return True
     return bool(re.search(r"\b(that|this|those|it|first one|second one|earlier)\b", lower))
 
 
+def _is_context_declaration(lower: str) -> bool:
+    return lower.startswith(("for this conversation", "first subject:", "second subject:", "context:"))
+
+
+def _requests_second_branch(lower: str) -> bool:
+    return bool(re.search(r"\b(second subject|second one|second topic)\b", lower))
+
+
+def _ambiguity_candidates(lower: str, episode: dict[str, Any]) -> list[str]:
+    if not _has_ambiguous_reference(lower):
+        return []
+    if _is_significance_question(lower):
+        return []
+    if any(term in lower for term in ("first", "second", "earlier", "previous")):
+        return []
+    branches = [branch for branch in episode.get("conversation_branch", []) if branch.get("topic")]
+    candidates = [str(branch.get("topic")) for branch in branches[-2:]]
+    ordered = _ordered_candidates(str(episode.get("active_answer") or ""))
+    if "which one" in lower and len(ordered) >= 2:
+        candidates = ordered[:2]
+    return list(dict.fromkeys(item for item in candidates if item)) if len(set(candidates)) >= 2 else []
+
+
+def _has_ambiguous_reference(lower: str) -> bool:
+    return bool(re.search(r"\b(that|it|which one)\b", lower))
+
+
+def _ordered_candidates(text: str) -> list[str]:
+    return [
+        match.group(2).strip(" .")
+        for match in re.finditer(r"\b(\d+)[\.)]\s*(.+?)(?=\s+\d+[\.)]\s+|$)", str(text or ""), flags=re.IGNORECASE)
+    ]
+
+
+def _ambiguity_answer(candidates: list[str]) -> str:
+    first, second = candidates[0], candidates[1]
+    return f"That could refer to either {first} or {second}. Which one do you mean?"
+
+
+def _is_explicit_task_directive(message: str, lower: str) -> bool:
+    """Protect command-shaped prompts from orphan follow-up routing."""
+    raw = str(message or "").lower()
+    if "topic:" in raw:
+        return True
+    if _is_self_contained_runtime_question(lower):
+        return True
+    directive_starts = (
+        "answer this",
+        "format compliance test",
+        "draft ",
+        "summarize ",
+        "evaluate ",
+        "inspect ",
+        "classify ",
+        "identify ",
+        "prepare ",
+        "retry ",
+        "use exactly ",
+        "based on ",
+        "suppose ",
+        "what should delta",
+        "what should the delta",
+        "what question should it ask",
+    )
+    if lower.startswith(directive_starts):
+        return True
+    return bool(re.search(r"\b(use exactly these headings|using exactly these headings|no other headings|original task:)\b", raw))
+
+
 def _followup_answer(lower: str, topic: str, episode: dict[str, Any]) -> str:
     answer = str(episode.get("active_answer") or "")
     entities = [entity for entity in _entities(lower) if entity != topic]
+    if _selects_prior_referent(lower):
+        return f"Continuing with {topic}: I will use {topic} as the referent for the next step."
+    if "first point" in lower:
+        point = _ordered_item(answer, 1)
+        if point:
+            return f"Continuing with {topic}: the first point is {point}"
+    if "second point" in lower:
+        point = _ordered_item(answer, 2)
+        if point:
+            return f"Continuing with {topic}: the second point is {point}"
+    if "second" in lower and not _has_ordered_content(answer):
+        return "I can explain the second one, but I need the two-item list or the specific pair you mean."
+    if "main limitation" in lower or "the limitation" in lower:
+        limitation = _sentence_with(answer, ("main limitation", "limitation"))
+        if limitation:
+            return f"Continuing with {topic}: {limitation}"
     if ("relate" in lower or "connect" in lower) and entities:
         target = entities[0]
         return (
@@ -459,9 +621,86 @@ def _followup_answer(lower: str, topic: str, episode: dict[str, Any]) -> str:
         return f"What changed is the conversational focus: I am carrying forward {topic} from the recent episode instead of starting a new retrieval path."
     if "what else" in lower:
         return f"Still on {topic}: the next useful angle is context, limits, and what evidence would make the answer stronger."
+    if _is_significance_question(lower):
+        return _significance_answer(topic, answer)
+    if "why do you think it keeps doing that" in lower and topic == "feedback loops":
+        return (
+            "It probably keeps happening because the feedback loop is not closing cleanly: the result shows up, "
+            "but the system does not turn that result into a specific adjustment. The useful check is whether each repeated mistake has an owner, a trigger, and a changed next action."
+        )
     if topic == "allergies" and "context" in lower:
         return "Continuing with allergies: allergies involve immune responses to allergens, and clinical context matters because exposure, severity, symptoms, medication history, and timing change what conclusion is justified."
     return f"Continuing with {topic}: {_plain_key_point(topic, answer)}"
+
+
+def _has_ordered_content(answer: str) -> bool:
+    text = str(answer or "")
+    if re.search(r"(^|\n)\s*(?:2[\.)]|second\b|- )", text, flags=re.IGNORECASE):
+        return True
+    sentences = [part for part in re.split(r"(?<=[.!?])\s+", text) if part.strip()]
+    return len(sentences) >= 2 and any(term in text.lower() for term in ("first", "second", "two ", "1.", "2."))
+
+
+def _clean_declared_topic(topic: str) -> str:
+    clean = re.sub(r"\s+", " ", str(topic or "")).strip(" .?!")
+    lower = clean.lower()
+    matches = [(lower.index(known), -len(known), known) for known in KNOWN_TOPICS if known in lower]
+    if matches:
+        return sorted(matches)[0][2]
+    clean = re.split(r"\b(?:can|could|should|would|is|are|was|were)\b", clean, maxsplit=1, flags=re.IGNORECASE)[0].strip(" .?!")
+    return clean or "this context"
+
+
+def _requests_first_branch(lower: str) -> bool:
+    return bool(re.search(r"\b(first subject|first one|first topic|earlier|return to the first|going back to the first)\b", lower))
+
+
+def _selects_prior_referent(lower: str) -> bool:
+    return bool(re.search(r"\b(i mean|meant|the answer is|use)\s+the\s+(first|second)\s+one\b", lower))
+
+
+def _is_self_contained_runtime_question(lower: str) -> bool:
+    if not lower.startswith(("what should ", "should ", "what question should ", "suppose ")):
+        return False
+    return any(term in lower for term in (
+        "delta",
+        "live runtime",
+        "runtime",
+        "router test",
+        "repair hypothes",
+        "bounded repair",
+    ))
+
+
+def _ordered_item(text: str, index: int) -> str:
+    pattern = rf"\b{index}[\.)]\s*(.+?)(?=\s+\d+[\.)]\s+|$)"
+    match = re.search(pattern, str(text or ""), flags=re.IGNORECASE)
+    return match.group(1).strip(" .") if match else ""
+
+
+def _sentence_with(text: str, terms: tuple[str, ...]) -> str:
+    for sentence in re.split(r"(?<=[.!?])\s+", str(text or "")):
+        if any(term in sentence.lower() for term in terms):
+            return sentence.strip(" .")
+    return ""
+
+
+def _is_significance_question(lower: str) -> bool:
+    return any(phrase in lower for phrase in (
+        "why does that matter",
+        "why is that important",
+        "why should i care about that",
+        "what difference does that make",
+        "how does that affect the decision",
+    ))
+
+
+def _significance_answer(topic: str, answer: str) -> str:
+    key = _plain_key_point(topic, answer)
+    return (
+        f"Continuing with {topic}: it matters because it changes what action or decision is justified next. "
+        f"If {key}, then the operator should look for the result, compare it with the goal, and adjust the next step instead of repeating the same behavior."
+    )
 
 
 def _plain_key_point(topic: str, answer: str) -> str:

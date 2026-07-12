@@ -110,6 +110,14 @@ def test_non_contradiction_prompt_still_uses_other_routes():
     assert payload["route"] != "contradiction_analysis"
 
 
+def test_natural_topic_drift_with_but_now_is_not_contradiction_route():
+    prompt = "I started with debugging, but now I am thinking more about how teams avoid repeating the same mistakes."
+    assert not is_contradiction_prompt(prompt)
+    payload = route_message("Conversation", prompt)
+    assert payload["route"] != "contradiction_analysis"
+    assert payload["memory_candidate"] is None
+
+
 def test_report_generation_is_read_only():
     report = build_contradiction_engine_report(write_reports=False)
     assert report["accuracy"] >= 0.85

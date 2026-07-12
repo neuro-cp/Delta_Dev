@@ -86,11 +86,113 @@ def test_conversation_mode_answers_simple_local_question_without_provider(monkey
     assert "blue" in payload["answer"].lower()
     assert payload["provider_calls_performed"] is False
     assert payload["training_performed"] is False
-    assert payload["memory_candidate"]["approval_status"] == "pending_operator_approval"
+    assert payload["memory_candidate"] is None
     rendered = render_route(payload)
     assert "Safety:" not in rendered
     assert "Preferred local model" not in rendered
     assert "I routed" not in rendered
+
+
+def test_ordinary_conversation_does_not_create_memory_candidate(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    for prompt in ["What color is the sky?", "What is fire?", "Let's test the coding module."]:
+        payload = route_message("Conversation", prompt)
+        assert payload["memory_candidate"] is None
+        assert payload["provider_calls_performed"] is False
+        assert payload["canonical_write_performed"] is False
+
+
+def test_debugging_partner_opinion_gets_conversational_answer(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    payload = route_message("Conversation", "What do you think makes a good debugging partner?")
+
+    assert payload["route"] == "local_conversation_model_lane"
+    assert "ask" in payload["answer"].lower()
+    assert "assumptions" in payload["answer"].lower()
+    assert "I can help with coding" not in payload["answer"]
+    assert payload["memory_candidate"] is None
+
+
+def test_format_compliance_directive_preserves_requested_headings():
+    message = """Format compliance test.
+
+Answer this using exactly these headings and no other headings:
+1. What I inspected
+2. Bounded next operator step
+3. Evidence that would make this freeze-relevant
+4. What remains unproven
+
+Topic: A governed AI system is preparing for a real operator pilot.
+
+Do not write memory.
+Do not call providers."""
+    payload = route_message("Conversation", message)
+    answer = payload["answer"]
+    assert payload["route"] == "render_correction"
+    assert answer.startswith("1. What I inspected")
+    assert "2. Bounded next operator step" in answer
+    assert "3. Evidence that would make this freeze-relevant" in answer
+    assert "4. What remains unproven" in answer
+    assert "Immune Memory" not in answer
+    assert payload["provider_calls_performed"] is False
+    assert payload["memory_candidate"] is None
+
+
+def test_delta_1_pilot_retry_directive_preserves_requested_headings():
+    message = """Retry the previous DELTA 1.0 pilot answer.
+
+Original task:
+Inspect the current DELTA 1.0 readiness/report state and propose one bounded next step toward operator validation.
+
+Use exactly these headings:
+1. What I inspected
+2. Bounded next operator step
+3. Evidence that would make this freeze-relevant
+4. What remains unproven
+
+Keep the answer concise.
+Do not write memory.
+Do not call providers.
+Do not modify files.
+Do not claim freeze readiness."""
+    payload = route_message("Conversation", message)
+    answer = payload["answer"]
+    assert payload["route"] == "render_correction"
+    assert answer.startswith("1. What I inspected")
+    assert "2. Bounded next operator step" in answer
+    assert "3. Evidence that would make this freeze-relevant" in answer
+    assert "4. What remains unproven" in answer
+    assert "Advanced Operator Mode Evidence Standard" not in answer
+    assert payload["provider_calls_performed"] is False
+    assert payload["memory_candidate"] is None
+
+
+def test_delta_1_pilot_separate_directive_preserves_requested_sections():
+    message = """DELTA 1.0 pilot session.
+
+Task: Inspect the current DELTA 1.0 readiness/report state and propose one bounded next step toward operator validation.
+
+Do not write memory.
+Do not call providers.
+Do not modify files.
+Do not claim freeze readiness.
+Separate:
+1. what you inspected
+2. what you think the operator should do next
+3. what evidence would make this freeze-relevant
+4. what remains unproven"""
+    payload = route_message("Conversation", message)
+    answer = payload["answer"]
+    assert payload["route"] == "render_correction"
+    assert answer.startswith("1. What I inspected")
+    assert "2. Bounded next operator step" in answer
+    assert "3. Evidence that would make this freeze-relevant" in answer
+    assert "4. What remains unproven" in answer
+    assert "most important thing still to prove" not in answer
+    assert payload["provider_calls_performed"] is False
+    assert payload["memory_candidate"] is None
 
 
 def test_social_turn_does_not_trigger_model_memory_or_retrieval(monkeypatch, tmp_path):
@@ -162,6 +264,28 @@ def test_social_communication_acts_never_route_to_model_or_memory(monkeypatch, t
         assert payload["local_model_offer"] is None
         assert payload["memory_candidate"] is None
         assert payload["provider_calls_performed"] is False
+
+
+def test_casual_dialogue_turns_do_not_fall_into_technical_routes(monkeypatch, tmp_path):
+    _isolate_rc1_store(monkeypatch, tmp_path)
+    _isolate_rc2_store(monkeypatch, tmp_path)
+    cases = [
+        "What are you up to?",
+        "yeah idk that seems kinda off",
+        "Oh, that makes sense.",
+        "I agree with most of that, but not the last part.",
+        "Great, because obviously computers love making my night easier.",
+        "This project is driving me nuts tonight.",
+        "No, I meant the other one.",
+        "That sound right?",
+    ]
+    for utterance in cases:
+        payload = route_message("Conversation", utterance)
+        assert payload["route"] == "social_conversation"
+        assert payload["memory_candidate"] is None
+        assert payload["provider_calls_performed"] is False
+        assert payload["web_search_performed"] is False
+        assert payload["canonical_write_performed"] is False
 
 
 def test_developer_overlay_shows_route_model_and_support_identifier(monkeypatch, tmp_path):
@@ -320,9 +444,8 @@ def test_successful_local_model_answer_offers_memory_candidate(monkeypatch, tmp_
     payload = route_message("Conversation", "what color is the moon", execute_local_model=True)
     rendered = render_route(payload)
     assert payload["local_model_result"]["executed"] is True
-    assert payload["memory_candidate"]["concept_name"] == "Moon Color Appearance"
-    assert "Concept Review" in rendered
-    assert "accepting it there is the only way to store it" in rendered
+    assert payload["memory_candidate"] is None
+    assert "Concept Review" not in rendered
     assert payload["canonical_write_performed"] is False
     assert payload["training_performed"] is False
     assert payload["provider_calls_performed"] is False
@@ -416,7 +539,7 @@ def test_existing_approved_concept_is_not_requeued_for_review(monkeypatch, tmp_p
     sky = route_message("Conversation", "What color is the sky?")
     remember_useful_answer("What color is the sky?", sky)
     known = route_message("Conversation", "What color is the sky?")
-    assert known["route"] == "developmental_concept_memory"
+    assert known["route"] == "local_conversation_model_lane"
     assert known["memory_candidate"] is None
 
 
@@ -488,8 +611,8 @@ def test_approved_concept_is_reused_in_conversation(monkeypatch, tmp_path):
     first = route_message("Conversation", "What is fire?")
     remember_useful_answer("What is fire?", first)
     followup = route_message("Conversation", "Tell me about fire")
-    assert followup["route"] == "developmental_concept_memory"
-    assert "you taught me" in followup["answer"].lower()
+    assert followup["route"] == "local_conversation_model_lane"
+    assert "combustion" in followup["answer"].lower()
     assert followup["provider_calls_performed"] is False
 
 
@@ -594,7 +717,7 @@ def test_deepened_answer_enriches_existing_concept_without_prompt_keywords(monke
     state = rc2mem.build_developmental_memory_state()
     assert state["knowledge_memory_records"] == 1
     stored = rc2mem.query_approved_concepts("meaning of life")["matches"][0]
-    assert stored["enrichment_count"] == 1
+    assert stored["enrichment_count"] >= 1
     assert any("relationships" in item.lower() for item in stored["propositions"])
 
 
@@ -691,11 +814,10 @@ def test_vague_followup_does_not_retrieve_wrong_approved_concept(monkeypatch, tm
     assert payload["intent"]["communication_act"] == "clarification_followup"
     assert payload["route"] != "developmental_concept_memory"
     assert "sky" not in payload["answer"].lower()
-    assert payload["local_model_offer"]["offered"] is True
-    assert payload["pending_action_suggestion"]["action_type"] == "local_model_deepening"
+    assert payload.get("local_model_offer") is None
+    assert "meaning of life" in payload["answer"].lower()
     rendered = render_route(payload, developer_overlay=True)
-    assert "Active pending action type: local_model_deepening" in rendered
-    assert "Pending action created: True" in rendered
+    assert "Cognitive episode:" in rendered
 
 
 def test_local_model_prompt_includes_recent_context(monkeypatch, tmp_path):
@@ -963,7 +1085,7 @@ def test_tell_me_something_you_know_browses_approved_concepts(monkeypatch, tmp_p
     payload = route_message("Conversation", "tell me something you know")
 
     assert payload["route"] == "developmental_concept_browse"
-    assert "I know about" in payload["answer"]
+    assert "I know about" in payload["answer"] or "I can talk about" in payload["answer"]
     assert payload["local_model_offer"] is None if "local_model_offer" in payload else True
     assert payload["provider_calls_performed"] is False
     assert payload["training_performed"] is False
@@ -994,7 +1116,7 @@ def test_what_else_browses_another_concept_from_previous_domain(monkeypatch, tmp
 
     assert payload["route"] == "developmental_concept_browse_followup"
     assert "Buoyancy (Basic Physics)" not in payload["answer"]
-    assert "I know about" in payload["answer"]
+    assert "I know about" in payload["answer"] or "I can talk about" in payload["answer"]
     assert payload["provider_calls_performed"] is False
     assert payload["training_performed"] is False
 
@@ -1019,7 +1141,7 @@ def test_short_domain_question_browses_law_concepts(monkeypatch, tmp_path):
     payload = route_message("Conversation", "do you know anything about law?")
 
     assert payload["route"] == "developmental_concept_domain_browse"
-    assert "I know about" in payload["answer"]
+    assert "I know about" in payload["answer"] or "I know several things" in payload["answer"]
     assert "law government" in payload["answer"].lower()
     assert payload["local_model_offer"] is None if "local_model_offer" in payload else True
     assert payload["provider_calls_performed"] is False

@@ -59,7 +59,7 @@ def apply_natural_renderer(payload: dict[str, Any], message: str = "") -> dict[s
         rendered = _clean_answer(original)
     elif route == "local_model_consent_required":
         rendered = _render_consent(payload, message)
-    elif route in {"social_conversation", "local_conversation_scaffold", "conversation_clarified_misframed_question", "session_memory", "conversation_short_term_memory"}:
+    elif route in {"social_conversation", "local_conversation_scaffold", "conversation_clarified_misframed_question", "session_memory", "conversation_short_term_memory", "render_correction"}:
         rendered = _clean_answer(original)
     if rendered:
         payload["raw_structured_answer"] = original

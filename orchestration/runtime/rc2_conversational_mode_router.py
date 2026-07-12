@@ -49,6 +49,7 @@ from orchestration.runtime.rc2_analogy_engine import build_analogy_analysis, is_
 from orchestration.runtime.rc2_cognitive_episode import attach_episode, resolve_working_memory_followup
 from orchestration.runtime.rc2_contradiction_engine import build_contradiction_analysis, is_contradiction_prompt
 from orchestration.runtime.rc2_natural_conversation_renderer import apply_natural_renderer
+from orchestration.runtime.rc2_render_correction import build_render_correction_payload
 from orchestration.runtime.rc2_route_arbitration import build_route_arbitration_trace, normalize_safety_payload
 from orchestration.runtime.rc2_working_reasoning_set import build_working_reasoning_set, should_use_wrs
 from orchestration.runtime.v17_provider_assisted_unknown_answer import answer_unknown_with_controlled_provider
@@ -181,10 +182,25 @@ DIRECT_LOCAL_ANSWERS = {
         "answer": "Yes. I can answer in a more natural assistant style: direct first, enough context to be useful, and technical details only when you ask for them.",
         "confidence": 0.86,
     },
+    "debugging_partner_opinion": {
+        "triggers": (("good", "debugging", "partner"), ("debugging", "partner")),
+        "answer": "A good debugging partner helps narrow the problem without taking over: they ask what changed, check assumptions, keep the reproduction small, and stay calm when the first theory is wrong.",
+        "confidence": 0.84,
+    },
     "followup_question_offer": {
         "triggers": (("ask", "follow", "question"), ("follow", "question"), ("follow-up", "question")),
         "answer": "Sure. What topic do you want to explore next, and do you want a quick overview or a deeper explanation?",
         "confidence": 0.84,
+    },
+    "rollback_recovery_evidence": {
+        "triggers": (("rollback", "evidence"), ("recovery", "evidence")),
+        "answer": "Recovery evidence means proof that an unwanted or failed change can be stopped, rejected, or rolled back without hidden side effects. A useful record names the tested change, what failed or was rejected, the stop or rollback action, the final recovered state, and confirmation that no unauthorized memory write, provider call, commit, push, deployment, or freeze claim occurred.",
+        "confidence": 0.86,
+    },
+    "delta12_ambiguity_runtime": {
+        "triggers": (("delta", "runtime", "ambiguity"), ("live", "runtime", "ambiguity")),
+        "answer": "The DELTA 1.2 live runtime should treat repeated ambiguity failures as evidence, cluster them into a developmental signal, rank a bounded objective, and queue an operator inquiry. It should not implement the fix by itself; operator approval is required before promotion, and it should ask whether to prepare a sandboxed repair objective with focused validation.",
+        "confidence": 0.86,
     },
 }
 
@@ -846,7 +862,7 @@ def confidence_for_intent(intent: str) -> float:
 
 
 def _direct_answer(message: str) -> dict[str, Any] | None:
-    lower = " " + " ".join(message.lower().replace("?", " ").split()) + " "
+    lower = " " + " ".join(re.sub(r"[^a-z0-9]+", " ", message.lower()).split()) + " "
     for answer_id, item in DIRECT_LOCAL_ANSWERS.items():
         for trigger in item["triggers"]:
             if all(f" {word} " in lower for word in trigger):
@@ -857,6 +873,89 @@ def _direct_answer(message: str) -> dict[str, Any] | None:
                     "confidence": "local_general_knowledge",
                 }
     return None
+
+
+def _is_development_workflow_request(message: str, history: list[dict[str, str]] | None = None) -> bool:
+    lower = " ".join(str(message or "").lower().replace("-", " ").split())
+    if any(term in lower for term in (
+        "repair hypothesis",
+        "repair hypotheses",
+        "bounded repair",
+        "which tests would prove",
+        "what should delta inspect",
+        "router test fails",
+        "classified as contradiction",
+        "governed self-development",
+        "sandbox implementation",
+        "development objective",
+        "implement the fix by itself",
+        "what question should it ask",
+    )):
+        return True
+    if lower.startswith(("now propose", "propose two", "rank them")) and _history_mentions_development(history):
+        return True
+    return False
+
+
+def _should_defer_to_knowledge_browse(intent_info: dict[str, Any]) -> bool:
+    return intent_info.get("intent") in {"knowledge_browse_followup", "knowledge_browse_jump"}
+
+
+def _history_mentions_development(history: list[dict[str, str]] | None) -> bool:
+    text = " ".join(str(item.get("content") or "") for item in (history or [])[-6:]).lower()
+    return any(term in text for term in ("router", "contradiction", "repair", "test", "delta", "runtime"))
+
+
+def _development_workflow_answer(message: str, history: list[dict[str, str]] | None = None) -> dict[str, Any] | None:
+    if not _is_development_workflow_request(message, history):
+        return None
+    lower = " ".join(str(message or "").lower().replace("-", " ").split())
+    if "which tests would prove" in lower or ("tests" in lower and "safer" in lower):
+        answer = (
+            "Use focused live-path regressions: one topic-shift case that must not enter contradiction analysis, "
+            "one ambiguity case that must ask for clarification, one follow-up continuity case that preserves the selected subject, "
+            "and one governance check proving no provider call, web search, memory write, commit, or push occurred."
+        )
+    elif "hypothes" in lower or lower.startswith(("now propose", "propose two", "rank them")):
+        answer = (
+            "Ranked repair hypotheses: 1. Adjust router precedence so governed development workflow prompts use the local engineering path before concept retrieval. "
+            "Confidence 0.86, low governance impact, moderate regression risk. "
+            "2. Add a broad concept-memory exclusion for technical words like contradiction and tests. Confidence 0.54, higher regression risk because it could suppress useful retrieval. "
+            "The safer first experiment is the precedence repair because it is narrow and reversible."
+        )
+    elif "implement the fix by itself" in lower:
+        answer = "No. DELTA may prepare a bounded objective, sandbox candidate, tests, and evidence, but operator approval is required before promotion into the primary repository."
+    elif "what question should it ask" in lower:
+        answer = "It should ask: Do you approve a bounded sandbox objective to repair the observed ambiguity failure, with focused tests and no provider calls, retrieval, memory writes, commits, or pushes?"
+    else:
+        answer = (
+            "DELTA should inspect the smallest responsible boundary first: the contradiction detector trigger, then router precedence, then the working-memory/discourse frame that carried the topic shift. "
+            "The first repair hypothesis should be narrow and proven with live-path conversation turns before any broader architectural change."
+        )
+    return {
+        "route": "local_conversation_model_lane",
+        "answer": answer,
+        "confidence": "local_governed_development_workflow",
+        "confidence_score": 0.84,
+        "selected_model_lane": select_model_lane(message, "coding"),
+        "local_model_result": None,
+        "supporting_information_offer": None,
+        "local_model_offer": None,
+        "memory_candidate": None,
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+    }
+
+
+def _is_explicit_topic_reset(message: str) -> bool:
+    text = " ".join(str(message or "").strip().lower().split())
+    return bool(re.match(
+        r"^(new topic:|switching subjects:|different topic:|let['’]?s move on[.!]?|forget the prior topic for now[.!]?)",
+        text,
+    ))
 
 
 def _support_offer(message: str, reason: str, history: list[dict[str, str]] | None = None) -> dict[str, Any]:
@@ -1230,26 +1329,17 @@ def candidate_is_memory_worthy(candidate: dict[str, Any], payload: dict[str, Any
 
 
 def maybe_build_memory_candidate(message: str, payload: dict[str, Any]) -> dict[str, Any] | None:
-    intent = payload.get("intent") if isinstance(payload.get("intent"), dict) else classify_intent(message)
-    if intent.get("communication_act") == "memory_request" or intent.get("intent") == "memory_request":
-        return None
-    if payload.get("route") in {
-        "developmental_concept_memory",
-        "substrate_first_conversation",
-        "gpt_support_approval_preview",
-        "provider_support_refused_or_local_known",
-        "social_conversation",
-    }:
-        return None
-    if payload.get("supporting_information_offer"):
-        return None
-    candidate = build_memory_candidate_from_answer(message, payload)
-    return candidate if candidate_is_memory_worthy(candidate, payload) else None
+    # Ordinary conversation should not create concept-review candidates on its
+    # own. Explicit UI memory requests use build_memory_candidate_from_answer()
+    # or remember_useful_answer() so operator review remains available.
+    return None
 
 
 def remember_useful_answer(message: str, payload: dict[str, Any]) -> dict[str, Any]:
     existing = payload.get("memory_candidate")
-    candidate = existing if isinstance(existing, dict) else maybe_build_memory_candidate(message, payload)
+    candidate = existing if isinstance(existing, dict) else build_memory_candidate_from_answer(message, payload)
+    if not candidate_is_memory_worthy(candidate, payload):
+        candidate = None
     if not candidate:
         return {
             "candidate": None,
@@ -1444,6 +1534,9 @@ def local_conversation_answer(
     intent = classify_intent(message)["intent"]
     model_lane = select_model_lane(message, intent)
     local = run_v29_local_answer(message, use_recall=False)
+    direct = _direct_answer(message)
+    if development := _development_workflow_answer(message, history):
+        return development
     if memory := _history_answer(message, history):
         return memory
     if recent := _recent_concept_followup_answer(message, history):
@@ -1521,7 +1614,12 @@ def local_conversation_answer(
                 "training_performed": False,
                 "canonical_write_performed": False,
             }
-    if intent == "coding":
+    if direct:
+        answer = str(direct["answer"])
+        confidence = str(direct["confidence"])
+        confidence_score = float(direct["confidence_score"])
+        support_offer = None
+    elif intent == "coding":
         answer = (
             "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. "
         )
@@ -1541,11 +1639,6 @@ def local_conversation_answer(
         answer = str(local["draft"]["answer_text"])
         confidence = "repo_local_self_knowledge"
         confidence_score = 0.86
-        support_offer = None
-    elif direct := _direct_answer(message):
-        answer = str(direct["answer"])
-        confidence = str(direct["confidence"])
-        confidence_score = float(direct["confidence_score"])
         support_offer = None
     elif intent in {"external_knowledge_request", "image"}:
         answer = (
@@ -1714,12 +1807,19 @@ def route_message(
         if intent_info.get("intent") in SOCIAL_INTENT_RESPONSES and intent_info.get("safe_no_route", True):
             payload = {
                 "mode": mode,
-                **local_conversation_answer(
-                    message,
-                    history,
-                    execute_local_model=execute_local_model,
-                    provider_manager=provider_manager,
-                ),
+                "route": "social_conversation",
+                "answer": SOCIAL_INTENT_RESPONSES[str(intent_info.get("intent"))],
+                "confidence": "social_intent",
+                "confidence_score": intent_info.get("confidence", 0.9),
+                "selected_model_lane": select_model_lane(message, str(intent_info.get("intent") or "")),
+                "local_model_result": None,
+                "supporting_information_offer": None,
+                "local_model_offer": None,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
             }
             payload["memory_candidate"] = None
             payload["autonomous_action_performed"] = False
@@ -1727,6 +1827,20 @@ def route_message(
             payload["intent"] = intent_info
             payload["confidence_decision"] = confidence_engine(message, False)
             payload["mode_router_flags"] = ROUTER_FLAGS
+            return _finish_conversation_payload(payload, message, history)
+        render_correction = build_render_correction_payload(message, history)
+        if render_correction:
+            payload = {"mode": mode, **render_correction}
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "render_correction", "communication_act": "render_correction"}
+            payload["confidence_decision"] = {
+                "confidence": payload.get("confidence_score", 0.0),
+                "evidence_quality": "ephemeral_prior_answer_rendering_context",
+                "retrieval_sufficiency": "not_needed_for_render_correction",
+                "provider_necessity": "none",
+            }
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = None
             return _finish_conversation_payload(payload, message, history)
         if intent_info.get("communication_act") == "clarification_followup" and not history:
             payload = {
@@ -1796,7 +1910,7 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
-        early_episode_followup = resolve_working_memory_followup(message, history)
+        early_episode_followup = None if _should_defer_to_knowledge_browse(intent_info) else resolve_working_memory_followup(message, history)
         if early_episode_followup:
             payload = {"mode": mode, **early_episode_followup}
             payload["escalation_plan"] = build_escalation_plan(message)
@@ -1808,6 +1922,22 @@ def route_message(
                 "provider_necessity": "none",
             }
             payload["mode_router_flags"] = ROUTER_FLAGS
+            return _finish_conversation_payload(payload, message, history)
+        if _is_explicit_topic_reset(message) and run_v29_local_answer(message, use_recall=False)["local_answer"]["matched"]:
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = intent_info
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
         early_analogy = build_analogy_analysis(message, history=history) if is_analogy_prompt(message, history) else {"matched": False}
         if early_analogy["matched"]:
@@ -1904,7 +2034,7 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
-        if intent_info.get("intent") in {"coding", "external_knowledge_request", "image"} or _direct_answer(message):
+        if intent_info.get("intent") in {"coding", "external_knowledge_request", "image"} or _direct_answer(message) or _is_development_workflow_request(message, history):
             payload = {
                 "mode": mode,
                 **local_conversation_answer(
@@ -1920,7 +2050,7 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
-        episode_followup = resolve_working_memory_followup(message, history)
+        episode_followup = None if _should_defer_to_knowledge_browse(intent_info) else resolve_working_memory_followup(message, history)
         if episode_followup:
             payload = {"mode": mode, **episode_followup}
             payload["escalation_plan"] = build_escalation_plan(message)

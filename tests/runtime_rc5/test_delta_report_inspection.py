@@ -247,6 +247,19 @@ def test_primary_freeze_evidence_gap_answers_unscripted_followup():
     assert "No provider was called" in answer
 
 
+def test_pc1_does_not_preempt_render_correction_request():
+    delta = _load_delta_module()
+    message = """Retry the previous DELTA 1.0 pilot answer.
+
+Use exactly these headings:
+1. What I inspected
+2. Bounded next operator step
+3. Evidence that would make this freeze-relevant
+4. What remains unproven"""
+
+    assert delta._try_pc1_pragmatic_answer(message, None) is None
+
+
 def test_recovery_evidence_answer_avoids_domain_recall():
     delta = _load_delta_module()
     answer = delta._answer_sufficient_recovery_evidence()

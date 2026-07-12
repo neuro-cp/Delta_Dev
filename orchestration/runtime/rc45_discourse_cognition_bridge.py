@@ -12,6 +12,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 import re
 
+from orchestration.runtime.rc2_render_correction import is_render_correction_request
+
 
 @dataclass(frozen=True)
 class DiscourseFrame:
@@ -158,6 +160,23 @@ def build_discourse_frame(message: str, anchor: dict[str, object] | None = None)
             constraints,
             referenced,
             confidence=0.92,
+        )
+
+    if is_render_correction_request(message):
+        return DiscourseFrame(
+            current_topic=topic,
+            active_task="render_correction",
+            referenced_artifacts=referenced,
+            prior_operator_request=anchor_request,
+            latest_relevant_finding=latest,
+            current_requested_operation="render_correction",
+            expected_output_form="requested_rendering_constraints",
+            explicit_constraints=constraints,
+            topic_switch_status=topic_switch,
+            candidate_referents=tuple(item for item in (report_name,) if item),
+            candidate_routes=("render_correction",),
+            confidence=0.9,
+            preempt_specialist_routing=False,
         )
 
     if _is_primary_freeze_proof_question(normalized):
@@ -362,6 +381,8 @@ def _is_primary_freeze_proof_question(normalized: str) -> bool:
         and ("most important thing" in normalized or "main thing" in normalized or "primary thing" in normalized)
         and ("freezing rc4 and rc5" in normalized or "freeze rc4 and rc5" in normalized or ("rc4" in normalized and "rc5" in normalized and "freeze" in normalized))
     )
+
+
 
 
 def _is_recovery_evidence_enrichment_question(normalized: str) -> bool:

@@ -53,7 +53,6 @@ CONTRADICTION_TRIGGERS = (
     "how can these both",
     "what changed between",
     "earlier you said",
-    "but now",
 )
 
 ABSOLUTE_TERMS = {"always", "never", "all", "none", "no", "cannot", "can't", "must"}
@@ -160,7 +159,7 @@ def is_contradiction_prompt(message: str, history: list[dict[str, str]] | None =
     lower = _clean_text(message).lower()
     if any(trigger in lower for trigger in CONTRADICTION_TRIGGERS):
         return True
-    if " but " in lower and _looks_like_two_claims(lower):
+    if " but " in lower and _looks_like_two_claims(lower) and _has_implicit_contradiction_cue(lower):
         return True
     if lower in {"is that inconsistent?", "is that a contradiction?", "can both be true?"} and history:
         return True
@@ -243,10 +242,18 @@ def _looks_like_two_claims(text: str) -> bool:
     return len(re.split(r"\s+(?:and|but|while|whereas)\s+|;|,", text)) >= 2
 
 
+def _has_implicit_contradiction_cue(text: str) -> bool:
+    return (
+        _has_negation(text)
+        or any(re.search(rf"\b{re.escape(term)}\b", text) for term in ABSOLUTE_TERMS)
+        or any(term in text for term in ("contradict", "conflict", "inconsistent", "wrong"))
+    )
+
+
 def _extract_claim_texts(message: str, history: list[dict[str, str]] | None) -> list[str]:
     text = _clean_text(message)
     lower = text.lower()
-    if "earlier you said" in lower or "but now" in lower:
+    if "earlier you said" in lower:
         parts = re.split(r"\bbut now\b|\bnow you said\b|;", text, flags=re.IGNORECASE)
         cleaned = [re.sub(r"^.*?earlier you said\s*", "", part, flags=re.IGNORECASE).strip(" .,:;\"'") for part in parts]
         claims = [part for part in cleaned if len(part.split()) >= 3]
