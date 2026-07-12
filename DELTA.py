@@ -87,6 +87,12 @@ from orchestration.runtime.rc11_rc12_systems_plateau import (  # noqa: E402
     build_plateau_operator_dashboard,
     render_plateau_operator_dashboard,
 )
+from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E402
+    LiveWikipediaRuntimeSession,
+    handle_live_chat,
+    start_live_wikipedia_runtime,
+    stop_live_wikipedia_runtime,
+)
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -1432,6 +1438,8 @@ class DeltaApp:
         self.active_topic_anchor: dict[str, object] | None = None
         self.last_report_inspection: dict[str, object] | None = None
         self.rc6_pilot_events: list[dict[str, object]] = []
+        self.live_runtime_session: LiveWikipediaRuntimeSession | None = None
+        self.live_runtime_status = tk.StringVar(value="Live runtime: stopped")
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1499,6 +1507,12 @@ class DeltaApp:
         self.mode.pack(side=tk.LEFT, padx=(6, 10))
         ttk.Checkbutton(mode_bar, text="Developer Overlay", variable=self.developer_overlay_enabled).pack(side=tk.LEFT)
         ttk.Button(mode_bar, text="Advanced Operator Console", command=lambda: self.notebook.select(self.advanced_tab)).pack(side=tk.RIGHT)
+
+        live_bar = ttk.Frame(self.conversation_tab)
+        live_bar.pack(fill=tk.X, pady=(8, 0))
+        ttk.Button(live_bar, text="Start Live Runtime", command=self._start_live_runtime).pack(side=tk.LEFT)
+        ttk.Button(live_bar, text="Stop", command=self._stop_live_runtime).pack(side=tk.LEFT, padx=(8, 0))
+        ttk.Label(live_bar, textvariable=self.live_runtime_status).pack(side=tk.LEFT, padx=(12, 0))
 
         self.chat_history = scrolledtext.ScrolledText(self.conversation_tab, wrap=tk.WORD, height=24)
         self.chat_history.pack(fill=tk.BOTH, expand=True, pady=(10, 0))
@@ -2092,6 +2106,36 @@ class DeltaApp:
         except Exception as exc:  # noqa: BLE001
             self.model_residency_status = f"switch_failed:{type(exc).__name__}:{str(exc)[:120]}"
 
+    def _start_live_runtime(self) -> None:
+        if self.live_runtime_session and self.live_runtime_session.active:
+            self.live_runtime_status.set(
+                f"Live runtime: {self.live_runtime_session.runtime.state}; "
+                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}"
+            )
+            return
+        try:
+            self.live_runtime_session = start_live_wikipedia_runtime(runtime_id="ui")
+            self.live_runtime_status.set("Live runtime: started; Wikipedia text enabled")
+            self._append_chat(
+                "DELTA",
+                "Live runtime started. Wikipedia text retrieval is enabled for this session only; no provider calls or memory writes are enabled.",
+            )
+        except Exception as exc:  # noqa: BLE001
+            self.live_runtime_status.set(f"Live runtime start failed: {type(exc).__name__}")
+            messagebox.showerror("Live Runtime", f"Could not start live runtime:\n{type(exc).__name__}: {str(exc)[:240]}")
+
+    def _stop_live_runtime(self) -> None:
+        if not self.live_runtime_session:
+            self.live_runtime_status.set("Live runtime: stopped")
+            return
+        try:
+            self.live_runtime_session = stop_live_wikipedia_runtime(self.live_runtime_session)
+            self.live_runtime_status.set("Live runtime: stopped")
+            self._append_chat("DELTA", "Live runtime stopped.")
+        except Exception as exc:  # noqa: BLE001
+            self.live_runtime_status.set(f"Live runtime stop failed: {type(exc).__name__}")
+            messagebox.showerror("Live Runtime", f"Could not stop live runtime:\n{type(exc).__name__}: {str(exc)[:240]}")
+
     def _send_chat(self) -> None:
         message = self.chat_input.get().strip()
         if not message:
@@ -2103,6 +2147,24 @@ class DeltaApp:
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
         discourse_trace = discourse_frame.as_dict()
+        if self.live_runtime_session and self.live_runtime_session.active:
+            self._append_session("user", message)
+            self.live_runtime_session, live_response = handle_live_chat(
+                self.live_runtime_session,
+                message,
+                history=self._recent_history_for_router(),
+                developer_overlay=self.developer_overlay_enabled.get(),
+            )
+            self.last_message = message
+            self.last_payload = live_response.payload
+            self._append_chat("DELTA", live_response.answer)
+            self._append_session("assistant", live_response.answer)
+            self.live_runtime_status.set(
+                f"Live runtime: {self.live_runtime_session.runtime.state}; "
+                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}"
+            )
+            self._refresh_state_cards()
+            return
         if is_render_correction_request(message):
             self._append_session("user", message)
             payload = route_message(

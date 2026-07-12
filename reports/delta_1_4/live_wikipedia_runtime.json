@@ -1,0 +1,34 @@
+{
+  "report": "DELTA_1_4_LIVE_WIKIPEDIA_RUNTIME",
+  "implemented": [
+    "operator-started live runtime session bridge",
+    "bounded Wikipedia text-summary retrieval",
+    "UI Start Live Runtime and Stop controls",
+    "live chat routing through the active runtime session",
+    "fallback to existing conversation router when Wikipedia is not needed",
+    "per-session query budget",
+    "retrieval provenance and safety flags"
+  ],
+  "wikipedia_boundary": {
+    "allowed_domain": "en.wikipedia.org",
+    "allowed_content": "page summary text, page title, canonical URL, revision timestamp",
+    "media_retrieval": false,
+    "external_link_following": false,
+    "queries_per_session_objective": 1,
+    "provider_calls": false,
+    "memory_writes": false,
+    "canonical_writes": false
+  },
+  "validation": {
+    "focused_suite": "15 passed",
+    "adjacent_suite": "107 passed",
+    "py_compile": "passed",
+    "real_wikipedia_smoke_test": "Ada Lovelace summary retrieved with provider_calls_performed=false"
+  },
+  "remaining_limitations": [
+    "UI was validated by compile and runtime bridge tests, not by manual Tkinter clicking in this environment.",
+    "Wikipedia query resolution uses the page-summary endpoint and does not yet perform full search disambiguation.",
+    "Retrieval is deliberately text-only and session-bounded."
+  ],
+  "ready_for_operator_live_trial": true
+}
