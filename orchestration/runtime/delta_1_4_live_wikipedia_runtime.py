@@ -29,6 +29,11 @@ from orchestration.runtime.delta_1_2_live_runtime import (
     enqueue_event,
     run_wake_cycle,
 )
+from orchestration.runtime.delta_1_5_developmental_cognition import (
+    DevelopmentalCognitionResult,
+    render_developmental_observation,
+    run_wikipedia_developmental_cognition,
+)
 from orchestration.runtime.rc2_conversational_mode_router import render_route, route_message
 
 
@@ -73,6 +78,9 @@ class LiveWikipediaRuntimeSession:
     active: bool
     started_at: str
     turns: tuple[LiveChatResponse, ...] = ()
+    developmental_results: tuple[DevelopmentalCognitionResult, ...] = ()
+    promotion_candidates: tuple[dict[str, Any], ...] = ()
+    operator_inquiries: tuple[dict[str, Any], ...] = ()
     retrieval_count: int = 0
     provider_calls_performed: bool = False
     memory_write_performed: bool = False
@@ -149,18 +157,71 @@ def handle_live_chat(
 
     event = create_event("operator_message", message, source="ui_live_chat", payload={"live_runtime": True})
     runtime = run_wake_cycle(replace(session.runtime, event_queue=enqueue_event(session.runtime.event_queue, event)))
+
+    if _is_live_help_request(message):
+        answer = _render_live_help()
+        payload = {
+            "mode": "Live Runtime",
+            "route": "live_runtime_help",
+            "answer": answer,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "external_retrieval_performed": False,
+            "network_calls_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+            "autonomous_action_performed": False,
+            "memory_candidate": None,
+            "promotion_candidate": None,
+        }
+        response = _response(answer, "live_runtime_help", payload, None, runtime.state, safety_metadata())
+        return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+
+    if _is_memory_request(message):
+        answer, payload = _render_memory_gate(session)
+        response = _response(answer, "live_memory_governance", payload, None, runtime.state, safety_metadata())
+        return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+
+    if _is_live_context_declaration(message):
+        answer = "Noted as live-session context. I will treat this as operator-provided behavioral evidence for this session only; no memory was written."
+        payload = {
+            "mode": "Live Runtime",
+            "route": "live_context_declaration",
+            "answer": answer,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "external_retrieval_performed": False,
+            "network_calls_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+            "autonomous_action_performed": False,
+            "memory_candidate": None,
+            "promotion_candidate": None,
+        }
+        runtime = replace(
+            runtime,
+            journal=append_journal(runtime.journal, "live_context_declaration", message[:500], (), runtime.cycle),
+        )
+        response = _response(answer, "live_context_declaration", payload, None, runtime.state, safety_metadata())
+        return replace(session, runtime=runtime, turns=session.turns + (response,)), response
+
     query = wikipedia_query_from_message(message)
     if query and session.retrieval_count < session.wikipedia_profile.max_queries_per_objective:
         result = retrieve_wikipedia_text(query, profile=session.wikipedia_profile, transport=wikipedia_transport)
+        development = run_wikipedia_developmental_cognition(result)
+        development_payload = development.as_dict()
         answer = render_wikipedia_answer(message, result)
+        answer += "\n\n" + render_developmental_observation(development)
         if developer_overlay:
             answer += "\n\n--- Developer Overlay ---\nRoute: live_wikipedia_text_retrieval\n"
             answer += "Wikipedia result:\n" + json.dumps(asdict(result), indent=2, sort_keys=True)
+            answer += "\nDevelopmental cognition:\n" + json.dumps(development_payload, indent=2, sort_keys=True)
         payload = {
             "mode": "Live Runtime",
             "route": "live_wikipedia_text_retrieval",
             "answer": answer,
             "wikipedia_result": asdict(result),
+            "developmental_cognition": development_payload,
             "provider_calls_performed": False,
             "web_search_performed": False,
             "external_retrieval_performed": True,
@@ -169,18 +230,50 @@ def handle_live_chat(
             "canonical_write_performed": False,
             "autonomous_action_performed": False,
             "memory_candidate": None,
+            "promotion_candidate": development_payload["promotion_candidate"],
+            "operator_inquiry": development_payload["operator_inquiry"],
         }
         runtime = replace(
             runtime,
             journal=append_journal(runtime.journal, "wikipedia_retrieval", f"Retrieved Wikipedia text for {result.title}.", (result.canonical_url,), runtime.cycle),
         )
+        runtime = replace(
+            runtime,
+            journal=append_journal(runtime.journal, "developmental_observation", development.observation, (result.canonical_url,), runtime.cycle),
+        )
         response = _response(answer, "live_wikipedia_text_retrieval", payload, result, runtime.state, _retrieval_safety())
-        return replace(session, runtime=runtime, turns=session.turns + (response,), retrieval_count=session.retrieval_count + 1), response
+        return replace(
+            session,
+            runtime=runtime,
+            turns=session.turns + (response,),
+            developmental_results=session.developmental_results + (development,),
+            promotion_candidates=session.promotion_candidates + (development_payload["promotion_candidate"],),
+            operator_inquiries=session.operator_inquiries + (development_payload["operator_inquiry"],),
+            retrieval_count=session.retrieval_count + 1,
+        ), response
+
+    if query and session.retrieval_count >= session.wikipedia_profile.max_queries_per_objective:
+        answer = _render_budget_exhausted(session)
+        payload = {
+            "mode": "Live Runtime",
+            "route": "live_wikipedia_budget_exhausted",
+            "answer": answer,
+            "provider_calls_performed": False,
+            "web_search_performed": False,
+            "external_retrieval_performed": False,
+            "network_calls_performed": False,
+            "training_performed": False,
+            "canonical_write_performed": False,
+            "autonomous_action_performed": False,
+            "memory_candidate": None,
+            "promotion_candidate": session.promotion_candidates[-1] if session.promotion_candidates else None,
+            "operator_inquiry": session.operator_inquiries[-1] if session.operator_inquiries else None,
+        }
+        response = _response(answer, "live_wikipedia_budget_exhausted", payload, None, runtime.state, safety_metadata())
+        return replace(session, runtime=runtime, turns=session.turns + (response,)), response
 
     payload = route_message("Conversation", message, history=history, execute_local_model=False)
     answer = render_route(payload, developer_overlay=developer_overlay)
-    if query and session.retrieval_count >= session.wikipedia_profile.max_queries_per_objective:
-        answer += "\n\nWikipedia retrieval was skipped because this live session's per-objective query budget is already used."
     response = _response(answer, str(payload.get("route") or "conversation_fallback"), payload, None, runtime.state, safety_metadata())
     return replace(session, runtime=runtime, turns=session.turns + (response,)), response
 
@@ -190,6 +283,9 @@ def wikipedia_query_from_message(message: str) -> str:
     lower = text.lower()
     patterns = (
         r"^(?:wikipedia|wiki)\s*[:\-]?\s*(.+)$",
+        r"tell me what wikipedia has (?:regarding|about|on)\s+(.+)$",
+        r"what does wikipedia (?:have|say) (?:regarding|about|on)\s+(.+)$",
+        r"what has wikipedia got (?:regarding|about|on)\s+(.+)$",
         r"look up\s+(.+?)(?:\s+on wikipedia)?$",
         r"retrieve\s+(.+?)(?:\s+from wikipedia)?$",
         r"tell me about\s+(.+)$",
@@ -269,6 +365,91 @@ def _retrieval_safety() -> dict[str, bool]:
         "external_retrieval_performed": True,
         "network_calls_performed": True,
     }
+
+
+def _is_memory_request(message: str) -> bool:
+    text = " ".join(str(message or "").lower().strip().split())
+    return bool(re.search(r"\b(remember|save|store|memorize)\s+(that|this|it|the previous|what you found)\b", text))
+
+
+def _is_live_help_request(message: str) -> bool:
+    text = " ".join(str(message or "").lower().strip(" ?.!").split())
+    return text in {
+        "how do i interact with you",
+        "how do i use this",
+        "what can i do here",
+        "what should i ask you",
+        "help",
+        "help me use this",
+    }
+
+
+def _is_live_context_declaration(message: str) -> bool:
+    text = " ".join(str(message or "").lower().strip().split())
+    if text.startswith(("context:", "note:", "observation:")):
+        return True
+    return bool(re.search(r"\b(this is|we are|you are)\b.*\blive runtime\b", text))
+
+
+def _render_live_help() -> str:
+    return "\n".join([
+        "You can chat normally, or ask for a Wikipedia text lookup by saying `Wikipedia: topic` or `Look up topic on Wikipedia`.",
+        "After a lookup, I will compare the article against local approved concepts and surface any reviewable knowledge gap.",
+        "I cannot remember or promote anything automatically. If you say `remember that`, I will show the gated promotion candidate and ask for approval.",
+    ])
+
+
+def _render_memory_gate(session: LiveWikipediaRuntimeSession) -> tuple[str, dict[str, Any]]:
+    candidate = session.promotion_candidates[-1] if session.promotion_candidates else None
+    inquiry = session.operator_inquiries[-1] if session.operator_inquiries else None
+    if candidate and inquiry:
+        title = str(candidate.get("title") or "the last evidence item")
+        changes = candidate.get("proposed_changes") or ()
+        preview = str(changes[0]) if changes else "Review the last evidence item as a noncanonical candidate."
+        answer = "\n".join([
+            "I cannot write memory automatically from the live runtime.",
+            f"I do have a gated promotion candidate: {title}.",
+            preview,
+            str(inquiry.get("prompt") or "Approve preparing this as a noncanonical review proposal?"),
+            "No memory was written.",
+        ])
+    else:
+        answer = "\n".join([
+            "I cannot write memory automatically from the live runtime.",
+            "There is not yet a promotion candidate in this session. Ask for a Wikipedia lookup first, then I can compare it against local knowledge and prepare a gated review item.",
+            "No memory was written.",
+        ])
+    payload = {
+        "mode": "Live Runtime",
+        "route": "live_memory_governance",
+        "answer": answer,
+        "provider_calls_performed": False,
+        "web_search_performed": False,
+        "external_retrieval_performed": False,
+        "network_calls_performed": False,
+        "training_performed": False,
+        "canonical_write_performed": False,
+        "autonomous_action_performed": False,
+        "memory_candidate": None,
+        "promotion_candidate": candidate,
+        "operator_inquiry": inquiry,
+    }
+    return answer, payload
+
+
+def _render_budget_exhausted(session: LiveWikipediaRuntimeSession) -> str:
+    if session.developmental_results:
+        latest = session.developmental_results[-1]
+        title = latest.evidence_title
+        return (
+            f"Wikipedia retrieval is already used for this live objective by `{title}`. "
+            "I did not retrieve another page. I can keep discussing the retrieved evidence, compare the promotion candidate, "
+            "or you can stop and start the live runtime for a fresh objective."
+        )
+    return (
+        "Wikipedia retrieval is already used for this live objective. I did not retrieve another page. "
+        "You can stop and start the live runtime for a fresh objective."
+    )
 
 
 def _response(

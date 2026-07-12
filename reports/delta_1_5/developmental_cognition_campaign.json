@@ -1,0 +1,268 @@
+{
+  "campaign": "DELTA_1_5_GOVERNED_DEVELOPMENTAL_COGNITION",
+  "developmental_cognition": {
+    "comparison": {
+      "classification": "HIGHER_RESOLUTION",
+      "confidence": 0.78,
+      "conflict_signals": [],
+      "explanation": "Local concepts exist, but the external text introduces reviewable terms not represented in the retrieved local material.",
+      "local_match_count": 1,
+      "novel_terms": [
+        "chemical reaction",
+        "pH",
+        "titration",
+        "acid-base theories",
+        "Bronsted-Lowry acid-base theory",
+        "reaction mechanisms"
+      ],
+      "overlapping_terms": [
+        "acid-base reaction"
+      ],
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      }
+    },
+    "cycle_id": "delta15-cycle-1461b88ddfddff4c",
+    "evidence_title": "Acid-base reaction",
+    "evidence_url": "https://en.wikipedia.org/wiki/Acid-base_reaction",
+    "knowledge_gap": {
+      "evidence_source": "https://en.wikipedia.org/wiki/Acid-base_reaction",
+      "gap_id": "delta15-gap-9f543b76f6a9571e",
+      "missing_terms": [
+        "chemical reaction",
+        "pH",
+        "titration",
+        "acid-base theories",
+        "Bronsted-Lowry acid-base theory",
+        "reaction mechanisms"
+      ],
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "summary": "HIGHER_RESOLUTION: Acid-base reaction may improve local knowledge around chemical reaction, pH, titration, acid-base theories.",
+      "why_it_matters": "The runtime can answer the immediate question from external text, but it cannot improve its local model unless novel or higher-resolution evidence is surfaced as a governed review item."
+    },
+    "local_concept_snapshot": {
+      "match_count": 1,
+      "matched": true,
+      "matches": [
+        {
+          "concept_name": "Acid Base Reactions Mechanism",
+          "domain": "Chemistry",
+          "memory_type": "knowledge"
+        }
+      ],
+      "search_query": "acid-base reaction"
+    },
+    "objective": {
+      "effort": "low: reuse the existing approved-concept substrate and operator gates",
+      "objective_id": "delta15-objective-9e1e4a460a7ca593",
+      "requires_operator_approval": true,
+      "risk": "low: no memory write, provider call, or canonical promotion is performed automatically",
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "stop_conditions": [
+        "no reliable source text is available",
+        "comparison cannot identify any reviewable delta",
+        "operator approval is absent",
+        "governance flags indicate provider, memory, canonical, commit, or push authority was used"
+      ],
+      "success_criteria": [
+        "external evidence is compared against local approved concepts",
+        "known, novel, conflicting, or higher-resolution status is explicit",
+        "a promotion candidate is prepared without being written",
+        "the operator receives a concise approval question"
+      ],
+      "summary": "Prepare a noncanonical review proposal for Acid-base reaction from Wikipedia evidence.",
+      "value": "medium: converts one retrieved article into a reviewable local-knowledge improvement opportunity"
+    },
+    "observation": "`Acid-base reaction` produced higher resolution evidence: chemical reaction, pH, titration.",
+    "observed_at": "2026-07-12T02:26:59+00:00",
+    "operator_inquiry": {
+      "blocks_promotion": true,
+      "inquiry_id": "delta15-inquiry-a59a6125fa61adc0",
+      "options": [
+        "approve_prepare_proposal",
+        "discuss_first",
+        "reject_candidate"
+      ],
+      "prompt": "I found higher resolution evidence in `Acid-base reaction`. Approve preparing a noncanonical expansion proposal for review?",
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      }
+    },
+    "promotion_candidate": {
+      "approval_required": true,
+      "automatic_memory_write": false,
+      "candidate_id": "delta15-promotion-9291f971a8857d53",
+      "canonical_write_performed": false,
+      "evidence_terms": [
+        "acid-base reaction",
+        "chemical reaction",
+        "pH",
+        "titration",
+        "acid-base theories",
+        "Bronsted-Lowry acid-base theory",
+        "reaction mechanisms"
+      ],
+      "proposed_changes": [
+        "Review whether `chemical reaction` should become a noncanonical concept, relation, or evidence note.",
+        "Review whether `pH` should become a noncanonical concept, relation, or evidence note.",
+        "Review whether `titration` should become a noncanonical concept, relation, or evidence note.",
+        "Review whether `acid-base theories` should become a noncanonical concept, relation, or evidence note.",
+        "Review whether `Bronsted-Lowry acid-base theory` should become a noncanonical concept, relation, or evidence note.",
+        "Review whether `reaction mechanisms` should become a noncanonical concept, relation, or evidence note."
+      ],
+      "proposed_status": "operator_review_required_noncanonical_candidate",
+      "safety": {
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "scheduler_action_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "source_url": "https://en.wikipedia.org/wiki/Acid-base_reaction",
+      "title": "Acid-base reaction local knowledge review"
+    },
+    "safety": {
+      "automatic_approval_performed": false,
+      "automatic_code_modification_performed": false,
+      "autonomous_action_performed": false,
+      "canonical_write_performed": false,
+      "delta_75_interaction_performed": false,
+      "deployment_performed": false,
+      "developmental_memory_write_performed": false,
+      "external_retrieval_performed": false,
+      "fine_tuning_performed": false,
+      "hidden_persistence_performed": false,
+      "network_calls_performed": false,
+      "noncanonical_write_performed": false,
+      "plugin_activation_performed": false,
+      "production_mutation_performed": false,
+      "provider_calls_performed": false,
+      "runtime_commit_performed": false,
+      "runtime_push_performed": false,
+      "sandbox_creation_performed": false,
+      "scheduler_action_performed": false,
+      "training_performed": false,
+      "weight_update_performed": false
+    }
+  },
+  "governance": {
+    "automatic_memory_write_performed": false,
+    "autonomous_execution_performed": false,
+    "canonical_write_performed": false,
+    "hidden_persistence_performed": false,
+    "provider_calls_performed": false
+  },
+  "objective": "Wikipedia evidence -> local comparison -> reviewable promotion candidate -> operator inquiry",
+  "validation": {
+    "focused_tests": "13 passed: tests/delta_1_5/test_developmental_cognition.py and tests/delta_1_4/test_live_wikipedia_runtime.py",
+    "nearby_regression_suite": "114 passed: delta_1_5, delta_1_4, delta_1_3, delta_1_2, and focused RC2 router/memory/render tests",
+    "operator_transcript_repairs": [
+      "how do i interact with you -> live_runtime_help, not concept recall",
+      "tell me what wikipedia has regarding acid base reactions -> Wikipedia lookup intent",
+      "remember that -> live_memory_governance, no memory write",
+      "second Wikipedia lookup after budget -> live_wikipedia_budget_exhausted, no concept-router fallthrough"
+    ],
+    "py_compile": "passed for DELTA.py, delta_1_4_live_wikipedia_runtime.py, delta_1_5_developmental_cognition.py, and focused tests",
+    "real_wikipedia_smoke": "passed: Acid-base reaction retrieved through live bridge; HIGHER_RESOLUTION; provider false; memory candidate none; promotion candidate true; one operator inquiry"
+  }
+}

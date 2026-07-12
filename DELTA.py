@@ -2110,15 +2110,16 @@ class DeltaApp:
         if self.live_runtime_session and self.live_runtime_session.active:
             self.live_runtime_status.set(
                 f"Live runtime: {self.live_runtime_session.runtime.state}; "
-                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}"
+                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
+                f"inquiries={len(self.live_runtime_session.operator_inquiries)}"
             )
             return
         try:
             self.live_runtime_session = start_live_wikipedia_runtime(runtime_id="ui")
-            self.live_runtime_status.set("Live runtime: started; Wikipedia text enabled")
+            self.live_runtime_status.set("Live runtime: started; Wikipedia text enabled; inquiries=0")
             self._append_chat(
                 "DELTA",
-                "Live runtime started. Wikipedia text retrieval is enabled for this session only; no provider calls or memory writes are enabled.",
+                "Live runtime started. Wikipedia text retrieval is enabled for this session only; no provider calls or memory writes are enabled. Retrieved text will be compared against local concepts and surfaced as a gated review candidate when useful.",
             )
         except Exception as exc:  # noqa: BLE001
             self.live_runtime_status.set(f"Live runtime start failed: {type(exc).__name__}")
@@ -2161,7 +2162,8 @@ class DeltaApp:
             self._append_session("assistant", live_response.answer)
             self.live_runtime_status.set(
                 f"Live runtime: {self.live_runtime_session.runtime.state}; "
-                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}"
+                f"turns={len(self.live_runtime_session.turns)}; wiki={self.live_runtime_session.retrieval_count}; "
+                f"inquiries={len(self.live_runtime_session.operator_inquiries)}"
             )
             self._refresh_state_cards()
             return

@@ -20,6 +20,7 @@ def _fake_transport(url: str, max_chars: int):
 def test_wikipedia_query_extraction_is_bounded():
     assert wikipedia_query_from_message("Wikipedia: Ada Lovelace") == "Ada Lovelace"
     assert wikipedia_query_from_message("Look up Ada Lovelace on Wikipedia.") == "Ada Lovelace"
+    assert wikipedia_query_from_message("Tell me what Wikipedia has regarding Ada Lovelace.") == "Ada Lovelace"
     assert wikipedia_query_from_message("Who is Ada Lovelace?") == "Ada Lovelace"
     assert wikipedia_query_from_message("Thanks, that makes sense.") == ""
 
@@ -67,6 +68,7 @@ def test_live_chat_can_use_wikipedia_then_respects_query_budget():
     assert first.payload["external_retrieval_performed"] is True
     assert first.payload["provider_calls_performed"] is False
     assert first.payload["memory_candidate"] is None
+    assert first.payload["promotion_candidate"]["approval_required"] is True
 
     session, second = handle_live_chat(
         session,
@@ -74,8 +76,8 @@ def test_live_chat_can_use_wikipedia_then_respects_query_budget():
         wikipedia_transport=_fake_transport,
     )
     assert session.retrieval_count == 1
-    assert second.route != "live_wikipedia_text_retrieval"
-    assert "query budget is already used" in second.answer
+    assert second.route == "live_wikipedia_budget_exhausted"
+    assert "I did not retrieve another page" in second.answer
 
 
 def test_live_chat_falls_back_to_router_without_retrieval_for_ordinary_turn():
