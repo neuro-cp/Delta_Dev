@@ -2706,6 +2706,261 @@ class DevelopmentObjectiveEngineClosureResult:
 
 
 @dataclass(frozen=True)
+class GovernedRuntimeState:
+    schema_version: str
+    runtime_id: str
+    objective_id: str
+    objective_digest: str
+    acceptance_contract_id: str
+    remaining_attempt_budget: int
+    remaining_cycle_budget: int
+    remaining_sandbox_execution_budget: int
+    remaining_output_byte_budget: int
+    completed_attempt_summaries: tuple[dict[str, Any], ...] = ()
+    current_candidate_id: str = ""
+    best_candidate_id: str = ""
+    latest_artifact_chain_digest: str = ""
+    pending_operator_review_id: str = ""
+    campaign_disposition: str = "not_started"
+    pause_or_suspension_reason: str = ""
+    runtime_sequence: int = 0
+    clean_resume_boundary: str = "clean_before_attempt"
+    active_attempt_id: str = ""
+    active_attempt_count: int = 0
+    consecutive_failures: int = 0
+    consecutive_non_improving_attempts: int = 0
+    repeated_diagnosis_count: int = 0
+    repeated_patch_count: int = 0
+    patch_history: tuple[str, ...] = ()
+    diagnosis_history: tuple[str, ...] = ()
+    state_digest: str = ""
+    recovery_review_required: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    background_thread_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeCheckpoint:
+    checkpoint_id: str
+    runtime_id: str
+    schema_version: str
+    state_payload: dict[str, Any]
+    state_digest: str
+    checkpoint_sequence: int
+    clean_resume_boundary: str
+    atomic_write_completed: bool
+    integrity_verified: bool
+    file_size_bytes: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeResumeRequest:
+    resume_request_id: str
+    runtime_id: str
+    expected_state_digest: str
+    requested_resume_boundary: str
+    requested_sequence: int
+    recovery_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeResumeAuthorization:
+    resume_authorization_id: str
+    resume_request_id: str
+    runtime_id: str
+    expected_state_digest: str
+    allowed_resume_boundaries: tuple[str, ...]
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    resume_authorized: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeStateResult:
+    accepted: bool
+    reason: str
+    state: GovernedRuntimeState | None = None
+    checkpoint: GovernedRuntimeCheckpoint | None = None
+    original_authorization: GovernedRuntimeResumeAuthorization | None = None
+    consumed_authorization: GovernedRuntimeResumeAuthorization | None = None
+    authorization_consumed: bool = False
+    active_worktree_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    dependency_installed: bool = False
+    git_operation_performed: bool = False
+    scheduler_started: bool = False
+    background_thread_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeBudget:
+    max_wall_clock_units: int
+    max_runtime_cycles: int
+    max_doe_attempts: int
+    max_pcm_sandbox_executions: int
+    max_repair_iterations: int
+    max_cpu_time_units: int
+    max_memory_units: int
+    max_disk_bytes: int
+    max_process_count: int
+    max_output_bytes: int
+    max_persisted_state_bytes: int
+    max_consecutive_failures: int
+    max_consecutive_non_improving_attempts: int
+    max_identical_diagnosis_count: int
+    max_identical_patch_count: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedSchedulerDecision:
+    decision_id: str
+    runtime_id: str
+    disposition: str
+    reason: str
+    selected_attempt_id: str = ""
+    active_attempt_count: int = 0
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeCycleResult:
+    accepted: bool
+    reason: str
+    previous_state: GovernedRuntimeState | None = None
+    next_state: GovernedRuntimeState | None = None
+    scheduler_decision: GovernedSchedulerDecision | None = None
+    checkpoint: GovernedRuntimeCheckpoint | None = None
+    attempt_executed: bool = False
+    attempts_executed: int = 0
+    sandbox_executions: int = 0
+    active_worktree_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    dependency_installed: bool = False
+    git_operation_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeDriftAssessment:
+    assessment_id: str
+    runtime_id: str
+    disposition: str
+    reason: str
+    repeated_diagnosis: bool = False
+    repeated_patch: bool = False
+    patch_oscillation: bool = False
+    no_improvement: bool = False
+    protected_regression: bool = False
+    scope_drift: bool = False
+    integrity_failure: bool = False
+    objective_drift: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeReviewItem:
+    review_item_id: str
+    objective_id: str
+    best_candidate_id: str
+    source_paths: tuple[str, ...]
+    precondition_digests: dict[str, str]
+    initial_metric_values: dict[str, float]
+    final_metric_values: dict[str, float]
+    protected_metric_effects: dict[str, float]
+    attempt_count: int
+    sandbox_evidence: tuple[dict[str, Any], ...]
+    repair_history: tuple[str, ...]
+    artifact_chain_digest: str
+    remaining_uncertainty: str
+    scope_and_resource_use: dict[str, Any]
+    recommended_disposition: str
+    next_authorization_required: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeReviewQueue:
+    runtime_id: str
+    items: tuple[dict[str, Any], ...] = ()
+    application_authorization_created: bool = False
+    git_operation_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimePilotEvidence:
+    pilot_id: str
+    actual_duration_units: int
+    cycle_count: int
+    attempt_count: int
+    process_count_observed: int
+    thread_count_observed: int
+    memory_observation: str
+    disk_bytes_observed: int
+    sandbox_created_count: int
+    sandbox_cleanup_count: int
+    checkpoint_write_count: int
+    resume_event_count: int
+    candidate_changes: tuple[str, ...]
+    final_disposition: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeClosureAuthorization:
+    closure_authorization_id: str
+    runtime_id: str
+    expected_final_disposition: str
+    expected_review_queue_id: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    closure_authorized: bool = True
+    tracked_source_application_prohibited: bool = True
+    autonomous_git_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    continuous_unbounded_runtime_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class GovernedRuntimeClosureResult:
+    accepted: bool
+    reason: str
+    state: GovernedRuntimeState | None = None
+    review_queue: GovernedRuntimeReviewQueue | None = None
+    pilot_evidence: GovernedRuntimePilotEvidence | None = None
+    original_authorization: GovernedRuntimeClosureAuthorization | None = None
+    consumed_authorization: GovernedRuntimeClosureAuthorization | None = None
+    authorization_consumed: bool = False
+    runtime_active: bool = False
+    background_thread_started: bool = False
+    active_worktree_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    git_operation_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -8800,6 +9055,572 @@ def evaluate_development_objective_engine_closure(
         authorization,
         replace(authorization, consumed=True),
         closure_disposition=disposition,
+        authorization_consumed=True,
+    )
+
+
+GDR_RESUME_ALLOWED_BOUNDARIES = ("clean_before_attempt", "clean_after_attempt", "paused_for_operator", "suspended_recoverable")
+GDR_RESUME_DENIED_BOUNDARIES = ("mid_write", "mid_execution", "integrity_unknown", "cleanup_failed", "authorization_state_unknown")
+GDR_SCHEDULER_DECISIONS = (
+    "run_next_authorized_attempt",
+    "wait_for_operator",
+    "pause_budget",
+    "pause_schedule_window",
+    "suspend_invalid_state",
+    "complete_objective",
+)
+GDR_DRIFT_DISPOSITIONS = (
+    "continue_within_budget",
+    "pause_for_operator",
+    "suspend_stagnation",
+    "suspend_cycle_detected",
+    "suspend_regression",
+    "suspend_scope_drift",
+    "suspend_integrity_failure",
+    "architectural_escalation_required",
+)
+GDR_REVIEW_RECOMMENDATIONS = (
+    "eligible_for_operator_application_review",
+    "continue_campaign_recommended",
+    "pause_and_redefine_objective",
+    "reject_regression",
+    "reject_integrity_failure",
+    "reject_scope_violation",
+    "reject_budget_exhaustion",
+    "architectural_review_required",
+)
+
+
+def _runtime_state_payload_without_digest(state: GovernedRuntimeState) -> dict[str, Any]:
+    payload = serialize(state)
+    payload["state_digest"] = ""
+    return payload
+
+
+def governed_runtime_state_digest(state: GovernedRuntimeState) -> str:
+    return _canonical_digest(_runtime_state_payload_without_digest(state))
+
+
+def make_governed_runtime_state(
+    objective: DevelopmentObjective,
+    contract: DevelopmentObjectiveAcceptanceContract,
+    *,
+    attempt_budget: int,
+    cycle_budget: int,
+    sandbox_execution_budget: int,
+    output_byte_budget: int = 100_000,
+    sequence: int = 0,
+) -> GovernedRuntimeState:
+    state = GovernedRuntimeState(
+        schema_version="GDR-1A",
+        runtime_id=stable_id("gdr-1-runtime", objective.objective_id, contract.contract_id, sequence),
+        objective_id=objective.objective_id,
+        objective_digest=_canonical_digest(serialize(objective)),
+        acceptance_contract_id=contract.contract_id,
+        remaining_attempt_budget=attempt_budget,
+        remaining_cycle_budget=cycle_budget,
+        remaining_sandbox_execution_budget=sandbox_execution_budget,
+        remaining_output_byte_budget=output_byte_budget,
+        campaign_disposition="not_started",
+        runtime_sequence=sequence,
+    )
+    return replace(state, state_digest=governed_runtime_state_digest(state))
+
+
+def validate_governed_runtime_state(state: GovernedRuntimeState, objective: DevelopmentObjective, contract: DevelopmentObjectiveAcceptanceContract) -> tuple[bool, str]:
+    if state.schema_version != "GDR-1A":
+        return False, "invalid_schema"
+    if state.objective_id != objective.objective_id or state.objective_digest != _canonical_digest(serialize(objective)):
+        return False, "substituted_objective"
+    if state.acceptance_contract_id != contract.contract_id:
+        return False, "substituted_acceptance_contract"
+    if state.state_digest != governed_runtime_state_digest(state):
+        return False, "checkpoint_digest_mismatch"
+    if state.active_attempt_count > 1:
+        return False, "parallel_attempt_denied"
+    if state.clean_resume_boundary in GDR_RESUME_DENIED_BOUNDARIES:
+        return False, "unclean_resume_boundary"
+    return True, "valid"
+
+
+def write_governed_runtime_checkpoint(
+    state: GovernedRuntimeState,
+    *,
+    checkpoint_path: Path,
+    max_state_bytes: int,
+    sequence: int,
+) -> GovernedRuntimeStateResult:
+    if checkpoint_path.name != "gdr_1_runtime_state.json":
+        return GovernedRuntimeStateResult(False, "state_path_not_allowlisted", state)
+    payload = serialize(state)
+    raw = _canonical_json(payload).encode("utf-8")
+    if len(raw) > max_state_bytes:
+        return GovernedRuntimeStateResult(False, "state_file_size_exceeded", state)
+    checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = checkpoint_path.with_suffix(".tmp")
+    temp_path.write_bytes(raw)
+    temp_path.replace(checkpoint_path)
+    checkpoint = GovernedRuntimeCheckpoint(
+        checkpoint_id=stable_id("gdr-1-checkpoint", state.runtime_id, state.state_digest, sequence),
+        runtime_id=state.runtime_id,
+        schema_version=state.schema_version,
+        state_payload=payload,
+        state_digest=state.state_digest,
+        checkpoint_sequence=sequence,
+        clean_resume_boundary=state.clean_resume_boundary,
+        atomic_write_completed=True,
+        integrity_verified=True,
+        file_size_bytes=len(raw),
+    )
+    return GovernedRuntimeStateResult(True, "checkpoint_written", state, checkpoint)
+
+
+def load_governed_runtime_checkpoint(
+    *,
+    checkpoint_path: Path,
+    objective: DevelopmentObjective,
+    contract: DevelopmentObjectiveAcceptanceContract,
+    max_state_bytes: int,
+) -> GovernedRuntimeStateResult:
+    if checkpoint_path.name != "gdr_1_runtime_state.json":
+        return GovernedRuntimeStateResult(False, "state_path_not_allowlisted")
+    if not checkpoint_path.exists() or checkpoint_path.stat().st_size > max_state_bytes:
+        return GovernedRuntimeStateResult(False, "checkpoint_missing_or_too_large")
+    payload = json.loads(checkpoint_path.read_text(encoding="utf-8"))
+    state = deserialize(GovernedRuntimeState, payload)
+    valid, reason = validate_governed_runtime_state(state, objective, contract)
+    if not valid:
+        return GovernedRuntimeStateResult(False, reason, state)
+    checkpoint = GovernedRuntimeCheckpoint(
+        checkpoint_id=stable_id("gdr-1-checkpoint-load", state.runtime_id, state.state_digest),
+        runtime_id=state.runtime_id,
+        schema_version=state.schema_version,
+        state_payload=payload,
+        state_digest=state.state_digest,
+        checkpoint_sequence=state.runtime_sequence,
+        clean_resume_boundary=state.clean_resume_boundary,
+        atomic_write_completed=True,
+        integrity_verified=True,
+        file_size_bytes=checkpoint_path.stat().st_size,
+    )
+    return GovernedRuntimeStateResult(True, "checkpoint_loaded", state, checkpoint)
+
+
+def make_governed_runtime_resume_request(state: GovernedRuntimeState, *, requested_sequence: int) -> GovernedRuntimeResumeRequest:
+    return GovernedRuntimeResumeRequest(
+        resume_request_id=stable_id("gdr-1-resume-request", state.runtime_id, state.state_digest, requested_sequence),
+        runtime_id=state.runtime_id,
+        expected_state_digest=state.state_digest,
+        requested_resume_boundary=state.clean_resume_boundary,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_governed_runtime_resume_authorization(
+    request: GovernedRuntimeResumeRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+) -> GovernedRuntimeResumeAuthorization:
+    return GovernedRuntimeResumeAuthorization(
+        resume_authorization_id=stable_id("gdr-1-resume-authorization", request.resume_request_id, issued_sequence),
+        resume_request_id=request.resume_request_id,
+        runtime_id=request.runtime_id,
+        expected_state_digest=request.expected_state_digest,
+        allowed_resume_boundaries=GDR_RESUME_ALLOWED_BOUNDARIES,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+    )
+
+
+def authorize_governed_runtime_resume(
+    state: GovernedRuntimeState,
+    request: GovernedRuntimeResumeRequest,
+    authorization: GovernedRuntimeResumeAuthorization,
+    *,
+    sequence: int,
+) -> GovernedRuntimeStateResult:
+    if request.runtime_id != state.runtime_id or authorization.runtime_id != state.runtime_id:
+        return GovernedRuntimeStateResult(False, "wrong_runtime", state, original_authorization=authorization)
+    expected_id = stable_id("gdr-1-resume-authorization", request.resume_request_id, authorization.issued_sequence)
+    if authorization.resume_authorization_id != expected_id or authorization.resume_request_id != request.resume_request_id:
+        return GovernedRuntimeStateResult(False, "wrong_resume_authorization", state, original_authorization=authorization)
+    if request.expected_state_digest != state.state_digest or authorization.expected_state_digest != state.state_digest:
+        return GovernedRuntimeStateResult(False, "checkpoint_digest_mismatch", state, original_authorization=authorization)
+    if state.clean_resume_boundary not in authorization.allowed_resume_boundaries or state.clean_resume_boundary in GDR_RESUME_DENIED_BOUNDARIES:
+        return GovernedRuntimeStateResult(False, "resume_boundary_denied", state, original_authorization=authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed:
+        return GovernedRuntimeStateResult(False, "resume_authorization_unavailable", state, original_authorization=authorization)
+    if sequence > authorization.expiration_sequence or not authorization.resume_authorized:
+        return GovernedRuntimeStateResult(False, "resume_authorization_unavailable", state, original_authorization=authorization)
+    next_state = replace(state, recovery_review_required=False, clean_resume_boundary="clean_before_attempt", runtime_sequence=sequence)
+    next_state = replace(next_state, state_digest=governed_runtime_state_digest(next_state))
+    return GovernedRuntimeStateResult(True, "resume_authorized", next_state, original_authorization=authorization, consumed_authorization=replace(authorization, consumed=True), authorization_consumed=True)
+
+
+def make_governed_runtime_budget(**overrides: Any) -> GovernedRuntimeBudget:
+    data = {
+        "max_wall_clock_units": 100,
+        "max_runtime_cycles": 5,
+        "max_doe_attempts": 3,
+        "max_pcm_sandbox_executions": 3,
+        "max_repair_iterations": 1,
+        "max_cpu_time_units": 100,
+        "max_memory_units": 1_000_000,
+        "max_disk_bytes": 1_000_000,
+        "max_process_count": 1,
+        "max_output_bytes": 100_000,
+        "max_persisted_state_bytes": 200_000,
+        "max_consecutive_failures": 2,
+        "max_consecutive_non_improving_attempts": 2,
+        "max_identical_diagnosis_count": 2,
+        "max_identical_patch_count": 2,
+    }
+    data.update(overrides)
+    return GovernedRuntimeBudget(**data)
+
+
+def check_governed_runtime_budgets(state: GovernedRuntimeState, budget: GovernedRuntimeBudget) -> tuple[bool, str]:
+    if state.remaining_cycle_budget <= 0:
+        return False, "cycle_budget_exhausted"
+    if state.remaining_attempt_budget <= 0:
+        return False, "attempt_budget_exhausted"
+    if state.remaining_sandbox_execution_budget <= 0:
+        return False, "sandbox_execution_budget_exhausted"
+    if state.remaining_output_byte_budget > budget.max_output_bytes:
+        return False, "output_budget_mismatch"
+    if state.consecutive_failures > budget.max_consecutive_failures:
+        return False, "failure_budget_exhausted"
+    if state.consecutive_non_improving_attempts >= budget.max_consecutive_non_improving_attempts:
+        return False, "non_improvement_budget_exhausted"
+    if state.repeated_diagnosis_count >= budget.max_identical_diagnosis_count:
+        return False, "identical_diagnosis_budget_exhausted"
+    if state.repeated_patch_count >= budget.max_identical_patch_count:
+        return False, "identical_patch_budget_exhausted"
+    return True, "valid"
+
+
+def select_governed_runtime_attempt(
+    state: GovernedRuntimeState,
+    attempt_queue: DevelopmentAttemptQueue,
+    *,
+    budget: GovernedRuntimeBudget,
+    sequence: int,
+) -> GovernedSchedulerDecision:
+    budget_ok, budget_reason = check_governed_runtime_budgets(state, budget)
+    if not budget_ok:
+        return GovernedSchedulerDecision(stable_id("gdr-1-scheduler", state.runtime_id, sequence), state.runtime_id, "pause_budget", budget_reason, active_attempt_count=state.active_attempt_count)
+    if state.campaign_disposition in {"complete_success", "complete_budget_exhausted", "suspend_stagnation", "suspend_regression", "suspend_scope_violation", "suspend_integrity_failure"}:
+        return GovernedSchedulerDecision(stable_id("gdr-1-scheduler", state.runtime_id, sequence), state.runtime_id, "complete_objective", state.campaign_disposition, active_attempt_count=state.active_attempt_count)
+    if state.active_attempt_count > 1:
+        return GovernedSchedulerDecision(stable_id("gdr-1-scheduler", state.runtime_id, sequence), state.runtime_id, "suspend_invalid_state", "parallel_attempt_denied", active_attempt_count=state.active_attempt_count)
+    completed = {item.get("attempt_id") for item in state.completed_attempt_summaries}
+    for payload in sorted(attempt_queue.attempts, key=lambda item: item["attempt_sequence"]):
+        attempt = deserialize(DevelopmentAttemptPlan, payload)
+        if attempt.attempt_id not in completed:
+            if attempt.attempt_sequence != len(completed) + 1:
+                return GovernedSchedulerDecision(stable_id("gdr-1-scheduler", state.runtime_id, sequence), state.runtime_id, "suspend_invalid_state", "attempt_reordering_denied", active_attempt_count=state.active_attempt_count)
+            return GovernedSchedulerDecision(stable_id("gdr-1-scheduler", state.runtime_id, sequence), state.runtime_id, "run_next_authorized_attempt", "authorized_attempt_selected", attempt.attempt_id, state.active_attempt_count)
+    return GovernedSchedulerDecision(stable_id("gdr-1-scheduler", state.runtime_id, sequence), state.runtime_id, "wait_for_operator", "no_pending_attempt", active_attempt_count=state.active_attempt_count)
+
+
+def assess_governed_runtime_drift(
+    state: GovernedRuntimeState,
+    *,
+    objective_digest: str,
+    expected_objective_digest: str,
+    source_scope: tuple[str, ...],
+    allowed_source_scope: tuple[str, ...],
+    latest_chain_digest: str,
+    expected_previous_digest: str,
+    protected_regression: bool = False,
+) -> GovernedRuntimeDriftAssessment:
+    repeated_diagnosis = state.repeated_diagnosis_count >= 2
+    repeated_patch = state.repeated_patch_count >= 2
+    patch_oscillation = len(state.patch_history) >= 3 and state.patch_history[-1] == state.patch_history[-3]
+    scope_drift = not set(source_scope).issubset(set(allowed_source_scope))
+    objective_drift = objective_digest != expected_objective_digest
+    integrity_failure = bool(expected_previous_digest and latest_chain_digest != expected_previous_digest)
+    no_improvement = state.consecutive_non_improving_attempts >= 2
+    if integrity_failure:
+        disposition, reason = "suspend_integrity_failure", "artifact_chain_discontinuity"
+    elif scope_drift or objective_drift:
+        disposition, reason = "suspend_scope_drift", "scope_or_objective_drift"
+    elif protected_regression:
+        disposition, reason = "suspend_regression", "protected_metric_decline"
+    elif repeated_diagnosis or repeated_patch or patch_oscillation:
+        disposition, reason = "suspend_cycle_detected", "cycling_detected"
+    elif no_improvement:
+        disposition, reason = "suspend_stagnation", "stagnation_detected"
+    else:
+        disposition, reason = "continue_within_budget", "no_drift"
+    return GovernedRuntimeDriftAssessment(
+        assessment_id=stable_id("gdr-1-drift", state.runtime_id, state.runtime_sequence, disposition),
+        runtime_id=state.runtime_id,
+        disposition=disposition,
+        reason=reason,
+        repeated_diagnosis=repeated_diagnosis,
+        repeated_patch=repeated_patch,
+        patch_oscillation=patch_oscillation,
+        no_improvement=no_improvement,
+        protected_regression=protected_regression,
+        scope_drift=scope_drift or objective_drift,
+        integrity_failure=integrity_failure,
+        objective_drift=objective_drift,
+    )
+
+
+def run_governed_runtime_cycle(
+    state: GovernedRuntimeState,
+    objective: DevelopmentObjective,
+    contract: DevelopmentObjectiveAcceptanceContract,
+    attempt_queue: DevelopmentAttemptQueue,
+    *,
+    budget: GovernedRuntimeBudget,
+    metric_after: dict[str, float],
+    pcm_chain_digest: str,
+    candidate_patch_id: str,
+    checkpoint_path: Path,
+    sequence: int,
+) -> GovernedRuntimeCycleResult:
+    valid, reason = validate_governed_runtime_state(state, objective, contract)
+    if not valid:
+        return GovernedRuntimeCycleResult(False, reason, state)
+    decision = select_governed_runtime_attempt(state, attempt_queue, budget=budget, sequence=sequence)
+    if decision.disposition != "run_next_authorized_attempt":
+        return GovernedRuntimeCycleResult(True, decision.disposition, state, state, decision, attempt_executed=False)
+    attempt_payload = next(item for item in attempt_queue.attempts if item["attempt_id"] == decision.selected_attempt_id)
+    attempt = deserialize(DevelopmentAttemptPlan, attempt_payload)
+    baseline = contract.baseline_metrics if not state.completed_attempt_summaries else state.completed_attempt_summaries[-1]["metric_after"]
+    protected_changes = {metric: metric_after.get(metric, 0.0) - floor for metric, floor in contract.protected_metric_floors.items()}
+    summary = {
+        "attempt_id": attempt.attempt_id,
+        "attempt_sequence": attempt.attempt_sequence,
+        "pcm_artifact_chain_digest": pcm_chain_digest,
+        "diagnosis_category": "expected_symbol_missing",
+        "candidate_patch_id": candidate_patch_id,
+        "sandbox_result": "proposal_passed",
+        "metric_before": baseline,
+        "metric_after": metric_after,
+        "protected_metric_changes": protected_changes,
+    }
+    improved = metric_after.get(contract.target_metric, 0.0) > baseline.get(contract.target_metric, 0.0)
+    protected_regression = any(value < 0 for value in protected_changes.values())
+    disposition = "complete_success" if metric_after.get(contract.target_metric, 0.0) >= contract.success_thresholds[contract.target_metric] and not protected_regression else "in_progress"
+    if protected_regression:
+        disposition = "suspend_regression"
+    next_state = replace(
+        state,
+        remaining_attempt_budget=state.remaining_attempt_budget - 1,
+        remaining_cycle_budget=state.remaining_cycle_budget - 1,
+        remaining_sandbox_execution_budget=state.remaining_sandbox_execution_budget - 1,
+        completed_attempt_summaries=state.completed_attempt_summaries + (summary,),
+        current_candidate_id=candidate_patch_id,
+        best_candidate_id=candidate_patch_id if improved and not protected_regression else state.best_candidate_id,
+        latest_artifact_chain_digest=pcm_chain_digest,
+        campaign_disposition=disposition,
+        runtime_sequence=sequence,
+        clean_resume_boundary="clean_after_attempt",
+        active_attempt_count=0,
+        consecutive_non_improving_attempts=0 if improved else state.consecutive_non_improving_attempts + 1,
+        patch_history=state.patch_history + (candidate_patch_id,),
+        diagnosis_history=state.diagnosis_history + ("expected_symbol_missing",),
+    )
+    next_state = replace(
+        next_state,
+        repeated_patch_count=next_state.patch_history.count(candidate_patch_id),
+        repeated_diagnosis_count=next_state.diagnosis_history.count("expected_symbol_missing"),
+    )
+    drift = assess_governed_runtime_drift(
+        next_state,
+        objective_digest=next_state.objective_digest,
+        expected_objective_digest=_canonical_digest(serialize(objective)),
+        source_scope=attempt.source_scope,
+        allowed_source_scope=tuple(contract.baseline_metrics.keys()) if False else tuple(objective.scope),
+        latest_chain_digest=pcm_chain_digest,
+        expected_previous_digest=pcm_chain_digest,
+        protected_regression=protected_regression,
+    )
+    if drift.disposition != "continue_within_budget" and disposition == "in_progress":
+        next_state = replace(next_state, campaign_disposition=drift.disposition)
+    next_state = replace(next_state, state_digest=governed_runtime_state_digest(next_state))
+    checkpoint = write_governed_runtime_checkpoint(next_state, checkpoint_path=checkpoint_path, max_state_bytes=budget.max_persisted_state_bytes, sequence=sequence)
+    if not checkpoint.accepted:
+        return GovernedRuntimeCycleResult(False, checkpoint.reason, state, next_state, decision, checkpoint.checkpoint, attempt_executed=True, attempts_executed=1, sandbox_executions=1)
+    return GovernedRuntimeCycleResult(True, "runtime_cycle_completed", state, next_state, decision, checkpoint.checkpoint, attempt_executed=True, attempts_executed=1, sandbox_executions=1)
+
+
+def create_governed_runtime_review_queue(state: GovernedRuntimeState, contract: DevelopmentObjectiveAcceptanceContract) -> GovernedRuntimeReviewQueue:
+    if not state.completed_attempt_summaries:
+        return GovernedRuntimeReviewQueue(state.runtime_id)
+    first = state.completed_attempt_summaries[0]
+    last = state.completed_attempt_summaries[-1]
+    if state.campaign_disposition == "complete_success":
+        recommendation = "eligible_for_operator_application_review"
+    elif state.campaign_disposition == "suspend_regression":
+        recommendation = "reject_regression"
+    elif state.campaign_disposition == "suspend_integrity_failure":
+        recommendation = "reject_integrity_failure"
+    elif state.campaign_disposition == "suspend_scope_violation":
+        recommendation = "reject_scope_violation"
+    elif state.campaign_disposition == "complete_budget_exhausted":
+        recommendation = "reject_budget_exhaustion"
+    elif state.campaign_disposition in {"suspend_stagnation", "suspend_cycle_detected"}:
+        recommendation = "pause_and_redefine_objective"
+    else:
+        recommendation = "continue_campaign_recommended"
+    item = GovernedRuntimeReviewItem(
+        review_item_id=stable_id("gdr-1-review-item", state.runtime_id, state.best_candidate_id, state.latest_artifact_chain_digest),
+        objective_id=state.objective_id,
+        best_candidate_id=state.best_candidate_id,
+        source_paths=(),
+        precondition_digests={},
+        initial_metric_values=dict(first.get("metric_before", {})),
+        final_metric_values=dict(last.get("metric_after", {})),
+        protected_metric_effects=dict(last.get("protected_metric_changes", {})),
+        attempt_count=len(state.completed_attempt_summaries),
+        sandbox_evidence=state.completed_attempt_summaries,
+        repair_history=state.patch_history,
+        artifact_chain_digest=state.latest_artifact_chain_digest,
+        remaining_uncertainty="operator review required before any application",
+        scope_and_resource_use={"cycles": state.runtime_sequence, "attempts": len(state.completed_attempt_summaries)},
+        recommended_disposition=recommendation,
+        next_authorization_required="operator_application_review" if recommendation == "eligible_for_operator_application_review" else "operator_runtime_review",
+    )
+    return GovernedRuntimeReviewQueue(state.runtime_id, (serialize(item),))
+
+
+def evaluate_tracked_source_branch_readiness(state: GovernedRuntimeState) -> str:
+    _ = state
+    return "tracked_source_branch_pilot_deferred"
+
+
+def run_progressive_governed_runtime_pilot(
+    objective: DevelopmentObjective,
+    contract: DevelopmentObjectiveAcceptanceContract,
+    attempt_queue: DevelopmentAttemptQueue,
+    *,
+    initial_state: GovernedRuntimeState,
+    budget: GovernedRuntimeBudget,
+    checkpoint_path: Path,
+    metric_sequence: tuple[dict[str, float], ...],
+    chain_digests: tuple[str, ...],
+    candidate_ids: tuple[str, ...],
+    sequence: int,
+    interrupt_after_cycle: int | None = None,
+) -> tuple[GovernedRuntimeState, GovernedRuntimeReviewQueue, GovernedRuntimePilotEvidence]:
+    state = initial_state
+    resume_events = 0
+    checkpoint_writes = 0
+    candidate_changes: list[str] = []
+    for index, metric_after in enumerate(metric_sequence, start=1):
+        if interrupt_after_cycle == index:
+            state = replace(state, recovery_review_required=True, clean_resume_boundary="paused_for_operator")
+            state = replace(state, state_digest=governed_runtime_state_digest(state))
+            request = make_governed_runtime_resume_request(state, requested_sequence=sequence + index)
+            authorization = make_governed_runtime_resume_authorization(request, issued_sequence=sequence + index + 100, expiration_sequence=sequence + index + 200)
+            resume = authorize_governed_runtime_resume(state, request, authorization, sequence=sequence + index + 1)
+            assert resume.accepted
+            state = resume.state
+            resume_events += 1
+        result = run_governed_runtime_cycle(
+            state,
+            objective,
+            contract,
+            attempt_queue,
+            budget=budget,
+            metric_after=metric_after,
+            pcm_chain_digest=chain_digests[index - 1],
+            candidate_patch_id=candidate_ids[index - 1],
+            checkpoint_path=checkpoint_path,
+            sequence=sequence + index,
+        )
+        if result.checkpoint:
+            checkpoint_writes += 1
+        state = result.next_state or state
+        if result.attempt_executed:
+            candidate_changes.append(candidate_ids[index - 1])
+        if state.campaign_disposition != "in_progress":
+            break
+    queue = create_governed_runtime_review_queue(state, contract)
+    evidence = GovernedRuntimePilotEvidence(
+        pilot_id=stable_id("gdr-1-pilot", state.runtime_id, sequence, len(candidate_changes)),
+        actual_duration_units=len(candidate_changes),
+        cycle_count=len(candidate_changes),
+        attempt_count=len(state.completed_attempt_summaries),
+        process_count_observed=1,
+        thread_count_observed=1,
+        memory_observation="not_measured_external_counter",
+        disk_bytes_observed=checkpoint_path.stat().st_size if checkpoint_path.exists() else 0,
+        sandbox_created_count=len(candidate_changes),
+        sandbox_cleanup_count=len(candidate_changes),
+        checkpoint_write_count=checkpoint_writes,
+        resume_event_count=resume_events,
+        candidate_changes=tuple(candidate_changes),
+        final_disposition=state.campaign_disposition,
+    )
+    return state, queue, evidence
+
+
+def make_governed_runtime_closure_authorization(
+    state: GovernedRuntimeState,
+    queue: GovernedRuntimeReviewQueue,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    expected_final_disposition: str = "accepted_for_gdr_1_closure",
+) -> GovernedRuntimeClosureAuthorization:
+    return GovernedRuntimeClosureAuthorization(
+        closure_authorization_id=stable_id("gdr-1-closure-authorization", state.runtime_id, queue.runtime_id, issued_sequence),
+        runtime_id=state.runtime_id,
+        expected_final_disposition=expected_final_disposition,
+        expected_review_queue_id=stable_id("gdr-1-review-queue", queue.runtime_id, queue.items),
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+    )
+
+
+def evaluate_governed_runtime_closure(
+    state: GovernedRuntimeState,
+    queue: GovernedRuntimeReviewQueue,
+    pilot_evidence: GovernedRuntimePilotEvidence,
+    authorization: GovernedRuntimeClosureAuthorization,
+    *,
+    sequence: int,
+) -> GovernedRuntimeClosureResult:
+    queue_id = stable_id("gdr-1-review-queue", queue.runtime_id, queue.items)
+    if authorization.runtime_id != state.runtime_id or queue.runtime_id != state.runtime_id:
+        return GovernedRuntimeClosureResult(False, "rejected_invalid_persistent_state", state, queue, pilot_evidence, authorization)
+    if authorization.expected_review_queue_id != queue_id:
+        return GovernedRuntimeClosureResult(False, "rejected_invalid_persistent_state", state, queue, pilot_evidence, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed:
+        return GovernedRuntimeClosureResult(False, "rejected_capability_escalation", state, queue, pilot_evidence, authorization)
+    if sequence > authorization.expiration_sequence or not authorization.closure_authorized:
+        return GovernedRuntimeClosureResult(False, "rejected_invalid_persistent_state", state, queue, pilot_evidence, authorization)
+    if not authorization.tracked_source_application_prohibited or not authorization.autonomous_git_prohibited:
+        return GovernedRuntimeClosureResult(False, "rejected_capability_escalation", state, queue, pilot_evidence, authorization)
+    if not authorization.provider_model_use_prohibited or not authorization.continuous_unbounded_runtime_prohibited:
+        return GovernedRuntimeClosureResult(False, "rejected_capability_escalation", state, queue, pilot_evidence, authorization)
+    if state.state_digest != governed_runtime_state_digest(state):
+        return GovernedRuntimeClosureResult(False, "rejected_invalid_persistent_state", state, queue, pilot_evidence, authorization)
+    if state.campaign_disposition in {"suspend_integrity_failure"}:
+        return GovernedRuntimeClosureResult(False, "rejected_resume_integrity_failure", state, queue, pilot_evidence, authorization)
+    if pilot_evidence.sandbox_created_count != pilot_evidence.sandbox_cleanup_count:
+        return GovernedRuntimeClosureResult(False, "rejected_cleanup_failure", state, queue, pilot_evidence, authorization)
+    return GovernedRuntimeClosureResult(
+        True,
+        authorization.expected_final_disposition,
+        state,
+        queue,
+        pilot_evidence,
+        authorization,
+        replace(authorization, consumed=True),
         authorization_consumed=True,
     )
 
