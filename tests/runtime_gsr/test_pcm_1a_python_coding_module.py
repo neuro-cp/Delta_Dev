@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from dataclasses import replace
 
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr
@@ -304,3 +305,182 @@ def test_pcm_1b_record_survives_serialization_without_activation():
     assert restored_record.module_activated is False
     assert restored_record.registry_mutated is False
     assert restored_record.permissions_granted is False
+
+
+def _pcm_1b_record() -> gsr.PythonCodingModuleAttachmentRecord:
+    eligibility = _evaluate()
+    state = gsr.make_python_coding_module_attachment_state()
+    result = gsr.create_python_coding_module_inert_attachment_record(state, eligibility, sequence=506)
+    assert result.accepted is True
+    return result.attachment_record
+
+
+def _inspection_pair(record: gsr.PythonCodingModuleAttachmentRecord, path: str = "sample.py"):
+    request = gsr.make_python_source_inspection_request(
+        record,
+        requested_relative_paths=(path,),
+        request_sequence=507,
+    )
+    authorization = gsr.make_python_source_inspection_authorization(
+        request,
+        issued_sequence=508,
+        expiration_sequence=520,
+    )
+    return request, authorization
+
+
+def _assert_no_pcm_1c_actions(result: gsr.PythonSourceInspectionResult) -> None:
+    assert result.diagnosis_performed is False
+    assert result.code_generated is False
+    assert result.patch_proposed is False
+    assert result.test_proposed is False
+    assert result.sandbox_handoff_created is False
+    assert result.execution_performed is False
+    assert result.source_mutated is False
+    assert result.module_loaded is False
+    assert result.module_activated is False
+    assert result.registry_mutated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+
+
+def test_pcm_1c_exact_inert_attachment_reads_one_temporary_python_file_structurally(tmp_path):
+    record = _pcm_1b_record()
+    source = "import os\n\nclass Example:\n    pass\n\ndef alpha(x: int):\n    if x:\n        return os.name\n    return 'n/a'\n"
+    target = tmp_path / "sample.py"
+    target.write_text(source, encoding="utf-8")
+    before_bytes = target.read_bytes()
+    before_digest = hashlib.sha256(before_bytes).hexdigest()
+    request, authorization = _inspection_pair(record)
+
+    result = gsr.inspect_python_source_read_only(record, request, authorization, root=tmp_path, sequence=509)
+
+    assert result.accepted is True
+    assert result.reason == "valid"
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.authorization_consumed is True
+    assert result.inspection_started is True
+    assert result.inspection_completed is True
+    assert result.source_read is True
+    assert result.ast_parsed is True
+    assert result.evidence.exact_paths_inspected == ("sample.py",)
+    assert result.evidence.files_requested == 1
+    assert result.evidence.files_read == 1
+    assert result.evidence.total_bytes_read == len(before_bytes)
+    assert result.evidence.per_file_digests["sample.py"] == before_digest
+    observation = gsr.deserialize(gsr.PythonSourceStructuralObservation, result.evidence.observations[0])
+    assert observation.path == "sample.py"
+    assert observation.byte_count == len(before_bytes)
+    assert observation.line_count == len(source.splitlines())
+    assert observation.source_digest == before_digest
+    assert observation.syntax_valid is True
+    assert observation.function_count == 1
+    assert observation.class_count == 1
+    assert observation.import_count == 1
+    assert observation.function_names == ("alpha",)
+    assert observation.class_names == ("Example",)
+    assert observation.imported_module_names == ("os",)
+    assert observation.structural_only is True
+    assert observation.diagnosis_absent is True
+    assert observation.recommendation_absent is True
+    assert hashlib.sha256(target.read_bytes()).hexdigest() == before_digest
+    _assert_no_pcm_1c_actions(result)
+
+    reuse = gsr.inspect_python_source_read_only(record, request, result.consumed_authorization, root=tmp_path, sequence=510)
+    assert reuse.accepted is False
+    assert reuse.reason == "consumed"
+    assert reuse.authorization_consumed is False
+
+
+def test_pcm_1c_identity_authority_permission_and_path_failures_read_nothing(tmp_path):
+    record = _pcm_1b_record()
+    (tmp_path / "sample.py").write_text("x = 1\n", encoding="utf-8")
+    request, authorization = _inspection_pair(record)
+    cases = (
+        (replace(record, attachment_record_id="wrong-record"), request, authorization, "wrong_attachment_record"),
+        (replace(record, attachment_status="ACTIVE"), request, authorization, "attachment_not_inert"),
+        (replace(record, module_loaded=True), request, authorization, "module_loaded"),
+        (replace(record, module_activated=True), request, authorization, "module_activated"),
+        (replace(record, capability_execution_enabled=True), request, authorization, "active_capability_present"),
+        (replace(record, authorized_capability_set=()), request, authorization, "source_inspection_not_declared"),
+        (record, replace(request, inspection_request_id="wrong-request"), authorization, "wrong_request"),
+        (record, request, replace(authorization, inspection_authorization_id="wrong-auth"), "wrong_authorization"),
+        (record, request, replace(authorization, operator_authority="DELTA_SELF"), "non_operator_authorization"),
+        (record, request, replace(authorization, one_shot=False), "not_one_shot"),
+        (record, request, replace(authorization, consumed=True), "consumed"),
+        (record, request, replace(authorization, expiration_sequence=508), "expired"),
+        (record, replace(request, source_execution_requested=True), authorization, "execution_permission_present"),
+        (record, replace(request, diagnosis_requested=True), authorization, "diagnosis_permission_present"),
+        (record, replace(request, generation_requested=True), authorization, "generation_permission_present"),
+        (record, request, replace(authorization, mutation_prohibited=False), "mutation_permission_present"),
+    )
+
+    for bad_record, bad_request, bad_authorization, reason in cases:
+        result = gsr.inspect_python_source_read_only(bad_record, bad_request, bad_authorization, root=tmp_path, sequence=509)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.source_read is False
+        _assert_no_pcm_1c_actions(result)
+
+
+def test_pcm_1c_scope_limits_and_filesystem_boundaries_fail_before_consumption(tmp_path):
+    record = _pcm_1b_record()
+    (tmp_path / "sample.py").write_text("x = 1\n", encoding="utf-8")
+    (tmp_path / "two.py").write_text("y = 2\n", encoding="utf-8")
+    unsafe_paths = (
+        ("*.py", "wildcard_path"),
+        ("../escape.py", "path_traversal"),
+        ("C:/outside.py", "absolute_path"),
+        (".git/config.py", "forbidden_path"),
+        ("DELTA-75/secret.py", "forbidden_path"),
+        ("reports/RC4_X.py", "forbidden_path"),
+        ("sample.txt", "unsupported_file_type"),
+        ("missing.py", "file_missing"),
+    )
+    for path, reason in unsafe_paths:
+        request, authorization = _inspection_pair(record, path)
+        result = gsr.inspect_python_source_read_only(record, request, authorization, root=tmp_path, sequence=509)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.source_read is False
+
+    too_many = gsr.make_python_source_inspection_request(record, requested_relative_paths=("sample.py", "two.py"), max_file_count=1, request_sequence=507)
+    too_many_auth = gsr.make_python_source_inspection_authorization(too_many, issued_sequence=508, expiration_sequence=520)
+    too_many_result = gsr.inspect_python_source_read_only(record, too_many, too_many_auth, root=tmp_path, sequence=509)
+    assert too_many_result.accepted is False
+    assert too_many_result.reason == "file_count_exceeded"
+
+    too_large = gsr.make_python_source_inspection_request(record, requested_relative_paths=("sample.py",), max_total_bytes=1, request_sequence=507)
+    too_large_auth = gsr.make_python_source_inspection_authorization(too_large, issued_sequence=508, expiration_sequence=520)
+    too_large_result = gsr.inspect_python_source_read_only(record, too_large, too_large_auth, root=tmp_path, sequence=509)
+    assert too_large_result.accepted is False
+    assert too_large_result.reason == "byte_limit_exceeded"
+
+
+def test_pcm_1c_syntax_invalid_source_is_structural_evidence_only(tmp_path):
+    record = _pcm_1b_record()
+    source = "def broken(:\n    pass\n"
+    target = tmp_path / "sample.py"
+    target.write_text(source, encoding="utf-8")
+    request, authorization = _inspection_pair(record)
+
+    result = gsr.inspect_python_source_read_only(record, request, authorization, root=tmp_path, sequence=509)
+
+    assert result.accepted is True
+    observation = gsr.deserialize(gsr.PythonSourceStructuralObservation, result.evidence.observations[0])
+    assert observation.syntax_valid is False
+    assert observation.parse_error_category == "SyntaxError"
+    assert observation.diagnosis_absent is True
+    assert observation.recommendation_absent is True
+    _assert_no_pcm_1c_actions(result)

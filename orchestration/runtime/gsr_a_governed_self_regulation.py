@@ -8,6 +8,7 @@ or authorize itself.
 
 from __future__ import annotations
 
+import ast
 from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 import hashlib
 import json
@@ -1071,6 +1072,142 @@ class PythonCodingModuleAttachmentResult:
     sandbox_handoff_created: bool = False
     execution_performed: bool = False
     source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSourceInspectionRequest:
+    inspection_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    module_id: str
+    module_version: str
+    requested_relative_paths: tuple[str, ...]
+    allowed_file_extension: str = ".py"
+    max_file_count: int = 1
+    max_total_bytes: int = 100_000
+    ast_parsing_requested: bool = True
+    source_execution_requested: bool = False
+    diagnosis_requested: bool = False
+    generation_requested: bool = False
+    patch_proposal_requested: bool = False
+    test_proposal_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSourceInspectionAuthorization:
+    inspection_authorization_id: str
+    inspection_request_id: str
+    attachment_record_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    authorized_relative_paths: tuple[str, ...]
+    max_file_count: int
+    max_total_bytes: int
+    ast_parsing_authorized: bool
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    source_execution_prohibited: bool = True
+    diagnosis_prohibited: bool = True
+    generation_prohibited: bool = True
+    mutation_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSourceStructuralObservation:
+    path: str
+    byte_count: int
+    line_count: int
+    source_digest: str
+    syntax_valid: bool
+    parse_error_category: str = ""
+    top_level_node_count: int = 0
+    function_count: int = 0
+    async_function_count: int = 0
+    class_count: int = 0
+    import_count: int = 0
+    assignment_count: int = 0
+    branch_count: int = 0
+    loop_count: int = 0
+    try_block_count: int = 0
+    with_block_count: int = 0
+    function_names: tuple[str, ...] = ()
+    class_names: tuple[str, ...] = ()
+    imported_module_names: tuple[str, ...] = ()
+    decorators: tuple[str, ...] = ()
+    docstring_present: bool = False
+    annotations_present: bool = False
+    structural_only: bool = True
+    diagnosis_absent: bool = True
+    recommendation_absent: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSourceInspectionEvidence:
+    inspection_attempt_id: str
+    inspection_request_id: str
+    inspection_authorization_id: str
+    attachment_record_id: str
+    exact_paths_inspected: tuple[str, ...]
+    files_requested: int
+    files_read: int
+    total_bytes_read: int
+    per_file_digests: dict[str, str]
+    observations: tuple[dict[str, Any], ...]
+    authorization_consumed: bool
+    source_executed: bool = False
+    imports_executed: bool = False
+    diagnosis_performed: bool = False
+    code_generated: bool = False
+    patch_proposed: bool = False
+    test_proposed: bool = False
+    source_mutated: bool = False
+    temporary_artifacts_created: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSourceInspectionResult:
+    accepted: bool
+    reason: str
+    request: PythonSourceInspectionRequest | None = None
+    original_authorization: PythonSourceInspectionAuthorization | None = None
+    consumed_authorization: PythonSourceInspectionAuthorization | None = None
+    evidence: PythonSourceInspectionEvidence | None = None
+    inspection_started: bool = False
+    inspection_completed: bool = False
+    authorization_consumed: bool = False
+    source_read: bool = False
+    ast_parsed: bool = False
+    diagnosis_performed: bool = False
+    code_generated: bool = False
+    patch_proposed: bool = False
+    test_proposed: bool = False
+    sandbox_handoff_created: bool = False
+    execution_performed: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
     provider_called: bool = False
     model_invoked: bool = False
     memory_written: bool = False
@@ -3849,6 +3986,298 @@ def create_python_coding_module_inert_attachment_record(
         consumed_authorization,
         attachment_record_created=True,
         authorization_consumed=True,
+    )
+
+
+def make_python_source_inspection_request(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    *,
+    requested_relative_paths: tuple[str, ...],
+    max_file_count: int = 1,
+    max_total_bytes: int = 100_000,
+    ast_parsing_requested: bool = True,
+    request_sequence: int = 0,
+    **overrides: Any,
+) -> PythonSourceInspectionRequest:
+    return PythonSourceInspectionRequest(
+        inspection_request_id=stable_id("pcm-1c-source-inspection-request", attachment_record.attachment_record_id, requested_relative_paths, request_sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        requested_relative_paths=requested_relative_paths,
+        max_file_count=max_file_count,
+        max_total_bytes=max_total_bytes,
+        ast_parsing_requested=ast_parsing_requested,
+        **overrides,
+    )
+
+
+def make_python_source_inspection_authorization(
+    request: PythonSourceInspectionRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonSourceInspectionAuthorization:
+    return PythonSourceInspectionAuthorization(
+        inspection_authorization_id=stable_id("pcm-1c-source-inspection-authorization", request.inspection_request_id, issued_sequence),
+        inspection_request_id=request.inspection_request_id,
+        attachment_record_id=request.attachment_record_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        authorized_relative_paths=request.requested_relative_paths,
+        max_file_count=request.max_file_count,
+        max_total_bytes=request.max_total_bytes,
+        ast_parsing_authorized=request.ast_parsing_requested,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _python_source_denial(
+    reason: str,
+    request: PythonSourceInspectionRequest | None,
+    authorization: PythonSourceInspectionAuthorization | None,
+) -> PythonSourceInspectionResult:
+    return PythonSourceInspectionResult(False, reason, request, original_authorization=authorization)
+
+
+def _python_inspection_authorization_is_available(authorization: PythonSourceInspectionAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not authorization.source_execution_prohibited:
+        return False, "execution_permission_present"
+    if not authorization.diagnosis_prohibited:
+        return False, "diagnosis_permission_present"
+    if not authorization.generation_prohibited:
+        return False, "generation_permission_present"
+    if not authorization.mutation_prohibited:
+        return False, "mutation_permission_present"
+    return True, "valid"
+
+
+def _python_inspection_request_matches_authorization(
+    request: PythonSourceInspectionRequest,
+    authorization: PythonSourceInspectionAuthorization,
+) -> tuple[bool, str]:
+    if authorization.inspection_request_id != request.inspection_request_id:
+        return False, "wrong_request"
+    expected_id = stable_id("pcm-1c-source-inspection-authorization", request.inspection_request_id, authorization.issued_sequence)
+    if authorization.inspection_authorization_id != expected_id:
+        return False, "wrong_authorization"
+    if authorization.attachment_record_id != request.attachment_record_id:
+        return False, "wrong_attachment_record"
+    if authorization.objective_cycle_id != request.objective_cycle_id or authorization.module_id != request.module_id or authorization.module_version != request.module_version:
+        return False, "wrong_request"
+    if authorization.authorized_relative_paths != request.requested_relative_paths:
+        return False, "path_mismatch"
+    if authorization.max_file_count != request.max_file_count or authorization.max_total_bytes != request.max_total_bytes:
+        return False, "path_mismatch"
+    if authorization.ast_parsing_authorized != request.ast_parsing_requested:
+        return False, "wrong_authorization"
+    return True, "valid"
+
+
+def _python_source_relative_paths_are_safe(paths: tuple[str, ...], *, max_file_count: int) -> tuple[bool, str, tuple[str, ...]]:
+    if not paths:
+        return False, "path_mismatch", ()
+    if len(paths) > max_file_count:
+        return False, "file_count_exceeded", ()
+    normalized_paths: list[str] = []
+    for path in paths:
+        text = str(path).strip().replace("\\", "/")
+        lowered = text.lower()
+        if "*" in text:
+            return False, "wildcard_path", ()
+        if Path(text).is_absolute():
+            return False, "absolute_path", ()
+        if not lowered.endswith(".py"):
+            return False, "unsupported_file_type", ()
+        if lowered.startswith("reports/rc4_") or any(marker in lowered for marker in (".git", ".env", "credential", "secret", "token", "password", "delta-75", "delta_75", "del" + "ta-75")):
+            return False, "forbidden_path", ()
+        normalized = _normalized_application_path(text)
+        if normalized is None:
+            return False, "path_traversal", ()
+        normalized_paths.append(normalized)
+    if len(set(normalized_paths)) != len(normalized_paths):
+        return False, "path_mismatch", ()
+    return True, "valid", tuple(normalized_paths)
+
+
+def _authorized_python_source_files(root: Path, relative_paths: tuple[str, ...], *, max_total_bytes: int) -> tuple[bool, str, tuple[Path, ...], int]:
+    root_path = root.resolve()
+    targets: list[Path] = []
+    total_bytes = 0
+    for relative_path in relative_paths:
+        target = root_path / relative_path
+        resolved = target.resolve(strict=False)
+        if not resolved.is_relative_to(root_path):
+            return False, "path_traversal", (), 0
+        if target.is_symlink():
+            return False, "symlink_forbidden", (), 0
+        if not target.exists():
+            return False, "file_missing", (), 0
+        if not target.is_file():
+            return False, "not_regular_file", (), 0
+        size = target.stat().st_size
+        total_bytes += size
+        if total_bytes > max_total_bytes:
+            return False, "byte_limit_exceeded", (), 0
+        targets.append(target)
+    return True, "valid", tuple(targets), total_bytes
+
+
+def _decorator_name(node: ast.AST) -> str:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    if isinstance(node, ast.Call):
+        return _decorator_name(node.func)
+    return type(node).__name__
+
+
+def _python_source_observation(relative_path: str, content: str, raw: bytes) -> PythonSourceStructuralObservation:
+    digest = hashlib.sha256(raw).hexdigest()
+    line_count = len(content.splitlines())
+    try:
+        tree = ast.parse(content, filename=relative_path)
+    except SyntaxError:
+        return PythonSourceStructuralObservation(
+            path=relative_path,
+            byte_count=len(raw),
+            line_count=line_count,
+            source_digest=digest,
+            syntax_valid=False,
+            parse_error_category="SyntaxError",
+        )
+    functions = tuple(node for node in ast.walk(tree) if isinstance(node, ast.FunctionDef))
+    async_functions = tuple(node for node in ast.walk(tree) if isinstance(node, ast.AsyncFunctionDef))
+    classes = tuple(node for node in ast.walk(tree) if isinstance(node, ast.ClassDef))
+    imports: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imports.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            imports.append(node.module or "")
+    decorators = tuple(_decorator_name(decorator) for node in functions + async_functions + classes for decorator in node.decorator_list)
+    annotations_present = any(isinstance(node, (ast.AnnAssign, ast.arg)) and getattr(node, "annotation", None) is not None for node in ast.walk(tree))
+    return PythonSourceStructuralObservation(
+        path=relative_path,
+        byte_count=len(raw),
+        line_count=line_count,
+        source_digest=digest,
+        syntax_valid=True,
+        top_level_node_count=len(tree.body),
+        function_count=len(functions),
+        async_function_count=len(async_functions),
+        class_count=len(classes),
+        import_count=len(imports),
+        assignment_count=sum(1 for node in ast.walk(tree) if isinstance(node, (ast.Assign, ast.AnnAssign, ast.AugAssign))),
+        branch_count=sum(1 for node in ast.walk(tree) if isinstance(node, ast.If)),
+        loop_count=sum(1 for node in ast.walk(tree) if isinstance(node, (ast.For, ast.AsyncFor, ast.While))),
+        try_block_count=sum(1 for node in ast.walk(tree) if isinstance(node, ast.Try)),
+        with_block_count=sum(1 for node in ast.walk(tree) if isinstance(node, (ast.With, ast.AsyncWith))),
+        function_names=tuple(node.name for node in functions + async_functions),
+        class_names=tuple(node.name for node in classes),
+        imported_module_names=tuple(imports),
+        decorators=decorators,
+        docstring_present=ast.get_docstring(tree) is not None,
+        annotations_present=annotations_present,
+    )
+
+
+def inspect_python_source_read_only(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    request: PythonSourceInspectionRequest,
+    authorization: PythonSourceInspectionAuthorization,
+    *,
+    root: Path,
+    sequence: int,
+) -> PythonSourceInspectionResult:
+    if attachment_record.attachment_record_id != request.attachment_record_id:
+        return _python_source_denial("wrong_attachment_record", request, authorization)
+    if attachment_record.attachment_status != "INERT_ATTACHMENT_RECORD":
+        return _python_source_denial("attachment_not_inert", request, authorization)
+    if attachment_record.module_loaded:
+        return _python_source_denial("module_loaded", request, authorization)
+    if attachment_record.module_activated:
+        return _python_source_denial("module_activated", request, authorization)
+    if attachment_record.capability_execution_enabled:
+        return _python_source_denial("active_capability_present", request, authorization)
+    if "read_python_source_metadata" not in attachment_record.authorized_capability_set:
+        return _python_source_denial("source_inspection_not_declared", request, authorization)
+    if request.source_execution_requested:
+        return _python_source_denial("execution_permission_present", request, authorization)
+    if request.diagnosis_requested:
+        return _python_source_denial("diagnosis_permission_present", request, authorization)
+    if request.generation_requested or request.patch_proposal_requested or request.test_proposal_requested:
+        return _python_source_denial("generation_permission_present", request, authorization)
+    request_match, request_reason = _python_inspection_request_matches_authorization(request, authorization)
+    if not request_match:
+        return _python_source_denial(request_reason, request, authorization)
+    auth_available, auth_reason = _python_inspection_authorization_is_available(authorization, sequence=sequence)
+    if not auth_available:
+        return _python_source_denial(auth_reason, request, authorization)
+    paths_ok, path_reason, normalized_paths = _python_source_relative_paths_are_safe(request.requested_relative_paths, max_file_count=request.max_file_count)
+    if not paths_ok:
+        return _python_source_denial(path_reason, request, authorization)
+    files_ok, files_reason, targets, total_bytes = _authorized_python_source_files(root, normalized_paths, max_total_bytes=request.max_total_bytes)
+    if not files_ok:
+        return _python_source_denial(files_reason, request, authorization)
+
+    consumed_authorization = replace(authorization, consumed=True)
+    observations: list[PythonSourceStructuralObservation] = []
+    digests: dict[str, str] = {}
+    for relative_path, target in zip(normalized_paths, targets):
+        raw = target.read_bytes()
+        try:
+            content = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            return PythonSourceInspectionResult(False, "decode_failed", request, authorization, consumed_authorization, authorization_consumed=True, inspection_started=True, source_read=True)
+        observation = _python_source_observation(relative_path, content, raw)
+        observations.append(observation)
+        digests[relative_path] = observation.source_digest
+    evidence = PythonSourceInspectionEvidence(
+        inspection_attempt_id=stable_id("pcm-1c-source-inspection-attempt", request.inspection_request_id, authorization.inspection_authorization_id, sequence),
+        inspection_request_id=request.inspection_request_id,
+        inspection_authorization_id=authorization.inspection_authorization_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        exact_paths_inspected=normalized_paths,
+        files_requested=len(normalized_paths),
+        files_read=len(observations),
+        total_bytes_read=total_bytes,
+        per_file_digests=digests,
+        observations=tuple(serialize(observation) for observation in observations),
+        authorization_consumed=True,
+    )
+    return PythonSourceInspectionResult(
+        True,
+        "valid",
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        inspection_started=True,
+        inspection_completed=True,
+        authorization_consumed=True,
+        source_read=True,
+        ast_parsed=request.ast_parsing_requested,
     )
 
 
