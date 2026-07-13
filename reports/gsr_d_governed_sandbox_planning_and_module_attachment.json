@@ -1,0 +1,99 @@
+{
+  "milestone": "GSR_D_GOVERNED_SANDBOX_PLANNING_AND_MODULE_ATTACHMENT_FOUNDATION",
+  "deterministic_marker": "gsr-d-closure-report-v1",
+  "accepted_checkpoints": [
+    "SEMANTIC_RUNTIME_COHERENCE_STAGE_FROZEN",
+    "GSR_A_FOUNDATION_ACCEPTED_AS_INERT_GOVERNED_SCAFFOLD",
+    "GSR_A_CLOSURE_AUDIT_PASSED",
+    "GSR_B_SELF_OBSERVATION_LEDGER_ACCEPTED_AS_INERT_GOVERNED_SCAFFOLD",
+    "GSR_B_CLOSURE_AUDIT_PASSED",
+    "GSR_C_PROVISIONAL_DIAGNOSIS_AND_PROPOSAL_ONLY_LAYER_ACCEPTED_AS_INERT_GOVERNED_SCAFFOLD",
+    "GSR_C_CLOSURE_AUDIT_PASSED",
+    "GSR_D_GATE_D1A_PLANNING_AUTHORIZATION_ACCEPTED",
+    "GSR_D_GATE_D1B_INERT_PLAN_CONTRACTS_ACCEPTED",
+    "GSR_D_GATE_D1C_PLAN_REVIEW_AND_FUTURE_EXECUTION_ELIGIBILITY_ACCEPTED"
+  ],
+  "contracts": [
+    "SandboxPlanningAuthorization",
+    "SandboxPlanningState",
+    "SandboxPlanCreationResult",
+    "ModuleAttachmentPlan",
+    "SandboxPlanReviewDecision",
+    "SandboxPlanReviewResult"
+  ],
+  "extended_contracts": [
+    "SandboxEvaluationPlan"
+  ],
+  "public_functions": [
+    "make_sandbox_planning_state",
+    "make_sandbox_planning_authorization",
+    "authorize_sandbox_plan_creation",
+    "create_inert_sandbox_plan",
+    "make_sandbox_plan_review_decision",
+    "review_sandbox_plan",
+    "sandbox_plan_can_review_itself",
+    "sandbox_plan_is_future_execution_eligible",
+    "sandbox_plan_disposition_blocks_execution"
+  ],
+  "sandbox_plan_review_dispositions": [
+    "approve_for_future_sandbox_execution",
+    "reject",
+    "revise",
+    "defer",
+    "deeper_design_required",
+    "suspend",
+    "expire"
+  ],
+  "blocking_dispositions": [
+    "reject",
+    "revise",
+    "defer",
+    "deeper_design_required",
+    "suspend",
+    "expire"
+  ],
+  "test_counts": {
+    "d1a_focused": 10,
+    "d1b_focused": 9,
+    "d1c_focused": 9,
+    "full_gsr_d": 28,
+    "gsr_c_regression": 41,
+    "gsr_b_regression": 27,
+    "gsr_a_regression": 14
+  },
+  "boundary_flags": {
+    "future_sandbox_planning_eligibility_is_authorization": false,
+    "sandbox_plan_is_sandbox_instance": false,
+    "module_attachment_plan_loads_module": false,
+    "future_sandbox_execution_eligibility_is_execution_authority": false,
+    "module_permissions_granted": false
+  },
+  "safety_flags": {
+    "sandbox_authorization_created": false,
+    "sandbox_created": false,
+    "sandbox_started": false,
+    "workspace_created": false,
+    "repository_cloned": false,
+    "command_executed": false,
+    "tool_invoked": false,
+    "patch_created": false,
+    "source_mutated": false,
+    "module_loaded": false,
+    "registry_mutated": false,
+    "permissions_granted": false,
+    "provider_or_model_activity": false,
+    "network_access": false,
+    "memory_write": false,
+    "application_authorized": false,
+    "application_performed": false,
+    "persistence_performed": false,
+    "scheduler_or_thread_started": false,
+    "training": false,
+    "staging": false,
+    "commit": false,
+    "push": false,
+    "merge": false,
+    "deployment": false,
+    "publication": false
+  }
+}

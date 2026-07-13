@@ -47,6 +47,7 @@ def _attempt(
 
 
 def _assert_no_actions(result: gsr.SandboxPlanCreationResult) -> None:
+    assert getattr(result, "sandbox_authorization_created", False) is False
     assert result.sandbox_created is False
     assert result.sandbox_started is False
     assert result.workspace_created is False
@@ -144,6 +145,42 @@ def _create_plan(
             proposal_state = default_proposal_state
     kwargs = _plan_kwargs(**overrides)
     return gsr.create_inert_sandbox_plan(proposal_state, planning_state, authorization, **kwargs)
+
+
+def _review_decision(plan_id: str, **overrides) -> gsr.SandboxPlanReviewDecision:
+    payload = {
+        "disposition": "approve_for_future_sandbox_execution",
+        "rationale": "operator marks plan eligible for future execution review only",
+        "allowed_execution_scope": ("future_sandbox_execution_review",),
+        "forbidden_execution_scope": ("application", "source_mutation"),
+        "allowed_tool_classes": ("read_only_inspection",),
+        "forbidden_tool_classes": ("command_execution", "patch_generation"),
+        "allowed_command_categories": ("focused_test_runner",),
+        "forbidden_command_categories": ("shell_command", "git_operation"),
+        "decision_sequence": 30,
+    }
+    payload.update(overrides)
+    return gsr.make_sandbox_plan_review_decision(plan_id, **payload)
+
+
+def _plan_for_review(**overrides) -> gsr.SandboxPlanCreationResult:
+    result = _create_plan(**overrides)
+    assert result.accepted is True
+    assert result.sandbox_plan is not None
+    return result
+
+
+def _review_plan(
+    plan_result: gsr.SandboxPlanCreationResult | None = None,
+    decision: gsr.SandboxPlanReviewDecision | None = None,
+    *,
+    sequence: int = 30,
+    **decision_overrides,
+) -> gsr.SandboxPlanReviewResult:
+    plan_result = plan_result or _plan_for_review()
+    assert plan_result.sandbox_plan is not None
+    decision = decision or _review_decision(plan_result.sandbox_plan.plan_id, **decision_overrides)
+    return gsr.review_sandbox_plan(plan_result.state, decision, sequence=sequence)
 
 
 def test_d1a_proposal_eligibility_alone_cannot_create_plan():
@@ -430,3 +467,163 @@ def test_d1b_sandbox_and_attachment_plans_survive_serialization_without_activati
     assert restored_module.module_loaded is False
     assert restored_module.registry_mutated is False
     assert restored_state.future_sandbox_execution_eligible_plans == ()
+
+
+def test_d1c_pending_plan_remains_ineligible_without_review():
+    result = _plan_for_review()
+    assert result.sandbox_plan is not None
+
+    assert result.sandbox_plan.plan_id in result.state.pending_plan_review_queue
+    assert gsr.sandbox_plan_is_future_execution_eligible(result.state, result.sandbox_plan.plan_id) is False
+
+
+def test_d1c_missing_wrong_non_operator_expired_consumed_and_non_one_shot_fail():
+    plan_result = _plan_for_review()
+    assert plan_result.sandbox_plan is not None
+    plan_id = plan_result.sandbox_plan.plan_id
+    cases = [
+        ("sandbox_plan_not_found", _review_decision("missing-plan")),
+        ("operator_authority_required", _review_decision(plan_id, operator_authority="DELTA_SELF_AUTHORITY")),
+        ("sandbox_plan_review_decision_expired", _review_decision(plan_id, expires_after_sequence=29), 30),
+        ("sandbox_plan_review_decision_consumed", _review_decision(plan_id, consumed=True)),
+        ("one_shot_review_required", _review_decision(plan_id, one_shot=False)),
+    ]
+    for item in cases:
+        reason = item[0]
+        decision = item[1]
+        sequence = item[2] if len(item) > 2 else 30
+        reviewed = gsr.review_sandbox_plan(plan_result.state, decision, sequence=sequence)
+        assert reviewed.accepted is False
+        assert reviewed.reason == reason
+        assert reviewed.state.consumed_plan_review_decision_ids == ()
+        _assert_no_actions(reviewed)
+
+
+def test_d1c_reused_decision_fails_and_successful_decision_is_consumed():
+    plan_result = _plan_for_review()
+    assert plan_result.sandbox_plan is not None
+    decision = _review_decision(plan_result.sandbox_plan.plan_id)
+
+    first = gsr.review_sandbox_plan(plan_result.state, decision, sequence=30)
+    second = gsr.review_sandbox_plan(first.state, decision, sequence=30)
+
+    assert first.accepted is True
+    assert first.state.consumed_plan_review_decision_ids == (decision.decision_id,)
+    assert second.accepted is False
+    assert second.reason == "sandbox_plan_review_decision_already_consumed"
+    assert second.state.consumed_plan_review_decision_ids == (decision.decision_id,)
+    _assert_no_actions(first)
+    _assert_no_actions(second)
+
+
+def test_d1c_unknown_non_plan_only_non_pending_and_self_review_fail_closed():
+    plan_result = _plan_for_review(module_attachment=_module_kwargs())
+    assert plan_result.sandbox_plan is not None
+    plan_id = plan_result.sandbox_plan.plan_id
+    not_plan_only = gsr.SandboxEvaluationPlan(**{**gsr.serialize(plan_result.sandbox_plan), "plan_only_status": "EXECUTION_PLAN"})
+    non_pending_state = gsr.SandboxPlanningState(
+        **{**gsr.serialize(plan_result.state), "pending_plan_review_queue": ()}
+    )
+    altered_state = gsr.SandboxPlanningState(
+        **{
+            **gsr.serialize(plan_result.state),
+            "sandbox_plans": (gsr.serialize(not_plan_only),),
+        }
+    )
+    cases = [
+        ("unknown_sandbox_plan_disposition", plan_result.state, _review_decision(plan_id, disposition="launch_now")),
+        ("sandbox_plan_not_plan_only", altered_state, _review_decision(plan_id)),
+        ("sandbox_plan_not_pending_review", non_pending_state, _review_decision(plan_id)),
+        ("sandbox_plan_cannot_self_review", plan_result.state, _review_decision(plan_id, operator_authority=plan_id)),
+        ("module_attachment_plan_cannot_self_review", plan_result.state, _review_decision(plan_id, operator_authority=plan_result.sandbox_plan.module_attachment_plan_id)),
+    ]
+    assert gsr.sandbox_plan_can_review_itself(plan_result.sandbox_plan) is False
+    for reason, state, decision in cases:
+        reviewed = gsr.review_sandbox_plan(state, decision, sequence=30)
+        assert reviewed.accepted is False
+        assert reviewed.reason == reason
+        _assert_no_actions(reviewed)
+
+
+def test_d1c_scope_tool_and_command_overlap_fail_closed():
+    plan_result = _plan_for_review()
+    assert plan_result.sandbox_plan is not None
+    plan_id = plan_result.sandbox_plan.plan_id
+    cases = [
+        ("execution_scope_overlaps_forbidden_scope", {"allowed_execution_scope": ("application",)}),
+        ("tool_class_overlaps_forbidden_tool_class", {"allowed_tool_classes": ("command_execution",)}),
+        ("command_category_overlaps_forbidden_category", {"allowed_command_categories": ("shell_command",)}),
+    ]
+    for reason, overrides in cases:
+        reviewed = _review_plan(plan_result, **overrides)
+        assert reviewed.accepted is False
+        assert reviewed.reason == reason
+        assert reviewed.state.consumed_plan_review_decision_ids == ()
+        _assert_no_actions(reviewed)
+
+
+def test_d1c_blocking_dispositions_enter_indexes_without_execution_eligibility():
+    disposition_indexes = {
+        "reject": "rejected_plans",
+        "revise": "revision_required_plans",
+        "defer": "deferred_plans",
+        "deeper_design_required": "deeper_design_plans",
+        "suspend": "suspended_plans",
+        "expire": "expired_plans",
+    }
+    for disposition, index_name in disposition_indexes.items():
+        plan_result = _plan_for_review()
+        assert plan_result.sandbox_plan is not None
+        reviewed = _review_plan(plan_result, disposition=disposition)
+
+        assert reviewed.accepted is True
+        assert reviewed.future_sandbox_execution_eligible is False
+        assert plan_result.sandbox_plan.plan_id in getattr(reviewed.state, index_name)
+        assert reviewed.state.future_sandbox_execution_eligible_plans == ()
+        assert plan_result.sandbox_plan.plan_id not in reviewed.state.pending_plan_review_queue
+        assert gsr.sandbox_plan_disposition_blocks_execution(disposition) is True
+        _assert_no_actions(reviewed)
+
+
+def test_d1c_valid_approval_adds_only_future_execution_eligibility_marker():
+    plan_result = _plan_for_review(module_attachment=_module_kwargs())
+    assert plan_result.sandbox_plan is not None
+
+    reviewed = _review_plan(plan_result)
+
+    assert reviewed.accepted is True
+    assert reviewed.future_sandbox_execution_eligible is True
+    assert reviewed.disposition == "approve_for_future_sandbox_execution"
+    assert reviewed.state.future_sandbox_execution_eligible_plans == (plan_result.sandbox_plan.plan_id,)
+    assert plan_result.sandbox_plan.plan_id not in reviewed.state.pending_plan_review_queue
+    assert gsr.sandbox_plan_is_future_execution_eligible(reviewed.state, plan_result.sandbox_plan.plan_id) is True
+    assert reviewed.state.plan_review_decisions
+    _assert_no_actions(reviewed)
+
+
+def test_d1c_review_and_eligibility_survive_serialization_without_authority_activation():
+    plan_result = _plan_for_review(module_attachment=_module_kwargs())
+    assert plan_result.sandbox_plan is not None
+    reviewed = _review_plan(plan_result)
+    assert reviewed.decision is not None
+
+    restored = gsr.deserialize(gsr.SandboxPlanningState, json.loads(json.dumps(gsr.serialize(reviewed.state))))
+
+    assert restored.future_sandbox_execution_eligible_plans == (plan_result.sandbox_plan.plan_id,)
+    assert restored.consumed_plan_review_decision_ids == (reviewed.decision.decision_id,)
+    assert restored.pending_plan_review_queue == ()
+    assert restored.sandbox_plans
+    assert restored.module_attachment_plans
+
+
+def test_d1c_review_does_not_change_d1a_or_d1b_boundaries():
+    plan_result = _plan_for_review()
+    assert plan_result.sandbox_plan is not None
+    reviewed = _review_plan(plan_result)
+
+    assert reviewed.state.consumed_planning_authorization_ids == plan_result.state.consumed_planning_authorization_ids
+    assert reviewed.state.sandbox_plans == plan_result.state.sandbox_plans
+    assert reviewed.state.module_attachment_plans == plan_result.state.module_attachment_plans
+    assert reviewed.state.plan_ids_by_proposal == plan_result.state.plan_ids_by_proposal
+    assert reviewed.state.attachment_plan_ids_by_sandbox_plan == plan_result.state.attachment_plan_ids_by_sandbox_plan
+    _assert_no_actions(reviewed)

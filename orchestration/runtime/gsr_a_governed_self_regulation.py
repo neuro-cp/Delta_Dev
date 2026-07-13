@@ -140,6 +140,25 @@ PROPOSAL_REVIEW_DISPOSITIONS = (
     "expire",
 )
 
+SANDBOX_PLAN_REVIEW_DISPOSITIONS = (
+    "approve_for_future_sandbox_execution",
+    "reject",
+    "revise",
+    "defer",
+    "deeper_design_required",
+    "suspend",
+    "expire",
+)
+
+SANDBOX_PLAN_BLOCKING_DISPOSITIONS = {
+    "reject",
+    "revise",
+    "defer",
+    "deeper_design_required",
+    "suspend",
+    "expire",
+}
+
 
 def safety_metadata() -> dict[str, bool]:
     safety = base_safety_metadata()
@@ -702,6 +721,60 @@ class SandboxPlanCreationResult:
     sandbox_plan: SandboxEvaluationPlan | None = None
     module_attachment_plan: ModuleAttachmentPlan | None = None
     planning_authorization_consumed: bool = False
+    sandbox_created: bool = False
+    sandbox_started: bool = False
+    workspace_created: bool = False
+    repository_cloned: bool = False
+    command_executed: bool = False
+    tool_invoked: bool = False
+    patch_created: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    registry_mutated: bool = False
+    permissions_granted: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_accessed: bool = False
+    memory_written: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+
+
+@dataclass(frozen=True)
+class SandboxPlanReviewDecision:
+    decision_id: str
+    plan_id: str
+    operator_authority: str
+    disposition: str
+    rationale: str
+    allowed_execution_scope: tuple[str, ...]
+    forbidden_execution_scope: tuple[str, ...]
+    allowed_tool_classes: tuple[str, ...]
+    forbidden_tool_classes: tuple[str, ...]
+    allowed_command_categories: tuple[str, ...]
+    forbidden_command_categories: tuple[str, ...]
+    conditions: tuple[str, ...]
+    one_shot: bool
+    decision_sequence: int
+    expires_after_sequence: int | None
+    consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxPlanReviewResult:
+    accepted: bool
+    reason: str
+    state: SandboxPlanningState
+    plan: SandboxEvaluationPlan | None = None
+    decision: SandboxPlanReviewDecision | None = None
+    future_sandbox_execution_eligible: bool = False
+    disposition: str = ""
+    sandbox_authorization_created: bool = False
     sandbox_created: bool = False
     sandbox_started: bool = False
     workspace_created: bool = False
@@ -2023,6 +2096,80 @@ def create_inert_sandbox_plan(
     )
 
 
+def make_sandbox_plan_review_decision(
+    plan_id: str,
+    *,
+    disposition: str,
+    rationale: str,
+    allowed_execution_scope: tuple[str, ...],
+    forbidden_execution_scope: tuple[str, ...] = (),
+    allowed_tool_classes: tuple[str, ...] = (),
+    forbidden_tool_classes: tuple[str, ...] = (),
+    allowed_command_categories: tuple[str, ...] = (),
+    forbidden_command_categories: tuple[str, ...] = (),
+    conditions: tuple[str, ...] = (),
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    decision_sequence: int = 0,
+    expires_after_sequence: int | None = None,
+    consumed: bool = False,
+) -> SandboxPlanReviewDecision:
+    return SandboxPlanReviewDecision(
+        decision_id=stable_id("gsr-d-sandbox-plan-review", plan_id, disposition, decision_sequence),
+        plan_id=plan_id,
+        operator_authority=operator_authority,
+        disposition=disposition,
+        rationale=rationale,
+        allowed_execution_scope=allowed_execution_scope,
+        forbidden_execution_scope=forbidden_execution_scope,
+        allowed_tool_classes=allowed_tool_classes,
+        forbidden_tool_classes=forbidden_tool_classes,
+        allowed_command_categories=allowed_command_categories,
+        forbidden_command_categories=forbidden_command_categories,
+        conditions=conditions,
+        one_shot=one_shot,
+        decision_sequence=decision_sequence,
+        expires_after_sequence=expires_after_sequence,
+        consumed=consumed,
+    )
+
+
+def review_sandbox_plan(
+    state: SandboxPlanningState,
+    decision: SandboxPlanReviewDecision,
+    *,
+    sequence: int,
+) -> SandboxPlanReviewResult:
+    allowed, reason, plan = _sandbox_plan_review_decision_allows(state, decision, sequence=sequence)
+    if not allowed:
+        return SandboxPlanReviewResult(False, reason, state, plan, decision, disposition=decision.disposition)
+    assert plan is not None
+    next_state = _replace_sandbox_plan_for_review(state, plan, decision)
+    eligible = decision.disposition == "approve_for_future_sandbox_execution"
+    return SandboxPlanReviewResult(
+        True,
+        "sandbox_plan_review_decision_accepted",
+        next_state,
+        plan,
+        decision,
+        future_sandbox_execution_eligible=eligible,
+        disposition=decision.disposition,
+    )
+
+
+def sandbox_plan_can_review_itself(plan: SandboxEvaluationPlan) -> bool:
+    _ = plan
+    return False
+
+
+def sandbox_plan_is_future_execution_eligible(state: SandboxPlanningState, plan_id: str) -> bool:
+    return plan_id in state.future_sandbox_execution_eligible_plans
+
+
+def sandbox_plan_disposition_blocks_execution(disposition: str) -> bool:
+    return disposition in SANDBOX_PLAN_BLOCKING_DISPOSITIONS
+
+
 def _normalized_observation_signature(
     source_subsystem: str,
     expected_transition: str,
@@ -2406,6 +2553,96 @@ def _module_attachment_plan_allows(payload: Mapping[str, Any]) -> tuple[bool, st
     if _contains_executable_plan_content(tuple(str(value) for value in payload.values())):
         return False, "executable_module_attachment_content_prohibited"
     return True, "module_attachment_plan_valid"
+
+
+def _sandbox_plan_payload(state: SandboxPlanningState, plan_id: str) -> dict[str, Any] | None:
+    for payload in state.sandbox_plans:
+        if payload.get("plan_id") == plan_id:
+            return payload
+    return None
+
+
+def _sandbox_plan_review_decision_allows(
+    state: SandboxPlanningState,
+    decision: SandboxPlanReviewDecision,
+    *,
+    sequence: int,
+) -> tuple[bool, str, SandboxEvaluationPlan | None]:
+    if decision.decision_id in state.consumed_plan_review_decision_ids:
+        return False, "sandbox_plan_review_decision_already_consumed", None
+    payload = _sandbox_plan_payload(state, decision.plan_id)
+    plan = deserialize(SandboxEvaluationPlan, payload) if payload is not None else None
+    if decision.operator_authority == decision.plan_id:
+        return False, "sandbox_plan_cannot_self_review", plan
+    if plan is not None and plan.module_attachment_plan_id and decision.operator_authority == plan.module_attachment_plan_id:
+        return False, "module_attachment_plan_cannot_self_review", plan
+    if decision.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "operator_authority_required", None
+    if decision.consumed:
+        return False, "sandbox_plan_review_decision_consumed", None
+    if decision.one_shot is not True:
+        return False, "one_shot_review_required", None
+    if decision.expires_after_sequence is not None and sequence > decision.expires_after_sequence:
+        return False, "sandbox_plan_review_decision_expired", None
+    if decision.disposition not in SANDBOX_PLAN_REVIEW_DISPOSITIONS:
+        return False, "unknown_sandbox_plan_disposition", None
+    if set(decision.allowed_execution_scope).intersection(decision.forbidden_execution_scope):
+        return False, "execution_scope_overlaps_forbidden_scope", None
+    if set(decision.allowed_tool_classes).intersection(decision.forbidden_tool_classes):
+        return False, "tool_class_overlaps_forbidden_tool_class", None
+    if set(decision.allowed_command_categories).intersection(decision.forbidden_command_categories):
+        return False, "command_category_overlaps_forbidden_category", None
+    if payload is None:
+        return False, "sandbox_plan_not_found", None
+    assert plan is not None
+    if plan.plan_only_status != "PLAN_ONLY":
+        return False, "sandbox_plan_not_plan_only", plan
+    if plan.plan_id not in state.pending_plan_review_queue:
+        return False, "sandbox_plan_not_pending_review", plan
+    return True, "sandbox_plan_review_decision_valid", plan
+
+
+def _replace_sandbox_plan_for_review(
+    state: SandboxPlanningState,
+    plan: SandboxEvaluationPlan,
+    decision: SandboxPlanReviewDecision,
+) -> SandboxPlanningState:
+    future = state.future_sandbox_execution_eligible_plans
+    rejected = state.rejected_plans
+    revision = state.revision_required_plans
+    deferred = state.deferred_plans
+    suspended = state.suspended_plans
+    expired = state.expired_plans
+    deeper = state.deeper_design_plans
+    if decision.disposition == "approve_for_future_sandbox_execution":
+        future = tuple(dict.fromkeys(future + (plan.plan_id,)))
+    elif decision.disposition == "reject":
+        rejected = tuple(dict.fromkeys(rejected + (plan.plan_id,)))
+    elif decision.disposition == "revise":
+        revision = tuple(dict.fromkeys(revision + (plan.plan_id,)))
+    elif decision.disposition == "defer":
+        deferred = tuple(dict.fromkeys(deferred + (plan.plan_id,)))
+    elif decision.disposition == "suspend":
+        suspended = tuple(dict.fromkeys(suspended + (plan.plan_id,)))
+    elif decision.disposition == "expire":
+        expired = tuple(dict.fromkeys(expired + (plan.plan_id,)))
+    elif decision.disposition == "deeper_design_required":
+        deeper = tuple(dict.fromkeys(deeper + (plan.plan_id,)))
+    return SandboxPlanningState(
+        **{
+            **serialize(state),
+            "plan_review_decisions": state.plan_review_decisions + (serialize(decision),),
+            "consumed_plan_review_decision_ids": tuple(dict.fromkeys(state.consumed_plan_review_decision_ids + (decision.decision_id,))),
+            "pending_plan_review_queue": tuple(item for item in state.pending_plan_review_queue if item != plan.plan_id),
+            "future_sandbox_execution_eligible_plans": future,
+            "rejected_plans": rejected,
+            "revision_required_plans": revision,
+            "deferred_plans": deferred,
+            "suspended_plans": suspended,
+            "expired_plans": expired,
+            "deeper_design_plans": deeper,
+        }
+    )
 
 
 def _contains_executable_plan_content(parts: tuple[str, ...]) -> bool:
