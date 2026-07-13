@@ -1006,6 +1006,85 @@ class PythonCodingModuleAttachmentEligibilityResult:
 
 
 @dataclass(frozen=True)
+class PythonCodingModuleAttachmentRecord:
+    attachment_record_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_name: str
+    module_version: str
+    manifest_version: str
+    manifest_identity: str
+    capability_request_id: str
+    attachment_request_id: str
+    attachment_authorization_id: str
+    authorized_capability_set: tuple[str, ...]
+    authorized_prohibited_capability_set: tuple[str, ...]
+    authorized_source_scope: tuple[str, ...]
+    authorized_file_types: tuple[str, ...]
+    attachment_sequence: int
+    attachment_status: str = "INERT_ATTACHMENT_RECORD"
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    permissions_granted: bool = False
+    capability_execution_enabled: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleAttachmentState:
+    state_version: str = "PCM-1B"
+    attachment_records: tuple[dict[str, Any], ...] = ()
+    consumed_attachment_authorization_ids: tuple[str, ...] = ()
+    attachment_record_ids_by_module: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    registry_entries: tuple[dict[str, Any], ...] = ()
+    live_registry_mutated: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    permissions_granted: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleAttachmentResult:
+    accepted: bool
+    reason: str
+    state: PythonCodingModuleAttachmentState
+    eligibility: PythonCodingModuleAttachmentEligibilityResult | None = None
+    attachment_record: PythonCodingModuleAttachmentRecord | None = None
+    original_authorization: PythonCodingModuleAttachmentAuthorization | None = None
+    consumed_authorization: PythonCodingModuleAttachmentAuthorization | None = None
+    attachment_record_created: bool = False
+    authorization_consumed: bool = False
+    attachment_performed: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    permissions_granted: bool = False
+    source_inspection_performed: bool = False
+    source_parsed: bool = False
+    diagnosis_performed: bool = False
+    code_generated: bool = False
+    patch_proposed: bool = False
+    test_proposed: bool = False
+    sandbox_handoff_created: bool = False
+    execution_performed: bool = False
+    source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -3697,6 +3776,79 @@ def evaluate_python_coding_module_attachment_eligibility(
         attachment_request,
         authorization,
         eligible_for_inert_attachment=True,
+    )
+
+
+def make_python_coding_module_attachment_state() -> PythonCodingModuleAttachmentState:
+    return PythonCodingModuleAttachmentState()
+
+
+def _pcm_attachment_record_payload(state: PythonCodingModuleAttachmentState, record_id: str) -> dict[str, Any] | None:
+    for payload in state.attachment_records:
+        if payload.get("attachment_record_id") == record_id:
+            return payload
+    return None
+
+
+def create_python_coding_module_inert_attachment_record(
+    state: PythonCodingModuleAttachmentState,
+    eligibility: PythonCodingModuleAttachmentEligibilityResult,
+    *,
+    sequence: int,
+) -> PythonCodingModuleAttachmentResult:
+    if not eligibility.accepted or not eligibility.eligible_for_inert_attachment:
+        return PythonCodingModuleAttachmentResult(False, "eligibility_not_accepted", state, eligibility, original_authorization=eligibility.authorization)
+    manifest = eligibility.manifest
+    attachment_request = eligibility.attachment_request
+    authorization = eligibility.authorization
+    if manifest is None or attachment_request is None or authorization is None:
+        return PythonCodingModuleAttachmentResult(False, "eligibility_incomplete", state, eligibility, original_authorization=authorization)
+    allowed, reason = python_coding_attachment_authorization_is_available(authorization, sequence=sequence)
+    if not allowed:
+        return PythonCodingModuleAttachmentResult(False, reason, state, eligibility, original_authorization=authorization)
+    if authorization.attachment_authorization_id in state.consumed_attachment_authorization_ids:
+        return PythonCodingModuleAttachmentResult(False, "attachment_authorization_already_consumed", state, eligibility, original_authorization=authorization)
+    record_id = stable_id("pcm-1b-inert-attachment-record", attachment_request.attachment_request_id, authorization.attachment_authorization_id, sequence)
+    if _pcm_attachment_record_payload(state, record_id) is not None:
+        return PythonCodingModuleAttachmentResult(False, "attachment_record_already_exists", state, eligibility, original_authorization=authorization)
+    consumed_authorization = replace(authorization, consumed=True)
+    record = PythonCodingModuleAttachmentRecord(
+        attachment_record_id=record_id,
+        objective_cycle_id=attachment_request.objective_cycle_id,
+        module_id=manifest.module_id,
+        module_name=manifest.module_name,
+        module_version=manifest.module_version,
+        manifest_version=manifest.manifest_version,
+        manifest_identity=attachment_request.manifest_identity,
+        capability_request_id=attachment_request.capability_request_id,
+        attachment_request_id=attachment_request.attachment_request_id,
+        attachment_authorization_id=authorization.attachment_authorization_id,
+        authorized_capability_set=authorization.authorized_capability_set,
+        authorized_prohibited_capability_set=authorization.authorized_prohibited_capability_set,
+        authorized_source_scope=authorization.authorized_source_scope,
+        authorized_file_types=authorization.authorized_file_types,
+        attachment_sequence=sequence,
+    )
+    index = dict(state.attachment_record_ids_by_module)
+    index[record.module_id] = tuple(dict.fromkeys(index.get(record.module_id, ()) + (record.attachment_record_id,)))
+    next_state = PythonCodingModuleAttachmentState(
+        **{
+            **serialize(state),
+            "attachment_records": state.attachment_records + (serialize(record),),
+            "consumed_attachment_authorization_ids": tuple(dict.fromkeys(state.consumed_attachment_authorization_ids + (authorization.attachment_authorization_id,))),
+            "attachment_record_ids_by_module": index,
+        }
+    )
+    return PythonCodingModuleAttachmentResult(
+        True,
+        "inert_attachment_record_created",
+        next_state,
+        eligibility,
+        record,
+        authorization,
+        consumed_authorization,
+        attachment_record_created=True,
+        authorization_consumed=True,
     )
 
 

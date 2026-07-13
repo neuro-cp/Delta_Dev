@@ -208,3 +208,99 @@ def test_pcm_1a_authorization_forbidden_action_flags_fail_closed():
         assert result.accepted is False
         assert result.reason in {"registry_mutation_forbidden", "execution_forbidden"}
         _assert_no_actions(result)
+
+
+def _assert_no_pcm_1b_actions(result: gsr.PythonCodingModuleAttachmentResult) -> None:
+    assert result.attachment_performed is False
+    assert result.module_loaded is False
+    assert result.module_activated is False
+    assert result.registry_mutated is False
+    assert result.permissions_granted is False
+    assert result.source_inspection_performed is False
+    assert result.source_parsed is False
+    assert result.diagnosis_performed is False
+    assert result.code_generated is False
+    assert result.patch_proposed is False
+    assert result.test_proposed is False
+    assert result.sandbox_handoff_created is False
+    assert result.execution_performed is False
+    assert result.source_mutated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+
+
+def test_pcm_1b_valid_eligibility_creates_one_inert_attachment_record_only():
+    eligibility = _evaluate()
+    state = gsr.make_python_coding_module_attachment_state()
+
+    result = gsr.create_python_coding_module_inert_attachment_record(state, eligibility, sequence=506)
+
+    assert result.accepted is True
+    assert result.reason == "inert_attachment_record_created"
+    assert result.attachment_record_created is True
+    assert result.authorization_consumed is True
+    assert result.consumed_authorization.consumed is True
+    assert eligibility.authorization.consumed is False
+    assert len(result.state.attachment_records) == 1
+    assert result.state.consumed_attachment_authorization_ids == (eligibility.authorization.attachment_authorization_id,)
+    assert result.state.attachment_record_ids_by_module[eligibility.manifest.module_id] == (result.attachment_record.attachment_record_id,)
+    assert result.attachment_record.attachment_status == "INERT_ATTACHMENT_RECORD"
+    assert result.attachment_record.module_loaded is False
+    assert result.attachment_record.module_activated is False
+    assert result.attachment_record.registry_mutated is False
+    assert result.attachment_record.capability_execution_enabled is False
+    assert result.state.registry_entries == ()
+    assert result.state.live_registry_mutated is False
+    _assert_no_pcm_1b_actions(result)
+
+
+def test_pcm_1b_reuse_consumed_and_denied_eligibility_fail_without_record():
+    eligibility = _evaluate()
+    state = gsr.make_python_coding_module_attachment_state()
+    first = gsr.create_python_coding_module_inert_attachment_record(state, eligibility, sequence=506)
+    second = gsr.create_python_coding_module_inert_attachment_record(first.state, eligibility, sequence=506)
+
+    assert first.accepted is True
+    assert second.accepted is False
+    assert second.reason == "attachment_authorization_already_consumed"
+    assert len(second.state.attachment_records) == 1
+    _assert_no_pcm_1b_actions(second)
+
+    consumed_eligibility = replace(eligibility, authorization=first.consumed_authorization)
+    consumed = gsr.create_python_coding_module_inert_attachment_record(state, consumed_eligibility, sequence=506)
+    assert consumed.accepted is False
+    assert consumed.reason == "consumed"
+    assert consumed.state.attachment_records == ()
+
+    denied = replace(eligibility, accepted=False, eligible_for_inert_attachment=False)
+    denied_result = gsr.create_python_coding_module_inert_attachment_record(state, denied, sequence=506)
+    assert denied_result.accepted is False
+    assert denied_result.reason == "eligibility_not_accepted"
+    assert denied_result.state.attachment_records == ()
+
+
+def test_pcm_1b_record_survives_serialization_without_activation():
+    eligibility = _evaluate()
+    state = gsr.make_python_coding_module_attachment_state()
+    result = gsr.create_python_coding_module_inert_attachment_record(state, eligibility, sequence=506)
+
+    restored_state = gsr.deserialize(gsr.PythonCodingModuleAttachmentState, gsr.serialize(result.state))
+    restored_record = gsr.deserialize(gsr.PythonCodingModuleAttachmentRecord, restored_state.attachment_records[0])
+
+    assert restored_state.consumed_attachment_authorization_ids == (eligibility.authorization.attachment_authorization_id,)
+    assert restored_state.live_registry_mutated is False
+    assert restored_state.module_loaded is False
+    assert restored_state.module_activated is False
+    assert restored_record.attachment_record_id == result.attachment_record.attachment_record_id
+    assert restored_record.module_loaded is False
+    assert restored_record.module_activated is False
+    assert restored_record.registry_mutated is False
+    assert restored_record.permissions_granted is False
