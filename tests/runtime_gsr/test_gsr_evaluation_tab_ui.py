@@ -184,3 +184,74 @@ def test_evaluation_tab_records_oar_dispositions_without_application_side_effect
 
     assert threading.active_count() == thread_count_before
     assert tuple(multiprocessing.active_children()) == child_processes_before
+
+
+def test_tk_live_mission_intake_surfaces_oar_compilation_before_live_routing():
+    thread_count_before = threading.active_count()
+    child_processes_before = tuple(multiprocessing.active_children())
+    root = tk.Tk()
+    root.withdraw()
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.root = root
+    try:
+        outer = DELTA.ttk.Frame(root)
+        outer.pack(fill=tk.BOTH, expand=True)
+        app.notebook = DELTA.ttk.Notebook(outer)
+        app.notebook.pack(fill=tk.BOTH, expand=True)
+        app.evaluation_tab = DELTA.ttk.Frame(app.notebook, padding=10)
+        app.notebook.add(app.evaluation_tab, text="Evaluation")
+        app._build_evaluation_tab()
+        app.chat_input = DELTA.ttk.Entry(root)
+        app.chat_input.insert(
+            0,
+            "Develop the first small improvement needed for better scholarly language behavior.",
+        )
+        app.mode = tk.StringVar(value="Conversation")
+        app.developer_overlay_enabled = tk.BooleanVar(value=False)
+        app.last_report_inspection = None
+        app.session_history = []
+        app.live_runtime_session = type("ActiveRuntime", (), {"active": True})()
+        app.live_runtime_called = False
+        app._begin_live_runtime_turn = lambda _message: setattr(app, "live_runtime_called", True)
+        app.chat_lines = []
+        app.session_lines = []
+        app._append_chat = lambda speaker, text: app.chat_lines.append((speaker, text))
+        app._append_session = lambda role, content: app.session_lines.append({"role": role, "content": content})
+        app._refresh_state_cards = lambda: None
+
+        app._send_chat()
+
+        assert app.live_runtime_called is False
+        assert len(app.evaluation_review_items) == 1
+        item = app.evaluation_review_items[0]
+        assert item["item_type"] == "oar_mission_compilation"
+        assert item["status"] == "pending_operator_review"
+        details = item["details"]
+        assert "scholarly language behavior" in details["original_operator_mission"]
+        assert details["mission_started"] is False
+        assert details["source_application_authorized"] is False
+        assert details["capability_activated"] is False
+        assert details["automatic_continuation"] is False
+        assert app.chat_lines[-1][0] == "DELTA"
+        assert "compiled it for operator review" in app.chat_lines[-1][1]
+    finally:
+        root.destroy()
+
+    assert threading.active_count() == thread_count_before
+    assert tuple(multiprocessing.active_children()) == child_processes_before
+
+
+def test_tk_non_mission_text_does_not_trigger_oar_intake():
+    root = tk.Tk()
+    root.withdraw()
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.root = root
+    try:
+        assert app._is_oar_language_development_mission("What color is the sky?") is False
+        assert app._is_oar_language_development_mission("tell me how to swim") is False
+        assert app._is_oar_language_development_mission("improve the report formatting") is False
+        assert app._is_oar_language_development_mission(
+            "Develop a bounded scholarly language improvement mission."
+        ) is True
+    finally:
+        root.destroy()

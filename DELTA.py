@@ -2090,6 +2090,67 @@ class DeltaApp:
         )
         self._show_selected_evaluation_item()
 
+    def _is_oar_language_development_mission(self, message: str) -> bool:
+        normalized = " ".join(message.lower().split())
+        if not any(token in normalized for token in ("develop", "improve", "refine")):
+            return False
+        if not any(token in normalized for token in ("language", "scholarly", "scholar")):
+            return False
+        return any(token in normalized for token in ("mission", "capability", "behavior", "improvement", "development"))
+
+    def _handle_oar_language_development_mission(self, message: str) -> str:
+        sequence = len(self.session_history) + len(self.evaluation_review_items) + 1
+        request = gsr.make_mission_compilation_request(
+            message,
+            baseline_evaluation_id=f"tk-live-language-baseline-{sequence}",
+            requested_sequence=sequence,
+            maximum_capability_campaigns=1,
+            maximum_attempts_per_campaign=1,
+            maximum_runtime_hours=1,
+        )
+        authorization = gsr.make_mission_compilation_authorization(request, issued_sequence=sequence + 1)
+        result = gsr.compile_language_development_mission(request, authorization, sequence=sequence + 2)
+        if not result.accepted or result.compiled_objective is None or result.evidence is None:
+            return (
+                "I recognized this as a governed language-development mission, but mission compilation failed closed: "
+                f"{result.reason}. No development runtime, source application, provider call, model call, or memory write occurred."
+            )
+        review_item = {
+            "item_type": "oar_mission_compilation",
+            "title": "OAR Mission Compilation",
+            "status": "pending_operator_review",
+            "boundary": "operator mission -> OAR mission compilation -> Evaluation review evidence -> stop",
+            "operator_action": "Review the compiled mission. This does not approve, start, apply, or activate development.",
+            "details": {
+                "original_operator_mission": result.compiled_objective.original_operator_mission,
+                "compiled_objective_id": result.compiled_objective.compiled_objective_id,
+                "mission_family": result.compiled_objective.mission_family,
+                "measurable_dimensions": result.compiled_objective.measurable_dimensions,
+                "success_thresholds": result.compiled_objective.success_thresholds,
+                "protected_invariants": result.compiled_objective.protected_invariants,
+                "resource_budgets": result.compiled_objective.resource_budgets,
+                "operator_decisions_required": result.compiled_objective.operator_decisions_required,
+                "compilation_evidence": asdict(result.evidence),
+                "mission_started": result.mission_started,
+                "source_application_authorized": result.source_application_authorized,
+                "capability_activated": result.capability_activated,
+                "automatic_continuation": result.automatic_continuation,
+            },
+            "guarantees": [
+                "The original operator wording is preserved in the compiled mission.",
+                "Mission compilation consumed only compilation authorization.",
+                "No development runtime was started.",
+                "No provider call, local-model call, memory write, source application, capability activation, scheduler, thread, or automatic continuation was performed.",
+            ],
+        }
+        self._set_evaluation_review_items([*self.evaluation_review_items, review_item])
+        return (
+            "I recognized this as a governed language-development mission and compiled it for operator review. "
+            "The compiled mission is now surfaced in the Evaluation tab as pending_operator_review. "
+            "No development runtime was started, and no source application, provider call, model call, memory write, "
+            "capability activation, or automatic continuation occurred."
+        )
+
     def _normalize_evaluation_review_item(self, index: int, item: dict[str, object]) -> dict[str, object]:
         item_type = str(item.get("item_type") or item.get("type") or "evaluation_item")
         title = str(item.get("title") or item.get("evaluation_id") or item.get("record_id") or f"Review item {index}")
@@ -2554,6 +2615,28 @@ class DeltaApp:
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
         discourse_trace = discourse_frame.as_dict()
+        if self._is_oar_language_development_mission(message):
+            self._append_session("user", message)
+            reply = self._handle_oar_language_development_mission(message)
+            if self.developer_overlay_enabled.get():
+                reply += "\n\n--- Developer Overlay ---\nRoute: oar_language_development_mission_intake\n"
+                reply += "Discourse frame:\n"
+                reply += json.dumps(discourse_trace, indent=2, sort_keys=True)
+                reply += "\nSafety:\n"
+                reply += json.dumps({
+                    "provider_calls_performed": False,
+                    "local_model_calls_performed": False,
+                    "developmental_memory_write_performed": False,
+                    "canonical_write_performed": False,
+                    "source_application_performed": False,
+                    "capability_activation_performed": False,
+                    "development_runtime_started": False,
+                    "automatic_continuation_performed": False,
+                }, indent=2, sort_keys=True)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
         if self.live_runtime_session and self.live_runtime_session.active:
             self._append_session("user", message)
             self._begin_live_runtime_turn(message)
