@@ -840,3 +840,190 @@ def test_pcm_1e_authority_limits_and_permissions_fail_closed(tmp_path):
         assert result.authorization_consumed is False
         assert result.proposal_started is False
         _assert_no_pcm_1e_actions(result)
+
+
+def _pcm_1e_result(tmp_path, *, expected_symbol: str = "missing_guard"):
+    record, diagnosis_result = _pcm_1d_result(tmp_path, expected_symbol=expected_symbol)
+    request, authorization = _test_proposal_pair(record, diagnosis_result)
+    result = gsr.create_python_focused_test_proposal(record, diagnosis_result, request, authorization, sequence=516)
+    assert result.accepted is True
+    return record, diagnosis_result, result
+
+
+def _handoff_pair(
+    record: gsr.PythonCodingModuleAttachmentRecord,
+    inspection_result: gsr.PythonSourceInspectionResult,
+    diagnosis_result: gsr.PythonBoundedDiagnosisResult,
+    test_proposal_result: gsr.PythonFocusedTestProposalResult,
+):
+    request = gsr.make_python_sandbox_handoff_request(
+        record,
+        inspection_result,
+        diagnosis_result,
+        test_proposal_result,
+        allowed_target_paths=("sample.py", "tests/runtime_gsr/test_pcm_generated_review.py"),
+        request_sequence=518,
+    )
+    authorization = gsr.make_python_sandbox_handoff_authorization(
+        request,
+        issued_sequence=519,
+        expiration_sequence=550,
+    )
+    return request, authorization
+
+
+def _assert_no_pcm_1f_actions(result: gsr.PythonSandboxHandoffResult) -> None:
+    assert result.sandbox_executed is False
+    assert result.patch_applied is False
+    assert result.source_written is False
+    assert result.test_file_written is False
+    assert result.command_executed is False
+    assert result.git_operation_performed is False
+    assert result.source_mutated is False
+    assert result.module_loaded is False
+    assert result.module_activated is False
+    assert result.registry_mutated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+
+
+def test_pcm_1f_exact_upstream_evidence_produces_one_inert_sandbox_handoff(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path, source="def present():\n    return 1\n")
+    diagnosis_request, diagnosis_authorization = _diagnosis_pair(record, inspection_result)
+    diagnosis_result = gsr.perform_python_bounded_diagnosis(record, inspection_result, diagnosis_request, diagnosis_authorization, sequence=512)
+    proposal_request, proposal_authorization = _test_proposal_pair(record, diagnosis_result)
+    proposal_result = gsr.create_python_focused_test_proposal(record, diagnosis_result, proposal_request, proposal_authorization, sequence=516)
+    request, authorization = _handoff_pair(record, inspection_result, diagnosis_result, proposal_result)
+
+    result = gsr.create_python_sandbox_handoff_package(record, inspection_result, diagnosis_result, proposal_result, request, authorization, sequence=520)
+
+    assert result.accepted is True
+    assert result.reason == "valid"
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.authorization_consumed is True
+    assert result.handoff_created is True
+    assert result.handoff_count == 1
+    assert result.evidence.handoffs_produced == 1
+    assert result.evidence.maximum_handoffs == 1
+    assert result.evidence.inspection_evidence_id == request.inspection_evidence_id
+    assert result.evidence.diagnosis_evidence_id == request.diagnosis_evidence_id
+    assert result.evidence.test_proposal_evidence_id == request.test_proposal_evidence_id
+    package = gsr.deserialize(gsr.PythonSandboxHandoffPackage, result.evidence.handoff_package)
+    assert package.attachment_record_id == record.attachment_record_id
+    assert package.finding_id == request.finding_id
+    assert package.proposal_id == request.proposal_id
+    assert package.source_path == "sample.py"
+    assert package.source_digest == request.source_digest
+    assert package.proposed_test_target_path == "tests/runtime_gsr/test_pcm_generated_review.py"
+    assert package.expected_behavior == request.expected_behavior
+    assert package.execution_prohibited is True
+    assert package.application_prohibited is True
+    assert package.git_prohibited is True
+    assert package.next_required_authorization_type == "gsr_sandbox_plan_review_authorization"
+    _assert_no_pcm_1f_actions(result)
+
+    reuse = gsr.create_python_sandbox_handoff_package(record, inspection_result, diagnosis_result, proposal_result, request, result.consumed_authorization, sequence=521)
+    assert reuse.accepted is False
+    assert reuse.reason == "consumed"
+    assert reuse.authorization_consumed is False
+
+
+def test_pcm_1f_zero_handoff_remains_bounded(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path, source="def present():\n    return 1\n")
+    diagnosis_request, diagnosis_authorization = _diagnosis_pair(record, inspection_result, expected_symbol="present")
+    diagnosis_result = gsr.perform_python_bounded_diagnosis(record, inspection_result, diagnosis_request, diagnosis_authorization, sequence=512)
+    proposal_request, proposal_authorization = _test_proposal_pair(record, diagnosis_result)
+    proposal_result = gsr.create_python_focused_test_proposal(record, diagnosis_result, proposal_request, proposal_authorization, sequence=516)
+    request, authorization = _handoff_pair(record, inspection_result, diagnosis_result, proposal_result)
+
+    result = gsr.create_python_sandbox_handoff_package(record, inspection_result, diagnosis_result, proposal_result, request, authorization, sequence=520)
+
+    assert result.accepted is True
+    assert result.reason == "no_bounded_sandbox_handoff"
+    assert result.authorization_consumed is True
+    assert result.handoff_created is False
+    assert result.handoff_count == 0
+    assert result.evidence.handoff_package is None
+    _assert_no_pcm_1f_actions(result)
+
+
+def test_pcm_1f_upstream_identity_mismatches_fail_before_handoff(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path)
+    diagnosis_request, diagnosis_authorization = _diagnosis_pair(record, inspection_result)
+    diagnosis_result = gsr.perform_python_bounded_diagnosis(record, inspection_result, diagnosis_request, diagnosis_authorization, sequence=512)
+    proposal_request, proposal_authorization = _test_proposal_pair(record, diagnosis_result)
+    proposal_result = gsr.create_python_focused_test_proposal(record, diagnosis_result, proposal_request, proposal_authorization, sequence=516)
+    request, authorization = _handoff_pair(record, inspection_result, diagnosis_result, proposal_result)
+    cases = (
+        (replace(record, attachment_record_id="wrong-record"), inspection_result, diagnosis_result, proposal_result, request, authorization, "wrong_attachment_record"),
+        (replace(record, attachment_status="ACTIVE"), inspection_result, diagnosis_result, proposal_result, request, authorization, "attachment_not_inert"),
+        (replace(record, module_loaded=True), inspection_result, diagnosis_result, proposal_result, request, authorization, "module_loaded"),
+        (replace(record, module_activated=True), inspection_result, diagnosis_result, proposal_result, request, authorization, "module_activated"),
+        (replace(record, capability_execution_enabled=True), inspection_result, diagnosis_result, proposal_result, request, authorization, "active_capability_present"),
+        (record, replace(inspection_result, accepted=False), diagnosis_result, proposal_result, request, authorization, "inspection_not_accepted"),
+        (record, inspection_result, replace(diagnosis_result, accepted=False), proposal_result, request, authorization, "diagnosis_not_accepted"),
+        (record, inspection_result, diagnosis_result, replace(proposal_result, accepted=False), request, authorization, "test_proposal_not_accepted"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, inspection_evidence_id="wrong-inspection-evidence"), authorization, "wrong_inspection_evidence"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, diagnosis_evidence_id="wrong-diagnosis-evidence"), authorization, "wrong_diagnosis_evidence"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, test_proposal_evidence_id="wrong-proposal-evidence"), authorization, "wrong_test_proposal_evidence"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, finding_id="wrong-finding"), authorization, "wrong_finding"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, proposal_id="wrong-proposal"), authorization, "wrong_test_proposal"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, source_path="other.py"), authorization, "path_mismatch"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(request, source_digest="bad"), authorization, "source_digest_mismatch"),
+    )
+
+    for bad_record, bad_inspection, bad_diagnosis, bad_proposal, bad_request, bad_authorization, reason in cases:
+        result = gsr.create_python_sandbox_handoff_package(bad_record, bad_inspection, bad_diagnosis, bad_proposal, bad_request, bad_authorization, sequence=520)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.handoff_started is False
+        _assert_no_pcm_1f_actions(result)
+
+
+def test_pcm_1f_authority_limits_and_permissions_fail_closed(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path)
+    diagnosis_request, diagnosis_authorization = _diagnosis_pair(record, inspection_result)
+    diagnosis_result = gsr.perform_python_bounded_diagnosis(record, inspection_result, diagnosis_request, diagnosis_authorization, sequence=512)
+    proposal_request, proposal_authorization = _test_proposal_pair(record, diagnosis_result)
+    proposal_result = gsr.create_python_focused_test_proposal(record, diagnosis_result, proposal_request, proposal_authorization, sequence=516)
+    request, authorization = _handoff_pair(record, inspection_result, diagnosis_result, proposal_result)
+    cases = (
+        (request, replace(authorization, operator_authority="DELTA_SELF"), "non_operator_authorization"),
+        (request, replace(authorization, one_shot=False), "not_one_shot"),
+        (request, replace(authorization, consumed=True), "consumed"),
+        (request, replace(authorization, expiration_sequence=519), "expired"),
+        (replace(request, maximum_handoff_count=2), authorization, "handoff_limit_invalid"),
+        (replace(request, handoff_only=False), authorization, "wrong_sandbox_handoff_request"),
+        (replace(request, sandbox_execution_requested=True), authorization, "sandbox_execution_permission_present"),
+        (replace(request, patch_application_requested=True), authorization, "patch_application_permission_present"),
+        (replace(request, source_write_requested=True), authorization, "source_write_permission_present"),
+        (replace(request, test_file_write_requested=True), authorization, "test_file_write_permission_present"),
+        (replace(request, git_operation_requested=True), authorization, "git_permission_present"),
+        (replace(request, mutation_requested=True), authorization, "mutation_permission_present"),
+        (replace(request, provider_model_requested=True), authorization, "provider_or_model_permission_present"),
+        (request, replace(authorization, sandbox_execution_prohibited=False), "sandbox_execution_permission_present"),
+        (request, replace(authorization, patch_application_prohibited=False), "patch_application_permission_present"),
+        (request, replace(authorization, source_write_prohibited=False), "source_write_permission_present"),
+        (request, replace(authorization, test_file_write_prohibited=False), "test_file_write_permission_present"),
+        (request, replace(authorization, git_operation_prohibited=False), "git_permission_present"),
+        (request, replace(authorization, mutation_prohibited=False), "mutation_permission_present"),
+        (request, replace(authorization, provider_model_use_prohibited=False), "provider_or_model_permission_present"),
+    )
+
+    for bad_request, bad_authorization, reason in cases:
+        result = gsr.create_python_sandbox_handoff_package(record, inspection_result, diagnosis_result, proposal_result, bad_request, bad_authorization, sequence=520)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.handoff_started is False
+        _assert_no_pcm_1f_actions(result)

@@ -1543,6 +1543,194 @@ class PythonFocusedTestProposalResult:
 
 
 @dataclass(frozen=True)
+class PythonSandboxHandoffRequest:
+    sandbox_handoff_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    test_proposal_attempt_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    proposal_id: str
+    module_id: str
+    module_version: str
+    source_path: str
+    source_digest: str
+    proposed_test_target_path: str
+    expected_behavior: str
+    allowed_target_paths: tuple[str, ...]
+    max_file_count: int
+    max_total_bytes: int
+    maximum_handoff_count: int = 1
+    handoff_only: bool = True
+    sandbox_execution_requested: bool = False
+    patch_application_requested: bool = False
+    source_write_requested: bool = False
+    test_file_write_requested: bool = False
+    git_operation_requested: bool = False
+    mutation_requested: bool = False
+    provider_model_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxHandoffAuthorization:
+    sandbox_handoff_authorization_id: str
+    sandbox_handoff_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    test_proposal_attempt_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    proposal_id: str
+    module_id: str
+    module_version: str
+    authorized_source_path: str
+    authorized_source_digest: str
+    authorized_test_target_path: str
+    authorized_expected_behavior: str
+    authorized_target_paths: tuple[str, ...]
+    max_file_count: int
+    max_total_bytes: int
+    maximum_handoff_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    handoff_authorized: bool = True
+    sandbox_execution_prohibited: bool = True
+    patch_application_prohibited: bool = True
+    source_write_prohibited: bool = True
+    test_file_write_prohibited: bool = True
+    git_operation_prohibited: bool = True
+    mutation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxHandoffPackage:
+    handoff_package_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    test_proposal_attempt_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    proposal_id: str
+    source_path: str
+    source_digest: str
+    diagnosis_confidence: float
+    diagnosis_uncertainty: str
+    proposed_test_name: str
+    proposed_test_target_path: str
+    inert_test_specification: str
+    expected_behavior: str
+    sandbox_fixture_strategy: str
+    allowed_target_paths: tuple[str, ...]
+    max_file_count: int
+    max_total_bytes: int
+    next_required_authorization_type: str
+    execution_prohibited: bool = True
+    application_prohibited: bool = True
+    git_prohibited: bool = True
+    operator_review_required: bool = True
+    package_only: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxHandoffEvidence:
+    sandbox_handoff_attempt_id: str
+    sandbox_handoff_request_id: str
+    sandbox_handoff_authorization_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    test_proposal_attempt_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    proposal_id: str
+    exact_source_path: str
+    exact_source_digest: str
+    handoff_package: dict[str, Any] | None
+    handoffs_produced: int
+    maximum_handoffs: int
+    authorization_consumed: bool
+    handoff_started: bool
+    handoff_completed: bool
+    upstream_evidence_used: bool
+    sandbox_executed: bool = False
+    patch_applied: bool = False
+    source_written: bool = False
+    test_file_written: bool = False
+    git_operation_performed: bool = False
+    source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    registry_mutated: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxHandoffResult:
+    accepted: bool
+    reason: str
+    request: PythonSandboxHandoffRequest | None = None
+    original_authorization: PythonSandboxHandoffAuthorization | None = None
+    consumed_authorization: PythonSandboxHandoffAuthorization | None = None
+    evidence: PythonSandboxHandoffEvidence | None = None
+    handoff_started: bool = False
+    handoff_completed: bool = False
+    authorization_consumed: bool = False
+    handoff_created: bool = False
+    handoff_count: int = 0
+    sandbox_executed: bool = False
+    patch_applied: bool = False
+    source_written: bool = False
+    test_file_written: bool = False
+    command_executed: bool = False
+    git_operation_performed: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -5193,6 +5381,335 @@ def create_python_focused_test_proposal(
         authorization_consumed=True,
         proposal_created=proposal is not None,
         proposal_count=1 if proposal is not None else 0,
+    )
+
+
+def python_focused_test_proposal_evidence_id(evidence: PythonFocusedTestProposalEvidence) -> str:
+    return stable_id("pcm-1e-focused-test-proposal-evidence", evidence.test_proposal_attempt_id, evidence.diagnosis_evidence_id, evidence.proposal, evidence.proposals_produced)
+
+
+def make_python_sandbox_handoff_request(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    *,
+    allowed_target_paths: tuple[str, ...],
+    max_file_count: int = 1,
+    max_total_bytes: int = 100_000,
+    request_sequence: int = 0,
+    **overrides: Any,
+) -> PythonSandboxHandoffRequest:
+    inspection_evidence = inspection_result.evidence
+    diagnosis_evidence = diagnosis_result.evidence
+    proposal_evidence = test_proposal_result.evidence
+    proposal_payload = proposal_evidence.proposal if proposal_evidence is not None else None
+    proposal = deserialize(PythonFocusedTestProposal, proposal_payload) if proposal_payload is not None else None
+    finding_payload = diagnosis_evidence.finding if diagnosis_evidence is not None else None
+    finding = deserialize(PythonBoundedDiagnosticFinding, finding_payload) if finding_payload is not None else None
+    return PythonSandboxHandoffRequest(
+        sandbox_handoff_request_id=stable_id("pcm-1f-sandbox-handoff-request", attachment_record.attachment_record_id, proposal.proposal_id if proposal else "", request_sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_attempt_id=inspection_evidence.inspection_attempt_id if inspection_evidence else "",
+        inspection_evidence_id=python_source_inspection_evidence_id(inspection_evidence) if inspection_evidence else "",
+        diagnosis_attempt_id=diagnosis_evidence.diagnosis_attempt_id if diagnosis_evidence else "",
+        diagnosis_evidence_id=python_bounded_diagnosis_evidence_id(diagnosis_evidence) if diagnosis_evidence else "",
+        test_proposal_attempt_id=proposal_evidence.test_proposal_attempt_id if proposal_evidence else "",
+        test_proposal_evidence_id=python_focused_test_proposal_evidence_id(proposal_evidence) if proposal_evidence else "",
+        finding_id=finding.finding_id if finding else "",
+        proposal_id=proposal.proposal_id if proposal else "",
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        source_path=proposal.source_path if proposal else "",
+        source_digest=proposal.source_digest if proposal else "",
+        proposed_test_target_path=proposal.proposed_test_target_path if proposal else "",
+        expected_behavior=proposal.expected_behavior if proposal else "",
+        allowed_target_paths=allowed_target_paths,
+        max_file_count=max_file_count,
+        max_total_bytes=max_total_bytes,
+        **overrides,
+    )
+
+
+def make_python_sandbox_handoff_authorization(
+    request: PythonSandboxHandoffRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonSandboxHandoffAuthorization:
+    return PythonSandboxHandoffAuthorization(
+        sandbox_handoff_authorization_id=stable_id("pcm-1f-sandbox-handoff-authorization", request.sandbox_handoff_request_id, issued_sequence),
+        sandbox_handoff_request_id=request.sandbox_handoff_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        attachment_record_id=request.attachment_record_id,
+        inspection_attempt_id=request.inspection_attempt_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_attempt_id=request.diagnosis_attempt_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_attempt_id=request.test_proposal_attempt_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        finding_id=request.finding_id,
+        proposal_id=request.proposal_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        authorized_source_path=request.source_path,
+        authorized_source_digest=request.source_digest,
+        authorized_test_target_path=request.proposed_test_target_path,
+        authorized_expected_behavior=request.expected_behavior,
+        authorized_target_paths=request.allowed_target_paths,
+        max_file_count=request.max_file_count,
+        max_total_bytes=request.max_total_bytes,
+        maximum_handoff_count=request.maximum_handoff_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _python_sandbox_handoff_denial(
+    reason: str,
+    request: PythonSandboxHandoffRequest | None,
+    authorization: PythonSandboxHandoffAuthorization | None,
+) -> PythonSandboxHandoffResult:
+    return PythonSandboxHandoffResult(False, reason, request, original_authorization=authorization)
+
+
+def _python_sandbox_handoff_authorization_is_available(authorization: PythonSandboxHandoffAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not authorization.handoff_authorized:
+        return False, "wrong_sandbox_handoff_authorization"
+    if not authorization.sandbox_execution_prohibited:
+        return False, "sandbox_execution_permission_present"
+    if not authorization.patch_application_prohibited:
+        return False, "patch_application_permission_present"
+    if not authorization.source_write_prohibited:
+        return False, "source_write_permission_present"
+    if not authorization.test_file_write_prohibited:
+        return False, "test_file_write_permission_present"
+    if not authorization.git_operation_prohibited:
+        return False, "git_permission_present"
+    if not authorization.mutation_prohibited:
+        return False, "mutation_permission_present"
+    if not authorization.provider_model_use_prohibited:
+        return False, "provider_or_model_permission_present"
+    return True, "valid"
+
+
+def _python_sandbox_handoff_request_matches_authorization(
+    request: PythonSandboxHandoffRequest,
+    authorization: PythonSandboxHandoffAuthorization,
+) -> tuple[bool, str]:
+    if authorization.sandbox_handoff_request_id != request.sandbox_handoff_request_id:
+        return False, "wrong_sandbox_handoff_request"
+    expected_id = stable_id("pcm-1f-sandbox-handoff-authorization", request.sandbox_handoff_request_id, authorization.issued_sequence)
+    if authorization.sandbox_handoff_authorization_id != expected_id:
+        return False, "wrong_sandbox_handoff_authorization"
+    pairs = (
+        (authorization.objective_cycle_id, request.objective_cycle_id, "wrong_sandbox_handoff_request"),
+        (authorization.attachment_record_id, request.attachment_record_id, "wrong_attachment_record"),
+        (authorization.inspection_attempt_id, request.inspection_attempt_id, "wrong_inspection_attempt"),
+        (authorization.inspection_evidence_id, request.inspection_evidence_id, "wrong_inspection_evidence"),
+        (authorization.diagnosis_attempt_id, request.diagnosis_attempt_id, "wrong_diagnosis_attempt"),
+        (authorization.diagnosis_evidence_id, request.diagnosis_evidence_id, "wrong_diagnosis_evidence"),
+        (authorization.test_proposal_attempt_id, request.test_proposal_attempt_id, "wrong_test_proposal_attempt"),
+        (authorization.test_proposal_evidence_id, request.test_proposal_evidence_id, "wrong_test_proposal_evidence"),
+        (authorization.finding_id, request.finding_id, "wrong_finding"),
+        (authorization.proposal_id, request.proposal_id, "wrong_test_proposal"),
+        (authorization.module_id, request.module_id, "wrong_sandbox_handoff_request"),
+        (authorization.module_version, request.module_version, "wrong_sandbox_handoff_request"),
+        (authorization.authorized_source_path, request.source_path, "path_mismatch"),
+        (authorization.authorized_source_digest, request.source_digest, "source_digest_mismatch"),
+        (authorization.authorized_test_target_path, request.proposed_test_target_path, "test_target_mismatch"),
+        (authorization.authorized_expected_behavior, request.expected_behavior, "expected_behavior_mismatch"),
+        (authorization.authorized_target_paths, request.allowed_target_paths, "target_path_mismatch"),
+        (authorization.max_file_count, request.max_file_count, "limit_mismatch"),
+        (authorization.max_total_bytes, request.max_total_bytes, "limit_mismatch"),
+        (authorization.maximum_handoff_count, request.maximum_handoff_count, "handoff_limit_invalid"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return False, reason
+    return True, "valid"
+
+
+def _python_sandbox_handoff_upstream_matches_request(
+    request: PythonSandboxHandoffRequest,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+) -> tuple[bool, str, PythonBoundedDiagnosticFinding | None, PythonFocusedTestProposal | None]:
+    if not inspection_result.accepted or not inspection_result.inspection_completed or inspection_result.evidence is None:
+        return False, "inspection_not_accepted", None, None
+    if python_source_inspection_evidence_id(inspection_result.evidence) != request.inspection_evidence_id:
+        return False, "wrong_inspection_evidence", None, None
+    if inspection_result.evidence.inspection_attempt_id != request.inspection_attempt_id:
+        return False, "wrong_inspection_attempt", None, None
+    if not diagnosis_result.accepted or not diagnosis_result.diagnosis_completed or diagnosis_result.evidence is None:
+        return False, "diagnosis_not_accepted", None, None
+    if python_bounded_diagnosis_evidence_id(diagnosis_result.evidence) != request.diagnosis_evidence_id:
+        return False, "wrong_diagnosis_evidence", None, None
+    if diagnosis_result.evidence.diagnosis_attempt_id != request.diagnosis_attempt_id:
+        return False, "wrong_diagnosis_attempt", None, None
+    if not test_proposal_result.accepted or not test_proposal_result.proposal_completed or test_proposal_result.evidence is None:
+        return False, "test_proposal_not_accepted", None, None
+    if python_focused_test_proposal_evidence_id(test_proposal_result.evidence) != request.test_proposal_evidence_id:
+        return False, "wrong_test_proposal_evidence", None, None
+    if test_proposal_result.evidence.test_proposal_attempt_id != request.test_proposal_attempt_id:
+        return False, "wrong_test_proposal_attempt", None, None
+    if test_proposal_result.evidence.proposals_produced == 0:
+        return True, "valid", None, None
+    if diagnosis_result.evidence.finding is None or test_proposal_result.evidence.proposal is None:
+        return False, "wrong_test_proposal", None, None
+    finding = deserialize(PythonBoundedDiagnosticFinding, diagnosis_result.evidence.finding)
+    proposal = deserialize(PythonFocusedTestProposal, test_proposal_result.evidence.proposal)
+    if finding.finding_id != request.finding_id:
+        return False, "wrong_finding", None, None
+    if proposal.proposal_id != request.proposal_id:
+        return False, "wrong_test_proposal", None, None
+    if proposal.finding_id != finding.finding_id:
+        return False, "wrong_test_proposal", None, None
+    if proposal.source_path != request.source_path or finding.path != request.source_path:
+        return False, "path_mismatch", None, None
+    if proposal.source_digest != request.source_digest or finding.source_digest != request.source_digest:
+        return False, "source_digest_mismatch", None, None
+    if proposal.proposed_test_target_path != request.proposed_test_target_path:
+        return False, "test_target_mismatch", None, None
+    if proposal.expected_behavior != request.expected_behavior:
+        return False, "expected_behavior_mismatch", None, None
+    return True, "valid", finding, proposal
+
+
+def create_python_sandbox_handoff_package(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    request: PythonSandboxHandoffRequest,
+    authorization: PythonSandboxHandoffAuthorization,
+    *,
+    sequence: int,
+) -> PythonSandboxHandoffResult:
+    if attachment_record.attachment_record_id != request.attachment_record_id:
+        return _python_sandbox_handoff_denial("wrong_attachment_record", request, authorization)
+    if attachment_record.attachment_status != "INERT_ATTACHMENT_RECORD":
+        return _python_sandbox_handoff_denial("attachment_not_inert", request, authorization)
+    if attachment_record.module_loaded:
+        return _python_sandbox_handoff_denial("module_loaded", request, authorization)
+    if attachment_record.module_activated:
+        return _python_sandbox_handoff_denial("module_activated", request, authorization)
+    if attachment_record.capability_execution_enabled:
+        return _python_sandbox_handoff_denial("active_capability_present", request, authorization)
+    if request.maximum_handoff_count != 1:
+        return _python_sandbox_handoff_denial("handoff_limit_invalid", request, authorization)
+    if not request.handoff_only:
+        return _python_sandbox_handoff_denial("wrong_sandbox_handoff_request", request, authorization)
+    if request.sandbox_execution_requested:
+        return _python_sandbox_handoff_denial("sandbox_execution_permission_present", request, authorization)
+    if request.patch_application_requested:
+        return _python_sandbox_handoff_denial("patch_application_permission_present", request, authorization)
+    if request.source_write_requested:
+        return _python_sandbox_handoff_denial("source_write_permission_present", request, authorization)
+    if request.test_file_write_requested:
+        return _python_sandbox_handoff_denial("test_file_write_permission_present", request, authorization)
+    if request.git_operation_requested:
+        return _python_sandbox_handoff_denial("git_permission_present", request, authorization)
+    if request.mutation_requested:
+        return _python_sandbox_handoff_denial("mutation_permission_present", request, authorization)
+    if request.provider_model_requested:
+        return _python_sandbox_handoff_denial("provider_or_model_permission_present", request, authorization)
+    request_match, request_reason = _python_sandbox_handoff_request_matches_authorization(request, authorization)
+    if not request_match:
+        return _python_sandbox_handoff_denial(request_reason, request, authorization)
+    auth_ok, auth_reason = _python_sandbox_handoff_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _python_sandbox_handoff_denial(auth_reason, request, authorization)
+    upstream_ok, upstream_reason, finding, proposal = _python_sandbox_handoff_upstream_matches_request(request, inspection_result, diagnosis_result, test_proposal_result)
+    if not upstream_ok:
+        return _python_sandbox_handoff_denial(upstream_reason, request, authorization)
+
+    consumed_authorization = replace(authorization, consumed=True)
+    package: PythonSandboxHandoffPackage | None = None
+    reason = "no_bounded_sandbox_handoff"
+    if finding is not None and proposal is not None:
+        package = PythonSandboxHandoffPackage(
+            handoff_package_id=stable_id("pcm-1f-sandbox-handoff-package", request.sandbox_handoff_request_id, proposal.proposal_id, sequence),
+            objective_cycle_id=request.objective_cycle_id,
+            module_id=request.module_id,
+            module_version=request.module_version,
+            attachment_record_id=request.attachment_record_id,
+            inspection_attempt_id=request.inspection_attempt_id,
+            inspection_evidence_id=request.inspection_evidence_id,
+            diagnosis_attempt_id=request.diagnosis_attempt_id,
+            diagnosis_evidence_id=request.diagnosis_evidence_id,
+            test_proposal_attempt_id=request.test_proposal_attempt_id,
+            test_proposal_evidence_id=request.test_proposal_evidence_id,
+            finding_id=request.finding_id,
+            proposal_id=request.proposal_id,
+            source_path=request.source_path,
+            source_digest=request.source_digest,
+            diagnosis_confidence=finding.confidence,
+            diagnosis_uncertainty=finding.uncertainty,
+            proposed_test_name=proposal.proposed_test_name,
+            proposed_test_target_path=request.proposed_test_target_path,
+            inert_test_specification=proposal.proposed_test_body,
+            expected_behavior=request.expected_behavior,
+            sandbox_fixture_strategy="future disposable fixture derived from accepted PCM evidence only",
+            allowed_target_paths=request.allowed_target_paths,
+            max_file_count=request.max_file_count,
+            max_total_bytes=request.max_total_bytes,
+            next_required_authorization_type="gsr_sandbox_plan_review_authorization",
+        )
+        reason = "valid"
+    evidence = PythonSandboxHandoffEvidence(
+        sandbox_handoff_attempt_id=stable_id("pcm-1f-sandbox-handoff-attempt", request.sandbox_handoff_request_id, authorization.sandbox_handoff_authorization_id, sequence),
+        sandbox_handoff_request_id=request.sandbox_handoff_request_id,
+        sandbox_handoff_authorization_id=authorization.sandbox_handoff_authorization_id,
+        attachment_record_id=request.attachment_record_id,
+        inspection_attempt_id=request.inspection_attempt_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_attempt_id=request.diagnosis_attempt_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_attempt_id=request.test_proposal_attempt_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        finding_id=request.finding_id,
+        proposal_id=request.proposal_id,
+        exact_source_path=request.source_path,
+        exact_source_digest=request.source_digest,
+        handoff_package=serialize(package) if package is not None else None,
+        handoffs_produced=1 if package is not None else 0,
+        maximum_handoffs=1,
+        authorization_consumed=True,
+        handoff_started=True,
+        handoff_completed=True,
+        upstream_evidence_used=True,
+    )
+    return PythonSandboxHandoffResult(
+        True,
+        reason,
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        handoff_started=True,
+        handoff_completed=True,
+        authorization_consumed=True,
+        handoff_created=package is not None,
+        handoff_count=1 if package is not None else 0,
     )
 
 
