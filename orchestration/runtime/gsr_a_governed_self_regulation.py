@@ -3290,6 +3290,334 @@ class CapabilityDevelopmentClosureResult:
 
 
 @dataclass(frozen=True)
+class CapabilitySpecificationRequest:
+    specification_request_id: str
+    parent_mission_id: str
+    capability_gap_id: str
+    selected_capability_id: str
+    authority_envelope: tuple[str, ...]
+    requested_sequence: int
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilitySpecificationAuthorization:
+    specification_authorization_id: str
+    specification_request_id: str
+    parent_mission_id: str
+    capability_gap_id: str
+    selected_capability_id: str
+    authority_envelope: tuple[str, ...]
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    specification_authorized: bool = True
+    permission_expansion_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    network_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilitySpecification:
+    specification_id: str
+    parent_mission_id: str
+    capability_gap_id: str
+    capability_id: str
+    purpose: str
+    mission_contribution: str
+    required_inputs: tuple[str, ...]
+    expected_outputs: tuple[str, ...]
+    state_requirements: tuple[str, ...]
+    dependencies: tuple[str, ...]
+    integration_points: tuple[str, ...]
+    authority_requirements: tuple[str, ...]
+    prohibited_behavior: tuple[str, ...]
+    resource_needs: tuple[str, ...]
+    validation_criteria: tuple[str, ...]
+    acceptance_evidence: tuple[str, ...]
+    reversibility: str
+    known_uncertainty: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilitySpecificationEvidence:
+    evidence_id: str
+    specification_id: str
+    parent_mission_digest: str
+    graph_id: str
+    self_model_id: str
+    selected_gap_id: str
+    authority_envelope_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilitySpecificationResult:
+    accepted: bool
+    reason: str
+    specification: CapabilitySpecification | None = None
+    evidence: CapabilitySpecificationEvidence | None = None
+    original_authorization: CapabilitySpecificationAuthorization | None = None
+    consumed_authorization: CapabilitySpecificationAuthorization | None = None
+    authorization_consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityArchitectureOption:
+    option_id: str
+    specification_id: str
+    architecture_summary: str
+    affected_subsystems: tuple[str, ...]
+    new_contracts_or_abstractions: tuple[str, ...]
+    dependencies: tuple[str, ...]
+    migration_impact: str
+    coupling: str
+    reversibility: str
+    testability: str
+    risks: tuple[str, ...]
+    authority_changes: tuple[str, ...]
+    resource_costs: tuple[str, ...]
+    parent_mission_leverage: str
+    novelty_score: int
+    reuse_score: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityArchitectureOptionsResult:
+    accepted: bool
+    reason: str
+    specification_id: str
+    options: tuple[dict[str, Any], ...] = ()
+    maximum_options: int = 3
+    recursive_generation: bool = False
+    implementation_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityArchitectureSelection:
+    selection_id: str
+    specification_id: str
+    selected_option_id: str
+    outcome: str
+    selection_rationale: str
+    rejected_option_reasons: tuple[dict[str, str], ...]
+    permission_expansion_required: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityValidationPlan:
+    validation_plan_id: str
+    specification_id: str
+    selected_option_id: str
+    focused_tests: tuple[str, ...]
+    integration_tests: tuple[str, ...]
+    adversarial_tests: tuple[str, ...]
+    fixture_strategy: str
+    expected_successful_transition: str
+    denial_transitions: tuple[str, ...]
+    achievable_evidence_tier: str
+    regression_bundles: tuple[str, ...]
+    resource_limits: dict[str, int]
+    cleanup_requirements: tuple[str, ...]
+    stop_conditions: tuple[str, ...]
+    claims_not_proven: tuple[str, ...]
+    frozen_before_implementation: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityImplementationPlan:
+    implementation_plan_id: str
+    specification_id: str
+    validation_plan_id: str
+    selected_option_id: str
+    files_for_inspection: tuple[str, ...]
+    files_for_modification: tuple[str, ...]
+    helpers_to_reuse: tuple[str, ...]
+    contracts_to_add_or_extend: tuple[str, ...]
+    tests_to_add: tuple[str, ...]
+    migration_requirements: tuple[str, ...]
+    maximum_changed_file_count: int
+    maximum_changed_byte_count: int
+    rollback_strategy: str
+    unresolved_operator_decisions: tuple[str, ...]
+    direct_source_mutation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityImplementationCampaignResult:
+    accepted: bool
+    reason: str
+    specification_id: str
+    selected_option_id: str
+    validation_plan_id: str
+    implementation_plan_id: str
+    doe_objective_id: str
+    gdr_review_item_id: str
+    pcm_artifact_chain_digest: str
+    attempts_used: int
+    operator_review_package_id: str
+    tracked_source_mutated: bool = False
+    capability_activated: bool = False
+    autonomous_git_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityPromotionAnalysis:
+    analysis_id: str
+    specification_id: str
+    campaign_id: str
+    matches_specification: bool
+    validation_passed: bool
+    integration_points_correct: bool
+    permissions_changed: bool
+    activation_required: bool
+    parent_contracts_valid: bool
+    closes_selected_gap: bool
+    evidence_tier_reached: str
+    promotion_allowed: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ParentMissionResumption:
+    resumption_id: str
+    parent_mission_id: str
+    selected_capability_id: str
+    operator_disposition: str
+    capability_approved: bool
+    selected_gap_closed: bool
+    another_prerequisite_remains: bool
+    mission_work_can_begin: bool
+    exposed_dependency: str
+    outcome: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RecursiveMissionWorkItem:
+    work_item_id: str
+    item_type: str
+    description: str
+    blocker_capability_id: str = ""
+    completed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RecursiveMissionState:
+    mission_state_id: str
+    original_parent_mission: str
+    interpreted_mission_id: str
+    demonstrated_capability_ids: tuple[str, ...]
+    current_blocker_id: str
+    active_capability_campaign_id: str = ""
+    approved_capability_additions: tuple[str, ...] = ()
+    completed_mission_work: tuple[dict[str, Any], ...] = ()
+    unresolved_questions: tuple[dict[str, Any], ...] = ()
+    remaining_budget: int = 3
+    recursion_depth: int = 0
+    campaign_count: int = 0
+    current_disposition: str = "mission_work_available"
+    parent_mission_digest: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RecursiveMissionCheckpoint:
+    checkpoint_id: str
+    mission_state_id: str
+    state_digest: str
+    clean_boundary: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RecursiveMissionResult:
+    accepted: bool
+    reason: str
+    state: RecursiveMissionState
+    checkpoint: RecursiveMissionCheckpoint | None = None
+    active_campaigns: int = 0
+    tracked_source_mutated: bool = False
+    capability_activated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RecursiveMissionReviewPackage:
+    review_package_id: str
+    original_mission: str
+    interpreted_mission_id: str
+    capability_graph_id: str
+    initial_self_model_id: str
+    blockers_encountered: tuple[str, ...]
+    capability_specifications: tuple[str, ...]
+    architecture_options_considered: tuple[str, ...]
+    selected_architectures: tuple[str, ...]
+    development_campaigns: tuple[str, ...]
+    validation_evidence: tuple[str, ...]
+    rejected_approaches: tuple[str, ...]
+    capability_promotions: tuple[str, ...]
+    mission_work_completed: tuple[str, ...]
+    unresolved_questions: tuple[dict[str, Any], ...]
+    remaining_blockers: tuple[str, ...]
+    exact_next_authority_request: str
+    remaining_budget: int
+    final_disposition: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CDE2MDRClosureAuthorization:
+    closure_authorization_id: str
+    mission_state_id: str
+    review_package_id: str
+    expected_disposition: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    closure_authorized: bool = True
+    capability_activation_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    autonomous_git_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    network_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CDE2MDRClosureResult:
+    accepted: bool
+    reason: str
+    review_package: RecursiveMissionReviewPackage | None = None
+    original_authorization: CDE2MDRClosureAuthorization | None = None
+    consumed_authorization: CDE2MDRClosureAuthorization | None = None
+    authorization_consumed: bool = False
+    capability_activated: bool = False
+    tracked_source_mutated: bool = False
+    autonomous_git_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -10404,6 +10732,406 @@ def evaluate_capability_development_closure(
         replace(authorization, consumed=True),
         authorization_consumed=True,
     )
+
+
+CDE2_SELECTION_OUTCOMES = (
+    "select_minimum_viable_architecture",
+    "request_operator_architecture_choice",
+    "request_permission_expansion",
+    "pause_insufficient_evidence",
+    "architectural_gap_not_resolvable",
+)
+
+MDR_BLOCKER_STATES = (
+    "mission_work_available",
+    "capability_gap_blocking",
+    "operator_authority_blocking",
+    "architectural_decision_blocking",
+    "resource_limit_blocking",
+    "mission_complete",
+    "mission_not_feasible",
+)
+
+
+def make_capability_specification_request(
+    mission: CapabilityDevelopmentMission,
+    selection: CapabilitySelection,
+    *,
+    authority_envelope: tuple[str, ...] = ("fixture_only", "operator_review_required", "no_activation"),
+    requested_sequence: int = 0,
+) -> CapabilitySpecificationRequest:
+    return CapabilitySpecificationRequest(
+        specification_request_id=stable_id("cde-2-spec-request", mission.mission_id, selection.selected_gap_id, requested_sequence),
+        parent_mission_id=mission.mission_id,
+        capability_gap_id=selection.selected_gap_id,
+        selected_capability_id=selection.selected_capability_id,
+        authority_envelope=authority_envelope,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_capability_specification_authorization(
+    request: CapabilitySpecificationRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+) -> CapabilitySpecificationAuthorization:
+    return CapabilitySpecificationAuthorization(
+        specification_authorization_id=stable_id("cde-2-spec-authorization", request.specification_request_id, issued_sequence),
+        specification_request_id=request.specification_request_id,
+        parent_mission_id=request.parent_mission_id,
+        capability_gap_id=request.capability_gap_id,
+        selected_capability_id=request.selected_capability_id,
+        authority_envelope=request.authority_envelope,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+    )
+
+
+def synthesize_capability_specification(
+    mission: CapabilityDevelopmentMission,
+    graph: RequiredCapabilityGraph,
+    self_model: DemonstratedCapabilitySelfModel,
+    selection: CapabilitySelection,
+    request: CapabilitySpecificationRequest,
+    authorization: CapabilitySpecificationAuthorization,
+    *,
+    sequence: int,
+) -> CapabilitySpecificationResult:
+    expected_id = stable_id("cde-2-spec-authorization", request.specification_request_id, authorization.issued_sequence)
+    if authorization.specification_authorization_id != expected_id or authorization.specification_request_id != request.specification_request_id:
+        return CapabilitySpecificationResult(False, "wrong_specification_authorization", original_authorization=authorization)
+    if request.parent_mission_id != mission.mission_id or authorization.parent_mission_id != mission.mission_id:
+        return CapabilitySpecificationResult(False, "parent_mission_substitution", original_authorization=authorization)
+    if request.capability_gap_id != selection.selected_gap_id or request.selected_capability_id != selection.selected_capability_id:
+        return CapabilitySpecificationResult(False, "selected_gap_substitution", original_authorization=authorization)
+    if authorization.authority_envelope != request.authority_envelope:
+        return CapabilitySpecificationResult(False, "authority_envelope_substitution", original_authorization=authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed or sequence > authorization.expiration_sequence:
+        return CapabilitySpecificationResult(False, "specification_authorization_unavailable", original_authorization=authorization)
+    if not authorization.permission_expansion_prohibited or not authorization.provider_model_use_prohibited or not authorization.network_prohibited or not authorization.tracked_source_application_prohibited:
+        return CapabilitySpecificationResult(False, "permission_expansion_denied", original_authorization=authorization)
+    nodes = [deserialize(RequiredCapabilityNode, payload) for payload in graph.nodes]
+    node = next((item for item in nodes if item.capability_id == selection.selected_capability_id), None)
+    if node is None:
+        return CapabilitySpecificationResult(False, "capability_not_in_graph", original_authorization=authorization)
+    specification = CapabilitySpecification(
+        specification_id=stable_id("cde-2-specification", mission.mission_id, node.capability_id, sequence),
+        parent_mission_id=mission.mission_id,
+        capability_gap_id=selection.selected_gap_id,
+        capability_id=node.capability_id,
+        purpose=f"Provide {node.name} for the parent mission without activation.",
+        mission_contribution=node.mission_contribution,
+        required_inputs=node.required_inputs,
+        expected_outputs=node.expected_outputs,
+        state_requirements=("inert_contract_state", "operator_review_boundary"),
+        dependencies=node.prerequisite_capability_ids,
+        integration_points=("CDE self-model", "DOE objective synthesis", "GDR review queue"),
+        authority_requirements=("operator review",),
+        prohibited_behavior=("self_authorization", "self_activation", "tracked_source_application", "network"),
+        resource_needs=("fixture tests", "bounded runtime budget"),
+        validation_criteria=("focused tests pass", "operator review package produced", "no activation"),
+        acceptance_evidence=("fixture_validated evidence tier only",),
+        reversibility=node.reversibility,
+        known_uncertainty="fixture architecture only; not real scholar capability",
+    )
+    evidence = CapabilitySpecificationEvidence(
+        evidence_id=stable_id("cde-2-spec-evidence", specification.specification_id),
+        specification_id=specification.specification_id,
+        parent_mission_digest=mission.mission_digest,
+        graph_id=graph.graph_id,
+        self_model_id=self_model.self_model_id,
+        selected_gap_id=selection.selected_gap_id,
+        authority_envelope_digest=_canonical_digest(request.authority_envelope),
+    )
+    return CapabilitySpecificationResult(True, "capability_specification_synthesized", specification, evidence, authorization, replace(authorization, consumed=True), authorization_consumed=True)
+
+
+def generate_capability_architecture_options(specification: CapabilitySpecification, *, requested_option_count: int = 3, recursive: bool = False) -> CapabilityArchitectureOptionsResult:
+    if recursive:
+        return CapabilityArchitectureOptionsResult(False, "recursive_option_generation_denied", specification.specification_id)
+    if requested_option_count > 3:
+        return CapabilityArchitectureOptionsResult(False, "architecture_option_limit_exceeded", specification.specification_id)
+    templates = (
+        ("extend_existing_cde_runtime", "Extend existing governed runtime contracts", ("gsr_a_governed_self_regulation.py",), 1, 5),
+        ("narrow_new_abstraction", "Add narrow capability-model abstraction", ("capability model contracts",), 2, 3),
+        ("compose_existing_capabilities", "Compose CDE, DOE, GDR, and PCM without new state", ("CDE", "DOE", "GDR", "PCM"), 1, 4),
+    )
+    options = []
+    for index, (name, summary, subsystems, novelty, reuse) in enumerate(templates[:requested_option_count], start=1):
+        options.append(
+            serialize(
+                CapabilityArchitectureOption(
+                    option_id=stable_id("cde-2-architecture-option", specification.specification_id, name),
+                    specification_id=specification.specification_id,
+                    architecture_summary=summary,
+                    affected_subsystems=subsystems,
+                    new_contracts_or_abstractions=(specification.capability_id,),
+                    dependencies=specification.dependencies,
+                    migration_impact="none for fixture proof",
+                    coupling="low",
+                    reversibility="high",
+                    testability="focused fixture tests",
+                    risks=("overclaim", "premature activation"),
+                    authority_changes=(),
+                    resource_costs=("bounded tests",),
+                    parent_mission_leverage="unblocks first prerequisite",
+                    novelty_score=novelty,
+                    reuse_score=reuse,
+                )
+            )
+        )
+    return CapabilityArchitectureOptionsResult(True, "architecture_options_generated", specification.specification_id, tuple(options))
+
+
+def select_minimum_viable_architecture(specification: CapabilitySpecification, options_result: CapabilityArchitectureOptionsResult) -> CapabilityArchitectureSelection:
+    if not options_result.accepted or not options_result.options:
+        return CapabilityArchitectureSelection(stable_id("cde-2-architecture-selection", specification.specification_id, "none"), specification.specification_id, "", "pause_insufficient_evidence", "no valid options", ())
+    options = [deserialize(CapabilityArchitectureOption, payload) for payload in options_result.options]
+    candidates = [option for option in options if not option.authority_changes]
+    if not candidates:
+        return CapabilityArchitectureSelection(stable_id("cde-2-architecture-selection", specification.specification_id, "permission"), specification.specification_id, "", "request_permission_expansion", "all options require authority expansion", ())
+    selected = sorted(candidates, key=lambda option: (-option.reuse_score, option.novelty_score, len(option.new_contracts_or_abstractions)))[0]
+    rejected = tuple({"option_id": option.option_id, "reason": "less reuse or more novelty"} for option in options if option.option_id != selected.option_id)
+    return CapabilityArchitectureSelection(
+        stable_id("cde-2-architecture-selection", specification.specification_id, selected.option_id),
+        specification.specification_id,
+        selected.option_id,
+        "select_minimum_viable_architecture",
+        "selected smallest reusable governed extension",
+        rejected,
+    )
+
+
+def synthesize_capability_validation_plan(specification: CapabilitySpecification, selection: CapabilityArchitectureSelection) -> CapabilityValidationPlan:
+    return CapabilityValidationPlan(
+        validation_plan_id=stable_id("cde-2-validation-plan", specification.specification_id, selection.selected_option_id),
+        specification_id=specification.specification_id,
+        selected_option_id=selection.selected_option_id,
+        focused_tests=("specification produces fixture contract", "promotion cannot skip tiers"),
+        integration_tests=("CDE-1 regression", "GDR/DOE/PCM regression"),
+        adversarial_tests=("self-approval denied", "activation denied", "validation substitution denied"),
+        fixture_strategy="synthetic disposable capability fixture",
+        expected_successful_transition="specification_to_fixture_validated_review_package",
+        denial_transitions=("permission_expansion", "tracked_source_application", "self_activation"),
+        achievable_evidence_tier="fixture_validated",
+        regression_bundles=("CDE-1", "GDR-1", "DOE-1", "PCM-1/2"),
+        resource_limits={"max_files": 2, "max_attempts": 3, "max_changed_bytes": 2000},
+        cleanup_requirements=("no temp fixtures committed",),
+        stop_conditions=("operator rejection", "scope drift", "integrity failure"),
+        claims_not_proven=("scientific competence", "tracked-source validation", "active capability"),
+    )
+
+
+def synthesize_capability_implementation_plan(specification: CapabilitySpecification, selection: CapabilityArchitectureSelection, validation_plan: CapabilityValidationPlan) -> CapabilityImplementationPlan:
+    return CapabilityImplementationPlan(
+        implementation_plan_id=stable_id("cde-2-implementation-plan", specification.specification_id, validation_plan.validation_plan_id),
+        specification_id=specification.specification_id,
+        validation_plan_id=validation_plan.validation_plan_id,
+        selected_option_id=selection.selected_option_id,
+        files_for_inspection=("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+        files_for_modification=("fixture_capability_contract.py",),
+        helpers_to_reuse=("stable_id", "serialize", "DOE/GDR/PCM contracts"),
+        contracts_to_add_or_extend=(specification.capability_id,),
+        tests_to_add=("test_fixture_capability_contract.py",),
+        migration_requirements=(),
+        maximum_changed_file_count=2,
+        maximum_changed_byte_count=2000,
+        rollback_strategy="discard disposable fixture",
+        unresolved_operator_decisions=("activation requires separate authorization",),
+    )
+
+
+def run_capability_implementation_campaign(specification: CapabilitySpecification, selection: CapabilityArchitectureSelection, validation_plan: CapabilityValidationPlan, implementation_plan: CapabilityImplementationPlan, *, sequence: int) -> CapabilityImplementationCampaignResult:
+    if not validation_plan.frozen_before_implementation:
+        return CapabilityImplementationCampaignResult(False, "validation_plan_not_frozen", specification.specification_id, selection.selected_option_id, validation_plan.validation_plan_id, implementation_plan.implementation_plan_id, "", "", "", 0, "")
+    if implementation_plan.direct_source_mutation or len(implementation_plan.files_for_modification) > implementation_plan.maximum_changed_file_count:
+        return CapabilityImplementationCampaignResult(False, "implementation_scope_violation", specification.specification_id, selection.selected_option_id, validation_plan.validation_plan_id, implementation_plan.implementation_plan_id, "", "", "", 0, "")
+    campaign_id = stable_id("cde-2-campaign", specification.specification_id, implementation_plan.implementation_plan_id, sequence)
+    return CapabilityImplementationCampaignResult(
+        True,
+        "capability_implementation_campaign_completed",
+        specification.specification_id,
+        selection.selected_option_id,
+        validation_plan.validation_plan_id,
+        implementation_plan.implementation_plan_id,
+        doe_objective_id=stable_id("cde-2-doe-objective", campaign_id),
+        gdr_review_item_id=stable_id("cde-2-gdr-review", campaign_id),
+        pcm_artifact_chain_digest=stable_id("cde-2-pcm-chain", campaign_id),
+        attempts_used=1,
+        operator_review_package_id=stable_id("cde-2-operator-review", campaign_id),
+    )
+
+
+def analyze_capability_integration_and_promotion(specification: CapabilitySpecification, campaign: CapabilityImplementationCampaignResult, *, operator_approved: bool) -> CapabilityPromotionAnalysis:
+    passed = campaign.accepted and not campaign.tracked_source_mutated and not campaign.capability_activated
+    tier = "operator_approved" if passed and operator_approved else ("fixture_validated" if passed else "specified")
+    return CapabilityPromotionAnalysis(
+        analysis_id=stable_id("cde-2-promotion", specification.specification_id, campaign.operator_review_package_id, operator_approved),
+        specification_id=specification.specification_id,
+        campaign_id=campaign.operator_review_package_id,
+        matches_specification=passed,
+        validation_passed=passed,
+        integration_points_correct=passed,
+        permissions_changed=False,
+        activation_required=True,
+        parent_contracts_valid=True,
+        closes_selected_gap=passed and operator_approved,
+        evidence_tier_reached=tier,
+        promotion_allowed=passed and operator_approved,
+    )
+
+
+def resume_parent_mission_after_capability(mission: CapabilityDevelopmentMission, promotion: CapabilityPromotionAnalysis, analysis: CapabilityGapAnalysis) -> ParentMissionResumption:
+    remaining = []
+    for payload in analysis.gaps:
+        gap = deserialize(CapabilityGap, payload)
+        if gap.gap_id not in promotion.analysis_id and gap.capability_id not in promotion.specification_id and gap.blocking:
+            remaining.append(gap.capability_id)
+    if promotion.promotion_allowed and remaining:
+        outcome = "select_next_blocking_capability"
+    elif promotion.promotion_allowed:
+        outcome = "mission_feasible"
+    else:
+        outcome = "pause_capability_rejected"
+    return ParentMissionResumption(
+        resumption_id=stable_id("cde-2-parent-resumption", mission.mission_id, promotion.analysis_id),
+        parent_mission_id=mission.mission_id,
+        selected_capability_id=promotion.specification_id,
+        operator_disposition="approved" if promotion.promotion_allowed else "rejected",
+        capability_approved=promotion.promotion_allowed,
+        selected_gap_closed=promotion.closes_selected_gap,
+        another_prerequisite_remains=bool(remaining),
+        mission_work_can_begin=promotion.promotion_allowed and not remaining,
+        exposed_dependency=remaining[0] if remaining else "",
+        outcome=outcome,
+    )
+
+
+def make_recursive_mission_state(mission: CapabilityDevelopmentMission, self_model: DemonstratedCapabilitySelfModel, blocker_id: str, *, remaining_budget: int = 3) -> RecursiveMissionState:
+    state = RecursiveMissionState(
+        mission_state_id=stable_id("mdr-1-state", mission.mission_id, blocker_id),
+        original_parent_mission=mission.original_operator_wording,
+        interpreted_mission_id=mission.mission_id,
+        demonstrated_capability_ids=tuple(payload["capability_id"] for payload in self_model.capabilities),
+        current_blocker_id=blocker_id,
+        remaining_budget=remaining_budget,
+        parent_mission_digest=mission.mission_digest,
+    )
+    return state
+
+
+def detect_recursive_mission_blocker(state: RecursiveMissionState, analysis: CapabilityGapAnalysis) -> str:
+    if state.remaining_budget <= 0:
+        return "resource_limit_blocking"
+    if state.active_capability_campaign_id:
+        return "capability_gap_blocking"
+    if not analysis.first_actionable_gap_id:
+        return "mission_work_available"
+    return "capability_gap_blocking"
+
+
+def invoke_capability_development_from_mission(state: RecursiveMissionState, selection: CapabilitySelection, *, sequence: int) -> RecursiveMissionResult:
+    if state.active_capability_campaign_id:
+        return RecursiveMissionResult(False, "nested_active_campaign_denied", state, active_campaigns=1)
+    if state.recursion_depth >= 3 or state.campaign_count >= 3:
+        return RecursiveMissionResult(False, "recursion_or_campaign_limit", state)
+    next_state = replace(
+        state,
+        active_capability_campaign_id=stable_id("mdr-1-capability-campaign", state.mission_state_id, selection.selected_capability_id, sequence),
+        current_blocker_id=selection.selected_capability_id,
+        recursion_depth=state.recursion_depth + 1,
+        campaign_count=state.campaign_count + 1,
+        current_disposition="capability_gap_blocking",
+    )
+    checkpoint = RecursiveMissionCheckpoint(stable_id("mdr-1-checkpoint", next_state.mission_state_id, sequence), next_state.mission_state_id, _canonical_digest(serialize(next_state)), "clean_capability_campaign_boundary")
+    return RecursiveMissionResult(True, "capability_development_invoked", next_state, checkpoint, active_campaigns=1)
+
+
+def resume_recursive_mission_after_approval(state: RecursiveMissionState, promotion: CapabilityPromotionAnalysis) -> RecursiveMissionState:
+    if not promotion.promotion_allowed:
+        return replace(state, active_capability_campaign_id="", current_disposition="operator_rejection")
+    return replace(
+        state,
+        demonstrated_capability_ids=tuple(dict.fromkeys(state.demonstrated_capability_ids + (promotion.specification_id,))),
+        approved_capability_additions=tuple(dict.fromkeys(state.approved_capability_additions + (promotion.specification_id,))),
+        active_capability_campaign_id="",
+        completed_mission_work=state.completed_mission_work + ({"capability": promotion.specification_id, "tier": promotion.evidence_tier_reached},),
+        remaining_budget=max(0, state.remaining_budget - 1),
+        current_disposition="mission_work_available",
+    )
+
+
+def enforce_recursive_mission_limits(state: RecursiveMissionState, *, repeated_blocker_count: int = 0, parent_mission: str | None = None) -> str:
+    if parent_mission is not None and parent_mission != state.original_parent_mission:
+        return "scope_drift"
+    if state.recursion_depth >= 3:
+        return "recursion_limit"
+    if state.campaign_count >= 3:
+        return "budget_exhausted"
+    if repeated_blocker_count >= 2:
+        return "repeated_blocker"
+    return "continue"
+
+
+def create_recursive_mission_review_package(state: RecursiveMissionState, mission: CapabilityDevelopmentMission, graph: RequiredCapabilityGraph, self_model: DemonstratedCapabilitySelfModel, specification: CapabilitySpecification, options: CapabilityArchitectureOptionsResult, selection: CapabilityArchitectureSelection, campaign: CapabilityImplementationCampaignResult, promotion: CapabilityPromotionAnalysis, resumption: ParentMissionResumption) -> RecursiveMissionReviewPackage:
+    return RecursiveMissionReviewPackage(
+        review_package_id=stable_id("mdr-1-review-package", state.mission_state_id, promotion.analysis_id),
+        original_mission=state.original_parent_mission,
+        interpreted_mission_id=mission.mission_id,
+        capability_graph_id=graph.graph_id,
+        initial_self_model_id=self_model.self_model_id,
+        blockers_encountered=(state.current_blocker_id,),
+        capability_specifications=(specification.specification_id,),
+        architecture_options_considered=tuple(payload["option_id"] for payload in options.options),
+        selected_architectures=(selection.selected_option_id,),
+        development_campaigns=(campaign.operator_review_package_id,),
+        validation_evidence=(promotion.analysis_id,),
+        rejected_approaches=tuple(item["option_id"] for item in selection.rejected_option_reasons),
+        capability_promotions=(promotion.specification_id,) if promotion.promotion_allowed else (),
+        mission_work_completed=tuple(item.get("capability", "") for item in state.completed_mission_work),
+        unresolved_questions=state.unresolved_questions,
+        remaining_blockers=(resumption.exposed_dependency,) if resumption.exposed_dependency else (),
+        exact_next_authority_request="operator mission review",
+        remaining_budget=state.remaining_budget,
+        final_disposition=resumption.outcome,
+    )
+
+
+def make_cde2_mdr_closure_authorization(review: RecursiveMissionReviewPackage, *, issued_sequence: int, expiration_sequence: int, expected_disposition: str = "accepted_for_cde_2_mdr_1_closure") -> CDE2MDRClosureAuthorization:
+    return CDE2MDRClosureAuthorization(
+        closure_authorization_id=stable_id("cde-2-mdr-closure-authorization", review.review_package_id, issued_sequence),
+        mission_state_id=stable_id("mdr-1-state-ref", review.interpreted_mission_id, review.original_mission),
+        review_package_id=review.review_package_id,
+        expected_disposition=expected_disposition,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+    )
+
+
+def evaluate_cde2_mdr_closure(review: RecursiveMissionReviewPackage, authorization: CDE2MDRClosureAuthorization, *, sequence: int) -> CDE2MDRClosureResult:
+    expected_id = stable_id("cde-2-mdr-closure-authorization", review.review_package_id, authorization.issued_sequence)
+    if authorization.closure_authorization_id != expected_id or authorization.review_package_id != review.review_package_id:
+        return CDE2MDRClosureResult(False, "rejected_incomplete_evidence", review, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed:
+        return CDE2MDRClosureResult(False, "rejected_operator_boundary_bypass", review, authorization)
+    if sequence > authorization.expiration_sequence or not authorization.closure_authorized:
+        return CDE2MDRClosureResult(False, "rejected_incomplete_evidence", review, authorization)
+    if not authorization.capability_activation_prohibited:
+        return CDE2MDRClosureResult(False, "rejected_capability_self_approval", review, authorization)
+    if not authorization.tracked_source_application_prohibited or not authorization.autonomous_git_prohibited:
+        return CDE2MDRClosureResult(False, "rejected_permission_expansion", review, authorization)
+    if not authorization.provider_model_use_prohibited or not authorization.network_prohibited:
+        return CDE2MDRClosureResult(False, "rejected_permission_expansion", review, authorization)
+    if not review.capability_specifications or not review.selected_architectures or not review.validation_evidence:
+        return CDE2MDRClosureResult(False, "rejected_incomplete_evidence", review, authorization)
+    return CDE2MDRClosureResult(True, authorization.expected_disposition, review, authorization, replace(authorization, consumed=True), authorization_consumed=True)
 
 
 def make_governed_objective_cycle(
