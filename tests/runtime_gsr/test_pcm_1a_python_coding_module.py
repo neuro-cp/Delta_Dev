@@ -1027,3 +1027,131 @@ def test_pcm_1f_authority_limits_and_permissions_fail_closed(tmp_path):
         assert result.authorization_consumed is False
         assert result.handoff_started is False
         _assert_no_pcm_1f_actions(result)
+
+
+def _pcm_1f_result(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path, source="def present():\n    return 1\n")
+    diagnosis_request, diagnosis_authorization = _diagnosis_pair(record, inspection_result)
+    diagnosis_result = gsr.perform_python_bounded_diagnosis(record, inspection_result, diagnosis_request, diagnosis_authorization, sequence=512)
+    proposal_request, proposal_authorization = _test_proposal_pair(record, diagnosis_result)
+    proposal_result = gsr.create_python_focused_test_proposal(record, diagnosis_result, proposal_request, proposal_authorization, sequence=516)
+    handoff_request, handoff_authorization = _handoff_pair(record, inspection_result, diagnosis_result, proposal_result)
+    handoff_result = gsr.create_python_sandbox_handoff_package(record, inspection_result, diagnosis_result, proposal_result, handoff_request, handoff_authorization, sequence=520)
+    assert handoff_result.accepted is True
+    return record, inspection_result, diagnosis_result, proposal_result, handoff_result
+
+
+def _closure_pair(record, inspection_result, diagnosis_result, proposal_result, handoff_result):
+    request = gsr.make_python_coding_module_closure_request(
+        record,
+        inspection_result,
+        diagnosis_result,
+        proposal_result,
+        handoff_result,
+        request_sequence=522,
+    )
+    authorization = gsr.make_python_coding_module_closure_authorization(
+        request,
+        issued_sequence=523,
+        expiration_sequence=560,
+    )
+    return request, authorization
+
+
+def _assert_no_pcm_1_closure_actions(result: gsr.PythonCodingModuleClosureResult) -> None:
+    assert result.tracked_source_mutated is False
+    assert result.sandbox_executed is False
+    assert result.module_activated is False
+    assert result.git_operation_performed is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.persistence_performed is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+
+
+def test_pcm_1_closure_exact_chain_accepts_disposable_fixture_pilot(tmp_path):
+    record, inspection_result, diagnosis_result, proposal_result, handoff_result = _pcm_1f_result(tmp_path)
+    request, authorization = _closure_pair(record, inspection_result, diagnosis_result, proposal_result, handoff_result)
+
+    result = gsr.evaluate_python_coding_module_closure(record, inspection_result, diagnosis_result, proposal_result, handoff_result, request, authorization, sequence=524)
+
+    assert result.accepted is True
+    assert result.reason == "accepted_for_pcm_1_closure"
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.authorization_consumed is True
+    assert result.closure_count == 1
+    assert result.evidence.stage_order == gsr.PCM_1_STAGE_ORDER
+    assert result.evidence.inspection_evidence_id == request.inspection_evidence_id
+    assert result.evidence.diagnosis_evidence_id == request.diagnosis_evidence_id
+    assert result.evidence.test_proposal_evidence_id == request.test_proposal_evidence_id
+    assert result.evidence.sandbox_handoff_evidence_id == request.sandbox_handoff_evidence_id
+    disposition = gsr.deserialize(gsr.PythonCodingModulePilotDisposition, result.evidence.pilot_disposition)
+    assert disposition.disposition == "accepted_for_pcm_1_closure"
+    assert disposition.pilot_classification == "disposable_fixture_end_to_end_contract_pilot"
+    _assert_no_pcm_1_closure_actions(result)
+
+    reuse = gsr.evaluate_python_coding_module_closure(record, inspection_result, diagnosis_result, proposal_result, handoff_result, request, result.consumed_authorization, sequence=525)
+    assert reuse.accepted is False
+    assert reuse.reason == "consumed"
+    assert reuse.authorization_consumed is False
+
+
+def test_pcm_1_closure_rejects_substituted_stale_and_incomplete_artifacts(tmp_path):
+    record, inspection_result, diagnosis_result, proposal_result, handoff_result = _pcm_1f_result(tmp_path)
+    request, authorization = _closure_pair(record, inspection_result, diagnosis_result, proposal_result, handoff_result)
+    cases = (
+        (replace(record, module_loaded=True), inspection_result, diagnosis_result, proposal_result, handoff_result, request, authorization, "rejected_capability_escalation"),
+        (record, replace(inspection_result, accepted=False), diagnosis_result, proposal_result, handoff_result, request, authorization, "rejected_incomplete_chain"),
+        (record, inspection_result, replace(diagnosis_result, accepted=False), proposal_result, handoff_result, request, authorization, "rejected_incomplete_chain"),
+        (record, inspection_result, diagnosis_result, replace(proposal_result, accepted=False), handoff_result, request, authorization, "rejected_incomplete_chain"),
+        (record, inspection_result, diagnosis_result, proposal_result, replace(handoff_result, accepted=False), request, authorization, "rejected_incomplete_chain"),
+        (record, inspection_result, diagnosis_result, proposal_result, handoff_result, replace(request, source_digest="stale"), authorization, "rejected_stale_evidence"),
+        (record, inspection_result, diagnosis_result, proposal_result, handoff_result, replace(request, source_path="other.py"), authorization, "rejected_scope_broadening"),
+        (record, inspection_result, diagnosis_result, proposal_result, handoff_result, replace(request, finding_id="wrong"), authorization, "rejected_identity_mismatch"),
+        (record, inspection_result, diagnosis_result, proposal_result, handoff_result, replace(request, test_proposal_id="wrong"), authorization, "rejected_identity_mismatch"),
+        (record, inspection_result, diagnosis_result, proposal_result, handoff_result, replace(request, handoff_package_id="wrong"), authorization, "rejected_identity_mismatch"),
+        (record, inspection_result, diagnosis_result, proposal_result, handoff_result, replace(request, stage_order=gsr.PCM_1_STAGE_ORDER[:-1]), authorization, "rejected_incomplete_chain"),
+    )
+
+    for bad_record, bad_inspection, bad_diagnosis, bad_proposal, bad_handoff, bad_request, bad_authorization, reason in cases:
+        result = gsr.evaluate_python_coding_module_closure(bad_record, bad_inspection, bad_diagnosis, bad_proposal, bad_handoff, bad_request, bad_authorization, sequence=524)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.closure_started is False
+        _assert_no_pcm_1_closure_actions(result)
+
+
+def test_pcm_1_closure_authority_scope_and_capability_escalation_fail_closed(tmp_path):
+    record, inspection_result, diagnosis_result, proposal_result, handoff_result = _pcm_1f_result(tmp_path)
+    request, authorization = _closure_pair(record, inspection_result, diagnosis_result, proposal_result, handoff_result)
+    cases = (
+        (request, replace(authorization, operator_authority="DELTA_SELF"), "non_operator_authorization"),
+        (request, replace(authorization, one_shot=False), "not_one_shot"),
+        (request, replace(authorization, consumed=True), "consumed"),
+        (request, replace(authorization, expiration_sequence=523), "expired"),
+        (replace(request, maximum_closure_count=2), authorization, "closure_limit_invalid"),
+        (replace(request, closure_only=False), authorization, "wrong_closure_request"),
+        (replace(request, module_activation_requested=True), authorization, "rejected_capability_escalation"),
+        (replace(request, tracked_source_application_requested=True), authorization, "rejected_scope_broadening"),
+        (replace(request, sandbox_execution_requested=True), authorization, "rejected_scope_broadening"),
+        (replace(request, git_operation_requested=True), authorization, "rejected_scope_broadening"),
+        (replace(request, provider_model_requested=True), authorization, "provider_or_model_permission_present"),
+        (replace(request, persistence_requested=True), authorization, "persistence_permission_present"),
+        (request, replace(authorization, module_activation_prohibited=False), "rejected_capability_escalation"),
+        (request, replace(authorization, tracked_source_application_prohibited=False), "tracked_source_application_permission_present"),
+        (request, replace(authorization, sandbox_execution_prohibited=False), "sandbox_execution_permission_present"),
+        (request, replace(authorization, git_operation_prohibited=False), "git_permission_present"),
+        (request, replace(authorization, provider_model_use_prohibited=False), "provider_or_model_permission_present"),
+        (request, replace(authorization, persistence_prohibited=False), "persistence_permission_present"),
+    )
+
+    for bad_request, bad_authorization, reason in cases:
+        result = gsr.evaluate_python_coding_module_closure(record, inspection_result, diagnosis_result, proposal_result, handoff_result, bad_request, bad_authorization, sequence=524)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.closure_started is False
+        _assert_no_pcm_1_closure_actions(result)

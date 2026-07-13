@@ -1731,6 +1731,146 @@ class PythonSandboxHandoffResult:
 
 
 @dataclass(frozen=True)
+class PythonCodingModuleClosureRequest:
+    closure_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    test_proposal_attempt_id: str
+    test_proposal_evidence_id: str
+    sandbox_handoff_attempt_id: str
+    sandbox_handoff_evidence_id: str
+    source_path: str
+    source_digest: str
+    finding_id: str
+    test_proposal_id: str
+    handoff_package_id: str
+    stage_order: tuple[str, ...]
+    pilot_classification: str
+    maximum_closure_count: int = 1
+    closure_only: bool = True
+    module_activation_requested: bool = False
+    tracked_source_application_requested: bool = False
+    sandbox_execution_requested: bool = False
+    git_operation_requested: bool = False
+    provider_model_requested: bool = False
+    persistence_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleClosureAuthorization:
+    closure_authorization_id: str
+    closure_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_evidence_id: str
+    diagnosis_evidence_id: str
+    test_proposal_evidence_id: str
+    sandbox_handoff_evidence_id: str
+    source_path: str
+    source_digest: str
+    finding_id: str
+    test_proposal_id: str
+    handoff_package_id: str
+    authorized_stage_order: tuple[str, ...]
+    authorized_pilot_classification: str
+    maximum_closure_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    closure_authorized: bool = True
+    module_activation_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    sandbox_execution_prohibited: bool = True
+    git_operation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    persistence_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModulePilotDisposition:
+    disposition_id: str
+    closure_request_id: str
+    disposition: str
+    rationale: str
+    pilot_classification: str
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleClosureEvidence:
+    closure_attempt_id: str
+    closure_request_id: str
+    closure_authorization_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_evidence_id: str
+    diagnosis_evidence_id: str
+    test_proposal_evidence_id: str
+    sandbox_handoff_evidence_id: str
+    source_path: str
+    source_digest: str
+    finding_id: str
+    test_proposal_id: str
+    handoff_package_id: str
+    stage_order: tuple[str, ...]
+    pilot_disposition: dict[str, Any]
+    closure_count: int
+    authorization_consumed: bool
+    closure_started: bool
+    closure_completed: bool
+    tracked_source_mutated: bool = False
+    sandbox_executed: bool = False
+    module_activated: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    persistence_performed: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleClosureResult:
+    accepted: bool
+    reason: str
+    request: PythonCodingModuleClosureRequest | None = None
+    original_authorization: PythonCodingModuleClosureAuthorization | None = None
+    consumed_authorization: PythonCodingModuleClosureAuthorization | None = None
+    evidence: PythonCodingModuleClosureEvidence | None = None
+    closure_started: bool = False
+    closure_completed: bool = False
+    authorization_consumed: bool = False
+    closure_count: int = 0
+    tracked_source_mutated: bool = False
+    sandbox_executed: bool = False
+    module_activated: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    persistence_performed: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -5710,6 +5850,292 @@ def create_python_sandbox_handoff_package(
         authorization_consumed=True,
         handoff_created=package is not None,
         handoff_count=1 if package is not None else 0,
+    )
+
+
+PCM_1_STAGE_ORDER = (
+    "pcm_1a_attachment_eligibility",
+    "pcm_1b_inert_attachment_record",
+    "pcm_1c_read_only_source_inspection",
+    "pcm_1d_bounded_diagnosis",
+    "pcm_1e_focused_test_proposal",
+    "pcm_1f_sandbox_handoff",
+)
+
+
+def python_sandbox_handoff_evidence_id(evidence: PythonSandboxHandoffEvidence) -> str:
+    return stable_id("pcm-1f-sandbox-handoff-evidence", evidence.sandbox_handoff_attempt_id, evidence.test_proposal_evidence_id, evidence.handoff_package, evidence.handoffs_produced)
+
+
+def make_python_coding_module_closure_request(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    sandbox_handoff_result: PythonSandboxHandoffResult,
+    *,
+    request_sequence: int = 0,
+    pilot_classification: str = "disposable_fixture_end_to_end_contract_pilot",
+    **overrides: Any,
+) -> PythonCodingModuleClosureRequest:
+    inspection_evidence = inspection_result.evidence
+    diagnosis_evidence = diagnosis_result.evidence
+    test_evidence = test_proposal_result.evidence
+    handoff_evidence = sandbox_handoff_result.evidence
+    package_payload = handoff_evidence.handoff_package if handoff_evidence is not None else None
+    package = deserialize(PythonSandboxHandoffPackage, package_payload) if package_payload is not None else None
+    proposal_payload = test_evidence.proposal if test_evidence is not None else None
+    proposal = deserialize(PythonFocusedTestProposal, proposal_payload) if proposal_payload is not None else None
+    return PythonCodingModuleClosureRequest(
+        closure_request_id=stable_id("pcm-1-closure-request", attachment_record.attachment_record_id, package.handoff_package_id if package else "", request_sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_attempt_id=inspection_evidence.inspection_attempt_id if inspection_evidence else "",
+        inspection_evidence_id=python_source_inspection_evidence_id(inspection_evidence) if inspection_evidence else "",
+        diagnosis_attempt_id=diagnosis_evidence.diagnosis_attempt_id if diagnosis_evidence else "",
+        diagnosis_evidence_id=python_bounded_diagnosis_evidence_id(diagnosis_evidence) if diagnosis_evidence else "",
+        test_proposal_attempt_id=test_evidence.test_proposal_attempt_id if test_evidence else "",
+        test_proposal_evidence_id=python_focused_test_proposal_evidence_id(test_evidence) if test_evidence else "",
+        sandbox_handoff_attempt_id=handoff_evidence.sandbox_handoff_attempt_id if handoff_evidence else "",
+        sandbox_handoff_evidence_id=python_sandbox_handoff_evidence_id(handoff_evidence) if handoff_evidence else "",
+        source_path=package.source_path if package else "",
+        source_digest=package.source_digest if package else "",
+        finding_id=package.finding_id if package else "",
+        test_proposal_id=proposal.proposal_id if proposal else "",
+        handoff_package_id=package.handoff_package_id if package else "",
+        stage_order=PCM_1_STAGE_ORDER,
+        pilot_classification=pilot_classification,
+        **overrides,
+    )
+
+
+def make_python_coding_module_closure_authorization(
+    request: PythonCodingModuleClosureRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonCodingModuleClosureAuthorization:
+    return PythonCodingModuleClosureAuthorization(
+        closure_authorization_id=stable_id("pcm-1-closure-authorization", request.closure_request_id, issued_sequence),
+        closure_request_id=request.closure_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        attachment_record_id=request.attachment_record_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        sandbox_handoff_evidence_id=request.sandbox_handoff_evidence_id,
+        source_path=request.source_path,
+        source_digest=request.source_digest,
+        finding_id=request.finding_id,
+        test_proposal_id=request.test_proposal_id,
+        handoff_package_id=request.handoff_package_id,
+        authorized_stage_order=request.stage_order,
+        authorized_pilot_classification=request.pilot_classification,
+        maximum_closure_count=request.maximum_closure_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _python_closure_denial(
+    reason: str,
+    request: PythonCodingModuleClosureRequest | None,
+    authorization: PythonCodingModuleClosureAuthorization | None,
+) -> PythonCodingModuleClosureResult:
+    return PythonCodingModuleClosureResult(False, reason, request, original_authorization=authorization)
+
+
+def _python_closure_authorization_is_available(authorization: PythonCodingModuleClosureAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not authorization.closure_authorized:
+        return False, "wrong_closure_authorization"
+    if not authorization.module_activation_prohibited:
+        return False, "rejected_capability_escalation"
+    if not authorization.tracked_source_application_prohibited:
+        return False, "tracked_source_application_permission_present"
+    if not authorization.sandbox_execution_prohibited:
+        return False, "sandbox_execution_permission_present"
+    if not authorization.git_operation_prohibited:
+        return False, "git_permission_present"
+    if not authorization.provider_model_use_prohibited:
+        return False, "provider_or_model_permission_present"
+    if not authorization.persistence_prohibited:
+        return False, "persistence_permission_present"
+    return True, "valid"
+
+
+def _python_closure_request_matches_authorization(
+    request: PythonCodingModuleClosureRequest,
+    authorization: PythonCodingModuleClosureAuthorization,
+) -> tuple[bool, str]:
+    expected_id = stable_id("pcm-1-closure-authorization", request.closure_request_id, authorization.issued_sequence)
+    pairs = (
+        (authorization.closure_request_id, request.closure_request_id, "wrong_closure_request"),
+        (authorization.closure_authorization_id, expected_id, "wrong_closure_authorization"),
+        (authorization.objective_cycle_id, request.objective_cycle_id, "wrong_closure_request"),
+        (authorization.module_id, request.module_id, "wrong_closure_request"),
+        (authorization.module_version, request.module_version, "wrong_closure_request"),
+        (authorization.attachment_record_id, request.attachment_record_id, "wrong_attachment_record"),
+        (authorization.inspection_evidence_id, request.inspection_evidence_id, "rejected_identity_mismatch"),
+        (authorization.diagnosis_evidence_id, request.diagnosis_evidence_id, "rejected_identity_mismatch"),
+        (authorization.test_proposal_evidence_id, request.test_proposal_evidence_id, "rejected_identity_mismatch"),
+        (authorization.sandbox_handoff_evidence_id, request.sandbox_handoff_evidence_id, "rejected_identity_mismatch"),
+        (authorization.source_path, request.source_path, "rejected_scope_broadening"),
+        (authorization.source_digest, request.source_digest, "rejected_stale_evidence"),
+        (authorization.finding_id, request.finding_id, "rejected_identity_mismatch"),
+        (authorization.test_proposal_id, request.test_proposal_id, "rejected_identity_mismatch"),
+        (authorization.handoff_package_id, request.handoff_package_id, "rejected_identity_mismatch"),
+        (authorization.authorized_stage_order, request.stage_order, "rejected_incomplete_chain"),
+        (authorization.authorized_pilot_classification, request.pilot_classification, "wrong_pilot_classification"),
+        (authorization.maximum_closure_count, request.maximum_closure_count, "closure_limit_invalid"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return False, reason
+    return True, "valid"
+
+
+def _python_closure_upstream_matches_request(
+    request: PythonCodingModuleClosureRequest,
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    sandbox_handoff_result: PythonSandboxHandoffResult,
+) -> tuple[bool, str]:
+    if attachment_record.attachment_record_id != request.attachment_record_id or attachment_record.module_loaded or attachment_record.module_activated or attachment_record.capability_execution_enabled:
+        return False, "rejected_capability_escalation"
+    if not inspection_result.accepted or inspection_result.evidence is None or python_source_inspection_evidence_id(inspection_result.evidence) != request.inspection_evidence_id:
+        return False, "rejected_incomplete_chain"
+    if inspection_result.evidence.inspection_attempt_id != request.inspection_attempt_id:
+        return False, "rejected_identity_mismatch"
+    if not diagnosis_result.accepted or diagnosis_result.evidence is None or python_bounded_diagnosis_evidence_id(diagnosis_result.evidence) != request.diagnosis_evidence_id:
+        return False, "rejected_incomplete_chain"
+    if diagnosis_result.evidence.diagnosis_attempt_id != request.diagnosis_attempt_id or diagnosis_result.evidence.finding is None:
+        return False, "rejected_identity_mismatch"
+    finding = deserialize(PythonBoundedDiagnosticFinding, diagnosis_result.evidence.finding)
+    if finding.finding_id != request.finding_id or finding.path != request.source_path or finding.source_digest != request.source_digest:
+        return False, "rejected_stale_evidence"
+    if not test_proposal_result.accepted or test_proposal_result.evidence is None or python_focused_test_proposal_evidence_id(test_proposal_result.evidence) != request.test_proposal_evidence_id:
+        return False, "rejected_incomplete_chain"
+    if test_proposal_result.evidence.test_proposal_attempt_id != request.test_proposal_attempt_id or test_proposal_result.evidence.proposal is None:
+        return False, "rejected_identity_mismatch"
+    proposal = deserialize(PythonFocusedTestProposal, test_proposal_result.evidence.proposal)
+    if proposal.proposal_id != request.test_proposal_id or proposal.source_path != request.source_path or proposal.source_digest != request.source_digest:
+        return False, "rejected_stale_evidence"
+    if not sandbox_handoff_result.accepted or sandbox_handoff_result.evidence is None or python_sandbox_handoff_evidence_id(sandbox_handoff_result.evidence) != request.sandbox_handoff_evidence_id:
+        return False, "rejected_incomplete_chain"
+    if sandbox_handoff_result.evidence.sandbox_handoff_attempt_id != request.sandbox_handoff_attempt_id or sandbox_handoff_result.evidence.handoff_package is None:
+        return False, "rejected_identity_mismatch"
+    package = deserialize(PythonSandboxHandoffPackage, sandbox_handoff_result.evidence.handoff_package)
+    if package.handoff_package_id != request.handoff_package_id or package.finding_id != request.finding_id or package.proposal_id != request.test_proposal_id:
+        return False, "rejected_identity_mismatch"
+    if package.source_path != request.source_path or package.source_digest != request.source_digest:
+        return False, "rejected_stale_evidence"
+    if not (package.execution_prohibited and package.application_prohibited and package.git_prohibited):
+        return False, "rejected_capability_escalation"
+    return True, "valid"
+
+
+def evaluate_python_coding_module_closure(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    sandbox_handoff_result: PythonSandboxHandoffResult,
+    request: PythonCodingModuleClosureRequest,
+    authorization: PythonCodingModuleClosureAuthorization,
+    *,
+    sequence: int,
+) -> PythonCodingModuleClosureResult:
+    if request.maximum_closure_count != 1:
+        return _python_closure_denial("closure_limit_invalid", request, authorization)
+    if request.stage_order != PCM_1_STAGE_ORDER:
+        return _python_closure_denial("rejected_incomplete_chain", request, authorization)
+    if request.pilot_classification != "disposable_fixture_end_to_end_contract_pilot":
+        return _python_closure_denial("wrong_pilot_classification", request, authorization)
+    if not request.closure_only:
+        return _python_closure_denial("wrong_closure_request", request, authorization)
+    if request.module_activation_requested:
+        return _python_closure_denial("rejected_capability_escalation", request, authorization)
+    if request.tracked_source_application_requested or request.sandbox_execution_requested or request.git_operation_requested:
+        return _python_closure_denial("rejected_scope_broadening", request, authorization)
+    if request.provider_model_requested:
+        return _python_closure_denial("provider_or_model_permission_present", request, authorization)
+    if request.persistence_requested:
+        return _python_closure_denial("persistence_permission_present", request, authorization)
+    match_ok, match_reason = _python_closure_request_matches_authorization(request, authorization)
+    if not match_ok:
+        return _python_closure_denial(match_reason, request, authorization)
+    auth_ok, auth_reason = _python_closure_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _python_closure_denial(auth_reason, request, authorization)
+    upstream_ok, upstream_reason = _python_closure_upstream_matches_request(request, attachment_record, inspection_result, diagnosis_result, test_proposal_result, sandbox_handoff_result)
+    if not upstream_ok:
+        return _python_closure_denial(upstream_reason, request, authorization)
+
+    consumed_authorization = replace(authorization, consumed=True)
+    disposition = PythonCodingModulePilotDisposition(
+        disposition_id=stable_id("pcm-1-pilot-disposition", request.closure_request_id, request.pilot_classification, sequence),
+        closure_request_id=request.closure_request_id,
+        disposition="accepted_for_pcm_1_closure",
+        rationale="exact disposable fixture chain preserved PCM-1 identities and no-action boundaries",
+        pilot_classification=request.pilot_classification,
+    )
+    evidence = PythonCodingModuleClosureEvidence(
+        closure_attempt_id=stable_id("pcm-1-closure-attempt", request.closure_request_id, authorization.closure_authorization_id, sequence),
+        closure_request_id=request.closure_request_id,
+        closure_authorization_id=authorization.closure_authorization_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        attachment_record_id=request.attachment_record_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        sandbox_handoff_evidence_id=request.sandbox_handoff_evidence_id,
+        source_path=request.source_path,
+        source_digest=request.source_digest,
+        finding_id=request.finding_id,
+        test_proposal_id=request.test_proposal_id,
+        handoff_package_id=request.handoff_package_id,
+        stage_order=request.stage_order,
+        pilot_disposition=serialize(disposition),
+        closure_count=1,
+        authorization_consumed=True,
+        closure_started=True,
+        closure_completed=True,
+    )
+    return PythonCodingModuleClosureResult(
+        True,
+        "accepted_for_pcm_1_closure",
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        closure_started=True,
+        closure_completed=True,
+        authorization_consumed=True,
+        closure_count=1,
     )
 
 
