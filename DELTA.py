@@ -1476,12 +1476,14 @@ class DeltaApp:
         self.rc3_tab = ttk.Frame(self.notebook, padding=10)
         self.rc4_tab = ttk.Frame(self.notebook, padding=10)
         self.rc5_tab = ttk.Frame(self.notebook, padding=10)
+        self.evaluation_tab = ttk.Frame(self.notebook, padding=10)
         self.advanced_tab = ttk.Frame(self.notebook, padding=10)
         self.notebook.add(self.conversation_tab, text="Conversation")
         self.notebook.add(self.database_tab, text="Database")
         self.notebook.add(self.rc3_tab, text="RC3")
         self.notebook.add(self.rc4_tab, text="RC4")
         self.notebook.add(self.rc5_tab, text="RC5")
+        self.notebook.add(self.evaluation_tab, text="Evaluation")
         self.notebook.add(self.advanced_tab, text="Advanced / Operator Console")
 
         self._build_conversation_tab()
@@ -1489,6 +1491,7 @@ class DeltaApp:
         self._build_rc3_tab()
         self._build_rc4_tab()
         self._build_rc5_tab()
+        self._build_evaluation_tab()
         self._build_advanced_tab()
 
     def _build_conversation_tab(self) -> None:
@@ -1720,6 +1723,39 @@ class DeltaApp:
         self.rc5_snapshot: dict[str, object] = {}
         self._refresh_rc5_snapshot()
 
+    def _build_evaluation_tab(self) -> None:
+        top = ttk.Frame(self.evaluation_tab)
+        top.pack(fill=tk.X)
+        ttk.Label(top, text="GSR Evaluation Review").pack(side=tk.LEFT)
+        ttk.Button(top, text="Refresh", command=self._refresh_evaluation_snapshot).pack(side=tk.RIGHT)
+
+        self.evaluation_status = tk.StringVar(
+            value="Read-only GSR-E3 review surface. No execution, application, persistence, or automatic continuation."
+        )
+        ttk.Label(self.evaluation_tab, textvariable=self.evaluation_status).pack(anchor=tk.W, pady=(8, 0))
+
+        panes = ttk.PanedWindow(self.evaluation_tab, orient=tk.HORIZONTAL)
+        panes.pack(fill=tk.BOTH, expand=True, pady=(8, 0))
+        left = ttk.Frame(panes)
+        right = ttk.Frame(panes)
+        panes.add(left, weight=1)
+        panes.add(right, weight=3)
+
+        self.evaluation_items = ttk.Treeview(left, columns=("status",), show="headings", height=18)
+        self.evaluation_items.heading("status", text="Evaluation Stage")
+        self.evaluation_items.column("status", width=320)
+        self.evaluation_items.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        scrollbar = ttk.Scrollbar(left, orient=tk.VERTICAL, command=self.evaluation_items.yview)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.evaluation_items.configure(yscrollcommand=scrollbar.set)
+        self.evaluation_items.bind("<<TreeviewSelect>>", lambda _event: self._show_selected_evaluation_item())
+
+        self.evaluation_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
+        self.evaluation_detail.pack(fill=tk.BOTH, expand=True)
+        self.evaluation_detail.configure(state=tk.DISABLED)
+        self.evaluation_snapshot: dict[str, dict[str, object]] = {}
+        self._refresh_evaluation_snapshot()
+
     def _build_advanced_tab(self) -> None:
         panes = ttk.PanedWindow(self.advanced_tab, orient=tk.HORIZONTAL)
         panes.pack(fill=tk.BOTH, expand=True)
@@ -1896,6 +1932,81 @@ class DeltaApp:
         report = build_rc5_ui_integration_report(write_reports=True)
         self._refresh_rc5_snapshot()
         self._write_rc5_detail(json.dumps(report, indent=2, sort_keys=True))
+
+    def _refresh_evaluation_snapshot(self) -> None:
+        self.evaluation_snapshot = {
+            "e3a": {
+                "title": "GSR-E3-A Evidence Evaluation",
+                "status": "accepted",
+                "boundary": "E2-B bounded sandbox evidence -> deterministic evidence evaluation -> operator review required -> stop",
+                "operator_action": "Review accepted evaluations outside the UI until a governed request queue is wired.",
+                "guarantees": [
+                    "Exact result and evidence identity validation.",
+                    "Deterministic classification and bounded findings.",
+                    "Cleanup, live-source, budget, output, artifact, and filesystem-write review.",
+                    "No application authority, execution authority, lifecycle transition, or automatic continuation.",
+                ],
+            },
+            "e3b": {
+                "title": "GSR-E3-B Operator Evidence Disposition",
+                "status": "accepted",
+                "boundary": "exact E3-A evaluation + exact request + exact operator disposition -> one inert record -> consumed authority -> stop",
+                "operator_action": "When a disposition request surfaces, operator and GPT review it manually before any later phase.",
+                "guarantees": [
+                    "Exact evaluation, request, disposition, cycle, plan, attempt, authorization, and digest binding.",
+                    "One-shot operator authority with explicit-sequence expiration.",
+                    "Immutable consumed replacement; original disposition remains unchanged.",
+                    "Future execution, application consideration, and lifecycle closure remain metadata only.",
+                ],
+            },
+            "queue": {
+                "title": "Surfaced Requests",
+                "status": "not wired",
+                "boundary": "No live queue integration exists in this tab yet.",
+                "operator_action": "Use this tab as a review landing page; do not treat it as approval or execution control.",
+                "guarantees": [
+                    "No provider or local-model call.",
+                    "No sandbox or command execution.",
+                    "No source mutation, memory write, persistence, scheduler, thread, or background task.",
+                    "No staging, commit, push, merge, deployment, or publication.",
+                ],
+            },
+        }
+        for item in self.evaluation_items.get_children():
+            self.evaluation_items.delete(item)
+        for key, item in self.evaluation_snapshot.items():
+            self.evaluation_items.insert("", tk.END, iid=key, values=(f"{item['title']} [{item['status']}]",))
+        self.evaluation_status.set(
+            "GSR-E3 review surface is read-only. Human/GPT review remains manual; no approval, execution, application, or continuation controls are available."
+        )
+        self.evaluation_items.selection_set("e3a")
+        self._show_selected_evaluation_item()
+
+    def _show_selected_evaluation_item(self) -> None:
+        selected = self.evaluation_items.selection()
+        if not selected or not self.evaluation_snapshot:
+            return
+        item = self.evaluation_snapshot.get(str(selected[0]), {})
+        lines = [
+            str(item.get("title", "")),
+            "",
+            f"Status: {item.get('status', '')}",
+            f"Boundary: {item.get('boundary', '')}",
+            "",
+            "Operator handling:",
+            str(item.get("operator_action", "")),
+            "",
+            "Guarantees:",
+        ]
+        lines.extend(f"- {value}" for value in item.get("guarantees", []))
+        self._write_evaluation_detail("\n".join(lines))
+
+    def _write_evaluation_detail(self, text: str) -> None:
+        self.evaluation_detail.configure(state=tk.NORMAL)
+        self.evaluation_detail.delete("1.0", tk.END)
+        if text:
+            self.evaluation_detail.insert(tk.END, text)
+        self.evaluation_detail.configure(state=tk.DISABLED)
 
     def _refresh_state_cards(self) -> None:
         state = build_cognitive_state()

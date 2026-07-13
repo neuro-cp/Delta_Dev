@@ -8,13 +8,17 @@ or authorize itself.
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field, fields, is_dataclass
+from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 import json
 from pathlib import Path
+import shutil
+import subprocess
+import tempfile
 from typing import Any, Mapping, get_args, get_origin
 
 from orchestration.runtime.delta_1_0_common import safety_metadata as base_safety_metadata
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime import rc4_governed_action_runtime as rc4
 
 
 LIFECYCLE_STATES = (
@@ -158,6 +162,96 @@ SANDBOX_PLAN_BLOCKING_DISPOSITIONS = {
     "suspend",
     "expire",
 }
+
+GSR_E1_LIFECYCLE_STATES = (
+    "objective_pending",
+    "objective_authorized",
+    "cycle_active",
+    "observation_requested",
+    "observation_review_pending",
+    "diagnosis_authorization_pending",
+    "diagnosis_review_pending",
+    "proposal_review_pending",
+    "sandbox_planning_authorization_pending",
+    "sandbox_plan_review_pending",
+    "future_sandbox_execution_eligible",
+    "paused",
+    "suspended",
+    "rejected",
+    "deeper_design_required",
+    "completed",
+    "rollback_review_required",
+    "interrupted",
+)
+
+GSR_E1_UNREACHABLE_EXECUTION_STATES = (
+    "sandbox_executing",
+    "applying",
+    "module_attaching",
+    "command_running",
+    "patching",
+)
+
+GSR_E1_FORBIDDEN_TRANSITION_SCOPES = (
+    "sandbox_execution",
+    "workspace_creation",
+    "command_execution",
+    "tool_invocation",
+    "patch_generation",
+    "source_mutation",
+    "module_loading",
+    "registry_mutation",
+    "application_authorization",
+    "application",
+    "provider_call",
+    "model_inference",
+    "memory_write",
+    "persistence",
+    "scheduler",
+    "thread",
+    "background_task",
+)
+
+GSR_E2_FORBIDDEN_EXECUTION_SCOPES = (
+    "live_source_mutation",
+    "source_mutation",
+    "patch_application",
+    "git_stage",
+    "git_commit",
+    "git_push",
+    "merge",
+    "deployment",
+    "publication",
+    "production_application",
+    "module_activation",
+    "registry_mutation",
+    "canonical_memory_write",
+    "provider_call",
+    "model_inference",
+    "scheduler",
+    "thread",
+    "background_loop",
+    "autonomous_retry",
+    "recursive_objective_continuation",
+    "additional_execution_attempt",
+    "unrestricted_filesystem",
+    "unrestricted_network",
+    "credential_access",
+    "DELTA-75",
+)
+
+GSR_E2_UNRESTRICTED_POLICY_MARKERS = ("*", "unrestricted", "ambient", "wildcard")
+
+GSR_E2_REQUIRED_BUDGET_FIELDS = (
+    "max_commands",
+    "max_tool_calls",
+    "max_elapsed_units",
+    "max_output_bytes",
+    "max_artifact_count",
+    "max_workspace_writes",
+    "max_processes",
+    "max_retries",
+)
 
 
 def safety_metadata() -> dict[str, bool]:
@@ -796,6 +890,520 @@ class SandboxPlanReviewResult:
     scheduler_started: bool = False
     thread_started: bool = False
     background_task_started: bool = False
+
+
+@dataclass(frozen=True)
+class GovernedObjectiveCycle:
+    cycle_id: str
+    objective_id: str
+    objective_snapshot: dict[str, Any]
+    current_stage: str
+    current_substage: str
+    sequence: int
+    cycle_status: str
+    active_artifact_type: str
+    active_artifact_id: str
+    observation_ledger_reference: str | None = None
+    diagnosis_state_reference: str | None = None
+    sandbox_planning_state_reference: str | None = None
+    completed_stage_markers: tuple[str, ...] = ()
+    pending_transition_request_ids: tuple[str, ...] = ()
+    consumed_transition_authorization_ids: tuple[str, ...] = ()
+    blocked_transition_ids: tuple[str, ...] = ()
+    pause_reason: str = ""
+    suspension_reason: str = ""
+    rejection_reason: str = ""
+    deeper_design_reason: str = ""
+    rollback_required: bool = False
+    interruption_marker: str = ""
+    last_successful_transition: str = ""
+    last_failed_transition: str = ""
+    operator_attention_required: bool = True
+    autonomous_continuation_prohibited: bool = True
+    background_execution_prohibited: bool = True
+    persistence_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ObjectiveCycleTransitionRequest:
+    request_id: str
+    cycle_id: str
+    from_stage: str
+    requested_stage: str
+    requested_substage: str
+    artifact_type: str
+    artifact_id: str
+    eligibility_claims: tuple[str, ...]
+    required_evidence_refs: tuple[str, ...]
+    required_authorization_scope: tuple[str, ...]
+    forbidden_scope: tuple[str, ...]
+    requested_sequence: int
+    request_rationale: str
+    creates_execution: bool = False
+    creates_background_work: bool = False
+    creates_persistence: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ObjectiveCycleTransitionAuthorization:
+    authorization_id: str
+    cycle_id: str
+    request_id: str
+    operator_authority: str
+    allowed_from_stage: str
+    allowed_to_stage: str
+    allowed_substage: str
+    allowed_artifact_type: str
+    allowed_artifact_id: str
+    allowed_scope: tuple[str, ...]
+    forbidden_scope: tuple[str, ...]
+    conditions: tuple[str, ...]
+    one_shot: bool
+    decision_sequence: int
+    expires_after_sequence: int | None
+    consumed: bool = False
+    rationale: str = "operator authorized inert objective-cycle transition"
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ObjectiveCycleTransitionRecord:
+    transition_id: str
+    cycle_id: str
+    from_stage: str
+    to_stage: str
+    from_substage: str
+    to_substage: str
+    artifact_type: str
+    artifact_id: str
+    request_id: str
+    authorization_id: str
+    sequence: int
+    result: str
+    reason: str
+    operator_controlled: bool = True
+    execution_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ObjectiveCycleTransitionResult:
+    accepted: bool
+    reason: str
+    previous_cycle: GovernedObjectiveCycle
+    next_cycle: GovernedObjectiveCycle
+    request: ObjectiveCycleTransitionRequest | None = None
+    authorization: ObjectiveCycleTransitionAuthorization | None = None
+    consumed_authorization: ObjectiveCycleTransitionAuthorization | None = None
+    transition_record: ObjectiveCycleTransitionRecord | None = None
+    eligibility_result: "ObjectiveCycleTransitionEligibilityResult | None" = None
+    operator_attention_required: bool = True
+    transition_applied: bool = False
+    authorization_consumed: bool = False
+    record_created: bool = False
+    cycle_mutated: bool = False
+    replacement_cycle_produced: bool = False
+    automatic_continuation: bool = False
+    execution_performed: bool = False
+    sandbox_started: bool = False
+    command_executed: bool = False
+    tool_invoked: bool = False
+    patch_created: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+
+
+@dataclass(frozen=True)
+class ObjectiveCycleTransitionEligibilityResult:
+    accepted: bool
+    reason: str
+    cycle: GovernedObjectiveCycle
+    request: ObjectiveCycleTransitionRequest | None = None
+    authorization: ObjectiveCycleTransitionAuthorization | None = None
+    eligible_for_operator_review: bool = False
+    transition_applied: bool = False
+    cycle_mutated: bool = False
+    execution_performed: bool = False
+    sandbox_started: bool = False
+    command_executed: bool = False
+    tool_invoked: bool = False
+    patch_created: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxExecutionRequest:
+    request_id: str
+    cycle_id: str
+    sandbox_plan_id: str
+    sandbox_plan_version: str
+    sandbox_plan_digest: str
+    requested_execution_sequence: int
+    requested_scope: tuple[str, ...]
+    requested_workspace_policy: tuple[str, ...]
+    requested_tool_allowlist: tuple[str, ...]
+    requested_command_allowlist: tuple[str, ...]
+    requested_network_policy: tuple[str, ...]
+    requested_execution_budget: dict[str, int]
+    requested_artifact_output_policy: tuple[str, ...]
+    operator_review_required: bool = True
+    execution_requested: bool = True
+    execution_started: bool = False
+    request_consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxExecutionAuthorization:
+    authorization_id: str
+    request_id: str
+    cycle_id: str
+    sandbox_plan_id: str
+    sandbox_plan_version: str
+    sandbox_plan_digest: str
+    authorized_source_lifecycle_stage: str
+    authorized_target_lifecycle_stage: str
+    authorized_scope: tuple[str, ...]
+    authorized_workspace_policy: tuple[str, ...]
+    authorized_tool_allowlist: tuple[str, ...]
+    authorized_command_allowlist: tuple[str, ...]
+    authorized_network_policy: tuple[str, ...]
+    authorized_execution_budget: dict[str, int]
+    authorized_artifact_output_policy: tuple[str, ...]
+    issued_sequence: int
+    expires_after_sequence: int | None
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    execution_authorized: bool = True
+    execution_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxExecutionEligibilityResult:
+    accepted: bool
+    reason: str
+    cycle: GovernedObjectiveCycle
+    sandbox_plan: SandboxEvaluationPlan | None = None
+    request: SandboxExecutionRequest | None = None
+    authorization: SandboxExecutionAuthorization | None = None
+    eligible_for_future_sandbox_execution: bool = False
+    authorization_consumed: bool = False
+    cycle_mutated: bool = False
+    plan_mutated: bool = False
+    execution_performed: bool = False
+    execution_started: bool = False
+    workspace_created: bool = False
+    sandbox_started: bool = False
+    command_executed: bool = False
+    tool_invoked: bool = False
+    network_accessed: bool = False
+    patch_created: bool = False
+    patch_applied: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxExecutionAttempt:
+    attempt_id: str
+    cycle_id: str
+    sandbox_plan_id: str
+    request_id: str
+    authorization_id: str
+    execution_sequence: int
+    workspace_policy: tuple[str, ...]
+    command_name: str
+    normalized_arguments: tuple[str, ...]
+    execution_budget: dict[str, int]
+    workspace_root: str
+    attempt_started: bool = False
+    attempt_completed: bool = False
+    authorization_consumed: bool = False
+    cleanup_required: bool = True
+    cleanup_verified: bool = False
+    live_source_unchanged: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxExecutionEvidence:
+    attempt_id: str
+    command_name: str
+    normalized_arguments: tuple[str, ...]
+    start_sequence: int
+    end_sequence: int
+    return_code: int
+    stdout_summary: str
+    stderr_summary: str
+    output_truncated: bool
+    artifact_manifest: tuple[str, ...]
+    filesystem_write_manifest: tuple[str, ...]
+    budget_observed: dict[str, int]
+    cleanup_result: str
+    live_source_integrity_status: str
+    execution_performed: bool
+    evaluation_performed: bool = False
+    application_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxExecutionResult:
+    accepted: bool
+    reason: str
+    cycle: GovernedObjectiveCycle
+    sandbox_plan: SandboxEvaluationPlan | None = None
+    request: SandboxExecutionRequest | None = None
+    original_authorization: SandboxExecutionAuthorization | None = None
+    consumed_authorization: SandboxExecutionAuthorization | None = None
+    attempt: SandboxExecutionAttempt | None = None
+    evidence: SandboxExecutionEvidence | None = None
+    eligible_for_operator_review: bool = False
+    execution_performed: bool = False
+    execution_succeeded: bool = False
+    cleanup_verified: bool = False
+    live_source_unchanged: bool = False
+    authorization_consumed: bool = False
+    second_attempt_created: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    patch_applied: bool = False
+    source_mutated: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxEvidenceFinding:
+    code: str
+    severity: str
+    message: str
+    source_field: str
+    expected_value: str
+    observed_value: str
+    blocks_operator_acceptance: bool
+    requires_deeper_design: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxEvidenceEvaluation:
+    evaluation_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    request_id: str
+    authorization_id: str
+    evidence_digest: str
+    accepted_for_operator_review: bool
+    classification: str
+    reason: str
+    findings: tuple[SandboxEvidenceFinding, ...]
+    execution_started: bool
+    execution_succeeded: bool
+    command_failed: bool
+    budget_compliant: bool
+    output_within_policy: bool
+    artifacts_within_policy: bool
+    writes_within_policy: bool
+    cleanup_verified: bool
+    live_source_unchanged: bool
+    evidence_complete: bool
+    evidence_consistent: bool
+    operator_review_required: bool = True
+    application_authorized: bool = False
+    application_performed: bool = False
+    next_attempt_authorized: bool = False
+    automatic_continuation: bool = False
+    execution_authorization_created: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    authorization_consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxEvaluationDispositionRequest:
+    disposition_request_id: str
+    evaluation_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    proposed_disposition: str
+    request_id: str = ""
+    authorization_id: str = ""
+    evidence_digest: str = ""
+    operator_review_required: bool = True
+    application_requested: bool = False
+    next_execution_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxEvaluationDisposition:
+    disposition_id: str
+    disposition_request_id: str
+    evaluation_id: str
+    operator_authority: str
+    accepted: bool
+    decision: str
+    reason: str
+    issued_sequence: int
+    one_shot: bool
+    cycle_id: str = ""
+    plan_id: str = ""
+    attempt_id: str = ""
+    request_id: str = ""
+    authorization_id: str = ""
+    evidence_digest: str = ""
+    consumed: bool = False
+    application_authorized: bool = False
+    execution_authorized: bool = False
+    automatic_continuation: bool = False
+    lifecycle_transition_applied: bool = False
+    source_mutation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxEvaluationDispositionRecord:
+    record_id: str
+    evaluation_id: str
+    disposition_request_id: str
+    disposition_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    request_id: str
+    authorization_id: str
+    evidence_digest: str
+    operator_disposition: str
+    operator_issued: bool
+    issued_sequence: int
+    disposition_applied: bool = True
+    disposition_authority_consumed: bool = True
+    accepted_evidence: bool = False
+    rejected_evidence: bool = False
+    revision_requested: bool = False
+    more_evidence_requested: bool = False
+    deeper_design_required: bool = False
+    another_execution_requested_metadata_only: bool = False
+    lifecycle_closure_requested_metadata_only: bool = False
+    cleanup_failure_marked: bool = False
+    live_source_integrity_failure_marked: bool = False
+    application_authorized: bool = False
+    execution_authorized: bool = False
+    lifecycle_transition_applied: bool = False
+    patch_created: bool = False
+    patch_applied: bool = False
+    source_mutated: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class SandboxEvaluationDispositionResult:
+    accepted: bool
+    reason: str
+    evaluation: SandboxEvidenceEvaluation
+    request: SandboxEvaluationDispositionRequest | None = None
+    disposition: SandboxEvaluationDisposition | None = None
+    original_disposition: SandboxEvaluationDisposition | None = None
+    consumed_disposition: SandboxEvaluationDisposition | None = None
+    disposition_record: SandboxEvaluationDispositionRecord | None = None
+    disposition_applied: bool = False
+    disposition_authority_consumed: bool = False
+    record_created: bool = False
+    evaluation_mutated: bool = False
+    execution_started: bool = False
+    sandbox_started: bool = False
+    next_execution_authorized: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    execution_authorized: bool = False
+    lifecycle_transition_applied: bool = False
+    patch_created: bool = False
+    patch_applied: bool = False
+    source_mutated: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    automatic_continuation: bool = False
+    next_request_created: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ObjectiveCycleStateBundle:
+    cycle: GovernedObjectiveCycle
+    observation_ledger_state: dict[str, Any] | None = None
+    diagnosis_proposal_state: dict[str, Any] | None = None
+    sandbox_planning_state: dict[str, Any] | None = None
+    transition_requests: tuple[dict[str, Any], ...] = ()
+    transition_authorizations: tuple[dict[str, Any], ...] = ()
+    transition_records: tuple[dict[str, Any], ...] = ()
+    consumed_request_ids: tuple[str, ...] = ()
+    persistence_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
 def make_development_objective(
@@ -2168,6 +2776,1332 @@ def sandbox_plan_is_future_execution_eligible(state: SandboxPlanningState, plan_
 
 def sandbox_plan_disposition_blocks_execution(disposition: str) -> bool:
     return disposition in SANDBOX_PLAN_BLOCKING_DISPOSITIONS
+
+
+def make_governed_objective_cycle(
+    objective: DevelopmentObjective,
+    *,
+    current_stage: str = "objective_authorized",
+    current_substage: str = "awaiting_transition_request",
+    sequence: int | None = None,
+) -> GovernedObjectiveCycle:
+    return GovernedObjectiveCycle(
+        cycle_id=stable_id("gsr-e-cycle", objective.objective_id, sequence if sequence is not None else objective.sequence),
+        objective_id=objective.objective_id,
+        objective_snapshot=serialize(objective),
+        current_stage=current_stage,
+        current_substage=current_substage,
+        sequence=objective.sequence if sequence is None else sequence,
+        cycle_status="operator_attention_required",
+        active_artifact_type="development_objective",
+        active_artifact_id=objective.objective_id,
+    )
+
+
+def make_objective_cycle_state_bundle(
+    cycle: GovernedObjectiveCycle,
+    *,
+    observation_ledger_state: ObservationLedgerState | None = None,
+    diagnosis_proposal_state: DiagnosisProposalState | None = None,
+    sandbox_planning_state: SandboxPlanningState | None = None,
+    transition_requests: tuple[ObjectiveCycleTransitionRequest, ...] = (),
+    transition_authorizations: tuple[ObjectiveCycleTransitionAuthorization, ...] = (),
+    transition_records: tuple[ObjectiveCycleTransitionRecord, ...] = (),
+) -> ObjectiveCycleStateBundle:
+    return ObjectiveCycleStateBundle(
+        cycle=cycle,
+        observation_ledger_state=serialize(observation_ledger_state) if observation_ledger_state is not None else None,
+        diagnosis_proposal_state=serialize(diagnosis_proposal_state) if diagnosis_proposal_state is not None else None,
+        sandbox_planning_state=serialize(sandbox_planning_state) if sandbox_planning_state is not None else None,
+        transition_requests=tuple(serialize(item) for item in transition_requests),
+        transition_authorizations=tuple(serialize(item) for item in transition_authorizations),
+        transition_records=tuple(serialize(item) for item in transition_records),
+    )
+
+
+def make_cycle_transition_request(
+    cycle: GovernedObjectiveCycle,
+    *,
+    requested_stage: str,
+    requested_substage: str,
+    artifact_type: str = "",
+    artifact_id: str = "",
+    eligibility_claims: tuple[str, ...] = (),
+    required_evidence_refs: tuple[str, ...] = (),
+    required_authorization_scope: tuple[str, ...] = (),
+    forbidden_scope: tuple[str, ...] = (),
+    requested_sequence: int | None = None,
+    request_rationale: str = "operator requested next inert cycle transition",
+) -> ObjectiveCycleTransitionRequest:
+    sequence = cycle.sequence + 1 if requested_sequence is None else requested_sequence
+    return ObjectiveCycleTransitionRequest(
+        request_id=stable_id("gsr-e-transition-request", cycle.cycle_id, cycle.current_stage, requested_stage, sequence),
+        cycle_id=cycle.cycle_id,
+        from_stage=cycle.current_stage,
+        requested_stage=requested_stage,
+        requested_substage=requested_substage,
+        artifact_type=artifact_type,
+        artifact_id=artifact_id,
+        eligibility_claims=eligibility_claims,
+        required_evidence_refs=required_evidence_refs,
+        required_authorization_scope=required_authorization_scope,
+        forbidden_scope=forbidden_scope,
+        requested_sequence=sequence,
+        request_rationale=request_rationale,
+    )
+
+
+def make_cycle_transition_authorization(
+    request: ObjectiveCycleTransitionRequest,
+    *,
+    allowed_scope: tuple[str, ...],
+    forbidden_scope: tuple[str, ...] = (),
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    conditions: tuple[str, ...] = (),
+    one_shot: bool = True,
+    decision_sequence: int | None = None,
+    expires_after_sequence: int | None = None,
+    consumed: bool = False,
+    rationale: str = "operator authorized inert objective-cycle transition",
+) -> ObjectiveCycleTransitionAuthorization:
+    sequence = request.requested_sequence if decision_sequence is None else decision_sequence
+    return ObjectiveCycleTransitionAuthorization(
+        authorization_id=stable_id("gsr-e-transition-authorization", request.request_id, request.requested_stage, sequence),
+        cycle_id=request.cycle_id,
+        request_id=request.request_id,
+        operator_authority=operator_authority,
+        allowed_from_stage=request.from_stage,
+        allowed_to_stage=request.requested_stage,
+        allowed_substage=request.requested_substage,
+        allowed_artifact_type=request.artifact_type,
+        allowed_artifact_id=request.artifact_id,
+        allowed_scope=allowed_scope,
+        forbidden_scope=forbidden_scope,
+        conditions=conditions,
+        one_shot=one_shot,
+        decision_sequence=sequence,
+        expires_after_sequence=expires_after_sequence,
+        consumed=consumed,
+        rationale=rationale,
+    )
+
+
+def make_objective_cycle_transition_record(
+    request: ObjectiveCycleTransitionRequest,
+    authorization: ObjectiveCycleTransitionAuthorization,
+    *,
+    result: str = "pending",
+    reason: str = "inert transition record only",
+) -> ObjectiveCycleTransitionRecord:
+    return ObjectiveCycleTransitionRecord(
+        transition_id=stable_id("gsr-e-transition-record", request.request_id, authorization.authorization_id, result),
+        cycle_id=request.cycle_id,
+        from_stage=request.from_stage,
+        to_stage=request.requested_stage,
+        from_substage="",
+        to_substage=request.requested_substage,
+        artifact_type=request.artifact_type,
+        artifact_id=request.artifact_id,
+        request_id=request.request_id,
+        authorization_id=authorization.authorization_id,
+        sequence=authorization.decision_sequence,
+        result=result,
+        reason=reason,
+    )
+
+
+def cycle_requires_operator_attention(cycle: GovernedObjectiveCycle) -> bool:
+    return cycle.operator_attention_required is True
+
+
+def cycle_can_continue_automatically(cycle: GovernedObjectiveCycle) -> bool:
+    _ = cycle
+    return False
+
+
+def cycle_transition_executes_stage(record: ObjectiveCycleTransitionRecord | ObjectiveCycleTransitionRequest | ObjectiveCycleTransitionResult) -> bool:
+    _ = record
+    return False
+
+
+def transition_request_targets_known_lifecycle_state(request: ObjectiveCycleTransitionRequest) -> bool:
+    return request.requested_stage in GSR_E1_LIFECYCLE_STATES
+
+
+def transition_request_targets_forbidden_execution_state(request: ObjectiveCycleTransitionRequest) -> bool:
+    return request.requested_stage in GSR_E1_UNREACHABLE_EXECUTION_STATES
+
+
+def transition_authorization_matches_request(
+    cycle: GovernedObjectiveCycle,
+    request: ObjectiveCycleTransitionRequest,
+    authorization: ObjectiveCycleTransitionAuthorization,
+) -> bool:
+    return (
+        request.cycle_id == cycle.cycle_id
+        and authorization.cycle_id == cycle.cycle_id
+        and authorization.request_id == request.request_id
+        and request.from_stage == cycle.current_stage
+        and authorization.allowed_from_stage == cycle.current_stage
+        and authorization.allowed_to_stage == request.requested_stage
+        and authorization.allowed_substage == request.requested_substage
+        and authorization.allowed_artifact_type == request.artifact_type
+        and authorization.allowed_artifact_id == request.artifact_id
+    )
+
+
+def transition_authorization_is_available(
+    authorization: ObjectiveCycleTransitionAuthorization,
+    *,
+    sequence: int,
+) -> bool:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False
+    if not authorization.one_shot:
+        return False
+    if authorization.consumed:
+        return False
+    if authorization.expires_after_sequence is not None and sequence > authorization.expires_after_sequence:
+        return False
+    return True
+
+
+def transition_scope_is_within_authorization(
+    request: ObjectiveCycleTransitionRequest,
+    authorization: ObjectiveCycleTransitionAuthorization,
+) -> bool:
+    required = set(request.required_authorization_scope)
+    allowed = set(authorization.allowed_scope)
+    if required and not required.issubset(allowed):
+        return False
+    if required.intersection(GSR_E1_FORBIDDEN_TRANSITION_SCOPES):
+        return False
+    if allowed.intersection(GSR_E1_FORBIDDEN_TRANSITION_SCOPES):
+        return False
+    if set(request.forbidden_scope).intersection(allowed):
+        return False
+    if set(authorization.forbidden_scope).intersection(required):
+        return False
+    return True
+
+
+def evaluate_objective_cycle_transition_eligibility(
+    cycle: GovernedObjectiveCycle,
+    request: ObjectiveCycleTransitionRequest,
+    authorization: ObjectiveCycleTransitionAuthorization,
+    *,
+    sequence: int,
+) -> ObjectiveCycleTransitionEligibilityResult:
+    if request.creates_execution or request.creates_background_work or request.creates_persistence:
+        return ObjectiveCycleTransitionEligibilityResult(False, "request_attempts_execution", cycle, request, authorization)
+    if transition_request_targets_forbidden_execution_state(request):
+        return ObjectiveCycleTransitionEligibilityResult(False, "forbidden_execution_state", cycle, request, authorization)
+    if not transition_request_targets_known_lifecycle_state(request):
+        return ObjectiveCycleTransitionEligibilityResult(False, "unknown_lifecycle_state", cycle, request, authorization)
+    if request.cycle_id != cycle.cycle_id or authorization.cycle_id != cycle.cycle_id:
+        return ObjectiveCycleTransitionEligibilityResult(False, "wrong_cycle", cycle, request, authorization)
+    if request.from_stage != cycle.current_stage or authorization.allowed_from_stage != cycle.current_stage:
+        return ObjectiveCycleTransitionEligibilityResult(False, "wrong_stage", cycle, request, authorization)
+    if authorization.request_id != request.request_id:
+        return ObjectiveCycleTransitionEligibilityResult(False, "wrong_request", cycle, request, authorization)
+    if authorization.consumed:
+        return ObjectiveCycleTransitionEligibilityResult(False, "authorization_consumed", cycle, request, authorization)
+    if authorization.expires_after_sequence is not None and sequence > authorization.expires_after_sequence:
+        return ObjectiveCycleTransitionEligibilityResult(False, "authorization_expired", cycle, request, authorization)
+    if not transition_authorization_is_available(authorization, sequence=sequence):
+        return ObjectiveCycleTransitionEligibilityResult(False, "authorization_unavailable", cycle, request, authorization)
+    if not transition_authorization_matches_request(cycle, request, authorization):
+        return ObjectiveCycleTransitionEligibilityResult(False, "authorization_mismatch", cycle, request, authorization)
+    if not transition_scope_is_within_authorization(request, authorization):
+        return ObjectiveCycleTransitionEligibilityResult(False, "scope_mismatch_or_forbidden", cycle, request, authorization)
+    return ObjectiveCycleTransitionEligibilityResult(
+        True,
+        "eligible_for_operator_review",
+        cycle,
+        request,
+        authorization,
+        eligible_for_operator_review=True,
+    )
+
+
+def apply_objective_cycle_transition(
+    cycle: GovernedObjectiveCycle,
+    request: ObjectiveCycleTransitionRequest,
+    authorization: ObjectiveCycleTransitionAuthorization,
+    *,
+    sequence: int,
+) -> ObjectiveCycleTransitionResult:
+    eligibility = evaluate_objective_cycle_transition_eligibility(
+        cycle,
+        request,
+        authorization,
+        sequence=sequence,
+    )
+    if not eligibility.accepted:
+        return ObjectiveCycleTransitionResult(
+            False,
+            eligibility.reason,
+            cycle,
+            cycle,
+            request=request,
+            authorization=authorization,
+            eligibility_result=eligibility,
+        )
+
+    consumed_authorization = replace(authorization, consumed=True)
+    completed_markers = tuple(dict.fromkeys((*cycle.completed_stage_markers, request.from_stage)))
+    consumed_authorization_ids = tuple(dict.fromkeys((*cycle.consumed_transition_authorization_ids, authorization.authorization_id)))
+    pending_request_ids = tuple(item for item in cycle.pending_transition_request_ids if item != request.request_id)
+    transition_id = stable_id("gsr-e-transition-record", request.request_id, authorization.authorization_id, "applied")
+    next_cycle = replace(
+        cycle,
+        current_stage=request.requested_stage,
+        current_substage=request.requested_substage,
+        sequence=sequence,
+        cycle_status="operator_attention_required",
+        active_artifact_type=request.artifact_type or cycle.active_artifact_type,
+        active_artifact_id=request.artifact_id or cycle.active_artifact_id,
+        completed_stage_markers=completed_markers,
+        pending_transition_request_ids=pending_request_ids,
+        consumed_transition_authorization_ids=consumed_authorization_ids,
+        last_successful_transition=transition_id,
+        operator_attention_required=True,
+        autonomous_continuation_prohibited=True,
+        background_execution_prohibited=True,
+        persistence_prohibited=True,
+    )
+    record = ObjectiveCycleTransitionRecord(
+        transition_id=transition_id,
+        cycle_id=cycle.cycle_id,
+        from_stage=cycle.current_stage,
+        to_stage=request.requested_stage,
+        from_substage=cycle.current_substage,
+        to_substage=request.requested_substage,
+        artifact_type=request.artifact_type,
+        artifact_id=request.artifact_id,
+        request_id=request.request_id,
+        authorization_id=authorization.authorization_id,
+        sequence=sequence,
+        result="metadata_transition_applied",
+        reason="one inert lifecycle metadata transition applied",
+    )
+    return ObjectiveCycleTransitionResult(
+        True,
+        "metadata_transition_applied",
+        cycle,
+        next_cycle,
+        request=request,
+        authorization=authorization,
+        consumed_authorization=consumed_authorization,
+        transition_record=record,
+        eligibility_result=eligibility,
+        operator_attention_required=True,
+        transition_applied=True,
+        authorization_consumed=True,
+        record_created=True,
+        cycle_mutated=False,
+        replacement_cycle_produced=True,
+        automatic_continuation=False,
+    )
+
+
+def sandbox_plan_version(plan: SandboxEvaluationPlan) -> str:
+    return str(plan.creation_sequence)
+
+
+def sandbox_plan_digest(plan: SandboxEvaluationPlan) -> str:
+    return stable_id("gsr-e2-sandbox-plan-digest", serialize(plan))
+
+
+def make_sandbox_execution_request(
+    cycle: GovernedObjectiveCycle,
+    sandbox_plan: SandboxEvaluationPlan,
+    *,
+    requested_scope: tuple[str, ...],
+    requested_workspace_policy: tuple[str, ...],
+    requested_tool_allowlist: tuple[str, ...],
+    requested_command_allowlist: tuple[str, ...],
+    requested_network_policy: tuple[str, ...],
+    requested_execution_budget: Mapping[str, int],
+    requested_artifact_output_policy: tuple[str, ...],
+    requested_execution_sequence: int,
+) -> SandboxExecutionRequest:
+    version = sandbox_plan_version(sandbox_plan)
+    digest = sandbox_plan_digest(sandbox_plan)
+    return SandboxExecutionRequest(
+        request_id=stable_id("gsr-e2-sandbox-execution-request", cycle.cycle_id, sandbox_plan.plan_id, version, digest, requested_execution_sequence),
+        cycle_id=cycle.cycle_id,
+        sandbox_plan_id=sandbox_plan.plan_id,
+        sandbox_plan_version=version,
+        sandbox_plan_digest=digest,
+        requested_execution_sequence=requested_execution_sequence,
+        requested_scope=requested_scope,
+        requested_workspace_policy=requested_workspace_policy,
+        requested_tool_allowlist=requested_tool_allowlist,
+        requested_command_allowlist=requested_command_allowlist,
+        requested_network_policy=requested_network_policy,
+        requested_execution_budget=dict(requested_execution_budget),
+        requested_artifact_output_policy=requested_artifact_output_policy,
+    )
+
+
+def make_sandbox_execution_authorization(
+    request: SandboxExecutionRequest,
+    *,
+    authorized_scope: tuple[str, ...],
+    authorized_workspace_policy: tuple[str, ...],
+    authorized_tool_allowlist: tuple[str, ...],
+    authorized_command_allowlist: tuple[str, ...],
+    authorized_network_policy: tuple[str, ...],
+    authorized_execution_budget: Mapping[str, int],
+    authorized_artifact_output_policy: tuple[str, ...],
+    authorized_source_lifecycle_stage: str = "future_sandbox_execution_eligible",
+    authorized_target_lifecycle_stage: str = "future_sandbox_execution_eligible",
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    issued_sequence: int | None = None,
+    expires_after_sequence: int | None = None,
+) -> SandboxExecutionAuthorization:
+    sequence = request.requested_execution_sequence if issued_sequence is None else issued_sequence
+    return SandboxExecutionAuthorization(
+        authorization_id=stable_id("gsr-e2-sandbox-execution-authorization", request.request_id, request.sandbox_plan_id, sequence),
+        request_id=request.request_id,
+        cycle_id=request.cycle_id,
+        sandbox_plan_id=request.sandbox_plan_id,
+        sandbox_plan_version=request.sandbox_plan_version,
+        sandbox_plan_digest=request.sandbox_plan_digest,
+        authorized_source_lifecycle_stage=authorized_source_lifecycle_stage,
+        authorized_target_lifecycle_stage=authorized_target_lifecycle_stage,
+        authorized_scope=authorized_scope,
+        authorized_workspace_policy=authorized_workspace_policy,
+        authorized_tool_allowlist=authorized_tool_allowlist,
+        authorized_command_allowlist=authorized_command_allowlist,
+        authorized_network_policy=authorized_network_policy,
+        authorized_execution_budget=dict(authorized_execution_budget),
+        authorized_artifact_output_policy=authorized_artifact_output_policy,
+        issued_sequence=sequence,
+        expires_after_sequence=expires_after_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+    )
+
+
+def sandbox_execution_request_matches_cycle(cycle: GovernedObjectiveCycle, request: SandboxExecutionRequest) -> bool:
+    return request.cycle_id == cycle.cycle_id
+
+
+def sandbox_execution_request_matches_plan(request: SandboxExecutionRequest, plan: SandboxEvaluationPlan) -> bool:
+    return (
+        request.sandbox_plan_id == plan.plan_id
+        and request.sandbox_plan_version == sandbox_plan_version(plan)
+        and request.sandbox_plan_digest == sandbox_plan_digest(plan)
+    )
+
+
+def sandbox_execution_authorization_matches_request(
+    request: SandboxExecutionRequest,
+    authorization: SandboxExecutionAuthorization,
+) -> bool:
+    return (
+        authorization.request_id == request.request_id
+        and authorization.cycle_id == request.cycle_id
+        and authorization.sandbox_plan_id == request.sandbox_plan_id
+        and authorization.sandbox_plan_version == request.sandbox_plan_version
+        and authorization.sandbox_plan_digest == request.sandbox_plan_digest
+    )
+
+
+def sandbox_execution_authorization_is_available(
+    authorization: SandboxExecutionAuthorization,
+    *,
+    sequence: int,
+) -> bool:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False
+    if not authorization.one_shot:
+        return False
+    if authorization.consumed:
+        return False
+    if authorization.expires_after_sequence is not None and sequence > authorization.expires_after_sequence:
+        return False
+    return True
+
+
+def _policy_has_unrestricted_marker(policy: tuple[str, ...]) -> bool:
+    normalized = {str(item).strip().lower() for item in policy}
+    return bool(normalized.intersection(GSR_E2_UNRESTRICTED_POLICY_MARKERS))
+
+
+def _scope_contains_forbidden_execution(scope: tuple[str, ...]) -> bool:
+    return bool(set(scope).intersection(GSR_E2_FORBIDDEN_EXECUTION_SCOPES))
+
+
+def sandbox_execution_scope_is_within_authorization(
+    request: SandboxExecutionRequest,
+    authorization: SandboxExecutionAuthorization,
+) -> bool:
+    requested = set(request.requested_scope)
+    authorized = set(authorization.authorized_scope)
+    if not requested or not requested.issubset(authorized):
+        return False
+    if _scope_contains_forbidden_execution(request.requested_scope):
+        return False
+    if _scope_contains_forbidden_execution(authorization.authorized_scope):
+        return False
+    return True
+
+
+def sandbox_execution_budget_is_within_authorization(
+    request: SandboxExecutionRequest,
+    authorization: SandboxExecutionAuthorization,
+) -> bool:
+    requested = request.requested_execution_budget
+    authorized = authorization.authorized_execution_budget
+    if set(requested) != set(GSR_E2_REQUIRED_BUDGET_FIELDS):
+        return False
+    if set(authorized) != set(GSR_E2_REQUIRED_BUDGET_FIELDS):
+        return False
+    for key in GSR_E2_REQUIRED_BUDGET_FIELDS:
+        requested_value = requested.get(key)
+        authorized_value = authorized.get(key)
+        if not isinstance(requested_value, int) or not isinstance(authorized_value, int):
+            return False
+        if requested_value <= 0 or authorized_value <= 0:
+            return False
+        if requested_value > authorized_value:
+            return False
+    return True
+
+
+def sandbox_execution_policy_is_safe(
+    request: SandboxExecutionRequest,
+    authorization: SandboxExecutionAuthorization,
+) -> tuple[bool, str]:
+    required_workspace = {
+        "disposable_workspace_required",
+        "cleanup_required",
+        "cleanup_verification_required",
+        "no_production_path_access",
+        "no_credential_access",
+        "no_home_directory_access",
+        "no_external_drive_access",
+        "no_environment_secret_inheritance",
+    }
+    if not required_workspace.issubset(set(request.requested_workspace_policy)):
+        return False, "workspace_policy_mismatch"
+    if not set(request.requested_workspace_policy).issubset(set(authorization.authorized_workspace_policy)):
+        return False, "workspace_policy_mismatch"
+    if _policy_has_unrestricted_marker(request.requested_workspace_policy) or _policy_has_unrestricted_marker(authorization.authorized_workspace_policy):
+        return False, "unrestricted_policy"
+    if not request.requested_tool_allowlist or not set(request.requested_tool_allowlist).issubset(set(authorization.authorized_tool_allowlist)):
+        return False, "tool_policy_mismatch"
+    if not request.requested_command_allowlist or not set(request.requested_command_allowlist).issubset(set(authorization.authorized_command_allowlist)):
+        return False, "command_policy_mismatch"
+    if _policy_has_unrestricted_marker(request.requested_tool_allowlist) or _policy_has_unrestricted_marker(authorization.authorized_tool_allowlist):
+        return False, "unrestricted_policy"
+    if _policy_has_unrestricted_marker(request.requested_command_allowlist) or _policy_has_unrestricted_marker(authorization.authorized_command_allowlist):
+        return False, "unrestricted_policy"
+    if not set(request.requested_network_policy).issubset(set(authorization.authorized_network_policy)):
+        return False, "network_policy_mismatch"
+    if _policy_has_unrestricted_marker(request.requested_network_policy) or _policy_has_unrestricted_marker(authorization.authorized_network_policy):
+        return False, "unrestricted_policy"
+    if not set(request.requested_artifact_output_policy).issubset(set(authorization.authorized_artifact_output_policy)):
+        return False, "artifact_policy_mismatch"
+    return True, "policy_valid"
+
+
+def evaluate_sandbox_execution_eligibility(
+    cycle: GovernedObjectiveCycle,
+    planning_state: SandboxPlanningState,
+    sandbox_plan: SandboxEvaluationPlan,
+    request: SandboxExecutionRequest,
+    authorization: SandboxExecutionAuthorization,
+    *,
+    sequence: int,
+) -> SandboxExecutionEligibilityResult:
+    if not sandbox_execution_request_matches_cycle(cycle, request) or authorization.cycle_id != cycle.cycle_id:
+        return SandboxExecutionEligibilityResult(False, "wrong_cycle", cycle, sandbox_plan, request, authorization)
+    if cycle.current_stage != "future_sandbox_execution_eligible" or authorization.authorized_source_lifecycle_stage != cycle.current_stage:
+        return SandboxExecutionEligibilityResult(False, "wrong_stage", cycle, sandbox_plan, request, authorization)
+    if cycle.current_stage in {"completed", "rejected", "suspended", "interrupted", "deeper_design_required"}:
+        return SandboxExecutionEligibilityResult(False, "cycle_terminal_or_blocked", cycle, sandbox_plan, request, authorization)
+    if not cycle.autonomous_continuation_prohibited or not cycle.background_execution_prohibited:
+        return SandboxExecutionEligibilityResult(False, "cycle_automatic_continuation_detected", cycle, sandbox_plan, request, authorization)
+    if not sandbox_execution_request_matches_plan(request, sandbox_plan):
+        return SandboxExecutionEligibilityResult(False, "wrong_plan", cycle, sandbox_plan, request, authorization)
+    if authorization.sandbox_plan_id != sandbox_plan.plan_id:
+        return SandboxExecutionEligibilityResult(False, "wrong_plan", cycle, sandbox_plan, request, authorization)
+    if authorization.sandbox_plan_version != sandbox_plan_version(sandbox_plan):
+        return SandboxExecutionEligibilityResult(False, "wrong_plan_version", cycle, sandbox_plan, request, authorization)
+    if authorization.sandbox_plan_digest != sandbox_plan_digest(sandbox_plan):
+        return SandboxExecutionEligibilityResult(False, "wrong_plan_digest", cycle, sandbox_plan, request, authorization)
+    if _sandbox_plan_payload(planning_state, sandbox_plan.plan_id) is None:
+        return SandboxExecutionEligibilityResult(False, "wrong_plan", cycle, sandbox_plan, request, authorization)
+    if sandbox_plan.plan_id not in planning_state.future_sandbox_execution_eligible_plans:
+        return SandboxExecutionEligibilityResult(False, "plan_not_future_execution_eligible", cycle, sandbox_plan, request, authorization)
+    if sandbox_plan.plan_id in planning_state.rejected_plans or sandbox_plan.plan_id in planning_state.deeper_design_plans:
+        return SandboxExecutionEligibilityResult(False, "plan_not_accepted", cycle, sandbox_plan, request, authorization)
+    if not sandbox_plan.disposable_workspace or not sandbox_plan.cleanup_proof_requirements:
+        return SandboxExecutionEligibilityResult(False, "workspace_policy_mismatch", cycle, sandbox_plan, request, authorization)
+    if not (
+        sandbox_plan.workspace_creation_prohibited
+        and sandbox_plan.sandbox_execution_prohibited
+        and sandbox_plan.command_execution_prohibited
+        and sandbox_plan.source_mutation_prohibited
+        and sandbox_plan.module_loading_prohibited
+        and sandbox_plan.application_prohibited
+        and sandbox_plan.persistence_prohibited
+    ):
+        return SandboxExecutionEligibilityResult(False, "plan_authorizes_operation", cycle, sandbox_plan, request, authorization)
+    if not sandbox_execution_authorization_matches_request(request, authorization):
+        return SandboxExecutionEligibilityResult(False, "wrong_request", cycle, sandbox_plan, request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return SandboxExecutionEligibilityResult(False, "non_operator_authorization", cycle, sandbox_plan, request, authorization)
+    if authorization.consumed:
+        return SandboxExecutionEligibilityResult(False, "consumed", cycle, sandbox_plan, request, authorization)
+    if authorization.expires_after_sequence is not None and sequence > authorization.expires_after_sequence:
+        return SandboxExecutionEligibilityResult(False, "expired", cycle, sandbox_plan, request, authorization)
+    if not sandbox_execution_authorization_is_available(authorization, sequence=sequence):
+        return SandboxExecutionEligibilityResult(False, "authorization_unavailable", cycle, sandbox_plan, request, authorization)
+    if not sandbox_execution_scope_is_within_authorization(request, authorization):
+        return SandboxExecutionEligibilityResult(False, "scope_mismatch", cycle, sandbox_plan, request, authorization)
+    if not sandbox_execution_budget_is_within_authorization(request, authorization):
+        return SandboxExecutionEligibilityResult(False, "budget_mismatch", cycle, sandbox_plan, request, authorization)
+    policy_ok, policy_reason = sandbox_execution_policy_is_safe(request, authorization)
+    if not policy_ok:
+        return SandboxExecutionEligibilityResult(False, policy_reason, cycle, sandbox_plan, request, authorization)
+    return SandboxExecutionEligibilityResult(
+        True,
+        "eligible_for_future_sandbox_execution",
+        cycle,
+        sandbox_plan,
+        request,
+        authorization,
+        eligible_for_future_sandbox_execution=True,
+    )
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _git_status_short() -> tuple[str, ...]:
+    completed = subprocess.run(
+        ["git", "status", "--short"],
+        cwd=_repo_root(),
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    return tuple(line for line in completed.stdout.splitlines() if line.strip())
+
+
+def _safe_relative_workspace_path(relative_path: str) -> bool:
+    path = Path(relative_path)
+    if path.is_absolute():
+        return False
+    if any(part in {"..", ""} for part in path.parts):
+        return False
+    blocked = {".git", ".env", "secrets", "credentials", "DELTA-75"}
+    return not any(part in blocked for part in path.parts)
+
+
+def _bounded_text(text: str, limit: int) -> tuple[str, bool]:
+    if len(text) <= limit:
+        return text, False
+    return text[-limit:], True
+
+
+def _workspace_write_manifest(workspace: Path) -> tuple[str, ...]:
+    if not workspace.exists():
+        return ()
+    paths: list[str] = []
+    for path in sorted(item for item in workspace.rglob("*") if item.is_file()):
+        paths.append(path.relative_to(workspace).as_posix())
+    return tuple(paths)
+
+
+def execute_disposable_sandbox_attempt(
+    cycle: GovernedObjectiveCycle,
+    planning_state: SandboxPlanningState,
+    sandbox_plan: SandboxEvaluationPlan,
+    request: SandboxExecutionRequest,
+    authorization: SandboxExecutionAuthorization,
+    *,
+    command_name: str,
+    command_arguments: tuple[str, ...],
+    fixture_files: Mapping[str, str],
+    sequence: int,
+) -> SandboxExecutionResult:
+    eligibility = evaluate_sandbox_execution_eligibility(
+        cycle,
+        planning_state,
+        sandbox_plan,
+        request,
+        authorization,
+        sequence=sequence,
+    )
+    if not eligibility.accepted:
+        return SandboxExecutionResult(False, eligibility.reason, cycle, sandbox_plan, request, authorization)
+    if command_name not in request.requested_command_allowlist or command_name not in authorization.authorized_command_allowlist:
+        return SandboxExecutionResult(False, "command_not_authorized", cycle, sandbox_plan, request, authorization)
+    if command_name not in rc4.SAFE_COMMAND_ALLOWLIST or command_name in rc4.PROHIBITED_COMMANDS:
+        return SandboxExecutionResult(False, "command_not_allowlisted", cycle, sandbox_plan, request, authorization)
+    if request.requested_execution_budget.get("max_commands", 0) < 1:
+        return SandboxExecutionResult(False, "budget_mismatch", cycle, sandbox_plan, request, authorization)
+    if len(fixture_files) > request.requested_execution_budget.get("max_workspace_writes", 0):
+        return SandboxExecutionResult(False, "workspace_write_budget_exceeded", cycle, sandbox_plan, request, authorization)
+    if not fixture_files:
+        return SandboxExecutionResult(False, "fixture_required", cycle, sandbox_plan, request, authorization)
+    if any(not _safe_relative_workspace_path(path) for path in fixture_files):
+        return SandboxExecutionResult(False, "path_traversal_or_forbidden_fixture", cycle, sandbox_plan, request, authorization)
+    if any(not _safe_relative_workspace_path(arg) for arg in command_arguments):
+        return SandboxExecutionResult(False, "path_traversal_or_forbidden_argument", cycle, sandbox_plan, request, authorization)
+
+    live_status_before = _git_status_short()
+    temp_root = Path(tempfile.mkdtemp(prefix="gsr_e2b_"))
+    workspace = temp_root / "workspace"
+    workspace.mkdir()
+    attempt_id = stable_id("gsr-e2b-sandbox-attempt", authorization.authorization_id, sequence)
+    consumed_authorization = replace(authorization, consumed=True)
+    cleanup_verified = False
+    cleanup_result = "not_started"
+    evidence: SandboxExecutionEvidence | None = None
+    attempt = SandboxExecutionAttempt(
+        attempt_id=attempt_id,
+        cycle_id=cycle.cycle_id,
+        sandbox_plan_id=sandbox_plan.plan_id,
+        request_id=request.request_id,
+        authorization_id=authorization.authorization_id,
+        execution_sequence=sequence,
+        workspace_policy=request.requested_workspace_policy,
+        command_name=command_name,
+        normalized_arguments=command_arguments,
+        execution_budget=request.requested_execution_budget,
+        workspace_root=str(workspace),
+        attempt_started=True,
+        authorization_consumed=True,
+    )
+    try:
+        for relative_path, content in fixture_files.items():
+            target = workspace / relative_path
+            resolved_target = target.resolve()
+            if not resolved_target.is_relative_to(workspace.resolve()):
+                return SandboxExecutionResult(
+                    False,
+                    "workspace_escape_detected",
+                    cycle,
+                    sandbox_plan,
+                    request,
+                    authorization,
+                    consumed_authorization,
+                    attempt,
+                    authorization_consumed=True,
+                    execution_performed=False,
+                )
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(content, encoding="utf-8")
+
+        scope = rc4.make_scope(
+            target_repository="disposable_fixture",
+            allowed_paths=tuple(fixture_files),
+            allowed_commands=(command_name,),
+            allowed_tools=("compiler", "filesystem_read"),
+            max_duration_seconds=max(1, min(request.requested_execution_budget["max_elapsed_units"], 20)),
+            max_changed_files=request.requested_execution_budget["max_workspace_writes"],
+            max_diff_lines=0,
+        )
+        command = rc4.authorize_command(command_name, command_arguments, scope)
+        command_result = rc4.run_authorized_command(workspace, command)
+        stdout_summary, stdout_truncated = _bounded_text(command_result.stdout, request.requested_execution_budget["max_output_bytes"])
+        stderr_summary, stderr_truncated = _bounded_text(command_result.stderr, request.requested_execution_budget["max_output_bytes"])
+        manifest = _workspace_write_manifest(workspace)
+        artifact_manifest = manifest[: request.requested_execution_budget["max_artifact_count"]]
+        output_truncated = stdout_truncated or stderr_truncated or len(manifest) > len(artifact_manifest)
+        live_status_after_execution = _git_status_short()
+        live_source_unchanged = live_status_after_execution == live_status_before
+        evidence = SandboxExecutionEvidence(
+            attempt_id=attempt_id,
+            command_name=command_name,
+            normalized_arguments=command_arguments,
+            start_sequence=sequence,
+            end_sequence=sequence,
+            return_code=command_result.returncode,
+            stdout_summary=stdout_summary,
+            stderr_summary=stderr_summary,
+            output_truncated=output_truncated,
+            artifact_manifest=artifact_manifest,
+            filesystem_write_manifest=manifest,
+            budget_observed={
+                "command_count": 1,
+                "tool_call_count": 0,
+                "process_count": 1,
+                "artifact_count": len(artifact_manifest),
+                "workspace_write_count": len(manifest),
+                "retry_count": 0,
+                "duration_ms": command_result.duration_ms,
+            },
+            cleanup_result="pending",
+            live_source_integrity_status="unchanged" if live_source_unchanged else "changed",
+            execution_performed=True,
+        )
+        if not live_source_unchanged:
+            return SandboxExecutionResult(
+                False,
+                "live_source_integrity_failed",
+                cycle,
+                sandbox_plan,
+                request,
+                authorization,
+                consumed_authorization,
+                attempt,
+                evidence,
+                execution_performed=True,
+                authorization_consumed=True,
+                live_source_unchanged=False,
+            )
+    finally:
+        try:
+            shutil.rmtree(temp_root)
+            cleanup_verified = not temp_root.exists()
+            cleanup_result = "verified" if cleanup_verified else "workspace_still_exists"
+        except Exception as exc:  # pragma: no cover - exercised by monkeypatch in tests
+            cleanup_verified = False
+            cleanup_result = f"cleanup_failed:{type(exc).__name__}"
+
+    final_live_unchanged = _git_status_short() == live_status_before
+    completed_attempt = replace(
+        attempt,
+        attempt_completed=evidence is not None,
+        cleanup_verified=cleanup_verified,
+        live_source_unchanged=final_live_unchanged,
+    )
+    completed_evidence = replace(
+        evidence,
+        cleanup_result=cleanup_result,
+        live_source_integrity_status="unchanged" if final_live_unchanged else "changed",
+    ) if evidence is not None else None
+    accepted = bool(
+        completed_evidence is not None
+        and completed_evidence.return_code == 0
+        and cleanup_verified
+        and final_live_unchanged
+    )
+    reason = "sandbox_attempt_succeeded" if accepted else (
+        "cleanup_failed" if not cleanup_verified else "command_failed"
+    )
+    return SandboxExecutionResult(
+        accepted,
+        reason,
+        cycle,
+        sandbox_plan,
+        request,
+        authorization,
+        consumed_authorization,
+        completed_attempt,
+        completed_evidence,
+        eligible_for_operator_review=True,
+        execution_performed=completed_evidence is not None,
+        execution_succeeded=accepted,
+        cleanup_verified=cleanup_verified,
+        live_source_unchanged=final_live_unchanged,
+        authorization_consumed=True,
+    )
+
+
+def make_sandbox_evidence_digest(evidence: SandboxExecutionEvidence) -> str:
+    return stable_id("gsr-e3-sandbox-evidence-digest", serialize(evidence))
+
+
+def _sandbox_finding(
+    code: str,
+    source_field: str,
+    expected: object,
+    observed: object,
+    *,
+    blocks: bool = True,
+    severity: str = "error",
+    deeper: bool = False,
+) -> SandboxEvidenceFinding:
+    return SandboxEvidenceFinding(
+        code=code,
+        severity=severity,
+        message=code,
+        source_field=source_field,
+        expected_value=str(expected),
+        observed_value=str(observed),
+        blocks_operator_acceptance=blocks,
+        requires_deeper_design=deeper,
+    )
+
+
+def evaluate_sandbox_execution_evidence(
+    result: SandboxExecutionResult,
+    *,
+    expected_evidence_digest: str | None = None,
+) -> SandboxEvidenceEvaluation:
+    cycle = result.cycle
+    plan = result.sandbox_plan
+    request = result.request
+    authorization = result.consumed_authorization or result.original_authorization
+    attempt = result.attempt
+    evidence = result.evidence
+    findings: list[SandboxEvidenceFinding] = []
+
+    if plan is None:
+        findings.append(_sandbox_finding("evidence_incomplete", "sandbox_plan", "present", "missing"))
+    if request is None:
+        findings.append(_sandbox_finding("evidence_incomplete", "request", "present", "missing"))
+    if authorization is None:
+        findings.append(_sandbox_finding("authorization_invalid", "authorization", "present", "missing"))
+    if result.reason in {"command_not_authorized", "command_not_allowlisted", "budget_mismatch", "workspace_write_budget_exceeded", "fixture_required", "path_traversal_or_forbidden_fixture", "path_traversal_or_forbidden_argument"}:
+        findings.append(_sandbox_finding("preflight_denied", "reason", "post_start_or_success", result.reason, blocks=False, severity="info"))
+    if attempt is None:
+        findings.append(_sandbox_finding("evidence_incomplete", "attempt", "present", "missing", blocks=result.execution_performed))
+    if evidence is None:
+        findings.append(_sandbox_finding("evidence_incomplete", "evidence", "present", "missing", blocks=result.execution_performed))
+
+    evidence_digest = make_sandbox_evidence_digest(evidence) if evidence is not None else stable_id("gsr-e3-missing-evidence", result.reason)
+    if expected_evidence_digest is not None and evidence_digest != expected_evidence_digest:
+        findings.append(_sandbox_finding("evidence_digest_mismatch", "evidence_digest", expected_evidence_digest, evidence_digest))
+
+    if attempt is not None:
+        if attempt.cycle_id != cycle.cycle_id:
+            findings.append(_sandbox_finding("wrong_cycle", "attempt.cycle_id", cycle.cycle_id, attempt.cycle_id))
+        if plan is not None and attempt.sandbox_plan_id != plan.plan_id:
+            findings.append(_sandbox_finding("wrong_plan", "attempt.sandbox_plan_id", plan.plan_id, attempt.sandbox_plan_id))
+        if request is not None and attempt.request_id != request.request_id:
+            findings.append(_sandbox_finding("wrong_request", "attempt.request_id", request.request_id, attempt.request_id))
+        if authorization is not None and attempt.authorization_id != authorization.authorization_id:
+            findings.append(_sandbox_finding("wrong_authorization", "attempt.authorization_id", authorization.authorization_id, attempt.authorization_id))
+        if attempt.attempt_started != result.execution_performed:
+            findings.append(_sandbox_finding("evidence_inconsistent", "attempt_started", result.execution_performed, attempt.attempt_started))
+        if attempt.authorization_consumed != result.authorization_consumed:
+            findings.append(_sandbox_finding("evidence_inconsistent", "authorization_consumed", result.authorization_consumed, attempt.authorization_consumed))
+        if attempt.cleanup_verified != result.cleanup_verified:
+            findings.append(_sandbox_finding("evidence_inconsistent", "cleanup_verified", result.cleanup_verified, attempt.cleanup_verified))
+        if not attempt.cleanup_verified and result.execution_performed:
+            findings.append(_sandbox_finding("cleanup_failed", "attempt.cleanup_verified", True, False))
+        if not attempt.live_source_unchanged and result.execution_performed:
+            findings.append(_sandbox_finding("live_source_integrity_failed", "attempt.live_source_unchanged", True, False, deeper=True))
+
+    budget_compliant = True
+    output_within_policy = True
+    artifacts_within_policy = True
+    writes_within_policy = True
+    if evidence is not None:
+        if attempt is not None and evidence.attempt_id != attempt.attempt_id:
+            findings.append(_sandbox_finding("wrong_attempt", "evidence.attempt_id", attempt.attempt_id, evidence.attempt_id))
+        if evidence.execution_performed != result.execution_performed:
+            findings.append(_sandbox_finding("evidence_inconsistent", "evidence.execution_performed", result.execution_performed, evidence.execution_performed))
+        if result.execution_succeeded != (evidence.return_code == 0 and result.accepted):
+            findings.append(_sandbox_finding("evidence_inconsistent", "return_code_success", result.execution_succeeded, evidence.return_code))
+        if not evidence.cleanup_result:
+            findings.append(_sandbox_finding("evidence_incomplete", "cleanup_result", "present", "missing"))
+        if evidence.cleanup_result != "verified" and result.execution_performed:
+            findings.append(_sandbox_finding("cleanup_failed", "cleanup_result", "verified", evidence.cleanup_result))
+        if not evidence.live_source_integrity_status:
+            findings.append(_sandbox_finding("evidence_incomplete", "live_source_integrity_status", "present", "missing"))
+        if evidence.live_source_integrity_status != "unchanged" and result.execution_performed:
+            findings.append(_sandbox_finding("live_source_integrity_failed", "live_source_integrity_status", "unchanged", evidence.live_source_integrity_status, deeper=True))
+        required_budget = {"command_count", "tool_call_count", "process_count", "artifact_count", "workspace_write_count", "retry_count", "duration_ms"}
+        if not required_budget.issubset(evidence.budget_observed):
+            findings.append(_sandbox_finding("evidence_incomplete", "budget_observed", required_budget, set(evidence.budget_observed)))
+            budget_compliant = False
+        else:
+            if request is not None:
+                budget_limits = request.requested_execution_budget
+                budget_pairs = {
+                    "command_count": "max_commands",
+                    "tool_call_count": "max_tool_calls",
+                    "process_count": "max_processes",
+                    "artifact_count": "max_artifact_count",
+                    "workspace_write_count": "max_workspace_writes",
+                    "retry_count": "max_retries",
+                }
+                for observed_key, limit_key in budget_pairs.items():
+                    if evidence.budget_observed[observed_key] > budget_limits.get(limit_key, 0):
+                        findings.append(_sandbox_finding("budget_exceeded", observed_key, budget_limits.get(limit_key, 0), evidence.budget_observed[observed_key]))
+                        budget_compliant = False
+        if evidence.output_truncated:
+            findings.append(_sandbox_finding("output_truncated", "output_truncated", False, True, blocks=False, severity="warning"))
+            output_within_policy = False
+        if evidence.artifact_manifest is None:
+            findings.append(_sandbox_finding("evidence_incomplete", "artifact_manifest", "present", "missing"))
+            artifacts_within_policy = False
+        if evidence.filesystem_write_manifest is None:
+            findings.append(_sandbox_finding("evidence_incomplete", "filesystem_write_manifest", "present", "missing"))
+            writes_within_policy = False
+        for path in evidence.artifact_manifest:
+            if not _safe_relative_workspace_path(path):
+                findings.append(_sandbox_finding("unsupported_artifact", "artifact_manifest", "safe_relative_path", path))
+                artifacts_within_policy = False
+        for path in evidence.filesystem_write_manifest:
+            if not _safe_relative_workspace_path(path):
+                findings.append(_sandbox_finding("external_write_detected", "filesystem_write_manifest", "workspace_relative_path", path))
+                writes_within_policy = False
+        if evidence.application_performed:
+            findings.append(_sandbox_finding("application_authority_detected", "evidence.application_performed", False, True))
+
+    action_flags = {
+        "second_attempt_created": result.second_attempt_created,
+        "automatic_continuation": result.automatic_continuation,
+        "patch_applied": result.patch_applied,
+        "source_mutated": result.source_mutated,
+        "module_activated": result.module_activated,
+        "provider_called": result.provider_called,
+        "model_invoked": result.model_invoked,
+        "memory_written": result.memory_written,
+        "persistence_performed": result.persistence_performed,
+        "application_authorized": result.application_authorized,
+        "application_performed": result.application_performed,
+    }
+    for field_name, observed in action_flags.items():
+        if observed:
+            code = "application_authority_detected" if field_name.startswith("application") else field_name
+            findings.append(_sandbox_finding(code, field_name, False, True, deeper=field_name in {"source_mutated"}))
+
+    blocking = [finding for finding in findings if finding.blocks_operator_acceptance]
+    complete = (not result.execution_performed) or (evidence is not None and attempt is not None)
+    consistent = not any(finding.code == "evidence_inconsistent" for finding in findings)
+    if not result.execution_performed:
+        classification = "preflight_denied"
+    elif result.execution_performed and evidence is not None and evidence.return_code != 0:
+        classification = "execution_failed"
+    elif any(finding.code == "budget_exceeded" for finding in findings):
+        classification = "budget_exceeded"
+    elif any(finding.code == "cleanup_failed" for finding in findings):
+        classification = "cleanup_failed"
+    elif any(finding.code == "live_source_integrity_failed" for finding in findings):
+        classification = "live_source_integrity_failed"
+    elif any(finding.code == "evidence_incomplete" for finding in findings):
+        classification = "evidence_incomplete"
+    elif any(finding.code == "evidence_inconsistent" for finding in findings):
+        classification = "evidence_inconsistent"
+    elif result.execution_succeeded:
+        classification = "execution_succeeded"
+    else:
+        classification = "evidence_valid_for_operator_review"
+    accepted = complete and consistent and not blocking and classification in {"execution_succeeded", "execution_failed", "preflight_denied", "evidence_valid_for_operator_review"}
+    reason = "evidence_valid_for_operator_review" if accepted else classification
+    return SandboxEvidenceEvaluation(
+        evaluation_id=stable_id("gsr-e3-evidence-evaluation", cycle.cycle_id, plan.plan_id if plan else "", evidence_digest, classification),
+        cycle_id=cycle.cycle_id,
+        plan_id=plan.plan_id if plan else "",
+        attempt_id=attempt.attempt_id if attempt else "",
+        request_id=request.request_id if request else "",
+        authorization_id=authorization.authorization_id if authorization else "",
+        evidence_digest=evidence_digest,
+        accepted_for_operator_review=accepted,
+        classification=classification,
+        reason=reason,
+        findings=tuple(findings),
+        execution_started=bool(attempt and attempt.attempt_started),
+        execution_succeeded=result.execution_succeeded,
+        command_failed=bool(result.execution_performed and evidence is not None and evidence.return_code != 0),
+        budget_compliant=budget_compliant,
+        output_within_policy=output_within_policy,
+        artifacts_within_policy=artifacts_within_policy,
+        writes_within_policy=writes_within_policy,
+        cleanup_verified=result.cleanup_verified,
+        live_source_unchanged=result.live_source_unchanged,
+        evidence_complete=complete,
+        evidence_consistent=consistent,
+    )
+
+
+def make_sandbox_evaluation_disposition_request(
+    evaluation: SandboxEvidenceEvaluation,
+    *,
+    proposed_disposition: str,
+) -> SandboxEvaluationDispositionRequest:
+    return SandboxEvaluationDispositionRequest(
+        disposition_request_id=stable_id("gsr-e3-disposition-request", evaluation.evaluation_id, proposed_disposition),
+        evaluation_id=evaluation.evaluation_id,
+        cycle_id=evaluation.cycle_id,
+        plan_id=evaluation.plan_id,
+        attempt_id=evaluation.attempt_id,
+        proposed_disposition=proposed_disposition,
+        request_id=evaluation.request_id,
+        authorization_id=evaluation.authorization_id,
+        evidence_digest=evaluation.evidence_digest,
+    )
+
+
+def make_sandbox_evaluation_disposition(
+    request: SandboxEvaluationDispositionRequest,
+    *,
+    decision: str,
+    reason: str,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    issued_sequence: int = 0,
+    one_shot: bool = True,
+    consumed: bool = False,
+) -> SandboxEvaluationDisposition:
+    return SandboxEvaluationDisposition(
+        disposition_id=stable_id("gsr-e3-disposition", request.disposition_request_id, decision, issued_sequence),
+        disposition_request_id=request.disposition_request_id,
+        evaluation_id=request.evaluation_id,
+        operator_authority=operator_authority,
+        accepted=operator_authority == OPERATOR_CONTROLLED_AUTHORITY and one_shot,
+        decision=decision,
+        reason=reason,
+        issued_sequence=issued_sequence,
+        one_shot=one_shot,
+        cycle_id=request.cycle_id,
+        plan_id=request.plan_id,
+        attempt_id=request.attempt_id,
+        request_id=request.request_id,
+        authorization_id=request.authorization_id,
+        evidence_digest=request.evidence_digest,
+        consumed=consumed,
+    )
+
+
+def review_sandbox_evaluation_disposition(
+    evaluation: SandboxEvidenceEvaluation,
+    request: SandboxEvaluationDispositionRequest,
+    disposition: SandboxEvaluationDisposition,
+) -> SandboxEvaluationDispositionResult:
+    if request.evaluation_id != evaluation.evaluation_id or disposition.evaluation_id != evaluation.evaluation_id:
+        return SandboxEvaluationDispositionResult(False, "wrong_evaluation", evaluation, request, disposition)
+    if disposition.disposition_request_id != request.disposition_request_id:
+        return SandboxEvaluationDispositionResult(False, "wrong_disposition_request", evaluation, request, disposition)
+    if disposition.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return SandboxEvaluationDispositionResult(False, "operator_authority_required", evaluation, request, disposition)
+    if not disposition.one_shot:
+        return SandboxEvaluationDispositionResult(False, "one_shot_disposition_required", evaluation, request, disposition)
+    if disposition.consumed:
+        return SandboxEvaluationDispositionResult(False, "disposition_consumed", evaluation, request, disposition)
+    if disposition.application_authorized or disposition.execution_authorized or disposition.automatic_continuation or disposition.lifecycle_transition_applied:
+        return SandboxEvaluationDispositionResult(False, "disposition_attempts_action", evaluation, request, disposition)
+    return SandboxEvaluationDispositionResult(True, "operator_disposition_recorded", evaluation, request, disposition)
+
+
+SANDBOX_EVALUATION_DISPOSITIONS = (
+    "accept_evidence_for_future_consideration",
+    "accept_evidence_for_future_application_consideration",
+    "reject_evidence",
+    "request_revised_sandbox_plan",
+    "request_another_sandbox_attempt",
+    "require_more_evidence",
+    "require_deeper_design",
+    "defer",
+    "suspend",
+    "close_objective_cycle_as_rejected",
+    "close_objective_cycle_as_completed_without_application",
+    "mark_cleanup_failure",
+    "mark_live_source_integrity_failure",
+)
+
+
+def sandbox_disposition_matches_evaluation(
+    evaluation: SandboxEvidenceEvaluation,
+    disposition: SandboxEvaluationDisposition,
+) -> tuple[bool, str]:
+    if disposition.evaluation_id != evaluation.evaluation_id:
+        return False, "wrong_evaluation"
+    if disposition.cycle_id != evaluation.cycle_id:
+        return False, "wrong_cycle"
+    if disposition.plan_id != evaluation.plan_id:
+        return False, "wrong_plan"
+    if disposition.attempt_id != evaluation.attempt_id:
+        return False, "wrong_attempt"
+    if disposition.request_id != evaluation.request_id:
+        return False, "wrong_request"
+    if disposition.authorization_id != evaluation.authorization_id:
+        return False, "wrong_authorization"
+    if disposition.evidence_digest != evaluation.evidence_digest:
+        return False, "wrong_evidence_digest"
+    return True, "valid"
+
+
+def sandbox_disposition_matches_request(
+    evaluation: SandboxEvidenceEvaluation,
+    request: SandboxEvaluationDispositionRequest,
+    disposition: SandboxEvaluationDisposition,
+) -> tuple[bool, str]:
+    if request.evaluation_id != evaluation.evaluation_id:
+        return False, "wrong_evaluation"
+    if request.cycle_id != evaluation.cycle_id:
+        return False, "wrong_cycle"
+    if request.plan_id != evaluation.plan_id:
+        return False, "wrong_plan"
+    if request.attempt_id != evaluation.attempt_id:
+        return False, "wrong_attempt"
+    if request.request_id != evaluation.request_id:
+        return False, "wrong_request"
+    if request.authorization_id != evaluation.authorization_id:
+        return False, "wrong_authorization"
+    if request.evidence_digest != evaluation.evidence_digest:
+        return False, "wrong_evidence_digest"
+    if disposition.disposition_request_id != request.disposition_request_id:
+        return False, "wrong_disposition_request"
+    if disposition.decision != request.proposed_disposition:
+        return False, "wrong_disposition"
+    return True, "valid"
+
+
+def sandbox_disposition_is_available(
+    disposition: SandboxEvaluationDisposition,
+    *,
+    sequence: int,
+) -> tuple[bool, str]:
+    if disposition.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not disposition.accepted:
+        return False, "non_operator_disposition"
+    if not disposition.one_shot:
+        return False, "wrong_disposition"
+    if disposition.consumed:
+        return False, "consumed"
+    if disposition.issued_sequence > sequence:
+        return False, "expired"
+    if disposition.application_authorized:
+        return False, "application_authority_forbidden"
+    if disposition.execution_authorized:
+        return False, "execution_authority_forbidden"
+    if disposition.lifecycle_transition_applied:
+        return False, "lifecycle_authority_forbidden"
+    if disposition.source_mutation_authorized:
+        return False, "source_mutation_forbidden"
+    if disposition.automatic_continuation:
+        return False, "automatic_continuation_forbidden"
+    return True, "valid"
+
+
+def sandbox_disposition_decision_is_allowed(decision: str) -> tuple[bool, str]:
+    if decision not in SANDBOX_EVALUATION_DISPOSITIONS:
+        return False, "unsupported_decision"
+    return True, "valid"
+
+
+def sandbox_disposition_is_compatible_with_evaluation(
+    evaluation: SandboxEvidenceEvaluation,
+    decision: str,
+) -> tuple[bool, str]:
+    clean_acceptance = {
+        "accept_evidence_for_future_consideration",
+        "accept_evidence_for_future_application_consideration",
+        "close_objective_cycle_as_completed_without_application",
+    }
+    if decision in clean_acceptance:
+        if not evaluation.accepted_for_operator_review or not evaluation.evidence_complete or not evaluation.evidence_consistent:
+            return False, "decision_incompatible_with_evaluation"
+        if not evaluation.cleanup_verified:
+            return False, "decision_incompatible_with_evaluation"
+        if not evaluation.live_source_unchanged:
+            return False, "decision_incompatible_with_evaluation"
+        if evaluation.classification in {"cleanup_failed", "live_source_integrity_failed", "evidence_incomplete", "evidence_inconsistent", "budget_exceeded"}:
+            return False, "decision_incompatible_with_evaluation"
+    if decision == "mark_cleanup_failure" and evaluation.classification != "cleanup_failed" and evaluation.cleanup_verified:
+        return False, "decision_incompatible_with_evaluation"
+    if decision == "mark_live_source_integrity_failure" and evaluation.classification != "live_source_integrity_failed" and evaluation.live_source_unchanged:
+        return False, "decision_incompatible_with_evaluation"
+    if decision == "request_another_sandbox_attempt" and evaluation.application_authorized:
+        return False, "application_authority_forbidden"
+    return True, "valid"
+
+
+def evaluate_sandbox_disposition_application(
+    evaluation: SandboxEvidenceEvaluation,
+    request: SandboxEvaluationDispositionRequest,
+    disposition: SandboxEvaluationDisposition,
+    *,
+    sequence: int,
+) -> tuple[bool, str]:
+    for check in (
+        sandbox_disposition_matches_evaluation(evaluation, disposition),
+        sandbox_disposition_matches_request(evaluation, request, disposition),
+        sandbox_disposition_is_available(disposition, sequence=sequence),
+        sandbox_disposition_decision_is_allowed(disposition.decision),
+        sandbox_disposition_is_compatible_with_evaluation(evaluation, disposition.decision),
+    ):
+        accepted, reason = check
+        if not accepted:
+            return accepted, reason
+    return True, "valid"
+
+
+def _sandbox_disposition_record(
+    evaluation: SandboxEvidenceEvaluation,
+    request: SandboxEvaluationDispositionRequest,
+    disposition: SandboxEvaluationDisposition,
+) -> SandboxEvaluationDispositionRecord:
+    decision = disposition.decision
+    return SandboxEvaluationDispositionRecord(
+        record_id=stable_id(
+            "gsr-e3-disposition-record",
+            evaluation.evaluation_id,
+            request.disposition_request_id,
+            disposition.disposition_id,
+            decision,
+        ),
+        evaluation_id=evaluation.evaluation_id,
+        disposition_request_id=request.disposition_request_id,
+        disposition_id=disposition.disposition_id,
+        cycle_id=evaluation.cycle_id,
+        plan_id=evaluation.plan_id,
+        attempt_id=evaluation.attempt_id,
+        request_id=evaluation.request_id,
+        authorization_id=evaluation.authorization_id,
+        evidence_digest=evaluation.evidence_digest,
+        operator_disposition=decision,
+        operator_issued=disposition.operator_authority == OPERATOR_CONTROLLED_AUTHORITY,
+        issued_sequence=disposition.issued_sequence,
+        accepted_evidence=decision in {"accept_evidence_for_future_consideration", "accept_evidence_for_future_application_consideration"},
+        rejected_evidence=decision in {"reject_evidence", "close_objective_cycle_as_rejected"},
+        revision_requested=decision == "request_revised_sandbox_plan",
+        more_evidence_requested=decision == "require_more_evidence",
+        deeper_design_required=decision == "require_deeper_design",
+        another_execution_requested_metadata_only=decision == "request_another_sandbox_attempt",
+        lifecycle_closure_requested_metadata_only=decision in {
+            "close_objective_cycle_as_rejected",
+            "close_objective_cycle_as_completed_without_application",
+        },
+        cleanup_failure_marked=decision == "mark_cleanup_failure",
+        live_source_integrity_failure_marked=decision == "mark_live_source_integrity_failure",
+    )
+
+
+def apply_sandbox_evaluation_disposition(
+    evaluation: SandboxEvidenceEvaluation,
+    request: SandboxEvaluationDispositionRequest,
+    disposition: SandboxEvaluationDisposition,
+    *,
+    sequence: int,
+) -> SandboxEvaluationDispositionResult:
+    accepted, reason = evaluate_sandbox_disposition_application(
+        evaluation,
+        request,
+        disposition,
+        sequence=sequence,
+    )
+    if not accepted:
+        return SandboxEvaluationDispositionResult(
+            False,
+            reason,
+            evaluation,
+            request,
+            disposition,
+            original_disposition=disposition,
+        )
+    consumed_disposition = replace(disposition, consumed=True)
+    record = _sandbox_disposition_record(evaluation, request, disposition)
+    return SandboxEvaluationDispositionResult(
+        True,
+        "operator_evidence_disposition_recorded",
+        evaluation,
+        request,
+        disposition,
+        original_disposition=disposition,
+        consumed_disposition=consumed_disposition,
+        disposition_record=record,
+        disposition_applied=True,
+        disposition_authority_consumed=True,
+        record_created=True,
+    )
 
 
 def _normalized_observation_signature(
