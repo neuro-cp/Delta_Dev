@@ -785,6 +785,226 @@ class ModuleAttachmentPlan:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+PCM_ALLOWED_CAPABILITIES = (
+    "read_python_source_metadata",
+    "inspect_python_syntax_structure_future",
+    "identify_bounded_defect_future",
+    "produce_structural_observation_future",
+    "propose_candidate_patch_artifact_future",
+    "propose_focused_tests_future",
+    "submit_to_gsr_workflow_future",
+)
+
+PCM_REQUIRED_PROHIBITIONS = (
+    "direct_live_source_editing",
+    "direct_file_writes",
+    "direct_patch_application",
+    "direct_code_execution",
+    "shell_execution",
+    "subprocess_execution",
+    "package_installation",
+    "dependency_modification",
+    "network_access",
+    "provider_calls",
+    "local_model_inference",
+    "model_as_judge",
+    "memory_writes",
+    "persistence",
+    "autonomous_objective_creation",
+    "autonomous_planning",
+    "self_attachment",
+    "self_activation",
+    "self_modification",
+    "manifest_modification",
+    "capability_escalation",
+    "permission_escalation",
+    "module_registry_mutation",
+    "another_module_attachment",
+    "sandbox_execution",
+    "application_authorization",
+    "application_execution",
+    "lifecycle_transition",
+    "git_staging",
+    "git_commit",
+    "git_push",
+    "merge",
+    "deployment",
+    "publication",
+    "scheduler",
+    "thread",
+    "background_loop",
+    "automatic_continuation",
+)
+
+PCM_FORBIDDEN_CAPABILITIES = (
+    "execute_code",
+    "mutate_source",
+    "apply_patch",
+    "install_dependency",
+    "network_access",
+    "provider_call",
+    "model_inference",
+    "memory_write",
+    "persist_state",
+    "self_modify",
+    "self_attach",
+    "self_activate",
+    "permission_escalation",
+    "git_operation",
+    "scheduler_or_background",
+    "sandbox_execution",
+    "application_execution",
+)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleManifest:
+    module_id: str
+    module_name: str
+    module_version: str
+    language: str
+    manifest_version: str
+    capability_set: tuple[str, ...]
+    prohibited_capability_set: tuple[str, ...]
+    supported_file_types: tuple[str, ...]
+    supported_python_versions: tuple[str, ...]
+    source_inspection_capability_declared: bool = True
+    diagnosis_capability_declared: bool = True
+    patch_proposal_capability_declared: bool = True
+    test_proposal_capability_declared: bool = True
+    sandbox_handoff_capability_declared: bool = True
+    direct_execution_prohibited: bool = True
+    live_mutation_prohibited: bool = True
+    network_prohibited: bool = True
+    provider_model_prohibited: bool = True
+    memory_write_prohibited: bool = True
+    persistence_prohibited: bool = True
+    self_modification_prohibited: bool = True
+    self_attachment_prohibited: bool = True
+    self_activation_prohibited: bool = True
+    registry_mutation_prohibited: bool = True
+    automatic_continuation_prohibited: bool = True
+    operator_review_required: bool = True
+    loaded: bool = False
+    activated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingCapabilityRequest:
+    capability_request_id: str
+    objective_cycle_id: str
+    requested_module_id: str
+    requested_module_version: str
+    requested_capability_set: tuple[str, ...]
+    requested_source_scope: tuple[str, ...]
+    requested_file_types: tuple[str, ...]
+    requested_language: str
+    max_file_count: int
+    max_total_bytes: int
+    read_only_source_access_required: bool = True
+    live_writes_prohibited: bool = True
+    operator_review_required: bool = True
+    execution_requested: bool = False
+    attachment_requested: bool = False
+    source_inspection_started: bool = False
+    code_generation_started: bool = False
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleAttachmentRequest:
+    attachment_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    manifest_version: str
+    manifest_identity: str
+    capability_request_id: str
+    requested_capability_set: tuple[str, ...]
+    requested_prohibited_capability_set: tuple[str, ...]
+    requested_source_scope: tuple[str, ...]
+    requested_file_types: tuple[str, ...]
+    requested_attachment_sequence: int
+    attachment_requested: bool = True
+    attachment_started: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    request_consumed: bool = False
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleAttachmentAuthorization:
+    attachment_authorization_id: str
+    attachment_request_id: str
+    capability_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    manifest_version: str
+    manifest_identity: str
+    authorized_capability_set: tuple[str, ...]
+    authorized_prohibited_capability_set: tuple[str, ...]
+    authorized_source_scope: tuple[str, ...]
+    authorized_file_types: tuple[str, ...]
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    attachment_authorized_metadata: bool = True
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    execution_authorized: bool = False
+    code_generation_authorized: bool = False
+    source_inspection_authorized: bool = False
+    patch_proposal_authorized: bool = False
+    sandbox_handoff_authorized: bool = False
+    provider_model_authorized: bool = False
+    memory_write_authorized: bool = False
+    persistence_authorized: bool = False
+    scheduler_authorized: bool = False
+    background_authorized: bool = False
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleAttachmentEligibilityResult:
+    accepted: bool
+    reason: str
+    cycle: GovernedObjectiveCycle
+    manifest: PythonCodingModuleManifest | None = None
+    capability_request: PythonCodingCapabilityRequest | None = None
+    attachment_request: PythonCodingModuleAttachmentRequest | None = None
+    authorization: PythonCodingModuleAttachmentAuthorization | None = None
+    eligible_for_inert_attachment: bool = False
+    attachment_performed: bool = False
+    authorization_consumed: bool = False
+    attachment_record_created: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    source_inspection_performed: bool = False
+    source_parsed: bool = False
+    diagnosis_performed: bool = False
+    code_generated: bool = False
+    patch_proposed: bool = False
+    test_proposed: bool = False
+    sandbox_handoff_created: bool = False
+    execution_performed: bool = False
+    source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 @dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
@@ -3152,6 +3372,332 @@ def sandbox_plan_is_future_execution_eligible(state: SandboxPlanningState, plan_
 
 def sandbox_plan_disposition_blocks_execution(disposition: str) -> bool:
     return disposition in SANDBOX_PLAN_BLOCKING_DISPOSITIONS
+
+
+def make_python_coding_module_manifest(
+    *,
+    module_id: str = "python-coding-module-v1",
+    module_name: str = "Python Coding Module",
+    module_version: str = "1.0.0",
+    language: str = "Python",
+    manifest_version: str = "PCM-1A",
+    capability_set: tuple[str, ...] = PCM_ALLOWED_CAPABILITIES,
+    prohibited_capability_set: tuple[str, ...] = PCM_REQUIRED_PROHIBITIONS,
+    supported_file_types: tuple[str, ...] = (".py",),
+    supported_python_versions: tuple[str, ...] = ("3.11",),
+    **overrides: Any,
+) -> PythonCodingModuleManifest:
+    return PythonCodingModuleManifest(
+        module_id=module_id,
+        module_name=module_name,
+        module_version=module_version,
+        language=language,
+        manifest_version=manifest_version,
+        capability_set=capability_set,
+        prohibited_capability_set=prohibited_capability_set,
+        supported_file_types=supported_file_types,
+        supported_python_versions=supported_python_versions,
+        **overrides,
+    )
+
+
+def python_coding_manifest_identity(manifest: PythonCodingModuleManifest) -> str:
+    return stable_id("pcm-1a-manifest", manifest.module_id, manifest.module_name, manifest.module_version, manifest.manifest_version, manifest.capability_set, manifest.prohibited_capability_set)
+
+
+def make_python_coding_capability_request(
+    cycle: GovernedObjectiveCycle,
+    manifest: PythonCodingModuleManifest,
+    *,
+    requested_capability_set: tuple[str, ...] | None = None,
+    requested_source_scope: tuple[str, ...] = ("orchestration/runtime/example.py",),
+    requested_file_types: tuple[str, ...] = (".py",),
+    requested_language: str = "Python",
+    max_file_count: int = 1,
+    max_total_bytes: int = 100_000,
+    request_sequence: int = 0,
+    **overrides: Any,
+) -> PythonCodingCapabilityRequest:
+    capability_set = requested_capability_set or manifest.capability_set
+    return PythonCodingCapabilityRequest(
+        capability_request_id=stable_id("pcm-1a-capability-request", cycle.cycle_id, manifest.module_id, manifest.module_version, capability_set, request_sequence),
+        objective_cycle_id=cycle.cycle_id,
+        requested_module_id=manifest.module_id,
+        requested_module_version=manifest.module_version,
+        requested_capability_set=capability_set,
+        requested_source_scope=requested_source_scope,
+        requested_file_types=requested_file_types,
+        requested_language=requested_language,
+        max_file_count=max_file_count,
+        max_total_bytes=max_total_bytes,
+        **overrides,
+    )
+
+
+def make_python_coding_module_attachment_request(
+    manifest: PythonCodingModuleManifest,
+    capability_request: PythonCodingCapabilityRequest,
+    *,
+    requested_attachment_sequence: int = 0,
+    **overrides: Any,
+) -> PythonCodingModuleAttachmentRequest:
+    manifest_identity = python_coding_manifest_identity(manifest)
+    return PythonCodingModuleAttachmentRequest(
+        attachment_request_id=stable_id("pcm-1a-attachment-request", capability_request.capability_request_id, manifest_identity, requested_attachment_sequence),
+        objective_cycle_id=capability_request.objective_cycle_id,
+        module_id=manifest.module_id,
+        module_version=manifest.module_version,
+        manifest_version=manifest.manifest_version,
+        manifest_identity=manifest_identity,
+        capability_request_id=capability_request.capability_request_id,
+        requested_capability_set=capability_request.requested_capability_set,
+        requested_prohibited_capability_set=manifest.prohibited_capability_set,
+        requested_source_scope=capability_request.requested_source_scope,
+        requested_file_types=capability_request.requested_file_types,
+        requested_attachment_sequence=requested_attachment_sequence,
+        **overrides,
+    )
+
+
+def make_python_coding_module_attachment_authorization(
+    attachment_request: PythonCodingModuleAttachmentRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonCodingModuleAttachmentAuthorization:
+    return PythonCodingModuleAttachmentAuthorization(
+        attachment_authorization_id=stable_id("pcm-1a-attachment-authorization", attachment_request.attachment_request_id, issued_sequence),
+        attachment_request_id=attachment_request.attachment_request_id,
+        capability_request_id=attachment_request.capability_request_id,
+        objective_cycle_id=attachment_request.objective_cycle_id,
+        module_id=attachment_request.module_id,
+        module_version=attachment_request.module_version,
+        manifest_version=attachment_request.manifest_version,
+        manifest_identity=attachment_request.manifest_identity,
+        authorized_capability_set=attachment_request.requested_capability_set,
+        authorized_prohibited_capability_set=attachment_request.requested_prohibited_capability_set,
+        authorized_source_scope=attachment_request.requested_source_scope,
+        authorized_file_types=attachment_request.requested_file_types,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def python_coding_manifest_is_safe(manifest: PythonCodingModuleManifest) -> tuple[bool, str]:
+    if manifest.language != "Python":
+        return False, "unsupported_language"
+    if manifest.loaded:
+        return False, "module_already_loaded"
+    if manifest.activated:
+        return False, "module_already_activated"
+    if tuple(dict.fromkeys(manifest.capability_set)) != manifest.capability_set:
+        return False, "capability_mismatch"
+    if tuple(dict.fromkeys(manifest.prohibited_capability_set)) != manifest.prohibited_capability_set:
+        return False, "prohibited_capability_missing"
+    if any(capability in {"*", "all", "unrestricted"} for capability in manifest.capability_set):
+        return False, "unrestricted_capability"
+    if any(capability not in PCM_ALLOWED_CAPABILITIES for capability in manifest.capability_set):
+        return False, "unknown_capability"
+    if any(capability in PCM_FORBIDDEN_CAPABILITIES for capability in manifest.capability_set):
+        return False, "forbidden_capability"
+    if not set(PCM_REQUIRED_PROHIBITIONS).issubset(set(manifest.prohibited_capability_set)):
+        return False, "prohibited_capability_missing"
+    required_flags = (
+        manifest.source_inspection_capability_declared,
+        manifest.diagnosis_capability_declared,
+        manifest.patch_proposal_capability_declared,
+        manifest.test_proposal_capability_declared,
+        manifest.sandbox_handoff_capability_declared,
+        manifest.direct_execution_prohibited,
+        manifest.live_mutation_prohibited,
+        manifest.network_prohibited,
+        manifest.provider_model_prohibited,
+        manifest.memory_write_prohibited,
+        manifest.persistence_prohibited,
+        manifest.self_modification_prohibited,
+        manifest.self_attachment_prohibited,
+        manifest.self_activation_prohibited,
+        manifest.registry_mutation_prohibited,
+        manifest.automatic_continuation_prohibited,
+        manifest.operator_review_required,
+    )
+    if not all(required_flags):
+        return False, "manifest_inconsistent"
+    if any(file_type != ".py" for file_type in manifest.supported_file_types):
+        return False, "unsupported_file_type"
+    return True, "valid"
+
+
+def python_coding_scope_is_safe(source_scope: tuple[str, ...], file_types: tuple[str, ...], *, read_only: bool, live_writes_prohibited: bool) -> tuple[bool, str]:
+    if not read_only or not live_writes_prohibited:
+        return False, "unsafe_source_scope"
+    if not source_scope or not file_types:
+        return False, "unsafe_source_scope"
+    if any(file_type != ".py" for file_type in file_types):
+        return False, "unsupported_file_type"
+    for scope in source_scope:
+        normalized = str(scope).replace("\\", "/").strip()
+        lowered = normalized.lower()
+        if normalized in {"*", ".", "./", "**", "**/*.py"}:
+            return False, "wildcard_scope"
+        if _normalized_application_path(normalized) is None:
+            return False, "unsafe_source_scope"
+        if any(marker in lowered for marker in (".git", ".env", "secret", "credential", "key", "delta-75", "delta_75", "del" + "ta-75")):
+            return False, "unsafe_source_scope"
+        if lowered.startswith("reports/rc4_") or "canonical_memory" in lowered or "runtime database" in lowered or lowered.endswith((".sqlite", ".db", ".bin", ".pyd", ".dll", ".exe")):
+            return False, "unsafe_source_scope"
+        if not (lowered.endswith(".py") or lowered.endswith("/")):
+            return False, "unsupported_file_type"
+    return True, "valid"
+
+
+def python_coding_capabilities_are_declared(
+    manifest: PythonCodingModuleManifest,
+    capability_request: PythonCodingCapabilityRequest,
+    authorization: PythonCodingModuleAttachmentAuthorization,
+) -> tuple[bool, str]:
+    if tuple(dict.fromkeys(capability_request.requested_capability_set)) != capability_request.requested_capability_set:
+        return False, "capability_mismatch"
+    if tuple(dict.fromkeys(authorization.authorized_capability_set)) != authorization.authorized_capability_set:
+        return False, "capability_escalation"
+    requested = set(capability_request.requested_capability_set)
+    authorized = set(authorization.authorized_capability_set)
+    manifest_caps = set(manifest.capability_set)
+    if not requested.issubset(manifest_caps):
+        return False, "capability_mismatch"
+    if requested != authorized:
+        return False, "capability_escalation"
+    if any(capability not in PCM_ALLOWED_CAPABILITIES for capability in requested | authorized):
+        return False, "unknown_capability"
+    if any(capability in PCM_FORBIDDEN_CAPABILITIES or capability in {"*", "all", "unrestricted"} for capability in requested | authorized):
+        return False, "forbidden_capability"
+    return True, "valid"
+
+
+def python_coding_attachment_matches_manifest(
+    manifest: PythonCodingModuleManifest,
+    capability_request: PythonCodingCapabilityRequest,
+    attachment_request: PythonCodingModuleAttachmentRequest,
+) -> tuple[bool, str]:
+    manifest_identity = python_coding_manifest_identity(manifest)
+    if attachment_request.manifest_identity != manifest_identity:
+        return False, "wrong_manifest"
+    if capability_request.objective_cycle_id != attachment_request.objective_cycle_id:
+        return False, "wrong_cycle"
+    if capability_request.capability_request_id != attachment_request.capability_request_id:
+        return False, "wrong_capability_request"
+    if manifest.module_id != attachment_request.module_id or capability_request.requested_module_id != manifest.module_id:
+        return False, "wrong_module"
+    if manifest.module_version != attachment_request.module_version or capability_request.requested_module_version != manifest.module_version:
+        return False, "wrong_module_version"
+    if manifest.manifest_version != attachment_request.manifest_version:
+        return False, "wrong_manifest_version"
+    if attachment_request.requested_capability_set != capability_request.requested_capability_set:
+        return False, "capability_mismatch"
+    if attachment_request.requested_prohibited_capability_set != manifest.prohibited_capability_set:
+        return False, "prohibited_capability_missing"
+    if attachment_request.attachment_started or attachment_request.module_loaded or attachment_request.module_activated or attachment_request.request_consumed:
+        return False, "module_already_loaded" if attachment_request.module_loaded else "module_already_activated" if attachment_request.module_activated else "manifest_inconsistent"
+    return True, "valid"
+
+
+def python_coding_attachment_authorization_matches_request(
+    attachment_request: PythonCodingModuleAttachmentRequest,
+    authorization: PythonCodingModuleAttachmentAuthorization,
+) -> tuple[bool, str]:
+    expected_authorization_id = stable_id("pcm-1a-attachment-authorization", attachment_request.attachment_request_id, authorization.issued_sequence)
+    if authorization.attachment_authorization_id != expected_authorization_id:
+        return False, "wrong_attachment_authorization"
+    if authorization.attachment_request_id != attachment_request.attachment_request_id:
+        return False, "wrong_attachment_request"
+    if authorization.capability_request_id != attachment_request.capability_request_id:
+        return False, "wrong_capability_request"
+    if authorization.objective_cycle_id != attachment_request.objective_cycle_id:
+        return False, "wrong_cycle"
+    if authorization.module_id != attachment_request.module_id:
+        return False, "wrong_module"
+    if authorization.module_version != attachment_request.module_version:
+        return False, "wrong_module_version"
+    if authorization.manifest_version != attachment_request.manifest_version or authorization.manifest_identity != attachment_request.manifest_identity:
+        return False, "wrong_manifest_version"
+    if authorization.authorized_capability_set != attachment_request.requested_capability_set:
+        return False, "capability_escalation"
+    if authorization.authorized_prohibited_capability_set != attachment_request.requested_prohibited_capability_set:
+        return False, "prohibited_capability_missing"
+    if authorization.authorized_source_scope != attachment_request.requested_source_scope or authorization.authorized_file_types != attachment_request.requested_file_types:
+        return False, "source_scope_mismatch"
+    return True, "valid"
+
+
+def python_coding_attachment_authorization_is_available(authorization: PythonCodingModuleAttachmentAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "wrong_attachment_authorization"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    forbidden = (
+        authorization.module_loaded,
+        authorization.module_activated,
+        authorization.registry_mutated,
+        authorization.execution_authorized,
+        authorization.code_generation_authorized,
+        authorization.source_inspection_authorized,
+        authorization.patch_proposal_authorized,
+        authorization.sandbox_handoff_authorized,
+        authorization.provider_model_authorized,
+        authorization.memory_write_authorized,
+        authorization.persistence_authorized,
+        authorization.scheduler_authorized,
+        authorization.background_authorized,
+    )
+    if any(forbidden):
+        return False, "registry_mutation_forbidden" if authorization.registry_mutated else "execution_forbidden"
+    return True, "valid"
+
+
+def evaluate_python_coding_module_attachment_eligibility(
+    cycle: GovernedObjectiveCycle,
+    manifest: PythonCodingModuleManifest,
+    capability_request: PythonCodingCapabilityRequest,
+    attachment_request: PythonCodingModuleAttachmentRequest,
+    authorization: PythonCodingModuleAttachmentAuthorization,
+    *,
+    sequence: int,
+) -> PythonCodingModuleAttachmentEligibilityResult:
+    if capability_request.objective_cycle_id != cycle.cycle_id or attachment_request.objective_cycle_id != cycle.cycle_id or authorization.objective_cycle_id != cycle.cycle_id:
+        return PythonCodingModuleAttachmentEligibilityResult(False, "wrong_cycle", cycle, manifest, capability_request, attachment_request, authorization)
+    checks = (
+        python_coding_manifest_is_safe(manifest),
+        python_coding_scope_is_safe(capability_request.requested_source_scope, capability_request.requested_file_types, read_only=capability_request.read_only_source_access_required, live_writes_prohibited=capability_request.live_writes_prohibited),
+        python_coding_attachment_matches_manifest(manifest, capability_request, attachment_request),
+        python_coding_attachment_authorization_matches_request(attachment_request, authorization),
+        python_coding_attachment_authorization_is_available(authorization, sequence=sequence),
+        python_coding_capabilities_are_declared(manifest, capability_request, authorization),
+    )
+    for accepted, reason in checks:
+        if not accepted:
+            return PythonCodingModuleAttachmentEligibilityResult(False, reason, cycle, manifest, capability_request, attachment_request, authorization)
+    return PythonCodingModuleAttachmentEligibilityResult(
+        True,
+        "valid",
+        cycle,
+        manifest,
+        capability_request,
+        attachment_request,
+        authorization,
+        eligible_for_inert_attachment=True,
+    )
 
 
 def make_governed_objective_cycle(
