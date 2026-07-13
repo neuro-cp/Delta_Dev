@@ -2405,6 +2405,307 @@ class PythonCodingModuleV2ClosureResult:
 
 
 @dataclass(frozen=True)
+class DevelopmentObjectiveRequest:
+    objective_request_id: str
+    title: str
+    statement: str
+    target_metric: str
+    baseline_metrics: dict[str, float]
+    success_thresholds: dict[str, float]
+    protected_metric_floors: dict[str, float]
+    allowed_source_paths: tuple[str, ...]
+    allowed_pcm_capabilities: tuple[str, ...]
+    maximum_attempts: int
+    maximum_elapsed_campaign_units: int
+    maximum_files_per_attempt: int
+    maximum_changed_bytes_per_attempt: int
+    forbidden_outcomes: tuple[str, ...]
+    stagnation_limit: int
+    regression_limit: int
+    requested_sequence: int
+    operator_review_required: bool = True
+    persistence_requested: bool = False
+    scheduler_requested: bool = False
+    tracked_source_application_requested: bool = False
+    provider_model_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveAuthorization:
+    objective_authorization_id: str
+    objective_request_id: str
+    title: str
+    target_metric: str
+    baseline_metrics: dict[str, float]
+    success_thresholds: dict[str, float]
+    protected_metric_floors: dict[str, float]
+    allowed_source_paths: tuple[str, ...]
+    allowed_pcm_capabilities: tuple[str, ...]
+    maximum_attempts: int
+    maximum_elapsed_campaign_units: int
+    maximum_files_per_attempt: int
+    maximum_changed_bytes_per_attempt: int
+    forbidden_outcomes: tuple[str, ...]
+    stagnation_limit: int
+    regression_limit: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    objective_authorized: bool = True
+    persistence_prohibited: bool = True
+    scheduler_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveState:
+    state_version: str = "DOE-1"
+    objective_id: str = ""
+    objective_request_id: str = ""
+    objective_authorization_id: str = ""
+    objective_status: str = "not_started"
+    target_metric: str = ""
+    baseline_metrics: dict[str, float] = field(default_factory=dict)
+    success_thresholds: dict[str, float] = field(default_factory=dict)
+    protected_metric_floors: dict[str, float] = field(default_factory=dict)
+    allowed_source_paths: tuple[str, ...] = ()
+    allowed_pcm_capabilities: tuple[str, ...] = ()
+    maximum_attempts: int = 0
+    attempts_started: int = 0
+    attempts_completed: int = 0
+    remaining_attempt_budget: int = 0
+    stagnation_count: int = 0
+    regression_count: int = 0
+    active_attempt_id: str = ""
+    terminal_disposition: str = ""
+    consumed_authorization_ids: tuple[str, ...] = ()
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveResult:
+    accepted: bool
+    reason: str
+    objective: DevelopmentObjective | None = None
+    state: DevelopmentObjectiveState | None = None
+    request: DevelopmentObjectiveRequest | None = None
+    original_authorization: DevelopmentObjectiveAuthorization | None = None
+    consumed_authorization: DevelopmentObjectiveAuthorization | None = None
+    authorization_consumed: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    tracked_source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveAcceptanceContract:
+    contract_id: str
+    objective_id: str
+    target_metric: str
+    baseline_metrics: dict[str, float]
+    success_thresholds: dict[str, float]
+    protected_metric_floors: dict[str, float]
+    maximum_permitted_regression: float
+    required_tests: tuple[str, ...]
+    prohibited_capabilities: tuple[str, ...]
+    completion_conditions: tuple[str, ...]
+    failure_conditions: tuple[str, ...]
+    metric_schema_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveEvaluation:
+    evaluation_id: str
+    objective_id: str
+    state: str
+    metric_values: dict[str, float]
+    target_delta: float
+    protected_regressions: dict[str, float]
+    reason: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentSubgoal:
+    subgoal_id: str
+    parent_objective_id: str
+    expected_contribution: str
+    required_pcm_capability: str
+    allowed_paths: tuple[str, ...]
+    attempt_budget: int
+    expected_evidence: tuple[str, ...]
+    stop_conditions: tuple[str, ...]
+    uncertainty: str
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveDecompositionResult:
+    accepted: bool
+    reason: str
+    objective_id: str
+    subgoals: tuple[dict[str, Any], ...] = ()
+    maximum_subgoals: int = 5
+    recursive_decomposition_performed: bool = False
+    execution_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentAttemptPlan:
+    attempt_id: str
+    objective_id: str
+    subgoal_id: str
+    attempt_sequence: int
+    pcm_cycle_kind: str
+    source_scope: tuple[str, ...]
+    metric_target: str
+    expected_improvement: float
+    resource_budget: dict[str, int]
+    artifact_chain_starting_digest: str
+    authorization_identity: str
+    stop_conditions: tuple[str, ...]
+    active: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentAttemptQueue:
+    objective_id: str
+    attempts: tuple[dict[str, Any], ...]
+    maximum_attempts: int
+    active_attempt_id: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentProgressEntry:
+    ledger_entry_id: str
+    objective_id: str
+    attempt_id: str
+    attempt_sequence: int
+    pcm_artifact_chain_digest: str
+    diagnosis_category: str
+    candidate_patch_id: str
+    sandbox_result: str
+    metric_before: dict[str, float]
+    metric_after: dict[str, float]
+    protected_metric_changes: dict[str, float]
+    resource_usage: dict[str, int]
+    disposition: str
+    rejection_reason: str
+    candidate_score: float
+    remaining_budget: int
+    scope_violation: bool = False
+    integrity_failure: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentProgressLedger:
+    objective_id: str
+    entries: tuple[dict[str, Any], ...] = ()
+    append_only: bool = True
+    persistence_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentCampaignArbitration:
+    objective_id: str
+    disposition: str
+    reason: str
+    attempts_completed: int
+    target_metric: str
+    current_metric_value: float
+    remaining_attempt_budget: int
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentCandidateRetentionState:
+    objective_id: str
+    current_candidate_id: str = ""
+    best_candidate_id: str = ""
+    previous_best_candidate_id: str = ""
+    rejected_candidate_summaries: tuple[dict[str, Any], ...] = ()
+    best_score: float = 0.0
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentCampaignPilotResult:
+    accepted: bool
+    reason: str
+    objective: DevelopmentObjective | None = None
+    state: DevelopmentObjectiveState | None = None
+    contract: DevelopmentObjectiveAcceptanceContract | None = None
+    decomposition: DevelopmentObjectiveDecompositionResult | None = None
+    attempt_queue: DevelopmentAttemptQueue | None = None
+    ledger: DevelopmentProgressLedger | None = None
+    retention: DevelopmentCandidateRetentionState | None = None
+    arbitration: DevelopmentCampaignArbitration | None = None
+    attempts_completed: int = 0
+    active_worktree_mutated: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveEngineClosureAuthorization:
+    closure_authorization_id: str
+    objective_id: str
+    expected_final_disposition: str
+    expected_ledger_entry_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    closure_authorized: bool = True
+    continuous_runtime_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    persistence_prohibited: bool = True
+    scheduler_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DevelopmentObjectiveEngineClosureResult:
+    accepted: bool
+    reason: str
+    pilot: DevelopmentCampaignPilotResult | None = None
+    original_authorization: DevelopmentObjectiveEngineClosureAuthorization | None = None
+    consumed_authorization: DevelopmentObjectiveEngineClosureAuthorization | None = None
+    closure_disposition: str = ""
+    authorization_consumed: bool = False
+    continuous_runtime_started: bool = False
+    tracked_source_mutated: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -7807,6 +8108,695 @@ def evaluate_python_coding_module_v2_closure(
         True,
         disposition,
         review_package,
+        authorization,
+        replace(authorization, consumed=True),
+        closure_disposition=disposition,
+        authorization_consumed=True,
+    )
+
+
+DOE_1_EVALUATION_STATES = (
+    "not_started",
+    "in_progress",
+    "success_threshold_met",
+    "protected_regression",
+    "budget_exhausted",
+    "stagnated",
+    "scope_violation",
+    "architectural_escalation",
+    "operator_paused",
+    "operator_suspended",
+)
+
+DOE_1_ARBITRATION_DISPOSITIONS = (
+    "continue_next_attempt",
+    "pause_for_operator",
+    "suspend_stagnation",
+    "suspend_regression",
+    "suspend_scope_violation",
+    "suspend_integrity_failure",
+    "complete_success",
+    "complete_budget_exhausted",
+    "architectural_escalation_required",
+)
+
+DOE_1_CLOSURE_DISPOSITIONS = (
+    "accepted_for_doe_1_closure",
+    "rejected_incomplete_campaign",
+    "rejected_objective_substitution",
+    "rejected_metric_substitution",
+    "rejected_scope_broadening",
+    "rejected_budget_violation",
+    "rejected_protected_regression",
+    "rejected_stagnation_control_failure",
+    "rejected_integrity_failure",
+    "rejected_capability_escalation",
+)
+
+
+def make_development_objective_request(
+    *,
+    title: str,
+    statement: str,
+    target_metric: str,
+    baseline_metrics: dict[str, float],
+    success_thresholds: dict[str, float],
+    protected_metric_floors: dict[str, float],
+    allowed_source_paths: tuple[str, ...],
+    allowed_pcm_capabilities: tuple[str, ...] = ("pcm_2_disposable_sandbox_coding_loop",),
+    maximum_attempts: int = 3,
+    maximum_elapsed_campaign_units: int = 100,
+    maximum_files_per_attempt: int = 1,
+    maximum_changed_bytes_per_attempt: int = 2000,
+    forbidden_outcomes: tuple[str, ...] = ("tracked_source_application", "provider_model_use", "persistence", "scheduler"),
+    stagnation_limit: int = 2,
+    regression_limit: int = 1,
+    requested_sequence: int = 0,
+    **overrides: Any,
+) -> DevelopmentObjectiveRequest:
+    return DevelopmentObjectiveRequest(
+        objective_request_id=stable_id("doe-1-objective-request", title, statement, target_metric, requested_sequence),
+        title=title,
+        statement=statement,
+        target_metric=target_metric,
+        baseline_metrics=baseline_metrics,
+        success_thresholds=success_thresholds,
+        protected_metric_floors=protected_metric_floors,
+        allowed_source_paths=allowed_source_paths,
+        allowed_pcm_capabilities=allowed_pcm_capabilities,
+        maximum_attempts=maximum_attempts,
+        maximum_elapsed_campaign_units=maximum_elapsed_campaign_units,
+        maximum_files_per_attempt=maximum_files_per_attempt,
+        maximum_changed_bytes_per_attempt=maximum_changed_bytes_per_attempt,
+        forbidden_outcomes=forbidden_outcomes,
+        stagnation_limit=stagnation_limit,
+        regression_limit=regression_limit,
+        requested_sequence=requested_sequence,
+        **overrides,
+    )
+
+
+def make_development_objective_authorization(
+    request: DevelopmentObjectiveRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> DevelopmentObjectiveAuthorization:
+    return DevelopmentObjectiveAuthorization(
+        objective_authorization_id=stable_id("doe-1-objective-authorization", request.objective_request_id, issued_sequence),
+        objective_request_id=request.objective_request_id,
+        title=request.title,
+        target_metric=request.target_metric,
+        baseline_metrics=dict(request.baseline_metrics),
+        success_thresholds=dict(request.success_thresholds),
+        protected_metric_floors=dict(request.protected_metric_floors),
+        allowed_source_paths=request.allowed_source_paths,
+        allowed_pcm_capabilities=request.allowed_pcm_capabilities,
+        maximum_attempts=request.maximum_attempts,
+        maximum_elapsed_campaign_units=request.maximum_elapsed_campaign_units,
+        maximum_files_per_attempt=request.maximum_files_per_attempt,
+        maximum_changed_bytes_per_attempt=request.maximum_changed_bytes_per_attempt,
+        forbidden_outcomes=request.forbidden_outcomes,
+        stagnation_limit=request.stagnation_limit,
+        regression_limit=request.regression_limit,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _development_objective_request_is_measurable(request: DevelopmentObjectiveRequest) -> tuple[bool, str]:
+    if not request.title.strip() or not request.statement.strip():
+        return False, "objective_statement_required"
+    vague = {"improve yourself", "be better", "optimize everything", "make delta smarter"}
+    if request.statement.strip().lower() in vague:
+        return False, "vague_objective_denied"
+    if not request.target_metric or request.target_metric not in request.baseline_metrics:
+        return False, "missing_baseline"
+    if request.target_metric not in request.success_thresholds:
+        return False, "missing_threshold"
+    if not request.allowed_source_paths:
+        return False, "missing_source_scope"
+    for path in request.allowed_source_paths:
+        ok, reason = _pcm2_safe_fixture_path(path)
+        if not ok:
+            return False, reason
+    if request.maximum_attempts < 1 or request.maximum_attempts > 5:
+        return False, "attempt_limit_invalid"
+    if request.maximum_files_per_attempt != 1:
+        return False, "file_limit_invalid"
+    if request.persistence_requested:
+        return False, "persistence_permission_present"
+    if request.scheduler_requested:
+        return False, "scheduler_permission_present"
+    if request.tracked_source_application_requested:
+        return False, "tracked_source_application_permission_present"
+    if request.provider_model_requested:
+        return False, "provider_or_model_permission_present"
+    return True, "valid"
+
+
+def _development_objective_authorization_matches_request(
+    request: DevelopmentObjectiveRequest,
+    authorization: DevelopmentObjectiveAuthorization,
+) -> tuple[bool, str]:
+    expected_id = stable_id("doe-1-objective-authorization", request.objective_request_id, authorization.issued_sequence)
+    pairs = (
+        (authorization.objective_request_id, request.objective_request_id, "wrong_objective_request"),
+        (authorization.objective_authorization_id, expected_id, "wrong_objective_authorization"),
+        (authorization.title, request.title, "wrong_objective"),
+        (authorization.target_metric, request.target_metric, "metric_substitution"),
+        (authorization.baseline_metrics, request.baseline_metrics, "baseline_substitution"),
+        (authorization.success_thresholds, request.success_thresholds, "threshold_substitution"),
+        (authorization.protected_metric_floors, request.protected_metric_floors, "protected_metric_substitution"),
+        (authorization.allowed_source_paths, request.allowed_source_paths, "scope_mismatch"),
+        (authorization.allowed_pcm_capabilities, request.allowed_pcm_capabilities, "capability_mismatch"),
+        (authorization.maximum_attempts, request.maximum_attempts, "budget_mismatch"),
+        (authorization.maximum_elapsed_campaign_units, request.maximum_elapsed_campaign_units, "budget_mismatch"),
+        (authorization.maximum_files_per_attempt, request.maximum_files_per_attempt, "budget_mismatch"),
+        (authorization.maximum_changed_bytes_per_attempt, request.maximum_changed_bytes_per_attempt, "budget_mismatch"),
+        (authorization.forbidden_outcomes, request.forbidden_outcomes, "forbidden_outcome_substitution"),
+        (authorization.stagnation_limit, request.stagnation_limit, "stagnation_limit_mismatch"),
+        (authorization.regression_limit, request.regression_limit, "regression_limit_mismatch"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return False, reason
+    return True, "valid"
+
+
+def authorize_development_objective(
+    request: DevelopmentObjectiveRequest,
+    authorization: DevelopmentObjectiveAuthorization,
+    *,
+    sequence: int,
+) -> DevelopmentObjectiveResult:
+    measurable, measurable_reason = _development_objective_request_is_measurable(request)
+    if not measurable:
+        return DevelopmentObjectiveResult(False, measurable_reason, request=request, original_authorization=authorization)
+    match_ok, match_reason = _development_objective_authorization_matches_request(request, authorization)
+    if not match_ok:
+        return DevelopmentObjectiveResult(False, match_reason, request=request, original_authorization=authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return DevelopmentObjectiveResult(False, "non_operator_authorization", request=request, original_authorization=authorization)
+    if not authorization.one_shot:
+        return DevelopmentObjectiveResult(False, "not_one_shot", request=request, original_authorization=authorization)
+    if authorization.consumed:
+        return DevelopmentObjectiveResult(False, "consumed", request=request, original_authorization=authorization)
+    if sequence > authorization.expiration_sequence:
+        return DevelopmentObjectiveResult(False, "expired", request=request, original_authorization=authorization)
+    if not authorization.objective_authorized:
+        return DevelopmentObjectiveResult(False, "wrong_objective_authorization", request=request, original_authorization=authorization)
+    if not authorization.persistence_prohibited or not authorization.scheduler_prohibited:
+        return DevelopmentObjectiveResult(False, "capability_escalation", request=request, original_authorization=authorization)
+    if not authorization.tracked_source_application_prohibited or not authorization.provider_model_use_prohibited:
+        return DevelopmentObjectiveResult(False, "capability_escalation", request=request, original_authorization=authorization)
+    objective = DevelopmentObjective(
+        objective_id=stable_id("doe-1-development-objective", request.objective_request_id, authorization.objective_authorization_id),
+        operator_supplied_goal=request.statement,
+        scope=request.allowed_source_paths,
+        success_criteria=tuple(f"{metric}>={threshold}" for metric, threshold in sorted(request.success_thresholds.items())),
+        forbidden_actions=request.forbidden_outcomes,
+        evidence_requirements=("pcm_2_artifact_chain", "development_progress_ledger", "operator_closure_review"),
+        lifecycle_state="objective_authorized",
+        operator_authorization_state="operator_authorized",
+        creation_source="operator_defined_doe_1_request",
+        sequence=sequence,
+        created_at=utc_now(),
+    )
+    state = DevelopmentObjectiveState(
+        objective_id=objective.objective_id,
+        objective_request_id=request.objective_request_id,
+        objective_authorization_id=authorization.objective_authorization_id,
+        objective_status="not_started",
+        target_metric=request.target_metric,
+        baseline_metrics=dict(request.baseline_metrics),
+        success_thresholds=dict(request.success_thresholds),
+        protected_metric_floors=dict(request.protected_metric_floors),
+        allowed_source_paths=request.allowed_source_paths,
+        allowed_pcm_capabilities=request.allowed_pcm_capabilities,
+        maximum_attempts=request.maximum_attempts,
+        remaining_attempt_budget=request.maximum_attempts,
+        consumed_authorization_ids=(authorization.objective_authorization_id,),
+    )
+    return DevelopmentObjectiveResult(
+        True,
+        "development_objective_authorized",
+        objective,
+        state,
+        request,
+        authorization,
+        replace(authorization, consumed=True),
+        authorization_consumed=True,
+    )
+
+
+def make_development_objective_acceptance_contract(
+    objective: DevelopmentObjective,
+    state: DevelopmentObjectiveState,
+    *,
+    required_tests: tuple[str, ...] = ("pcm_2_disposable_fixture_pilot",),
+    prohibited_capabilities: tuple[str, ...] = ("provider_model_use", "tracked_source_application", "persistence", "scheduler"),
+    maximum_permitted_regression: float = 0.0,
+) -> DevelopmentObjectiveAcceptanceContract:
+    metric_schema = {
+        "target": state.target_metric,
+        "baseline": state.baseline_metrics,
+        "thresholds": state.success_thresholds,
+        "protected": state.protected_metric_floors,
+    }
+    return DevelopmentObjectiveAcceptanceContract(
+        contract_id=stable_id("doe-1-acceptance-contract", objective.objective_id, metric_schema),
+        objective_id=objective.objective_id,
+        target_metric=state.target_metric,
+        baseline_metrics=dict(state.baseline_metrics),
+        success_thresholds=dict(state.success_thresholds),
+        protected_metric_floors=dict(state.protected_metric_floors),
+        maximum_permitted_regression=maximum_permitted_regression,
+        required_tests=required_tests,
+        prohibited_capabilities=prohibited_capabilities,
+        completion_conditions=("target_metric_threshold_met", "protected_metrics_preserved"),
+        failure_conditions=("protected_regression", "scope_violation", "budget_exhausted", "stagnated"),
+        metric_schema_digest=_canonical_digest(metric_schema),
+    )
+
+
+def evaluate_development_objective_metrics(
+    contract: DevelopmentObjectiveAcceptanceContract,
+    metric_values: dict[str, float],
+    *,
+    sequence: int,
+    attempts_completed: int = 0,
+    maximum_attempts: int = 0,
+    stagnation_count: int = 0,
+    stagnation_limit: int = 2,
+    scope_violation: bool = False,
+    architectural_escalation: bool = False,
+    operator_paused: bool = False,
+    operator_suspended: bool = False,
+) -> DevelopmentObjectiveEvaluation:
+    if operator_paused:
+        state = "operator_paused"
+        reason = "operator_paused"
+    elif operator_suspended:
+        state = "operator_suspended"
+        reason = "operator_suspended"
+    elif architectural_escalation:
+        state = "architectural_escalation"
+        reason = "architectural_escalation"
+    elif scope_violation:
+        state = "scope_violation"
+        reason = "scope_violation"
+    else:
+        protected_regressions = {
+            metric: metric_values.get(metric, 0.0) - floor
+            for metric, floor in contract.protected_metric_floors.items()
+            if metric_values.get(metric, 0.0) < floor
+        }
+        if protected_regressions:
+            state = "protected_regression"
+            reason = "protected_metric_floor_breached"
+        elif metric_values.get(contract.target_metric, 0.0) >= contract.success_thresholds.get(contract.target_metric, float("inf")):
+            state = "success_threshold_met"
+            reason = "success_threshold_met"
+        elif maximum_attempts and attempts_completed >= maximum_attempts:
+            state = "budget_exhausted"
+            reason = "attempt_budget_exhausted"
+        elif stagnation_count >= stagnation_limit:
+            state = "stagnated"
+            reason = "stagnation_limit_reached"
+        elif attempts_completed == 0:
+            state = "not_started"
+            reason = "not_started"
+        else:
+            state = "in_progress"
+            reason = "in_progress"
+    protected_regressions = {
+        metric: metric_values.get(metric, 0.0) - floor
+        for metric, floor in contract.protected_metric_floors.items()
+        if metric_values.get(metric, 0.0) < floor
+    }
+    return DevelopmentObjectiveEvaluation(
+        evaluation_id=stable_id("doe-1-objective-evaluation", contract.contract_id, metric_values, sequence),
+        objective_id=contract.objective_id,
+        state=state,
+        metric_values=dict(metric_values),
+        target_delta=metric_values.get(contract.target_metric, 0.0) - contract.baseline_metrics.get(contract.target_metric, 0.0),
+        protected_regressions=protected_regressions,
+        reason=reason,
+    )
+
+
+def decompose_development_objective(
+    objective: DevelopmentObjective,
+    state: DevelopmentObjectiveState,
+    contract: DevelopmentObjectiveAcceptanceContract,
+    *,
+    requested_subgoal_count: int = 1,
+    recursive: bool = False,
+    sequence: int = 0,
+) -> DevelopmentObjectiveDecompositionResult:
+    if recursive:
+        return DevelopmentObjectiveDecompositionResult(False, "recursive_decomposition_denied", objective.objective_id)
+    if requested_subgoal_count < 1 or requested_subgoal_count > 5:
+        return DevelopmentObjectiveDecompositionResult(False, "decomposition_count_limit_exceeded", objective.objective_id)
+    if contract.objective_id != objective.objective_id:
+        return DevelopmentObjectiveDecompositionResult(False, "objective_substitution", objective.objective_id)
+    if not set(state.allowed_source_paths).issubset(set(objective.scope)):
+        return DevelopmentObjectiveDecompositionResult(False, "scope_mismatch", objective.objective_id)
+    subgoals = []
+    for index in range(1, requested_subgoal_count + 1):
+        subgoal = DevelopmentSubgoal(
+            subgoal_id=stable_id("doe-1-subgoal", objective.objective_id, index, sequence),
+            parent_objective_id=objective.objective_id,
+            expected_contribution=f"improve {state.target_metric} toward {contract.success_thresholds[state.target_metric]}",
+            required_pcm_capability="pcm_2_disposable_sandbox_coding_loop",
+            allowed_paths=state.allowed_source_paths,
+            attempt_budget=max(1, state.maximum_attempts // requested_subgoal_count),
+            expected_evidence=("pcm_2_review_package", "metric_delta"),
+            stop_conditions=("success_threshold_met", "protected_regression", "budget_exhausted", "stagnated"),
+            uncertainty="synthetic deterministic decomposition",
+        )
+        subgoals.append(serialize(subgoal))
+    return DevelopmentObjectiveDecompositionResult(True, "bounded_decomposition_created", objective.objective_id, tuple(subgoals))
+
+
+def create_development_attempt_queue(
+    state: DevelopmentObjectiveState,
+    decomposition: DevelopmentObjectiveDecompositionResult,
+    *,
+    artifact_chain_starting_digest: str,
+    authorization_identity: str,
+) -> DevelopmentAttemptQueue:
+    if not decomposition.accepted:
+        return DevelopmentAttemptQueue(state.objective_id, (), state.maximum_attempts)
+    attempts: list[dict[str, Any]] = []
+    sequence = 1
+    for payload in decomposition.subgoals:
+        subgoal = deserialize(DevelopmentSubgoal, payload)
+        for _ in range(subgoal.attempt_budget):
+            if sequence > state.maximum_attempts:
+                break
+            attempt = DevelopmentAttemptPlan(
+                attempt_id=stable_id("doe-1-attempt", state.objective_id, subgoal.subgoal_id, sequence),
+                objective_id=state.objective_id,
+                subgoal_id=subgoal.subgoal_id,
+                attempt_sequence=sequence,
+                pcm_cycle_kind="pcm_2_disposable_sandbox_coding_loop",
+                source_scope=subgoal.allowed_paths,
+                metric_target=state.target_metric,
+                expected_improvement=max(0.0, state.success_thresholds[state.target_metric] - state.baseline_metrics[state.target_metric]) / max(1, state.maximum_attempts),
+                resource_budget={"max_files": state.maximum_attempts, "max_repair_iterations": 1, "max_pcm_attempts": 2},
+                artifact_chain_starting_digest=artifact_chain_starting_digest,
+                authorization_identity=authorization_identity,
+                stop_conditions=subgoal.stop_conditions,
+            )
+            attempts.append(serialize(attempt))
+            sequence += 1
+    return DevelopmentAttemptQueue(state.objective_id, tuple(attempts), state.maximum_attempts)
+
+
+def append_development_progress(
+    ledger: DevelopmentProgressLedger,
+    attempt: DevelopmentAttemptPlan,
+    *,
+    pcm_artifact_chain_digest: str,
+    diagnosis_category: str,
+    candidate_patch_id: str,
+    sandbox_result: str,
+    metric_before: dict[str, float],
+    metric_after: dict[str, float],
+    protected_metric_changes: dict[str, float],
+    resource_usage: dict[str, int],
+    disposition: str,
+    rejection_reason: str = "",
+    scope_violation: bool = False,
+    integrity_failure: bool = False,
+) -> DevelopmentProgressLedger:
+    if attempt.objective_id != ledger.objective_id:
+        return ledger
+    entry = DevelopmentProgressEntry(
+        ledger_entry_id=stable_id("doe-1-progress-entry", attempt.attempt_id, pcm_artifact_chain_digest, metric_after),
+        objective_id=ledger.objective_id,
+        attempt_id=attempt.attempt_id,
+        attempt_sequence=attempt.attempt_sequence,
+        pcm_artifact_chain_digest=pcm_artifact_chain_digest,
+        diagnosis_category=diagnosis_category,
+        candidate_patch_id=candidate_patch_id,
+        sandbox_result=sandbox_result,
+        metric_before=dict(metric_before),
+        metric_after=dict(metric_after),
+        protected_metric_changes=dict(protected_metric_changes),
+        resource_usage=dict(resource_usage),
+        disposition=disposition,
+        rejection_reason=rejection_reason,
+        candidate_score=metric_after.get(attempt.metric_target, 0.0),
+        remaining_budget=max(0, attempt.resource_budget.get("max_pcm_attempts", 0) - resource_usage.get("pcm_attempts", 0)),
+        scope_violation=scope_violation,
+        integrity_failure=integrity_failure,
+    )
+    return DevelopmentProgressLedger(ledger.objective_id, ledger.entries + (serialize(entry),))
+
+
+def arbitrate_development_campaign(
+    state: DevelopmentObjectiveState,
+    contract: DevelopmentObjectiveAcceptanceContract,
+    ledger: DevelopmentProgressLedger,
+    *,
+    operator_pause: bool = False,
+    architectural_escalation: bool = False,
+) -> DevelopmentCampaignArbitration:
+    attempts_completed = len(ledger.entries)
+    latest_entry = deserialize(DevelopmentProgressEntry, ledger.entries[-1]) if ledger.entries else None
+    current_value = latest_entry.metric_after.get(contract.target_metric, state.baseline_metrics.get(contract.target_metric, 0.0)) if latest_entry else state.baseline_metrics.get(contract.target_metric, 0.0)
+    if operator_pause:
+        disposition, reason = "pause_for_operator", "operator_pause"
+    elif architectural_escalation:
+        disposition, reason = "architectural_escalation_required", "architectural_escalation"
+    elif latest_entry and latest_entry.integrity_failure:
+        disposition, reason = "suspend_integrity_failure", "integrity_failure"
+    elif latest_entry and latest_entry.scope_violation:
+        disposition, reason = "suspend_scope_violation", "scope_violation"
+    elif latest_entry and any(value < 0 for value in latest_entry.protected_metric_changes.values()):
+        disposition, reason = "suspend_regression", "protected_regression"
+    elif current_value >= contract.success_thresholds[contract.target_metric]:
+        disposition, reason = "complete_success", "success_threshold_met"
+    elif attempts_completed >= state.maximum_attempts:
+        disposition, reason = "complete_budget_exhausted", "attempt_budget_exhausted"
+    else:
+        non_improving = 0
+        previous = state.baseline_metrics.get(contract.target_metric, 0.0)
+        for payload in ledger.entries:
+            entry = deserialize(DevelopmentProgressEntry, payload)
+            now = entry.metric_after.get(contract.target_metric, previous)
+            if now <= previous:
+                non_improving += 1
+            else:
+                non_improving = 0
+            previous = now
+        stagnation_limit = state.stagnation_count if state.stagnation_count > 0 else 2
+        if non_improving >= stagnation_limit:
+            disposition, reason = "suspend_stagnation", "stagnation_limit_reached"
+        else:
+            disposition, reason = "continue_next_attempt", "attempt_budget_remaining"
+    return DevelopmentCampaignArbitration(
+        objective_id=state.objective_id,
+        disposition=disposition,
+        reason=reason,
+        attempts_completed=attempts_completed,
+        target_metric=contract.target_metric,
+        current_metric_value=current_value,
+        remaining_attempt_budget=max(0, state.maximum_attempts - attempts_completed),
+    )
+
+
+def update_development_candidate_retention(
+    retention: DevelopmentCandidateRetentionState,
+    entry: DevelopmentProgressEntry,
+    contract: DevelopmentObjectiveAcceptanceContract,
+) -> DevelopmentCandidateRetentionState:
+    protected_regression = any(value < 0 for value in entry.protected_metric_changes.values())
+    rejected = list(retention.rejected_candidate_summaries)
+    if protected_regression or entry.scope_violation or entry.integrity_failure:
+        rejected.append({"candidate_patch_id": entry.candidate_patch_id, "reason": entry.rejection_reason or "candidate_rejected"})
+        return DevelopmentCandidateRetentionState(
+            retention.objective_id,
+            current_candidate_id=entry.candidate_patch_id,
+            best_candidate_id=retention.best_candidate_id,
+            previous_best_candidate_id=retention.previous_best_candidate_id,
+            rejected_candidate_summaries=tuple(rejected),
+            best_score=retention.best_score,
+        )
+    score = entry.metric_after.get(contract.target_metric, 0.0)
+    if score > retention.best_score:
+        return DevelopmentCandidateRetentionState(
+            retention.objective_id,
+            current_candidate_id=entry.candidate_patch_id,
+            best_candidate_id=entry.candidate_patch_id,
+            previous_best_candidate_id=retention.best_candidate_id,
+            rejected_candidate_summaries=retention.rejected_candidate_summaries,
+            best_score=score,
+        )
+    rejected.append({"candidate_patch_id": entry.candidate_patch_id, "reason": "not_best"})
+    return DevelopmentCandidateRetentionState(
+        retention.objective_id,
+        current_candidate_id=entry.candidate_patch_id,
+        best_candidate_id=retention.best_candidate_id,
+        previous_best_candidate_id=retention.previous_best_candidate_id,
+        rejected_candidate_summaries=tuple(rejected),
+        best_score=retention.best_score,
+    )
+
+
+def run_bounded_development_objective_campaign(
+    request: DevelopmentObjectiveRequest,
+    authorization: DevelopmentObjectiveAuthorization,
+    *,
+    metric_after_attempts: tuple[dict[str, float], ...],
+    pcm_chain_digests: tuple[str, ...],
+    candidate_patch_ids: tuple[str, ...],
+    sequence: int,
+    scope_violation_attempt: int | None = None,
+    integrity_failure_attempt: int | None = None,
+    operator_pause_after_attempt: int | None = None,
+) -> DevelopmentCampaignPilotResult:
+    objective_result = authorize_development_objective(request, authorization, sequence=sequence)
+    if not objective_result.accepted or objective_result.objective is None or objective_result.state is None:
+        return DevelopmentCampaignPilotResult(False, objective_result.reason)
+    contract = make_development_objective_acceptance_contract(objective_result.objective, objective_result.state)
+    decomposition = decompose_development_objective(objective_result.objective, objective_result.state, contract, requested_subgoal_count=1, sequence=sequence + 1)
+    queue = create_development_attempt_queue(objective_result.state, decomposition, artifact_chain_starting_digest="DOE-GENESIS", authorization_identity=authorization.objective_authorization_id)
+    ledger = DevelopmentProgressLedger(objective_result.objective.objective_id)
+    retention = DevelopmentCandidateRetentionState(objective_result.objective.objective_id)
+    metric_before = dict(objective_result.state.baseline_metrics)
+    arbitration = DevelopmentCampaignArbitration(objective_result.objective.objective_id, "complete_budget_exhausted", "no_attempts", 0, request.target_metric, metric_before.get(request.target_metric, 0.0), request.maximum_attempts)
+    for index, payload in enumerate(queue.attempts[: request.maximum_attempts], start=1):
+        if index > len(metric_after_attempts):
+            break
+        attempt = deserialize(DevelopmentAttemptPlan, payload)
+        metric_after = dict(metric_after_attempts[index - 1])
+        protected_changes = {
+            metric: metric_after.get(metric, 0.0) - floor
+            for metric, floor in request.protected_metric_floors.items()
+        }
+        ledger = append_development_progress(
+            ledger,
+            attempt,
+            pcm_artifact_chain_digest=pcm_chain_digests[index - 1],
+            diagnosis_category="expected_symbol_missing",
+            candidate_patch_id=candidate_patch_ids[index - 1],
+            sandbox_result="proposal_passed" if metric_after.get(request.target_metric, 0.0) > metric_before.get(request.target_metric, 0.0) else "proposal_failed_test",
+            metric_before=metric_before,
+            metric_after=metric_after,
+            protected_metric_changes=protected_changes,
+            resource_usage={"pcm_attempts": 1, "repair_iterations": 0},
+            disposition="candidate_recorded",
+            rejection_reason="scope_or_integrity" if index in {scope_violation_attempt, integrity_failure_attempt} else "",
+            scope_violation=index == scope_violation_attempt,
+            integrity_failure=index == integrity_failure_attempt,
+        )
+        entry = deserialize(DevelopmentProgressEntry, ledger.entries[-1])
+        retention = update_development_candidate_retention(retention, entry, contract)
+        arbitration = arbitrate_development_campaign(
+            replace(objective_result.state, stagnation_count=request.stagnation_limit),
+            contract,
+            ledger,
+            operator_pause=operator_pause_after_attempt == index,
+        )
+        metric_before = metric_after
+        if arbitration.disposition != "continue_next_attempt":
+            break
+    final_state = replace(
+        objective_result.state,
+        objective_status=arbitration.disposition,
+        attempts_completed=len(ledger.entries),
+        remaining_attempt_budget=max(0, request.maximum_attempts - len(ledger.entries)),
+        terminal_disposition=arbitration.disposition if arbitration.disposition != "continue_next_attempt" else "",
+    )
+    return DevelopmentCampaignPilotResult(
+        True,
+        "bounded_campaign_completed",
+        objective_result.objective,
+        final_state,
+        contract,
+        decomposition,
+        queue,
+        ledger,
+        retention,
+        arbitration,
+        attempts_completed=len(ledger.entries),
+    )
+
+
+def make_development_objective_engine_closure_authorization(
+    pilot: DevelopmentCampaignPilotResult,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    disposition: str = "accepted_for_doe_1_closure",
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> DevelopmentObjectiveEngineClosureAuthorization:
+    return DevelopmentObjectiveEngineClosureAuthorization(
+        closure_authorization_id=stable_id("doe-1-closure-authorization", pilot.objective.objective_id if pilot.objective else "", issued_sequence),
+        objective_id=pilot.objective.objective_id if pilot.objective else "",
+        expected_final_disposition=disposition,
+        expected_ledger_entry_count=len(pilot.ledger.entries) if pilot.ledger else 0,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def evaluate_development_objective_engine_closure(
+    pilot: DevelopmentCampaignPilotResult,
+    authorization: DevelopmentObjectiveEngineClosureAuthorization,
+    *,
+    sequence: int,
+) -> DevelopmentObjectiveEngineClosureResult:
+    if not pilot.accepted or pilot.objective is None or pilot.ledger is None or pilot.arbitration is None:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_incomplete_campaign", pilot, authorization)
+    if authorization.objective_id != pilot.objective.objective_id:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_objective_substitution", pilot, authorization)
+    if authorization.expected_ledger_entry_count != len(pilot.ledger.entries):
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_incomplete_campaign", pilot, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_capability_escalation", pilot, authorization)
+    if sequence > authorization.expiration_sequence or not authorization.closure_authorized:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_incomplete_campaign", pilot, authorization)
+    if not authorization.continuous_runtime_prohibited or not authorization.tracked_source_application_prohibited:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_capability_escalation", pilot, authorization)
+    if not authorization.persistence_prohibited or not authorization.scheduler_prohibited or not authorization.provider_model_use_prohibited:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_capability_escalation", pilot, authorization)
+    if pilot.active_worktree_mutated or pilot.persistence_performed or pilot.scheduler_started or pilot.provider_called or pilot.model_invoked:
+        return DevelopmentObjectiveEngineClosureResult(False, "rejected_capability_escalation", pilot, authorization)
+    disposition_map = {
+        "complete_success": "accepted_for_doe_1_closure",
+        "complete_budget_exhausted": "accepted_for_doe_1_closure",
+        "suspend_stagnation": "accepted_for_doe_1_closure",
+        "suspend_regression": "rejected_protected_regression",
+        "suspend_scope_violation": "rejected_scope_broadening",
+        "suspend_integrity_failure": "rejected_integrity_failure",
+    }
+    disposition = disposition_map.get(pilot.arbitration.disposition, authorization.expected_final_disposition)
+    if disposition != authorization.expected_final_disposition:
+        return DevelopmentObjectiveEngineClosureResult(False, disposition, pilot, authorization)
+    return DevelopmentObjectiveEngineClosureResult(
+        True,
+        disposition,
+        pilot,
         authorization,
         replace(authorization, consumed=True),
         closure_disposition=disposition,
