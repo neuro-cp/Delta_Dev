@@ -2961,6 +2961,335 @@ class GovernedRuntimeClosureResult:
 
 
 @dataclass(frozen=True)
+class CapabilityDevelopmentMissionRequest:
+    mission_request_id: str
+    original_operator_wording: str
+    intended_outcome: str
+    domain: str
+    constraints: tuple[str, ...]
+    prohibited_outcomes: tuple[str, ...]
+    success_concept: str
+    acceptable_uncertainty: str
+    required_operator_decisions: tuple[str, ...]
+    maximum_developmental_depth: int
+    maximum_campaign_count: int
+    maximum_elapsed_runtime_units: int
+    requested_sequence: int
+    operator_review_required: bool = True
+    permission_expansion_requested: bool = False
+    provider_model_requested: bool = False
+    network_requested: bool = False
+    tracked_source_application_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentMissionAuthorization:
+    mission_authorization_id: str
+    mission_request_id: str
+    original_operator_wording: str
+    intended_outcome: str
+    domain: str
+    authorized_constraints: tuple[str, ...]
+    authorized_prohibited_outcomes: tuple[str, ...]
+    authorized_success_concept: str
+    maximum_developmental_depth: int
+    maximum_campaign_count: int
+    maximum_elapsed_runtime_units: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    mission_interpretation_authorized: bool = True
+    permission_expansion_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    network_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentMission:
+    mission_id: str
+    original_operator_wording: str
+    intended_outcome: str
+    domain: str
+    constraints: tuple[str, ...]
+    prohibited_outcomes: tuple[str, ...]
+    success_concept: str
+    acceptable_uncertainty: str
+    maximum_developmental_depth: int
+    maximum_campaign_count: int
+    maximum_elapsed_runtime_units: int
+    mission_digest: str
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentMissionInterpretation:
+    interpretation_id: str
+    mission_id: str
+    mission_kind: str
+    development_objective_distinction: str
+    subgoal_distinction: str
+    attempt_distinction: str
+    capability_distinction: str
+    permission_distinction: str
+    authorization_distinction: str
+    normalized_scope: tuple[str, ...]
+    ambiguity_escalations: tuple[str, ...]
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentMissionResult:
+    accepted: bool
+    reason: str
+    mission: CapabilityDevelopmentMission | None = None
+    interpretation: CapabilityDevelopmentMissionInterpretation | None = None
+    request: CapabilityDevelopmentMissionRequest | None = None
+    original_authorization: CapabilityDevelopmentMissionAuthorization | None = None
+    consumed_authorization: CapabilityDevelopmentMissionAuthorization | None = None
+    authorization_consumed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    tracked_source_mutated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RequiredCapabilityNode:
+    capability_id: str
+    name: str
+    mission_contribution: str
+    required_inputs: tuple[str, ...]
+    expected_outputs: tuple[str, ...]
+    prerequisite_capability_ids: tuple[str, ...]
+    validation_method: str
+    evidence_required: tuple[str, ...]
+    risk_class: str
+    authority_class: str
+    reversibility: str
+    external_resources_required: bool
+    currently_demonstrated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RequiredCapabilityDependency:
+    dependency_id: str
+    capability_id: str
+    prerequisite_capability_id: str
+    dependency_reason: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RequiredCapabilityGraph:
+    graph_id: str
+    mission_id: str
+    nodes: tuple[dict[str, Any], ...]
+    dependencies: tuple[dict[str, Any], ...]
+    maximum_nodes: int
+    maximum_depth: int
+    acyclic: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RequiredCapabilityGraphEvidence:
+    evidence_id: str
+    graph_id: str
+    mission_id: str
+    deterministic_rule_set: str
+    self_model_sources: tuple[str, ...]
+    hidden_capabilities_detected: bool = False
+    permission_as_capability_detected: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class RequiredCapabilityGraphResult:
+    accepted: bool
+    reason: str
+    graph: RequiredCapabilityGraph | None = None
+    evidence: RequiredCapabilityGraphEvidence | None = None
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DemonstratedCapabilityState:
+    capability_id: str
+    name: str
+    subsystem: str
+    evidence_tiers: tuple[str, ...]
+    implementation_evidence: tuple[str, ...]
+    test_evidence: tuple[str, ...]
+    pilot_evidence: tuple[str, ...]
+    checkpoint_commit: str
+    known_limitations: tuple[str, ...]
+    required_authorizations: tuple[str, ...]
+    activation_state: str
+    confidence: float
+    uncertainty: str
+    artifact_chain_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class DemonstratedCapabilitySelfModel:
+    self_model_id: str
+    capabilities: tuple[dict[str, Any], ...]
+    source_evidence: tuple[str, ...]
+    overclaim_detected: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityGap:
+    gap_id: str
+    capability_id: str
+    classification: str
+    dependency_order: int
+    blocking: bool
+    requires_operator_authority: bool
+    requires_architectural_review: bool
+    resolvable_within_current_permissions: bool
+    reason: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityGapAnalysis:
+    analysis_id: str
+    mission_id: str
+    gaps: tuple[dict[str, Any], ...]
+    first_actionable_gap_id: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilitySelection:
+    selection_id: str
+    mission_id: str
+    selected_gap_id: str
+    selected_capability_id: str
+    disposition: str
+    rationale: str
+    expected_leverage: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentObjectiveSynthesis:
+    synthesis_id: str
+    parent_mission_id: str
+    capability_gap_id: str
+    selected_capability_id: str
+    objective_request: dict[str, Any]
+    allowed_gdr_runtime_envelope: dict[str, int]
+    stop_conditions: tuple[str, ...]
+    closure_criteria: tuple[str, ...]
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentCycleResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    selected_capability_id: str
+    synthesized_objective_id: str
+    doe_campaign_disposition: str
+    gdr_review_item_id: str
+    operator_disposition: str
+    capability_evidence_tier: str
+    recursive_depth_used: int
+    campaign_count_used: int
+    self_model_update_allowed: bool = False
+    tracked_source_mutated: bool = False
+    capability_activated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityMissionReevaluation:
+    reevaluation_id: str
+    mission_id: str
+    selected_capability_id: str
+    capability_now_demonstrated: bool
+    evidence_tier: str
+    parent_mission_unchanged: bool
+    gap_closed: bool
+    remaining_prerequisite_ids: tuple[str, ...]
+    disposition: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityOperatorQuestion:
+    question_id: str
+    category: str
+    parent_mission_id: str
+    blocking_capability_id: str
+    current_evidence: tuple[str, ...]
+    alternatives: tuple[str, ...]
+    tradeoffs: tuple[str, ...]
+    safest_default: str
+    no_response_consequence: str
+    exact_authorization_required: str
+    generic_question: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentClosureAuthorization:
+    closure_authorization_id: str
+    mission_id: str
+    expected_disposition: str
+    expected_reevaluation_id: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    closure_authorized: bool = True
+    capability_activation_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    autonomous_authorization_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    network_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityDevelopmentClosureResult:
+    accepted: bool
+    reason: str
+    mission: CapabilityDevelopmentMission | None = None
+    graph: RequiredCapabilityGraph | None = None
+    self_model: DemonstratedCapabilitySelfModel | None = None
+    gap_analysis: CapabilityGapAnalysis | None = None
+    selection: CapabilitySelection | None = None
+    synthesis: CapabilityDevelopmentObjectiveSynthesis | None = None
+    cycle: CapabilityDevelopmentCycleResult | None = None
+    reevaluation: CapabilityMissionReevaluation | None = None
+    question: CapabilityOperatorQuestion | None = None
+    original_authorization: CapabilityDevelopmentClosureAuthorization | None = None
+    consumed_authorization: CapabilityDevelopmentClosureAuthorization | None = None
+    authorization_consumed: bool = False
+    capability_activated: bool = False
+    tracked_source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -9619,6 +9948,458 @@ def evaluate_governed_runtime_closure(
         state,
         queue,
         pilot_evidence,
+        authorization,
+        replace(authorization, consumed=True),
+        authorization_consumed=True,
+    )
+
+
+CDE_GAP_CLASSIFICATIONS = (
+    "demonstrated_sufficient",
+    "demonstrated_but_insufficient",
+    "declared_only",
+    "missing",
+    "stale_evidence",
+    "blocked_by_dependency",
+    "blocked_by_authority",
+    "blocked_by_resource",
+    "architectural_unknown",
+)
+
+CDE_SELECTION_DISPOSITIONS = (
+    "select_capability_for_development",
+    "request_operator_authority",
+    "request_architectural_decision",
+    "pause_insufficient_evidence",
+    "mission_currently_feasible",
+    "mission_not_feasible_within_limits",
+)
+
+CDE_QUESTION_CATEGORIES = (
+    "permission_expansion_required",
+    "source_policy_decision_required",
+    "architecture_choice_required",
+    "metric_conflict_requires_operator",
+    "resource_budget_change_required",
+    "mission_clarification_required",
+    "capability_activation_required",
+    "tracked_source_application_required",
+)
+
+
+def make_capability_development_mission_request(
+    *,
+    original_operator_wording: str,
+    intended_outcome: str,
+    domain: str,
+    constraints: tuple[str, ...],
+    prohibited_outcomes: tuple[str, ...],
+    success_concept: str,
+    requested_sequence: int,
+    acceptable_uncertainty: str = "bounded_unknowns_must_be_reported",
+    required_operator_decisions: tuple[str, ...] = ("approve_capability_evidence_promotion",),
+    maximum_developmental_depth: int = 3,
+    maximum_campaign_count: int = 3,
+    maximum_elapsed_runtime_units: int = 100,
+    **overrides: Any,
+) -> CapabilityDevelopmentMissionRequest:
+    return CapabilityDevelopmentMissionRequest(
+        mission_request_id=stable_id("cde-1-mission-request", original_operator_wording, intended_outcome, requested_sequence),
+        original_operator_wording=original_operator_wording,
+        intended_outcome=intended_outcome,
+        domain=domain,
+        constraints=constraints,
+        prohibited_outcomes=prohibited_outcomes,
+        success_concept=success_concept,
+        acceptable_uncertainty=acceptable_uncertainty,
+        required_operator_decisions=required_operator_decisions,
+        maximum_developmental_depth=maximum_developmental_depth,
+        maximum_campaign_count=maximum_campaign_count,
+        maximum_elapsed_runtime_units=maximum_elapsed_runtime_units,
+        requested_sequence=requested_sequence,
+        **overrides,
+    )
+
+
+def make_capability_development_mission_authorization(
+    request: CapabilityDevelopmentMissionRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+) -> CapabilityDevelopmentMissionAuthorization:
+    return CapabilityDevelopmentMissionAuthorization(
+        mission_authorization_id=stable_id("cde-1-mission-authorization", request.mission_request_id, issued_sequence),
+        mission_request_id=request.mission_request_id,
+        original_operator_wording=request.original_operator_wording,
+        intended_outcome=request.intended_outcome,
+        domain=request.domain,
+        authorized_constraints=request.constraints,
+        authorized_prohibited_outcomes=request.prohibited_outcomes,
+        authorized_success_concept=request.success_concept,
+        maximum_developmental_depth=request.maximum_developmental_depth,
+        maximum_campaign_count=request.maximum_campaign_count,
+        maximum_elapsed_runtime_units=request.maximum_elapsed_runtime_units,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+    )
+
+
+def interpret_capability_development_mission(
+    request: CapabilityDevelopmentMissionRequest,
+    authorization: CapabilityDevelopmentMissionAuthorization,
+    *,
+    sequence: int,
+) -> CapabilityDevelopmentMissionResult:
+    if not request.original_operator_wording.strip() or not request.success_concept.strip():
+        return CapabilityDevelopmentMissionResult(False, "mission_clarification_required", request=request, original_authorization=authorization)
+    expected_id = stable_id("cde-1-mission-authorization", request.mission_request_id, authorization.issued_sequence)
+    pairs = (
+        (authorization.mission_request_id, request.mission_request_id, "mission_substitution"),
+        (authorization.mission_authorization_id, expected_id, "wrong_mission_authorization"),
+        (authorization.original_operator_wording, request.original_operator_wording, "mission_wording_substitution"),
+        (authorization.intended_outcome, request.intended_outcome, "mission_substitution"),
+        (authorization.domain, request.domain, "mission_scope_broadening"),
+        (authorization.authorized_constraints, request.constraints, "mission_scope_broadening"),
+        (authorization.authorized_prohibited_outcomes, request.prohibited_outcomes, "prohibited_outcome_substitution"),
+        (authorization.authorized_success_concept, request.success_concept, "success_concept_substitution"),
+        (authorization.maximum_developmental_depth, request.maximum_developmental_depth, "depth_mismatch"),
+        (authorization.maximum_campaign_count, request.maximum_campaign_count, "campaign_limit_mismatch"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return CapabilityDevelopmentMissionResult(False, reason, request=request, original_authorization=authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed:
+        return CapabilityDevelopmentMissionResult(False, "mission_authorization_unavailable", request=request, original_authorization=authorization)
+    if sequence > authorization.expiration_sequence or not authorization.mission_interpretation_authorized:
+        return CapabilityDevelopmentMissionResult(False, "mission_authorization_unavailable", request=request, original_authorization=authorization)
+    if request.permission_expansion_requested or not authorization.permission_expansion_prohibited:
+        return CapabilityDevelopmentMissionResult(False, "permission_boundary_requires_operator", request=request, original_authorization=authorization)
+    if request.provider_model_requested or request.network_requested or not authorization.provider_model_use_prohibited or not authorization.network_prohibited:
+        return CapabilityDevelopmentMissionResult(False, "external_resource_boundary_denied", request=request, original_authorization=authorization)
+    if request.tracked_source_application_requested or not authorization.tracked_source_application_prohibited:
+        return CapabilityDevelopmentMissionResult(False, "tracked_source_application_boundary_denied", request=request, original_authorization=authorization)
+    mission = CapabilityDevelopmentMission(
+        mission_id=stable_id("cde-1-mission", request.mission_request_id, authorization.mission_authorization_id),
+        original_operator_wording=request.original_operator_wording,
+        intended_outcome=request.intended_outcome,
+        domain=request.domain,
+        constraints=request.constraints,
+        prohibited_outcomes=request.prohibited_outcomes,
+        success_concept=request.success_concept,
+        acceptable_uncertainty=request.acceptable_uncertainty,
+        maximum_developmental_depth=request.maximum_developmental_depth,
+        maximum_campaign_count=request.maximum_campaign_count,
+        maximum_elapsed_runtime_units=request.maximum_elapsed_runtime_units,
+        mission_digest=_canonical_digest(serialize(request)),
+    )
+    interpretation = CapabilityDevelopmentMissionInterpretation(
+        interpretation_id=stable_id("cde-1-mission-interpretation", mission.mission_id, sequence),
+        mission_id=mission.mission_id,
+        mission_kind="capability_development_mission",
+        development_objective_distinction="measurable bounded DOE objective derived from a selected capability gap",
+        subgoal_distinction="bounded contribution inside a DOE objective",
+        attempt_distinction="one scheduled PCM/GDR attempt",
+        capability_distinction="demonstrated reusable ability with evidence tier",
+        permission_distinction="allowed action boundary, not a capability",
+        authorization_distinction="one-shot operator authority for a specific transition",
+        normalized_scope=("bounded_mathematical_question_investigation",) if "mathematical" in mission.original_operator_wording.lower() else (mission.domain,),
+        ambiguity_escalations=tuple(decision for decision in request.required_operator_decisions if "permission" in decision),
+    )
+    return CapabilityDevelopmentMissionResult(True, "mission_interpreted", mission, interpretation, request, authorization, replace(authorization, consumed=True), authorization_consumed=True)
+
+
+def build_required_capability_graph(mission: CapabilityDevelopmentMission, *, include_cycle: bool = False, node_count: int | None = None) -> RequiredCapabilityGraphResult:
+    if node_count is not None and node_count > 12:
+        return RequiredCapabilityGraphResult(False, "capability_node_limit_exceeded")
+    nodes = (
+        RequiredCapabilityNode("governed_claim_representation", "governed scientific claim representation", "represent bounded mathematical claims with assumptions and evidence", ("claim_text",), ("claim_record",), (), "fixture_contract_tests", ("claim_identity", "evidence_reference"), "low", "inert_contract", "reversible", False),
+        RequiredCapabilityNode("evidence_linked_argument_map", "evidence-linked argument map", "connect claims to sources and assumptions", ("claim_record",), ("argument_map",), ("governed_claim_representation",), "focused_integration_tests", ("claim_record",), "medium", "inert_contract", "reversible", False),
+        RequiredCapabilityNode("bounded_math_question_protocol", "bounded mathematical question protocol", "run a rigorous investigation protocol", ("argument_map",), ("investigation_plan",), ("evidence_linked_argument_map",), "operator_pilot", ("argument_map",), "medium", "operator_review", "reversible", False),
+    )
+    if include_cycle:
+        deps = (
+            RequiredCapabilityDependency("dep-cycle-a", "governed_claim_representation", "bounded_math_question_protocol", "forced cycle"),
+            RequiredCapabilityDependency("dep-cycle-b", "bounded_math_question_protocol", "governed_claim_representation", "forced cycle"),
+        )
+    else:
+        deps = (
+            RequiredCapabilityDependency("dep-argument-claim", "evidence_linked_argument_map", "governed_claim_representation", "claim representation prerequisite"),
+            RequiredCapabilityDependency("dep-protocol-map", "bounded_math_question_protocol", "evidence_linked_argument_map", "argument map prerequisite"),
+        )
+    graph = RequiredCapabilityGraph(
+        graph_id=stable_id("cde-1-capability-graph", mission.mission_id, tuple(node.capability_id for node in nodes)),
+        mission_id=mission.mission_id,
+        nodes=tuple(serialize(node) for node in nodes),
+        dependencies=tuple(serialize(dep) for dep in deps),
+        maximum_nodes=12,
+        maximum_depth=6,
+        acyclic=not include_cycle,
+    )
+    if include_cycle:
+        return RequiredCapabilityGraphResult(False, "capability_graph_cycle_detected", graph)
+    evidence = RequiredCapabilityGraphEvidence(
+        evidence_id=stable_id("cde-1-capability-graph-evidence", graph.graph_id),
+        graph_id=graph.graph_id,
+        mission_id=mission.mission_id,
+        deterministic_rule_set="bounded_math_scholar_fixture_v1",
+        self_model_sources=("GSR", "PCM", "DOE", "GDR"),
+    )
+    return RequiredCapabilityGraphResult(True, "capability_graph_created", graph, evidence)
+
+
+def build_demonstrated_capability_self_model(*, overclaim: bool = False) -> DemonstratedCapabilitySelfModel:
+    capabilities = [
+        DemonstratedCapabilityState("pcm_2_disposable_sandbox_coding_loop", "governed Python sandbox coding loop", "PCM", ("implemented", "focused_tested", "fixture_validated", "operator_approved"), ("7c06661d",), ("PCM-2 tests",), ("disposable sandbox pilot",), "7c06661d", ("not tracked-source validated", "not long-duration validated"), ("operator review for application",), "inactive", 0.82, "fixture validated only", "PCM2"),
+        DemonstratedCapabilityState("doe_1_bounded_objective_engine", "bounded development objective engine", "DOE", ("implemented", "focused_tested", "fixture_validated", "operator_approved"), ("0c63844f",), ("DOE-1 tests",), ("synthetic objective pilot",), "0c63844f", ("in-memory only",), ("operator objective authorization",), "inactive", 0.78, "not continuous-runtime validated beyond GDR", "DOE1"),
+        DemonstratedCapabilityState("gdr_1_continuous_governed_runtime", "continuous governed runtime", "GDR", ("implemented", "focused_tested", "fixture_validated", "operator_approved"), ("d39cd5ff",), ("GDR-1 tests",), ("bounded runtime pilot",), "d39cd5ff", ("not overnight validated",), ("operator runtime authorization",), "inactive", 0.72, "bounded pilot only", "GDR1"),
+    ]
+    if overclaim:
+        capabilities.append(DemonstratedCapabilityState("scholar", "scholar", "CDE", ("active", "long_duration_validated", "tracked_source_validated"), (), (), (), "", (), (), "active", 1.0, "none", "OVERCLAIM"))
+    return DemonstratedCapabilitySelfModel(stable_id("cde-1-self-model", tuple(item.capability_id for item in capabilities)), tuple(serialize(item) for item in capabilities), ("accepted GSR/PCM/DOE/GDR checkpoints",), overclaim_detected=overclaim)
+
+
+def analyze_capability_gaps(graph: RequiredCapabilityGraph, self_model: DemonstratedCapabilitySelfModel, mission: CapabilityDevelopmentMission) -> CapabilityGapAnalysis:
+    demonstrated = {payload["capability_id"]: payload for payload in self_model.capabilities}
+    nodes = [deserialize(RequiredCapabilityNode, payload) for payload in graph.nodes]
+    gaps: list[CapabilityGap] = []
+    for index, node in enumerate(nodes, start=1):
+        if node.capability_id in demonstrated and "operator_approved" in demonstrated[node.capability_id].get("evidence_tiers", ()):
+            classification = "demonstrated_sufficient"
+            blocking = False
+        elif any(prereq not in demonstrated for prereq in node.prerequisite_capability_ids):
+            classification = "blocked_by_dependency"
+            blocking = True
+        elif node.authority_class not in {"inert_contract", "operator_review"}:
+            classification = "blocked_by_authority"
+            blocking = True
+        else:
+            classification = "missing"
+            blocking = True
+        gap = CapabilityGap(
+            gap_id=stable_id("cde-1-gap", mission.mission_id, node.capability_id),
+            capability_id=node.capability_id,
+            classification=classification,
+            dependency_order=index,
+            blocking=blocking,
+            requires_operator_authority=node.authority_class == "operator_review",
+            requires_architectural_review=classification == "architectural_unknown",
+            resolvable_within_current_permissions=classification in {"missing", "declared_only", "demonstrated_but_insufficient"},
+            reason=classification,
+        )
+        gaps.append(gap)
+    first = next((gap.gap_id for gap in gaps if gap.blocking and gap.resolvable_within_current_permissions), "")
+    return CapabilityGapAnalysis(stable_id("cde-1-gap-analysis", mission.mission_id, graph.graph_id, self_model.self_model_id), mission.mission_id, tuple(serialize(gap) for gap in gaps), first)
+
+
+def select_capability_prerequisite(analysis: CapabilityGapAnalysis, graph: RequiredCapabilityGraph) -> CapabilitySelection:
+    if not analysis.gaps:
+        return CapabilitySelection(stable_id("cde-1-selection", analysis.mission_id, "none"), analysis.mission_id, "", "", "mission_currently_feasible", "no gaps", "none")
+    gaps = [deserialize(CapabilityGap, payload) for payload in analysis.gaps]
+    blocking = [gap for gap in gaps if gap.blocking]
+    if not blocking:
+        return CapabilitySelection(stable_id("cde-1-selection", analysis.mission_id, "feasible"), analysis.mission_id, "", "", "mission_currently_feasible", "all required capabilities demonstrated", "none")
+    first = sorted(blocking, key=lambda gap: gap.dependency_order)[0]
+    if first.requires_architectural_review:
+        disposition = "request_architectural_decision"
+    elif not first.resolvable_within_current_permissions:
+        disposition = "mission_not_feasible_within_limits"
+    elif first.requires_operator_authority:
+        disposition = "request_operator_authority"
+    else:
+        disposition = "select_capability_for_development"
+    return CapabilitySelection(
+        stable_id("cde-1-selection", analysis.mission_id, first.gap_id),
+        analysis.mission_id,
+        first.gap_id,
+        first.capability_id,
+        disposition,
+        "first blocking prerequisite selected by dependency order and leverage",
+        "unblocks downstream mission graph",
+    )
+
+
+def synthesize_capability_development_objective(
+    mission: CapabilityDevelopmentMission,
+    selection: CapabilitySelection,
+    *,
+    allowed_paths: tuple[str, ...] = ("claim_representation_fixture.py",),
+) -> CapabilityDevelopmentObjectiveSynthesis:
+    objective_request = make_development_objective_request(
+        title=f"Develop {selection.selected_capability_id}",
+        statement=f"Create fixture evidence for {selection.selected_capability_id} without broadening mission {mission.mission_id}.",
+        target_metric="capability_fixture_contracts",
+        baseline_metrics={"capability_fixture_contracts": 0.0, "protected_governance": 1.0},
+        success_thresholds={"capability_fixture_contracts": 1.0},
+        protected_metric_floors={"protected_governance": 1.0},
+        allowed_source_paths=allowed_paths,
+        maximum_attempts=3,
+        requested_sequence=1700,
+    )
+    return CapabilityDevelopmentObjectiveSynthesis(
+        synthesis_id=stable_id("cde-1-objective-synthesis", mission.mission_id, selection.selection_id),
+        parent_mission_id=mission.mission_id,
+        capability_gap_id=selection.selected_gap_id,
+        selected_capability_id=selection.selected_capability_id,
+        objective_request=serialize(objective_request),
+        allowed_gdr_runtime_envelope={"max_cycles": 3, "max_attempts": 3, "max_files": 1, "max_changed_bytes": 2000},
+        stop_conditions=("success", "regression", "scope_violation", "budget_exhausted"),
+        closure_criteria=("operator_review_package_created", "capability_evidence_waits_for_approval"),
+    )
+
+
+def run_capability_development_cycle(
+    mission: CapabilityDevelopmentMission,
+    selection: CapabilitySelection,
+    synthesis: CapabilityDevelopmentObjectiveSynthesis,
+    *,
+    operator_disposition: str,
+    sequence: int,
+) -> CapabilityDevelopmentCycleResult:
+    approved = operator_disposition == "approve_fixture_validated_capability"
+    return CapabilityDevelopmentCycleResult(
+        accepted=True,
+        reason="capability_development_cycle_completed",
+        mission_id=mission.mission_id,
+        selected_capability_id=selection.selected_capability_id,
+        synthesized_objective_id=synthesis.synthesis_id,
+        doe_campaign_disposition="complete_success",
+        gdr_review_item_id=stable_id("cde-1-gdr-review", mission.mission_id, selection.selected_capability_id, sequence),
+        operator_disposition=operator_disposition,
+        capability_evidence_tier="fixture_validated" if approved else "not_promoted",
+        recursive_depth_used=1,
+        campaign_count_used=1,
+        self_model_update_allowed=approved,
+    )
+
+
+def reevaluate_parent_mission(
+    mission: CapabilityDevelopmentMission,
+    graph: RequiredCapabilityGraph,
+    analysis: CapabilityGapAnalysis,
+    cycle: CapabilityDevelopmentCycleResult,
+) -> CapabilityMissionReevaluation:
+    remaining = []
+    for payload in analysis.gaps:
+        gap = deserialize(CapabilityGap, payload)
+        if gap.capability_id != cycle.selected_capability_id and gap.blocking:
+            remaining.append(gap.capability_id)
+    if not cycle.self_model_update_allowed:
+        disposition = "pause_for_operator"
+    elif remaining:
+        disposition = "select_next_capability_gap"
+    else:
+        disposition = "mission_feasible"
+    return CapabilityMissionReevaluation(
+        reevaluation_id=stable_id("cde-1-reevaluation", mission.mission_id, cycle.selected_capability_id, cycle.operator_disposition),
+        mission_id=mission.mission_id,
+        selected_capability_id=cycle.selected_capability_id,
+        capability_now_demonstrated=cycle.self_model_update_allowed,
+        evidence_tier=cycle.capability_evidence_tier,
+        parent_mission_unchanged=True,
+        gap_closed=cycle.self_model_update_allowed,
+        remaining_prerequisite_ids=tuple(remaining),
+        disposition=disposition,
+    )
+
+
+def make_capability_operator_question(
+    *,
+    category: str,
+    mission: CapabilityDevelopmentMission,
+    blocking_capability_id: str,
+    current_evidence: tuple[str, ...],
+    alternatives: tuple[str, ...],
+    tradeoffs: tuple[str, ...],
+    safest_default: str,
+    no_response_consequence: str,
+    exact_authorization_required: str,
+) -> CapabilityOperatorQuestion:
+    generic = category not in CDE_QUESTION_CATEGORIES or not blocking_capability_id or exact_authorization_required.strip().lower() in {"continue", "what should i do next"}
+    return CapabilityOperatorQuestion(
+        question_id=stable_id("cde-1-operator-question", mission.mission_id, category, blocking_capability_id),
+        category=category,
+        parent_mission_id=mission.mission_id,
+        blocking_capability_id=blocking_capability_id,
+        current_evidence=current_evidence,
+        alternatives=alternatives,
+        tradeoffs=tradeoffs,
+        safest_default=safest_default,
+        no_response_consequence=no_response_consequence,
+        exact_authorization_required=exact_authorization_required,
+        generic_question=generic,
+    )
+
+
+def make_capability_development_closure_authorization(
+    mission: CapabilityDevelopmentMission,
+    reevaluation: CapabilityMissionReevaluation,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    expected_disposition: str = "accepted_for_cde_1_closure",
+) -> CapabilityDevelopmentClosureAuthorization:
+    return CapabilityDevelopmentClosureAuthorization(
+        closure_authorization_id=stable_id("cde-1-closure-authorization", mission.mission_id, reevaluation.reevaluation_id, issued_sequence),
+        mission_id=mission.mission_id,
+        expected_disposition=expected_disposition,
+        expected_reevaluation_id=reevaluation.reevaluation_id,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+    )
+
+
+def evaluate_capability_development_closure(
+    mission: CapabilityDevelopmentMission,
+    graph: RequiredCapabilityGraph,
+    self_model: DemonstratedCapabilitySelfModel,
+    analysis: CapabilityGapAnalysis,
+    selection: CapabilitySelection,
+    synthesis: CapabilityDevelopmentObjectiveSynthesis,
+    cycle: CapabilityDevelopmentCycleResult,
+    reevaluation: CapabilityMissionReevaluation,
+    question: CapabilityOperatorQuestion,
+    authorization: CapabilityDevelopmentClosureAuthorization,
+    *,
+    sequence: int,
+) -> CapabilityDevelopmentClosureResult:
+    if authorization.mission_id != mission.mission_id or authorization.expected_reevaluation_id != reevaluation.reevaluation_id:
+        return CapabilityDevelopmentClosureResult(False, "rejected_mission_substitution", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot or authorization.consumed:
+        return CapabilityDevelopmentClosureResult(False, "rejected_authority_escalation", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if sequence > authorization.expiration_sequence or not authorization.closure_authorized:
+        return CapabilityDevelopmentClosureResult(False, "rejected_incomplete_evidence", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if not graph.acyclic or len(graph.nodes) > graph.maximum_nodes:
+        return CapabilityDevelopmentClosureResult(False, "rejected_capability_graph_invalid", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if self_model.overclaim_detected:
+        return CapabilityDevelopmentClosureResult(False, "rejected_self_model_overclaim", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if synthesis.parent_mission_id != mission.mission_id or cycle.mission_id != mission.mission_id or not reevaluation.parent_mission_unchanged:
+        return CapabilityDevelopmentClosureResult(False, "rejected_parent_mission_drift", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if cycle.recursive_depth_used > mission.maximum_developmental_depth or cycle.campaign_count_used > mission.maximum_campaign_count:
+        return CapabilityDevelopmentClosureResult(False, "rejected_unbounded_recursion", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if cycle.capability_activated:
+        return CapabilityDevelopmentClosureResult(False, "rejected_capability_self_approval", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if not authorization.capability_activation_prohibited or not authorization.tracked_source_application_prohibited or not authorization.autonomous_authorization_prohibited:
+        return CapabilityDevelopmentClosureResult(False, "rejected_authority_escalation", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    if not authorization.provider_model_use_prohibited or not authorization.network_prohibited:
+        return CapabilityDevelopmentClosureResult(False, "rejected_authority_escalation", mission, graph, self_model, analysis, selection, synthesis, cycle, reevaluation, question, authorization)
+    return CapabilityDevelopmentClosureResult(
+        True,
+        authorization.expected_disposition,
+        mission,
+        graph,
+        self_model,
+        analysis,
+        selection,
+        synthesis,
+        cycle,
+        reevaluation,
+        question,
         authorization,
         replace(authorization, consumed=True),
         authorization_consumed=True,
