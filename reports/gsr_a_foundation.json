@@ -1,0 +1,321 @@
+{
+  "contracts": {
+    "diagnosis": {
+      "competing_hypotheses": [],
+      "confidence": 0.5,
+      "deeper_design_required": false,
+      "diagnosis_id": "gsr-diagnosis-ee911b8db933af68",
+      "disconfirming_evidence": [],
+      "first_incorrect_transition": "observation_to_authorized_repair_missing_gate",
+      "linked_observations": [
+        "gsr-observation-032f2b5c90497a00"
+      ],
+      "provisional": true,
+      "safety": {
+        "application_performed": false,
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "live_runtime_activation_performed": false,
+        "local_model_inference_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "sandbox_evaluation_started": false,
+        "scheduler_action_performed": false,
+        "scheduler_started": false,
+        "self_approval_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "scope_estimate": "bounded",
+      "supporting_evidence": [
+        "gsr-observation-032f2b5c90497a00"
+      ],
+      "suspected_mechanism": "distributed_authority_without_explicit_gsr_state"
+    },
+    "objective": {
+      "created_at": "2026-07-13T06:30:51+00:00",
+      "creation_source": "operator_supplied",
+      "evidence_requirements": [
+        "reproducible_observation"
+      ],
+      "forbidden_actions": [
+        "provider_calls",
+        "model_inference",
+        "source_mutation",
+        "canonical_writes",
+        "schedulers",
+        "self_approval"
+      ],
+      "lifecycle_state": "objective_pending",
+      "objective_id": "gsr-objective-5f2277fa6dc88149",
+      "operator_authorization_state": "NOT_AUTHORIZED",
+      "operator_supplied_goal": "Create an inert governed self-regulation foundation.",
+      "parent_objective_id": null,
+      "safety": {
+        "application_performed": false,
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "live_runtime_activation_performed": false,
+        "local_model_inference_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "sandbox_evaluation_started": false,
+        "scheduler_action_performed": false,
+        "scheduler_started": false,
+        "self_approval_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "scope": [
+        "diagnosis",
+        "proposal"
+      ],
+      "sequence": 0,
+      "success_criteria": [
+        "operator_review_ready"
+      ]
+    },
+    "observation": {
+      "confidence": 0.5,
+      "evidence_references": [
+        "reports/semantic_runtime_closure.md"
+      ],
+      "expected_behavior": "observation remains evidence only",
+      "objective_id": "gsr-objective-5f2277fa6dc88149",
+      "observation_id": "gsr-observation-032f2b5c90497a00",
+      "observed_behavior": "runtime behavior can be observed",
+      "reproducibility": "unknown",
+      "safety": {
+        "application_performed": false,
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "live_runtime_activation_performed": false,
+        "local_model_inference_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "sandbox_evaluation_started": false,
+        "scheduler_action_performed": false,
+        "scheduler_started": false,
+        "self_approval_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "severity": "medium",
+      "source_subsystem": "semantic_runtime",
+      "telemetry_only": false,
+      "uncertainty": "explicit",
+      "user_visible": true
+    },
+    "proposal": {
+      "diagnosis_id": "gsr-diagnosis-ee911b8db933af68",
+      "files_or_components_in_scope": [
+        "orchestration/runtime/gsr_a_governed_self_regulation.py"
+      ],
+      "forbidden_files_or_components": [
+        "DELTA.py",
+        "live_router",
+        "provider_runtime"
+      ],
+      "operator_approval_requirement": "EXPLICIT_OPERATOR_DECISION_REQUIRED",
+      "predicted_effects": [],
+      "proposal_id": "gsr-proposal-47d78beace97dec6",
+      "proposal_only_status": "PROPOSAL_ONLY",
+      "proposed_change": "add inert GSR-A state contracts",
+      "risks": [],
+      "rollback_strategy": [
+        "discard_candidate_patch"
+      ],
+      "safety": {
+        "application_performed": false,
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "live_runtime_activation_performed": false,
+        "local_model_inference_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "sandbox_evaluation_started": false,
+        "scheduler_action_performed": false,
+        "scheduler_started": false,
+        "self_approval_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "validation_plan": [
+        "py_compile",
+        "focused_gsr_a_tests"
+      ]
+    },
+    "sandbox": {
+      "artifact_retention_policy": "retain_report_artifacts_only",
+      "disposable_workspace": "required_disposable_workspace",
+      "failure_criteria": [
+        "scope_expansion",
+        "provider_call",
+        "memory_write",
+        "live_mutation"
+      ],
+      "live_runtime_evidence_requirements": [
+        "no_live_runtime_activation"
+      ],
+      "memory_write_restrictions": [
+        "canonical_writes_forbidden",
+        "noncanonical_writes_forbidden"
+      ],
+      "plan_id": "gsr-sandbox-plan-51d3c808b03d9cbf",
+      "proposal_id": "gsr-proposal-47d78beace97dec6",
+      "provider_model_restrictions": [
+        "provider_calls_forbidden",
+        "local_model_inference_forbidden"
+      ],
+      "rollback_proof": [
+        "discard_candidate_patch"
+      ],
+      "safety": {
+        "application_performed": false,
+        "automatic_approval_performed": false,
+        "automatic_code_modification_performed": false,
+        "autonomous_action_performed": false,
+        "canonical_write_performed": false,
+        "delta_75_interaction_performed": false,
+        "deployment_performed": false,
+        "developmental_memory_write_performed": false,
+        "external_retrieval_performed": false,
+        "fine_tuning_performed": false,
+        "hidden_persistence_performed": false,
+        "live_runtime_activation_performed": false,
+        "local_model_inference_performed": false,
+        "network_calls_performed": false,
+        "noncanonical_write_performed": false,
+        "plugin_activation_performed": false,
+        "production_mutation_performed": false,
+        "provider_calls_performed": false,
+        "runtime_commit_performed": false,
+        "runtime_push_performed": false,
+        "sandbox_creation_performed": false,
+        "sandbox_evaluation_started": false,
+        "scheduler_action_performed": false,
+        "scheduler_started": false,
+        "self_approval_performed": false,
+        "training_performed": false,
+        "weight_update_performed": false
+      },
+      "success_criteria": [
+        "focused_tests_pass",
+        "rollback_proof_present"
+      ],
+      "test_selection": [
+        "py_compile",
+        "focused_gsr_a_tests"
+      ]
+    }
+  },
+  "lifecycle_states": [
+    "idle",
+    "objective_pending",
+    "observing",
+    "observation_review",
+    "diagnosing",
+    "diagnosis_review",
+    "proposal_drafting",
+    "proposal_review",
+    "sandbox_authorized",
+    "sandbox_evaluating",
+    "evaluation_review",
+    "application_authorized",
+    "applying",
+    "post_change_observation",
+    "completed",
+    "rejected",
+    "suspended",
+    "rolled_back",
+    "deeper_design_required"
+  ],
+  "live_runtime_integration_performed": false,
+  "safety": {
+    "application_performed": false,
+    "automatic_approval_performed": false,
+    "automatic_code_modification_performed": false,
+    "autonomous_action_performed": false,
+    "canonical_write_performed": false,
+    "delta_75_interaction_performed": false,
+    "deployment_performed": false,
+    "developmental_memory_write_performed": false,
+    "external_retrieval_performed": false,
+    "fine_tuning_performed": false,
+    "hidden_persistence_performed": false,
+    "live_runtime_activation_performed": false,
+    "local_model_inference_performed": false,
+    "network_calls_performed": false,
+    "noncanonical_write_performed": false,
+    "plugin_activation_performed": false,
+    "production_mutation_performed": false,
+    "provider_calls_performed": false,
+    "runtime_commit_performed": false,
+    "runtime_push_performed": false,
+    "sandbox_creation_performed": false,
+    "sandbox_evaluation_started": false,
+    "scheduler_action_performed": false,
+    "scheduler_started": false,
+    "self_approval_performed": false,
+    "training_performed": false,
+    "weight_update_performed": false
+  },
+  "stage": "GSR-A",
+  "status": "INERT_GOVERNED_SCAFFOLD"
+}

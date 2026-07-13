@@ -1,0 +1,90 @@
+{
+  "accepted_checkpoints": [
+    "GSR_B_FIRST_CONTRACT_GROUP_ACCEPTED",
+    "GSR_B_DECISION_CONSUMPTION_GATE_ACCEPTED",
+    "GSR_B_GATE_A_DISPOSITIONS_ACCEPTED",
+    "GSR_B_GATE_B_RETENTION_EXPIRATION_ACCEPTED",
+    "GSR_B_GATE_C_SUPERSESSION_ACCEPTED",
+    "GSR_B_GATE_D_ELIGIBILITY_SERIALIZATION_ACCEPTED",
+    "GSR_B_SECOND_CONTRACT_GROUP_ACCEPTED"
+  ],
+  "contract_names": [
+    "ObservationEvidence",
+    "ObservationLedgerEntry",
+    "ObservationDisposition",
+    "ObservationReviewDecision",
+    "ObservationLedgerState",
+    "ObservationLedgerResult"
+  ],
+  "diagnosis_candidate_created": false,
+  "focused_test_counts": {
+    "gate_a_dispositions": 3,
+    "gate_b_retention_expiration": 4,
+    "gate_c_supersession": 3,
+    "gate_d_eligibility_serialization": 5,
+    "gsr_a_regression": 14,
+    "gsr_b_total": 27
+  },
+  "live_integration_flags": {
+    "continuous_runtime_integration_performed": false,
+    "delta_py_integration_performed": false,
+    "live_router_integration_performed": false
+  },
+  "milestone": "GSR-B_SELF_OBSERVATION_LEDGER",
+  "persistence_flags": {
+    "canonical_memory_write_performed": false,
+    "database_write_performed": false,
+    "file_persistence_performed": false,
+    "noncanonical_memory_write_performed": false
+  },
+  "provider_model_flags": {
+    "local_model_inference_performed": false,
+    "model_as_judge_performed": false,
+    "provider_call_performed": false
+  },
+  "repair_proposal_created": false,
+  "report_generation_marker": "deterministic_gsr_b_closure_v1",
+  "safety_flags": {
+    "application_performed": false,
+    "live_runtime_activation_performed": false,
+    "local_model_inference_performed": false,
+    "sandbox_evaluation_started": false,
+    "scheduler_started": false,
+    "self_approval_performed": false
+  },
+  "scheduler_thread_flags": {
+    "background_loop_started": false,
+    "scheduler_started": false,
+    "thread_started": false
+  },
+  "source_mutation_flags": {
+    "automatic_source_mutation_performed": false,
+    "repository_action_performed": false
+  },
+  "supported_dispositions": [
+    "retain",
+    "reject",
+    "mark_duplicate",
+    "mark_corroborated",
+    "supersede",
+    "expire",
+    "mark_insufficient_evidence",
+    "mark_non_defect",
+    "mark_telemetry_only",
+    "suspend",
+    "make_diagnosis_review_eligible"
+  ],
+  "supported_retention_policies": [
+    "retain_until_review",
+    "retain_for_sequence_window",
+    "retain_until_objective_closed",
+    "manual_retention",
+    "expire_after_sequence"
+  ],
+  "terminal_states": [
+    "rejected",
+    "superseded",
+    "expired",
+    "suspended"
+  ]
+}
