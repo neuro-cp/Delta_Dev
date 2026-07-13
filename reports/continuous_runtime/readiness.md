@@ -1,10 +1,10 @@
 # Continuous Runtime Readiness
 
 ## Recommendation
-CONTINUOUS_RUNTIME_READY_FOR_CONTROLLED_OPERATOR_PILOT
+CONTINUOUS_RUNTIME_PARTIALLY_OPERATIONAL_PROCEED_TO_REAL_LONG_HORIZON_VALIDATION
 
 ## Evidence
-LIVE_VALIDATED and LONG_RUN_VALIDATED for event-driven in-process controller; controlled multi-hour operator pilot still recommended.
+Controller is event-driven, bounded, and instrumented, but the current harness is not a multi-hour UI/model/Wikipedia stress pilot.
 
 ## Implemented
 - "managed lifecycle"
@@ -26,8 +26,7 @@ LIVE_VALIDATED and LONG_RUN_VALIDATED for event-driven in-process controller; co
 - "unrestricted web"
 
 ## Remaining Risks
-- "multi-hour UI pilot still needed"
-- "OS-level CPU/RSS counters unavailable in this validation environment"
-- "local model long inference was not stress-tested; model execution remains consent-gated"
-- "Wikipedia retrieval remains synchronous and can block briefly on network latency"
-- "controller is in-process rather than a separate daemon service"
+- "real multi-hour UI operator pilot still needed"
+- "local model execution remains consent-gated and was not stress-tested with long inference"
+- "Wikipedia retrieval remains synchronous and can block briefly during network latency"
+- "controller/service boundary is in-process rather than a separate daemon"

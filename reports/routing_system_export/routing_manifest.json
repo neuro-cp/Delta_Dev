@@ -1,0 +1,128 @@
+{
+  "active_files": [
+    "DELTA.py",
+    "orchestration/runtime/delta_1_4_live_wikipedia_runtime.py",
+    "orchestration/runtime/rc2_conversational_mode_router.py"
+  ],
+  "branch": "codex/delta-cognitive-core",
+  "dormant_or_obsolete_files": [
+    "orchestration/runtime/integrated_cognitive_runtime.py",
+    "orchestration/runtime/rc3_ui_capability_adapter.py",
+    "orchestration/runtime/rc4_ui_capability_adapter.py",
+    "orchestration/runtime/rc5_ui_capability_adapter.py",
+    "orchestration/runtime/rc6_governed_external_intelligence.py",
+    "orchestration/runtime/rc7_governed_development_loop.py",
+    "orchestration/runtime/rc11_rc12_systems_plateau.py",
+    "integration/model_runtime/routing_policy.py"
+  ],
+  "entry_point": "DELTA.py",
+  "exported_source_file_count": 35,
+  "governance_files": [
+    "orchestration/runtime/rc1_operator_console.py",
+    "orchestration/runtime/rc2_render_correction.py",
+    "orchestration/runtime/v17_provider_assisted_unknown_answer.py",
+    "orchestration/runtime/delta_1_1_development_loop.py"
+  ],
+  "head": "f8d0c343452141d26509f44f5198b69e20b695e4",
+  "model_routing_files": [
+    "integration/model_runtime/model_registry.py",
+    "integration/model_runtime/provider_manager.py",
+    "integration/model_runtime/gguf_model_runner.py",
+    "scripts/delta_rc2_local_model_infer.py"
+  ],
+  "observed_risks": [
+    "RISK-001",
+    "RISK-002",
+    "RISK-003",
+    "RISK-004",
+    "RISK-005",
+    "RISK-006",
+    "RISK-007",
+    "RISK-008",
+    "RISK-009",
+    "RISK-010"
+  ],
+  "repository": "G:\\Delta_Dev",
+  "response_composition_files": [
+    "orchestration/runtime/rc2_natural_conversation_renderer.py",
+    "orchestration/runtime/rc2_route_arbitration.py",
+    "orchestration/runtime/pc1_pragmatic_cognition.py",
+    "orchestration/runtime/v29_local_answer_engine.py"
+  ],
+  "retrieval_files": [
+    "orchestration/runtime/rc2_developmental_concept_memory.py",
+    "orchestration/runtime/rc2_storage_adapter.py",
+    "orchestration/runtime/rc2_working_reasoning_set.py",
+    "orchestration/runtime/rc2_analogy_engine.py",
+    "orchestration/runtime/rc2_contradiction_engine.py",
+    "orchestration/runtime/delta_1_5_developmental_cognition.py"
+  ],
+  "routing_stages": [
+    "UI _send_chat",
+    "live handle_live_chat when active",
+    "UI preemptions when non-live",
+    "RC2 route_message",
+    "route-specific handler",
+    "render_route or LiveChatResponse.answer",
+    "DeltaApp._append_chat"
+  ],
+  "runtime_input_function": "orchestration/runtime/delta_1_4_live_wikipedia_runtime.py::handle_live_chat and orchestration/runtime/rc2_conversational_mode_router.py::route_message",
+  "state_objects": [
+    "session_history",
+    "last_message",
+    "last_payload",
+    "active_topic_anchor",
+    "pending_provider_question",
+    "pending_local_model_question",
+    "pending_local_model_deepening",
+    "concept_review_items",
+    "LiveWikipediaRuntimeSession",
+    "continuous_controller",
+    "operator_inquiries",
+    "promotion_candidates",
+    "pending_local_model_request",
+    "autonomy_status",
+    "model_residency",
+    "route_arbitration",
+    "cognitive_episode"
+  ],
+  "supporting_state_files": [
+    "orchestration/runtime/rc45_discourse_cognition_bridge.py",
+    "orchestration/runtime/rc2_cognitive_episode.py",
+    "orchestration/runtime/continuous_runtime_controller.py",
+    "orchestration/runtime/delta_1_2_live_runtime.py",
+    "orchestration/runtime/delta_1_6_operational_autonomy.py",
+    "orchestration/runtime/delta_1_0_common.py"
+  ],
+  "test_files": [
+    "orchestration/tests/runtime/test_model_abstraction.py",
+    "orchestration/tests/runtime/test_provider_qualification.py",
+    "tests/continuous_runtime/test_continuous_runtime_controller.py",
+    "tests/delta_1_3/test_behavioral_maturation.py",
+    "tests/delta_1_4/test_live_wikipedia_runtime.py",
+    "tests/delta_1_5/test_developmental_cognition.py",
+    "tests/delta_1_6/test_operational_autonomy.py",
+    "tests/runtime_arc_ii/test_arc_ii_knowledge_substrate.py",
+    "tests/runtime_arc_iv/test_arc_iv_knowledge_evolution.py",
+    "tests/runtime_rc2/test_rc2_analogy_engine.py",
+    "tests/runtime_rc2/test_rc2_cognitive_capability_benchmark.py",
+    "tests/runtime_rc2/test_rc2_contradiction_engine.py",
+    "tests/runtime_rc2/test_rc2_conversation_carryover.py",
+    "tests/runtime_rc2/test_rc2_conversational_mode_router.py",
+    "tests/runtime_rc2/test_rc2_governed_semantic_graph.py",
+    "tests/runtime_rc2/test_rc2_graph_assisted_reasoning.py",
+    "tests/runtime_rc2/test_rc2_level2_runtime_integration.py",
+    "tests/runtime_rc2/test_rc2_natural_conversation_renderer.py",
+    "tests/runtime_rc2/test_rc2_render_correction.py",
+    "tests/runtime_rc2/test_rc2_retrieval_ranking.py",
+    "tests/runtime_rc2/test_rc2_routing_precedence.py",
+    "tests/runtime_rc2/test_rc2_routing_stabilization.py",
+    "tests/runtime_rc2/test_rc2_working_memory_episode.py",
+    "tests/runtime_rc2/test_rc2_working_reasoning_set.py",
+    "tests/runtime_rc3/test_rc3_e_to_k_foundations.py",
+    "tests/runtime_rc9/test_rc9_real_campaign_operations.py",
+    "tests/runtime_v31/test_v31_learning_readiness.py"
+  ],
+  "ui_submission_handler": "DELTA.py::DeltaApp._send_chat",
+  "uncertain_files": []
+}

@@ -9,9 +9,19 @@
     "question": "What is the relation between Avogadro's number and quantum field theory?",
     "relevant_approved_concepts": [
       {
-        "concept_name": "Number Theory (Mathematics)",
+        "concept_name": "Number Theory Boundary Conditions (Mathematics)",
         "memory_type": "knowledge",
-        "short_definition": "Number Theory is a reusable mathematics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the mathematics domain."
+        "short_definition": "Number Theory Boundary Conditions (Mathematics) states when the concept applies, when it does not, and what assumptions must hold in mathematics, connecting number theory to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_name": "Number Theory Evidence Standard (Mathematics)",
+        "memory_type": "knowledge",
+        "short_definition": "Number Theory Evidence Standard (Mathematics) defines what observations or measurements make the concept credible in mathematics, connecting number theory to evidence, constraints, examples, and operator-reviewable uncertainty."
+      },
+      {
+        "concept_name": "Number Theory Failure Mode (Mathematics)",
+        "memory_type": "knowledge",
+        "short_definition": "Number Theory Failure Mode (Mathematics) identifies how the concept breaks down or becomes misleading in mathematics, connecting number theory to evidence, constraints, examples, and operator-reviewable uncertainty."
       }
     ],
     "relevant_chat_history": [],

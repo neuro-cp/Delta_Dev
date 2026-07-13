@@ -18,23 +18,19 @@ UI Start Runtime
 -> controller returns to IDLE
 ```
 
-The controller is intentionally in-process. It does not create hidden threads,
-daemons, external schedulers, or background services. The UI remains the
-operator-controlled lifecycle boundary.
+The controller is intentionally in-process. It does not create hidden threads, daemons, external schedulers, or background services. The UI remains the operator-controlled lifecycle boundary.
 
 ## Ownership
 
 - `LiveRuntimeState` remains the lower-level cognitive event and journal runtime.
 - `LiveWikipediaRuntimeSession` remains the live chat and Wikipedia bridge.
-- `ContinuousRuntimeController` owns the service lifecycle, normalized events,
-  wake mode, health, objectives, initiative queue, model-residency inventory,
-  notification readiness, and shutdown state.
-- `OperationalSelfModel` remains a derived snapshot. It is not the lifecycle
-  authority.
+- `ContinuousRuntimeController` owns the service lifecycle, normalized events, wake mode, health, objectives, initiative queue, model-residency inventory, notification readiness, and shutdown state.
+- `OperationalSelfModel` remains a derived snapshot. It is not the lifecycle authority.
 
 ## Safety
 
-The controller may run deterministic local analysis and queue review items. It
-may not call providers, retrieve arbitrary web pages, write memory, mutate the
-repository, promote sandbox changes, commit, push, deploy, access secrets, or
-change governance.
+The controller may run deterministic local analysis and queue review items. It may not call providers, retrieve arbitrary web pages, write memory, mutate the repository, promote sandbox changes, commit, push, deploy, access secrets, or change governance.
+
+## Current Evidence Boundary
+
+The bounded validation harness injects events and records process metrics, but it is not a substitute for a multi-hour UI/model/retrieval pilot.

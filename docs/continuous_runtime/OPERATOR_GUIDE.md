@@ -4,10 +4,7 @@ Use Start Runtime, Stop Runtime, Pause, Resume, and Suspend from the UI. The sta
 
 ## Recommended Pilot
 
-Run a controlled operator pilot with the UI open. Exercise ordinary chat,
-context declarations, one Wikipedia lookup, a self-model question, a local model
-deepening request, pause/resume, suspend, restart, and review of pending
-promotion candidates.
+Run a controlled operator pilot with the UI open. Exercise ordinary chat, context declarations, one Wikipedia lookup, a self-model question, a local model deepening request, pause/resume, suspend, restart, and review of pending promotion candidates.
 
 ## Reading Status
 
@@ -22,6 +19,4 @@ promotion candidates.
 
 ## Authority Reminder
 
-DELTA can prepare and queue review items. It cannot persist, promote, commit,
-push, deploy, broaden web access, call providers, or change governance without
-operator authority.
+DELTA can prepare and queue review items. It cannot persist, promote, commit, push, deploy, broaden web access, call providers, or change governance without operator authority.

@@ -1,17 +1,61 @@
 {
   "long_run": {
-    "cycles_completed": 60,
-    "cycles_requested": 60,
+    "cycles_completed": 30,
+    "cycles_requested": 30,
     "duplicate_initiatives": 0,
-    "duration_seconds": 0.0019,
+    "duration_seconds": 0.4126,
+    "event_types_seen": [
+      "BEHAVIORAL_FAILURE",
+      "MODEL_READY",
+      "OBJECTIVE_BLOCKED",
+      "VALIDATION_RESULT",
+      "WIKIPEDIA_RESULT"
+    ],
+    "events_injected": 11,
+    "events_processed": 11,
+    "external_process_metrics": {
+      "end": {
+        "active_python_threads": 1,
+        "handle_count": 155,
+        "os_thread_count": 6,
+        "pid": 10748,
+        "powershell_cpu_seconds": 0.375,
+        "process_memory_error": "GetProcessMemoryInfo returned false",
+        "process_metrics_source": "powershell.exe",
+        "process_time_seconds": 0.359375,
+        "thread_count": 1,
+        "working_set_bytes": 33619968
+      },
+      "start": {
+        "active_python_threads": 1,
+        "handle_count": 155,
+        "os_thread_count": 6,
+        "pid": 10748,
+        "powershell_cpu_seconds": 0.359375,
+        "process_memory_error": "GetProcessMemoryInfo returned false",
+        "process_metrics_source": "powershell.exe",
+        "process_time_seconds": 0.359375,
+        "thread_count": 1,
+        "working_set_bytes": 33554432
+      },
+      "thread_count_delta": 0,
+      "working_set_delta_bytes": 65536
+    },
     "final_queue_size": 0,
     "final_state": "IDLE",
     "health_state": "HEALTHY",
     "hidden_memory_writes": false,
     "hidden_threads_created": false,
-    "idle_cpu_proxy": "near_zero_between_explicit_cycles_no_thread_or_polling",
+    "idle_cpu_proxy": "measured_process_cpu_time_for_bounded_explicit_cycles",
     "max_queue_size": 0,
-    "model_calls": 0,
+    "model_calls": 1,
+    "model_events_observed": 1,
+    "pilot_limitations": [
+      "short bounded in-process harness, not multi-hour UI pilot",
+      "model events are observed as controller inputs; local model inference is still separately consent-gated",
+      "Wikipedia calls counted from event processing; asynchronous retrieval is not proven"
+    ],
+    "process_cpu_seconds": 0.015625,
     "safety": {
       "automatic_approval_performed": false,
       "automatic_code_modification_performed": false,
@@ -36,7 +80,8 @@
       "weight_update_performed": false
     },
     "unauthorized_retrieval": false,
-    "wikipedia_calls": 0
+    "wikipedia_calls": 2,
+    "wikipedia_events_observed": 2
   },
   "resource_policy": {
     "background_threads": 0,
@@ -46,5 +91,5 @@
     "model_residency": "serial_one_model_max",
     "queue_limit": 96
   },
-  "status": "LONG_RUN_VALIDATED"
+  "status": "BOUNDED_CAMPAIGN_MEASURED"
 }

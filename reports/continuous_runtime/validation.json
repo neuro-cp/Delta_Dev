@@ -1,20 +1,63 @@
 {
-  "bounded_cross_milestone_tests": "155 passed: continuous_runtime, delta_1_6, delta_1_5, delta_1_4, delta_1_3, delta_1_2, delta_1_1, affected delta_1_0, focused RC2, and RC3 sandbox foundation",
-  "focused_controller_tests": "8 passed: tests/continuous_runtime/test_continuous_runtime_controller.py",
-  "json_reports": "validated: reports/continuous_runtime/*.json parse successfully",
+  "adjacent_runtime_tests": "15 passed: tests/delta_1_4/test_live_wikipedia_runtime.py and tests/delta_1_6/test_operational_autonomy.py",
+  "focused_controller_tests": "9 passed: tests/continuous_runtime/test_continuous_runtime_controller.py",
   "long_run": {
-    "cycles_completed": 60,
-    "cycles_requested": 60,
+    "cycles_completed": 30,
+    "cycles_requested": 30,
     "duplicate_initiatives": 0,
-    "duration_seconds": 0.0019,
+    "duration_seconds": 0.4126,
+    "event_types_seen": [
+      "BEHAVIORAL_FAILURE",
+      "MODEL_READY",
+      "OBJECTIVE_BLOCKED",
+      "VALIDATION_RESULT",
+      "WIKIPEDIA_RESULT"
+    ],
+    "events_injected": 11,
+    "events_processed": 11,
+    "external_process_metrics": {
+      "end": {
+        "active_python_threads": 1,
+        "handle_count": 155,
+        "os_thread_count": 6,
+        "pid": 10748,
+        "powershell_cpu_seconds": 0.375,
+        "process_memory_error": "GetProcessMemoryInfo returned false",
+        "process_metrics_source": "powershell.exe",
+        "process_time_seconds": 0.359375,
+        "thread_count": 1,
+        "working_set_bytes": 33619968
+      },
+      "start": {
+        "active_python_threads": 1,
+        "handle_count": 155,
+        "os_thread_count": 6,
+        "pid": 10748,
+        "powershell_cpu_seconds": 0.359375,
+        "process_memory_error": "GetProcessMemoryInfo returned false",
+        "process_metrics_source": "powershell.exe",
+        "process_time_seconds": 0.359375,
+        "thread_count": 1,
+        "working_set_bytes": 33554432
+      },
+      "thread_count_delta": 0,
+      "working_set_delta_bytes": 65536
+    },
     "final_queue_size": 0,
     "final_state": "IDLE",
     "health_state": "HEALTHY",
     "hidden_memory_writes": false,
     "hidden_threads_created": false,
-    "idle_cpu_proxy": "near_zero_between_explicit_cycles_no_thread_or_polling",
+    "idle_cpu_proxy": "measured_process_cpu_time_for_bounded_explicit_cycles",
     "max_queue_size": 0,
-    "model_calls": 0,
+    "model_calls": 1,
+    "model_events_observed": 1,
+    "pilot_limitations": [
+      "short bounded in-process harness, not multi-hour UI pilot",
+      "model events are observed as controller inputs; local model inference is still separately consent-gated",
+      "Wikipedia calls counted from event processing; asynchronous retrieval is not proven"
+    ],
+    "process_cpu_seconds": 0.015625,
     "safety": {
       "automatic_approval_performed": false,
       "automatic_code_modification_performed": false,
@@ -39,34 +82,16 @@
       "weight_update_performed": false
     },
     "unauthorized_retrieval": false,
-    "wikipedia_calls": 0
+    "wikipedia_calls": 2,
+    "wikipedia_events_observed": 2
   },
-  "performance_note": "psutil was unavailable in the venv, so OS RSS/CPU counters were not captured; controller-level queue/model/wiki/thread metrics were captured.",
-  "py_compile": "passed for DELTA.py, delta_1_4_live_wikipedia_runtime.py, delta_1_6_operational_autonomy.py, continuous_runtime_controller.py, and continuous runtime tests",
-  "real_live_runtime_smoke": {
-    "canonical_write_performed": false,
-    "classification": "HIGHER_RESOLUTION",
-    "controller_health": "HEALTHY",
-    "controller_state": "IDLE",
-    "initiative_count": 1,
-    "memory_write_performed": false,
-    "model_status_route": "live_operational_self_model",
-    "objective_count": 2,
-    "provider_calls_performed": false,
-    "wikipedia_route": "live_wikipedia_text_retrieval",
-    "wikipedia_title": "Acid\u2013base reaction",
-    "work_status_route": "live_operational_self_model"
-  },
-  "safety_flags": {
-    "automatic_memory_write_performed": false,
-    "canonical_write_performed": false,
-    "delta_75_interaction_performed": false,
-    "deployment_performed": false,
-    "hidden_persistence_performed": false,
-    "provider_calls_performed": false,
-    "runtime_commit_performed_by_delta_runtime": false,
-    "runtime_push_performed_by_delta_runtime": false
-  },
-  "status": "LONG_RUN_VALIDATED",
-  "unsafe_authority_scan": "passed: no secrets, live provider enablement, runtime commit/push/deploy true flags, or DELTA-75 interaction found in new continuous runtime scope; only false safety flags matched"
+  "performance_note": "process CPU time, Python/OS thread counts, handles, CPU, and working-set bytes captured without psutil when Get-Process is available",
+  "py_compile": "passed for continuous_runtime_controller.py and continuous runtime tests",
+  "remaining_validation_gaps": [
+    "multi-hour UI pilot",
+    "real repeated local-model inference stress",
+    "asynchronous Wikipedia retrieval",
+    "operator notification noise suppression over time"
+  ],
+  "status": "FOCUSED_CONTROLLER_REVALIDATED"
 }

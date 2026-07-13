@@ -47,6 +47,16 @@ _APPROVED_CONCEPT_CACHE: dict[str, Any] = {"signature": None, "records": []}
 _CONCEPT_INDEX_CACHE: dict[str, Any] = {"signature": None, "index": None}
 _RANK_RESULT_CACHE: dict[str, Any] = {"signature": None, "results": {}}
 
+
+def _using_default_memory_store() -> bool:
+    default_data = ROOT / "data" / "rc2_developmental_memory"
+    default_stores = {
+        "conversation": default_data / "conversation_memory.jsonl",
+        "personal": default_data / "personal_memory.jsonl",
+        "knowledge": default_data / "knowledge_concepts.jsonl",
+    }
+    return all(Path(STORE_BY_TYPE.get(key, "")) == path for key, path in default_stores.items())
+
 DOMAIN_ALIASES = {
     "law": "law government basics",
     "legal": "law government basics",
@@ -417,7 +427,29 @@ def rank_approved_concepts(
     excluded = {_normalize_compact(name) for name in (exclude_concept_names or [])}
     wanted_domain = str(domain or "").lower().strip()
     blocked_domains = {str(item).lower().strip() for item in (exclude_domains or []) if str(item).strip()}
-    if not blocked_domains:
+    exact_title_matches = _exact_base_title_matches(profile, wanted_domain=wanted_domain, blocked_domains=blocked_domains, excluded=excluded)
+    if exact_title_matches:
+        matches = []
+        for row in exact_title_matches[:max(1, limit)]:
+            score = score_concept_for_query(row, profile, forced_domain=domain)
+            score["score"] = round(float(score.get("score") or 0.0) + 120.0, 4)
+            components = dict(score.get("components") or {})
+            components["exact_base_title"] = 120.0
+            score["components"] = components
+            reasons = set(score.get("reasons") or [])
+            reasons.add("exact_base_title_match")
+            score["reasons"] = sorted(reasons)
+            score["relevance_gate_passed"] = True
+            matches.append({**row, "_retrieval_score": score})
+        return {
+            "matched": True,
+            "matches": matches,
+            "query_profile": profile,
+            "duplicate_suppression_count": 0,
+            "retrieval_precision_estimate": 1.0,
+            "candidate_pool_size": len(exact_title_matches),
+        }
+    if not blocked_domains and _using_default_memory_store():
         try:
             from orchestration.runtime.rc2_sqlite_substrate import backend_health, search_concepts_sqlite
 
@@ -486,6 +518,43 @@ def rank_approved_concepts(
     }
     _RANK_RESULT_CACHE["results"][cache_key] = _copy_rank_result(result)
     return result
+
+
+def _exact_base_title_matches(
+    profile: dict[str, Any],
+    *,
+    wanted_domain: str,
+    blocked_domains: set[str],
+    excluded: set[str],
+) -> list[dict[str, Any]]:
+    query = _normalize_compact(profile.get("normalized") or profile.get("raw") or "")
+    if len(_meaningful_tokens(query)) < 2 and len(query.split()) < 2:
+        return []
+    matches = []
+    seen = set()
+    for row in load_approved_concepts():
+        domain = str(row.get("domain") or "").lower().strip()
+        name_key = _normalize_compact(row.get("concept_name"))
+        if name_key in excluded or name_key in seen:
+            continue
+        if wanted_domain and domain != wanted_domain:
+            continue
+        if blocked_domains and domain in blocked_domains:
+            continue
+        if _base_concept_title(row.get("concept_name")) == query:
+            seen.add(name_key)
+            matches.append(row)
+    matches.sort(key=lambda row: (
+        -float(row.get("quality_score") or 0.0),
+        str(row.get("domain") or ""),
+        str(row.get("concept_name") or ""),
+    ))
+    return matches
+
+
+def _base_concept_title(name: object) -> str:
+    without_parenthetical = re.sub(r"\([^)]*\)", " ", str(name or ""))
+    return _normalize_compact(without_parenthetical)
 
 
 def score_concept_for_query(row: dict[str, Any], profile: dict[str, Any], *, forced_domain: str | None = None) -> dict[str, Any]:
@@ -646,6 +715,7 @@ def _recall_search_query(question: str) -> str:
         r"^explain\s+(.+?)\s+in\s+one\s+useful\s+paragraph(?:\s+from\s+local\s+memory)?$",
         r"^explain\s+(.+?)\s+from\s+local\s+memory$",
         r"^tell\s+me\s+about\s+(.+?)$",
+        r"^tell\s+me\s+(.+?)$",
         r"^what\s+do\s+you\s+know\s+about\s+(.+?)$",
     ]
     for pattern in patterns:
@@ -668,7 +738,7 @@ def query_approved_concepts(question: str) -> dict[str, Any]:
     matches = ranked["matches"]
     first = matches[0]
     lines = [
-        f"You taught me the concept `{first['concept_name']}` earlier. Based on that:",
+        f"I know about `{first['concept_name']}` from noncanonical reviewed memory.",
         first["short_definition"],
     ]
     propositions = first.get("propositions", [])[:3]

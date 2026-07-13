@@ -125,6 +125,7 @@ def build_cognitive_episode(
     topic_reset = _explicit_topic_reset(message)
     episode_message = topic_reset or message
     current_entities = _entities(episode_message)
+    older_target = _older_topic_target(_norm(message))
     active = _select_active_branch(message, branches, current_entities)
     explicit_change = bool(topic_reset) or _explicit_topic_change(message, active)
     if explicit_change:
@@ -137,6 +138,16 @@ def build_cognitive_episode(
             "summary": "explicit topic change",
         }
     payload = current_payload or {}
+    topic_state = payload.get("conversation_topic_state") if isinstance(payload.get("conversation_topic_state"), dict) else {}
+    if not older_target and topic_state.get("topic") and topic_state.get("state_kind") in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH", "FOLLOWUP", "CONCEPT_ANCHOR"}:
+        active = {
+            "topic": topic_state.get("topic"),
+            "question": topic_state.get("last_user_prompt") or message,
+            "answer": topic_state.get("last_visible_answer") or str(payload.get("answer") or ""),
+            "route": current_route or topic_state.get("source_route") or "topic_state",
+            "entities": topic_state.get("entities") or [topic_state.get("topic")],
+            "summary": topic_state.get("last_visible_answer") or _summary(message, str(payload.get("answer") or "")),
+        }
     episode = CognitiveEpisode(
         episode_id=_episode_id(message, history),
         active_topic=active.get("topic"),
@@ -317,6 +328,24 @@ def _branches(history: list[dict[str, str]]) -> list[dict[str, Any]]:
                 "route": "anchor",
                 "summary": anchor.get("last_answer_summary", ""),
             })
+        elif role == "topic_state":
+            try:
+                state = json.loads(content)
+            except json.JSONDecodeError:
+                continue
+            topic = str(state.get("topic") or "").strip()
+            if not topic:
+                continue
+            branches.append({
+                "topic": topic,
+                "entities": state.get("entities", [topic]) if isinstance(state.get("entities"), list) else [topic],
+                "question": state.get("last_user_prompt"),
+                "answer": state.get("last_visible_answer", ""),
+                "route": state.get("source_route") or "topic_state",
+                "summary": state.get("last_visible_answer", ""),
+                "state_kind": state.get("state_kind"),
+                "supersedes_anchor": bool(state.get("supersedes_anchor", False)),
+            })
     for question, answer in turns:
         semantic_answer = _semantic_answer(answer)
         topic = _topic_from_question(question) or (_entities(question) or _entities(semantic_answer) or [None])[0]
@@ -338,7 +367,7 @@ def _dedupe_branches(branches: list[dict[str, Any]]) -> list[dict[str, Any]]:
     deduped = []
     seen = set()
     for branch in branches:
-        key = (branch.get("topic"), branch.get("question"))
+        key = (_topic_identity(branch.get("topic")), branch.get("question"))
         if key in seen:
             continue
         seen.add(key)
@@ -352,6 +381,15 @@ def _select_active_branch(message: str, branches: list[dict[str, Any]], current_
         return _subject_branch(branches, "first") or _branch_by_ordinal(branches, 0) or (branches[-1] if branches else {})
     if _requests_second_branch(lower):
         return _subject_branch(branches, "second") or _branch_by_ordinal(branches, 1) or (branches[-1] if branches else {})
+    older_target = _older_topic_target(lower)
+    if older_target:
+        matched = _branch_matching_topic(branches, older_target)
+        if matched:
+            return matched
+    if _is_followup(lower):
+        for branch in reversed(branches):
+            if branch.get("state_kind") in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH", "FOLLOWUP"} and branch.get("topic"):
+                return branch
     if current_entities:
         for branch in reversed(branches):
             if set(current_entities) & set(branch.get("entities", [])):
@@ -373,6 +411,73 @@ def _subject_branch(branches: list[dict[str, Any]], ordinal: str) -> dict[str, A
     return None
 
 
+def _branch_matching_topic(branches: list[dict[str, Any]], target: str) -> dict[str, Any] | None:
+    normalized = _topic_identity(target)
+    if not normalized:
+        return None
+    target_tokens = _topic_tokens(normalized)
+    for branch in reversed(branches):
+        topic = _topic_identity(branch.get("topic"))
+        question = _topic_identity(branch.get("question"))
+        entities = [_topic_identity(item) for item in branch.get("entities", [])]
+        if _same_topic_reference(normalized, topic, target_tokens):
+            return branch
+        if _same_topic_reference(normalized, question, target_tokens):
+            return branch
+        if any(_same_topic_reference(normalized, entity, target_tokens) for entity in entities if entity):
+            return branch
+    return None
+
+
+def _topic_tokens(text: str) -> set[str]:
+    return {
+        token
+        for token in re.findall(r"[a-z0-9]+", str(text or "").lower())
+        if len(token) > 2 and token not in {"the", "and", "about", "that", "this", "with", "topic"}
+    }
+
+
+def _topic_identity(text: object) -> str:
+    normalized = _norm(str(text or ""))
+    normalized = re.sub(r"[^a-z0-9\s]", " ", normalized)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    normalized = re.sub(r"^(?:a|an|the)\s+", "", normalized)
+    if normalized.endswith("s"):
+        singular = normalized[:-1]
+        if singular and " " not in singular:
+            normalized = singular
+    return normalized
+
+
+def _same_topic_reference(target: str, candidate: str, target_tokens: set[str]) -> bool:
+    if not target or not candidate:
+        return False
+    if target == candidate:
+        return True
+    if re.search(rf"(?<![a-z0-9]){re.escape(target)}(?![a-z0-9])", candidate):
+        return True
+    candidate_tokens = _topic_tokens(candidate)
+    if not target_tokens or not candidate_tokens:
+        return False
+    overlap = target_tokens & candidate_tokens
+    if len(target_tokens) == 1:
+        return overlap == target_tokens
+    return len(overlap) >= max(2, len(target_tokens) - 1)
+
+
+def _older_topic_target(lower: str) -> str:
+    patterns = [
+        r"^(?:go back to|return to|tell me more about)\s+(.+)$",
+        r"^what did you say earlier about\s+(.+)$",
+        r"^what about the earlier one(?:\s+about\s+(.+))?$",
+    ]
+    for pattern in patterns:
+        match = re.match(pattern, lower)
+        if match:
+            return (match.group(1) or "").strip(" .?!")
+    return ""
+
+
 def _topic_from_question(text: str) -> str | None:
     lower = _norm(text)
     declaration_patterns = [
@@ -390,6 +495,7 @@ def _topic_from_question(text: str) -> str | None:
         if topic in lower:
             return topic
     patterns = [
+        r"what color is (.+)",
         r"how does (.+) work",
         r"what is (.+)",
         r"what are (.+)",
@@ -523,16 +629,44 @@ def _requests_second_branch(lower: str) -> bool:
 def _ambiguity_candidates(lower: str, episode: dict[str, Any]) -> list[str]:
     if not _has_ambiguous_reference(lower):
         return []
+    if re.search(r"\bcompare\s+(?:that|this|it|those|them)\s+(?:with|to)\s+.+", lower):
+        return []
+    if _has_superseding_topic_state(episode):
+        return []
     if _is_significance_question(lower):
         return []
     if any(term in lower for term in ("first", "second", "earlier", "previous")):
         return []
     branches = [branch for branch in episode.get("conversation_branch", []) if branch.get("topic")]
-    candidates = [str(branch.get("topic")) for branch in branches[-2:]]
+    candidates = _unique_topic_labels(str(branch.get("topic")) for branch in branches[-2:])
     ordered = _ordered_candidates(str(episode.get("active_answer") or ""))
     if "which one" in lower and len(ordered) >= 2:
-        candidates = ordered[:2]
-    return list(dict.fromkeys(item for item in candidates if item)) if len(set(candidates)) >= 2 else []
+        candidates = _unique_topic_labels(ordered[:2])
+    return candidates if len(candidates) >= 2 else []
+
+
+def _has_superseding_topic_state(episode: dict[str, Any]) -> bool:
+    active_topic = str(episode.get("active_topic") or "")
+    if not active_topic:
+        return False
+    active_identity = _topic_identity(active_topic)
+    for branch in reversed(episode.get("conversation_branch", [])):
+        if branch.get("state_kind") in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH", "FOLLOWUP"} and branch.get("supersedes_anchor", True):
+            return _topic_identity(branch.get("topic")) == active_identity
+    return False
+
+
+def _unique_topic_labels(labels: Any) -> list[str]:
+    unique: list[str] = []
+    seen: set[str] = set()
+    for label in labels:
+        text = str(label or "").strip()
+        identity = _topic_identity(text)
+        if not text or not identity or identity in seen:
+            continue
+        seen.add(identity)
+        unique.append(text)
+    return unique
 
 
 def _has_ambiguous_reference(lower: str) -> bool:
@@ -607,6 +741,14 @@ def _followup_answer(lower: str, topic: str, episode: dict[str, Any]) -> str:
             f"while {target} changes what details matter next. I would compare the concrete facts for {topic} with the "
             f"concrete facts for {target}, then separate what is known from what still needs evidence."
         )
+    comparison = re.search(r"\bcompare\s+(?:that|this|it|those|them)\s+(?:with|to)\s+(.+)$", lower)
+    if comparison:
+        target = comparison.group(1).strip(" .?!")
+        if target:
+            return (
+                f"Comparing {topic} with {target}: {topic} is the active topic from the prior turn, while {target} is the new comparison target. "
+                f"The useful comparison is to line up the visible properties, causes, and context for each, then avoid replacing the prior topic with an unrelated retrieval."
+            )
     if "example" in lower:
         return _example_answer(topic, answer)
     if "simpl" in lower:
@@ -623,6 +765,18 @@ def _followup_answer(lower: str, topic: str, episode: dict[str, Any]) -> str:
         return f"Still on {topic}: the next useful angle is context, limits, and what evidence would make the answer stronger."
     if _is_significance_question(lower):
         return _significance_answer(topic, answer)
+    if _is_limit_followup(lower):
+        focus = _limit_followup_focus(lower)
+        return (
+            f"No, it does not always {focus}. For {topic}, the prior answer describes the usual case, "
+            "but it can change depending on context, conditions, light, examples, or surrounding evidence."
+        )
+    if _is_emotional_response_followup(lower):
+        return (
+            f"People can respond emotionally to {topic} when it connects perception, memory, rhythm or pattern, "
+            "expectation, personal association, and bodily response. The emotional reaction is usually about how "
+            "the topic lands in experience, not just the bare facts."
+        )
     if "why do you think it keeps doing that" in lower and topic == "feedback loops":
         return (
             "It probably keeps happening because the feedback loop is not closing cleanly: the result shows up, "
@@ -630,7 +784,32 @@ def _followup_answer(lower: str, topic: str, episode: dict[str, Any]) -> str:
         )
     if topic == "allergies" and "context" in lower:
         return "Continuing with allergies: allergies involve immune responses to allergens, and clinical context matters because exposure, severity, symptoms, medication history, and timing change what conclusion is justified."
+    if _is_cause_followup(lower):
+        return (
+            f"Because {topic} depends on the mechanism in the prior answer: {_plain_key_point(topic, answer)} "
+            "The useful next step is to separate the usual explanation from the conditions where it changes."
+        )
     return f"Continuing with {topic}: {_plain_key_point(topic, answer)}"
+
+
+def _is_limit_followup(lower: str) -> bool:
+    return bool(re.search(r"\b(?:does|do|did|is|are|was|were|can|could|will|would)\s+(?:it|that|this|they|those|them|the topic)?\s*always\b", lower))
+
+
+def _limit_followup_focus(lower: str) -> str:
+    match = re.search(r"\balways\s+(.+)$", lower)
+    focus = (match.group(1) if match else "work that way").strip(" .?!")
+    return focus or "work that way"
+
+
+def _is_emotional_response_followup(lower: str) -> bool:
+    if not re.search(r"\b(?:emotion|emotional|emotionally|feel|feeling|respond|react|reaction)\b", lower):
+        return False
+    return bool(re.search(r"\b(?:it|that|this|people|someone|we|they)\b", lower))
+
+
+def _is_cause_followup(lower: str) -> bool:
+    return bool(re.search(r"^(?:why|why is that|why does that happen|how come)\b", lower))
 
 
 def _has_ordered_content(answer: str) -> bool:

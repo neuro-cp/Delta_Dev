@@ -6,4 +6,4 @@
 - Wikipedia: preserve text-only one-page-per-query policy; continuous controller performs no autonomous retrieval.
 - Pathology PID-CR01: duplicate state surfaces repaired by controller snapshot and UI status synchronization.
 - Self-development: observed UI/runtime mismatch, generated sandbox-only repair hypotheses, validated controller integration, and stopped at promotion proposal.
-- Remaining risk: continuous service is in-process and event-driven; true all-day pilot remains operator validation work.
+- Readiness: bounded controller validation is useful, but live developmental operation is not yet proven without a real long-horizon UI/model/retrieval campaign.

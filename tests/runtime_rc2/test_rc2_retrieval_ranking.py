@@ -217,3 +217,376 @@ def test_browse_jump_avoids_recent_domain_when_possible(monkeypatch, tmp_path):
 
     assert second["route"] == "developmental_concept_browse_followup"
     assert "Static Electricity" in second["answer"]
+
+
+def test_direct_exact_multiword_lookup_selects_base_concept():
+    payload = route_message("Conversation", "tell me about activation energy")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert payload["concept_matches"][0]["concept_name"] == "Activation Energy (Chemistry)"
+    assert "Baseload" not in payload["answer"]
+
+
+def test_accepted_noncanonical_concept_retrievable_by_exact_title(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("How To Swim", "", "Swimming starts with water safety, floating, kicking, breathing, and supervised practice."),
+    ])
+
+    payload = route_message("Conversation", "How To Swim")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert payload["concept_matches"][0]["concept_name"] == "How To Swim"
+    assert "noncanonical reviewed memory" in payload["answer"].lower()
+    assert payload.get("local_model_offer") is None
+    assert payload["canonical_write_performed"] is False
+
+
+def test_accepted_noncanonical_concept_retrievable_by_tell_me_wrapper(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("How To Swim", "", "Swimming starts with water safety, floating, kicking, breathing, and supervised practice."),
+    ])
+
+    payload = route_message("Conversation", "tell me how to swim")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert payload["concept_matches"][0]["concept_name"] == "How To Swim"
+    assert "noncanonical reviewed memory" in payload["answer"].lower()
+    assert payload.get("local_model_offer") is None
+    assert payload["provider_calls_performed"] is False
+    assert payload["training_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
+def test_accepted_noncanonical_concept_retrievable_by_bare_phrase(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("How To Swim", "", "Swimming starts with water safety, floating, kicking, breathing, and supervised practice."),
+    ])
+
+    payload = route_message("Conversation", "how to swim")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert payload["concept_matches"][0]["concept_name"] == "How To Swim"
+    assert "local reasoning model" not in payload["answer"].lower()
+
+
+def test_unrelated_unknown_query_still_falls_back_after_noncanonical_recall(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("How To Swim", "", "Swimming starts with water safety, floating, kicking, breathing, and supervised practice."),
+    ])
+
+    payload = route_message("Conversation", "tell me how to weld underwater")
+
+    assert payload["route"] == "local_model_consent_required"
+    assert payload.get("concept_matches") in (None, [])
+    assert (payload.get("local_model_offer") or {}).get("offered") is True
+
+
+def test_active_noncanonical_concept_answers_practical_tip_from_stored_content(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept(
+            "How To Swim",
+            "",
+            "Swimming starts with water safety, floating, kicking, breathing, and supervised practice.",
+        ) | {
+            "propositions": [
+                "Start with short supervised practice sessions.",
+                "Practice floating before trying longer swimming.",
+                "Focus on breathing naturally and relaxing your muscles.",
+            ],
+        },
+    ])
+    first = route_message("Conversation", "tell me how to swim")
+    history = [
+        {"role": "user", "content": "tell me how to swim"},
+        {"role": "assistant", "content": first["answer"]},
+        {"role": "topic_state", "content": json.dumps(first["conversation_topic_state"], sort_keys=True)},
+    ]
+
+    followup = route_message("Conversation", "give me another practical tip", history=history)
+
+    assert followup["route"] == "session_memory"
+    assert "noncanonical reviewed memory" in followup["answer"].lower()
+    assert "How To Swim" in followup["answer"]
+    assert any(term in followup["answer"].lower() for term in ("practice", "floating", "breathing", "supervised"))
+    assert followup.get("local_model_offer") is None
+    assert followup["provider_calls_performed"] is False
+    assert followup["canonical_write_performed"] is False
+
+
+def test_unrelated_practical_tip_request_still_falls_back(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("How To Swim", "", "Swimming starts with water safety and supervised practice."),
+    ])
+
+    payload = route_message("Conversation", "give me a practical tip for underwater welding")
+
+    assert payload["route"] == "local_model_consent_required"
+    assert (payload.get("local_model_offer") or {}).get("offered") is True
+    assert payload.get("concept_matches") in (None, [])
+
+
+def test_domain_list_followup_selects_listed_multiword_concept():
+    first = route_message("Conversation", "what about chemistry?")
+    history = [
+        {"role": "user", "content": "what about chemistry?"},
+        {"role": "assistant", "content": first["answer"]},
+    ]
+
+    second = route_message("Conversation", "tell me about activation energy", history=history)
+
+    assert first["route"] == "developmental_concept_domain_browse"
+    assert "Activation Energy" in first["answer"]
+    assert second["route"] == "developmental_concept_memory"
+    assert second["concept_matches"][0]["concept_name"] == "Activation Energy (Chemistry)"
+
+
+def test_exact_phrase_outranks_broad_domain_token():
+    exact = route_message("Conversation", "tell me about activation energy")
+    broad = route_message("Conversation", "what about energy?")
+
+    assert exact["concept_matches"][0]["domain"] == "chemistry"
+    assert exact["concept_matches"][0]["concept_name"] == "Activation Energy (Chemistry)"
+    assert broad["route"] == "developmental_concept_domain_browse"
+    assert all(item["domain"] == "energy" for item in broad["concept_matches"])
+
+
+def test_center_of_mass_does_not_collapse_to_mass():
+    payload = route_message("Conversation", "tell me about center of mass")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert "Center of Mass" in payload["concept_matches"][0]["concept_name"]
+    assert payload["concept_matches"][0]["domain"] == "basic physics"
+
+
+def test_approval_workflow_does_not_collapse_to_workflow():
+    payload = route_message("Conversation", "tell me about approval workflow")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert "Approval Workflow" in payload["concept_matches"][0]["concept_name"]
+    assert payload["concept_matches"][0]["domain"] == "DELTA architecture itself"
+
+
+def test_broad_energy_topic_still_browses_energy_domain():
+    payload = route_message("Conversation", "what about energy?")
+
+    assert payload["route"] == "developmental_concept_domain_browse"
+    assert payload["concept_matches"]
+    assert all(item["domain"] == "energy" for item in payload["concept_matches"])
+
+
+def test_single_word_mechanism_binds_to_active_topic_before_global_retrieval(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("Activation Energy", "chemistry", "Activation Energy is the energy barrier for a reaction.") | {
+            "propositions": ["Activation Energy mechanism depends on particles reaching a transition state."],
+        },
+        _concept("Acid Base Reactions Mechanism", "chemistry", "Acid base mechanism describes proton transfer."),
+    ])
+    history = [
+        {"role": "topic_state", "content": json.dumps({
+            "state_kind": "TOPIC_SWITCH",
+            "topic": "Activation Energy",
+            "last_visible_answer": "Got it. Let's talk about Activation Energy.",
+            "source_route": "social_conversation",
+            "entities": ["Activation Energy"],
+            "supersedes_anchor": True,
+        })},
+    ]
+
+    payload = route_message("Conversation", "mechanism", history=history)
+
+    assert payload["route"] == "session_memory"
+    assert "Activation Energy" in payload["answer"]
+    assert "transition state" in payload["answer"]
+    assert payload.get("concept_matches") in (None, [])
+    assert payload["conversation_topic_state"]["topic"] == "Activation Energy"
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
+def test_single_word_limits_binds_to_active_topic_before_global_retrieval(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("Activation Energy", "chemistry", "Activation Energy is the energy barrier for a reaction.") | {
+            "propositions": ["Activation Energy limits include temperature, catalysts, and reaction pathway assumptions."],
+        },
+        _concept("Constitutional Limits Evidence Standard", "law", "Constitutional limits evidence belongs to law."),
+    ])
+    history = [
+        {"role": "topic_state", "content": json.dumps({
+            "state_kind": "TOPIC_SWITCH",
+            "topic": "Activation Energy",
+            "last_visible_answer": "Got it. Let's talk about Activation Energy.",
+            "source_route": "social_conversation",
+            "entities": ["Activation Energy"],
+            "supersedes_anchor": True,
+        })},
+    ]
+
+    payload = route_message("Conversation", "limits", history=history)
+
+    assert payload["route"] == "session_memory"
+    assert "Activation Energy" in payload["answer"]
+    assert "temperature" in payload["answer"]
+    assert "Constitutional Limits" not in payload["answer"]
+    assert payload.get("concept_matches") in (None, [])
+    assert payload["conversation_topic_state"]["topic"] == "Activation Energy"
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
+def test_explicit_full_concept_request_still_retrieves_other_concept(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("Activation Energy", "chemistry", "Activation Energy is the energy barrier for a reaction."),
+        _concept("Acid Base Reactions Mechanism", "chemistry", "Acid base mechanism describes proton transfer."),
+    ])
+    history = [
+        {"role": "topic_state", "content": json.dumps({
+            "state_kind": "TOPIC_SWITCH",
+            "topic": "Activation Energy",
+            "last_visible_answer": "Got it. Let's talk about Activation Energy.",
+            "source_route": "social_conversation",
+            "entities": ["Activation Energy"],
+            "supersedes_anchor": True,
+        })},
+    ]
+
+    payload = route_message("Conversation", "tell me about Acid Base Reactions Mechanism", history=history)
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert payload["concept_matches"][0]["concept_name"] == "Acid Base Reactions Mechanism"
+
+
+def test_single_word_aspect_without_active_topic_keeps_existing_safe_path(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, [
+        _concept("Acid Base Reactions Mechanism", "chemistry", "Acid base mechanism describes proton transfer."),
+    ])
+
+    payload = route_message("Conversation", "mechanism")
+
+    assert payload["route"] == "developmental_concept_memory"
+    assert "Acid Base Reactions Mechanism" in payload["concept_matches"][0]["concept_name"]
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
+def _phase_b_concepts():
+    return [
+        _concept("How To Swim", "", "Swimming starts with water safety, floating, kicking, breathing, and supervised practice."),
+        _concept("Activation Energy", "chemistry", "Activation Energy is the energy barrier for a reaction."),
+        _concept("Constitutional Limits Evidence Standard", "law", "Constitutional limits evidence belongs to law."),
+    ]
+
+
+def _append_history(history, prompt, payload):
+    history.extend([
+        {"role": "user", "content": prompt},
+        {"role": "assistant", "content": payload["answer"]},
+    ])
+    if payload.get("conversation_topic_state"):
+        history.append({"role": "topic_state", "content": json.dumps(payload["conversation_topic_state"], sort_keys=True)})
+
+
+def _phase_b_history():
+    history = []
+    for prompt in [
+        "tell me how to swim",
+        "let's talk about activation energy",
+        "tell me about Constitutional Limits Evidence Standard",
+    ]:
+        payload = route_message("Conversation", prompt, history=history)
+        _append_history(history, prompt, payload)
+    return history
+
+
+def test_go_back_to_prior_topic_restores_how_to_swim(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, _phase_b_concepts())
+    history = _phase_b_history()
+
+    payload = route_message("Conversation", "go back to how to swim", history=history)
+
+    assert payload["route"] == "topic_return"
+    assert payload["conversation_topic_state"]["topic"] == "How To Swim"
+    assert payload["conversation_topic_state"]["supersedes_anchor"] is True
+    assert "How To Swim" in payload["answer"]
+    assert "Constitutional Limits" not in payload["answer"]
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+    _append_history(history, "go back to how to swim", payload)
+    followup = route_message("Conversation", "tell me more", history=history)
+
+    assert followup["route"] == "session_memory"
+    assert followup["conversation_topic_state"]["topic"] == "How To Swim"
+    assert "How To Swim" in followup["answer"]
+    assert "Constitutional Limits" not in followup["answer"]
+
+
+def test_return_to_prior_topic_forms_restore_how_to_swim(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, _phase_b_concepts())
+
+    for phrase in ("return to how to swim", "let's go back to how to swim", "back to how to swim"):
+        payload = route_message("Conversation", phrase, history=_phase_b_history())
+
+        assert payload["route"] == "topic_return"
+        assert payload["conversation_topic_state"]["topic"] == "How To Swim"
+        assert payload["provider_calls_performed"] is False
+        assert payload["canonical_write_performed"] is False
+
+
+def test_return_target_can_resolve_from_approved_concept_without_prior_topic(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, _phase_b_concepts())
+    current = route_message("Conversation", "tell me about Constitutional Limits Evidence Standard")
+    history = [
+        {"role": "user", "content": "tell me about Constitutional Limits Evidence Standard"},
+        {"role": "assistant", "content": current["answer"]},
+        {"role": "topic_state", "content": json.dumps(current["conversation_topic_state"], sort_keys=True)},
+    ]
+
+    payload = route_message("Conversation", "go back to how to swim", history=history)
+
+    assert payload["route"] == "topic_return"
+    assert payload["conversation_topic_state"]["topic"] == "How To Swim"
+    assert "How To Swim" in payload["answer"]
+    assert "Constitutional Limits" not in payload["answer"]
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
+def test_unknown_return_target_falls_back_without_model_or_memory_write(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, _phase_b_concepts())
+    history = _phase_b_history()
+
+    payload = route_message("Conversation", "return to orbital sandwich", history=history)
+
+    assert payload["route"] == "topic_return_unresolved"
+    assert "do not have a prior or approved topic" in payload["answer"]
+    assert payload["conversation_topic_state"]["topic"] == ""
+    assert payload["conversation_topic_state"]["state_kind"] == "NONE"
+    assert payload.get("local_model_offer") is None
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False
+
+
+def test_explicit_topic_switch_remains_unchanged_after_return_parser(monkeypatch, tmp_path):
+    knowledge = _isolate_rc2_store(monkeypatch, tmp_path)
+    _write_concepts(knowledge, _phase_b_concepts())
+
+    payload = route_message("Conversation", "let's talk about activation energy")
+
+    assert payload["route"] == "social_conversation"
+    assert payload["conversation_topic_state"]["topic"] == "activation energy"
+    assert payload["provider_calls_performed"] is False
+    assert payload["canonical_write_performed"] is False

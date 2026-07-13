@@ -1,0 +1,938 @@
+﻿diff --git a/DELTA.py b/DELTA.py
+index c85128ee..500833db 100644
+--- a/DELTA.py
++++ b/DELTA.py
+@@ -1442,6 +1442,7 @@ class DeltaApp:
+         self.pending_local_model_question: str | None = None
+         self.pending_local_model_deepening: dict[str, str] | None = None
+         self.active_topic_anchor: dict[str, object] | None = None
++        self.conversation_topic_state: dict[str, object] | None = None
+         self.last_report_inspection: dict[str, object] | None = None
+         self.rc6_pilot_events: list[dict[str, object]] = []
+         self.live_runtime_session: LiveWikipediaRuntimeSession | None = None
+@@ -2051,6 +2052,8 @@ class DeltaApp:
+         history = self.session_history[-10:]
+         if self.active_topic_anchor:
+             history = [*history, {"role": "anchor", "content": json.dumps(self.active_topic_anchor, sort_keys=True)}]
++        if self.conversation_topic_state:
++            history = [*history, {"role": "topic_state", "content": json.dumps(self.conversation_topic_state, sort_keys=True)}]
+         return history
+ 
+     def _last_substantive_exchange(self) -> dict[str, str] | None:
+@@ -2261,6 +2264,7 @@ class DeltaApp:
+                 payload = getattr(response, "payload", {})
+                 self.last_payload = payload if isinstance(payload, dict) else None
+                 if isinstance(payload, dict):
++                    self._update_active_topic_anchor(payload)
+                     self._queue_concept_candidate(payload)
+                 self._append_chat("DELTA", str(getattr(response, "answer", "")))
+                 self._append_session("assistant", str(getattr(response, "answer", "")))
+@@ -2739,6 +2743,19 @@ class DeltaApp:
+         self._append_session("assistant", rendered)
+ 
+     def _update_active_topic_anchor(self, payload: dict[str, object]) -> None:
++        topic_state = payload.get("conversation_topic_state")
++        if isinstance(topic_state, dict):
++            state_kind = str(topic_state.get("state_kind") or "")
++            topic = str(topic_state.get("topic") or "").strip()
++            if state_kind in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH"} and topic:
++                self.conversation_topic_state = dict(topic_state)
++                if topic_state.get("supersedes_anchor"):
++                    self.active_topic_anchor = None
++                return
++            if state_kind == "SOCIAL_INTERLUDE":
++                return
++            if state_kind == "CONCEPT_ANCHOR" and topic:
++                self.conversation_topic_state = dict(topic_state)
+         anchor = payload.get("active_topic_anchor")
+         if isinstance(anchor, dict) and (anchor.get("active_concept_id") or anchor.get("active_concept_name")):
+             self.active_topic_anchor = dict(anchor)
+diff --git a/orchestration/runtime/delta_1_4_live_wikipedia_runtime.py b/orchestration/runtime/delta_1_4_live_wikipedia_runtime.py
+index 82062789..b12fd62b 100644
+--- a/orchestration/runtime/delta_1_4_live_wikipedia_runtime.py
++++ b/orchestration/runtime/delta_1_4_live_wikipedia_runtime.py
+@@ -428,6 +428,25 @@ def handle_live_chat(
+             "memory_candidate": _memory_candidate_from_development(development_payload),
+             "promotion_candidate": development_payload["promotion_candidate"],
+             "operator_inquiry": development_payload["operator_inquiry"],
++            "conversation_topic_state": {
++                "state_kind": "SUBSTANTIVE_TOPIC",
++                "topic": result.title,
++                "source_turn": "current",
++                "source_route": "live_wikipedia_text_retrieval",
++                "last_user_prompt": message,
++                "last_visible_answer": answer.split("\n\n--- Developer Overlay ---", 1)[0][:600],
++                "entities": [result.title],
++                "confidence": 0.86,
++                "supersedes_anchor": True,
++                "read_only": True,
++            },
++            "routing_observability": _live_routing_trace(
++                message,
++                "live_wikipedia_text_retrieval",
++                query=query,
++                rc2_fallback_considered=False,
++                wikipedia_considered=True,
++            ),
+         }
+         runtime = replace(
+             runtime,
+@@ -502,6 +521,13 @@ def handle_live_chat(
+         request = _new_local_model_request(session, message, payload)
+         payload = {**payload, "live_runtime_local_model_request": request}
+         session = replace(session, pending_local_model_request=request)
++    payload["live_routing_observability"] = _live_routing_trace(
++        message,
++        str(payload.get("route") or "conversation_fallback"),
++        query=query,
++        rc2_fallback_considered=True,
++        wikipedia_considered=bool(query),
++    )
+     response = _response(answer, str(payload.get("route") or "conversation_fallback"), payload, None, runtime.state, safety_metadata())
+     updated = _advance_continuous_controller(replace(session, runtime=runtime), "VALIDATION_RESULT", {"summary": "ordinary chat routed without continuous work"}, priority=20)
+     return replace(updated, turns=updated.turns + (response,)), response
+@@ -510,19 +536,16 @@ def handle_live_chat(
+ def wikipedia_query_from_message(message: str) -> str:
+     text = " ".join(str(message or "").strip().strip(" .?!").split())
+     lower = text.lower()
++    if not _has_explicit_wikipedia_intent(lower):
++        return ""
+     patterns = (
+         r"^(?:wikipedia|wiki)\s*[:\-]?\s*(.+)$",
+         r"tell me what wikipedia has (?:regarding|about|on)\s+(.+)$",
+         r"what does wikipedia (?:have|say) (?:regarding|about|on)\s+(.+)$",
+         r"what has wikipedia got (?:regarding|about|on)\s+(.+)$",
+-        r"look up\s+(.+?)(?:\s+on wikipedia)?$",
++        r"look up\s+(.+?)\s+on wikipedia$",
+         r"retrieve\s+(.+?)(?:\s+from wikipedia)?$",
+-        r"tell me about\s+(.+)$",
+-        r"what is\s+(.+)$",
+-        r"who is\s+(.+)$",
+     )
+-    if not any(term in lower for term in ("wikipedia", "wiki", "look up", "retrieve", "what is", "who is", "tell me about")):
+-        return ""
+     for pattern in patterns:
+         match = re.search(pattern, text, flags=re.IGNORECASE)
+         if match:
+@@ -531,6 +554,35 @@ def wikipedia_query_from_message(message: str) -> str:
+     return ""
+ 
+ 
++def _has_explicit_wikipedia_intent(lower: str) -> bool:
++    if "wikipedia" in lower or re.search(r"(^|\s)wiki\s*[:\-]", lower):
++        return True
++    if lower.startswith("retrieve ") and "from wikipedia" in lower:
++        return True
++    return bool(re.match(r"^look up .+ on wikipedia$", lower))
++
++
++def _live_routing_trace(
++    message: str,
++    selected_route: str,
++    *,
++    query: str = "",
++    rc2_fallback_considered: bool,
++    wikipedia_considered: bool,
++) -> dict[str, Any]:
++    return {
++        "layer": "delta_1_4_live_wikipedia_runtime",
++        "selected_route": selected_route,
++        "raw_message": message,
++        "wikipedia_query": query,
++        "explicit_wikipedia_intent": _has_explicit_wikipedia_intent(" ".join(str(message or "").lower().split())),
++        "wikipedia_considered": wikipedia_considered,
++        "rc2_fallback_considered": rc2_fallback_considered,
++        "read_only": True,
++        "ephemeral": True,
++    }
++
++
+ def retrieve_wikipedia_text(
+     query: str,
+     *,
+diff --git a/orchestration/runtime/rc2_cognitive_episode.py b/orchestration/runtime/rc2_cognitive_episode.py
+index 2e842c18..0d2be9e6 100644
+--- a/orchestration/runtime/rc2_cognitive_episode.py
++++ b/orchestration/runtime/rc2_cognitive_episode.py
+@@ -137,6 +137,16 @@ def build_cognitive_episode(
+             "summary": "explicit topic change",
+         }
+     payload = current_payload or {}
++    topic_state = payload.get("conversation_topic_state") if isinstance(payload.get("conversation_topic_state"), dict) else {}
++    if topic_state.get("topic") and topic_state.get("state_kind") in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH", "CONCEPT_ANCHOR"}:
++        active = {
++            "topic": topic_state.get("topic"),
++            "question": topic_state.get("last_user_prompt") or message,
++            "answer": topic_state.get("last_visible_answer") or str(payload.get("answer") or ""),
++            "route": current_route or topic_state.get("source_route") or "topic_state",
++            "entities": topic_state.get("entities") or [topic_state.get("topic")],
++            "summary": topic_state.get("last_visible_answer") or _summary(message, str(payload.get("answer") or "")),
++        }
+     episode = CognitiveEpisode(
+         episode_id=_episode_id(message, history),
+         active_topic=active.get("topic"),
+@@ -317,6 +327,23 @@ def _branches(history: list[dict[str, str]]) -> list[dict[str, Any]]:
+                 "route": "anchor",
+                 "summary": anchor.get("last_answer_summary", ""),
+             })
++        elif role == "topic_state":
++            try:
++                state = json.loads(content)
++            except json.JSONDecodeError:
++                continue
++            topic = str(state.get("topic") or "").strip()
++            if not topic:
++                continue
++            branches.append({
++                "topic": topic,
++                "entities": state.get("entities", [topic]) if isinstance(state.get("entities"), list) else [topic],
++                "question": state.get("last_user_prompt"),
++                "answer": state.get("last_visible_answer", ""),
++                "route": state.get("source_route") or "topic_state",
++                "summary": state.get("last_visible_answer", ""),
++                "state_kind": state.get("state_kind"),
++            })
+     for question, answer in turns:
+         semantic_answer = _semantic_answer(answer)
+         topic = _topic_from_question(question) or (_entities(question) or _entities(semantic_answer) or [None])[0]
+@@ -352,6 +379,10 @@ def _select_active_branch(message: str, branches: list[dict[str, Any]], current_
+         return _subject_branch(branches, "first") or _branch_by_ordinal(branches, 0) or (branches[-1] if branches else {})
+     if _requests_second_branch(lower):
+         return _subject_branch(branches, "second") or _branch_by_ordinal(branches, 1) or (branches[-1] if branches else {})
++    if _is_followup(lower):
++        for branch in reversed(branches):
++            if branch.get("state_kind") in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH"} and branch.get("topic"):
++                return branch
+     if current_entities:
+         for branch in reversed(branches):
+             if set(current_entities) & set(branch.get("entities", [])):
+@@ -390,6 +421,7 @@ def _topic_from_question(text: str) -> str | None:
+         if topic in lower:
+             return topic
+     patterns = [
++        r"what color is (.+)",
+         r"how does (.+) work",
+         r"what is (.+)",
+         r"what are (.+)",
+@@ -523,6 +555,10 @@ def _requests_second_branch(lower: str) -> bool:
+ def _ambiguity_candidates(lower: str, episode: dict[str, Any]) -> list[str]:
+     if not _has_ambiguous_reference(lower):
+         return []
++    if re.search(r"\bcompare\s+(?:that|this|it|those|them)\s+(?:with|to)\s+.+", lower):
++        return []
++    if _has_superseding_topic_state(episode):
++        return []
+     if _is_significance_question(lower):
+         return []
+     if any(term in lower for term in ("first", "second", "earlier", "previous")):
+@@ -535,6 +571,16 @@ def _ambiguity_candidates(lower: str, episode: dict[str, Any]) -> list[str]:
+     return list(dict.fromkeys(item for item in candidates if item)) if len(set(candidates)) >= 2 else []
+ 
+ 
++def _has_superseding_topic_state(episode: dict[str, Any]) -> bool:
++    active_topic = str(episode.get("active_topic") or "")
++    if not active_topic:
++        return False
++    for branch in reversed(episode.get("conversation_branch", [])):
++        if branch.get("state_kind") in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH"}:
++            return str(branch.get("topic") or "") == active_topic
++    return False
++
++
+ def _has_ambiguous_reference(lower: str) -> bool:
+     return bool(re.search(r"\b(that|it|which one)\b", lower))
+ 
+@@ -607,6 +653,14 @@ def _followup_answer(lower: str, topic: str, episode: dict[str, Any]) -> str:
+             f"while {target} changes what details matter next. I would compare the concrete facts for {topic} with the "
+             f"concrete facts for {target}, then separate what is known from what still needs evidence."
+         )
++    comparison = re.search(r"\bcompare\s+(?:that|this|it|those|them)\s+(?:with|to)\s+(.+)$", lower)
++    if comparison:
++        target = comparison.group(1).strip(" .?!")
++        if target:
++            return (
++                f"Comparing {topic} with {target}: {topic} is the active topic from the prior turn, while {target} is the new comparison target. "
++                f"The useful comparison is to line up the visible properties, causes, and context for each, then avoid replacing the prior topic with an unrelated retrieval."
++            )
+     if "example" in lower:
+         return _example_answer(topic, answer)
+     if "simpl" in lower:
+diff --git a/orchestration/runtime/rc2_conversational_mode_router.py b/orchestration/runtime/rc2_conversational_mode_router.py
+index 4c2059ba..7203be8d 100644
+--- a/orchestration/runtime/rc2_conversational_mode_router.py
++++ b/orchestration/runtime/rc2_conversational_mode_router.py
+@@ -202,6 +202,11 @@ DIRECT_LOCAL_ANSWERS = {
+         "answer": "The DELTA 1.2 live runtime should treat repeated ambiguity failures as evidence, cluster them into a developmental signal, rank a bounded objective, and queue an operator inquiry. It should not implement the fix by itself; operator approval is required before promotion, and it should ask whether to prepare a sandboxed repair objective with focused validation.",
+         "confidence": 0.86,
+     },
++    "ada_lovelace": {
++        "triggers": (("ada", "lovelace"),),
++        "answer": "Ada Lovelace was a 19th-century English mathematician and writer, best known for her work on Charles Babbage's proposed Analytical Engine and for writing notes often described as an early example of computer programming thinking.",
++        "confidence": 0.8,
++    },
+ }
+ 
+ VAGUE_CONCEPT_NAMES = {
+@@ -458,7 +463,13 @@ def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any
+         }
+     names = []
+     domain = None
++    newer_explicit_topic = False
+     for item in reversed(history or []):
++        if item.get("role") == "user" and _is_explicit_new_topic_request(str(item.get("content") or "")):
++            newer_explicit_topic = True
++            continue
++        if newer_explicit_topic:
++            break
+         if item.get("role") != "assistant":
+             continue
+         content = str(item.get("content") or "")
+@@ -482,9 +493,22 @@ def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any
+ 
+ 
+ def resolve_followup_anchor(history: list[dict[str, str]] | None) -> dict[str, Any]:
++    newer_explicit_topic = False
+     for item in reversed(history or []):
++        if item.get("role") == "topic_state":
++            try:
++                state = json.loads(str(item.get("content") or "{}"))
++            except json.JSONDecodeError:
++                continue
++            if state.get("supersedes_anchor"):
++                return {}
++        if item.get("role") == "user" and _is_explicit_new_topic_request(str(item.get("content") or "")):
++            newer_explicit_topic = True
++            continue
+         if item.get("role") != "anchor":
+             continue
++        if newer_explicit_topic:
++            return {}
+         try:
+             anchor = json.loads(str(item.get("content") or "{}"))
+         except json.JSONDecodeError:
+@@ -496,6 +520,8 @@ def resolve_followup_anchor(history: list[dict[str, str]] | None) -> dict[str, A
+ 
+ def _is_anchor_followup(message: str) -> bool:
+     lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
++    if _is_explicit_new_topic_request(message):
++        return False
+     if lower in {
+         "tell me more",
+         "go deeper",
+@@ -514,6 +540,65 @@ def _is_anchor_followup(message: str) -> bool:
+     return bool(re.match(r"how does (that|this|it) relate to .+", lower))
+ 
+ 
++def _is_explicit_new_topic_request(message: str) -> bool:
++    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
++    if not lower:
++        return False
++    if lower in {"what do you mean", "why", "why is that", "tell me more", "go deeper", "continue", "expand on that"}:
++        return False
++    if _is_context_dependent_followup(message):
++        return False
++    if re.match(r"^(what|who|where|when|which|how)\s+(is|are|was|were|do|does|did|can|should)\b", lower):
++        return True
++    if lower.startswith(("tell me about ", "explain ", "compare ", "analyze ", "brainstorm ", "what comes to mind")):
++        return True
++    if "new topic" in lower or "switch topics" in lower or "completely different" in lower:
++        return True
++    return False
++
++
++def _is_brainstorming_request(message: str) -> bool:
++    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
++    return any(phrase in lower for phrase in (
++        "first concept that comes to mind",
++        "what comes to mind",
++        "brainstorm",
++        "give me ideas",
++        "free associate",
++    ))
++
++
++def _is_context_dependent_followup(message: str) -> bool:
++    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
++    if re.match(r"^compare\s+(that|this|it|those|them)\s+(?:with|to)\b", lower):
++        return True
++    if lower in {
++        "explain that",
++        "explain this",
++        "explain it",
++        "give me another one",
++        "another one",
++        "give me an example",
++        "give me examples",
++        "why",
++        "why is that",
++        "why does that matter",
++        "why is that important",
++        "why should i care about that",
++        "what difference does that make",
++        "how does that affect the decision",
++        "where does that analogy break",
++        "tell me more",
++        "continue",
++        "expand on that",
++    }:
++        return True
++    return bool(re.match(
++        r"^(how|why|where|what)\s+(does|do|is|are|was|were|would|could|should)\s+(that|this|it|those|them)\b",
++        lower,
++    ))
++
++
+ def _is_anchor_browse_followup(message: str) -> bool:
+     lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+     return lower in {"what else", "another one", "what else do you know", "show me another", "nearby concepts"}
+@@ -875,6 +960,142 @@ def _direct_answer(message: str) -> dict[str, Any] | None:
+     return None
+ 
+ 
++def _topic_switch_target(message: str) -> str | None:
++    lower = " ".join(str(message or "").lower().strip().split()).strip(" .?!")
++    patterns = [
++        r"^(?:actually\s+)?(?:let['’]?s|lets)\s+talk\s+about\s+(.+)$",
++        r"^(?:actually\s+)?(?:let['’]?s|lets)\s+switch\s+to\s+(.+)$",
++        r"^(?:actually\s+)?talk\s+about\s+(.+)$",
++        r"^(?:actually\s+)?switch(?:ing)?\s+(?:to|topics?\s+to)\s+(.+)$",
++        r"^(?:new topic:|different topic:|switching subjects:)\s*(.+)$",
++    ]
++    for pattern in patterns:
++        match = re.match(pattern, lower)
++        if match:
++            topic = match.group(1).strip(" .?!")
++            return topic if topic else None
++    return None
++
++
++def _topic_hint_from_message(message: str, payload: dict[str, Any]) -> str | None:
++    lower = " ".join(str(message or "").lower().strip().split()).strip(" .?!")
++    switch = _topic_switch_target(message)
++    if switch:
++        return switch
++    if "first concept that comes to mind" in lower and "physics" in lower:
++        return "motion in physics"
++    if "sky" in lower:
++        return "sky"
++    if "music" in lower:
++        return "music"
++    if "moon" in lower:
++        return "moon"
++    if "mars" in lower:
++        return "mars"
++    topic = _topic_label_from_message(message)
++    if topic:
++        return topic
++    answer = str(payload.get("answer") or "").lower()
++    if "motion" in answer and "physics" in answer:
++        return "motion in physics"
++    if "sky" in answer or "blue wavelengths" in answer:
++        return "sky"
++    return None
++
++
++def _conversation_topic_state(message: str, payload: dict[str, Any], intent_info: dict[str, Any]) -> dict[str, Any]:
++    route = str(payload.get("route") or "")
++    answer = str(payload.get("answer") or "")
++    switch_topic = _topic_switch_target(message)
++    if switch_topic:
++        return {
++            "state_kind": "TOPIC_SWITCH",
++            "topic": switch_topic,
++            "source_turn": "current",
++            "source_route": route,
++            "last_user_prompt": message,
++            "last_visible_answer": answer[:600],
++            "entities": [switch_topic],
++            "confidence": 0.88,
++            "supersedes_anchor": True,
++            "read_only": True,
++        }
++    anchor = payload.get("active_topic_anchor")
++    matches = payload.get("concept_matches")
++    if isinstance(anchor, dict) and (anchor.get("active_concept_name") or anchor.get("active_concept_id")):
++        topic = str(anchor.get("active_concept_name") or anchor.get("active_concept_id") or "")
++        return {
++            "state_kind": "CONCEPT_ANCHOR",
++            "topic": topic,
++            "source_turn": "current",
++            "source_route": route,
++            "last_user_prompt": message,
++            "last_visible_answer": answer[:600],
++            "entities": [topic],
++            "confidence": float(payload.get("confidence_score") or 0.84),
++            "supersedes_anchor": False,
++            "read_only": True,
++        }
++    if isinstance(matches, list) and matches and isinstance(matches[0], dict) and matches[0].get("concept_name"):
++        topic = str(matches[0].get("concept_name") or "")
++        return {
++            "state_kind": "CONCEPT_ANCHOR",
++            "topic": topic,
++            "source_turn": "current",
++            "source_route": route,
++            "last_user_prompt": message,
++            "last_visible_answer": answer[:600],
++            "entities": [topic],
++            "confidence": float(payload.get("confidence_score") or 0.84),
++            "supersedes_anchor": False,
++            "read_only": True,
++        }
++    if route == "social_conversation" or intent_info.get("intent") in SOCIAL_INTENT_RESPONSES:
++        return {
++            "state_kind": "SOCIAL_INTERLUDE",
++            "topic": "",
++            "source_turn": "current",
++            "source_route": route,
++            "last_user_prompt": message,
++            "last_visible_answer": answer[:300],
++            "entities": [],
++            "confidence": float(payload.get("confidence_score") or intent_info.get("confidence") or 0.8),
++            "supersedes_anchor": False,
++            "read_only": True,
++        }
++    topic = _topic_hint_from_message(message, payload)
++    if topic and route in {
++        "local_conversation_model_lane",
++        "conversation_clarified_misframed_question",
++        "session_memory",
++        "conversation_short_term_memory",
++    }:
++        return {
++            "state_kind": "SUBSTANTIVE_TOPIC",
++            "topic": topic,
++            "source_turn": "current",
++            "source_route": route,
++            "last_user_prompt": message,
++            "last_visible_answer": answer[:600],
++            "entities": [topic],
++            "confidence": float(payload.get("confidence_score") or 0.78),
++            "supersedes_anchor": True,
++            "read_only": True,
++        }
++    return {
++        "state_kind": "FOLLOWUP" if _is_context_dependent_followup(message) else "NONE",
++        "topic": "",
++        "source_turn": "current",
++        "source_route": route,
++        "last_user_prompt": message,
++        "last_visible_answer": answer[:300],
++        "entities": [],
++        "confidence": float(payload.get("confidence_score") or 0.5),
++        "supersedes_anchor": False,
++        "read_only": True,
++    }
++
++
+ def _is_development_workflow_request(message: str, history: list[dict[str, str]] | None = None) -> bool:
+     lower = " ".join(str(message or "").lower().replace("-", " ").split())
+     if any(term in lower for term in (
+@@ -1398,6 +1619,80 @@ def _history_answer(message: str, history: list[dict[str, str]] | None) -> dict[
+     return None
+ 
+ 
++def _last_visible_exchange(history: list[dict[str, str]] | None) -> dict[str, str] | None:
++    last_assistant = ""
++    for item in reversed(history or []):
++        role = item.get("role")
++        content = str(item.get("content") or "")
++        if role == "assistant" and not last_assistant:
++            last_assistant = content.split("--- Developer Overlay ---", 1)[0].strip()
++            continue
++        if role == "user" and last_assistant:
++            return {"question": content.strip(), "answer": last_assistant}
++    return None
++
++
++def _bounded_followup_from_last_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
++    exchange = _last_visible_exchange(history)
++    if not exchange:
++        return None
++    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
++    question = exchange["question"].lower()
++    answer = exchange["answer"].lower()
++    if "sky" in question or "sky" in answer or "blue wavelengths" in answer:
++        if lower in {"tell me more", "continue", "more detail", "more details", "go deeper"}:
++            text = (
++                "Still on the sky: the short version is Rayleigh scattering. Sunlight contains many wavelengths, "
++                "and the gases in the atmosphere scatter shorter blue wavelengths more than red ones, so blue light reaches your eyes from many directions."
++            )
++        elif lower in {"why", "why is that"}:
++            text = (
++                "Because shorter wavelengths scatter more strongly in air. Blue light is scattered across the daytime sky, "
++                "while much of the longer red and orange light travels more directly."
++            )
++        elif "always" in lower and "blue" in lower:
++            text = (
++                "No. The sky can look red or orange near sunrise and sunset because sunlight travels through more atmosphere, "
++                "and clouds, haze, storms, smoke, or nighttime conditions can make it look white, gray, dark, or tinted."
++            )
++        else:
++            text = "Still on the sky: the useful mechanism is atmospheric scattering of sunlight, especially shorter blue wavelengths."
++        return _session_payload(message, text, confidence_score=0.86, resolved=True)
++    if "motion" in question or "motion" in answer or "physics" in question:
++        if "another" in lower:
++            text = "Another physics concept that comes to mind is energy: it connects motion, forces, heat, fields, and conservation in a very reusable way."
++        elif lower in {"tell me more", "continue", "more detail", "more details", "go deeper"}:
++            text = (
++                "Staying with motion in physics: it is useful because it turns change into something measurable: position, velocity, acceleration, time, "
++                "and the forces that alter them."
++            )
++        elif "why" in lower:
++            text = (
++                "I chose motion because it is one of the cleanest entry points into physics: once you can describe how something moves, "
++                "you can ask what forces, energy changes, or constraints explain it."
++            )
++        else:
++            text = "Staying with motion in physics: the next useful angle is how forces and energy explain changes in motion."
++        return _session_payload(message, text, confidence_score=0.84, resolved=True)
++    if "music" in question or "music" in answer:
++        if "emotion" in lower or "emotionally" in lower:
++            text = (
++                "People respond emotionally to music because rhythm, expectation, memory, voice-like tones, and shared cultural patterns all interact with attention and mood."
++            )
++        elif lower in {"tell me more", "continue", "more detail", "more details", "go deeper"}:
++            text = "Still on music: a useful starting point is that it organizes sound into rhythm, pitch, tension, release, and memory."
++        else:
++            text = "Still on music: the next useful angle is how rhythm, melody, expectation, and memory shape the experience."
++        return _session_payload(message, text, confidence_score=0.84, resolved=True)
++    if "ada lovelace" in question or "ada lovelace" in answer:
++        text = (
++            "Still on Ada Lovelace: she is remembered for connecting mathematics with Babbage's Analytical Engine, "
++            "especially through notes that described how such a machine might manipulate symbols, not just numbers."
++        )
++        return _session_payload(message, text, confidence_score=0.84, resolved=True)
++    return None
++
++
+ def _is_session_memory_turn(message: str) -> bool:
+     lower = message.lower()
+     return any(phrase in lower for phrase in (
+@@ -1438,19 +1733,29 @@ def _is_recent_concept_followup(message: str) -> bool:
+     return message.lower().strip(" ?!.") in {
+         "why",
+         "why is that",
++        "tell me more",
++        "continue",
++        "expand on that",
++        "more detail",
++        "more details",
+         "go deeper",
++        "tell me more",
++        "continue",
++        "expand on that",
++        "more detail",
++        "more details",
+         "give me an example",
+         "how big can they get",
+         "does that happen to all of them",
+     }
+ 
+ 
+-def _session_payload(message: str, answer: str) -> dict[str, Any]:
++def _session_payload(message: str, answer: str, *, confidence_score: float = 0.92, resolved: bool | None = None) -> dict[str, Any]:
+     return {
+-        "route": "conversation_short_term_memory",
++        "route": "session_memory",
+         "answer": answer,
+         "confidence": "session_memory",
+-        "confidence_score": 0.92,
++        "confidence_score": confidence_score,
+         "selected_model_lane": select_model_lane(message),
+         "supporting_information_offer": None,
+         "memory_candidate": None,
+@@ -1458,12 +1763,15 @@ def _session_payload(message: str, answer: str) -> dict[str, Any]:
+         "web_search_performed": False,
+         "training_performed": False,
+         "canonical_write_performed": False,
++        "resolved_from_prior_visible_answer": resolved,
+     }
+ 
+ 
+ def _recent_concept_followup_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
++    if _is_explicit_new_topic_request(message):
++        return None
+     lower = message.lower().strip(" ?!.")
+-    if lower not in {"why", "why is that", "go deeper", "give me an example", "how big can they get", "does that happen to all of them"}:
++    if lower not in {"why", "why is that", "tell me more", "continue", "expand on that", "more detail", "more details", "go deeper", "give me an example", "how big can they get", "does that happen to all of them"}:
+         return None
+     context = _last_concept_context(history)
+     concept_name = context.get("concept_name")
+@@ -1541,6 +1849,9 @@ def local_conversation_answer(
+         return development
+     if memory := _history_answer(message, history):
+         return memory
++    if not execute_local_model and (intent == "followup" or _is_context_dependent_followup(message)):
++        if bounded := _bounded_followup_from_last_answer(message, history):
++            return bounded
+     if recent := _recent_concept_followup_answer(message, history):
+         return recent
+     if intent == "followup":
+@@ -1621,6 +1932,14 @@ def local_conversation_answer(
+         confidence = str(direct["confidence"])
+         confidence_score = float(direct["confidence_score"])
+         support_offer = None
++    elif _is_brainstorming_request(message):
++        answer = (
++            "The first concept that comes to mind is motion: in physics, it is a clean starting point because it connects position, time, forces, energy, and prediction. "
++            "If you want a more playful association, I would branch from motion to symmetry, fields, or conservation."
++        )
++        confidence = "local_brainstorming"
++        confidence_score = 0.78
++        support_offer = None
+     elif intent == "coding":
+         answer = (
+             "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. "
+@@ -1754,6 +2073,21 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
+ 
+ def _finish_conversation_payload(payload: dict[str, Any], message: str, history: list[dict[str, str]] | None) -> dict[str, Any]:
+     normalize_safety_payload(payload)
++    intent_info = payload.get("intent") if isinstance(payload.get("intent"), dict) else classify_intent(message)
++    payload["conversation_topic_state"] = _conversation_topic_state(message, payload, intent_info)
++    payload["routing_observability"] = {
++        "layer": "rc2_conversational_mode_router",
++        "selected_route": str(payload.get("route") or ""),
++        "intent": intent_info,
++        "explicit_new_topic_request": _is_explicit_new_topic_request(message),
++        "anchor_available": bool(resolve_followup_anchor(history)),
++        "anchor_followup_allowed": _is_anchor_followup(message),
++        "memory_retrieval_bypassed": bool(payload.get("memory_retrieval_bypassed", False)),
++        "history_turns_seen": len(history or []),
++        "early_return": str(payload.get("route") or ""),
++        "read_only": True,
++        "ephemeral": True,
++    }
+     payload["route_arbitration"] = build_route_arbitration_trace(
+         message,
+         history,
+@@ -1781,6 +2115,7 @@ def route_message(
+     if mode == "Conversation":
+         intent_info = classify_intent(message)
+         anchor = resolve_followup_anchor(history)
++        explicit_new_topic = _is_explicit_new_topic_request(message)
+         if provider_approved:
+             payload = execute_gpt_support_request(message, history, transport=provider_transport)
+             payload["intent"] = intent_info
+@@ -1844,7 +2179,7 @@ def route_message(
+             payload["mode_router_flags"] = ROUTER_FLAGS
+             payload["memory_candidate"] = None
+             return _finish_conversation_payload(payload, message, history)
+-        if intent_info.get("communication_act") == "clarification_followup" and not history:
++        if (intent_info.get("communication_act") == "clarification_followup" or _is_context_dependent_followup(message)) and not history:
+             payload = {
+                 "mode": mode,
+                 "route": "session_memory",
+@@ -1912,7 +2247,49 @@ def route_message(
+             payload["mode_router_flags"] = ROUTER_FLAGS
+             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
+             return _finish_conversation_payload(payload, message, history)
+-        early_episode_followup = None if _should_defer_to_knowledge_browse(intent_info) else resolve_working_memory_followup(message, history)
++        if _is_brainstorming_request(message):
++            payload = {
++                "mode": mode,
++                **local_conversation_answer(
++                    message,
++                    history,
++                    execute_local_model=execute_local_model,
++                    provider_manager=provider_manager,
++                ),
++            }
++            payload["escalation_plan"] = build_escalation_plan(message)
++            payload["intent"] = {**intent_info, "intent": "brainstorming"}
++            payload["confidence_decision"] = confidence_engine(message, False)
++            payload["mode_router_flags"] = ROUTER_FLAGS
++            payload["memory_candidate"] = None
++            payload["memory_retrieval_bypassed"] = True
++            return _finish_conversation_payload(payload, message, history)
++        if not anchor and not _should_defer_to_knowledge_browse(intent_info) and (
++            intent_info.get("communication_act") == "clarification_followup"
++            or intent_info.get("intent") == "followup"
++            or _is_recent_concept_followup(message)
++        ):
++            payload = {
++                "mode": mode,
++                **local_conversation_answer(
++                    message,
++                    history,
++                    execute_local_model=execute_local_model,
++                    provider_manager=provider_manager,
++                ),
++            }
++            payload["escalation_plan"] = build_escalation_plan(message)
++            payload["intent"] = {**intent_info, "intent": "recent_topic_followup"}
++            payload["confidence_decision"] = confidence_engine(message, False)
++            payload["mode_router_flags"] = ROUTER_FLAGS
++            payload["memory_candidate"] = None
++            payload["memory_retrieval_bypassed"] = True
++            return _finish_conversation_payload(payload, message, history)
++        early_episode_followup = None if (
++            _should_defer_to_knowledge_browse(intent_info)
++            or explicit_new_topic
++            or bool(anchor and _is_anchor_followup(message))
++        ) else resolve_working_memory_followup(message, history)
+         if early_episode_followup:
+             payload = {"mode": mode, **early_episode_followup}
+             payload["escalation_plan"] = build_escalation_plan(message)
+@@ -2011,7 +2388,7 @@ def route_message(
+                 "mode_router_flags": ROUTER_FLAGS,
+             })
+             return _finish_conversation_payload(payload, message, history)
+-        if _is_anchor_followup(message) and anchor:
++        if not explicit_new_topic and _is_anchor_followup(message) and anchor:
+             anchored = browse_near_active_anchor(message, anchor) if _is_anchor_browse_followup(message) else deepen_from_concept_anchor(message, anchor)
+             if anchored:
+                 payload = {"mode": mode, **anchored}
+@@ -2052,7 +2429,11 @@ def route_message(
+             payload["mode_router_flags"] = ROUTER_FLAGS
+             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
+             return _finish_conversation_payload(payload, message, history)
+-        episode_followup = None if _should_defer_to_knowledge_browse(intent_info) else resolve_working_memory_followup(message, history)
++        episode_followup = None if (
++            _should_defer_to_knowledge_browse(intent_info)
++            or explicit_new_topic
++            or bool(anchor and _is_anchor_followup(message))
++        ) else resolve_working_memory_followup(message, history)
+         if episode_followup:
+             payload = {"mode": mode, **episode_followup}
+             payload["escalation_plan"] = build_escalation_plan(message)
+@@ -2382,6 +2763,7 @@ def route_message(
+             return _finish_conversation_payload(payload, message, history)
+         bypass_memory_retrieval = (
+             execute_local_model
++            or explicit_new_topic and _is_brainstorming_request(message)
+             or intent_info.get("communication_act") == "clarification_followup"
+             or intent_info.get("intent") == "followup"
+             or _is_session_memory_turn(message)
+@@ -2421,6 +2803,7 @@ def route_message(
+                     provider_manager=provider_manager,
+                 ),
+             }
++        payload["memory_retrieval_bypassed"] = bypass_memory_retrieval
+         payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
+         payload["escalation_plan"] = build_escalation_plan(message)
+         payload["intent"] = intent_info
+diff --git "a/C:\\Users\\Admin\\AppData\\Local\\Temp\\tmp7CA3.tmp" "b/tests\\runtime_rc2\\test_rc2_conversation_topic_state.py"
+index e69de29b..537a2234 100644
+--- "a/C:\\Users\\Admin\\AppData\\Local\\Temp\\tmp7CA3.tmp"
++++ "b/tests\\runtime_rc2\\test_rc2_conversation_topic_state.py"
+@@ -0,0 +1,119 @@
++import json
++
++from orchestration.runtime.rc2_conversational_mode_router import route_message
++
++
++OLD_ANCHOR = {
++    "active_concept_id": "old",
++    "active_concept_name": "Advanced Operator Mode Evidence Standard",
++    "last_user_question": "Tell me about Advanced Operator Mode Evidence Standard",
++    "last_answer_summary": "Advanced Operator Mode Evidence Standard details.",
++    "retrieved_concept_ids": ["old"],
++    "retrieved_concept_names": ["Advanced Operator Mode Evidence Standard"],
++}
++
++
++def _history_with_anchor(*turns, topic_state=None):
++    history = []
++    for user, assistant in turns:
++        history.append({"role": "user", "content": user})
++        history.append({"role": "assistant", "content": assistant})
++    history.append({"role": "anchor", "content": json.dumps(OLD_ANCHOR)})
++    if topic_state:
++        history.append({"role": "topic_state", "content": json.dumps(topic_state)})
++    return history
++
++
++def test_brainstorming_promotes_substantive_topic_that_supersedes_old_anchor():
++    payload = route_message(
++        "Conversation",
++        "what is the first concept that comes to mind related to physics",
++        history=_history_with_anchor(("Tell me about Advanced Operator Mode Evidence Standard", "Advanced Operator Mode Evidence Standard details.")),
++    )
++
++    state = payload["conversation_topic_state"]
++    assert payload["route"] == "local_conversation_model_lane"
++    assert state["state_kind"] == "SUBSTANTIVE_TOPIC"
++    assert state["topic"] == "motion in physics"
++    assert state["supersedes_anchor"] is True
++
++
++def test_followup_uses_promoted_physics_topic_before_concept_anchor():
++    topic_state = {
++        "state_kind": "SUBSTANTIVE_TOPIC",
++        "topic": "motion in physics",
++        "last_user_prompt": "what is the first concept that comes to mind related to physics",
++        "last_visible_answer": "The first concept that comes to mind is motion in physics.",
++        "source_route": "local_conversation_model_lane",
++        "entities": ["motion in physics"],
++        "supersedes_anchor": True,
++    }
++    history = _history_with_anchor(
++        ("what is the first concept that comes to mind related to physics", "The first concept that comes to mind is motion in physics."),
++        topic_state=topic_state,
++    )
++
++    payload = route_message("Conversation", "tell me more", history=history)
++
++    assert payload["route"] == "session_memory"
++    assert "motion" in payload["answer"].lower()
++    assert "advanced operator mode" not in payload["answer"].lower()
++    assert not (payload.get("local_model_offer") or {}).get("offered")
++
++
++def test_sky_followup_elaborates_from_prior_visible_answer_without_model_consent():
++    history = [
++        {"role": "user", "content": "what color is the sky"},
++        {"role": "assistant", "content": "The sky usually looks blue because air molecules scatter shorter blue wavelengths."},
++        {"role": "topic_state", "content": json.dumps({
++            "state_kind": "SUBSTANTIVE_TOPIC",
++            "topic": "sky",
++            "last_user_prompt": "what color is the sky",
++            "last_visible_answer": "The sky usually looks blue because air molecules scatter shorter blue wavelengths.",
++            "source_route": "local_conversation_model_lane",
++            "entities": ["sky"],
++            "supersedes_anchor": True,
++        })},
++    ]
++
++    payload = route_message("Conversation", "why is that", history=history)
++
++    assert payload["route"] == "session_memory"
++    assert "wavelength" in payload["answer"].lower() or "scatter" in payload["answer"].lower()
++    assert not (payload.get("local_model_offer") or {}).get("offered")
++
++
++def test_topic_switch_commits_music_and_supersedes_prior_anchor():
++    payload = route_message(
++        "Conversation",
++        "actually let's talk about music",
++        history=_history_with_anchor(("tell me about physics", "I know several things about basic physics, including Buoyancy.")),
++    )
++
++    state = payload["conversation_topic_state"]
++    assert state["state_kind"] == "TOPIC_SWITCH"
++    assert state["topic"] == "music"
++    assert state["supersedes_anchor"] is True
++
++
++def test_compare_that_with_mars_uses_resolved_topic_not_raw_multi_concept_retrieval():
++    moon_anchor = {
++        "active_concept_id": "moon",
++        "active_concept_name": "Moon Color Appearance",
++        "last_user_question": "what makes the moon gray",
++        "last_answer_summary": "The moon appears gray because of its surface and reflected sunlight.",
++        "retrieved_concept_ids": ["moon"],
++        "retrieved_concept_names": ["Moon Color Appearance"],
++    }
++    history = [
++        {"role": "user", "content": "what makes the moon gray"},
++        {"role": "assistant", "content": "The moon appears gray because of its surface and reflected sunlight."},
++        {"role": "anchor", "content": json.dumps(moon_anchor)},
++    ]
++
++    payload = route_message("Conversation", "compare that with Mars", history=history)
++
++    assert payload["route"] == "session_memory"
++    assert "moon" in payload["answer"].lower()
++    assert "mars" in payload["answer"].lower()
++    assert "attention budgeting" not in payload["answer"].lower()

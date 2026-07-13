@@ -1,0 +1,555 @@
+{
+  "run_id": "live-style-activation-energy-20260713T034952Z",
+  "path": "Tk-compatible DeltaApp._send_chat live-style sequence",
+  "turn_count": 5,
+  "local_model_inference_observed": false,
+  "provider_invocation_observed": false,
+  "turns": [
+    {
+      "turn": 1,
+      "prompt": "What color is the sky?",
+      "visible_response": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "exact_response": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "route": "local_conversation_model_lane",
+      "concept_matches": [],
+      "topic_state_before": null,
+      "topic_state_after": {
+        "state_kind": "SUBSTANTIVE_TOPIC",
+        "topic": "sky",
+        "source_turn": "current",
+        "source_route": "local_conversation_model_lane",
+        "last_user_prompt": "What color is the sky?",
+        "last_visible_answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "entities": [
+          "sky"
+        ],
+        "confidence": 0.88,
+        "supersedes_anchor": true,
+        "read_only": true
+      },
+      "active_topic_anchor_before": null,
+      "active_topic_anchor_after": null,
+      "pending_state_after": {
+        "provider": null,
+        "local_model_question": null,
+        "local_model_deepening": null
+      },
+      "cognitive_episode": {
+        "episode_id": "rc2-episode-5722dbf1b632c1bc",
+        "active_topic": "sky",
+        "active_entities": [
+          "sky"
+        ],
+        "active_question": "What color is the sky?",
+        "active_answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "active_route": "local_conversation_model_lane",
+        "active_wrs": null,
+        "active_contradiction": null,
+        "active_analogy": null,
+        "active_examples": [],
+        "active_limits": [],
+        "unresolved_questions": [],
+        "last_summary": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "conversation_branch": [],
+        "resolved_references": [],
+        "rejected_references": [],
+        "episode_confidence": 0.7,
+        "turn_number": 1,
+        "created_at": "2026-07-13T03:49:55+00:00",
+        "ephemeral": true,
+        "read_only": true
+      },
+      "local_model_invoked": false,
+      "provider_invoked": false
+    },
+    {
+      "turn": 2,
+      "prompt": "tell me more about the sky",
+      "visible_response": "Continuing with sky: the sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "exact_response": "Continuing with sky: the sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+      "route": "session_memory",
+      "concept_matches": [],
+      "topic_state_before": {
+        "state_kind": "SUBSTANTIVE_TOPIC",
+        "topic": "sky",
+        "source_turn": "current",
+        "source_route": "local_conversation_model_lane",
+        "last_user_prompt": "What color is the sky?",
+        "last_visible_answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "entities": [
+          "sky"
+        ],
+        "confidence": 0.88,
+        "supersedes_anchor": true,
+        "read_only": true
+      },
+      "topic_state_after": {
+        "confidence": 0.88,
+        "entities": [
+          "sky"
+        ],
+        "last_user_prompt": "tell me more about the sky",
+        "last_visible_answer": "Continuing with sky: the sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "read_only": true,
+        "source_route": "session_memory",
+        "source_turn": "current",
+        "state_kind": "FOLLOWUP",
+        "supersedes_anchor": true,
+        "topic": "sky"
+      },
+      "active_topic_anchor_before": null,
+      "active_topic_anchor_after": null,
+      "pending_state_after": {
+        "provider": null,
+        "local_model_question": null,
+        "local_model_deepening": null
+      },
+      "cognitive_episode": {
+        "episode_id": "rc2-episode-7a86bdf3ad9dc769",
+        "active_topic": "sky",
+        "active_entities": [
+          "sky"
+        ],
+        "active_question": "What color is the sky?",
+        "active_answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "active_route": "session_memory",
+        "active_wrs": null,
+        "active_contradiction": null,
+        "active_analogy": null,
+        "active_examples": [],
+        "active_limits": [],
+        "unresolved_questions": [],
+        "last_summary": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "conversation_branch": [
+          {
+            "topic": "sky",
+            "entities": [
+              "sky"
+            ],
+            "question": "What color is the sky?",
+            "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "route": "local_conversation_model_lane",
+            "summary": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "state_kind": "SUBSTANTIVE_TOPIC",
+            "supersedes_anchor": true
+          }
+        ],
+        "resolved_references": [],
+        "rejected_references": [],
+        "episode_confidence": 0.9,
+        "turn_number": 2,
+        "created_at": "2026-07-13T03:49:56+00:00",
+        "ephemeral": true,
+        "read_only": true
+      },
+      "local_model_invoked": false,
+      "provider_invoked": false
+    },
+    {
+      "turn": 3,
+      "prompt": "what else do you know?",
+      "visible_response": "I can talk about Advanced Operator Mode, Approval Workflow, Audit Trail. Which direction do you want to explore?",
+      "exact_response": "I can talk about Advanced Operator Mode, Approval Workflow, Audit Trail. Which direction do you want to explore?",
+      "route": "developmental_concept_browse_followup",
+      "concept_matches": [
+        "Advanced Operator Mode (Delta Architecture Itself)",
+        "Approval Workflow (Delta Architecture Itself)",
+        "Audit Trail (Delta Architecture Itself)"
+      ],
+      "topic_state_before": {
+        "confidence": 0.88,
+        "entities": [
+          "sky"
+        ],
+        "last_user_prompt": "tell me more about the sky",
+        "last_visible_answer": "Continuing with sky: the sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "read_only": true,
+        "source_route": "session_memory",
+        "source_turn": "current",
+        "state_kind": "FOLLOWUP",
+        "supersedes_anchor": true,
+        "topic": "sky"
+      },
+      "topic_state_after": {
+        "state_kind": "CONCEPT_ANCHOR",
+        "topic": "Advanced Operator Mode (Delta Architecture Itself)",
+        "source_turn": "current",
+        "source_route": "developmental_concept_browse_followup",
+        "last_user_prompt": "what else do you know?",
+        "last_visible_answer": "I know about `Advanced Operator Mode (Delta Architecture Itself)` from local noncanonical memory.\nAdvanced Operator Mode is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:\n- DELTA architecture itself reasoning\n- DELTA architecture itself evidence\n- DELTA architecture itself tradeoffs\n- DELTA architecture itself applications\n- DELTA architecture itself uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Approval Workflow (Delta Architecture Itself)\n- Audit ",
+        "entities": [
+          "Advanced Operator Mode (Delta Architecture Itself)"
+        ],
+        "confidence": 0.9,
+        "supersedes_anchor": false,
+        "read_only": true
+      },
+      "active_topic_anchor_before": null,
+      "active_topic_anchor_after": {
+        "active_concept_id": "rc2-concept-growth-1277ba06573edc1c",
+        "active_concept_name": "Advanced Operator Mode (Delta Architecture Itself)",
+        "domain": "DELTA architecture itself",
+        "related_concepts": [
+          "DELTA architecture itself reasoning",
+          "DELTA architecture itself evidence",
+          "DELTA architecture itself tradeoffs",
+          "DELTA architecture itself applications",
+          "DELTA architecture itself uncertainty"
+        ],
+        "retrieved_concept_ids": [
+          "rc2-concept-growth-1277ba06573edc1c",
+          "rc2-concept-growth-6e1ed1547bfa01f4",
+          "rc2-concept-growth-2dd86d73209e8a0c"
+        ],
+        "retrieved_concept_names": [
+          "Advanced Operator Mode (Delta Architecture Itself)",
+          "Approval Workflow (Delta Architecture Itself)",
+          "Audit Trail (Delta Architecture Itself)"
+        ],
+        "last_user_question": "what else do you know?",
+        "last_answer_summary": "I can talk about Advanced Operator Mode, Approval Workflow, Audit Trail. Which direction do you want to explore?"
+      },
+      "pending_state_after": {
+        "provider": null,
+        "local_model_question": null,
+        "local_model_deepening": null
+      },
+      "cognitive_episode": {
+        "episode_id": "rc2-episode-8989639d67b9df30",
+        "active_topic": "Advanced Operator Mode (Delta Architecture Itself)",
+        "active_entities": [
+          "Advanced Operator Mode (Delta Architecture Itself)"
+        ],
+        "active_question": "what else do you know?",
+        "active_answer": "I know about `Advanced Operator Mode (Delta Architecture Itself)` from local noncanonical memory.\nAdvanced Operator Mode is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:\n- DELTA architecture itself reasoning\n- DELTA architecture itself evidence\n- DELTA architecture itself tradeoffs\n- DELTA architecture itself applications\n- DELTA architecture itself uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Approval Workflow (Delta Architecture Itself)\n- Audit ",
+        "active_route": "developmental_concept_browse_followup",
+        "active_wrs": null,
+        "active_contradiction": null,
+        "active_analogy": null,
+        "active_examples": [],
+        "active_limits": [
+          "DELTA architecture itself uncertainty"
+        ],
+        "unresolved_questions": [],
+        "last_summary": "I know about `Advanced Operator Mode (Delta Architecture Itself)` from local noncanonical memory.\nAdvanced Operator Mode is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:\n- DELTA architecture itself reasoning\n- DELTA architecture itself evidence\n- DELTA architecture itself tradeoffs\n- DELTA architecture itself applications\n- DELTA architecture itself uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Approval Workflow (Delta Architecture Itself)\n- Audit ",
+        "conversation_branch": [
+          {
+            "topic": "sky",
+            "entities": [
+              "sky"
+            ],
+            "question": "tell me more about the sky",
+            "answer": "Continuing with sky: the sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "route": "session_memory",
+            "summary": "Continuing with sky: the sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "state_kind": "FOLLOWUP",
+            "supersedes_anchor": true
+          },
+          {
+            "topic": "the sky",
+            "entities": [
+              "the sky"
+            ],
+            "question": "What color is the sky?",
+            "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "route": "session_history",
+            "summary": "Question: What color is the sky? | Answer: The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+          }
+        ],
+        "resolved_references": [],
+        "rejected_references": [],
+        "episode_confidence": 0.7,
+        "turn_number": 3,
+        "created_at": "2026-07-13T03:49:57+00:00",
+        "ephemeral": true,
+        "read_only": true
+      },
+      "local_model_invoked": false,
+      "provider_invoked": false
+    },
+    {
+      "turn": 4,
+      "prompt": "what about chemistry?",
+      "visible_response": "I know several things about chemistry, including Acid Base Reactions, Activation Energy, Alkanes. Pick one and I can explain it more naturally.",
+      "exact_response": "I know several things about chemistry, including Acid Base Reactions, Activation Energy, Alkanes. Pick one and I can explain it more naturally.",
+      "route": "developmental_concept_domain_browse",
+      "concept_matches": [
+        "Acid Base Reactions (Chemistry)",
+        "Activation Energy (Chemistry)",
+        "Alkanes (Chemistry)"
+      ],
+      "topic_state_before": {
+        "state_kind": "CONCEPT_ANCHOR",
+        "topic": "Advanced Operator Mode (Delta Architecture Itself)",
+        "source_turn": "current",
+        "source_route": "developmental_concept_browse_followup",
+        "last_user_prompt": "what else do you know?",
+        "last_visible_answer": "I know about `Advanced Operator Mode (Delta Architecture Itself)` from local noncanonical memory.\nAdvanced Operator Mode is a reusable DELTA architecture itself concept that helps explain causes, constraints, tradeoffs, and practical decisions in the DELTA architecture itself domain.\n\nRelated ideas:\n- DELTA architecture itself reasoning\n- DELTA architecture itself evidence\n- DELTA architecture itself tradeoffs\n- DELTA architecture itself applications\n- DELTA architecture itself uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Approval Workflow (Delta Architecture Itself)\n- Audit ",
+        "entities": [
+          "Advanced Operator Mode (Delta Architecture Itself)"
+        ],
+        "confidence": 0.9,
+        "supersedes_anchor": false,
+        "read_only": true
+      },
+      "topic_state_after": {
+        "state_kind": "CONCEPT_ANCHOR",
+        "topic": "Acid Base Reactions (Chemistry)",
+        "source_turn": "current",
+        "source_route": "developmental_concept_domain_browse",
+        "last_user_prompt": "what about chemistry?",
+        "last_visible_answer": "I know about `Acid Base Reactions (Chemistry)` from local noncanonical memory.\nAcid Base Reactions is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nRelated ideas:\n- chemistry reasoning\n- chemistry evidence\n- chemistry tradeoffs\n- chemistry applications\n- chemistry uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Activation Energy (Chemistry)\n- Alkanes (Chemistry)",
+        "entities": [
+          "Acid Base Reactions (Chemistry)"
+        ],
+        "confidence": 0.9,
+        "supersedes_anchor": false,
+        "read_only": true
+      },
+      "active_topic_anchor_before": {
+        "active_concept_id": "rc2-concept-growth-1277ba06573edc1c",
+        "active_concept_name": "Advanced Operator Mode (Delta Architecture Itself)",
+        "domain": "DELTA architecture itself",
+        "related_concepts": [
+          "DELTA architecture itself reasoning",
+          "DELTA architecture itself evidence",
+          "DELTA architecture itself tradeoffs",
+          "DELTA architecture itself applications",
+          "DELTA architecture itself uncertainty"
+        ],
+        "retrieved_concept_ids": [
+          "rc2-concept-growth-1277ba06573edc1c",
+          "rc2-concept-growth-6e1ed1547bfa01f4",
+          "rc2-concept-growth-2dd86d73209e8a0c"
+        ],
+        "retrieved_concept_names": [
+          "Advanced Operator Mode (Delta Architecture Itself)",
+          "Approval Workflow (Delta Architecture Itself)",
+          "Audit Trail (Delta Architecture Itself)"
+        ],
+        "last_user_question": "what else do you know?",
+        "last_answer_summary": "I can talk about Advanced Operator Mode, Approval Workflow, Audit Trail. Which direction do you want to explore?"
+      },
+      "active_topic_anchor_after": {
+        "active_concept_id": "rc2-concept-growth-be9493244f11c506",
+        "active_concept_name": "Acid Base Reactions (Chemistry)",
+        "domain": "chemistry",
+        "related_concepts": [
+          "chemistry reasoning",
+          "chemistry evidence",
+          "chemistry tradeoffs",
+          "chemistry applications",
+          "chemistry uncertainty"
+        ],
+        "retrieved_concept_ids": [
+          "rc2-concept-growth-be9493244f11c506",
+          "rc2-concept-growth-9d4ead474c780ff9",
+          "rc2-concept-growth-13cb412ff6fa2a10"
+        ],
+        "retrieved_concept_names": [
+          "Acid Base Reactions (Chemistry)",
+          "Activation Energy (Chemistry)",
+          "Alkanes (Chemistry)"
+        ],
+        "last_user_question": "what about chemistry?",
+        "last_answer_summary": "I know several things about chemistry, including Acid Base Reactions, Activation Energy, Alkanes. Pick one and I can explain it more naturally."
+      },
+      "pending_state_after": {
+        "provider": null,
+        "local_model_question": null,
+        "local_model_deepening": null
+      },
+      "cognitive_episode": {
+        "episode_id": "rc2-episode-5a86622d8fb417b7",
+        "active_topic": "Acid Base Reactions (Chemistry)",
+        "active_entities": [
+          "Acid Base Reactions (Chemistry)"
+        ],
+        "active_question": "what about chemistry?",
+        "active_answer": "I know about `Acid Base Reactions (Chemistry)` from local noncanonical memory.\nAcid Base Reactions is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nRelated ideas:\n- chemistry reasoning\n- chemistry evidence\n- chemistry tradeoffs\n- chemistry applications\n- chemistry uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Activation Energy (Chemistry)\n- Alkanes (Chemistry)",
+        "active_route": "developmental_concept_domain_browse",
+        "active_wrs": null,
+        "active_contradiction": null,
+        "active_analogy": null,
+        "active_examples": [],
+        "active_limits": [
+          "chemistry uncertainty"
+        ],
+        "unresolved_questions": [],
+        "last_summary": "I know about `Acid Base Reactions (Chemistry)` from local noncanonical memory.\nAcid Base Reactions is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nRelated ideas:\n- chemistry reasoning\n- chemistry evidence\n- chemistry tradeoffs\n- chemistry applications\n- chemistry uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Activation Energy (Chemistry)\n- Alkanes (Chemistry)",
+        "conversation_branch": [
+          {
+            "topic": "Advanced Operator Mode (Delta Architecture Itself)",
+            "entities": [
+              "Advanced Operator Mode (Delta Architecture Itself)",
+              "Approval Workflow (Delta Architecture Itself)",
+              "Audit Trail (Delta Architecture Itself)"
+            ],
+            "question": "what else do you know?",
+            "answer": "I can talk about Advanced Operator Mode, Approval Workflow, Audit Trail. Which direction do you want to explore?",
+            "route": "anchor",
+            "summary": "I can talk about Advanced Operator Mode, Approval Workflow, Audit Trail. Which direction do you want to explore?"
+          },
+          {
+            "topic": "the sky",
+            "entities": [
+              "the sky"
+            ],
+            "question": "What color is the sky?",
+            "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "route": "session_history",
+            "summary": "Question: What color is the sky? | Answer: The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+          }
+        ],
+        "resolved_references": [],
+        "rejected_references": [],
+        "episode_confidence": 0.7,
+        "turn_number": 4,
+        "created_at": "2026-07-13T03:49:58+00:00",
+        "ephemeral": true,
+        "read_only": true
+      },
+      "local_model_invoked": false,
+      "provider_invoked": false
+    },
+    {
+      "turn": 5,
+      "prompt": "tell me about activation energy.",
+      "visible_response": "I know about Activation Energy. Activation Energy is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain. Activation Energy connects observable situations to underlying chemistry principles. Activation Energy is useful for comparing evidence, identifying constraints, and choosing next questions.",
+      "exact_response": "I know about Activation Energy. Activation Energy is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain. Activation Energy connects observable situations to underlying chemistry principles. Activation Energy is useful for comparing evidence, identifying constraints, and choosing next questions.",
+      "route": "developmental_concept_memory",
+      "concept_matches": [
+        "Activation Energy (Chemistry)"
+      ],
+      "topic_state_before": {
+        "state_kind": "CONCEPT_ANCHOR",
+        "topic": "Acid Base Reactions (Chemistry)",
+        "source_turn": "current",
+        "source_route": "developmental_concept_domain_browse",
+        "last_user_prompt": "what about chemistry?",
+        "last_visible_answer": "I know about `Acid Base Reactions (Chemistry)` from local noncanonical memory.\nAcid Base Reactions is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nRelated ideas:\n- chemistry reasoning\n- chemistry evidence\n- chemistry tradeoffs\n- chemistry applications\n- chemistry uncertainty\n\nA couple of nearby concepts I can also discuss:\n- Activation Energy (Chemistry)\n- Alkanes (Chemistry)",
+        "entities": [
+          "Acid Base Reactions (Chemistry)"
+        ],
+        "confidence": 0.9,
+        "supersedes_anchor": false,
+        "read_only": true
+      },
+      "topic_state_after": {
+        "state_kind": "CONCEPT_ANCHOR",
+        "topic": "Activation Energy (Chemistry)",
+        "source_turn": "current",
+        "source_route": "developmental_concept_memory",
+        "last_user_prompt": "tell me about activation energy.",
+        "last_visible_answer": "You taught me the concept `Activation Energy (Chemistry)` earlier. Based on that:\nActivation Energy is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nKey points:\n- Activation Energy connects observable situations to underlying chemistry principles.\n- Activation Energy is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about activation energy should separate known facts, assumptions, uncertainty, and practical implications.",
+        "entities": [
+          "Activation Energy (Chemistry)"
+        ],
+        "confidence": 0.92,
+        "supersedes_anchor": false,
+        "read_only": true
+      },
+      "active_topic_anchor_before": {
+        "active_concept_id": "rc2-concept-growth-be9493244f11c506",
+        "active_concept_name": "Acid Base Reactions (Chemistry)",
+        "domain": "chemistry",
+        "related_concepts": [
+          "chemistry reasoning",
+          "chemistry evidence",
+          "chemistry tradeoffs",
+          "chemistry applications",
+          "chemistry uncertainty"
+        ],
+        "retrieved_concept_ids": [
+          "rc2-concept-growth-be9493244f11c506",
+          "rc2-concept-growth-9d4ead474c780ff9",
+          "rc2-concept-growth-13cb412ff6fa2a10"
+        ],
+        "retrieved_concept_names": [
+          "Acid Base Reactions (Chemistry)",
+          "Activation Energy (Chemistry)",
+          "Alkanes (Chemistry)"
+        ],
+        "last_user_question": "what about chemistry?",
+        "last_answer_summary": "I know several things about chemistry, including Acid Base Reactions, Activation Energy, Alkanes. Pick one and I can explain it more naturally."
+      },
+      "active_topic_anchor_after": {
+        "active_concept_id": "rc2-concept-growth-9d4ead474c780ff9",
+        "active_concept_name": "Activation Energy (Chemistry)",
+        "domain": "chemistry",
+        "related_concepts": [
+          "chemistry reasoning",
+          "chemistry evidence",
+          "chemistry tradeoffs",
+          "chemistry applications",
+          "chemistry uncertainty"
+        ],
+        "retrieved_concept_ids": [
+          "rc2-concept-growth-9d4ead474c780ff9"
+        ],
+        "retrieved_concept_names": [
+          "Activation Energy (Chemistry)"
+        ],
+        "last_user_question": "tell me about activation energy.",
+        "last_answer_summary": "You taught me the concept `Activation Energy (Chemistry)` earlier. Based on that: Activation Energy is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain. Key points: - Activation Energy connects observable situations to underlying chemistry principles. - Activation Energy is useful for comparing evidence, identifying constraints, and choosi"
+      },
+      "pending_state_after": {
+        "provider": null,
+        "local_model_question": null,
+        "local_model_deepening": null
+      },
+      "cognitive_episode": {
+        "episode_id": "rc2-episode-93b5bb9c9f7d3867",
+        "active_topic": "Activation Energy (Chemistry)",
+        "active_entities": [
+          "Activation Energy (Chemistry)"
+        ],
+        "active_question": "tell me about activation energy.",
+        "active_answer": "You taught me the concept `Activation Energy (Chemistry)` earlier. Based on that:\nActivation Energy is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nKey points:\n- Activation Energy connects observable situations to underlying chemistry principles.\n- Activation Energy is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about activation energy should separate known facts, assumptions, uncertainty, and practical implications.",
+        "active_route": "developmental_concept_memory",
+        "active_wrs": null,
+        "active_contradiction": null,
+        "active_analogy": null,
+        "active_examples": [],
+        "active_limits": [
+          "Reasoning about activation energy should separate known facts, assumptions, uncertainty, and practical implications."
+        ],
+        "unresolved_questions": [],
+        "last_summary": "You taught me the concept `Activation Energy (Chemistry)` earlier. Based on that:\nActivation Energy is a reusable chemistry concept that helps explain causes, constraints, tradeoffs, and practical decisions in the chemistry domain.\n\nKey points:\n- Activation Energy connects observable situations to underlying chemistry principles.\n- Activation Energy is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about activation energy should separate known facts, assumptions, uncertainty, and practical implications.",
+        "conversation_branch": [
+          {
+            "topic": "Acid Base Reactions (Chemistry)",
+            "entities": [
+              "Acid Base Reactions (Chemistry)",
+              "Activation Energy (Chemistry)",
+              "Alkanes (Chemistry)"
+            ],
+            "question": "what about chemistry?",
+            "answer": "I know several things about chemistry, including Acid Base Reactions, Activation Energy, Alkanes. Pick one and I can explain it more naturally.",
+            "route": "anchor",
+            "summary": "I know several things about chemistry, including Acid Base Reactions, Activation Energy, Alkanes. Pick one and I can explain it more naturally."
+          },
+          {
+            "topic": "the sky",
+            "entities": [
+              "the sky"
+            ],
+            "question": "What color is the sky?",
+            "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+            "route": "session_history",
+            "summary": "Question: What color is the sky? | Answer: The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
+          }
+        ],
+        "resolved_references": [],
+        "rejected_references": [],
+        "episode_confidence": 0.7,
+        "turn_number": 5,
+        "created_at": "2026-07-13T03:49:59+00:00",
+        "ephemeral": true,
+        "read_only": true
+      },
+      "local_model_invoked": false,
+      "provider_invoked": false
+    }
+  ]
+}

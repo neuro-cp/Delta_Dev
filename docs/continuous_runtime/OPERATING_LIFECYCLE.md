@@ -15,13 +15,8 @@ Default wake mode is `EVENT_DRIVEN`. `BOUNDED_BACKGROUND` may be enabled by oper
 
 ## Cycle Bounds
 
-Each cycle enforces a maximum event batch size, cycle duration target, generated
-initiative count, journal entries, model calls, and Wikipedia calls. The current
-controller sets model and Wikipedia calls per cycle to zero because model
-execution and retrieval are handled by explicit governed paths, not idle
-reflection.
+Each cycle enforces a maximum event batch size, cycle duration target, generated initiative count, journal entries, model calls, and Wikipedia calls. The controller records model and Wikipedia calls from explicit governed events; it does not infer idle calls from silence.
 
 ## Shutdown
 
-Shutdown is explicit: `SHUTTING_DOWN -> SHUTDOWN`. The controller clears its
-queue and remains inspectable through the final snapshot.
+Shutdown is explicit: `SHUTTING_DOWN -> SHUTDOWN`. The controller clears its queue and remains inspectable through the final snapshot.

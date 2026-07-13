@@ -109,13 +109,34 @@ def test_bounded_long_run_has_no_model_or_wikipedia_call_storm():
     controller, metrics = run_bounded_long_run(controller, cycles=25)
 
     assert metrics["cycles_completed"] == 25
+    assert metrics["events_injected"] > 0
+    assert metrics["events_processed"] > 0
+    assert "BEHAVIORAL_FAILURE" in metrics["event_types_seen"]
     assert metrics["max_queue_size"] <= controller.config.queue_limit
-    assert metrics["model_calls"] == 0
-    assert metrics["wikipedia_calls"] == 0
+    assert metrics["model_calls"] > 0
+    assert metrics["wikipedia_calls"] > 0
+    assert metrics["external_process_metrics"]["end"]["pid"]
     assert metrics["duplicate_initiatives"] == 0
     assert metrics["hidden_threads_created"] is False
     assert metrics["hidden_memory_writes"] is False
     assert metrics["health_state"] == "HEALTHY"
+
+
+def test_stale_events_expire_before_processing():
+    controller = start_continuous_runtime_controller(session_id="continuous-expiry")
+    stale = make_continuous_event(
+        "VALIDATION_RESULT",
+        source="test",
+        session_id="continuous-expiry",
+        payload={"result": "stale"},
+        expiration_cycle=0,
+    )
+    controller = enqueue_continuous_event(controller, stale)
+    for _ in range(3):
+        controller = run_controller_cycle(controller)
+
+    assert stale.event_id not in controller.processed_event_ids
+    assert not controller.event_queue
 
 
 def test_self_development_demo_stops_at_promotion_boundary():
@@ -139,4 +160,5 @@ def test_report_payload_classifies_capabilities_and_recommendation():
     )
 
     assert payload["active_runtime_spine"]["capability_classification"]["delta_1_2_live_runtime"] == "LIVE"
-    assert payload["readiness"]["recommendation"] == "CONTINUOUS_RUNTIME_READY_FOR_CONTROLLED_OPERATOR_PILOT"
+    assert payload["performance"]["status"] == "BOUNDED_CAMPAIGN_MEASURED"
+    assert payload["readiness"]["recommendation"] == "CONTINUOUS_RUNTIME_PARTIALLY_OPERATIONAL_PROCEED_TO_REAL_LONG_HORIZON_VALIDATION"

@@ -1441,7 +1441,9 @@ class DeltaApp:
         self.pending_provider_question: str | None = None
         self.pending_local_model_question: str | None = None
         self.pending_local_model_deepening: dict[str, str] | None = None
+        self.last_local_model_exchange: dict[str, object] | None = None
         self.active_topic_anchor: dict[str, object] | None = None
+        self.conversation_topic_state: dict[str, object] | None = None
         self.last_report_inspection: dict[str, object] | None = None
         self.rc6_pilot_events: list[dict[str, object]] = []
         self.live_runtime_session: LiveWikipediaRuntimeSession | None = None
@@ -2051,6 +2053,8 @@ class DeltaApp:
         history = self.session_history[-10:]
         if self.active_topic_anchor:
             history = [*history, {"role": "anchor", "content": json.dumps(self.active_topic_anchor, sort_keys=True)}]
+        if self.conversation_topic_state:
+            history = [*history, {"role": "topic_state", "content": json.dumps(self.conversation_topic_state, sort_keys=True)}]
         return history
 
     def _last_substantive_exchange(self) -> dict[str, str] | None:
@@ -2261,6 +2265,7 @@ class DeltaApp:
                 payload = getattr(response, "payload", {})
                 self.last_payload = payload if isinstance(payload, dict) else None
                 if isinstance(payload, dict):
+                    self._update_active_topic_anchor(payload)
                     self._queue_concept_candidate(payload)
                 self._append_chat("DELTA", str(getattr(response, "answer", "")))
                 self._append_session("assistant", str(getattr(response, "answer", "")))
@@ -2573,6 +2578,20 @@ class DeltaApp:
             self._append_chat("DELTA", pc1_reply)
             self._append_session("assistant", pc1_reply)
             return
+        if self._is_local_model_response_query(lower):
+            reply = self._last_local_model_response_answer()
+            if reply:
+                self._append_session("user", message)
+                self._append_chat("DELTA", reply)
+                self._append_session("assistant", reply)
+                return
+        if self._is_discourse_history_query(lower):
+            reply = self._discourse_history_answer()
+            if reply:
+                self._append_session("user", message)
+                self._append_chat("DELTA", reply)
+                self._append_session("assistant", reply)
+                return
         if self.pending_local_model_deepening and lower in affirm_words:
             pending = self.pending_local_model_deepening
             self.pending_local_model_deepening = None
@@ -2639,6 +2658,7 @@ class DeltaApp:
             rendered = render_route(payload, developer_overlay=self.developer_overlay_enabled.get())
             self._queue_concept_candidate(payload)
             self._set_deepening_offer_if_present(target, payload)
+            self._remember_local_model_exchange(target, payload)
             self._append_chat("DELTA", rendered)
             self._append_session("assistant", rendered)
             self._refresh_state_cards()
@@ -2738,7 +2758,99 @@ class DeltaApp:
         self._append_session("user", message)
         self._append_session("assistant", rendered)
 
+    def _remember_local_model_exchange(self, question: str, payload: dict[str, object]) -> None:
+        result = payload.get("local_model_result") if isinstance(payload, dict) else None
+        if not isinstance(result, dict):
+            self.last_local_model_exchange = {
+                "question": question,
+                "status": "unavailable",
+                "answer": "",
+                "reason": "no_local_model_result",
+            }
+            return
+        if result.get("executed"):
+            self.last_local_model_exchange = {
+                "question": question,
+                "status": "completed",
+                "answer": str(result.get("answer") or payload.get("answer") or ""),
+                "model_id": result.get("model_id"),
+                "provider_calls_performed": bool(result.get("provider_calls_performed", False)),
+            }
+            return
+        self.last_local_model_exchange = {
+            "question": question,
+            "status": "unavailable",
+            "answer": "",
+            "reason": result.get("reason") or "local_model_not_completed",
+        }
+
+    def _is_local_model_response_query(self, lower: str) -> bool:
+        normalized = " ".join(str(lower or "").lower().strip().split()).strip(" ?!.")
+        return normalized in {
+            "what was the response",
+            "what was its response",
+            "what did it say",
+            "what did the model say",
+            "what did the local model say",
+            "show me the response",
+            "show me the local model response",
+        }
+
+    def _last_local_model_response_answer(self) -> str:
+        exchange = self.last_local_model_exchange
+        if not isinstance(exchange, dict):
+            return ""
+        question = str(exchange.get("question") or "the previous request")
+        if exchange.get("status") == "completed" and str(exchange.get("answer") or "").strip():
+            return f"The local model response for `{question}` was:\n\n{str(exchange.get('answer')).strip()}"
+        return f"I do not have a completed local-model response for `{question}` yet."
+
+    def _is_discourse_history_query(self, lower: str) -> bool:
+        normalized = " ".join(str(lower or "").lower().strip().split()).strip(" ?!.")
+        return normalized in {
+            "what were we discussing before that",
+            "what were we talking about before that",
+            "what was the topic before that",
+            "what were we discussing",
+            "what were we talking about",
+        }
+
+    def _discourse_history_answer(self) -> str:
+        topic = ""
+        if isinstance(self.conversation_topic_state, dict):
+            topic = str(self.conversation_topic_state.get("topic") or "").strip()
+        if not topic:
+            for item in reversed(self.session_history):
+                if item.get("role") != "topic_state":
+                    continue
+                try:
+                    state = json.loads(str(item.get("content") or "{}"))
+                except json.JSONDecodeError:
+                    continue
+                topic = str(state.get("topic") or "").strip()
+                if topic:
+                    break
+        if not topic:
+            exchange = self._last_substantive_exchange()
+            topic = str((exchange or {}).get("question") or "").strip()
+        if not topic:
+            return ""
+        return f"Before that, we were discussing {topic}."
+
     def _update_active_topic_anchor(self, payload: dict[str, object]) -> None:
+        topic_state = payload.get("conversation_topic_state")
+        if isinstance(topic_state, dict):
+            state_kind = str(topic_state.get("state_kind") or "")
+            topic = str(topic_state.get("topic") or "").strip()
+            if state_kind in {"SUBSTANTIVE_TOPIC", "TOPIC_SWITCH", "FOLLOWUP"} and topic:
+                self.conversation_topic_state = dict(topic_state)
+                if topic_state.get("supersedes_anchor"):
+                    self.active_topic_anchor = None
+                return
+            if state_kind == "SOCIAL_INTERLUDE":
+                return
+            if state_kind == "CONCEPT_ANCHOR" and topic:
+                self.conversation_topic_state = dict(topic_state)
         anchor = payload.get("active_topic_anchor")
         if isinstance(anchor, dict) and (anchor.get("active_concept_id") or anchor.get("active_concept_name")):
             self.active_topic_anchor = dict(anchor)

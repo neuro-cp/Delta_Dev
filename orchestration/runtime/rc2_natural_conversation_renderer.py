@@ -166,16 +166,17 @@ def _render_concept_memory(payload: dict[str, Any]) -> str:
     name = _clean_name(first.get("concept_name"))
     definition = _clean_sentence(str(first.get("short_definition") or ""))
     propositions = [_clean_sentence(str(item)) for item in (first.get("propositions") or [])[:3]]
+    source_label = " from noncanonical reviewed memory" if "noncanonical reviewed memory" in str(payload.get("answer") or "").lower() else ""
     if definition and not _contains_any(definition, GENERIC_SCAFFOLD):
-        answer = f"I know about {name}. {definition}"
+        answer = f"I know about {name}{source_label}. {definition}"
     elif propositions:
         useful_props = [item for item in propositions if not _contains_any(item, GENERIC_SCAFFOLD)]
         if useful_props:
-            answer = f"I know about {name}. {useful_props[0]}"
+            answer = f"I know about {name}{source_label}. {useful_props[0]}"
         else:
             answer = f"I found a weak local match for {name}, but the stored details are too generic to answer confidently from the substrate alone."
     else:
-        answer = f"I know about {name}, but the stored concept is still thin."
+        answer = f"I know about {name}{source_label}, but the stored concept is still thin."
     if propositions:
         useful = [
             item for item in propositions
@@ -204,7 +205,7 @@ def _render_multi_concept(payload: dict[str, Any]) -> str:
     matches = payload.get("concept_matches") or []
     names = [_clean_name(item.get("concept_name")) for item in matches[:5]]
     if names:
-        return f"I found a useful local set for that: {', '.join(names)}. I can use those as the basis for a careful comparison, but I am not storing any new synthesis from this turn."
+        return f"I found a useful local set for that: {', '.join(names)}. Synthesis is not enabled yet. I can use those as the basis for a careful comparison, but I am not storing any new synthesis from this turn."
     return _clean_answer(str(payload.get("answer") or "I could not find a strong local concept set for that."))
 
 

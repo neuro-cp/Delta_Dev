@@ -1,364 +1,57 @@
 {
   "cases": [
     {
-      "answer": "You taught me the concept `Moon Color Appearance` earlier. Based on that:\nThe moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.\n\nKey points:\n- The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
+      "answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "concept_matches": [
-        {
-          "_retrieval_score": {
-            "components": {
-              "concept_name": 18.0,
-              "definition": 1.5,
-              "propositions": 3.0,
-              "quality": 0.87,
-              "related_concepts": 2.5,
-              "source_question": 6.0
-            },
-            "domain": "",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "definition_token_overlap",
-              "name_phrase:color",
-              "name_token_overlap",
-              "proposition_token_overlap",
-              "related_token_overlap",
-              "source_phrase:color is",
-              "source_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 31.87
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-07T18:03:35+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-7051d920a32ce90e",
-          "concept_name": "Moon Color Appearance",
-          "concept_type": "general_concept",
-          "created_at": "2026-07-07T18:03:22+00:00",
-          "examples": [
-            "what color is the moon"
-          ],
-          "explains": [
-            "what color is the moon"
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [],
-          "propositions": [
-            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
-          ],
-          "provider_calls_performed": false,
-          "quality_flags": [
-            "too_few_propositions"
-          ],
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 0.87,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
-          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
-          "source_answer_id": "rc2-answer-7051d920a32ce90e",
-          "source_model_id": "llama",
-          "source_model_lane": "everyday_conversation",
-          "source_question": "what color is the moon",
-          "source_type": "local_model_lane",
-          "training_performed": false,
-          "uncertainty": "low_to_moderate_operator_reviewed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "concept_name": 18.0,
-              "quality": 0.87,
-              "related_concepts": 2.5,
-              "source_question": 6.0
-            },
-            "domain": "",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "name_phrase:color",
-              "name_token_overlap",
-              "related_token_overlap",
-              "source_phrase:color is",
-              "source_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 27.37
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-07T03:03:44+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-183f0cb7b12abb56",
-          "concept_name": "Daytime Sky Color",
-          "concept_type": "causal_explanation",
-          "created_at": "2026-07-07T03:03:44+00:00",
-          "examples": [
-            "What color is the sky?"
-          ],
-          "explains": [
-            "What color is the sky?"
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [],
-          "propositions": [
-            "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
-          ],
-          "provider_calls_performed": false,
-          "quality_flags": [
-            "too_few_propositions"
-          ],
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 0.87,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
-          "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-          "source_answer_id": "rc2-answer-183f0cb7b12abb56",
-          "source_model_id": "phi4",
-          "source_model_lane": "everyday_conversation",
-          "source_question": "What color is the sky?",
-          "source_type": "local_model_lane",
-          "training_performed": false,
-          "uncertainty": "low_to_moderate_operator_reviewed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "quality": 1.0,
-              "related_concepts": 6.5
-            },
-            "domain": "basic physics",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "related_phrase:color",
-              "related_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 7.5
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:06:41+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-a0dce209413271e9",
-          "concept_name": "Light Scattering (Basic Physics)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:06:41+00:00",
-          "domain": "basic physics",
-          "examples": [
-            "Explain how light scattering affects a practical basic physics decision.",
-            "Use light scattering to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain light scattering in basic physics."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Light Scattering should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Light Scattering connects observable situations to underlying basic physics principles.",
-            "Light Scattering is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about light scattering should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-a0dce209413271e9",
-          "short_definition": "Light Scattering is a reusable basic physics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the basic physics domain.",
-          "source_answer_id": "rc2-answer-growth-a0dce209413271e9",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain light scattering in basic physics.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "quality": 1.0,
-              "related_concepts": 6.5
-            },
-            "domain": "social communication",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "related_phrase:color",
-              "related_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 7.5
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:08:45+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-fd92b17edf7d7c5b",
-          "concept_name": "Reflective Listening (Social Communication)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:08:45+00:00",
-          "domain": "social communication",
-          "examples": [
-            "Explain how reflective listening affects a practical social communication decision.",
-            "Use reflective listening to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain reflective listening in social communication."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Reflective Listening should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Reflective Listening connects observable situations to underlying social communication principles.",
-            "Reflective Listening is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about reflective listening should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:09:02+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-fd92b17edf7d7c5b",
-          "short_definition": "Reflective Listening is a reusable social communication concept that helps explain causes, constraints, tradeoffs, and practical decisions in the social communication domain.",
-          "source_answer_id": "rc2-answer-growth-fd92b17edf7d7c5b",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain reflective listening in social communication.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "quality": 1.0,
-              "related_concepts": 6.5
-            },
-            "domain": "",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "related_phrase:color",
-              "related_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 7.5
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T16:49:57+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-1089a6018195daa1",
-          "concept_name": "Solar Brightness Mechanism",
-          "concept_type": "causal_explanation",
-          "created_at": "2026-07-08T16:48:40+00:00",
-          "examples": [
-            "what makes the sun bright?"
-          ],
-          "explains": [
-            "what makes the sun bright?"
-          ],
-          "memory_request_source": "explicit_user_remember_that",
-          "memory_type": "knowledge",
-          "misconceptions": [],
-          "operator_edited": true,
-          "operator_notes": "User explicitly asked to remember the previous answer; candidate was queued for manual review despite lower automatic memory-worthiness.",
-          "operator_review_required": true,
-          "propositions": [
-            "The sun is bright because of its incredibly high surface temperature, which is about 5500 degrees Celsius.",
-            "This heat is produced by nuclear reactions that occur in its core, where hydrogen atoms are fused together to form helium, releasing vast amounts of energy in the process.",
-            "This energy is then radiated outward from the core, making the sun shine so brightly in our sky."
-          ],
-          "provider_calls_performed": false,
-          "quality_name_repaired_from": "What Makes Sun Bright",
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "review_note": "User explicitly asked to remember the previous answer; candidate was queued for manual review despite lower automatic memory-worthiness.",
-          "rollback_handle": "rollback-rc2-concept-1089a6018195daa1",
-          "short_definition": "The sun is bright because of its incredibly high surface temperature, which is about 5500 degrees Celsius.",
-          "source_answer_id": "rc2-answer-1089a6018195daa1",
-          "source_model_id": "llama",
-          "source_model_lane": "everyday_conversation",
-          "source_question": "what makes the sun bright?",
-          "source_type": "local_model_lane",
-          "training_performed": false,
-          "uncertainty": "moderate_operator_review_required"
-        }
-      ],
-      "confidence": "grounded_in_approved_noncanonical_concept",
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "active_contradiction": null,
+        "active_entities": [
+          "sky"
+        ],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": "What color is the sky?",
+        "active_route": "local_conversation_model_lane",
+        "active_topic": "sky",
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:50+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.7,
+        "episode_id": "rc2-episode-ffc380c1f6ae8379",
+        "last_summary": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": []
+      },
+      "confidence": "local_general_knowledge",
       "confidence_decision": {
         "confidence": 0.82,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.92,
+      "confidence_score": 0.88,
+      "conversation_topic_state": {
+        "confidence": 0.88,
+        "entities": [
+          "sky"
+        ],
+        "last_user_prompt": "What color is the sky?",
+        "last_visible_answer": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
+        "read_only": true,
+        "source_route": "local_conversation_model_lane",
+        "source_turn": "current",
+        "state_kind": "SUBSTANTIVE_TOPIC",
+        "supersedes_anchor": true,
+        "topic": "sky"
+      },
+      "deterministic_fixture": null,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "question",
@@ -370,6 +63,9 @@
         "requires_operator_approval": false,
         "web_search_performed": false
       },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "intent": {
         "communication_act": "factual_question",
         "confidence": 0.82,
@@ -379,6 +75,8 @@
         "routed_action": "substrate_or_local_model_path",
         "safe_no_route": false
       },
+      "local_model_offer": null,
+      "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
@@ -393,8 +91,162 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "replay_write_performed": false,
+      "route": "local_conversation_model_lane",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "local_conversation_model_lane",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:local_conversation_model_lane"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:50+00:00",
+        "dispatch_aligned_with_arbitration": true,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "local_conversation_model_lane",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "local_conversation_model_lane",
+        "selected_route": "local_conversation_model_lane"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "local_conversation_model_lane",
+        "ephemeral": true,
+        "explicit_new_topic_request": false,
+        "history_turns_seen": 0,
+        "intent": {
+          "communication_act": "factual_question",
+          "confidence": 0.82,
+          "intent": "question",
+          "matched_rule": "factual_question",
+          "message": "What color is the sky?",
+          "routed_action": "substrate_or_local_model_path",
+          "safe_no_route": false
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "local_conversation_model_lane"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "autonomous_action_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -448,164 +300,61 @@
       },
       "supporting_information_offer": null,
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     },
     {
-      "answer": "You taught me the concept `Moon Color Appearance` earlier. Based on that:\nThe moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.\n\nKey points:\n- The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
+      "answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "concept_matches": [
-        {
-          "_retrieval_score": {
-            "components": {
-              "concept_name": 18.0,
-              "definition": 1.5,
-              "propositions": 3.0,
-              "quality": 0.87,
-              "related_concepts": 2.5,
-              "source_question": 6.0
-            },
-            "domain": "",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "definition_token_overlap",
-              "name_phrase:color",
-              "name_token_overlap",
-              "proposition_token_overlap",
-              "related_token_overlap",
-              "source_phrase:color is",
-              "source_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 31.87
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-07T18:03:35+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-7051d920a32ce90e",
-          "concept_name": "Moon Color Appearance",
-          "concept_type": "general_concept",
-          "created_at": "2026-07-07T18:03:22+00:00",
-          "examples": [
-            "what color is the moon"
-          ],
-          "explains": [
-            "what color is the moon"
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [],
-          "propositions": [
-            "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface."
-          ],
-          "provider_calls_performed": false,
-          "quality_flags": [
-            "too_few_propositions"
-          ],
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 0.87,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-7051d920a32ce90e",
-          "short_definition": "The moon is generally considered to be dark gray in color, but it can appear to be a lighter gray or even a bluish color due to the way that sunlight scatters off its surface.",
-          "source_answer_id": "rc2-answer-7051d920a32ce90e",
-          "source_model_id": "llama",
-          "source_model_lane": "everyday_conversation",
-          "source_question": "what color is the moon",
-          "source_type": "local_model_lane",
-          "training_performed": false,
-          "uncertainty": "low_to_moderate_operator_reviewed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "concept_name": 18.0,
-              "quality": 0.87,
-              "related_concepts": 2.5,
-              "source_question": 6.0
-            },
-            "domain": "",
-            "key_token_overlap": [
-              "color"
-            ],
-            "overlap": [
-              "color"
-            ],
-            "reasons": [
-              "name_phrase:color",
-              "name_token_overlap",
-              "related_token_overlap",
-              "source_phrase:color is",
-              "source_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 27.37
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-07T03:03:44+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-183f0cb7b12abb56",
-          "concept_name": "Daytime Sky Color",
-          "concept_type": "causal_explanation",
-          "created_at": "2026-07-07T03:03:44+00:00",
-          "examples": [
-            "What color is the sky?"
-          ],
-          "explains": [
-            "What color is the sky?"
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [],
-          "propositions": [
-            "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths."
-          ],
-          "provider_calls_performed": false,
-          "quality_flags": [
-            "too_few_propositions"
-          ],
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 0.87,
-          "related_concepts": [
-            "light scattering",
-            "surface reflection",
-            "visible light",
-            "atmospheric optics",
-            "apparent color",
-            "illumination"
-          ],
-          "rollback_handle": "rollback-rc2-concept-183f0cb7b12abb56",
-          "short_definition": "The sky usually looks blue during the day because air molecules scatter shorter blue wavelengths of sunlight more strongly than longer red wavelengths.",
-          "source_answer_id": "rc2-answer-183f0cb7b12abb56",
-          "source_model_id": "phi4",
-          "source_model_lane": "everyday_conversation",
-          "source_question": "What color is the sky?",
-          "source_type": "local_model_lane",
-          "training_performed": false,
-          "uncertainty": "low_to_moderate_operator_reviewed"
-        }
-      ],
-      "confidence": "grounded_in_approved_noncanonical_concept",
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+        "active_contradiction": null,
+        "active_entities": [
+          "sky"
+        ],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": "What color is water?",
+        "active_route": "local_conversation_model_lane",
+        "active_topic": "sky",
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.7,
+        "episode_id": "rc2-episode-8bb37e625400baff",
+        "last_summary": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": []
+      },
+      "confidence": "local_general_knowledge",
       "confidence_decision": {
         "confidence": 0.82,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.92,
+      "confidence_score": 0.82,
+      "conversation_topic_state": {
+        "confidence": 0.82,
+        "entities": [
+          "sky"
+        ],
+        "last_user_prompt": "What color is water?",
+        "last_visible_answer": "Pure water is nearly colorless in a small glass, but large amounts can look faintly blue because water absorbs a little more red light than blue light. In everyday life, water also reflects the sky and surrounding surfaces, so it can look blue, gray, green, or brown depending on context.",
+        "read_only": true,
+        "source_route": "local_conversation_model_lane",
+        "source_turn": "current",
+        "state_kind": "SUBSTANTIVE_TOPIC",
+        "supersedes_anchor": true,
+        "topic": "sky"
+      },
+      "deterministic_fixture": null,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "question",
@@ -617,6 +366,9 @@
         "requires_operator_approval": false,
         "web_search_performed": false
       },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "intent": {
         "communication_act": "factual_question",
         "confidence": 0.82,
@@ -626,6 +378,8 @@
         "routed_action": "substrate_or_local_model_path",
         "safe_no_route": false
       },
+      "local_model_offer": null,
+      "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
@@ -640,8 +394,162 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "replay_write_performed": false,
+      "route": "local_conversation_model_lane",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "local_conversation_model_lane",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:local_conversation_model_lane"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "dispatch_aligned_with_arbitration": true,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "local_conversation_model_lane",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "local_conversation_model_lane",
+        "selected_route": "local_conversation_model_lane"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "local_conversation_model_lane",
+        "ephemeral": true,
+        "explicit_new_topic_request": false,
+        "history_turns_seen": 0,
+        "intent": {
+          "communication_act": "factual_question",
+          "confidence": 0.82,
+          "intent": "question",
+          "matched_rule": "factual_question",
+          "message": "What color is water?",
+          "routed_action": "substrate_or_local_model_path",
+          "safe_no_route": false
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "local_conversation_model_lane"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "autonomous_action_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -695,340 +603,57 @@
       },
       "supporting_information_offer": null,
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     },
     {
-      "answer": "You taught me the concept `Apis (Programming)` earlier. Based on that:\nApis is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.\n\nKey points:\n- Apis connects observable situations to underlying programming principles.\n- Apis is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about APIs should separate known facts, assumptions, uncertainty, and practical implications.",
+      "answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. ",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "concept_matches": [
-        {
-          "_retrieval_score": {
-            "components": {
-              "domain": 8.0,
-              "quality": 1.0
-            },
-            "domain": "programming",
-            "key_token_overlap": [],
-            "overlap": [],
-            "reasons": [
-              "domain_alias_match"
-            ],
-            "relevance_gate_passed": true,
-            "score": 9.0
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:07:04+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-5f210792d446ed74",
-          "concept_name": "Apis (Programming)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:07:04+00:00",
-          "domain": "programming",
-          "examples": [
-            "Explain how APIs affects a practical programming decision.",
-            "Use APIs to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain APIs in programming."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Apis should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Apis connects observable situations to underlying programming principles.",
-            "Apis is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about APIs should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "programming fundamentals",
-            "debugging practice",
-            "algorithmic thinking",
-            "data structures",
-            "software projects",
-            "code review",
-            "learning workflow"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-5f210792d446ed74",
-          "short_definition": "Apis is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
-          "source_answer_id": "rc2-answer-growth-5f210792d446ed74",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain APIs in programming.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "domain": 8.0,
-              "quality": 1.0
-            },
-            "domain": "programming",
-            "key_token_overlap": [],
-            "overlap": [],
-            "reasons": [
-              "domain_alias_match"
-            ],
-            "relevance_gate_passed": true,
-            "score": 9.0
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:07:05+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-0ed5fecf3d3291fe",
-          "concept_name": "Asynchronous Programming (Programming)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:07:05+00:00",
-          "domain": "programming",
-          "examples": [
-            "Explain how asynchronous programming affects a practical programming decision.",
-            "Use asynchronous programming to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain asynchronous programming in programming."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Asynchronous Programming should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Asynchronous Programming connects observable situations to underlying programming principles.",
-            "Asynchronous Programming is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about asynchronous programming should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "programming fundamentals",
-            "debugging practice",
-            "algorithmic thinking",
-            "data structures",
-            "software projects",
-            "code review",
-            "learning workflow"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-0ed5fecf3d3291fe",
-          "short_definition": "Asynchronous Programming is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
-          "source_answer_id": "rc2-answer-growth-0ed5fecf3d3291fe",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain asynchronous programming in programming.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "domain": 8.0,
-              "quality": 1.0
-            },
-            "domain": "programming",
-            "key_token_overlap": [],
-            "overlap": [],
-            "reasons": [
-              "domain_alias_match"
-            ],
-            "relevance_gate_passed": true,
-            "score": 9.0
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:07:06+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-17b643257c80003a",
-          "concept_name": "Code Review (Programming)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:07:06+00:00",
-          "domain": "programming",
-          "examples": [
-            "Explain how code review affects a practical programming decision.",
-            "Use code review to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain code review in programming."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Code Review should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Code Review connects observable situations to underlying programming principles.",
-            "Code Review is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about code review should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "programming fundamentals",
-            "debugging practice",
-            "algorithmic thinking",
-            "data structures",
-            "software projects",
-            "code review",
-            "learning workflow",
-            "workflow planning",
-            "task sequencing",
-            "review process"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-17b643257c80003a",
-          "short_definition": "Code Review is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
-          "source_answer_id": "rc2-answer-growth-17b643257c80003a",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain code review in programming.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "domain": 8.0,
-              "quality": 1.0
-            },
-            "domain": "programming",
-            "key_token_overlap": [],
-            "overlap": [],
-            "reasons": [
-              "domain_alias_match"
-            ],
-            "relevance_gate_passed": true,
-            "score": 9.0
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:07:07+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-cfd1920bbd274c26",
-          "concept_name": "Command Line Interfaces (Programming)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:07:07+00:00",
-          "domain": "programming",
-          "examples": [
-            "Explain how command line interfaces affects a practical programming decision.",
-            "Use command line interfaces to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain command line interfaces in programming."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Command Line Interfaces should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Command Line Interfaces connects observable situations to underlying programming principles.",
-            "Command Line Interfaces is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about command line interfaces should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "programming fundamentals",
-            "debugging practice",
-            "algorithmic thinking",
-            "data structures",
-            "software projects",
-            "code review",
-            "learning workflow"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-cfd1920bbd274c26",
-          "short_definition": "Command Line Interfaces is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
-          "source_answer_id": "rc2-answer-growth-cfd1920bbd274c26",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain command line interfaces in programming.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        },
-        {
-          "_retrieval_score": {
-            "components": {
-              "domain": 8.0,
-              "quality": 1.0
-            },
-            "domain": "programming",
-            "key_token_overlap": [],
-            "overlap": [],
-            "reasons": [
-              "domain_alias_match"
-            ],
-            "relevance_gate_passed": true,
-            "score": 9.0
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:07:05+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-075fcaef5c34cf13",
-          "concept_name": "Concurrency (Programming)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:07:05+00:00",
-          "domain": "programming",
-          "examples": [
-            "Explain how concurrency affects a practical programming decision.",
-            "Use concurrency to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain concurrency in programming."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Concurrency should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Concurrency connects observable situations to underlying programming principles.",
-            "Concurrency is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about concurrency should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_repair_reason": "semantic_related_concepts_refinement",
-          "quality_repaired_at": "2026-07-08T17:10:04+00:00",
-          "quality_score": 1.0,
-          "related_concepts": [
-            "programming fundamentals",
-            "debugging practice",
-            "algorithmic thinking",
-            "data structures",
-            "software projects",
-            "code review",
-            "learning workflow"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-075fcaef5c34cf13",
-          "short_definition": "Concurrency is a reusable programming concept that helps explain causes, constraints, tradeoffs, and practical decisions in the programming domain.",
-          "source_answer_id": "rc2-answer-growth-075fcaef5c34cf13",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain concurrency in programming.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        }
-      ],
-      "confidence": "grounded_in_approved_noncanonical_concept",
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": null,
+        "active_contradiction": null,
+        "active_entities": [],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": null,
+        "active_route": "local_conversation_model_lane",
+        "active_topic": null,
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.35,
+        "episode_id": "rc2-episode-6add00569d0a3041",
+        "last_summary": "Question:  | Answer:",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": []
+      },
+      "confidence": "local_coding_capability_route",
       "confidence_decision": {
         "confidence": 0.9,
         "evidence_quality": "local_conversation_or_mode_context",
         "provider_necessity": "not_required_for_local_response",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.92,
+      "confidence_score": 0.78,
+      "conversation_topic_state": {
+        "confidence": 0.78,
+        "entities": [],
+        "last_user_prompt": "What do you know about coding?",
+        "last_visible_answer": "I can help with coding by reading the repo, explaining files, proposing patches, writing tests, and validating behavior. ",
+        "read_only": true,
+        "source_route": "local_conversation_model_lane",
+        "source_turn": "current",
+        "state_kind": "NONE",
+        "supersedes_anchor": false,
+        "topic": ""
+      },
+      "deterministic_fixture": null,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "coding",
@@ -1041,6 +666,9 @@
         "requires_operator_approval": false,
         "web_search_performed": false
       },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "intent": {
         "communication_act": "coding_request",
         "confidence": 0.9,
@@ -1050,6 +678,8 @@
         "routed_action": "local_model_or_repo_context",
         "safe_no_route": false
       },
+      "local_model_offer": null,
+      "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
@@ -1064,8 +694,162 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "replay_write_performed": false,
+      "route": "local_conversation_model_lane",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "local_conversation_model_lane",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:local_conversation_model_lane"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "dispatch_aligned_with_arbitration": true,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "local_conversation_model_lane",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "local_conversation_model_lane",
+        "selected_route": "local_conversation_model_lane"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "local_conversation_model_lane",
+        "ephemeral": true,
+        "explicit_new_topic_request": true,
+        "history_turns_seen": 0,
+        "intent": {
+          "communication_act": "coding_request",
+          "confidence": 0.9,
+          "intent": "coding",
+          "matched_rule": "coding_request",
+          "message": "What do you know about coding?",
+          "routed_action": "local_model_or_repo_context",
+          "safe_no_route": false
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "local_conversation_model_lane"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "autonomous_action_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -1118,95 +902,63 @@
       },
       "supporting_information_offer": null,
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     },
     {
-      "answer": "You taught me the concept `Number Theory (Mathematics)` earlier. Based on that:\nNumber Theory is a reusable mathematics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the mathematics domain.\n\nKey points:\n- Number Theory connects observable situations to underlying mathematics principles.\n- Number Theory is useful for comparing evidence, identifying constraints, and choosing next questions.\n- Reasoning about number theory should separate known facts, assumptions, uncertainty, and practical implications.",
+      "answer": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
-      "concept_matches": [
-        {
-          "_retrieval_score": {
-            "components": {
-              "concept_name": 36.0,
-              "definition": 3.0,
-              "propositions": 6.0,
-              "quality": 1.0,
-              "source_question": 2.0
-            },
-            "domain": "mathematics",
-            "key_token_overlap": [
-              "number",
-              "theory"
-            ],
-            "overlap": [
-              "number",
-              "theory"
-            ],
-            "reasons": [
-              "definition_token_overlap",
-              "name_phrase:number",
-              "name_phrase:theory",
-              "name_token_overlap",
-              "proposition_token_overlap",
-              "source_token_overlap"
-            ],
-            "relevance_gate_passed": true,
-            "score": 48.0
-          },
-          "_store_memory_type": "knowledge",
-          "approval_status": "approved_noncanonical",
-          "approved_at": "2026-07-08T17:07:01+00:00",
-          "canonical": false,
-          "concept_id": "rc2-concept-growth-489154b2a32d1d16",
-          "concept_name": "Number Theory (Mathematics)",
-          "concept_type": "domain_concept",
-          "created_at": "2026-07-08T17:07:01+00:00",
-          "domain": "mathematics",
-          "examples": [
-            "Explain how number theory affects a practical mathematics decision.",
-            "Use number theory to identify what evidence is still missing."
-          ],
-          "explains": [
-            "Explain number theory in mathematics."
-          ],
-          "memory_type": "knowledge",
-          "misconceptions": [
-            "Number Theory should not be treated as a standalone answer without context or evidence."
-          ],
-          "propositions": [
-            "Number Theory connects observable situations to underlying mathematics principles.",
-            "Number Theory is useful for comparing evidence, identifying constraints, and choosing next questions.",
-            "Reasoning about number theory should separate known facts, assumptions, uncertainty, and practical implications."
-          ],
-          "provider_calls_performed": false,
-          "quality_score": 1.0,
-          "related_concepts": [
-            "mathematics reasoning",
-            "mathematics evidence",
-            "mathematics tradeoffs",
-            "mathematics applications",
-            "mathematics uncertainty"
-          ],
-          "rollback_handle": "rollback-rc2-concept-growth-489154b2a32d1d16",
-          "short_definition": "Number Theory is a reusable mathematics concept that helps explain causes, constraints, tradeoffs, and practical decisions in the mathematics domain.",
-          "source_answer_id": "rc2-answer-growth-489154b2a32d1d16",
-          "source_model_id": "deterministic_curated_growth_no_model_call",
-          "source_model_lane": "curated_concept_growth",
-          "source_question": "Explain number theory in mathematics.",
-          "source_type": "rc2_curated_growth_run",
-          "training_performed": false,
-          "uncertainty": "low_curated_operator_test_seed"
-        }
-      ],
-      "confidence": "grounded_in_approved_noncanonical_concept",
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
+        "active_contradiction": null,
+        "active_entities": [
+          "the relation between avogadro's number and quantum field theory"
+        ],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": "What is the relation between Avogadro's number and quantum field theory?",
+        "active_route": "local_conversation_model_lane",
+        "active_topic": "the relation between avogadro's number and quantum field theory",
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.7,
+        "episode_id": "rc2-episode-874d4475fc9a1b2a",
+        "last_summary": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": [
+          "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?"
+        ]
+      },
+      "confidence": "needs_supporting_information",
       "confidence_decision": {
         "confidence": 0.35,
         "evidence_quality": "insufficient_local_evidence",
         "provider_necessity": "gated_provider_or_web_may_be_needed",
         "retrieval_sufficiency": "not_checked_or_insufficient"
       },
-      "confidence_score": 0.92,
+      "confidence_score": 0.35,
+      "conversation_topic_state": {
+        "confidence": 0.35,
+        "entities": [
+          "the relation between avogadro's number and quantum field theory"
+        ],
+        "last_user_prompt": "What is the relation between Avogadro's number and quantum field theory?",
+        "last_visible_answer": "I do not have enough governed local evidence to answer that confidently. I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
+        "read_only": true,
+        "source_route": "local_conversation_model_lane",
+        "source_turn": "current",
+        "state_kind": "SUBSTANTIVE_TOPIC",
+        "supersedes_anchor": true,
+        "topic": "the relation between avogadro's number and quantum field theory"
+      },
+      "deterministic_fixture": null,
       "escalation_plan": {
         "enabled_now": false,
         "intent": "external_knowledge_request",
@@ -1219,6 +971,9 @@
         "requires_operator_approval": true,
         "web_search_performed": false
       },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "intent": {
         "communication_act": "research_request",
         "confidence": 0.9,
@@ -1228,6 +983,8 @@
         "routed_action": "research_or_provider_consent_path",
         "safe_no_route": false
       },
+      "local_model_offer": null,
+      "local_model_result": null,
       "memory_candidate": null,
       "mode": "Conversation",
       "mode_router_flags": {
@@ -1242,8 +999,214 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "provider_calls_performed": false,
-      "route": "developmental_concept_memory",
+      "replay_write_performed": false,
+      "route": "local_conversation_model_lane",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.76,
+            "context_available": true,
+            "precedence": 8,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "approved_concept_candidates",
+            "route": "multi_concept_retrieval",
+            "selected": false,
+            "trigger_evidence": [
+              "multiple_named_entities_or_relation_terms"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.74,
+            "context_available": true,
+            "precedence": 9,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "approved_concept_candidate",
+            "route": "single_concept_retrieval",
+            "selected": false,
+            "trigger_evidence": [
+              "single_topic_lookup"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "local_conversation_model_lane",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:local_conversation_model_lane"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "dispatch_aligned_with_arbitration": true,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "multi_concept_retrieval",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.76,
+            "context_available": true,
+            "precedence": 8,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "approved_concept_candidates",
+            "route": "multi_concept_retrieval",
+            "selected": false,
+            "trigger_evidence": [
+              "multiple_named_entities_or_relation_terms"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.74,
+            "context_available": true,
+            "precedence": 9,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "approved_concept_candidate",
+            "route": "single_concept_retrieval",
+            "selected": false,
+            "trigger_evidence": [
+              "single_topic_lookup"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "local_conversation_model_lane",
+        "selected_route": "local_conversation_model_lane"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "local_conversation_model_lane",
+        "ephemeral": true,
+        "explicit_new_topic_request": true,
+        "history_turns_seen": 0,
+        "intent": {
+          "communication_act": "research_request",
+          "confidence": 0.9,
+          "intent": "external_knowledge_request",
+          "matched_rule": "external_knowledge_request",
+          "message": "What is the relation between Avogadro's number and quantum field theory?",
+          "routed_action": "research_or_provider_consent_path",
+          "safe_no_route": false
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "local_conversation_model_lane"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "autonomous_action_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "selected_model_lane": {
         "available": true,
         "candidate_models": [
@@ -1291,14 +1254,95 @@
         "selection_reason": "Selected meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m because it is a usable local llama model for the reasoning_analysis lane.",
         "support_identifier": "rc2-local-lane:reasoning_analysis:model:meta-llama-3-1-8b-instruct-gguf-meta-llama-3-1-8b-instruct-q4-k-m:family:llama:capabilities:text"
       },
-      "supporting_information_offer": null,
+      "supporting_information_offer": {
+        "compact_support_packet": {
+          "desired_answer_format": "brief_direct_answer_with_uncertainty_if_needed",
+          "instructions": "Return a concise answer only. Do not include hashes, internal reports, or unrelated diagnostics.",
+          "packet_type": "rc2_supporting_information_request",
+          "provider_call_performed": false,
+          "question": "What is the relation between Avogadro's number and quantum field theory?",
+          "relevant_approved_concepts": [
+            {
+              "concept_name": "Number Theory Boundary Conditions (Mathematics)",
+              "memory_type": "knowledge",
+              "short_definition": "Number Theory Boundary Conditions (Mathematics) states when the concept applies, when it does not, and what assumptions must hold in mathematics, connecting number theory to evidence, constraints, examples, and operator-reviewable uncertainty."
+            },
+            {
+              "concept_name": "Number Theory Evidence Standard (Mathematics)",
+              "memory_type": "knowledge",
+              "short_definition": "Number Theory Evidence Standard (Mathematics) defines what observations or measurements make the concept credible in mathematics, connecting number theory to evidence, constraints, examples, and operator-reviewable uncertainty."
+            },
+            {
+              "concept_name": "Number Theory Failure Mode (Mathematics)",
+              "memory_type": "knowledge",
+              "short_definition": "Number Theory Failure Mode (Mathematics) identifies how the concept breaks down or becomes misleading in mathematics, connecting number theory to evidence, constraints, examples, and operator-reviewable uncertainty."
+            }
+          ],
+          "relevant_chat_history": [],
+          "routing_reason": "local_or_substrate_confidence_was_insufficient",
+          "web_search_performed": false
+        },
+        "dry_run_provider_request": {
+          "api_key_present": true,
+          "api_key_redacted": true,
+          "authoritative": false,
+          "endpoint": "https://api.openai.com/v1/chat/completions",
+          "model": "gpt-4.1-mini",
+          "question": "What is the relation between Avogadro's number and quantum field theory?"
+        },
+        "offered": true,
+        "options": [
+          "yes_ask_gpt_or_sources",
+          "not_now"
+        ],
+        "prompt": "I'm not confident enough locally. Would you like me to ask GPT or look for sources?",
+        "provider_calls_performed": false,
+        "reason": "insufficient_local_evidence",
+        "web_search_performed": false
+      },
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     },
     {
       "answer": "Detected 1 proposition candidate(s).",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": null,
+        "active_contradiction": null,
+        "active_entities": [],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": null,
+        "active_route": "evidence_review",
+        "active_topic": null,
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.35,
+        "episode_id": "rc2-episode-4f53cda18c2baa0c",
+        "last_summary": "Question:  | Answer:",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": []
+      },
+      "conversation_topic_state": {
+        "confidence": 0.5,
+        "entities": [],
+        "last_user_prompt": "",
+        "last_visible_answer": "Detected 1 proposition candidate(s).",
+        "read_only": true,
+        "source_route": "evidence_review",
+        "source_turn": "current",
+        "state_kind": "NONE",
+        "supersedes_anchor": false,
+        "topic": ""
+      },
       "extracted": {
         "candidate_count": 1,
         "candidates": [
@@ -1317,6 +1361,9 @@
         "provider_calls_performed": false,
         "training_performed": false
       },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "mode": "Evidence Review",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -1330,6 +1377,8 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "preview": {
         "canonical_write_performed": false,
         "characters": 32,
@@ -1341,14 +1390,200 @@
         "sha256": "9e51db7e8605ae30044c42de4e7d004d2a6cd500d206eeb91e43ef13665a9470"
       },
       "provider_calls_performed": false,
+      "replay_write_performed": false,
       "route": "evidence_review",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "evidence_review",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:evidence_review"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "dispatch_aligned_with_arbitration": true,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "evidence_review",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "evidence_review",
+        "selected_route": "evidence_review"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "evidence_review",
+        "ephemeral": true,
+        "explicit_new_topic_request": false,
+        "history_turns_seen": 0,
+        "intent": {
+          "confidence": 0.65,
+          "intent": "conversation",
+          "message": ""
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "evidence_review"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     },
     {
       "answer": "No local deterministic answer was available.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": null,
+        "active_contradiction": null,
+        "active_entities": [],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": null,
+        "active_route": "v29_local_answer",
+        "active_topic": null,
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.35,
+        "episode_id": "rc2-episode-baa8d850fef526a6",
+        "last_summary": "Question:  | Answer:",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": []
+      },
+      "conversation_topic_state": {
+        "confidence": 0.5,
+        "entities": [],
+        "last_user_prompt": "What do you know about Frontier?",
+        "last_visible_answer": "No local deterministic answer was available.",
+        "read_only": true,
+        "source_route": "v29_local_answer",
+        "source_turn": "current",
+        "state_kind": "NONE",
+        "supersedes_anchor": false,
+        "topic": ""
+      },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "mode": "Ask Substrate",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -1362,16 +1597,205 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "provider_calls_performed": false,
       "question": "What do you know about Frontier?",
+      "replay_write_performed": false,
       "route": "v29_local_answer",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "v29_local_answer",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:v29_local_answer"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "dispatch_aligned_with_arbitration": true,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "v29_local_answer",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "v29_local_answer",
+        "selected_route": "v29_local_answer"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "v29_local_answer",
+        "ephemeral": true,
+        "explicit_new_topic_request": true,
+        "history_turns_seen": 0,
+        "intent": {
+          "communication_act": "factual_question",
+          "confidence": 0.82,
+          "intent": "question",
+          "matched_rule": "factual_question",
+          "message": "What do you know about Frontier?",
+          "routed_action": "substrate_or_local_model_path",
+          "safe_no_route": false
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "v29_local_answer"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     },
     {
       "answer": "Research Analyst mode can plan local/provider/web escalation, but external routes are disabled until explicitly gated.",
       "autonomous_action_performed": false,
       "canonical_write_performed": false,
+      "cognitive_episode": {
+        "active_analogy": null,
+        "active_answer": null,
+        "active_contradiction": null,
+        "active_entities": [],
+        "active_examples": [],
+        "active_limits": [],
+        "active_question": null,
+        "active_route": "research_analyst_scaffold",
+        "active_topic": null,
+        "active_wrs": null,
+        "conversation_branch": [],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "ephemeral": true,
+        "episode_confidence": 0.35,
+        "episode_id": "rc2-episode-5fb9540b4e6e26d3",
+        "last_summary": "Question:  | Answer:",
+        "read_only": true,
+        "rejected_references": [],
+        "resolved_references": [],
+        "turn_number": 1,
+        "unresolved_questions": []
+      },
+      "conversation_topic_state": {
+        "confidence": 0.5,
+        "entities": [],
+        "last_user_prompt": "Tell me about beluga whales.",
+        "last_visible_answer": "Research Analyst mode can plan local/provider/web escalation, but external routes are disabled until explicitly gated.",
+        "read_only": true,
+        "source_route": "research_analyst_scaffold",
+        "source_turn": "current",
+        "state_kind": "NONE",
+        "supersedes_anchor": false,
+        "topic": ""
+      },
       "escalation_plan": {
         "enabled_now": false,
         "intent": "external_knowledge_request",
@@ -1384,6 +1808,9 @@
         "requires_operator_approval": true,
         "web_search_performed": false
       },
+      "fine_tuning_performed": false,
+      "graph_write_performed": false,
+      "hyb1_promoted": false,
       "mode": "Research Analyst",
       "mode_router_flags": {
         "autonomous_actions_enabled": false,
@@ -1397,10 +1824,190 @@
         "training_enabled": false,
         "web_search_enabled": false
       },
+      "model_b_replaced": false,
+      "noncanonical_write_performed": false,
       "provider_calls_performed": false,
+      "replay_write_performed": false,
       "route": "research_analyst_scaffold",
+      "route_arbitration": {
+        "candidate_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.74,
+            "context_available": true,
+            "precedence": 9,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "approved_concept_candidate",
+            "route": "single_concept_retrieval",
+            "selected": false,
+            "trigger_evidence": [
+              "single_topic_lookup"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.5,
+            "context_available": true,
+            "precedence": 99,
+            "rejection_reason": "",
+            "required_context": "route_specific",
+            "route": "research_analyst_scaffold",
+            "selected": true,
+            "trigger_evidence": [
+              "actual_dispatch:research_analyst_scaffold"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "created_at": "2026-07-13T05:05:51+00:00",
+        "dispatch_aligned_with_arbitration": false,
+        "ephemeral": true,
+        "precedence_order": [
+          {
+            "precedence": 1,
+            "route": "safety"
+          },
+          {
+            "precedence": 2,
+            "route": "explicit_user_command"
+          },
+          {
+            "precedence": 3,
+            "route": "social_conversation"
+          },
+          {
+            "precedence": 4,
+            "route": "contradiction_analysis"
+          },
+          {
+            "precedence": 5,
+            "route": "analogy_analysis"
+          },
+          {
+            "precedence": 6,
+            "route": "working_memory_reference_resolution"
+          },
+          {
+            "precedence": 7,
+            "route": "working_reasoning_set"
+          },
+          {
+            "precedence": 8,
+            "route": "multi_concept_retrieval"
+          },
+          {
+            "precedence": 9,
+            "route": "single_concept_retrieval"
+          },
+          {
+            "precedence": 10,
+            "route": "local_model_consent_required"
+          },
+          {
+            "precedence": 11,
+            "route": "provider_consent_gate"
+          }
+        ],
+        "read_only": true,
+        "recommended_group": "single_concept_retrieval",
+        "rejected_routes": [
+          {
+            "confidence": 1.0,
+            "context_available": true,
+            "precedence": 1,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "none",
+            "route": "safety",
+            "selected": false,
+            "trigger_evidence": [
+              "hard_invariants_checked"
+            ],
+            "yielded_to": null
+          },
+          {
+            "confidence": 0.74,
+            "context_available": true,
+            "precedence": 9,
+            "rejection_reason": "candidate_not_matched_or_context_insufficient_at_dispatch",
+            "required_context": "approved_concept_candidate",
+            "route": "single_concept_retrieval",
+            "selected": false,
+            "trigger_evidence": [
+              "single_topic_lookup"
+            ],
+            "yielded_to": null
+          }
+        ],
+        "selected_group": "research_analyst_scaffold",
+        "selected_route": "research_analyst_scaffold"
+      },
+      "routing_observability": {
+        "anchor_available": false,
+        "anchor_followup_allowed": false,
+        "early_return": "research_analyst_scaffold",
+        "ephemeral": true,
+        "explicit_new_topic_request": true,
+        "history_turns_seen": 0,
+        "intent": {
+          "communication_act": "research_request",
+          "confidence": 0.9,
+          "intent": "external_knowledge_request",
+          "matched_rule": "external_knowledge_request",
+          "message": "Tell me about beluga whales.",
+          "routed_action": "research_or_provider_consent_path",
+          "safe_no_route": false
+        },
+        "layer": "rc2_conversational_mode_router",
+        "memory_retrieval_bypassed": false,
+        "read_only": true,
+        "selected_route": "research_analyst_scaffold"
+      },
+      "safety_metadata": {
+        "behavioral_safety_passed": true,
+        "complete": true,
+        "missing_fields_filled": [
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "weight_update_performed"
+        ],
+        "read_only": true,
+        "required_fields": [
+          "autonomous_action_performed",
+          "canonical_write_performed",
+          "fine_tuning_performed",
+          "graph_write_performed",
+          "hyb1_promoted",
+          "model_b_replaced",
+          "noncanonical_write_performed",
+          "provider_calls_performed",
+          "replay_write_performed",
+          "scheduler_action_performed",
+          "training_performed",
+          "web_search_performed",
+          "weight_update_performed"
+        ]
+      },
+      "scheduler_action_performed": false,
       "training_performed": false,
-      "web_search_performed": false
+      "web_search_performed": false,
+      "weight_update_performed": false
     }
   ],
   "conversation_primary_interface": true,
@@ -1408,7 +2015,7 @@
     "canonical_records": 0,
     "concept_contradictions": 0,
     "concept_edges": 24869,
-    "concept_replay_queue": 1041,
+    "concept_replay_queue": 1042,
     "conversation_memory_records": 0,
     "flags": {
       "autonomous_write_performed": false,
@@ -1422,7 +2029,7 @@
       "training_performed": false,
       "web_search_performed": false
     },
-    "knowledge_memory_records": 1038,
+    "knowledge_memory_records": 10001,
     "personal_memory_records": 0,
     "training_records": 0
   },

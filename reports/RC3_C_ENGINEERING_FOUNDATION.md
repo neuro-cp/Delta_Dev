@@ -1,6 +1,6 @@
 # RC3-C Engineering Foundation
 
-Created: 2026-07-10T17:36:52+00:00
+Created: 2026-07-12T03:01:23+00:00
 Arbitration: plugin_candidate
 Proposal: Plugin Capability Proposal: code execution, plugin
 Validation: valid_with_warnings

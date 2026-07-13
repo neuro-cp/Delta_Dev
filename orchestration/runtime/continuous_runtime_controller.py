@@ -11,9 +11,12 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
+import ctypes
 import json
 import os
+import subprocess
 import time
+import threading
 from typing import Any, Iterable
 
 from orchestration.runtime.delta_1_0_common import safety_metadata, stable_id, utc_now, write_json, write_markdown
@@ -239,6 +242,7 @@ class RuntimeCycleRecord:
     wikipedia_calls: int
     idle_result: str
     health_state: str
+    external_metrics: dict[str, Any] = field(default_factory=dict)
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
@@ -379,6 +383,8 @@ def enqueue_continuous_event(controller: ContinuousRuntimeController, event: Con
     if event.duplicate_key and event.duplicate_key in controller.duplicate_keys:
         journal = _journal(controller, "duplicate_event_suppressed", event.event_type, (event.event_id,))
         return replace(controller, journal=journal)
+    expires_at = len(controller.cycles) + event.expiration_cycle if event.expiration_cycle > 0 else len(controller.cycles)
+    event = replace(event, audit_metadata={**event.audit_metadata, "queued_at_cycle": len(controller.cycles), "expires_at_cycle": expires_at})
     queue = tuple(sorted((controller.event_queue + (event,))[-controller.config.queue_limit :], key=lambda item: (-item.priority, item.timestamp, item.event_id)))
     keys = (controller.duplicate_keys + ((event.duplicate_key,) if event.duplicate_key else ())) [-controller.config.queue_limit :]
     return replace(controller, event_queue=queue, duplicate_keys=keys, health=_health_for(controller, queue_size=len(queue)))
@@ -394,6 +400,7 @@ def run_controller_cycle(controller: ContinuousRuntimeController, *, session: An
     started = time.perf_counter()
     start_state = controller.lifecycle_state
     queue = _expire_stale_events(controller)
+    controller = replace(controller, event_queue=queue)
     batch = queue[: controller.config.max_events_per_cycle]
     remaining = queue[controller.config.max_events_per_cycle :]
     idle_due = force_idle_reflection or _idle_reflection_due(controller)
@@ -454,6 +461,7 @@ def run_controller_cycle(controller: ContinuousRuntimeController, *, session: An
         tuple(item.initiative_id for item in initiatives),
         tuple(item.objective_id for item in objectives),
         idle_result,
+        batch=batch,
         duration_ms=duration,
         health_state=health.health_state,
     )
@@ -531,31 +539,68 @@ def controller_snapshot(controller: ContinuousRuntimeController) -> dict[str, An
 
 def run_bounded_long_run(controller: ContinuousRuntimeController, *, cycles: int = 30) -> tuple[ContinuousRuntimeController, dict[str, Any]]:
     started = time.perf_counter()
+    process_started = time.process_time()
+    start_metrics = _sample_process_metrics(include_external=True)
     queue_sizes = []
+    injected_events = 0
+    processed_before = len(controller.processed_event_ids)
+    event_types_seen: set[str] = set()
     for index in range(cycles):
-        if index % 7 == 0:
-            event = make_continuous_event("VALIDATION_RESULT", source="long_run", session_id=controller.session_id, payload={"index": index, "result": "heartbeat"}, priority=20)
+        event_spec = _long_run_event_spec(index)
+        if event_spec is not None:
+            event_type, payload, priority = event_spec
+            event = make_continuous_event(
+                event_type,
+                source="long_run",
+                session_id=controller.session_id,
+                payload={**payload, "index": index},
+                priority=priority,
+                correlation_id=f"long-run-{index}",
+                expiration_cycle=cycles + 5,
+            )
             controller = enqueue_continuous_event(controller, event)
+            injected_events += 1
+            event_types_seen.add(event_type)
         controller = run_controller_cycle(controller, force_idle_reflection=index % 5 == 0)
         queue_sizes.append(len(controller.event_queue))
         if controller.lifecycle_state in {"SUSPENDED", "SHUTDOWN"}:
             break
     elapsed = time.perf_counter() - started
+    end_metrics = _sample_process_metrics(include_external=True)
+    recent_cycles = controller.cycles[-len(queue_sizes) :] if queue_sizes else ()
+    processed_after = len(controller.processed_event_ids)
     metrics = {
         "duration_seconds": round(elapsed, 4),
+        "process_cpu_seconds": round(time.process_time() - process_started, 6),
         "cycles_requested": cycles,
         "cycles_completed": len(queue_sizes),
+        "events_injected": injected_events,
+        "events_processed": processed_after - processed_before,
+        "event_types_seen": sorted(event_types_seen),
         "max_queue_size": max(queue_sizes or [0]),
         "final_queue_size": queue_sizes[-1] if queue_sizes else len(controller.event_queue),
-        "model_calls": sum(item.model_calls for item in controller.cycles[-cycles:]),
-        "wikipedia_calls": sum(item.wikipedia_calls for item in controller.cycles[-cycles:]),
+        "model_calls": sum(item.model_calls for item in recent_cycles),
+        "wikipedia_calls": sum(item.wikipedia_calls for item in recent_cycles),
+        "model_events_observed": sum(1 for item in controller.journal if item.get("summary") in {"MODEL_READY", "MODEL_UNAVAILABLE"}),
+        "wikipedia_events_observed": sum(1 for item in controller.journal if item.get("summary") in {"WIKIPEDIA_RESULT", "WIKIPEDIA_FAILURE"}),
+        "external_process_metrics": {
+            "start": start_metrics,
+            "end": end_metrics,
+            "working_set_delta_bytes": _metric_delta(start_metrics, end_metrics, "working_set_bytes"),
+            "thread_count_delta": _metric_delta(start_metrics, end_metrics, "thread_count"),
+        },
         "final_state": controller.lifecycle_state,
         "health_state": controller.health.health_state,
-        "idle_cpu_proxy": "near_zero_between_explicit_cycles_no_thread_or_polling",
+        "idle_cpu_proxy": "measured_process_cpu_time_for_bounded_explicit_cycles",
         "hidden_threads_created": False,
         "unauthorized_retrieval": False,
         "hidden_memory_writes": False,
         "duplicate_initiatives": _duplicate_initiative_count(controller.initiatives),
+        "pilot_limitations": (
+            "short bounded in-process harness, not multi-hour UI pilot",
+            "model events are observed as controller inputs; local model inference is still separately consent-gated",
+            "Wikipedia calls counted from event processing; asynchronous retrieval is not proven",
+        ),
         "safety": safety_metadata(),
     }
     return controller, metrics
@@ -624,8 +669,9 @@ def build_report_payload(
         "objectives": [asdict(item) for item in controller.objectives[-5:]],
         "operator_inquiries": controller.operator_inquiries[-5:],
     }
+    long_run_proven = _long_run_proven(long_run_metrics)
     performance = {
-        "status": "LONG_RUN_VALIDATED",
+        "status": "BOUNDED_CAMPAIGN_MEASURED" if not long_run_proven else "LONG_RUN_VALIDATED",
         "long_run": long_run_metrics,
         "resource_policy": {
             "model_residency": "serial_one_model_max",
@@ -637,8 +683,12 @@ def build_report_payload(
         },
     }
     readiness = {
-        "recommendation": "CONTINUOUS_RUNTIME_READY_FOR_CONTROLLED_OPERATOR_PILOT",
-        "evidence": "Controller is event-driven, bounded, deterministic for governance/state work, long-run validated without hidden thread/polling.",
+        "recommendation": "CONTINUOUS_RUNTIME_PARTIALLY_OPERATIONAL_PROCEED_TO_REAL_LONG_HORIZON_VALIDATION"
+        if not long_run_proven
+        else "CONTINUOUS_RUNTIME_READY_FOR_CONTROLLED_OPERATOR_PILOT",
+        "evidence": "Controller is event-driven, bounded, and instrumented, but the current harness is not a multi-hour UI/model/Wikipedia stress pilot."
+        if not long_run_proven
+        else "Controller completed a long-horizon pilot with events, model/Wikipedia calls, external process metrics, and recovery controls.",
         "implemented": (
             "managed lifecycle",
             "unified event envelope",
@@ -695,7 +745,7 @@ def build_report_payload(
         "- Wikipedia: preserve text-only one-page-per-query policy; continuous controller performs no autonomous retrieval.",
         "- Pathology PID-CR01: duplicate state surfaces repaired by controller snapshot and UI status synchronization.",
         "- Self-development: observed UI/runtime mismatch, generated sandbox-only repair hypotheses, validated controller integration, and stopped at promotion proposal.",
-        "- Remaining risk: continuous service is in-process and event-driven; true all-day pilot remains operator validation work.",
+        "- Readiness: bounded controller validation is useful, but live developmental operation is not yet proven without a real long-horizon UI/model/retrieval campaign.",
     ])
     return {
         "active_runtime_spine": active_spine,
@@ -711,11 +761,135 @@ def build_report_payload(
 
 def _continuous_docs(controller: ContinuousRuntimeController) -> dict[str, str]:
     return {
-        "architecture_doc": "# Continuous Runtime Architecture\n\nThe continuous runtime controller is an in-process managed service loop. It owns lifecycle state, normalized event envelopes, wake policy, controller health, model residency metadata, active objectives, initiatives, and notification readiness. It reuses DELTA 1.2 live runtime, DELTA 1.5 evidence comparison, and DELTA 1.6 self-model instead of replacing them.\n",
-        "lifecycle_doc": "# Operating Lifecycle\n\nSupported states: `" + "`, `".join(LIFECYCLE_STATES) + "`.\n\nDefault wake mode is `EVENT_DRIVEN`. `BOUNDED_BACKGROUND` may be enabled by operator policy, while `PAUSED` and `SUSPENDED` fail closed. Illegal transitions raise errors.\n",
-        "model_doc": "# Model Orchestration\n\nThe controller reads the real local model registry and lane router. Default conversation uses `" + controller.model_residency.selected_default_model + "`, planning uses `" + controller.model_residency.selected_planning_model + "`, and development analysis uses `" + controller.model_residency.selected_development_model + "`. ProviderManager remains serial with one resident local model maximum.\n",
-        "operator_doc": "# Continuous Runtime Operator Guide\n\nUse Start Runtime, Stop Runtime, Pause, Resume, and Suspend from the UI. The status line reports lifecycle, health, resident model, active objective, inquiries, promotion candidates, Wikipedia budget, and recent initiative. Ask `What are you currently working on?` or `Which local model is available?` for grounded state.\n",
-        "failure_doc": "# Failure Recovery\n\nQueue growth, timeouts, invalid transitions, model unavailability, Wikipedia failure, and repeated exceptions move the controller toward `DEGRADED`, `PAUSED_FOR_REVIEW`, `SUSPENDED`, or `FAILED_SAFE`. Shutdown remains available at all times. Recovery returns to `IDLE` only through explicit controller transitions.\n",
+        "architecture_doc": "\n".join([
+            "# Continuous Runtime Architecture",
+            "",
+            "The continuous runtime controller is an in-process managed service loop. It owns lifecycle state, normalized event envelopes, wake policy, controller health, model residency metadata, active objectives, initiatives, and notification readiness. It reuses DELTA 1.2 live runtime, DELTA 1.5 evidence comparison, and DELTA 1.6 self-model instead of replacing them.",
+            "",
+            "## Active Spine",
+            "",
+            "The active runtime path is:",
+            "",
+            "```text",
+            "UI Start Runtime",
+            "-> start_live_wikipedia_runtime",
+            "-> DELTA 1.2 LiveRuntimeState boot",
+            "-> ContinuousRuntimeController boot",
+            "-> operator/live events normalized into ContinuousEvent",
+            "-> bounded controller cycle",
+            "-> DELTA 1.6 background initiative/self-model sync",
+            "-> operator inquiry and promotion candidate surfaces",
+            "-> controller returns to IDLE",
+            "```",
+            "",
+            "The controller is intentionally in-process. It does not create hidden threads, daemons, external schedulers, or background services. The UI remains the operator-controlled lifecycle boundary.",
+            "",
+            "## Ownership",
+            "",
+            "- `LiveRuntimeState` remains the lower-level cognitive event and journal runtime.",
+            "- `LiveWikipediaRuntimeSession` remains the live chat and Wikipedia bridge.",
+            "- `ContinuousRuntimeController` owns the service lifecycle, normalized events, wake mode, health, objectives, initiative queue, model-residency inventory, notification readiness, and shutdown state.",
+            "- `OperationalSelfModel` remains a derived snapshot. It is not the lifecycle authority.",
+            "",
+            "## Safety",
+            "",
+            "The controller may run deterministic local analysis and queue review items. It may not call providers, retrieve arbitrary web pages, write memory, mutate the repository, promote sandbox changes, commit, push, deploy, access secrets, or change governance.",
+            "",
+            "## Current Evidence Boundary",
+            "",
+            "The bounded validation harness injects events and records process metrics, but it is not a substitute for a multi-hour UI/model/retrieval pilot.",
+            "",
+        ]),
+        "lifecycle_doc": "\n".join([
+            "# Operating Lifecycle",
+            "",
+            "Supported states: `" + "`, `".join(LIFECYCLE_STATES) + "`.",
+            "",
+            "Default wake mode is `EVENT_DRIVEN`. `BOUNDED_BACKGROUND` may be enabled by operator policy, while `PAUSED` and `SUSPENDED` fail closed. Illegal transitions raise errors.",
+            "",
+            "## Wake Modes",
+            "",
+            "- `MANUAL`: only explicit operator or test calls advance the controller.",
+            "- `EVENT_DRIVEN`: default; wake only when an event arrives.",
+            "- `BOUNDED_BACKGROUND`: permits low-frequency idle reflection.",
+            "- `EXPERIMENTAL_CONTINUOUS`: reserved for future operator-approved trials.",
+            "- `PAUSED`: no initiative generation.",
+            "- `SUSPENDED`: fail-closed review state.",
+            "",
+            "## Cycle Bounds",
+            "",
+            "Each cycle enforces a maximum event batch size, cycle duration target, generated initiative count, journal entries, model calls, and Wikipedia calls. The controller records model and Wikipedia calls from explicit governed events; it does not infer idle calls from silence.",
+            "",
+            "## Shutdown",
+            "",
+            "Shutdown is explicit: `SHUTTING_DOWN -> SHUTDOWN`. The controller clears its queue and remains inspectable through the final snapshot.",
+            "",
+        ]),
+        "model_doc": "\n".join([
+            "# Model Orchestration",
+            "",
+            "The controller reads the real local model registry and lane router. Default conversation uses `" + controller.model_residency.selected_default_model + "`, planning uses `" + controller.model_residency.selected_planning_model + "`, and development analysis uses `" + controller.model_residency.selected_development_model + "`. ProviderManager remains serial with one resident local model maximum.",
+            "",
+            "## Actual Inventory",
+            "",
+            "The registry exposes multiple GGUF models and aliases rather than exactly two hardcoded models. The controller therefore reports actual registry state, selected lane models, resident model ID, resident lane, and residency status.",
+            "",
+            "## Routing Policy",
+            "",
+            "Deterministic subsystems answer without a model for lifecycle status, authority classification, capability reporting, Wikipedia budget exhaustion, and cached evidence discussion. Local models remain useful for synthesis, planning, hypothesis generation, coding proposals, ambiguity resolution, and deeper developmental reflection.",
+            "",
+            "## Residency Policy",
+            "",
+            "The existing `ProviderManager` is the authority for local model residency. It is serial and keeps at most one local GGUF model resident at a time. The continuous controller observes and reports this state; it does not keep multiple models loaded or invoke inference from idle reflection.",
+            "",
+            "## Validation Boundary",
+            "",
+            "The bounded campaign observes model-ready events and lane selection. Repeated real inference, model switching under pressure, failed invocation recovery, and planning-to-conversation handoff still require a controlled long-horizon pilot.",
+            "",
+        ]),
+        "operator_doc": "\n".join([
+            "# Continuous Runtime Operator Guide",
+            "",
+            "Use Start Runtime, Stop Runtime, Pause, Resume, and Suspend from the UI. The status line reports lifecycle, health, resident model, active objective, inquiries, promotion candidates, Wikipedia budget, and recent initiative. Ask `What are you currently working on?` or `Which local model is available?` for grounded state.",
+            "",
+            "## Recommended Pilot",
+            "",
+            "Run a controlled operator pilot with the UI open. Exercise ordinary chat, context declarations, one Wikipedia lookup, a self-model question, a local model deepening request, pause/resume, suspend, restart, and review of pending promotion candidates.",
+            "",
+            "## Reading Status",
+            "",
+            "- `Runtime`: controller lifecycle state.",
+            "- `health`: controller health classification.",
+            "- `model`: resident model when known, otherwise default lane model.",
+            "- `objective`: active or waiting objective.",
+            "- `inquiries`: pending operator inquiry count.",
+            "- `promotions`: gated promotion candidate count.",
+            "- `wiki`: current session query count and budget.",
+            "- `initiative`: latest initiative outcome.",
+            "",
+            "## Authority Reminder",
+            "",
+            "DELTA can prepare and queue review items. It cannot persist, promote, commit, push, deploy, broaden web access, call providers, or change governance without operator authority.",
+            "",
+        ]),
+        "failure_doc": "\n".join([
+            "# Failure Recovery",
+            "",
+            "Queue growth, timeouts, invalid transitions, model unavailability, Wikipedia failure, and repeated exceptions move the controller toward `DEGRADED`, `PAUSED_FOR_REVIEW`, `SUSPENDED`, or `FAILED_SAFE`. Shutdown remains available at all times. Recovery returns to `IDLE` only through explicit controller transitions.",
+            "",
+            "## Health Inputs",
+            "",
+            "The controller checks event queue size, model availability, Wikipedia availability, cycle timeout, repeated exceptions, stale objectives, and resource limit events. It records process CPU time, active Python threads, and best-effort Windows working-set metrics without requiring `psutil`.",
+            "",
+            "## Degraded Mode",
+            "",
+            "When degraded, the controller stops automatic initiative work and preserves the audit trail. The operator can pause, suspend, or shut down. Unknown action types or invalid lifecycle transitions fail closed.",
+            "",
+            "## Recovery",
+            "",
+            "Recovery is explicit and bounded. The controller may return to `IDLE` after a recoverable condition clears, but it does not retry external retrieval, model execution, sandbox work, or persistence automatically.",
+            "",
+        ]),
     }
 
 
@@ -736,7 +910,11 @@ def _event_duplicate_key(event_type: str, payload: dict[str, Any], correlation_i
 
 def _expire_stale_events(controller: ContinuousRuntimeController) -> tuple[ContinuousEvent, ...]:
     cycle_count = len(controller.cycles)
-    return tuple(event for event in controller.event_queue if event.expiration_cycle <= 0 or event.expiration_cycle + cycle_count >= cycle_count)
+    return tuple(
+        event
+        for event in controller.event_queue
+        if int(event.audit_metadata.get("expires_at_cycle", cycle_count + event.expiration_cycle)) > cycle_count
+    )
 
 
 def _idle_reflection_due(controller: ContinuousRuntimeController) -> bool:
@@ -866,10 +1044,13 @@ def _cycle_record(
     objectives: tuple[str, ...],
     idle_result: str,
     *,
+    batch: tuple[ContinuousEvent, ...] = (),
     duration_ms: float | None = None,
     health_state: str | None = None,
 ) -> RuntimeCycleRecord:
     duration = (time.perf_counter() - started) * 1000 if duration_ms is None else duration_ms
+    model_calls = sum(_model_call_count(event) for event in batch)
+    wikipedia_calls = sum(1 for event in batch if event.event_type in {"WIKIPEDIA_RESULT", "WIKIPEDIA_FAILURE"})
     return RuntimeCycleRecord(
         cycle_id=stable_id("continuous-cycle", controller.controller_id, len(controller.cycles) + 1, events, initiatives, objectives),
         cycle_index=len(controller.cycles) + 1,
@@ -880,10 +1061,135 @@ def _cycle_record(
         events_processed=events,
         initiatives_created=initiatives,
         objectives_updated=objectives,
-        model_calls=0,
-        wikipedia_calls=0,
+        model_calls=model_calls,
+        wikipedia_calls=wikipedia_calls,
+        external_metrics=_sample_process_metrics(include_external=False),
         idle_result=idle_result,
         health_state=health_state or controller.health.health_state,
+    )
+
+
+def _long_run_event_spec(index: int) -> tuple[str, dict[str, Any], int] | None:
+    if index % 19 == 0:
+        return ("WIKIPEDIA_RESULT", {"title": "Runtime validation", "classification": "noncanonical_review_candidate"}, 75)
+    if index % 17 == 0:
+        return ("MODEL_READY", {"model_id": "planning-lane", "lane": "planning", "local_model_call_performed": True}, 70)
+    if index % 13 == 0:
+        return ("BEHAVIORAL_FAILURE", {"summary": "blocked objective observed during bounded campaign"}, 80)
+    if index % 11 == 0:
+        return ("OBJECTIVE_BLOCKED", {"summary": "waiting for operator validation"}, 65)
+    if index % 7 == 0:
+        return ("VALIDATION_RESULT", {"result": "heartbeat"}, 20)
+    return None
+
+
+def _model_call_count(event: ContinuousEvent) -> int:
+    if event.event_type == "MODEL_READY" and event.payload.get("local_model_call_performed"):
+        return 1
+    if event.event_type == "MODEL_UNAVAILABLE" and event.payload.get("attempted"):
+        return 1
+    return int(event.payload.get("model_calls") or 0)
+
+
+def _metric_delta(start: dict[str, Any], end: dict[str, Any], key: str) -> int | None:
+    if not isinstance(start.get(key), int) or not isinstance(end.get(key), int):
+        return None
+    return int(end[key]) - int(start[key])
+
+
+def _sample_process_metrics(*, include_external: bool = True) -> dict[str, Any]:
+    metrics = {
+        "pid": os.getpid(),
+        "process_time_seconds": round(time.process_time(), 6),
+        "active_python_threads": threading.active_count(),
+    }
+    if os.name == "nt" and include_external:
+        metrics.update(_sample_windows_process_metrics())
+    return metrics
+
+
+def _sample_windows_process_metrics() -> dict[str, Any]:
+    class ProcessMemoryCounters(ctypes.Structure):
+        _fields_ = [
+            ("cb", ctypes.c_ulong),
+            ("PageFaultCount", ctypes.c_ulong),
+            ("PeakWorkingSetSize", ctypes.c_size_t),
+            ("WorkingSetSize", ctypes.c_size_t),
+            ("QuotaPeakPagedPoolUsage", ctypes.c_size_t),
+            ("QuotaPagedPoolUsage", ctypes.c_size_t),
+            ("QuotaPeakNonPagedPoolUsage", ctypes.c_size_t),
+            ("QuotaNonPagedPoolUsage", ctypes.c_size_t),
+            ("PagefileUsage", ctypes.c_size_t),
+            ("PeakPagefileUsage", ctypes.c_size_t),
+        ]
+
+    result: dict[str, Any] = {}
+    try:
+        counters = ProcessMemoryCounters()
+        counters.cb = ctypes.sizeof(ProcessMemoryCounters)
+        handle = ctypes.windll.kernel32.GetCurrentProcess()
+        psapi = ctypes.WinDLL("psapi.dll")
+        ok = psapi.GetProcessMemoryInfo(handle, ctypes.byref(counters), counters.cb)
+        if ok:
+            result.update({
+                "working_set_bytes": int(counters.WorkingSetSize),
+                "peak_working_set_bytes": int(counters.PeakWorkingSetSize),
+                "pagefile_usage_bytes": int(counters.PagefileUsage),
+            })
+        else:
+            result["process_memory_error"] = "GetProcessMemoryInfo returned false"
+    except Exception as exc:  # noqa: BLE001 - metrics are best-effort instrumentation only.
+        result["process_memory_error"] = type(exc).__name__
+    if "working_set_bytes" not in result:
+        result.update(_sample_windows_process_metrics_via_powershell(os.getpid()))
+    try:
+        result["thread_count"] = int(ctypes.windll.kernel32.GetActiveProcessorCount(0)) if False else threading.active_count()
+    except Exception:
+        result["thread_count"] = threading.active_count()
+    return result
+
+
+def _sample_windows_process_metrics_via_powershell(pid: int) -> dict[str, Any]:
+    command = (
+        "$p=Get-Process -Id "
+        + str(int(pid))
+        + "; [pscustomobject]@{WorkingSet64=$p.WorkingSet64; CPU=$p.CPU; Handles=$p.Handles; Threads=$p.Threads.Count} | ConvertTo-Json -Compress"
+    )
+    for executable in ("powershell.exe", "powershell"):
+        try:
+            completed = subprocess.run(
+                [executable, "-NoProfile", "-Command", command],
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=2,
+            )
+        except Exception as exc:  # noqa: BLE001 - metrics are best-effort instrumentation only.
+            continue
+        if completed.returncode != 0 or not completed.stdout.strip():
+            continue
+        try:
+            payload = json.loads(completed.stdout)
+        except json.JSONDecodeError:
+            continue
+        return {
+            "working_set_bytes": int(payload.get("WorkingSet64") or 0),
+            "powershell_cpu_seconds": float(payload.get("CPU") or 0.0),
+            "handle_count": int(payload.get("Handles") or 0),
+            "os_thread_count": int(payload.get("Threads") or 0),
+            "process_metrics_source": executable,
+        }
+    return {"process_metrics_fallback_error": "Get-Process unavailable"}
+
+
+def _long_run_proven(metrics: dict[str, Any]) -> bool:
+    return (
+        float(metrics.get("duration_seconds") or 0) >= 3600
+        and int(metrics.get("events_processed") or 0) > 0
+        and int(metrics.get("model_calls") or 0) > 0
+        and int(metrics.get("wikipedia_calls") or 0) > 0
+        and int(metrics.get("final_queue_size") or 0) <= 1
+        and metrics.get("health_state") == "HEALTHY"
     )
 
 

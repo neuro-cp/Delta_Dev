@@ -1,0 +1,17 @@
+{
+  "run_id": "conversation-cycles-authority-switch-20260713T033915Z",
+  "repository": "G:\\Delta_Dev",
+  "path": "Tk-compatible integrated DeltaApp._send_chat primary path",
+  "cycle_count": 6,
+  "turn_count": 23,
+  "failure_count": 2,
+  "failed_turn_count": 2,
+  "local_model_inference_allowed": false,
+  "local_model_inference_observed": false,
+  "model_as_judge_used": false,
+  "wikipedia_transport": "fake patched _default_wikipedia_transport for explicit Wikipedia cycle only",
+  "wikipedia_calls": [
+    "https://en.wikipedia.org/api/rest_v1/page/summary/Ada_Lovelace"
+  ],
+  "default_model_warmup_skipped": true
+}

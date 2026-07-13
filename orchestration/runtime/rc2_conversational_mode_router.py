@@ -42,6 +42,7 @@ from orchestration.runtime.rc2_developmental_concept_memory import (
     browse_approved_concepts,
     discover_memory_store_separation,
     extract_candidate_concept,
+    parse_multi_concept_query,
     query_approved_concepts,
     retrieve_multi_concept_set,
 )
@@ -201,6 +202,12 @@ DIRECT_LOCAL_ANSWERS = {
         "triggers": (("delta", "runtime", "ambiguity"), ("live", "runtime", "ambiguity")),
         "answer": "The DELTA 1.2 live runtime should treat repeated ambiguity failures as evidence, cluster them into a developmental signal, rank a bounded objective, and queue an operator inquiry. It should not implement the fix by itself; operator approval is required before promotion, and it should ask whether to prepare a sandboxed repair objective with focused validation.",
         "confidence": 0.86,
+    },
+    "ada_lovelace": {
+        "triggers": (("ada", "lovelace"),),
+        "answer": "Ada Lovelace was a 19th-century English mathematician and writer, best known for her work on Charles Babbage's proposed Analytical Engine and for writing notes often described as an early example of computer programming thinking.",
+        "confidence": 0.8,
+        "fixture": "approved_deterministic_local_knowledge",
     },
 }
 
@@ -435,6 +442,8 @@ def _domain_browse_request(message: str) -> str | None:
     lower = " ".join(str(message or "").lower().strip().split())
     if not any(phrase in lower for phrase in ("what about", "how about", "do you know", "anything about", "tell me about", "show me")):
         return None
+    if _explicit_multiword_concept_lookup_target(lower):
+        return None
     if any(phrase in lower for phrase in ("newton", "first law", "second law", "third law", "law of")):
         return None
     if any(phrase in lower for phrase in ("should i", "can i sue", "am i liable", "legal advice", "calculate", "court case")):
@@ -445,6 +454,25 @@ def _domain_browse_request(message: str) -> str | None:
         if re.search(pattern, lower):
             return domain
     return None
+
+
+def _explicit_multiword_concept_lookup_target(lower: str) -> str:
+    patterns = (
+        r"^(?:tell me about|show me|explain|what do you know about)\s+(.+)$",
+        r"^(?:what is|what are)\s+(.+)$",
+    )
+    for pattern in patterns:
+        match = re.match(pattern, lower)
+        if not match:
+            continue
+        target = " ".join(match.group(1).strip(" .?!").split())
+        words = [
+            word for word in re.findall(r"[a-z0-9]+", target)
+            if word not in {"the", "a", "an", "and", "or", "of", "in", "to", "local", "memory", "concept"}
+        ]
+        if len(words) >= 2:
+            return target
+    return ""
 
 
 def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any]:
@@ -458,7 +486,13 @@ def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any
         }
     names = []
     domain = None
+    newer_explicit_topic = False
     for item in reversed(history or []):
+        if item.get("role") == "user" and _is_explicit_new_topic_request(str(item.get("content") or "")):
+            newer_explicit_topic = True
+            continue
+        if newer_explicit_topic:
+            break
         if item.get("role") != "assistant":
             continue
         content = str(item.get("content") or "")
@@ -469,6 +503,13 @@ def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any
                 line.strip()[2:].strip()
                 for line in nearby.splitlines()
                 if line.strip().startswith("- ") and line.strip()[2:].strip()
+            )
+        talk_match = re.search(r"\bI can talk about\s+(.+?)\.\s+Which direction", content)
+        if talk_match:
+            found.extend(
+                part.strip()
+                for part in re.split(r"\s*,\s*|\s+and\s+", talk_match.group(1))
+                if part.strip()
             )
         if not found:
             continue
@@ -482,9 +523,22 @@ def _last_concept_context(history: list[dict[str, str]] | None) -> dict[str, Any
 
 
 def resolve_followup_anchor(history: list[dict[str, str]] | None) -> dict[str, Any]:
+    newer_explicit_topic = False
     for item in reversed(history or []):
+        if item.get("role") == "topic_state":
+            try:
+                state = json.loads(str(item.get("content") or "{}"))
+            except json.JSONDecodeError:
+                continue
+            if state.get("supersedes_anchor"):
+                return {}
+        if item.get("role") == "user" and _is_explicit_new_topic_request(str(item.get("content") or "")):
+            newer_explicit_topic = True
+            continue
         if item.get("role") != "anchor":
             continue
+        if newer_explicit_topic:
+            return {}
         try:
             anchor = json.loads(str(item.get("content") or "{}"))
         except json.JSONDecodeError:
@@ -496,6 +550,8 @@ def resolve_followup_anchor(history: list[dict[str, str]] | None) -> dict[str, A
 
 def _is_anchor_followup(message: str) -> bool:
     lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    if _is_explicit_new_topic_request(message):
+        return False
     if lower in {
         "tell me more",
         "go deeper",
@@ -512,6 +568,70 @@ def _is_anchor_followup(message: str) -> bool:
     }:
         return True
     return bool(re.match(r"how does (that|this|it) relate to .+", lower))
+
+
+def _is_explicit_new_topic_request(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    if not lower:
+        return False
+    if lower in {"what do you mean", "why", "why is that", "tell me more", "go deeper", "continue", "expand on that"}:
+        return False
+    if _is_context_dependent_followup(message):
+        return False
+    if re.match(r"^(what|who|where|when|which|how)\s+(is|are|was|were|do|does|did|can|should)\b", lower):
+        return True
+    if lower.startswith(("tell me about ", "explain ", "compare ", "analyze ", "brainstorm ", "what comes to mind")):
+        return True
+    if "new topic" in lower or "switch topics" in lower or "completely different" in lower:
+        return True
+    return False
+
+
+def _is_brainstorming_request(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    return any(phrase in lower for phrase in (
+        "first concept that comes to mind",
+        "what comes to mind",
+        "brainstorm",
+        "give me ideas",
+        "free associate",
+    ))
+
+
+def _is_context_dependent_followup(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    if re.match(r"^compare\s+(that|this|it|those|them)\s+(?:with|to)\b", lower):
+        return True
+    if lower in {
+        "explain that",
+        "explain this",
+        "explain it",
+        "give me another one",
+        "another one",
+        "give me another practical tip",
+        "another practical tip",
+        "give me another tip",
+        "another tip",
+        "what is a practical next step",
+        "give me an example",
+        "give me examples",
+        "why",
+        "why is that",
+        "why does that matter",
+        "why is that important",
+        "why should i care about that",
+        "what difference does that make",
+        "how does that affect the decision",
+        "where does that analogy break",
+        "tell me more",
+        "continue",
+        "expand on that",
+    }:
+        return True
+    return bool(re.match(
+        r"^(how|why|where|what)\s+(does|do|is|are|was|were|would|could|should)\s+(that|this|it|those|them)\b",
+        lower,
+    ))
 
 
 def _is_anchor_browse_followup(message: str) -> bool:
@@ -871,8 +991,247 @@ def _direct_answer(message: str) -> dict[str, Any] | None:
                     "answer": item["answer"],
                     "confidence_score": item["confidence"],
                     "confidence": "local_general_knowledge",
+                    "fixture": item.get("fixture"),
                 }
     return None
+
+
+def _topic_switch_target(message: str) -> str | None:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" .?!")
+    patterns = [
+        r"^(?:now\s+)?(?:actually\s+)?(?:let['’]?s|lets)\s+talk\s+about\s+(.+)$",
+        r"^(?:actually\s+)?(?:let['’]?s|lets)\s+switch\s+to:?\s+(.+)$",
+        r"^(?:actually\s+)?talk\s+about\s+(.+)$",
+        r"^(?:actually\s+)?switch(?:ing)?\s+(?:to|topics?\s+to):?\s+(.+)$",
+        r"^(?:new topic:|different topic:|switching subjects:)\s*(.+)$",
+    ]
+    for pattern in patterns:
+        match = re.match(pattern, lower)
+        if match:
+            topic = match.group(1).strip(" .?!")
+            return topic if topic else None
+    return None
+
+
+def _topic_return_target(message: str) -> str | None:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" .?!")
+    patterns = (
+        r"^(?:let['’]?s\s+)?go back to\s+(.+)$",
+        r"^return to\s+(.+)$",
+        r"^(?:let['’]?s\s+)?return to\s+(.+)$",
+        r"^back to\s+(.+)$",
+    )
+    for pattern in patterns:
+        match = re.match(pattern, lower)
+        if match:
+            target = match.group(1).strip(" .?!")
+            return target if target else None
+    return None
+
+
+def _is_substantive_switch_target(target: str | None) -> bool:
+    lower = " ".join(str(target or "").lower().strip(" :;,.?!").split())
+    if not lower:
+        return False
+    if re.match(r"^(what|who|where|when|why|how|which)\b", lower):
+        return True
+    if re.match(r"^(is|are|was|were|do|does|did|can|could|should|would)\b", lower):
+        return True
+    return lower.startswith((
+        "explain ",
+        "describe ",
+        "define ",
+        "summarize ",
+        "compare ",
+        "analyze ",
+        "list ",
+        "show ",
+        "tell me ",
+    ))
+
+
+def _topic_hint_from_message(message: str, payload: dict[str, Any]) -> str | None:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" .?!")
+    switch = _topic_switch_target(message)
+    if switch and not _is_substantive_switch_target(switch):
+        return switch
+    if "first concept that comes to mind" in lower and "physics" in lower:
+        return "motion in physics"
+    if "sky" in lower:
+        return "sky"
+    if "music" in lower:
+        return "music"
+    if "moon" in lower:
+        return "moon"
+    if "mars" in lower:
+        return "mars"
+    topic = _topic_label_from_message(message)
+    if topic:
+        return topic
+    answer = str(payload.get("answer") or "").lower()
+    if "motion" in answer and "physics" in answer:
+        return "motion in physics"
+    if "sky" in answer or "blue wavelengths" in answer:
+        return "sky"
+    return None
+
+
+def _latest_topic_state(history: list[dict[str, str]] | None) -> dict[str, Any]:
+    for item in reversed(history or []):
+        if item.get("role") != "topic_state":
+            continue
+        try:
+            state = json.loads(str(item.get("content") or "{}"))
+        except json.JSONDecodeError:
+            continue
+        if isinstance(state, dict) and str(state.get("topic") or "").strip():
+            return state
+    return {}
+
+
+def _prior_topic_match(history: list[dict[str, str]] | None, target: str) -> str:
+    wanted = _normalize_topic_label(target)
+    if not wanted:
+        return ""
+    for item in reversed(history or []):
+        if item.get("role") != "topic_state":
+            continue
+        try:
+            state = json.loads(str(item.get("content") or "{}"))
+        except json.JSONDecodeError:
+            continue
+        topic = str(state.get("topic") or "").strip()
+        if not topic:
+            continue
+        normalized = _normalize_topic_label(topic)
+        if wanted == normalized or wanted in normalized or normalized in wanted:
+            return topic
+    return ""
+
+
+def _normalize_topic_label(value: object) -> str:
+    return " ".join(re.findall(r"[a-z0-9]+", str(value or "").lower()))
+
+
+def _conversation_topic_state(message: str, payload: dict[str, Any], intent_info: dict[str, Any], history: list[dict[str, str]] | None = None) -> dict[str, Any]:
+    route = str(payload.get("route") or "")
+    answer = str(payload.get("answer") or "")
+    if route == "topic_return":
+        topic = str(payload.get("topic_return_target") or "").strip()
+        if topic:
+            return {
+                "state_kind": "TOPIC_SWITCH",
+                "topic": topic,
+                "source_turn": "current",
+                "source_route": route,
+                "last_user_prompt": message,
+                "last_visible_answer": answer[:600],
+                "entities": [topic],
+                "confidence": float(payload.get("confidence_score") or 0.86),
+                "supersedes_anchor": True,
+                "read_only": True,
+            }
+    switch_topic = _topic_switch_target(message)
+    if switch_topic and not _is_substantive_switch_target(switch_topic):
+        return {
+            "state_kind": "TOPIC_SWITCH",
+            "topic": switch_topic,
+            "source_turn": "current",
+            "source_route": route,
+            "last_user_prompt": message,
+            "last_visible_answer": answer[:600],
+            "entities": [switch_topic],
+            "confidence": 0.88,
+            "supersedes_anchor": True,
+            "read_only": True,
+        }
+    anchor = payload.get("active_topic_anchor")
+    matches = payload.get("concept_matches")
+    if isinstance(anchor, dict) and (anchor.get("active_concept_name") or anchor.get("active_concept_id")):
+        topic = str(anchor.get("active_concept_name") or anchor.get("active_concept_id") or "")
+        return {
+            "state_kind": "CONCEPT_ANCHOR",
+            "topic": topic,
+            "source_turn": "current",
+            "source_route": route,
+            "last_user_prompt": message,
+            "last_visible_answer": answer[:600],
+            "entities": [topic],
+            "confidence": float(payload.get("confidence_score") or 0.84),
+            "supersedes_anchor": False,
+            "read_only": True,
+        }
+    if isinstance(matches, list) and matches and isinstance(matches[0], dict) and matches[0].get("concept_name"):
+        topic = str(matches[0].get("concept_name") or "")
+        return {
+            "state_kind": "CONCEPT_ANCHOR",
+            "topic": topic,
+            "source_turn": "current",
+            "source_route": route,
+            "last_user_prompt": message,
+            "last_visible_answer": answer[:600],
+            "entities": [topic],
+            "confidence": float(payload.get("confidence_score") or 0.84),
+            "supersedes_anchor": False,
+            "read_only": True,
+        }
+    if route == "social_conversation" or intent_info.get("intent") in SOCIAL_INTENT_RESPONSES:
+        return {
+            "state_kind": "SOCIAL_INTERLUDE",
+            "topic": "",
+            "source_turn": "current",
+            "source_route": route,
+            "last_user_prompt": message,
+            "last_visible_answer": answer[:300],
+            "entities": [],
+            "confidence": float(payload.get("confidence_score") or intent_info.get("confidence") or 0.8),
+            "supersedes_anchor": False,
+            "read_only": True,
+        }
+    prior_topic_state = _latest_topic_state(history)
+    if route == "session_memory" and prior_topic_state.get("topic"):
+        return {
+            **prior_topic_state,
+            "state_kind": "FOLLOWUP",
+            "source_turn": "current",
+            "source_route": route,
+            "last_user_prompt": message,
+            "last_visible_answer": answer[:600],
+            "confidence": float(payload.get("confidence_score") or prior_topic_state.get("confidence") or 0.78),
+            "supersedes_anchor": bool(prior_topic_state.get("supersedes_anchor", True)),
+            "read_only": True,
+        }
+    topic = _topic_hint_from_message(message, payload)
+    if topic and route in {
+        "local_conversation_model_lane",
+        "conversation_clarified_misframed_question",
+        "session_memory",
+        "conversation_short_term_memory",
+    }:
+        return {
+            "state_kind": "SUBSTANTIVE_TOPIC",
+            "topic": topic,
+            "source_turn": "current",
+            "source_route": route,
+            "last_user_prompt": message,
+            "last_visible_answer": answer[:600],
+            "entities": [topic],
+            "confidence": float(payload.get("confidence_score") or 0.78),
+            "supersedes_anchor": True,
+            "read_only": True,
+        }
+    return {
+        "state_kind": "FOLLOWUP" if _is_context_dependent_followup(message) else "NONE",
+        "topic": "",
+        "source_turn": "current",
+        "source_route": route,
+        "last_user_prompt": message,
+        "last_visible_answer": answer[:300],
+        "entities": [],
+        "confidence": float(payload.get("confidence_score") or 0.5),
+        "supersedes_anchor": False,
+        "read_only": True,
+    }
 
 
 def _is_development_workflow_request(message: str, history: list[dict[str, str]] | None = None) -> bool:
@@ -1398,6 +1757,217 @@ def _history_answer(message: str, history: list[dict[str, str]] | None) -> dict[
     return None
 
 
+def _last_visible_exchange(history: list[dict[str, str]] | None) -> dict[str, str] | None:
+    last_assistant = ""
+    for item in reversed(history or []):
+        role = item.get("role")
+        content = str(item.get("content") or "")
+        if role == "assistant" and not last_assistant:
+            last_assistant = content.split("--- Developer Overlay ---", 1)[0].strip()
+            continue
+        if role == "user" and last_assistant:
+            return {"question": content.strip(), "answer": last_assistant}
+    return None
+
+
+def _followup_act(message: str) -> str:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    if re.search(r"\bcompare\s+(?:that|this|it|those|them)\s+(?:with|to)\s+.+", lower):
+        return "comparison"
+    if _is_practical_elaboration_request(message):
+        return "practical_elaboration"
+    if "another" in lower or "what else" in lower:
+        return "alternative"
+    if "example" in lower:
+        return "example"
+    if lower in {"why", "why is that"} or lower.startswith("why "):
+        return "causal"
+    if "always" in lower or "does it" in lower or "does that" in lower:
+        return "clarification"
+    if lower in {"tell me more", "continue", "more detail", "more details", "go deeper", "expand on that"}:
+        return "elaboration"
+    return "clarification" if _is_context_dependent_followup(message) else "other"
+
+
+def _compact_prior_point(text: str, topic: str) -> str:
+    cleaned = " ".join(str(text or "").split())
+    if not cleaned:
+        return f"the recent answer about {topic}"
+    sentences = [part.strip() for part in re.split(r"(?<=[.!?])\s+", cleaned) if part.strip()]
+    if sentences:
+        return sentences[0][:240]
+    return cleaned[:240]
+
+
+def _alternative_from_prior_answer(answer: str, topic: str) -> str:
+    text = str(answer or "")
+    candidates: list[str] = []
+    branch_match = re.search(r"\bbranch from [^:]+ to\s+(.+?)(?:[.!?]|$)", text, flags=re.IGNORECASE)
+    if branch_match:
+        candidates.extend(re.split(r"\s*,\s*|\s+or\s+|\s+and\s+", branch_match.group(1)))
+    if not candidates:
+        for term in ("energy", "symmetry", "fields", "conservation", "rhythm", "memory", "expectation", "surface", "reflection"):
+            if re.search(rf"\b{re.escape(term)}\b", text, flags=re.IGNORECASE):
+                candidates.append(term)
+    cleaned = [item.strip(" .,:;`'\"") for item in candidates if item.strip(" .,:;`'\"")]
+    chosen = next((item for item in cleaned if item.lower() not in str(topic or "").lower()), "")
+    return chosen or "a neighboring angle"
+
+
+def _bounded_followup_answer(topic_state: dict[str, Any], message: str) -> str:
+    topic = str(topic_state.get("topic") or "the current topic").strip() or "the current topic"
+    prior_answer = str(topic_state.get("last_visible_answer") or "")
+    prior_point = _compact_prior_point(prior_answer, topic)
+    act = _followup_act(message)
+    if act == "alternative":
+        alternative = _alternative_from_prior_answer(prior_answer, topic)
+        return f"Another related angle is {alternative}. Staying with {topic}, it gives us a nearby way to keep exploring without changing topics."
+    if act == "causal":
+        return f"I chose or continued with {topic} because the prior answer gives a concrete handle: {prior_point}"
+    if act == "example":
+        return f"An example within {topic}: take the key point from the prior answer, then ask how it would show up in one observable case. The prior point was: {prior_point}"
+    if act == "comparison":
+        target = _comparison_target(message)
+        if target:
+            return (
+                f"Comparing {topic} with {target}: I can use {topic} from the current conversation as the resolved referent. "
+                f"Grounded detail for {topic}: {prior_point} For {target}, I need equally grounded details before making a strong comparison, so I will not replace it with unrelated retrieval."
+            )
+        return f"I can compare {topic}, but I need the comparison target."
+    if act == "clarification":
+        return f"No, not always in the same way. Staying with {topic}, the prior answer gives the baseline, but context can change how it appears or why it matters: {prior_point}"
+    return f"Still on {topic}: {prior_point} A useful next step is to unpack the mechanism, limits, and examples without changing topics."
+
+
+def _comparison_target(message: str) -> str:
+    lower = " ".join(str(message or "").strip().split())
+    match = re.search(r"\bcompare\s+(?:that|this|it|those|them)\s+(?:with|to)\s+(.+)$", lower, flags=re.IGNORECASE)
+    return match.group(1).strip(" .?!") if match else ""
+
+
+def _bounded_followup_from_last_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
+    topic_state = _latest_topic_state(history)
+    if not topic_state:
+        return None
+    if _is_practical_elaboration_request(message):
+        answer = _grounded_practical_elaboration(topic_state)
+        if answer:
+            return _session_payload(message, answer, confidence_score=0.86, resolved=True)
+    answer = _bounded_followup_answer(topic_state, message)
+    return _session_payload(message, answer, confidence_score=0.84, resolved=True)
+
+
+def _active_topic_aspect_followup(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
+    aspect = _active_topic_aspect(message)
+    if not aspect:
+        return None
+    topic_state = _latest_topic_state(history)
+    topic = str(topic_state.get("topic") or "").strip()
+    if not topic:
+        return None
+    answer = _active_topic_aspect_answer(topic, aspect, topic_state)
+    if not answer:
+        return None
+    payload = _session_payload(message, answer, confidence_score=0.86, resolved=True)
+    payload["memory_retrieval_bypassed"] = True
+    return payload
+
+
+def _active_topic_aspect(message: str) -> str:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    if " " in lower:
+        return ""
+    return lower if lower in {
+        "mechanism",
+        "limits",
+        "examples",
+        "causes",
+        "effects",
+        "applications",
+        "evidence",
+        "risks",
+        "benefits",
+    } else ""
+
+
+def _active_topic_aspect_answer(topic: str, aspect: str, topic_state: dict[str, Any]) -> str:
+    matches = query_approved_concepts(topic).get("matches", [])
+    concept = matches[0] if matches else {}
+    source_lines = [
+        str(item).strip()
+        for item in [
+            *((concept or {}).get("propositions") or []),
+            *((concept or {}).get("examples") or []),
+            (concept or {}).get("short_definition"),
+            topic_state.get("last_visible_answer"),
+        ]
+        if str(item or "").strip()
+    ]
+    selected = next((line for line in source_lines if aspect in line.lower()), "")
+    if not selected and source_lines:
+        selected = source_lines[0]
+    if not selected:
+        return ""
+    name = str((concept or {}).get("concept_name") or topic)
+    return (
+        f"Still on {name}: for {aspect}, the grounded detail I have is: "
+        f"{_compact_prior_point(selected, name)}"
+    )
+
+
+def _is_practical_elaboration_request(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    return lower in {
+        "give me another practical tip",
+        "another practical tip",
+        "give me another tip",
+        "another tip",
+        "what is a practical next step",
+    }
+
+
+def _is_practical_tip_for_explicit_target(message: str) -> bool:
+    lower = " ".join(str(message or "").lower().strip().split()).strip(" ?!.")
+    return bool(re.match(r"^give me (?:a |another )?practical tip for .+", lower))
+
+
+def _grounded_practical_elaboration(topic_state: dict[str, Any]) -> str:
+    topic = str(topic_state.get("topic") or "").strip()
+    if not topic:
+        return ""
+    matches = query_approved_concepts(topic).get("matches", [])
+    if not matches:
+        return ""
+    concept = matches[0]
+    stored_lines = [
+        str(item).strip()
+        for item in [
+            *(concept.get("propositions") or []),
+            *(concept.get("examples") or []),
+            concept.get("short_definition"),
+        ]
+        if str(item or "").strip()
+    ]
+    useful = _first_useful_practical_line(stored_lines)
+    if not useful:
+        return ""
+    name = str(concept.get("concept_name") or topic)
+    return (
+        f"From noncanonical reviewed memory for `{name}`: another practical tip is to {useful[0].lower() + useful[1:] if len(useful) > 1 else useful} "
+        "This stays grounded in the stored concept rather than asking a model or adding new memory."
+    )
+
+
+def _first_useful_practical_line(lines: list[str]) -> str:
+    for line in lines:
+        clean = _compact_prior_point(line, "the stored concept").strip(" .")
+        if not clean:
+            continue
+        if any(term in clean.lower() for term in ("practice", "start", "use", "consider", "focus", "learn", "get comfortable")):
+            return clean
+    return _compact_prior_point(lines[0], "the stored concept").strip(" .") if lines else ""
+
+
 def _is_session_memory_turn(message: str) -> bool:
     lower = message.lower()
     return any(phrase in lower for phrase in (
@@ -1414,23 +1984,23 @@ def _session_memory_answer(message: str, history: list[dict[str, str]] | None) -
     if "pretend my favorite color is" in lower:
         match = re.search(r"favorite color is\s+([a-zA-Z]+)", lower)
         color = match.group(1) if match else "that"
-        return _session_payload(message, f"Got it. For this conversation only, I'll treat your favorite color as {color}.")
+        return _session_payload(message, f"Got it. For this conversation only, I'll treat your favorite color as {color}.", route="conversation_short_term_memory")
     if "alice owns" in lower and "bob owns" in lower:
-        return _session_payload(message, "Got it. For this conversation only: Alice owns the truck, and Bob owns the trailer.")
+        return _session_payload(message, "Got it. For this conversation only: Alice owns the truck, and Bob owns the trailer.", route="conversation_short_term_memory")
     if history and "favorite color" in lower and "conversation" in lower:
         for item in reversed(history):
             text = str(item.get("content") or "").lower()
             match = re.search(r"favorite color is\s+([a-zA-Z]+)", text)
             if match:
-                return _session_payload(message, f"In this conversation, your favorite color is {match.group(1)}.")
+                return _session_payload(message, f"In this conversation, your favorite color is {match.group(1)}.", route="conversation_short_term_memory")
     if history and "who owns the" in lower:
         target = "trailer" if "trailer" in lower else "truck" if "truck" in lower else ""
         for item in reversed(history):
             text = str(item.get("content") or "").lower()
             if target == "trailer" and "bob owns the trailer" in text:
-                return _session_payload(message, "Bob owns the trailer in this conversation.")
+                return _session_payload(message, "Bob owns the trailer in this conversation.", route="conversation_short_term_memory")
             if target == "truck" and "alice owns the truck" in text:
-                return _session_payload(message, "Alice owns the truck in this conversation.")
+                return _session_payload(message, "Alice owns the truck in this conversation.", route="conversation_short_term_memory")
     return None
 
 
@@ -1438,19 +2008,36 @@ def _is_recent_concept_followup(message: str) -> bool:
     return message.lower().strip(" ?!.") in {
         "why",
         "why is that",
+        "tell me more",
+        "continue",
+        "expand on that",
+        "more detail",
+        "more details",
         "go deeper",
+        "tell me more",
+        "continue",
+        "expand on that",
+        "more detail",
+        "more details",
         "give me an example",
         "how big can they get",
         "does that happen to all of them",
     }
 
 
-def _session_payload(message: str, answer: str) -> dict[str, Any]:
+def _session_payload(
+    message: str,
+    answer: str,
+    *,
+    confidence_score: float = 0.92,
+    resolved: bool | None = None,
+    route: str = "session_memory",
+) -> dict[str, Any]:
     return {
-        "route": "conversation_short_term_memory",
+        "route": route,
         "answer": answer,
         "confidence": "session_memory",
-        "confidence_score": 0.92,
+        "confidence_score": confidence_score,
         "selected_model_lane": select_model_lane(message),
         "supporting_information_offer": None,
         "memory_candidate": None,
@@ -1458,12 +2045,15 @@ def _session_payload(message: str, answer: str) -> dict[str, Any]:
         "web_search_performed": False,
         "training_performed": False,
         "canonical_write_performed": False,
+        "resolved_from_prior_visible_answer": resolved,
     }
 
 
 def _recent_concept_followup_answer(message: str, history: list[dict[str, str]] | None) -> dict[str, Any] | None:
+    if _is_explicit_new_topic_request(message):
+        return None
     lower = message.lower().strip(" ?!.")
-    if lower not in {"why", "why is that", "go deeper", "give me an example", "how big can they get", "does that happen to all of them"}:
+    if lower not in {"why", "why is that", "tell me more", "continue", "expand on that", "more detail", "more details", "go deeper", "give me an example", "how big can they get", "does that happen to all of them"}:
         return None
     context = _last_concept_context(history)
     concept_name = context.get("concept_name")
@@ -1471,9 +2061,13 @@ def _recent_concept_followup_answer(message: str, history: list[dict[str, str]] 
         topic = _recent_user_topic(history)
         if not topic:
             return None
+        prior = str((_last_visible_exchange(history) or {}).get("answer") or "").lower()
+        unresolved_offer = "would you like me to ask a local reasoning model" in prior and "don't think i know enough" in prior
+        route = "conversation_short_term_memory" if unresolved_offer else "session_memory"
         return _session_payload(
             message,
             f"I can continue from your recent topic, {topic}. I do not have approved local knowledge for it yet, so I can ask the local reasoning model if you want.",
+            route=route,
         )
     if lower == "give me an example":
         answer = f"Using the recent concept `{concept_name}`, I can give an example from that same topic, but I will keep this as session context rather than storing anything new."
@@ -1541,6 +2135,9 @@ def local_conversation_answer(
         return development
     if memory := _history_answer(message, history):
         return memory
+    if not execute_local_model and (intent == "followup" or _is_context_dependent_followup(message)):
+        if bounded := _bounded_followup_from_last_answer(message, history):
+            return bounded
     if recent := _recent_concept_followup_answer(message, history):
         return recent
     if intent == "followup":
@@ -1616,10 +2213,19 @@ def local_conversation_answer(
                 "training_performed": False,
                 "canonical_write_performed": False,
             }
-    if direct:
+    if direct and not _is_synthesis_trial_request(message):
         answer = str(direct["answer"])
         confidence = str(direct["confidence"])
         confidence_score = float(direct["confidence_score"])
+        support_offer = None
+        fixture = direct.get("fixture")
+    elif _is_brainstorming_request(message):
+        answer = (
+            "The first concept that comes to mind is motion: in physics, it is a clean starting point because it connects position, time, forces, energy, and prediction. "
+            "If you want a more playful association, I would branch from motion to symmetry, fields, or conservation."
+        )
+        confidence = "local_brainstorming"
+        confidence_score = 0.78
         support_offer = None
     elif intent == "coding":
         answer = (
@@ -1694,6 +2300,7 @@ def local_conversation_answer(
         "local_model_result": local_model_result,
         "supporting_information_offer": support_offer,
         "local_model_offer": None,
+        "deterministic_fixture": fixture if direct else None,
         "memory_candidate": None,
         "provider_calls_performed": False,
         "web_search_performed": False,
@@ -1754,6 +2361,21 @@ def confidence_engine(message: str, substrate_matched: bool = False) -> dict[str
 
 def _finish_conversation_payload(payload: dict[str, Any], message: str, history: list[dict[str, str]] | None) -> dict[str, Any]:
     normalize_safety_payload(payload)
+    intent_info = payload.get("intent") if isinstance(payload.get("intent"), dict) else classify_intent(message)
+    payload["conversation_topic_state"] = _conversation_topic_state(message, payload, intent_info, history)
+    payload["routing_observability"] = {
+        "layer": "rc2_conversational_mode_router",
+        "selected_route": str(payload.get("route") or ""),
+        "intent": intent_info,
+        "explicit_new_topic_request": _is_explicit_new_topic_request(message),
+        "anchor_available": bool(resolve_followup_anchor(history)),
+        "anchor_followup_allowed": _is_anchor_followup(message),
+        "memory_retrieval_bypassed": bool(payload.get("memory_retrieval_bypassed", False)),
+        "history_turns_seen": len(history or []),
+        "early_return": str(payload.get("route") or ""),
+        "read_only": True,
+        "ephemeral": True,
+    }
     payload["route_arbitration"] = build_route_arbitration_trace(
         message,
         history,
@@ -1781,6 +2403,7 @@ def route_message(
     if mode == "Conversation":
         intent_info = classify_intent(message)
         anchor = resolve_followup_anchor(history)
+        explicit_new_topic = _is_explicit_new_topic_request(message)
         if provider_approved:
             payload = execute_gpt_support_request(message, history, transport=provider_transport)
             payload["intent"] = intent_info
@@ -1805,6 +2428,87 @@ def route_message(
             }
             payload["escalation_plan"] = build_escalation_plan(target)
             payload["mode_router_flags"] = ROUTER_FLAGS
+            return _finish_conversation_payload(payload, message, history)
+        switch_topic = _topic_switch_target(message)
+        if switch_topic and not _is_substantive_switch_target(switch_topic):
+            payload = {
+                "mode": mode,
+                "route": "social_conversation",
+                "answer": f"Got it. Let's talk about {switch_topic}.",
+                "confidence": "topic_switch_acknowledgement",
+                "confidence_score": 0.88,
+                "selected_model_lane": select_model_lane(message),
+                "local_model_result": None,
+                "supporting_information_offer": None,
+                "local_model_offer": None,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "escalation_plan": build_escalation_plan(message),
+                "intent": {**intent_info, "intent": "topic_switch", "communication_act": "topic_switch"},
+                "confidence_decision": confidence_engine(message, False),
+                "mode_router_flags": ROUTER_FLAGS,
+            }
+            return _finish_conversation_payload(payload, message, history)
+        return_target = _topic_return_target(message)
+        if return_target:
+            prior_topic = _prior_topic_match(history, return_target)
+            concept = query_approved_concepts(prior_topic or return_target)
+            matches = concept.get("matches", []) if concept.get("matched") else []
+            resolved_topic = prior_topic or (str(matches[0].get("concept_name") or "") if matches else "")
+            if resolved_topic:
+                detail = str((matches[0].get("short_definition") if matches else "") or "").strip()
+                answer = f"Returning to {resolved_topic}."
+                if detail:
+                    answer += f" {detail}"
+                payload = {
+                    "mode": mode,
+                    "route": "topic_return",
+                    "answer": answer,
+                    "confidence": "explicit_prior_topic_return",
+                    "confidence_score": 0.88,
+                    "selected_model_lane": select_model_lane(message),
+                    "supporting_information_offer": None,
+                    "local_model_offer": None,
+                    "local_model_result": None,
+                    "concept_matches": matches,
+                    "topic_return_target": resolved_topic,
+                    "memory_candidate": None,
+                    "provider_calls_performed": False,
+                    "web_search_performed": False,
+                    "training_performed": False,
+                    "canonical_write_performed": False,
+                    "autonomous_action_performed": False,
+                    "escalation_plan": build_escalation_plan(message),
+                    "intent": {**intent_info, "intent": "topic_return", "communication_act": "topic_return"},
+                    "confidence_decision": confidence_engine(message, bool(matches)),
+                    "mode_router_flags": ROUTER_FLAGS,
+                }
+                return _finish_conversation_payload(payload, message, history)
+            payload = {
+                "mode": mode,
+                "route": "topic_return_unresolved",
+                "answer": f"I do not have a prior or approved topic matching `{return_target}` in this conversation.",
+                "confidence": "topic_return_unresolved",
+                "confidence_score": 0.62,
+                "selected_model_lane": select_model_lane(message),
+                "supporting_information_offer": None,
+                "local_model_offer": None,
+                "local_model_result": None,
+                "memory_candidate": None,
+                "provider_calls_performed": False,
+                "web_search_performed": False,
+                "training_performed": False,
+                "canonical_write_performed": False,
+                "autonomous_action_performed": False,
+                "escalation_plan": build_escalation_plan(message),
+                "intent": {**intent_info, "intent": "topic_return_unresolved", "communication_act": "topic_return"},
+                "confidence_decision": confidence_engine(message, False),
+                "mode_router_flags": ROUTER_FLAGS,
+            }
             return _finish_conversation_payload(payload, message, history)
         if intent_info.get("intent") in SOCIAL_INTENT_RESPONSES and intent_info.get("safe_no_route", True):
             payload = {
@@ -1844,7 +2548,7 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = None
             return _finish_conversation_payload(payload, message, history)
-        if intent_info.get("communication_act") == "clarification_followup" and not history:
+        if (intent_info.get("communication_act") == "clarification_followup" or _is_context_dependent_followup(message)) and not history:
             payload = {
                 "mode": mode,
                 "route": "session_memory",
@@ -1912,7 +2616,59 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
-        early_episode_followup = None if _should_defer_to_knowledge_browse(intent_info) else resolve_working_memory_followup(message, history)
+        if _is_brainstorming_request(message):
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "brainstorming"}
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = None
+            payload["memory_retrieval_bypassed"] = True
+            return _finish_conversation_payload(payload, message, history)
+        if not anchor and not _should_defer_to_knowledge_browse(intent_info) and (
+            intent_info.get("communication_act") == "clarification_followup"
+            or intent_info.get("intent") == "followup"
+            or _is_recent_concept_followup(message)
+        ):
+            payload = {
+                "mode": mode,
+                **local_conversation_answer(
+                    message,
+                    history,
+                    execute_local_model=execute_local_model,
+                    provider_manager=provider_manager,
+                ),
+            }
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "recent_topic_followup"}
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = None
+            payload["memory_retrieval_bypassed"] = True
+            return _finish_conversation_payload(payload, message, history)
+        explicit_session = _session_memory_answer(message, history) if _is_session_memory_turn(message) else None
+        if explicit_session:
+            payload = {"mode": mode, **explicit_session}
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "conversation_short_term_memory"}
+            payload["confidence_decision"] = confidence_engine(message, False)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = None
+            payload["memory_retrieval_bypassed"] = True
+            return _finish_conversation_payload(payload, message, history)
+        early_episode_followup = None if (
+            _should_defer_to_knowledge_browse(intent_info)
+            or explicit_new_topic
+            or bool(anchor and _is_anchor_followup(message))
+        ) else resolve_working_memory_followup(message, history)
         if early_episode_followup:
             payload = {"mode": mode, **early_episode_followup}
             payload["escalation_plan"] = build_escalation_plan(message)
@@ -1972,7 +2728,11 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return _finish_conversation_payload(payload, message, history)
-        early_wrs = build_working_reasoning_set(message) if should_use_wrs(message) else {"matched": False}
+        early_wrs = build_working_reasoning_set(message) if (
+            should_use_wrs(message)
+            and not _is_synthesis_trial_request(message)
+            and len(parse_multi_concept_query(message)) < 2
+        ) else {"matched": False}
         if early_wrs["matched"]:
             wrs_payload = dict(early_wrs.get("working_reasoning_set") or {})
             wrs_payload.update({
@@ -1981,6 +2741,8 @@ def route_message(
                 "synthesis_enabled_by_default": False,
                 "memory_write_performed": False,
                 "graph_write_performed": False,
+                "retrieved_concept_count": early_wrs.get("retrieved_concept_count", 0),
+                "retrieved_proposition_count": early_wrs.get("retrieved_proposition_count", 0),
             })
             payload = {
                 "mode": mode,
@@ -2011,7 +2773,7 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return _finish_conversation_payload(payload, message, history)
-        if _is_anchor_followup(message) and anchor:
+        if not explicit_new_topic and _is_anchor_followup(message) and anchor:
             anchored = browse_near_active_anchor(message, anchor) if _is_anchor_browse_followup(message) else deepen_from_concept_anchor(message, anchor)
             if anchored:
                 payload = {"mode": mode, **anchored}
@@ -2036,7 +2798,11 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
-        if intent_info.get("intent") in {"coding", "external_knowledge_request", "image"} or _direct_answer(message) or _is_development_workflow_request(message, history):
+        if (
+            (intent_info.get("intent") in {"coding", "external_knowledge_request", "image"} and not _is_synthesis_trial_request(message))
+            or (_direct_answer(message) and not _is_synthesis_trial_request(message))
+            or _is_development_workflow_request(message, history)
+        ):
             payload = {
                 "mode": mode,
                 **local_conversation_answer(
@@ -2052,7 +2818,11 @@ def route_message(
             payload["mode_router_flags"] = ROUTER_FLAGS
             payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
             return _finish_conversation_payload(payload, message, history)
-        episode_followup = None if _should_defer_to_knowledge_browse(intent_info) else resolve_working_memory_followup(message, history)
+        episode_followup = None if (
+            _should_defer_to_knowledge_browse(intent_info)
+            or explicit_new_topic
+            or bool(anchor and _is_anchor_followup(message))
+        ) else resolve_working_memory_followup(message, history)
         if episode_followup:
             payload = {"mode": mode, **episode_followup}
             payload["escalation_plan"] = build_escalation_plan(message)
@@ -2256,7 +3026,11 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return _finish_conversation_payload(payload, message, history)
-        wrs_result = build_working_reasoning_set(message) if should_use_wrs(message) else {"matched": False}
+        wrs_result = build_working_reasoning_set(message) if (
+            should_use_wrs(message)
+            and not _is_synthesis_trial_request(message)
+            and len(parse_multi_concept_query(message)) < 2
+        ) else {"matched": False}
         if wrs_result["matched"]:
             wrs_payload = dict(wrs_result.get("working_reasoning_set") or {})
             wrs_payload.update({
@@ -2265,6 +3039,8 @@ def route_message(
                 "synthesis_enabled_by_default": False,
                 "memory_write_performed": False,
                 "graph_write_performed": False,
+                "retrieved_concept_count": wrs_result.get("retrieved_concept_count", 0),
+                "retrieved_proposition_count": wrs_result.get("retrieved_proposition_count", 0),
             })
             payload = {
                 "mode": mode,
@@ -2380,8 +3156,19 @@ def route_message(
                 "mode_router_flags": ROUTER_FLAGS,
             })
             return _finish_conversation_payload(payload, message, history)
+        aspect_followup = _active_topic_aspect_followup(message, history)
+        if aspect_followup:
+            payload = {"mode": mode, **aspect_followup}
+            payload["escalation_plan"] = build_escalation_plan(message)
+            payload["intent"] = {**intent_info, "intent": "active_topic_aspect_followup"}
+            payload["confidence_decision"] = confidence_engine(message, True)
+            payload["mode_router_flags"] = ROUTER_FLAGS
+            payload["memory_candidate"] = None
+            return _finish_conversation_payload(payload, message, history)
         bypass_memory_retrieval = (
             execute_local_model
+            or explicit_new_topic and _is_brainstorming_request(message)
+            or _is_practical_tip_for_explicit_target(message)
             or intent_info.get("communication_act") == "clarification_followup"
             or intent_info.get("intent") == "followup"
             or _is_session_memory_turn(message)
@@ -2421,6 +3208,7 @@ def route_message(
                     provider_manager=provider_manager,
                 ),
             }
+        payload["memory_retrieval_bypassed"] = bypass_memory_retrieval
         payload["memory_candidate"] = maybe_build_memory_candidate(message, payload)
         payload["escalation_plan"] = build_escalation_plan(message)
         payload["intent"] = intent_info

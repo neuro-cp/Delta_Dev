@@ -1,0 +1,111 @@
+{
+  "path": "Tk-compatible DeltaApp._send_chat primary path",
+  "prompts": [
+    "lookup how to swim",
+    "yes",
+    "what was the response"
+  ],
+  "local_model_inference_executed": false,
+  "mocked_local_model_execution_observed": true,
+  "provider_calls_performed": false,
+  "canonical_memory_write_performed": false,
+  "concept_retrieval_bypassed_for_response_query": true,
+  "route_calls": [
+    {
+      "message": "lookup how to swim",
+      "execute_local_model": false,
+      "provider_approved": false
+    },
+    {
+      "message": "lookup how to swim",
+      "execute_local_model": true,
+      "provider_approved": false
+    }
+  ],
+  "turns": [
+    {
+      "prompt": "lookup how to swim",
+      "visible_response": "I don't think I know enough from my learned local knowledge yet. Would you like me to ask a local reasoning model?\n\nWould you like me to ask it?\nReply yes to ask the local model for this one question, or no to leave it unanswered.",
+      "state_before": {
+        "pending_local_model_question": null,
+        "pending_local_model_deepening": null,
+        "last_local_model_exchange": null,
+        "last_payload_route": null,
+        "local_model_executed": false,
+        "provider_calls_performed": false,
+        "canonical_write_performed": false
+      },
+      "state_after": {
+        "pending_local_model_question": "lookup how to swim",
+        "pending_local_model_deepening": null,
+        "last_local_model_exchange": null,
+        "last_payload_route": "local_model_consent_required",
+        "local_model_executed": false,
+        "provider_calls_performed": false,
+        "canonical_write_performed": false
+      }
+    },
+    {
+      "prompt": "yes",
+      "visible_response": "Mock local model response: practice floating, kicking, breathing, and water safety in a supervised pool.",
+      "state_before": {
+        "pending_local_model_question": "lookup how to swim",
+        "pending_local_model_deepening": null,
+        "last_local_model_exchange": null,
+        "last_payload_route": "local_model_consent_required",
+        "local_model_executed": false,
+        "provider_calls_performed": false,
+        "canonical_write_performed": false
+      },
+      "state_after": {
+        "pending_local_model_question": null,
+        "pending_local_model_deepening": null,
+        "last_local_model_exchange": {
+          "question": "lookup how to swim",
+          "status": "completed",
+          "answer": "Mock local model response: practice floating, kicking, breathing, and water safety in a supervised pool.",
+          "model_id": "mock-local-model",
+          "provider_calls_performed": false
+        },
+        "last_payload_route": "local_conversation_model_lane",
+        "local_model_executed": true,
+        "provider_calls_performed": false,
+        "canonical_write_performed": false
+      }
+    },
+    {
+      "prompt": "what was the response",
+      "visible_response": "The local model response for `lookup how to swim` was:\n\nMock local model response: practice floating, kicking, breathing, and water safety in a supervised pool.",
+      "state_before": {
+        "pending_local_model_question": null,
+        "pending_local_model_deepening": null,
+        "last_local_model_exchange": {
+          "question": "lookup how to swim",
+          "status": "completed",
+          "answer": "Mock local model response: practice floating, kicking, breathing, and water safety in a supervised pool.",
+          "model_id": "mock-local-model",
+          "provider_calls_performed": false
+        },
+        "last_payload_route": "local_conversation_model_lane",
+        "local_model_executed": true,
+        "provider_calls_performed": false,
+        "canonical_write_performed": false
+      },
+      "state_after": {
+        "pending_local_model_question": null,
+        "pending_local_model_deepening": null,
+        "last_local_model_exchange": {
+          "question": "lookup how to swim",
+          "status": "completed",
+          "answer": "Mock local model response: practice floating, kicking, breathing, and water safety in a supervised pool.",
+          "model_id": "mock-local-model",
+          "provider_calls_performed": false
+        },
+        "last_payload_route": "local_conversation_model_lane",
+        "local_model_executed": true,
+        "provider_calls_performed": false,
+        "canonical_write_performed": false
+      }
+    }
+  ]
+}

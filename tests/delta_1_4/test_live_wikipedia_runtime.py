@@ -51,7 +51,8 @@ def test_wikipedia_query_extraction_is_bounded():
     assert wikipedia_query_from_message("Wikipedia: Ada Lovelace") == "Ada Lovelace"
     assert wikipedia_query_from_message("Look up Ada Lovelace on Wikipedia.") == "Ada Lovelace"
     assert wikipedia_query_from_message("Tell me what Wikipedia has regarding Ada Lovelace.") == "Ada Lovelace"
-    assert wikipedia_query_from_message("Who is Ada Lovelace?") == "Ada Lovelace"
+    assert wikipedia_query_from_message("Who is Ada Lovelace?") == ""
+    assert wikipedia_query_from_message("what is the first concept that comes to mind related to physics") == ""
     assert wikipedia_query_from_message("Thanks, that makes sense.") == ""
 
 
@@ -246,6 +247,25 @@ def test_live_chat_falls_back_to_router_without_retrieval_for_ordinary_turn():
     assert response.payload["provider_calls_performed"] is False
     assert session.retrieval_count == 0
     assert "debugging partner" in response.answer.lower()
+
+
+def test_live_chat_does_not_turn_broad_brainstorming_into_wikipedia_query():
+    def fail_if_called(_url: str, _max_chars: int):
+        raise AssertionError("Wikipedia transport should not be called for broad brainstorming.")
+
+    session = start_live_wikipedia_runtime(runtime_id="broad-brainstorm")
+    session, response = handle_live_chat(
+        session,
+        "what is the first concept that comes to mind related to physics",
+        wikipedia_transport=fail_if_called,
+    )
+
+    assert response.route == "local_conversation_model_lane"
+    assert response.wikipedia_result is None
+    assert session.retrieval_count == 0
+    assert "motion" in response.answer.lower()
+    assert response.payload["live_routing_observability"]["explicit_wikipedia_intent"] is False
+    assert response.payload["live_routing_observability"]["rc2_fallback_considered"] is True
 
 
 def test_live_local_model_turn_requires_consent_and_synchronizes_controller_residency():

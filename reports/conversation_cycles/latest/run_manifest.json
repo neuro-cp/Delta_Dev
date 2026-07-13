@@ -1,0 +1,29 @@
+{
+  "cycle_count": 6,
+  "default_model_warmup_skipped": true,
+  "failure_count": 13,
+  "failure_taxonomy": [
+    "GREETING_ROUTING",
+    "FOLLOWUP_CONTEXT",
+    "TOPIC_DRIFT",
+    "PRONOUN_RESOLUTION",
+    "STALE_ANCHOR",
+    "PENDING_STATE_HIJACK",
+    "WIKIPEDIA_OVERROUTE",
+    "MODEL_ROUTE_FAILURE",
+    "RESPONSE_COMPOSITION",
+    "SELF_MODEL_MISMATCH",
+    "STATE_SYNC",
+    "GOVERNANCE",
+    "PERFORMANCE",
+    "OTHER"
+  ],
+  "local_model_inference_allowed": false,
+  "local_model_inference_observed": false,
+  "model_as_judge_used": false,
+  "path": "Tk-compatible integrated DeltaApp._send_chat primary path",
+  "repository": "G:\\Delta_Dev",
+  "run_id": "conversation-cycles-20260713T022352Z",
+  "turn_count": 23,
+  "wikipedia_transport": "fake patched _default_wikipedia_transport for explicit Wikipedia cycle only"
+}

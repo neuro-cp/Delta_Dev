@@ -4,19 +4,12 @@ Queue growth, timeouts, invalid transitions, model unavailability, Wikipedia fai
 
 ## Health Inputs
 
-The controller checks event queue size, model availability, Wikipedia
-availability, cycle timeout, repeated exceptions, stale objectives, and resource
-limit events. Current CPU and memory pressure are controller-level indicators;
-OS-level RSS/CPU counters were not available in the validation environment.
+The controller checks event queue size, model availability, Wikipedia availability, cycle timeout, repeated exceptions, stale objectives, and resource limit events. It records process CPU time, active Python threads, and best-effort Windows working-set metrics without requiring `psutil`.
 
 ## Degraded Mode
 
-When degraded, the controller stops automatic initiative work and preserves the
-audit trail. The operator can pause, suspend, or shut down. Unknown action types
-or invalid lifecycle transitions fail closed.
+When degraded, the controller stops automatic initiative work and preserves the audit trail. The operator can pause, suspend, or shut down. Unknown action types or invalid lifecycle transitions fail closed.
 
 ## Recovery
 
-Recovery is explicit and bounded. The controller may return to `IDLE` after a
-recoverable condition clears, but it does not retry external retrieval, model
-execution, sandbox work, or persistence automatically.
+Recovery is explicit and bounded. The controller may return to `IDLE` after a recoverable condition clears, but it does not retry external retrieval, model execution, sandbox work, or persistence automatically.

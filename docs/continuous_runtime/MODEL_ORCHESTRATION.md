@@ -4,21 +4,16 @@ The controller reads the real local model registry and lane router. Default conv
 
 ## Actual Inventory
 
-The registry exposes multiple GGUF models and aliases rather than exactly two
-hardcoded models. The controller therefore reports actual registry state,
-selected lane models, resident model ID, resident lane, and residency status.
+The registry exposes multiple GGUF models and aliases rather than exactly two hardcoded models. The controller therefore reports actual registry state, selected lane models, resident model ID, resident lane, and residency status.
 
 ## Routing Policy
 
-Deterministic subsystems answer without a model for lifecycle status, authority
-classification, capability reporting, Wikipedia budget exhaustion, and cached
-evidence discussion. Local models remain useful for synthesis, planning,
-hypothesis generation, coding proposals, ambiguity resolution, and deeper
-developmental reflection.
+Deterministic subsystems answer without a model for lifecycle status, authority classification, capability reporting, Wikipedia budget exhaustion, and cached evidence discussion. Local models remain useful for synthesis, planning, hypothesis generation, coding proposals, ambiguity resolution, and deeper developmental reflection.
 
 ## Residency Policy
 
-The existing `ProviderManager` is the authority for local model residency. It is
-serial and keeps at most one local GGUF model resident at a time. The continuous
-controller observes and reports this state; it does not keep multiple models
-loaded or invoke inference from idle reflection.
+The existing `ProviderManager` is the authority for local model residency. It is serial and keeps at most one local GGUF model resident at a time. The continuous controller observes and reports this state; it does not keep multiple models loaded or invoke inference from idle reflection.
+
+## Validation Boundary
+
+The bounded campaign observes model-ready events and lane selection. Repeated real inference, model switching under pressure, failed invocation recovery, and planning-to-conversation handoff still require a controlled long-horizon pilot.

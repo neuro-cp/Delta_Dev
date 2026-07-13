@@ -428,6 +428,25 @@ def handle_live_chat(
             "memory_candidate": _memory_candidate_from_development(development_payload),
             "promotion_candidate": development_payload["promotion_candidate"],
             "operator_inquiry": development_payload["operator_inquiry"],
+            "conversation_topic_state": {
+                "state_kind": "SUBSTANTIVE_TOPIC",
+                "topic": result.title,
+                "source_turn": "current",
+                "source_route": "live_wikipedia_text_retrieval",
+                "last_user_prompt": message,
+                "last_visible_answer": answer.split("\n\n--- Developer Overlay ---", 1)[0][:600],
+                "entities": [result.title],
+                "confidence": 0.86,
+                "supersedes_anchor": True,
+                "read_only": True,
+            },
+            "routing_observability": _live_routing_trace(
+                message,
+                "live_wikipedia_text_retrieval",
+                query=query,
+                rc2_fallback_considered=False,
+                wikipedia_considered=True,
+            ),
         }
         runtime = replace(
             runtime,
@@ -502,6 +521,13 @@ def handle_live_chat(
         request = _new_local_model_request(session, message, payload)
         payload = {**payload, "live_runtime_local_model_request": request}
         session = replace(session, pending_local_model_request=request)
+    payload["live_routing_observability"] = _live_routing_trace(
+        message,
+        str(payload.get("route") or "conversation_fallback"),
+        query=query,
+        rc2_fallback_considered=True,
+        wikipedia_considered=bool(query),
+    )
     response = _response(answer, str(payload.get("route") or "conversation_fallback"), payload, None, runtime.state, safety_metadata())
     updated = _advance_continuous_controller(replace(session, runtime=runtime), "VALIDATION_RESULT", {"summary": "ordinary chat routed without continuous work"}, priority=20)
     return replace(updated, turns=updated.turns + (response,)), response
@@ -510,25 +536,51 @@ def handle_live_chat(
 def wikipedia_query_from_message(message: str) -> str:
     text = " ".join(str(message or "").strip().strip(" .?!").split())
     lower = text.lower()
+    if not _has_explicit_wikipedia_intent(lower):
+        return ""
     patterns = (
         r"^(?:wikipedia|wiki)\s*[:\-]?\s*(.+)$",
         r"tell me what wikipedia has (?:regarding|about|on)\s+(.+)$",
         r"what does wikipedia (?:have|say) (?:regarding|about|on)\s+(.+)$",
         r"what has wikipedia got (?:regarding|about|on)\s+(.+)$",
-        r"look up\s+(.+?)(?:\s+on wikipedia)?$",
+        r"look up\s+(.+?)\s+on wikipedia$",
         r"retrieve\s+(.+?)(?:\s+from wikipedia)?$",
-        r"tell me about\s+(.+)$",
-        r"what is\s+(.+)$",
-        r"who is\s+(.+)$",
     )
-    if not any(term in lower for term in ("wikipedia", "wiki", "look up", "retrieve", "what is", "who is", "tell me about")):
-        return ""
     for pattern in patterns:
         match = re.search(pattern, text, flags=re.IGNORECASE)
         if match:
             query = re.sub(r"\b(on|from)\s+wikipedia\b", "", match.group(1), flags=re.IGNORECASE).strip(" ?.!")
             return _clean_query(query)
     return ""
+
+
+def _has_explicit_wikipedia_intent(lower: str) -> bool:
+    if "wikipedia" in lower or re.search(r"(^|\s)wiki\s*[:\-]", lower):
+        return True
+    if lower.startswith("retrieve ") and "from wikipedia" in lower:
+        return True
+    return bool(re.match(r"^look up .+ on wikipedia$", lower))
+
+
+def _live_routing_trace(
+    message: str,
+    selected_route: str,
+    *,
+    query: str = "",
+    rc2_fallback_considered: bool,
+    wikipedia_considered: bool,
+) -> dict[str, Any]:
+    return {
+        "layer": "delta_1_4_live_wikipedia_runtime",
+        "selected_route": selected_route,
+        "raw_message": message,
+        "wikipedia_query": query,
+        "explicit_wikipedia_intent": _has_explicit_wikipedia_intent(" ".join(str(message or "").lower().split())),
+        "wikipedia_considered": wikipedia_considered,
+        "rc2_fallback_considered": rc2_fallback_considered,
+        "read_only": True,
+        "ephemeral": True,
+    }
 
 
 def retrieve_wikipedia_text(
