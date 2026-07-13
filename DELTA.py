@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, fields, is_dataclass
 import json
 import os
 import queue
@@ -100,6 +100,7 @@ from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E4
     suspend_live_runtime_initiative,
 )
 from orchestration.runtime.continuous_runtime_controller import controller_snapshot  # noqa: E402
+from orchestration.runtime import gsr_a_governed_self_regulation as gsr  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
 
@@ -1751,11 +1752,18 @@ class DeltaApp:
         self.evaluation_items.configure(yscrollcommand=scrollbar.set)
         self.evaluation_items.bind("<<TreeviewSelect>>", lambda _event: self._show_selected_evaluation_item())
 
+        controls = ttk.Frame(right)
+        controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Button(controls, text="Accept", command=lambda: self._record_evaluation_disposition("accepted")).pack(side=tk.LEFT)
+        ttk.Button(controls, text="Decline", command=lambda: self._record_evaluation_disposition("declined")).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Needs Modification", command=lambda: self._record_evaluation_disposition("needs_modification")).pack(side=tk.LEFT, padx=(6, 0))
+
         self.evaluation_detail = scrolledtext.ScrolledText(right, wrap=tk.WORD)
         self.evaluation_detail.pack(fill=tk.BOTH, expand=True)
         self.evaluation_detail.configure(state=tk.DISABLED)
         self.evaluation_snapshot: dict[str, dict[str, object]] = {}
         self.evaluation_review_items: list[dict[str, object]] = []
+        self.evaluation_dispositions: list[dict[str, object]] = []
         self._refresh_evaluation_snapshot()
 
     def _build_advanced_tab(self) -> None:
@@ -1942,7 +1950,7 @@ class DeltaApp:
         for key, item in self.evaluation_snapshot.items():
             self.evaluation_items.insert("", tk.END, iid=key, values=(f"{item['title']} [{item['status']}]",))
         self.evaluation_status.set(
-            "GSR-E3 review surface is read-only. Human/GPT review remains manual; no approval, execution, application, or continuation controls are available."
+            "GSR/OAR review surface. Disposition controls record immutable operator intent only; no source application, execution, or continuation."
         )
         first_item = next(iter(self.evaluation_snapshot), "")
         if first_item:
@@ -2000,6 +2008,87 @@ class DeltaApp:
             for item in items
         ]
         self._refresh_evaluation_snapshot()
+
+    def _selected_evaluation_review_item(self) -> tuple[str, dict[str, object]] | tuple[None, None]:
+        selected = self.evaluation_items.selection()
+        if not selected or not self.evaluation_snapshot:
+            return None, None
+        key = str(selected[0])
+        item = self.evaluation_snapshot.get(key)
+        if not item:
+            return None, None
+        details = item.get("details", item)
+        if not isinstance(details, dict):
+            return None, None
+        return key, details
+
+    def _oar_review_item_from_details(self, details: dict[str, object]) -> gsr.OperatorReviewItem | None:
+        field_names = {field.name for field in fields(gsr.OperatorReviewItem)}
+        payload = {key: value for key, value in details.items() if key in field_names}
+        required = {
+            "review_item_id",
+            "parent_mission_id",
+            "compiled_objective_id",
+            "capability_gap_id",
+            "proposal_id",
+            "proposal_version",
+            "artifact_chain_digest",
+        }
+        if not required.issubset(payload):
+            return None
+        return gsr.OperatorReviewItem(**payload)
+
+    def _record_evaluation_disposition(self, disposition: str) -> None:
+        _key, details = self._selected_evaluation_review_item()
+        if details is None:
+            self.evaluation_status.set("No evaluation item selected.")
+            return
+        item = self._oar_review_item_from_details(details)
+        if item is None:
+            self.evaluation_status.set("Selected item is display-only and cannot receive an OAR disposition.")
+            return
+        existing_ids = {
+            str(record.get("review_item_id"))
+            for record in self.evaluation_dispositions
+            if bool(record.get("terminal"))
+        }
+        if item.review_item_id in existing_ids:
+            self.evaluation_status.set(f"Disposition denied for {item.review_item_id}: duplicate terminal disposition.")
+            return
+        reason = "operator_comment" if disposition == "accepted" else ("insufficient_evidence" if disposition == "declined" else "needs_narrower_scope")
+        sequence = len(self.evaluation_dispositions) + 1
+        request = gsr.make_operator_proposal_disposition_request(
+            item,
+            requested_disposition=disposition,
+            reason_code=reason,
+            operator_comment=f"Tk operator selected {disposition}.",
+            ui_action_id=f"tk-evaluation-{disposition}-{sequence}",
+            sequence=sequence,
+        )
+        authorization = gsr.make_operator_proposal_disposition_authorization(
+            request,
+            operator_identity="tk_operator",
+            issued_sequence=sequence,
+        )
+        previous = tuple(
+            gsr.OperatorProposalDisposition(**{
+                key: value
+                for key, value in record.items()
+                if key in {field.name for field in fields(gsr.OperatorProposalDisposition)}
+            })
+            for record in self.evaluation_dispositions
+            if record.get("review_item_id") == item.review_item_id
+        )
+        result = gsr.apply_operator_proposal_disposition(item, request, authorization, previous, sequence=sequence)
+        if not result.accepted or result.disposition is None:
+            self.evaluation_status.set(f"Disposition denied for {item.review_item_id}: {result.reason}.")
+            return
+        record = asdict(result.disposition)
+        self.evaluation_dispositions.append(record)
+        self.evaluation_status.set(
+            f"Recorded {disposition} for {item.proposal_id}. No source application, execution, activation, or continuation was performed."
+        )
+        self._show_selected_evaluation_item()
 
     def _normalize_evaluation_review_item(self, index: int, item: dict[str, object]) -> dict[str, object]:
         item_type = str(item.get("item_type") or item.get("type") or "evaluation_item")

@@ -111,3 +111,76 @@ def test_evaluation_tab_renders_constructed_fixtures_without_runtime_side_effect
     assert threading.active_count() == thread_count_before
     assert tuple(multiprocessing.active_children()) == child_processes_before
     assert set(Path.cwd().glob("gsr_e2b_*")) == temp_workspaces_before
+
+
+def _oar_review_item_fixture() -> gsr.OperatorReviewItem:
+    return gsr.make_evaluation_review_item(
+        parent_mission_id="mission-ui",
+        compiled_objective_id="compiled-ui",
+        capability_gap_id="gap-ui",
+        proposal_id="proposal-ui",
+        parent_mission="Improve demonstrated language comprehension and scholarly discussion ability.",
+        current_blocker="weak assumption extraction",
+        capability_specification={"capability_id": "assumption_extraction"},
+        architecture_alternatives=({"option_id": "reuse-existing"},),
+        selected_design={"option_id": "reuse-existing"},
+        exact_affected_files=("fixtures/language.py",),
+        full_patch_or_structured_change="exact reviewed text change",
+        focused_tests=("pytest fixture",),
+        adjacent_regressions=("pytest adjacent",),
+        sandbox_results={"classification": "passed"},
+        score_change={"assumption_extraction": 0.1},
+        artifact_chain_digest="chain-ui",
+        source_precondition_hashes={"fixtures/language.py": "hash-ui"},
+    )
+
+
+def test_evaluation_tab_records_oar_dispositions_without_application_side_effects():
+    thread_count_before = threading.active_count()
+    child_processes_before = tuple(multiprocessing.active_children())
+    review_item = _oar_review_item_fixture()
+
+    root = tk.Tk()
+    root.withdraw()
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.root = root
+    try:
+        outer = DELTA.ttk.Frame(root)
+        outer.pack(fill=tk.BOTH, expand=True)
+        app.notebook = DELTA.ttk.Notebook(outer)
+        app.notebook.pack(fill=tk.BOTH, expand=True)
+        app.evaluation_tab = DELTA.ttk.Frame(app.notebook, padding=10)
+        app.notebook.add(app.evaluation_tab, text="Evaluation")
+
+        app._build_evaluation_tab()
+        app._set_evaluation_review_items([review_item])
+        root.update_idletasks()
+        selected = app.evaluation_items.get_children()[0]
+        app.evaluation_items.selection_set(selected)
+
+        app._record_evaluation_disposition("accepted")
+        assert len(app.evaluation_dispositions) == 1
+        assert app.evaluation_dispositions[0]["operator_disposition"] == "accepted"
+        assert app.evaluation_dispositions[0]["source_written"] is False
+        assert app.evaluation_dispositions[0]["application_authorized"] is False
+        assert app.evaluation_dispositions[0]["capability_activated"] is False
+
+        app._record_evaluation_disposition("declined")
+        assert len(app.evaluation_dispositions) == 1
+        assert "duplicate terminal disposition" in app.evaluation_status.get().lower()
+
+        revised = replace(review_item, review_item_id="review-ui-2", proposal_id="proposal-ui-2")
+        app._set_evaluation_review_items([revised])
+        root.update_idletasks()
+        selected = app.evaluation_items.get_children()[0]
+        app.evaluation_items.selection_set(selected)
+        app._record_evaluation_disposition("needs_modification")
+        assert len(app.evaluation_dispositions) == 2
+        assert app.evaluation_dispositions[1]["operator_disposition"] == "needs_modification"
+        assert app.evaluation_dispositions[1]["creates_revision_request"] is True
+        assert app.evaluation_dispositions[1]["revision_request_id"]
+    finally:
+        root.destroy()
+
+    assert threading.active_count() == thread_count_before
+    assert tuple(multiprocessing.active_children()) == child_processes_before

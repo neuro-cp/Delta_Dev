@@ -14142,3 +14142,829 @@ def _decision_allows(
     if decision.expires_after_sequence is not None and sequence > decision.expires_after_sequence:
         return False
     return True
+
+
+OAR_1_MISSION_FAMILY = "Improve demonstrated language comprehension and scholarly discussion ability."
+OAR_1_REVIEW_DISPOSITIONS = ("accepted", "declined", "needs_modification")
+OAR_1_DECLINE_OR_MODIFICATION_REASONS = (
+    "incorrect_diagnosis",
+    "architecture_too_broad",
+    "insufficient_evidence",
+    "wrong_priority",
+    "unsafe_permission_request",
+    "needs_narrower_scope",
+    "needs_alternative_design",
+    "reject_permanently",
+    "operator_comment",
+)
+OAR_1_RUNTIME_MODES = ("stopped", "development_runtime", "live_runtime")
+
+
+@dataclass(frozen=True)
+class MissionCompilationRequest:
+    compilation_request_id: str
+    original_operator_mission: str
+    requested_family: str
+    baseline_evaluation_id: str
+    requested_sequence: int
+    maximum_capability_campaigns: int
+    maximum_attempts_per_campaign: int
+    maximum_runtime_hours: int
+    operator_approval_required: bool = True
+    source_scope: tuple[str, ...] = ("local_repository", "approved_fixture_corpus")
+    permission_expansion_requested: bool = False
+    provider_model_requested: bool = False
+    network_requested: bool = False
+    tracked_source_application_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class MissionCompilationAuthorization:
+    compilation_authorization_id: str
+    compilation_request_id: str
+    authorized_family: str
+    baseline_evaluation_id: str
+    maximum_capability_campaigns: int
+    maximum_attempts_per_campaign: int
+    maximum_runtime_hours: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    mission_compilation_authorized: bool = True
+    mission_start_authorized: bool = False
+    source_application_authorized: bool = False
+    capability_activation_authorized: bool = False
+    provider_model_use_prohibited: bool = True
+    network_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CompiledMissionObjective:
+    compiled_objective_id: str
+    compilation_request_id: str
+    original_operator_mission: str
+    mission_family: str
+    baseline_evaluation_id: str
+    measurable_dimensions: tuple[str, ...]
+    proposed_baseline_evaluation: str
+    success_thresholds: dict[str, float]
+    protected_invariants: tuple[str, ...]
+    resource_budgets: dict[str, int]
+    allowed_capabilities: tuple[str, ...]
+    source_scope: tuple[str, ...]
+    stop_conditions: tuple[str, ...]
+    operator_decisions_required: tuple[str, ...]
+    mission_substituted: bool = False
+    hidden_permission_expansion: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class MissionCompilationEvidence:
+    compilation_evidence_id: str
+    compilation_request_id: str
+    compilation_authorization_id: str
+    compiled_objective_id: str
+    original_wording_preserved: bool
+    measurable_dimensions_present: bool
+    baseline_bound: bool
+    budgets_bound: bool
+    operator_approval_required: bool
+    hidden_permission_expansion_absent: bool
+    compilation_consumed_authorization: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class MissionCompilationResult:
+    accepted: bool
+    reason: str
+    request: MissionCompilationRequest | None = None
+    original_authorization: MissionCompilationAuthorization | None = None
+    consumed_authorization: MissionCompilationAuthorization | None = None
+    compiled_objective: CompiledMissionObjective | None = None
+    evidence: MissionCompilationEvidence | None = None
+    mission_started: bool = False
+    source_application_authorized: bool = False
+    capability_activated: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class MissionApprovalDisposition:
+    mission_approval_id: str
+    compiled_objective_id: str
+    operator_disposition: str
+    operator_identity: str
+    issued_sequence: int
+    approval_comment: str = ""
+    operator_issued: bool = True
+    starts_exactly_one_mission: bool = False
+    consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OperatorReviewItem:
+    review_item_id: str
+    parent_mission_id: str
+    compiled_objective_id: str
+    capability_gap_id: str
+    proposal_id: str
+    proposal_version: int
+    parent_mission: str
+    current_blocker: str
+    capability_specification: dict[str, Any]
+    architecture_alternatives: tuple[dict[str, Any], ...]
+    selected_design: dict[str, Any]
+    exact_affected_files: tuple[str, ...]
+    full_patch_or_structured_change: str
+    focused_tests: tuple[str, ...]
+    adjacent_regressions: tuple[str, ...]
+    sandbox_results: dict[str, Any]
+    score_change: dict[str, float]
+    artifact_chain_digest: str
+    source_precondition_hashes: dict[str, str]
+    resources_used: tuple[dict[str, Any], ...]
+    model_provider_identity: str
+    uncertainty: str
+    permission_impact: str
+    activation_impact: str
+    rollback_status: str
+    recommendation: str
+    status: str = "queued"
+    application_authorized: bool = False
+    application_performed: bool = False
+    capability_activated: bool = False
+    immutable: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class EvaluationReviewQueue:
+    queue_id: str
+    review_items: tuple[dict[str, Any], ...] = ()
+    terminal_dispositions: tuple[dict[str, Any], ...] = ()
+    revision_requests: tuple[dict[str, Any], ...] = ()
+    queue_version: int = 1
+    source_application_performed: bool = False
+    direct_ui_write_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OperatorProposalDispositionRequest:
+    disposition_request_id: str
+    review_item_id: str
+    proposal_id: str
+    proposal_version: int
+    artifact_chain_digest: str
+    requested_disposition: str
+    reason_code: str
+    operator_comment: str
+    requested_sequence: int
+    ui_action_id: str
+    application_requested: bool = False
+    source_write_requested: bool = False
+    automatic_continuation_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OperatorProposalDispositionAuthorization:
+    disposition_authorization_id: str
+    disposition_request_id: str
+    review_item_id: str
+    proposal_id: str
+    proposal_version: int
+    artifact_chain_digest: str
+    authorized_disposition: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_identity: str
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    disposition_authorized: bool = True
+    application_authorized: bool = False
+    source_write_authorized: bool = False
+    capability_activation_authorized: bool = False
+    automatic_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OperatorProposalDisposition:
+    disposition_id: str
+    disposition_request_id: str
+    review_item_id: str
+    proposal_id: str
+    proposal_version: int
+    artifact_chain_digest: str
+    operator_disposition: str
+    reason_code: str
+    operator_comment: str
+    operator_identity: str
+    issued_sequence: int
+    terminal: bool
+    creates_revision_request: bool = False
+    revision_request_id: str = ""
+    application_authorized: bool = False
+    source_written: bool = False
+    capability_activated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OperatorProposalDispositionEvidence:
+    disposition_evidence_id: str
+    disposition_request_id: str
+    disposition_authorization_id: str
+    disposition_id: str
+    review_item_id: str
+    proposal_id: str
+    artifact_chain_digest: str
+    authorization_consumed: bool
+    reviewed_proposal_immutable: bool
+    duplicate_disposition_denied: bool
+    application_not_performed: bool
+    source_not_written: bool
+    capability_not_activated: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OperatorProposalDispositionResult:
+    accepted: bool
+    reason: str
+    review_item: OperatorReviewItem | None = None
+    request: OperatorProposalDispositionRequest | None = None
+    original_authorization: OperatorProposalDispositionAuthorization | None = None
+    consumed_authorization: OperatorProposalDispositionAuthorization | None = None
+    disposition: OperatorProposalDisposition | None = None
+    evidence: OperatorProposalDispositionEvidence | None = None
+    application_performed: bool = False
+    source_written: bool = False
+    capability_activated: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PostApplicationValidationRecord:
+    validation_id: str
+    application_attempt_id: str
+    focused_tests_passed: bool
+    adjacent_regressions_passed: bool
+    startup_smoke_passed: bool
+    before_digests: dict[str, str]
+    after_digests: dict[str, str]
+    classification: str
+    rollback_required: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityEvidencePromotionRequest:
+    promotion_request_id: str
+    capability_id: str
+    proposal_id: str
+    application_attempt_id: str
+    validation_id: str
+    requested_evidence_tier: str
+    requested_sequence: int
+    activation_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityEvidencePromotionAuthorization:
+    promotion_authorization_id: str
+    promotion_request_id: str
+    capability_id: str
+    proposal_id: str
+    application_attempt_id: str
+    validation_id: str
+    authorized_evidence_tier: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    promotion_authorized: bool = True
+    activation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class CapabilityEvidencePromotionResult:
+    accepted: bool
+    reason: str
+    request: CapabilityEvidencePromotionRequest | None = None
+    original_authorization: CapabilityEvidencePromotionAuthorization | None = None
+    consumed_authorization: CapabilityEvidencePromotionAuthorization | None = None
+    capability_id: str = ""
+    evidence_tier: str = ""
+    available: bool = False
+    active: bool = False
+    activation_required: bool = True
+    source_application_validated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OARRuntimeState:
+    runtime_state_id: str
+    development_runtime_mode: str = "stopped"
+    live_runtime_mode: str = "stopped"
+    pending_review_ids: tuple[str, ...] = ()
+    declined_review_ids: tuple[str, ...] = ()
+    accepted_review_ids: tuple[str, ...] = ()
+    available_capability_ids: tuple[str, ...] = ()
+    active_capability_ids: tuple[str, ...] = ()
+    rollback_required_ids: tuple[str, ...] = ()
+    last_clean_checkpoint_id: str = ""
+    clean_shutdown: bool = True
+    integrity_failure: bool = False
+    automatic_resume_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+def make_mission_compilation_request(
+    original_operator_mission: str,
+    *,
+    baseline_evaluation_id: str,
+    requested_sequence: int,
+    maximum_capability_campaigns: int = 3,
+    maximum_attempts_per_campaign: int = 3,
+    maximum_runtime_hours: int = 4,
+) -> MissionCompilationRequest:
+    return MissionCompilationRequest(
+        compilation_request_id=stable_id("oar-1a-mission-compilation-request", original_operator_mission, baseline_evaluation_id, requested_sequence),
+        original_operator_mission=original_operator_mission,
+        requested_family=OAR_1_MISSION_FAMILY,
+        baseline_evaluation_id=baseline_evaluation_id,
+        requested_sequence=requested_sequence,
+        maximum_capability_campaigns=maximum_capability_campaigns,
+        maximum_attempts_per_campaign=maximum_attempts_per_campaign,
+        maximum_runtime_hours=maximum_runtime_hours,
+    )
+
+
+def make_mission_compilation_authorization(
+    request: MissionCompilationRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int | None = None,
+) -> MissionCompilationAuthorization:
+    return MissionCompilationAuthorization(
+        compilation_authorization_id=stable_id("oar-1a-mission-compilation-authorization", request.compilation_request_id, issued_sequence),
+        compilation_request_id=request.compilation_request_id,
+        authorized_family=request.requested_family,
+        baseline_evaluation_id=request.baseline_evaluation_id,
+        maximum_capability_campaigns=request.maximum_capability_campaigns,
+        maximum_attempts_per_campaign=request.maximum_attempts_per_campaign,
+        maximum_runtime_hours=request.maximum_runtime_hours,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence if expiration_sequence is not None else issued_sequence + 5,
+    )
+
+
+def compile_language_development_mission(
+    request: MissionCompilationRequest,
+    authorization: MissionCompilationAuthorization,
+    *,
+    sequence: int,
+) -> MissionCompilationResult:
+    if authorization.compilation_request_id != request.compilation_request_id:
+        return MissionCompilationResult(False, "wrong_compilation_authorization", request=request, original_authorization=authorization)
+    if authorization.consumed or sequence > authorization.expiration_sequence:
+        return MissionCompilationResult(False, "compilation_authorization_unavailable", request=request, original_authorization=authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return MissionCompilationResult(False, "operator_authority_required", request=request, original_authorization=authorization)
+    if request.permission_expansion_requested or request.provider_model_requested or request.network_requested or request.tracked_source_application_requested:
+        return MissionCompilationResult(False, "mission_compilation_scope_denied", request=request, original_authorization=authorization)
+    if authorization.mission_start_authorized or authorization.source_application_authorized or authorization.capability_activation_authorized:
+        return MissionCompilationResult(False, "compilation_authorization_overbroad", request=request, original_authorization=authorization)
+    if request.requested_family != authorization.authorized_family:
+        return MissionCompilationResult(False, "mission_family_mismatch", request=request, original_authorization=authorization)
+    dimensions = (
+        "thesis_identification",
+        "assumption_extraction",
+        "evidence_and_counterevidence_tracking",
+        "terminology_preservation",
+        "argument_comparison",
+        "ambiguity_detection",
+        "uncertainty_calibration",
+        "bounded_synthesis_quality",
+        "expert_and_general_reader_explanation",
+        "citation_and_source_restraint",
+    )
+    compiled = CompiledMissionObjective(
+        compiled_objective_id=stable_id("oar-1a-compiled-mission", request.compilation_request_id, request.original_operator_mission, request.baseline_evaluation_id),
+        compilation_request_id=request.compilation_request_id,
+        original_operator_mission=request.original_operator_mission,
+        mission_family=request.requested_family,
+        baseline_evaluation_id=request.baseline_evaluation_id,
+        measurable_dimensions=dimensions,
+        proposed_baseline_evaluation="fixed scholarly-language baseline must be captured before development",
+        success_thresholds={dimension: 0.70 for dimension in dimensions},
+        protected_invariants=(
+            "operator_approval_required_for_application",
+            "operator_activation_required_for_live_runtime",
+            "no_permission_expansion",
+            "no_network_without_separate_authority",
+            "no_autonomous_git",
+        ),
+        resource_budgets={
+            "maximum_capability_campaigns": request.maximum_capability_campaigns,
+            "maximum_attempts_per_campaign": request.maximum_attempts_per_campaign,
+            "maximum_runtime_hours": request.maximum_runtime_hours,
+            "maximum_files_per_proposal": 2,
+        },
+        allowed_capabilities=("PCM", "DOE", "GDR", "CDE", "MDR", "GSR"),
+        source_scope=request.source_scope,
+        stop_conditions=("success", "stagnation", "budget_exhaustion", "integrity_failure", "scope_drift", "operator_stop"),
+        operator_decisions_required=("mission_approval", "proposal_disposition", "application_authorization", "capability_promotion", "live_activation"),
+    )
+    consumed = replace(authorization, consumed=True)
+    evidence = MissionCompilationEvidence(
+        compilation_evidence_id=stable_id("oar-1a-compilation-evidence", compiled.compiled_objective_id, sequence),
+        compilation_request_id=request.compilation_request_id,
+        compilation_authorization_id=authorization.compilation_authorization_id,
+        compiled_objective_id=compiled.compiled_objective_id,
+        original_wording_preserved=compiled.original_operator_mission == request.original_operator_mission,
+        measurable_dimensions_present=bool(compiled.measurable_dimensions),
+        baseline_bound=compiled.baseline_evaluation_id == request.baseline_evaluation_id,
+        budgets_bound=compiled.resource_budgets["maximum_capability_campaigns"] == request.maximum_capability_campaigns,
+        operator_approval_required=request.operator_approval_required,
+        hidden_permission_expansion_absent=not compiled.hidden_permission_expansion,
+        compilation_consumed_authorization=True,
+    )
+    return MissionCompilationResult(True, "mission_compiled_for_operator_approval", request, authorization, consumed, compiled, evidence)
+
+
+def approve_compiled_mission(
+    compiled: CompiledMissionObjective,
+    *,
+    operator_identity: str,
+    sequence: int,
+) -> MissionApprovalDisposition:
+    return MissionApprovalDisposition(
+        mission_approval_id=stable_id("oar-1a-mission-approval", compiled.compiled_objective_id, operator_identity, sequence),
+        compiled_objective_id=compiled.compiled_objective_id,
+        operator_disposition="approved",
+        operator_identity=operator_identity,
+        issued_sequence=sequence,
+        starts_exactly_one_mission=True,
+    )
+
+
+def make_evaluation_review_item(
+    *,
+    parent_mission_id: str,
+    compiled_objective_id: str,
+    capability_gap_id: str,
+    proposal_id: str,
+    parent_mission: str,
+    current_blocker: str,
+    capability_specification: Mapping[str, Any],
+    architecture_alternatives: tuple[Mapping[str, Any], ...],
+    selected_design: Mapping[str, Any],
+    exact_affected_files: tuple[str, ...],
+    full_patch_or_structured_change: str,
+    focused_tests: tuple[str, ...],
+    adjacent_regressions: tuple[str, ...],
+    sandbox_results: Mapping[str, Any],
+    score_change: Mapping[str, float],
+    artifact_chain_digest: str,
+    source_precondition_hashes: Mapping[str, str],
+    resources_used: tuple[Mapping[str, Any], ...] = (),
+    model_provider_identity: str = "none",
+    uncertainty: str = "operator review required",
+    permission_impact: str = "no permission expansion",
+    activation_impact: str = "activation requires separate operator command",
+    rollback_status: str = "known_good_checkpoint_required",
+    recommendation: str = "operator_review",
+    proposal_version: int = 1,
+) -> OperatorReviewItem:
+    return OperatorReviewItem(
+        review_item_id=stable_id("oar-1b-review-item", parent_mission_id, compiled_objective_id, proposal_id, artifact_chain_digest, proposal_version),
+        parent_mission_id=parent_mission_id,
+        compiled_objective_id=compiled_objective_id,
+        capability_gap_id=capability_gap_id,
+        proposal_id=proposal_id,
+        proposal_version=proposal_version,
+        parent_mission=parent_mission,
+        current_blocker=current_blocker,
+        capability_specification=dict(capability_specification),
+        architecture_alternatives=tuple(dict(item) for item in architecture_alternatives),
+        selected_design=dict(selected_design),
+        exact_affected_files=exact_affected_files,
+        full_patch_or_structured_change=full_patch_or_structured_change,
+        focused_tests=focused_tests,
+        adjacent_regressions=adjacent_regressions,
+        sandbox_results=dict(sandbox_results),
+        score_change=dict(score_change),
+        artifact_chain_digest=artifact_chain_digest,
+        source_precondition_hashes=dict(source_precondition_hashes),
+        resources_used=tuple(dict(item) for item in resources_used),
+        model_provider_identity=model_provider_identity,
+        uncertainty=uncertainty,
+        permission_impact=permission_impact,
+        activation_impact=activation_impact,
+        rollback_status=rollback_status,
+        recommendation=recommendation,
+    )
+
+
+def enqueue_evaluation_review_item(queue: EvaluationReviewQueue, item: OperatorReviewItem) -> EvaluationReviewQueue:
+    if item.application_authorized or item.application_performed or item.capability_activated:
+        raise ValueError("review item must not carry application or activation authority")
+    if any(existing.get("review_item_id") == item.review_item_id for existing in queue.review_items):
+        return queue
+    return replace(queue, review_items=queue.review_items + (asdict(item),), queue_version=queue.queue_version + 1)
+
+
+def make_operator_proposal_disposition_request(
+    item: OperatorReviewItem,
+    *,
+    requested_disposition: str,
+    reason_code: str,
+    operator_comment: str,
+    ui_action_id: str,
+    sequence: int,
+) -> OperatorProposalDispositionRequest:
+    return OperatorProposalDispositionRequest(
+        disposition_request_id=stable_id("oar-1c-disposition-request", item.review_item_id, requested_disposition, reason_code, ui_action_id, sequence),
+        review_item_id=item.review_item_id,
+        proposal_id=item.proposal_id,
+        proposal_version=item.proposal_version,
+        artifact_chain_digest=item.artifact_chain_digest,
+        requested_disposition=requested_disposition,
+        reason_code=reason_code,
+        operator_comment=operator_comment,
+        requested_sequence=sequence,
+        ui_action_id=ui_action_id,
+    )
+
+
+def make_operator_proposal_disposition_authorization(
+    request: OperatorProposalDispositionRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int | None = None,
+) -> OperatorProposalDispositionAuthorization:
+    return OperatorProposalDispositionAuthorization(
+        disposition_authorization_id=stable_id("oar-1c-disposition-authorization", request.disposition_request_id, operator_identity, issued_sequence),
+        disposition_request_id=request.disposition_request_id,
+        review_item_id=request.review_item_id,
+        proposal_id=request.proposal_id,
+        proposal_version=request.proposal_version,
+        artifact_chain_digest=request.artifact_chain_digest,
+        authorized_disposition=request.requested_disposition,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence if expiration_sequence is not None else issued_sequence + 5,
+        operator_identity=operator_identity,
+    )
+
+
+def apply_operator_proposal_disposition(
+    item: OperatorReviewItem,
+    request: OperatorProposalDispositionRequest,
+    authorization: OperatorProposalDispositionAuthorization,
+    existing_dispositions: tuple[OperatorProposalDisposition, ...] = (),
+    *,
+    sequence: int,
+) -> OperatorProposalDispositionResult:
+    if request.review_item_id != item.review_item_id or request.proposal_id != item.proposal_id:
+        return OperatorProposalDispositionResult(False, "wrong_review_item", item, request, authorization)
+    if request.artifact_chain_digest != item.artifact_chain_digest:
+        return OperatorProposalDispositionResult(False, "artifact_chain_mismatch", item, request, authorization)
+    if request.requested_disposition not in OAR_1_REVIEW_DISPOSITIONS:
+        return OperatorProposalDispositionResult(False, "unsupported_disposition", item, request, authorization)
+    if request.reason_code not in OAR_1_DECLINE_OR_MODIFICATION_REASONS:
+        return OperatorProposalDispositionResult(False, "unsupported_disposition_reason", item, request, authorization)
+    if request.application_requested or request.source_write_requested or request.automatic_continuation_requested:
+        return OperatorProposalDispositionResult(False, "disposition_request_overbroad", item, request, authorization)
+    if authorization.disposition_request_id != request.disposition_request_id:
+        return OperatorProposalDispositionResult(False, "wrong_disposition_authorization", item, request, authorization)
+    if authorization.consumed or sequence > authorization.expiration_sequence:
+        return OperatorProposalDispositionResult(False, "disposition_authorization_unavailable", item, request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return OperatorProposalDispositionResult(False, "operator_authority_required", item, request, authorization)
+    if authorization.authorized_disposition != request.requested_disposition:
+        return OperatorProposalDispositionResult(False, "disposition_mismatch", item, request, authorization)
+    if authorization.application_authorized or authorization.source_write_authorized or authorization.capability_activation_authorized or authorization.automatic_continuation_authorized:
+        return OperatorProposalDispositionResult(False, "disposition_authorization_overbroad", item, request, authorization)
+    if any(record.review_item_id == item.review_item_id and record.terminal for record in existing_dispositions):
+        return OperatorProposalDispositionResult(False, "duplicate_terminal_disposition", item, request, authorization)
+    revision_id = ""
+    creates_revision = request.requested_disposition == "needs_modification"
+    if creates_revision:
+        revision_id = stable_id("oar-1c-proposal-revision-request", item.review_item_id, request.disposition_request_id, sequence)
+    disposition = OperatorProposalDisposition(
+        disposition_id=stable_id("oar-1c-proposal-disposition", request.disposition_request_id, authorization.disposition_authorization_id, sequence),
+        disposition_request_id=request.disposition_request_id,
+        review_item_id=item.review_item_id,
+        proposal_id=item.proposal_id,
+        proposal_version=item.proposal_version,
+        artifact_chain_digest=item.artifact_chain_digest,
+        operator_disposition=request.requested_disposition,
+        reason_code=request.reason_code,
+        operator_comment=request.operator_comment,
+        operator_identity=authorization.operator_identity,
+        issued_sequence=sequence,
+        terminal=True,
+        creates_revision_request=creates_revision,
+        revision_request_id=revision_id,
+    )
+    consumed = replace(authorization, consumed=True)
+    evidence = OperatorProposalDispositionEvidence(
+        disposition_evidence_id=stable_id("oar-1c-disposition-evidence", disposition.disposition_id),
+        disposition_request_id=request.disposition_request_id,
+        disposition_authorization_id=authorization.disposition_authorization_id,
+        disposition_id=disposition.disposition_id,
+        review_item_id=item.review_item_id,
+        proposal_id=item.proposal_id,
+        artifact_chain_digest=item.artifact_chain_digest,
+        authorization_consumed=True,
+        reviewed_proposal_immutable=item.immutable,
+        duplicate_disposition_denied=True,
+        application_not_performed=True,
+        source_not_written=True,
+        capability_not_activated=True,
+    )
+    return OperatorProposalDispositionResult(True, "operator_disposition_recorded", item, request, authorization, consumed, disposition, evidence)
+
+
+def build_application_artifact_from_review_item(
+    item: OperatorReviewItem,
+    evaluation: SandboxEvidenceEvaluation,
+    disposition_record: SandboxEvaluationDispositionRecord,
+    *,
+    operation: str = "apply_exact_reviewed_text_change",
+) -> ApplicationArtifact:
+    return make_application_artifact(
+        evaluation,
+        disposition_record,
+        proposed_application_artifact_id=stable_id("oar-1d-application-artifact", item.review_item_id, item.artifact_chain_digest),
+        proposed_application_artifact_digest=item.artifact_chain_digest,
+        target_file_set=item.exact_affected_files,
+        operation_set=(operation,),
+        expected_pre_application_hashes=item.source_precondition_hashes,
+        target_scope=item.exact_affected_files,
+    )
+
+
+def classify_post_application_validation(
+    application_result: GovernedApplicationResult,
+    *,
+    focused_tests_passed: bool,
+    adjacent_regressions_passed: bool,
+    startup_smoke_passed: bool,
+) -> PostApplicationValidationRecord:
+    if not application_result.accepted or not application_result.application_succeeded:
+        classification = "application_failed_focused_tests"
+    elif not focused_tests_passed:
+        classification = "application_failed_focused_tests"
+    elif not adjacent_regressions_passed:
+        classification = "application_failed_adjacent_regression"
+    elif not startup_smoke_passed:
+        classification = "application_failed_startup_check"
+    else:
+        classification = "application_validated"
+    evidence = application_result.evidence
+    return PostApplicationValidationRecord(
+        validation_id=stable_id("oar-1e-post-application-validation", application_result.application_plan.application_plan_id, classification),
+        application_attempt_id=evidence.application_attempt_id if evidence else "",
+        focused_tests_passed=focused_tests_passed,
+        adjacent_regressions_passed=adjacent_regressions_passed,
+        startup_smoke_passed=startup_smoke_passed,
+        before_digests=dict(evidence.pre_application_hashes) if evidence else {},
+        after_digests=dict(evidence.post_application_hashes) if evidence else {},
+        classification=classification,
+        rollback_required=classification != "application_validated",
+    )
+
+
+def promote_validated_capability_evidence(
+    request: CapabilityEvidencePromotionRequest,
+    authorization: CapabilityEvidencePromotionAuthorization,
+    validation: PostApplicationValidationRecord,
+    *,
+    sequence: int,
+) -> CapabilityEvidencePromotionResult:
+    if authorization.promotion_request_id != request.promotion_request_id:
+        return CapabilityEvidencePromotionResult(False, "wrong_promotion_authorization", request, authorization)
+    if authorization.consumed or sequence > authorization.expiration_sequence:
+        return CapabilityEvidencePromotionResult(False, "promotion_authorization_unavailable", request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return CapabilityEvidencePromotionResult(False, "operator_authority_required", request, authorization)
+    if request.activation_requested or authorization.activation_authorized:
+        return CapabilityEvidencePromotionResult(False, "activation_requires_separate_authorization", request, authorization)
+    if request.validation_id != validation.validation_id or authorization.validation_id != validation.validation_id:
+        return CapabilityEvidencePromotionResult(False, "validation_mismatch", request, authorization)
+    if validation.classification != "application_validated" or validation.rollback_required:
+        return CapabilityEvidencePromotionResult(False, "validated_application_required", request, authorization)
+    if authorization.authorized_evidence_tier != request.requested_evidence_tier:
+        return CapabilityEvidencePromotionResult(False, "evidence_tier_mismatch", request, authorization)
+    consumed = replace(authorization, consumed=True)
+    return CapabilityEvidencePromotionResult(
+        True,
+        "capability_evidence_promoted_available_not_active",
+        request,
+        authorization,
+        consumed,
+        capability_id=request.capability_id,
+        evidence_tier=request.requested_evidence_tier,
+        available=True,
+        active=False,
+        activation_required=True,
+        source_application_validated=True,
+    )
+
+
+def make_capability_promotion_request(
+    *,
+    capability_id: str,
+    proposal_id: str,
+    application_attempt_id: str,
+    validation_id: str,
+    requested_evidence_tier: str,
+    sequence: int,
+) -> CapabilityEvidencePromotionRequest:
+    return CapabilityEvidencePromotionRequest(
+        promotion_request_id=stable_id("oar-1f-promotion-request", capability_id, proposal_id, application_attempt_id, validation_id, requested_evidence_tier, sequence),
+        capability_id=capability_id,
+        proposal_id=proposal_id,
+        application_attempt_id=application_attempt_id,
+        validation_id=validation_id,
+        requested_evidence_tier=requested_evidence_tier,
+        requested_sequence=sequence,
+    )
+
+
+def make_capability_promotion_authorization(
+    request: CapabilityEvidencePromotionRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int | None = None,
+) -> CapabilityEvidencePromotionAuthorization:
+    return CapabilityEvidencePromotionAuthorization(
+        promotion_authorization_id=stable_id("oar-1f-promotion-authorization", request.promotion_request_id, issued_sequence),
+        promotion_request_id=request.promotion_request_id,
+        capability_id=request.capability_id,
+        proposal_id=request.proposal_id,
+        application_attempt_id=request.application_attempt_id,
+        validation_id=request.validation_id,
+        authorized_evidence_tier=request.requested_evidence_tier,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence if expiration_sequence is not None else issued_sequence + 5,
+    )
+
+
+def shutdown_oar_runtime_cleanly(state: OARRuntimeState, *, checkpoint_id: str) -> OARRuntimeState:
+    return replace(
+        state,
+        development_runtime_mode="stopped",
+        live_runtime_mode="stopped",
+        last_clean_checkpoint_id=checkpoint_id,
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+
+
+def recover_oar_runtime_after_restart(state: OARRuntimeState, *, integrity_valid: bool) -> OARRuntimeState:
+    return replace(
+        state,
+        development_runtime_mode="stopped",
+        live_runtime_mode="stopped",
+        clean_shutdown=bool(integrity_valid and state.clean_shutdown),
+        integrity_failure=not integrity_valid,
+        automatic_resume_performed=False,
+    )
+
+
+def activate_oar_live_runtime(state: OARRuntimeState, *, capability_ids: tuple[str, ...]) -> tuple[bool, str, OARRuntimeState]:
+    if state.integrity_failure:
+        return False, "integrity_failure", state
+    if state.rollback_required_ids:
+        return False, "rollback_required", state
+    if state.development_runtime_mode != "stopped":
+        return False, "runtime_mode_conflict", state
+    missing = tuple(capability for capability in capability_ids if capability not in state.available_capability_ids)
+    if missing:
+        return False, "capability_not_available", state
+    return True, "live_runtime_started_with_explicit_activation", replace(
+        state,
+        live_runtime_mode="live_runtime",
+        active_capability_ids=tuple(dict.fromkeys(state.active_capability_ids + capability_ids)),
+    )
