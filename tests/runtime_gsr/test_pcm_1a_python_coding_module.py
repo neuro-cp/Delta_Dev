@@ -663,3 +663,180 @@ def test_pcm_1d_authority_limits_and_permissions_fail_closed(tmp_path):
         assert result.authorization_consumed is False
         assert result.diagnosis_started is False
         _assert_no_pcm_1d_actions(result)
+
+
+def _pcm_1d_result(tmp_path, *, expected_symbol: str = "missing_guard"):
+    record, inspection_result = _pcm_1c_result(tmp_path, source="def present():\n    return 1\n")
+    request, authorization = _diagnosis_pair(record, inspection_result, expected_symbol=expected_symbol)
+    result = gsr.perform_python_bounded_diagnosis(record, inspection_result, request, authorization, sequence=512)
+    assert result.accepted is True
+    return record, result
+
+
+def _test_proposal_pair(
+    record: gsr.PythonCodingModuleAttachmentRecord,
+    diagnosis_result: gsr.PythonBoundedDiagnosisResult,
+    *,
+    expected_behavior: str = "missing_guard is structurally represented as a function",
+):
+    request = gsr.make_python_focused_test_proposal_request(
+        record,
+        diagnosis_result,
+        expected_behavior=expected_behavior,
+        proposed_test_target_path="tests/runtime_gsr/test_pcm_generated_review.py",
+        request_sequence=514,
+    )
+    authorization = gsr.make_python_focused_test_proposal_authorization(
+        request,
+        issued_sequence=515,
+        expiration_sequence=540,
+    )
+    return request, authorization
+
+
+def _assert_no_pcm_1e_actions(result: gsr.PythonFocusedTestProposalResult) -> None:
+    assert result.source_reread is False
+    assert result.source_patch_created is False
+    assert result.test_file_written is False
+    assert result.command_executed is False
+    assert result.sandbox_handoff_created is False
+    assert result.source_mutated is False
+    assert result.module_loaded is False
+    assert result.module_activated is False
+    assert result.registry_mutated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+
+
+def test_pcm_1e_exact_diagnosis_produces_one_inert_focused_test_proposal(tmp_path):
+    record, diagnosis_result = _pcm_1d_result(tmp_path)
+    request, authorization = _test_proposal_pair(record, diagnosis_result)
+
+    result = gsr.create_python_focused_test_proposal(record, diagnosis_result, request, authorization, sequence=516)
+
+    assert result.accepted is True
+    assert result.reason == "valid"
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.authorization_consumed is True
+    assert result.proposal_started is True
+    assert result.proposal_completed is True
+    assert result.proposal_created is True
+    assert result.proposal_count == 1
+    assert result.evidence.proposals_produced == 1
+    assert result.evidence.maximum_proposals == 1
+    assert result.evidence.diagnosis_attempt_id == diagnosis_result.evidence.diagnosis_attempt_id
+    assert result.evidence.diagnosis_evidence_id == request.diagnosis_evidence_id
+    assert result.evidence.finding_id == request.finding_id
+    assert result.evidence.exact_source_path == request.source_path
+    assert result.evidence.exact_source_digest == request.source_digest
+    proposal = gsr.deserialize(gsr.PythonFocusedTestProposal, result.evidence.proposal)
+    assert proposal.finding_id == request.finding_id
+    assert proposal.source_path == "sample.py"
+    assert proposal.source_digest == request.source_digest
+    assert proposal.responsible_symbol == "missing_guard"
+    assert proposal.expected_behavior == request.expected_behavior
+    assert proposal.proposed_test_name == "test_missing_guard_expected_symbol_present"
+    assert proposal.proposed_test_target_path == "tests/runtime_gsr/test_pcm_generated_review.py"
+    assert "missing_guard" in proposal.proposed_test_body
+    assert proposal.fixture_requirements == ("accepted PCM-1C structural observation fixture",)
+    assert proposal.expected_assertion == "'missing_guard' appears in function_names"
+    assert proposal.expected_pre_fix_result.startswith("fails")
+    assert proposal.expected_post_fix_result.startswith("passes")
+    assert proposal.production_patch_absent is True
+    assert proposal.replacement_production_code_absent is True
+    assert proposal.shell_commands_absent is True
+    assert proposal.git_instructions_absent is True
+    assert proposal.automatic_execution_permission_absent is True
+    _assert_no_pcm_1e_actions(result)
+
+    reuse = gsr.create_python_focused_test_proposal(record, diagnosis_result, request, result.consumed_authorization, sequence=517)
+    assert reuse.accepted is False
+    assert reuse.reason == "consumed"
+    assert reuse.authorization_consumed is False
+
+
+def test_pcm_1e_zero_proposal_remains_bounded_without_broadening(tmp_path):
+    record, diagnosis_result = _pcm_1d_result(tmp_path, expected_symbol="present")
+    request, authorization = _test_proposal_pair(record, diagnosis_result)
+
+    result = gsr.create_python_focused_test_proposal(record, diagnosis_result, request, authorization, sequence=516)
+
+    assert result.accepted is True
+    assert result.reason == "no_bounded_test_proposal"
+    assert result.authorization_consumed is True
+    assert result.proposal_created is False
+    assert result.proposal_count == 0
+    assert result.evidence.proposal is None
+    assert result.evidence.proposals_produced == 0
+    _assert_no_pcm_1e_actions(result)
+
+
+def test_pcm_1e_identity_and_evidence_mismatches_fail_before_proposal(tmp_path):
+    record, diagnosis_result = _pcm_1d_result(tmp_path)
+    request, authorization = _test_proposal_pair(record, diagnosis_result)
+    cases = (
+        (replace(record, attachment_record_id="wrong-record"), diagnosis_result, request, authorization, "wrong_attachment_record"),
+        (replace(record, attachment_status="ACTIVE"), diagnosis_result, request, authorization, "attachment_not_inert"),
+        (replace(record, module_loaded=True), diagnosis_result, request, authorization, "module_loaded"),
+        (replace(record, module_activated=True), diagnosis_result, request, authorization, "module_activated"),
+        (replace(record, capability_execution_enabled=True), diagnosis_result, request, authorization, "active_capability_present"),
+        (record, replace(diagnosis_result, accepted=False), request, authorization, "diagnosis_not_accepted"),
+        (record, replace(diagnosis_result, diagnosis_completed=False), request, authorization, "diagnosis_not_completed"),
+        (record, diagnosis_result, replace(request, diagnosis_attempt_id="wrong-attempt"), authorization, "wrong_diagnosis_attempt"),
+        (record, diagnosis_result, replace(request, diagnosis_evidence_id="wrong-evidence"), authorization, "wrong_diagnosis_evidence"),
+        (record, diagnosis_result, replace(request, finding_id="wrong-finding"), authorization, "wrong_finding"),
+        (record, diagnosis_result, replace(request, source_path="other.py"), authorization, "path_mismatch"),
+        (record, diagnosis_result, replace(request, source_digest="bad"), authorization, "source_digest_mismatch"),
+        (record, diagnosis_result, replace(request, expected_behavior="different behavior"), authorization, "expected_behavior_mismatch"),
+        (record, diagnosis_result, replace(request, proposed_test_target_path="other_test.py"), authorization, "test_target_mismatch"),
+        (record, diagnosis_result, replace(request, test_proposal_request_id="wrong-request"), authorization, "wrong_test_proposal_request"),
+        (record, diagnosis_result, request, replace(authorization, test_proposal_authorization_id="wrong-auth"), "wrong_test_proposal_authorization"),
+    )
+
+    for bad_record, bad_diagnosis, bad_request, bad_authorization, reason in cases:
+        result = gsr.create_python_focused_test_proposal(bad_record, bad_diagnosis, bad_request, bad_authorization, sequence=516)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.proposal_started is False
+        _assert_no_pcm_1e_actions(result)
+
+
+def test_pcm_1e_authority_limits_and_permissions_fail_closed(tmp_path):
+    record, diagnosis_result = _pcm_1d_result(tmp_path)
+    request, authorization = _test_proposal_pair(record, diagnosis_result)
+    cases = (
+        (request, replace(authorization, operator_authority="DELTA_SELF"), "non_operator_authorization"),
+        (request, replace(authorization, one_shot=False), "not_one_shot"),
+        (request, replace(authorization, consumed=True), "consumed"),
+        (request, replace(authorization, expiration_sequence=515), "expired"),
+        (replace(request, maximum_proposal_count=2), authorization, "proposal_limit_invalid"),
+        (replace(request, proposal_only=False), authorization, "wrong_test_proposal_request"),
+        (replace(request, source_patch_requested=True), authorization, "source_patch_permission_present"),
+        (replace(request, test_file_write_requested=True), authorization, "test_file_write_permission_present"),
+        (replace(request, execution_requested=True), authorization, "execution_permission_present"),
+        (replace(request, mutation_requested=True), authorization, "mutation_permission_present"),
+        (replace(request, provider_model_requested=True), authorization, "provider_or_model_permission_present"),
+        (request, replace(authorization, source_patch_prohibited=False), "source_patch_permission_present"),
+        (request, replace(authorization, test_file_write_prohibited=False), "test_file_write_permission_present"),
+        (request, replace(authorization, execution_prohibited=False), "execution_permission_present"),
+        (request, replace(authorization, mutation_prohibited=False), "mutation_permission_present"),
+        (request, replace(authorization, provider_model_use_prohibited=False), "provider_or_model_permission_present"),
+    )
+
+    for bad_request, bad_authorization, reason in cases:
+        result = gsr.create_python_focused_test_proposal(record, diagnosis_result, bad_request, bad_authorization, sequence=516)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.proposal_started is False
+        _assert_no_pcm_1e_actions(result)

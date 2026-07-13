@@ -1379,6 +1379,170 @@ class PythonBoundedDiagnosisResult:
 
 
 @dataclass(frozen=True)
+class PythonFocusedTestProposalRequest:
+    test_proposal_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    finding_id: str
+    module_id: str
+    module_version: str
+    source_path: str
+    source_digest: str
+    responsible_symbol: str
+    expected_behavior: str
+    failure_condition: str
+    proposed_test_target_path: str
+    maximum_proposal_count: int = 1
+    proposal_only: bool = True
+    source_patch_requested: bool = False
+    test_file_write_requested: bool = False
+    execution_requested: bool = False
+    mutation_requested: bool = False
+    provider_model_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonFocusedTestProposalAuthorization:
+    test_proposal_authorization_id: str
+    test_proposal_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    finding_id: str
+    module_id: str
+    module_version: str
+    authorized_source_path: str
+    authorized_source_digest: str
+    authorized_expected_behavior: str
+    authorized_test_target_path: str
+    maximum_proposal_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    test_proposal_authorized: bool = True
+    source_patch_prohibited: bool = True
+    test_file_write_prohibited: bool = True
+    execution_prohibited: bool = True
+    mutation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonFocusedTestProposal:
+    proposal_id: str
+    diagnosis_attempt_id: str
+    finding_id: str
+    source_path: str
+    source_digest: str
+    responsible_symbol: str
+    expected_behavior: str
+    failure_condition_being_tested: str
+    proposed_test_name: str
+    proposed_test_target_path: str
+    proposed_test_body: str
+    fixture_requirements: tuple[str, ...]
+    expected_assertion: str
+    expected_pre_fix_result: str
+    expected_post_fix_result: str
+    bounded_scope: str
+    uncertainty: str
+    operator_review_required: bool = True
+    proposal_only: bool = True
+    production_patch_absent: bool = True
+    replacement_production_code_absent: bool = True
+    application_instructions_absent: bool = True
+    shell_commands_absent: bool = True
+    git_instructions_absent: bool = True
+    dependency_installation_absent: bool = True
+    broad_suite_recommendation_absent: bool = True
+    automatic_execution_permission_absent: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonFocusedTestProposalEvidence:
+    test_proposal_attempt_id: str
+    test_proposal_request_id: str
+    test_proposal_authorization_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    finding_id: str
+    exact_source_path: str
+    exact_source_digest: str
+    proposal: dict[str, Any] | None
+    proposals_produced: int
+    maximum_proposals: int
+    authorization_consumed: bool
+    proposal_started: bool
+    proposal_completed: bool
+    diagnosis_evidence_used: bool
+    source_reread: bool = False
+    source_patch_created: bool = False
+    test_file_written: bool = False
+    command_executed: bool = False
+    sandbox_handoff_created: bool = False
+    source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    registry_mutated: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonFocusedTestProposalResult:
+    accepted: bool
+    reason: str
+    request: PythonFocusedTestProposalRequest | None = None
+    original_authorization: PythonFocusedTestProposalAuthorization | None = None
+    consumed_authorization: PythonFocusedTestProposalAuthorization | None = None
+    evidence: PythonFocusedTestProposalEvidence | None = None
+    proposal_started: bool = False
+    proposal_completed: bool = False
+    authorization_consumed: bool = False
+    proposal_created: bool = False
+    proposal_count: int = 0
+    source_reread: bool = False
+    source_patch_created: bool = False
+    test_file_written: bool = False
+    command_executed: bool = False
+    sandbox_handoff_created: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -4741,6 +4905,294 @@ def perform_python_bounded_diagnosis(
         authorization_consumed=True,
         finding_created=finding is not None,
         finding_count=1 if finding is not None else 0,
+    )
+
+
+def python_bounded_diagnosis_evidence_id(evidence: PythonBoundedDiagnosisEvidence) -> str:
+    return stable_id("pcm-1d-bounded-diagnosis-evidence", evidence.diagnosis_attempt_id, evidence.inspection_evidence_id, evidence.finding, evidence.findings_produced)
+
+
+def make_python_focused_test_proposal_request(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    *,
+    expected_behavior: str,
+    proposed_test_target_path: str,
+    failure_condition: str = "expected symbol remains absent from structural evidence",
+    request_sequence: int = 0,
+    **overrides: Any,
+) -> PythonFocusedTestProposalRequest:
+    evidence = diagnosis_result.evidence
+    finding_payload = evidence.finding if evidence is not None else None
+    finding = deserialize(PythonBoundedDiagnosticFinding, finding_payload) if finding_payload is not None else None
+    return PythonFocusedTestProposalRequest(
+        test_proposal_request_id=stable_id("pcm-1e-focused-test-proposal-request", attachment_record.attachment_record_id, evidence.diagnosis_attempt_id if evidence else "", finding.finding_id if finding else "", expected_behavior, request_sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_attempt_id=evidence.inspection_attempt_id if evidence else "",
+        inspection_evidence_id=evidence.inspection_evidence_id if evidence else "",
+        diagnosis_attempt_id=evidence.diagnosis_attempt_id if evidence else "",
+        diagnosis_evidence_id=python_bounded_diagnosis_evidence_id(evidence) if evidence else "",
+        finding_id=finding.finding_id if finding else "",
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        source_path=finding.path if finding else "",
+        source_digest=finding.source_digest if finding else "",
+        responsible_symbol=finding.responsible_symbol if finding else "",
+        expected_behavior=expected_behavior,
+        failure_condition=failure_condition,
+        proposed_test_target_path=proposed_test_target_path,
+        **overrides,
+    )
+
+
+def make_python_focused_test_proposal_authorization(
+    request: PythonFocusedTestProposalRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonFocusedTestProposalAuthorization:
+    return PythonFocusedTestProposalAuthorization(
+        test_proposal_authorization_id=stable_id("pcm-1e-focused-test-proposal-authorization", request.test_proposal_request_id, issued_sequence),
+        test_proposal_request_id=request.test_proposal_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        attachment_record_id=request.attachment_record_id,
+        diagnosis_attempt_id=request.diagnosis_attempt_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        finding_id=request.finding_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        authorized_source_path=request.source_path,
+        authorized_source_digest=request.source_digest,
+        authorized_expected_behavior=request.expected_behavior,
+        authorized_test_target_path=request.proposed_test_target_path,
+        maximum_proposal_count=request.maximum_proposal_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _python_test_proposal_denial(
+    reason: str,
+    request: PythonFocusedTestProposalRequest | None,
+    authorization: PythonFocusedTestProposalAuthorization | None,
+) -> PythonFocusedTestProposalResult:
+    return PythonFocusedTestProposalResult(False, reason, request, original_authorization=authorization)
+
+
+def _python_test_proposal_authorization_is_available(authorization: PythonFocusedTestProposalAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not authorization.test_proposal_authorized:
+        return False, "wrong_test_proposal_authorization"
+    if not authorization.source_patch_prohibited:
+        return False, "source_patch_permission_present"
+    if not authorization.test_file_write_prohibited:
+        return False, "test_file_write_permission_present"
+    if not authorization.execution_prohibited:
+        return False, "execution_permission_present"
+    if not authorization.mutation_prohibited:
+        return False, "mutation_permission_present"
+    if not authorization.provider_model_use_prohibited:
+        return False, "provider_or_model_permission_present"
+    return True, "valid"
+
+
+def _python_test_proposal_request_matches_authorization(
+    request: PythonFocusedTestProposalRequest,
+    authorization: PythonFocusedTestProposalAuthorization,
+) -> tuple[bool, str]:
+    if authorization.test_proposal_request_id != request.test_proposal_request_id:
+        return False, "wrong_test_proposal_request"
+    expected_id = stable_id("pcm-1e-focused-test-proposal-authorization", request.test_proposal_request_id, authorization.issued_sequence)
+    if authorization.test_proposal_authorization_id != expected_id:
+        return False, "wrong_test_proposal_authorization"
+    if authorization.objective_cycle_id != request.objective_cycle_id or authorization.attachment_record_id != request.attachment_record_id:
+        return False, "wrong_test_proposal_request"
+    if authorization.diagnosis_attempt_id != request.diagnosis_attempt_id:
+        return False, "wrong_diagnosis_attempt"
+    if authorization.diagnosis_evidence_id != request.diagnosis_evidence_id:
+        return False, "wrong_diagnosis_evidence"
+    if authorization.finding_id != request.finding_id:
+        return False, "wrong_finding"
+    if authorization.module_id != request.module_id or authorization.module_version != request.module_version:
+        return False, "wrong_test_proposal_request"
+    if authorization.authorized_source_path != request.source_path:
+        return False, "path_mismatch"
+    if authorization.authorized_source_digest != request.source_digest:
+        return False, "source_digest_mismatch"
+    if authorization.authorized_expected_behavior != request.expected_behavior:
+        return False, "expected_behavior_mismatch"
+    if authorization.authorized_test_target_path != request.proposed_test_target_path:
+        return False, "test_target_mismatch"
+    if authorization.maximum_proposal_count != request.maximum_proposal_count:
+        return False, "proposal_limit_invalid"
+    return True, "valid"
+
+
+def _python_test_proposal_diagnosis_matches_request(
+    request: PythonFocusedTestProposalRequest,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+) -> tuple[bool, str, PythonBoundedDiagnosticFinding | None]:
+    if not diagnosis_result.accepted:
+        return False, "diagnosis_not_accepted", None
+    if not diagnosis_result.diagnosis_completed:
+        return False, "diagnosis_not_completed", None
+    if diagnosis_result.code_generated or diagnosis_result.patch_proposed or diagnosis_result.test_proposed:
+        return False, "wrong_diagnosis_result", None
+    if diagnosis_result.source_executed or diagnosis_result.source_mutated:
+        return False, "wrong_diagnosis_result", None
+    evidence = diagnosis_result.evidence
+    if evidence is None:
+        return False, "wrong_diagnosis_evidence", None
+    if evidence.diagnosis_attempt_id != request.diagnosis_attempt_id:
+        return False, "wrong_diagnosis_attempt", None
+    if python_bounded_diagnosis_evidence_id(evidence) != request.diagnosis_evidence_id:
+        return False, "wrong_diagnosis_evidence", None
+    if evidence.inspection_attempt_id != request.inspection_attempt_id:
+        return False, "wrong_inspection_attempt", None
+    if evidence.inspection_evidence_id != request.inspection_evidence_id:
+        return False, "wrong_inspection_evidence", None
+    if evidence.findings_produced not in {0, 1}:
+        return False, "proposal_limit_invalid", None
+    if evidence.findings_produced == 0:
+        if request.finding_id or request.source_path or request.source_digest or request.responsible_symbol:
+            return False, "wrong_finding", None
+        return True, "valid", None
+    if evidence.finding is None:
+        return False, "wrong_finding", None
+    finding = deserialize(PythonBoundedDiagnosticFinding, evidence.finding)
+    if finding.finding_id != request.finding_id:
+        return False, "wrong_finding", None
+    if finding.path != request.source_path:
+        return False, "path_mismatch", None
+    if finding.source_digest != request.source_digest:
+        return False, "source_digest_mismatch", None
+    if finding.responsible_symbol != request.responsible_symbol:
+        return False, "wrong_finding", None
+    return True, "valid", finding
+
+
+def _focused_test_body_for_symbol(request: PythonFocusedTestProposalRequest, finding: PythonBoundedDiagnosticFinding) -> str:
+    return (
+        f"def test_{finding.responsible_symbol}_is_represented_in_structural_observation():\n"
+        f"    observed_function_names = ()\n"
+        f"    assert {finding.responsible_symbol!r} in observed_function_names\n"
+    )
+
+
+def create_python_focused_test_proposal(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    request: PythonFocusedTestProposalRequest,
+    authorization: PythonFocusedTestProposalAuthorization,
+    *,
+    sequence: int,
+) -> PythonFocusedTestProposalResult:
+    if attachment_record.attachment_record_id != request.attachment_record_id:
+        return _python_test_proposal_denial("wrong_attachment_record", request, authorization)
+    if attachment_record.attachment_status != "INERT_ATTACHMENT_RECORD":
+        return _python_test_proposal_denial("attachment_not_inert", request, authorization)
+    if attachment_record.module_loaded:
+        return _python_test_proposal_denial("module_loaded", request, authorization)
+    if attachment_record.module_activated:
+        return _python_test_proposal_denial("module_activated", request, authorization)
+    if attachment_record.capability_execution_enabled:
+        return _python_test_proposal_denial("active_capability_present", request, authorization)
+    if request.maximum_proposal_count != 1:
+        return _python_test_proposal_denial("proposal_limit_invalid", request, authorization)
+    if not request.proposal_only:
+        return _python_test_proposal_denial("wrong_test_proposal_request", request, authorization)
+    if request.source_patch_requested:
+        return _python_test_proposal_denial("source_patch_permission_present", request, authorization)
+    if request.test_file_write_requested:
+        return _python_test_proposal_denial("test_file_write_permission_present", request, authorization)
+    if request.execution_requested:
+        return _python_test_proposal_denial("execution_permission_present", request, authorization)
+    if request.mutation_requested:
+        return _python_test_proposal_denial("mutation_permission_present", request, authorization)
+    if request.provider_model_requested:
+        return _python_test_proposal_denial("provider_or_model_permission_present", request, authorization)
+    request_match, request_reason = _python_test_proposal_request_matches_authorization(request, authorization)
+    if not request_match:
+        return _python_test_proposal_denial(request_reason, request, authorization)
+    auth_ok, auth_reason = _python_test_proposal_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _python_test_proposal_denial(auth_reason, request, authorization)
+    diagnosis_ok, diagnosis_reason, finding = _python_test_proposal_diagnosis_matches_request(request, diagnosis_result)
+    if not diagnosis_ok:
+        return _python_test_proposal_denial(diagnosis_reason, request, authorization)
+
+    consumed_authorization = replace(authorization, consumed=True)
+    proposal: PythonFocusedTestProposal | None = None
+    reason = "no_bounded_test_proposal"
+    if finding is not None and finding.diagnosis_category == "expected_symbol_missing":
+        proposal = PythonFocusedTestProposal(
+            proposal_id=stable_id("pcm-1e-focused-test-proposal", request.test_proposal_request_id, finding.finding_id, request.proposed_test_target_path),
+            diagnosis_attempt_id=request.diagnosis_attempt_id,
+            finding_id=finding.finding_id,
+            source_path=request.source_path,
+            source_digest=request.source_digest,
+            responsible_symbol=request.responsible_symbol,
+            expected_behavior=request.expected_behavior,
+            failure_condition_being_tested=request.failure_condition,
+            proposed_test_name=f"test_{request.responsible_symbol}_expected_symbol_present",
+            proposed_test_target_path=request.proposed_test_target_path,
+            proposed_test_body=_focused_test_body_for_symbol(request, finding),
+            fixture_requirements=("accepted PCM-1C structural observation fixture",),
+            expected_assertion=f"{request.responsible_symbol!r} appears in function_names",
+            expected_pre_fix_result="fails while the expected symbol is absent from structural observations",
+            expected_post_fix_result="passes after a future governed repair makes the expected symbol structurally present",
+            bounded_scope="single expected_symbol_missing diagnosis from accepted PCM-1D evidence",
+            uncertainty=finding.uncertainty,
+        )
+        reason = "valid"
+    evidence = PythonFocusedTestProposalEvidence(
+        test_proposal_attempt_id=stable_id("pcm-1e-focused-test-proposal-attempt", request.test_proposal_request_id, authorization.test_proposal_authorization_id, sequence),
+        test_proposal_request_id=request.test_proposal_request_id,
+        test_proposal_authorization_id=authorization.test_proposal_authorization_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_attempt_id=request.inspection_attempt_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_attempt_id=request.diagnosis_attempt_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        finding_id=request.finding_id,
+        exact_source_path=request.source_path,
+        exact_source_digest=request.source_digest,
+        proposal=serialize(proposal) if proposal is not None else None,
+        proposals_produced=1 if proposal is not None else 0,
+        maximum_proposals=1,
+        authorization_consumed=True,
+        proposal_started=True,
+        proposal_completed=True,
+        diagnosis_evidence_used=True,
+    )
+    return PythonFocusedTestProposalResult(
+        True,
+        reason,
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        proposal_started=True,
+        proposal_completed=True,
+        authorization_consumed=True,
+        proposal_created=proposal is not None,
+        proposal_count=1 if proposal is not None else 0,
     )
 
 
