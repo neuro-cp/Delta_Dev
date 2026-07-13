@@ -1871,6 +1871,540 @@ class PythonCodingModuleClosureResult:
 
 
 @dataclass(frozen=True)
+class PythonCandidatePatchOperation:
+    operation_id: str
+    operation: str
+    target_relative_path: str
+    expected_old_text: str
+    replacement_text: str
+    precondition_digest: str
+    expected_postcondition: str
+    max_changed_bytes: int
+    rollback_text: str
+    operation_order: int = 1
+    bounded_text_operation: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCandidatePatchRequest:
+    patch_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    diagnosis_attempt_id: str
+    diagnosis_evidence_id: str
+    test_proposal_attempt_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    test_proposal_id: str
+    source_path: str
+    source_digest: str
+    diagnosis_category: str
+    responsible_symbol: str
+    expected_behavior: str
+    focused_test_target_path: str
+    focused_test_digest: str
+    target_relative_path: str
+    precondition_digest: str
+    operation: str
+    replacement_text: str
+    expected_postcondition: str
+    max_file_count: int = 1
+    max_changed_bytes: int = 2000
+    maximum_patch_count: int = 1
+    patch_proposal_only: bool = True
+    file_write_requested: bool = False
+    execution_requested: bool = False
+    sandbox_materialization_requested: bool = False
+    application_requested: bool = False
+    git_operation_requested: bool = False
+    provider_model_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCandidatePatchAuthorization:
+    patch_authorization_id: str
+    patch_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_evidence_id: str
+    diagnosis_evidence_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    test_proposal_id: str
+    authorized_source_path: str
+    authorized_source_digest: str
+    authorized_target_path: str
+    authorized_precondition_digest: str
+    authorized_operation: str
+    authorized_replacement_text: str
+    authorized_expected_postcondition: str
+    authorized_focused_test_digest: str
+    max_file_count: int
+    max_changed_bytes: int
+    maximum_patch_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    patch_proposal_authorized: bool = True
+    file_write_prohibited: bool = True
+    execution_prohibited: bool = True
+    sandbox_materialization_prohibited: bool = True
+    application_prohibited: bool = True
+    git_operation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCandidatePatchProposal:
+    patch_proposal_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_evidence_id: str
+    diagnosis_evidence_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    test_proposal_id: str
+    source_path: str
+    source_digest: str
+    target_relative_path: str
+    precondition_digest: str
+    operations: tuple[dict[str, Any], ...]
+    expected_postcondition: str
+    rollback_metadata: dict[str, Any]
+    uncertainty: str
+    max_file_count: int
+    max_changed_bytes: int
+    operator_review_required: bool = True
+    proposal_only: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCandidatePatchEvidence:
+    patch_attempt_id: str
+    patch_request_id: str
+    patch_authorization_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    attachment_record_id: str
+    inspection_evidence_id: str
+    diagnosis_evidence_id: str
+    test_proposal_evidence_id: str
+    finding_id: str
+    test_proposal_id: str
+    source_path: str
+    source_digest: str
+    patch_proposal: dict[str, Any] | None
+    patches_produced: int
+    maximum_patches: int
+    authorization_consumed: bool
+    patch_started: bool
+    patch_completed: bool
+    upstream_evidence_used: bool
+    file_written: bool = False
+    command_executed: bool = False
+    sandbox_materialized: bool = False
+    application_performed: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCandidatePatchResult:
+    accepted: bool
+    reason: str
+    request: PythonCandidatePatchRequest | None = None
+    original_authorization: PythonCandidatePatchAuthorization | None = None
+    consumed_authorization: PythonCandidatePatchAuthorization | None = None
+    evidence: PythonCandidatePatchEvidence | None = None
+    patch_started: bool = False
+    patch_completed: bool = False
+    authorization_consumed: bool = False
+    patch_created: bool = False
+    patch_count: int = 0
+    file_written: bool = False
+    command_executed: bool = False
+    sandbox_materialized: bool = False
+    application_performed: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ArtifactChainLink:
+    link_id: str
+    stage_identity: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    sequence: int
+    artifact_type: str
+    artifact_id: str
+    payload_digest: str
+    previous_digest: str
+    chain_digest: str
+    canonical_payload: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ArtifactChainValidationResult:
+    accepted: bool
+    reason: str
+    chain_links: tuple[dict[str, Any], ...] = ()
+    final_chain_digest: str = ""
+    expected_final_chain_digest: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxMaterializationRequest:
+    materialization_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    source_path: str
+    source_digest: str
+    target_relative_path: str
+    test_relative_path: str
+    expected_chain_digest: str
+    allowed_fixture_paths: tuple[str, ...]
+    max_file_count: int = 2
+    max_total_bytes: int = 200_000
+    maximum_materialization_count: int = 1
+    external_disposable_workspace_required: bool = True
+    execution_requested: bool = False
+    active_worktree_mutation_requested: bool = False
+    git_operation_requested: bool = False
+    network_requested: bool = False
+    dependency_install_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxMaterializationAuthorization:
+    materialization_authorization_id: str
+    materialization_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    source_path: str
+    source_digest: str
+    target_relative_path: str
+    test_relative_path: str
+    expected_chain_digest: str
+    allowed_fixture_paths: tuple[str, ...]
+    max_file_count: int
+    max_total_bytes: int
+    maximum_materialization_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    materialization_authorized: bool = True
+    execution_prohibited: bool = True
+    active_worktree_mutation_prohibited: bool = True
+    git_operation_prohibited: bool = True
+    network_prohibited: bool = True
+    dependency_install_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxManifest:
+    sandbox_manifest_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    source_path: str
+    target_relative_path: str
+    test_relative_path: str
+    workspace_root: str
+    pre_materialization_hashes: dict[str, str]
+    post_materialization_hashes: dict[str, str]
+    written_files: tuple[str, ...]
+    artifact_chain_digest: str
+    cleanup_required: bool
+    active_worktree_mutated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxMaterializationResult:
+    accepted: bool
+    reason: str
+    request: PythonSandboxMaterializationRequest | None = None
+    original_authorization: PythonSandboxMaterializationAuthorization | None = None
+    consumed_authorization: PythonSandboxMaterializationAuthorization | None = None
+    manifest: PythonSandboxManifest | None = None
+    materialization_started: bool = False
+    materialization_completed: bool = False
+    authorization_consumed: bool = False
+    workspace_created: bool = False
+    file_written: bool = False
+    command_executed: bool = False
+    active_worktree_mutated: bool = False
+    git_operation_performed: bool = False
+    network_used: bool = False
+    dependency_installed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    cleanup_required: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxExecutionRequest:
+    execution_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    sandbox_manifest_id: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    expected_chain_digest: str
+    command: tuple[str, ...]
+    working_directory: str
+    timeout_seconds: int
+    output_byte_limit: int
+    process_count_limit: int = 1
+    maximum_execution_count: int = 1
+    network_requested: bool = False
+    git_operation_requested: bool = False
+    dependency_install_requested: bool = False
+    active_worktree_execution_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxExecutionAuthorization:
+    execution_authorization_id: str
+    execution_request_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    sandbox_manifest_id: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    expected_chain_digest: str
+    authorized_command: tuple[str, ...]
+    authorized_working_directory: str
+    timeout_seconds: int
+    output_byte_limit: int
+    process_count_limit: int
+    maximum_execution_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    execution_authorized: bool = True
+    network_prohibited: bool = True
+    git_operation_prohibited: bool = True
+    dependency_install_prohibited: bool = True
+    active_worktree_execution_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxExecutionEvidence:
+    execution_attempt_id: str
+    execution_request_id: str
+    execution_authorization_id: str
+    sandbox_manifest_id: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    command: tuple[str, ...]
+    working_directory: str
+    exit_code: int | None
+    stdout_text: str
+    stderr_text: str
+    stdout_digest: str
+    stderr_digest: str
+    output_truncated: bool
+    timeout_status: str
+    process_count: int
+    files_changed: tuple[str, ...]
+    cleanup_status: str
+    artifact_chain_digest: str
+    authorization_consumed: bool
+    execution_started: bool
+    execution_completed: bool
+    network_used: bool = False
+    git_operation_performed: bool = False
+    dependency_installed: bool = False
+    active_worktree_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxExecutionResult:
+    accepted: bool
+    reason: str
+    request: PythonSandboxExecutionRequest | None = None
+    original_authorization: PythonSandboxExecutionAuthorization | None = None
+    consumed_authorization: PythonSandboxExecutionAuthorization | None = None
+    evidence: PythonSandboxExecutionEvidence | None = None
+    execution_started: bool = False
+    execution_completed: bool = False
+    authorization_consumed: bool = False
+    command_executed: bool = False
+    active_worktree_mutated: bool = False
+    network_used: bool = False
+    git_operation_performed: bool = False
+    dependency_installed: bool = False
+    cleanup_completed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxEvaluation:
+    evaluation_id: str
+    classification: str
+    sandbox_manifest_id: str
+    execution_attempt_id: str
+    patch_proposal_id: str
+    test_proposal_id: str
+    artifact_chain_digest: str
+    expected_outcome: str
+    observed_exit_code: int | None
+    findings: tuple[str, ...]
+    pre_post_hashes_consistent: bool
+    cleanup_verified: bool
+    source_scope_preserved: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonSandboxEvaluationResult:
+    accepted: bool
+    reason: str
+    evaluation: PythonSandboxEvaluation | None = None
+    command_executed: bool = False
+    patch_revised: bool = False
+    active_worktree_mutated: bool = False
+    next_request_created: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonBoundedRepairIteration:
+    iteration_id: str
+    initial_evaluation_id: str
+    final_evaluation_id: str
+    attempts_used: int
+    revised_patch_proposal_id: str
+    stop_reason: str
+    final_classification: str
+    artifact_chain_digest: str
+    maximum_attempts: int = 2
+    active_worktree_mutated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonOperatorReviewPackage:
+    review_package_id: str
+    objective_cycle_id: str
+    module_id: str
+    module_version: str
+    artifact_chain_digest: str
+    original_inspection_evidence_id: str
+    original_diagnosis_evidence_id: str
+    initial_patch_proposal_id: str
+    initial_evaluation_id: str
+    final_evaluation_id: str
+    source_paths: tuple[str, ...]
+    source_hashes: dict[str, str]
+    scope_summary: str
+    resource_usage: dict[str, int]
+    remaining_uncertainty: str
+    cleanup_confirmed: bool
+    recommendation: str
+    revised_patch_proposal_id: str = ""
+    repair_iteration_id: str = ""
+    application_authorization_created: bool = False
+    tracked_source_mutated: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleV2ClosureAuthorization:
+    closure_authorization_id: str
+    review_package_id: str
+    expected_final_chain_digest: str
+    authorized_disposition: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    closure_authorized: bool = True
+    application_authorization_prohibited: bool = True
+    tracked_source_application_prohibited: bool = True
+    git_operation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonCodingModuleV2ClosureResult:
+    accepted: bool
+    reason: str
+    review_package: PythonOperatorReviewPackage | None = None
+    original_authorization: PythonCodingModuleV2ClosureAuthorization | None = None
+    consumed_authorization: PythonCodingModuleV2ClosureAuthorization | None = None
+    closure_disposition: str = ""
+    authorization_consumed: bool = False
+    application_authorization_created: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -6136,6 +6670,1147 @@ def evaluate_python_coding_module_closure(
         closure_completed=True,
         authorization_consumed=True,
         closure_count=1,
+    )
+
+
+PCM_2_STAGE_ORDER = (
+    "pcm_2a_candidate_patch_proposal",
+    "pcm_2b_artifact_integrity_chain",
+    "pcm_2c_disposable_sandbox_materialization",
+    "pcm_2d_focused_sandbox_test_execution",
+    "pcm_2e_sandbox_result_evaluation",
+    "pcm_2f_bounded_repair_iteration",
+    "pcm_2g_operator_review_package",
+)
+
+PCM_2_REVIEW_RECOMMENDATIONS = (
+    "eligible_for_operator_application_review",
+    "not_eligible_test_failure",
+    "not_eligible_regression",
+    "not_eligible_inconclusive",
+    "not_eligible_integrity_failure",
+    "not_eligible_scope_violation",
+    "not_eligible_budget_exhausted",
+)
+
+PCM_2_CLOSURE_DISPOSITIONS = (
+    "accepted_for_pcm_2_closure",
+    "rejected_incomplete_chain",
+    "rejected_integrity_mismatch",
+    "rejected_stale_source",
+    "rejected_scope_broadening",
+    "rejected_authorization_replay",
+    "rejected_execution_violation",
+    "rejected_cleanup_failure",
+    "rejected_iteration_limit",
+    "rejected_capability_escalation",
+)
+
+
+def _canonical_json(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), default=str)
+
+
+def _canonical_digest(value: Any) -> str:
+    return hashlib.sha256(_canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def make_artifact_chain_link(
+    *,
+    stage_identity: str,
+    objective_cycle_id: str,
+    module_id: str,
+    module_version: str,
+    sequence: int,
+    artifact_type: str,
+    artifact_id: str,
+    payload: Mapping[str, Any],
+    previous_digest: str,
+) -> ArtifactChainLink:
+    canonical_payload = _canonical_json(dict(payload))
+    payload_digest = hashlib.sha256(canonical_payload.encode("utf-8")).hexdigest()
+    chain_material = {
+        "stage_identity": stage_identity,
+        "objective_cycle_id": objective_cycle_id,
+        "module_id": module_id,
+        "module_version": module_version,
+        "sequence": sequence,
+        "artifact_type": artifact_type,
+        "artifact_id": artifact_id,
+        "payload_digest": payload_digest,
+        "previous_digest": previous_digest,
+    }
+    chain_digest = _canonical_digest(chain_material)
+    return ArtifactChainLink(
+        link_id=stable_id("pcm-2-artifact-chain-link", stage_identity, objective_cycle_id, module_id, sequence, artifact_id, chain_digest),
+        stage_identity=stage_identity,
+        objective_cycle_id=objective_cycle_id,
+        module_id=module_id,
+        module_version=module_version,
+        sequence=sequence,
+        artifact_type=artifact_type,
+        artifact_id=artifact_id,
+        payload_digest=payload_digest,
+        previous_digest=previous_digest,
+        chain_digest=chain_digest,
+        canonical_payload=canonical_payload,
+    )
+
+
+def _pcm2_artifact_id(payload: Mapping[str, Any], fallback: str) -> str:
+    for key in (
+        "inspection_attempt_id",
+        "diagnosis_attempt_id",
+        "test_proposal_attempt_id",
+        "sandbox_handoff_attempt_id",
+        "patch_proposal_id",
+        "sandbox_manifest_id",
+        "execution_attempt_id",
+        "evaluation_id",
+        "iteration_id",
+        "review_package_id",
+    ):
+        if payload.get(key):
+            return str(payload[key])
+    return fallback
+
+
+def build_pcm2_artifact_chain(
+    *,
+    objective_cycle_id: str,
+    module_id: str,
+    module_version: str,
+    artifacts: tuple[tuple[str, str, Mapping[str, Any]], ...],
+    initial_previous_digest: str = "GENESIS",
+) -> ArtifactChainValidationResult:
+    previous = initial_previous_digest
+    links: list[ArtifactChainLink] = []
+    for index, (stage_identity, artifact_type, payload) in enumerate(artifacts, start=1):
+        artifact_id = _pcm2_artifact_id(payload, stable_id("pcm-2-artifact", stage_identity, index, payload))
+        link = make_artifact_chain_link(
+            stage_identity=stage_identity,
+            objective_cycle_id=objective_cycle_id,
+            module_id=module_id,
+            module_version=module_version,
+            sequence=index,
+            artifact_type=artifact_type,
+            artifact_id=artifact_id,
+            payload=payload,
+            previous_digest=previous,
+        )
+        links.append(link)
+        previous = link.chain_digest
+    return ArtifactChainValidationResult(True, "valid", tuple(serialize(link) for link in links), previous, previous)
+
+
+def validate_pcm2_artifact_chain(
+    *,
+    objective_cycle_id: str,
+    module_id: str,
+    module_version: str,
+    artifacts: tuple[tuple[str, str, Mapping[str, Any]], ...],
+    expected_stage_order: tuple[str, ...],
+    expected_final_chain_digest: str,
+) -> ArtifactChainValidationResult:
+    if tuple(stage for stage, _artifact_type, _payload in artifacts) != expected_stage_order:
+        return ArtifactChainValidationResult(False, "reordered_or_omitted_chain_stage", (), "", expected_final_chain_digest)
+    chain = build_pcm2_artifact_chain(objective_cycle_id=objective_cycle_id, module_id=module_id, module_version=module_version, artifacts=artifacts)
+    if chain.final_chain_digest != expected_final_chain_digest:
+        return ArtifactChainValidationResult(False, "integrity_mismatch", chain.chain_links, chain.final_chain_digest, expected_final_chain_digest)
+    return chain
+
+
+def python_candidate_patch_evidence_id(evidence: PythonCandidatePatchEvidence) -> str:
+    return stable_id("pcm-2a-candidate-patch-evidence", evidence.patch_attempt_id, evidence.diagnosis_evidence_id, evidence.patch_proposal, evidence.patches_produced)
+
+
+def python_sandbox_execution_evidence_id(evidence: PythonSandboxExecutionEvidence) -> str:
+    return stable_id("pcm-2d-sandbox-execution-evidence", evidence.execution_attempt_id, evidence.exit_code, evidence.stdout_digest, evidence.stderr_digest, evidence.artifact_chain_digest)
+
+
+def _pcm2_denied_patch(
+    reason: str,
+    request: PythonCandidatePatchRequest | None,
+    authorization: PythonCandidatePatchAuthorization | None,
+) -> PythonCandidatePatchResult:
+    return PythonCandidatePatchResult(False, reason, request, original_authorization=authorization)
+
+
+def make_python_candidate_patch_request(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    *,
+    replacement_text: str,
+    expected_postcondition: str,
+    request_sequence: int,
+    **overrides: Any,
+) -> PythonCandidatePatchRequest:
+    inspection_evidence = inspection_result.evidence
+    diagnosis_evidence = diagnosis_result.evidence
+    test_evidence = test_proposal_result.evidence
+    finding = deserialize(PythonBoundedDiagnosticFinding, diagnosis_evidence.finding) if diagnosis_evidence and diagnosis_evidence.finding else None
+    proposal = deserialize(PythonFocusedTestProposal, test_evidence.proposal) if test_evidence and test_evidence.proposal else None
+    source_path = proposal.source_path if proposal else ""
+    source_digest = proposal.source_digest if proposal else ""
+    return PythonCandidatePatchRequest(
+        patch_request_id=stable_id("pcm-2a-candidate-patch-request", attachment_record.attachment_record_id, source_path, request_sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_attempt_id=inspection_evidence.inspection_attempt_id if inspection_evidence else "",
+        inspection_evidence_id=python_source_inspection_evidence_id(inspection_evidence) if inspection_evidence else "",
+        diagnosis_attempt_id=diagnosis_evidence.diagnosis_attempt_id if diagnosis_evidence else "",
+        diagnosis_evidence_id=python_bounded_diagnosis_evidence_id(diagnosis_evidence) if diagnosis_evidence else "",
+        test_proposal_attempt_id=test_evidence.test_proposal_attempt_id if test_evidence else "",
+        test_proposal_evidence_id=python_focused_test_proposal_evidence_id(test_evidence) if test_evidence else "",
+        finding_id=finding.finding_id if finding else "",
+        test_proposal_id=proposal.proposal_id if proposal else "",
+        source_path=source_path,
+        source_digest=source_digest,
+        diagnosis_category=finding.diagnosis_category if finding else "",
+        responsible_symbol=finding.responsible_symbol if finding else "",
+        expected_behavior=proposal.expected_behavior if proposal else "",
+        focused_test_target_path=proposal.proposed_test_target_path if proposal else "",
+        focused_test_digest=_canonical_digest(test_evidence.proposal if test_evidence and test_evidence.proposal else {}),
+        target_relative_path=source_path,
+        precondition_digest=source_digest,
+        operation="append_text",
+        replacement_text=replacement_text,
+        expected_postcondition=expected_postcondition,
+        **overrides,
+    )
+
+
+def make_python_candidate_patch_authorization(
+    request: PythonCandidatePatchRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonCandidatePatchAuthorization:
+    return PythonCandidatePatchAuthorization(
+        patch_authorization_id=stable_id("pcm-2a-candidate-patch-authorization", request.patch_request_id, issued_sequence),
+        patch_request_id=request.patch_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        attachment_record_id=request.attachment_record_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        finding_id=request.finding_id,
+        test_proposal_id=request.test_proposal_id,
+        authorized_source_path=request.source_path,
+        authorized_source_digest=request.source_digest,
+        authorized_target_path=request.target_relative_path,
+        authorized_precondition_digest=request.precondition_digest,
+        authorized_operation=request.operation,
+        authorized_replacement_text=request.replacement_text,
+        authorized_expected_postcondition=request.expected_postcondition,
+        authorized_focused_test_digest=request.focused_test_digest,
+        max_file_count=request.max_file_count,
+        max_changed_bytes=request.max_changed_bytes,
+        maximum_patch_count=request.maximum_patch_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _python_candidate_patch_authorization_is_available(authorization: PythonCandidatePatchAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not authorization.patch_proposal_authorized:
+        return False, "wrong_patch_authorization"
+    if not authorization.file_write_prohibited:
+        return False, "file_write_permission_present"
+    if not authorization.execution_prohibited:
+        return False, "execution_permission_present"
+    if not authorization.sandbox_materialization_prohibited:
+        return False, "sandbox_materialization_permission_present"
+    if not authorization.application_prohibited:
+        return False, "application_permission_present"
+    if not authorization.git_operation_prohibited:
+        return False, "git_permission_present"
+    if not authorization.provider_model_use_prohibited:
+        return False, "provider_or_model_permission_present"
+    return True, "valid"
+
+
+def _python_candidate_patch_request_matches_authorization(
+    request: PythonCandidatePatchRequest,
+    authorization: PythonCandidatePatchAuthorization,
+) -> tuple[bool, str]:
+    expected_id = stable_id("pcm-2a-candidate-patch-authorization", request.patch_request_id, authorization.issued_sequence)
+    pairs = (
+        (authorization.patch_request_id, request.patch_request_id, "wrong_patch_request"),
+        (authorization.patch_authorization_id, expected_id, "wrong_patch_authorization"),
+        (authorization.objective_cycle_id, request.objective_cycle_id, "wrong_patch_request"),
+        (authorization.module_id, request.module_id, "wrong_patch_request"),
+        (authorization.module_version, request.module_version, "wrong_patch_request"),
+        (authorization.attachment_record_id, request.attachment_record_id, "wrong_attachment_record"),
+        (authorization.inspection_evidence_id, request.inspection_evidence_id, "wrong_inspection_evidence"),
+        (authorization.diagnosis_evidence_id, request.diagnosis_evidence_id, "wrong_diagnosis_evidence"),
+        (authorization.test_proposal_evidence_id, request.test_proposal_evidence_id, "wrong_test_proposal_evidence"),
+        (authorization.finding_id, request.finding_id, "wrong_finding"),
+        (authorization.test_proposal_id, request.test_proposal_id, "wrong_test_proposal"),
+        (authorization.authorized_source_path, request.source_path, "path_mismatch"),
+        (authorization.authorized_source_digest, request.source_digest, "source_digest_mismatch"),
+        (authorization.authorized_target_path, request.target_relative_path, "target_path_mismatch"),
+        (authorization.authorized_precondition_digest, request.precondition_digest, "precondition_digest_mismatch"),
+        (authorization.authorized_operation, request.operation, "operation_mismatch"),
+        (authorization.authorized_replacement_text, request.replacement_text, "patch_payload_mismatch"),
+        (authorization.authorized_expected_postcondition, request.expected_postcondition, "expected_postcondition_mismatch"),
+        (authorization.authorized_focused_test_digest, request.focused_test_digest, "focused_test_mismatch"),
+        (authorization.max_file_count, request.max_file_count, "limit_mismatch"),
+        (authorization.max_changed_bytes, request.max_changed_bytes, "limit_mismatch"),
+        (authorization.maximum_patch_count, request.maximum_patch_count, "patch_limit_invalid"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return False, reason
+    return True, "valid"
+
+
+def _candidate_patch_upstream_matches_request(
+    request: PythonCandidatePatchRequest,
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+) -> tuple[bool, str, PythonBoundedDiagnosticFinding | None, PythonFocusedTestProposal | None]:
+    if attachment_record.attachment_record_id != request.attachment_record_id or attachment_record.module_loaded or attachment_record.module_activated:
+        return False, "rejected_capability_escalation", None, None
+    if not inspection_result.accepted or inspection_result.evidence is None or python_source_inspection_evidence_id(inspection_result.evidence) != request.inspection_evidence_id:
+        return False, "inspection_not_accepted", None, None
+    if not diagnosis_result.accepted or diagnosis_result.evidence is None or diagnosis_result.evidence.finding is None or python_bounded_diagnosis_evidence_id(diagnosis_result.evidence) != request.diagnosis_evidence_id:
+        return False, "diagnosis_not_accepted", None, None
+    if not test_proposal_result.accepted or test_proposal_result.evidence is None or test_proposal_result.evidence.proposal is None or python_focused_test_proposal_evidence_id(test_proposal_result.evidence) != request.test_proposal_evidence_id:
+        return False, "test_proposal_not_accepted", None, None
+    finding = deserialize(PythonBoundedDiagnosticFinding, diagnosis_result.evidence.finding)
+    proposal = deserialize(PythonFocusedTestProposal, test_proposal_result.evidence.proposal)
+    if finding.finding_id != request.finding_id or finding.diagnosis_category != request.diagnosis_category:
+        return False, "wrong_finding", None, None
+    if finding.diagnosis_category != "expected_symbol_missing":
+        return False, "unsupported_diagnosis_category", None, None
+    if proposal.proposal_id != request.test_proposal_id or proposal.finding_id != finding.finding_id:
+        return False, "wrong_test_proposal", None, None
+    if finding.path != request.source_path or proposal.source_path != request.source_path:
+        return False, "path_mismatch", None, None
+    if finding.source_digest != request.source_digest or proposal.source_digest != request.source_digest:
+        return False, "source_digest_mismatch", None, None
+    if finding.responsible_symbol != request.responsible_symbol:
+        return False, "wrong_finding", None, None
+    return True, "valid", finding, proposal
+
+
+def create_python_candidate_patch_proposal(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    request: PythonCandidatePatchRequest,
+    authorization: PythonCandidatePatchAuthorization,
+    *,
+    sequence: int,
+) -> PythonCandidatePatchResult:
+    if request.maximum_patch_count != 1 or request.max_file_count != 1:
+        return _pcm2_denied_patch("patch_limit_invalid", request, authorization)
+    if not request.patch_proposal_only:
+        return _pcm2_denied_patch("wrong_patch_request", request, authorization)
+    if request.file_write_requested or request.execution_requested or request.sandbox_materialization_requested or request.application_requested or request.git_operation_requested:
+        return _pcm2_denied_patch("action_permission_present", request, authorization)
+    if request.provider_model_requested:
+        return _pcm2_denied_patch("provider_or_model_permission_present", request, authorization)
+    if request.operation != "append_text" or len(request.replacement_text.encode("utf-8")) > request.max_changed_bytes:
+        return _pcm2_denied_patch("unsupported_or_oversized_operation", request, authorization)
+    safe_ok, safe_reason, normalized = _python_source_relative_paths_are_safe((request.target_relative_path,), max_file_count=1)
+    if not safe_ok or normalized[0] != request.source_path:
+        return _pcm2_denied_patch(safe_reason if not safe_ok else "target_path_mismatch", request, authorization)
+    request_ok, request_reason = _python_candidate_patch_request_matches_authorization(request, authorization)
+    if not request_ok:
+        return _pcm2_denied_patch(request_reason, request, authorization)
+    auth_ok, auth_reason = _python_candidate_patch_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _pcm2_denied_patch(auth_reason, request, authorization)
+    upstream_ok, upstream_reason, finding, proposal = _candidate_patch_upstream_matches_request(request, attachment_record, inspection_result, diagnosis_result, test_proposal_result)
+    if not upstream_ok or finding is None or proposal is None:
+        return _pcm2_denied_patch(upstream_reason, request, authorization)
+
+    operation = PythonCandidatePatchOperation(
+        operation_id=stable_id("pcm-2a-candidate-patch-operation", request.patch_request_id, request.target_relative_path, request.operation),
+        operation=request.operation,
+        target_relative_path=request.target_relative_path,
+        expected_old_text="",
+        replacement_text=request.replacement_text,
+        precondition_digest=request.precondition_digest,
+        expected_postcondition=request.expected_postcondition,
+        max_changed_bytes=request.max_changed_bytes,
+        rollback_text="remove appended bounded replacement text",
+    )
+    patch = PythonCandidatePatchProposal(
+        patch_proposal_id=stable_id("pcm-2a-candidate-patch", request.patch_request_id, operation.operation_id, sequence),
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        attachment_record_id=request.attachment_record_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        finding_id=finding.finding_id,
+        test_proposal_id=proposal.proposal_id,
+        source_path=request.source_path,
+        source_digest=request.source_digest,
+        target_relative_path=request.target_relative_path,
+        precondition_digest=request.precondition_digest,
+        operations=(serialize(operation),),
+        expected_postcondition=request.expected_postcondition,
+        rollback_metadata={"operation": "restore_precondition_digest", "precondition_digest": request.precondition_digest},
+        uncertainty=finding.uncertainty,
+        max_file_count=request.max_file_count,
+        max_changed_bytes=request.max_changed_bytes,
+    )
+    consumed_authorization = replace(authorization, consumed=True)
+    evidence = PythonCandidatePatchEvidence(
+        patch_attempt_id=stable_id("pcm-2a-candidate-patch-attempt", request.patch_request_id, authorization.patch_authorization_id, sequence),
+        patch_request_id=request.patch_request_id,
+        patch_authorization_id=authorization.patch_authorization_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        attachment_record_id=request.attachment_record_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        diagnosis_evidence_id=request.diagnosis_evidence_id,
+        test_proposal_evidence_id=request.test_proposal_evidence_id,
+        finding_id=finding.finding_id,
+        test_proposal_id=proposal.proposal_id,
+        source_path=request.source_path,
+        source_digest=request.source_digest,
+        patch_proposal=serialize(patch),
+        patches_produced=1,
+        maximum_patches=1,
+        authorization_consumed=True,
+        patch_started=True,
+        patch_completed=True,
+        upstream_evidence_used=True,
+    )
+    return PythonCandidatePatchResult(
+        True,
+        "valid",
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        patch_started=True,
+        patch_completed=True,
+        authorization_consumed=True,
+        patch_created=True,
+        patch_count=1,
+    )
+
+
+def _pcm2_authorization_available(
+    authorization: Any,
+    *,
+    sequence: int,
+    authorized_attr: str,
+    permission_reason_prefix: str,
+) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not getattr(authorization, authorized_attr):
+        return False, f"wrong_{permission_reason_prefix}_authorization"
+    return True, "valid"
+
+
+def make_python_sandbox_materialization_request(
+    patch_result: PythonCandidatePatchResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    chain: ArtifactChainValidationResult,
+    *,
+    request_sequence: int,
+    **overrides: Any,
+) -> PythonSandboxMaterializationRequest:
+    patch = deserialize(PythonCandidatePatchProposal, patch_result.evidence.patch_proposal) if patch_result.evidence and patch_result.evidence.patch_proposal else None
+    test_proposal = deserialize(PythonFocusedTestProposal, test_proposal_result.evidence.proposal) if test_proposal_result.evidence and test_proposal_result.evidence.proposal else None
+    return PythonSandboxMaterializationRequest(
+        materialization_request_id=stable_id("pcm-2c-materialization-request", patch.patch_proposal_id if patch else "", request_sequence),
+        objective_cycle_id=patch.objective_cycle_id if patch else "",
+        module_id=patch.module_id if patch else "",
+        module_version=patch.module_version if patch else "",
+        patch_proposal_id=patch.patch_proposal_id if patch else "",
+        test_proposal_id=test_proposal.proposal_id if test_proposal else "",
+        source_path=patch.source_path if patch else "",
+        source_digest=patch.source_digest if patch else "",
+        target_relative_path=patch.target_relative_path if patch else "",
+        test_relative_path=test_proposal.proposed_test_target_path if test_proposal else "",
+        expected_chain_digest=chain.final_chain_digest,
+        allowed_fixture_paths=(patch.source_path, test_proposal.proposed_test_target_path) if patch and test_proposal else (),
+        **overrides,
+    )
+
+
+def make_python_sandbox_materialization_authorization(
+    request: PythonSandboxMaterializationRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonSandboxMaterializationAuthorization:
+    return PythonSandboxMaterializationAuthorization(
+        materialization_authorization_id=stable_id("pcm-2c-materialization-authorization", request.materialization_request_id, issued_sequence),
+        materialization_request_id=request.materialization_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        patch_proposal_id=request.patch_proposal_id,
+        test_proposal_id=request.test_proposal_id,
+        source_path=request.source_path,
+        source_digest=request.source_digest,
+        target_relative_path=request.target_relative_path,
+        test_relative_path=request.test_relative_path,
+        expected_chain_digest=request.expected_chain_digest,
+        allowed_fixture_paths=request.allowed_fixture_paths,
+        max_file_count=request.max_file_count,
+        max_total_bytes=request.max_total_bytes,
+        maximum_materialization_count=request.maximum_materialization_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _materialization_denial(
+    reason: str,
+    request: PythonSandboxMaterializationRequest | None,
+    authorization: PythonSandboxMaterializationAuthorization | None,
+) -> PythonSandboxMaterializationResult:
+    return PythonSandboxMaterializationResult(False, reason, request, original_authorization=authorization)
+
+
+def _materialization_request_matches_authorization(
+    request: PythonSandboxMaterializationRequest,
+    authorization: PythonSandboxMaterializationAuthorization,
+) -> tuple[bool, str]:
+    expected_id = stable_id("pcm-2c-materialization-authorization", request.materialization_request_id, authorization.issued_sequence)
+    pairs = (
+        (authorization.materialization_request_id, request.materialization_request_id, "wrong_materialization_request"),
+        (authorization.materialization_authorization_id, expected_id, "wrong_materialization_authorization"),
+        (authorization.objective_cycle_id, request.objective_cycle_id, "wrong_materialization_request"),
+        (authorization.module_id, request.module_id, "wrong_materialization_request"),
+        (authorization.module_version, request.module_version, "wrong_materialization_request"),
+        (authorization.patch_proposal_id, request.patch_proposal_id, "wrong_patch_proposal"),
+        (authorization.test_proposal_id, request.test_proposal_id, "wrong_test_proposal"),
+        (authorization.source_path, request.source_path, "path_mismatch"),
+        (authorization.source_digest, request.source_digest, "source_digest_mismatch"),
+        (authorization.target_relative_path, request.target_relative_path, "target_path_mismatch"),
+        (authorization.test_relative_path, request.test_relative_path, "test_target_mismatch"),
+        (authorization.expected_chain_digest, request.expected_chain_digest, "integrity_mismatch"),
+        (authorization.allowed_fixture_paths, request.allowed_fixture_paths, "scope_mismatch"),
+        (authorization.max_file_count, request.max_file_count, "limit_mismatch"),
+        (authorization.max_total_bytes, request.max_total_bytes, "limit_mismatch"),
+        (authorization.maximum_materialization_count, request.maximum_materialization_count, "materialization_limit_invalid"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return False, reason
+    return True, "valid"
+
+
+def _materialization_authorization_is_available(authorization: PythonSandboxMaterializationAuthorization, *, sequence: int) -> tuple[bool, str]:
+    ok, reason = _pcm2_authorization_available(authorization, sequence=sequence, authorized_attr="materialization_authorized", permission_reason_prefix="materialization")
+    if not ok:
+        return False, reason
+    if not authorization.execution_prohibited:
+        return False, "execution_permission_present"
+    if not authorization.active_worktree_mutation_prohibited:
+        return False, "active_worktree_mutation_permission_present"
+    if not authorization.git_operation_prohibited:
+        return False, "git_permission_present"
+    if not authorization.network_prohibited:
+        return False, "network_permission_present"
+    if not authorization.dependency_install_prohibited:
+        return False, "dependency_install_permission_present"
+    return True, "valid"
+
+
+def _pcm2_safe_fixture_path(path: str) -> tuple[bool, str]:
+    if not _safe_relative_workspace_path(path):
+        return False, "path_traversal_or_forbidden_path"
+    lowered = path.lower().replace("\\", "/")
+    if "*" in lowered:
+        return False, "wildcard_path"
+    if lowered.startswith("reports/rc4_") or "delta-75" in lowered or "delta_75" in lowered:
+        return False, "forbidden_path"
+    if not lowered.endswith(".py"):
+        return False, "unsupported_file_type"
+    return True, "valid"
+
+
+def _pcm2_apply_patch_operation(source_text: str, patch: PythonCandidatePatchProposal) -> tuple[bool, str, str]:
+    if len(patch.operations) != 1:
+        return False, "operation_limit_invalid", source_text
+    operation = deserialize(PythonCandidatePatchOperation, patch.operations[0])
+    if operation.operation != "append_text":
+        return False, "unsupported_operation", source_text
+    if len(operation.replacement_text.encode("utf-8")) > operation.max_changed_bytes:
+        return False, "changed_byte_limit_exceeded", source_text
+    return True, "valid", source_text.rstrip() + "\n\n" + operation.replacement_text.strip() + "\n"
+
+
+def _pcm2_runnable_test_body(source_path: str, responsible_symbol: str) -> str:
+    module_name = Path(source_path).with_suffix("").name
+    return (
+        "import importlib\n\n"
+        f"def test_{responsible_symbol}_expected_symbol_present():\n"
+        f"    module = importlib.import_module({module_name!r})\n"
+        f"    assert hasattr(module, {responsible_symbol!r})\n"
+    )
+
+
+def materialize_python_candidate_in_disposable_sandbox(
+    patch_result: PythonCandidatePatchResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    chain: ArtifactChainValidationResult,
+    request: PythonSandboxMaterializationRequest,
+    authorization: PythonSandboxMaterializationAuthorization,
+    *,
+    fixture_root: Path,
+    sandbox_parent: Path | None = None,
+    sequence: int,
+) -> PythonSandboxMaterializationResult:
+    if request.maximum_materialization_count != 1:
+        return _materialization_denial("materialization_limit_invalid", request, authorization)
+    if not request.external_disposable_workspace_required or request.execution_requested or request.active_worktree_mutation_requested or request.git_operation_requested:
+        return _materialization_denial("scope_violation", request, authorization)
+    if request.network_requested:
+        return _materialization_denial("network_permission_present", request, authorization)
+    if request.dependency_install_requested:
+        return _materialization_denial("dependency_install_permission_present", request, authorization)
+    match_ok, match_reason = _materialization_request_matches_authorization(request, authorization)
+    if not match_ok:
+        return _materialization_denial(match_reason, request, authorization)
+    auth_ok, auth_reason = _materialization_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _materialization_denial(auth_reason, request, authorization)
+    if not patch_result.accepted or patch_result.evidence is None or patch_result.evidence.patch_proposal is None:
+        return _materialization_denial("patch_not_accepted", request, authorization)
+    if not test_proposal_result.accepted or test_proposal_result.evidence is None or test_proposal_result.evidence.proposal is None:
+        return _materialization_denial("test_proposal_not_accepted", request, authorization)
+    if not chain.accepted or chain.final_chain_digest != request.expected_chain_digest:
+        return _materialization_denial("integrity_mismatch", request, authorization)
+    for relative_path in request.allowed_fixture_paths:
+        safe_ok, safe_reason = _pcm2_safe_fixture_path(relative_path)
+        if not safe_ok:
+            return _materialization_denial(safe_reason, request, authorization)
+    if request.source_path not in request.allowed_fixture_paths or request.test_relative_path not in request.allowed_fixture_paths:
+        return _materialization_denial("scope_mismatch", request, authorization)
+    source_file = fixture_root / request.source_path
+    resolved_root = fixture_root.resolve()
+    resolved_source = source_file.resolve(strict=False)
+    if not resolved_source.is_relative_to(resolved_root) or source_file.is_symlink():
+        return _materialization_denial("path_traversal_or_forbidden_path", request, authorization)
+    if not source_file.exists() or not source_file.is_file():
+        return _materialization_denial("fixture_missing", request, authorization)
+    source_bytes = source_file.read_bytes()
+    if _sha256_bytes(source_bytes) != request.source_digest:
+        return _materialization_denial("stale_source_digest", request, authorization)
+    if len(source_bytes) > request.max_total_bytes:
+        return _materialization_denial("byte_limit_exceeded", request, authorization)
+    consumed_authorization = replace(authorization, consumed=True)
+    parent = sandbox_parent or Path(tempfile.gettempdir())
+    parent.mkdir(parents=True, exist_ok=True)
+    workspace = Path(tempfile.mkdtemp(prefix="pcm2_sandbox_", dir=str(parent))).resolve()
+    patch = deserialize(PythonCandidatePatchProposal, patch_result.evidence.patch_proposal)
+    test_proposal = deserialize(PythonFocusedTestProposal, test_proposal_result.evidence.proposal)
+    ok, reason, patched_text = _pcm2_apply_patch_operation(source_bytes.decode("utf-8"), patch)
+    if not ok:
+        return PythonSandboxMaterializationResult(False, reason, request, authorization, consumed_authorization, materialization_started=True, authorization_consumed=True, workspace_created=True, cleanup_required=True)
+    target_file = workspace / request.target_relative_path
+    test_file = workspace / request.test_relative_path
+    for target in (target_file, test_file):
+        resolved = target.resolve(strict=False)
+        if not resolved.is_relative_to(workspace):
+            return PythonSandboxMaterializationResult(False, "path_traversal_or_forbidden_path", request, authorization, consumed_authorization, materialization_started=True, authorization_consumed=True, workspace_created=True, cleanup_required=True)
+        target.parent.mkdir(parents=True, exist_ok=True)
+    target_file.write_text(patched_text, encoding="utf-8")
+    responsible_symbol = patch.expected_postcondition.replace("symbol_present:", "") if patch.expected_postcondition.startswith("symbol_present:") else "missing_guard"
+    test_file.write_text(_pcm2_runnable_test_body(request.target_relative_path, responsible_symbol), encoding="utf-8")
+    manifest = PythonSandboxManifest(
+        sandbox_manifest_id=stable_id("pcm-2c-sandbox-manifest", request.materialization_request_id, authorization.materialization_authorization_id, sequence),
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        patch_proposal_id=request.patch_proposal_id,
+        test_proposal_id=request.test_proposal_id,
+        source_path=request.source_path,
+        target_relative_path=request.target_relative_path,
+        test_relative_path=request.test_relative_path,
+        workspace_root=str(workspace),
+        pre_materialization_hashes={request.source_path: _sha256_bytes(source_bytes)},
+        post_materialization_hashes={
+            request.target_relative_path: _sha256_bytes(target_file.read_bytes()),
+            request.test_relative_path: _sha256_bytes(test_file.read_bytes()),
+        },
+        written_files=(request.target_relative_path, request.test_relative_path),
+        artifact_chain_digest=request.expected_chain_digest,
+        cleanup_required=True,
+    )
+    return PythonSandboxMaterializationResult(
+        True,
+        "valid",
+        request,
+        authorization,
+        consumed_authorization,
+        manifest,
+        materialization_started=True,
+        materialization_completed=True,
+        authorization_consumed=True,
+        workspace_created=True,
+        file_written=True,
+        cleanup_required=True,
+    )
+
+
+def make_python_sandbox_execution_request(
+    manifest: PythonSandboxManifest,
+    *,
+    command: tuple[str, ...],
+    timeout_seconds: int = 10,
+    output_byte_limit: int = 4000,
+    request_sequence: int,
+    **overrides: Any,
+) -> PythonSandboxExecutionRequest:
+    return PythonSandboxExecutionRequest(
+        execution_request_id=stable_id("pcm-2d-execution-request", manifest.sandbox_manifest_id, command, request_sequence),
+        objective_cycle_id=manifest.objective_cycle_id,
+        module_id=manifest.module_id,
+        module_version=manifest.module_version,
+        sandbox_manifest_id=manifest.sandbox_manifest_id,
+        patch_proposal_id=manifest.patch_proposal_id,
+        test_proposal_id=manifest.test_proposal_id,
+        expected_chain_digest=manifest.artifact_chain_digest,
+        command=command,
+        working_directory=manifest.workspace_root,
+        timeout_seconds=timeout_seconds,
+        output_byte_limit=output_byte_limit,
+        **overrides,
+    )
+
+
+def make_python_sandbox_execution_authorization(
+    request: PythonSandboxExecutionRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonSandboxExecutionAuthorization:
+    return PythonSandboxExecutionAuthorization(
+        execution_authorization_id=stable_id("pcm-2d-execution-authorization", request.execution_request_id, issued_sequence),
+        execution_request_id=request.execution_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        sandbox_manifest_id=request.sandbox_manifest_id,
+        patch_proposal_id=request.patch_proposal_id,
+        test_proposal_id=request.test_proposal_id,
+        expected_chain_digest=request.expected_chain_digest,
+        authorized_command=request.command,
+        authorized_working_directory=request.working_directory,
+        timeout_seconds=request.timeout_seconds,
+        output_byte_limit=request.output_byte_limit,
+        process_count_limit=request.process_count_limit,
+        maximum_execution_count=request.maximum_execution_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _execution_denial(
+    reason: str,
+    request: PythonSandboxExecutionRequest | None,
+    authorization: PythonSandboxExecutionAuthorization | None,
+) -> PythonSandboxExecutionResult:
+    return PythonSandboxExecutionResult(False, reason, request, original_authorization=authorization)
+
+
+def _execution_request_matches_authorization(request: PythonSandboxExecutionRequest, authorization: PythonSandboxExecutionAuthorization) -> tuple[bool, str]:
+    expected_id = stable_id("pcm-2d-execution-authorization", request.execution_request_id, authorization.issued_sequence)
+    pairs = (
+        (authorization.execution_request_id, request.execution_request_id, "wrong_execution_request"),
+        (authorization.execution_authorization_id, expected_id, "wrong_execution_authorization"),
+        (authorization.objective_cycle_id, request.objective_cycle_id, "wrong_execution_request"),
+        (authorization.sandbox_manifest_id, request.sandbox_manifest_id, "wrong_sandbox_manifest"),
+        (authorization.patch_proposal_id, request.patch_proposal_id, "wrong_patch_proposal"),
+        (authorization.test_proposal_id, request.test_proposal_id, "wrong_test_proposal"),
+        (authorization.expected_chain_digest, request.expected_chain_digest, "integrity_mismatch"),
+        (authorization.authorized_command, request.command, "command_mismatch"),
+        (authorization.authorized_working_directory, request.working_directory, "workspace_mismatch"),
+        (authorization.timeout_seconds, request.timeout_seconds, "budget_mismatch"),
+        (authorization.output_byte_limit, request.output_byte_limit, "budget_mismatch"),
+        (authorization.process_count_limit, request.process_count_limit, "budget_mismatch"),
+        (authorization.maximum_execution_count, request.maximum_execution_count, "execution_limit_invalid"),
+    )
+    for actual, expected, reason in pairs:
+        if actual != expected:
+            return False, reason
+    return True, "valid"
+
+
+def _execution_authorization_is_available(authorization: PythonSandboxExecutionAuthorization, *, sequence: int) -> tuple[bool, str]:
+    ok, reason = _pcm2_authorization_available(authorization, sequence=sequence, authorized_attr="execution_authorized", permission_reason_prefix="execution")
+    if not ok:
+        return False, reason
+    if not authorization.network_prohibited:
+        return False, "network_permission_present"
+    if not authorization.git_operation_prohibited:
+        return False, "git_permission_present"
+    if not authorization.dependency_install_prohibited:
+        return False, "dependency_install_permission_present"
+    if not authorization.active_worktree_execution_prohibited:
+        return False, "active_worktree_execution_permission_present"
+    return True, "valid"
+
+
+def _command_is_allowlisted(command: tuple[str, ...], test_relative_path: str) -> tuple[bool, str]:
+    if len(command) != 4:
+        return False, "command_not_allowlisted"
+    exe, module_flag, module_name, target = command
+    if module_flag != "-m" or module_name != "pytest" or target != test_relative_path:
+        return False, "command_not_allowlisted"
+    if "python" not in Path(exe).name.lower():
+        return False, "command_not_allowlisted"
+    if any(part.lower() in {"git", "pip", "curl", "wget", "powershell", "cmd", "bash"} for part in command):
+        return False, "command_not_allowlisted"
+    return True, "valid"
+
+
+def execute_python_sandbox_focused_test_once(
+    manifest: PythonSandboxManifest,
+    request: PythonSandboxExecutionRequest,
+    authorization: PythonSandboxExecutionAuthorization,
+    *,
+    sequence: int,
+) -> PythonSandboxExecutionResult:
+    if request.maximum_execution_count != 1:
+        return _execution_denial("execution_limit_invalid", request, authorization)
+    if request.network_requested:
+        return _execution_denial("network_permission_present", request, authorization)
+    if request.git_operation_requested:
+        return _execution_denial("git_permission_present", request, authorization)
+    if request.dependency_install_requested:
+        return _execution_denial("dependency_install_permission_present", request, authorization)
+    if request.active_worktree_execution_requested:
+        return _execution_denial("active_worktree_execution_permission_present", request, authorization)
+    if manifest.sandbox_manifest_id != request.sandbox_manifest_id or manifest.artifact_chain_digest != request.expected_chain_digest:
+        return _execution_denial("wrong_sandbox_manifest", request, authorization)
+    match_ok, match_reason = _execution_request_matches_authorization(request, authorization)
+    if not match_ok:
+        return _execution_denial(match_reason, request, authorization)
+    auth_ok, auth_reason = _execution_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _execution_denial(auth_reason, request, authorization)
+    allow_ok, allow_reason = _command_is_allowlisted(request.command, manifest.test_relative_path)
+    if not allow_ok:
+        return _execution_denial(allow_reason, request, authorization)
+    workspace = Path(manifest.workspace_root).resolve()
+    if not workspace.exists() or not workspace.is_dir():
+        return _execution_denial("workspace_missing", request, authorization)
+    if Path(request.working_directory).resolve() != workspace:
+        return _execution_denial("workspace_mismatch", request, authorization)
+    consumed_authorization = replace(authorization, consumed=True)
+    before_manifest = _workspace_write_manifest(workspace)
+    exit_code: int | None = None
+    stdout_text = ""
+    stderr_text = ""
+    timeout_status = "completed"
+    output_truncated = False
+    try:
+        completed = subprocess.run(
+            request.command,
+            cwd=workspace,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=request.timeout_seconds,
+        )
+        exit_code = completed.returncode
+        stdout_text, stdout_truncated = _bounded_text(completed.stdout, request.output_byte_limit)
+        stderr_text, stderr_truncated = _bounded_text(completed.stderr, request.output_byte_limit)
+        output_truncated = stdout_truncated or stderr_truncated
+    except subprocess.TimeoutExpired as exc:
+        timeout_status = "timeout"
+        stdout_raw = exc.stdout if isinstance(exc.stdout, str) else (exc.stdout or b"").decode("utf-8", errors="replace")
+        stderr_raw = exc.stderr if isinstance(exc.stderr, str) else (exc.stderr or b"").decode("utf-8", errors="replace")
+        stdout_text, _stdout_truncated = _bounded_text(stdout_raw, request.output_byte_limit)
+        stderr_text, _stderr_truncated = _bounded_text(stderr_raw, request.output_byte_limit)
+        output_truncated = True
+    after_manifest = _workspace_write_manifest(workspace)
+    changed = tuple(path for path in after_manifest if path not in before_manifest or path.endswith(".pyc"))
+    evidence = PythonSandboxExecutionEvidence(
+        execution_attempt_id=stable_id("pcm-2d-execution-attempt", request.execution_request_id, authorization.execution_authorization_id, sequence),
+        execution_request_id=request.execution_request_id,
+        execution_authorization_id=authorization.execution_authorization_id,
+        sandbox_manifest_id=manifest.sandbox_manifest_id,
+        patch_proposal_id=manifest.patch_proposal_id,
+        test_proposal_id=manifest.test_proposal_id,
+        command=request.command,
+        working_directory=request.working_directory,
+        exit_code=exit_code,
+        stdout_text=stdout_text,
+        stderr_text=stderr_text,
+        stdout_digest=_sha256_bytes(stdout_text.encode("utf-8")),
+        stderr_digest=_sha256_bytes(stderr_text.encode("utf-8")),
+        output_truncated=output_truncated,
+        timeout_status=timeout_status,
+        process_count=1,
+        files_changed=changed,
+        cleanup_status="cleanup_required",
+        artifact_chain_digest=request.expected_chain_digest,
+        authorization_consumed=True,
+        execution_started=True,
+        execution_completed=timeout_status == "completed",
+    )
+    reason = "valid" if exit_code == 0 else ("timeout" if timeout_status == "timeout" else "command_failed")
+    return PythonSandboxExecutionResult(
+        True,
+        reason,
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        execution_started=True,
+        execution_completed=True,
+        authorization_consumed=True,
+        command_executed=True,
+    )
+
+
+def evaluate_python_sandbox_result(
+    manifest: PythonSandboxManifest,
+    patch_result: PythonCandidatePatchResult,
+    test_proposal_result: PythonFocusedTestProposalResult,
+    execution_result: PythonSandboxExecutionResult,
+    chain: ArtifactChainValidationResult,
+    *,
+    sequence: int,
+) -> PythonSandboxEvaluationResult:
+    if not execution_result.accepted or execution_result.evidence is None:
+        return PythonSandboxEvaluationResult(False, "execution_missing")
+    if manifest.artifact_chain_digest != chain.final_chain_digest or execution_result.evidence.artifact_chain_digest != chain.final_chain_digest:
+        return PythonSandboxEvaluationResult(False, "integrity_mismatch")
+    if not patch_result.accepted or not test_proposal_result.accepted:
+        return PythonSandboxEvaluationResult(False, "incomplete_chain")
+    source_scope_preserved = not execution_result.active_worktree_mutated and not execution_result.evidence.active_worktree_mutated
+    cleanup_verified = execution_result.evidence.cleanup_status in {"cleanup_required", "cleaned"}
+    if execution_result.evidence.timeout_status == "timeout":
+        classification = "proposal_inconclusive"
+    elif execution_result.evidence.exit_code == 0 and source_scope_preserved:
+        classification = "proposal_passed"
+    elif not source_scope_preserved:
+        classification = "proposal_regressed"
+    else:
+        classification = "proposal_failed_test"
+    evaluation = PythonSandboxEvaluation(
+        evaluation_id=stable_id("pcm-2e-sandbox-evaluation", manifest.sandbox_manifest_id, execution_result.evidence.execution_attempt_id, sequence),
+        classification=classification,
+        sandbox_manifest_id=manifest.sandbox_manifest_id,
+        execution_attempt_id=execution_result.evidence.execution_attempt_id,
+        patch_proposal_id=manifest.patch_proposal_id,
+        test_proposal_id=manifest.test_proposal_id,
+        artifact_chain_digest=chain.final_chain_digest,
+        expected_outcome="focused test exits zero after bounded patch",
+        observed_exit_code=execution_result.evidence.exit_code,
+        findings=(classification,),
+        pre_post_hashes_consistent=bool(manifest.pre_materialization_hashes and manifest.post_materialization_hashes),
+        cleanup_verified=cleanup_verified,
+        source_scope_preserved=source_scope_preserved,
+    )
+    return PythonSandboxEvaluationResult(True, "valid", evaluation)
+
+
+def cleanup_python_disposable_sandbox(manifest: PythonSandboxManifest) -> tuple[bool, str]:
+    workspace = Path(manifest.workspace_root)
+    if not workspace.name.startswith("pcm2_sandbox_"):
+        return False, "cleanup_scope_mismatch"
+    if workspace.exists():
+        shutil.rmtree(workspace)
+    return (not workspace.exists()), "cleaned" if not workspace.exists() else "cleanup_failed"
+
+
+def create_python_bounded_repair_iteration(
+    initial_evaluation: PythonSandboxEvaluation,
+    initial_patch: PythonCandidatePatchProposal,
+    revised_patch: PythonCandidatePatchProposal,
+    final_evaluation: PythonSandboxEvaluation,
+    *,
+    sequence: int,
+) -> PythonBoundedRepairIteration:
+    same_patch = serialize(initial_patch) == serialize(revised_patch)
+    if initial_evaluation.classification == "proposal_passed":
+        stop_reason = "initial_success_no_repair_needed"
+    elif same_patch:
+        stop_reason = "repeated_identical_patch"
+    elif final_evaluation.classification == "proposal_passed":
+        stop_reason = "success_after_one_repair"
+    else:
+        stop_reason = "second_failure_stop"
+    return PythonBoundedRepairIteration(
+        iteration_id=stable_id("pcm-2f-bounded-repair-iteration", initial_evaluation.evaluation_id, final_evaluation.evaluation_id, sequence),
+        initial_evaluation_id=initial_evaluation.evaluation_id,
+        final_evaluation_id=final_evaluation.evaluation_id,
+        attempts_used=1 if initial_evaluation.classification == "proposal_passed" else 2,
+        revised_patch_proposal_id="" if same_patch else revised_patch.patch_proposal_id,
+        stop_reason=stop_reason,
+        final_classification=final_evaluation.classification,
+        artifact_chain_digest=final_evaluation.artifact_chain_digest,
+    )
+
+
+def create_python_operator_review_package(
+    *,
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    diagnosis_result: PythonBoundedDiagnosisResult,
+    initial_patch: PythonCandidatePatchProposal,
+    initial_evaluation: PythonSandboxEvaluation,
+    final_evaluation: PythonSandboxEvaluation,
+    chain: ArtifactChainValidationResult,
+    cleanup_confirmed: bool,
+    repair_iteration: PythonBoundedRepairIteration | None = None,
+    sequence: int,
+) -> PythonOperatorReviewPackage:
+    if final_evaluation.classification == "proposal_passed" and cleanup_confirmed:
+        recommendation = "eligible_for_operator_application_review"
+    elif final_evaluation.classification == "proposal_failed_test":
+        recommendation = "not_eligible_test_failure"
+    elif final_evaluation.classification == "proposal_regressed":
+        recommendation = "not_eligible_regression"
+    elif not cleanup_confirmed:
+        recommendation = "not_eligible_integrity_failure"
+    else:
+        recommendation = "not_eligible_inconclusive"
+    source_hashes = dict(inspection_result.evidence.per_file_digests) if inspection_result.evidence else {}
+    return PythonOperatorReviewPackage(
+        review_package_id=stable_id("pcm-2g-operator-review-package", final_evaluation.evaluation_id, recommendation, sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        artifact_chain_digest=chain.final_chain_digest,
+        original_inspection_evidence_id=python_source_inspection_evidence_id(inspection_result.evidence) if inspection_result.evidence else "",
+        original_diagnosis_evidence_id=python_bounded_diagnosis_evidence_id(diagnosis_result.evidence) if diagnosis_result.evidence else "",
+        initial_patch_proposal_id=initial_patch.patch_proposal_id,
+        initial_evaluation_id=initial_evaluation.evaluation_id,
+        final_evaluation_id=final_evaluation.evaluation_id,
+        source_paths=(initial_patch.source_path,),
+        source_hashes=source_hashes,
+        scope_summary="one target file, one bounded text operation, external disposable sandbox only",
+        resource_usage={"attempts": repair_iteration.attempts_used if repair_iteration else 1, "target_files": 1, "patches": 2 if repair_iteration and repair_iteration.revised_patch_proposal_id else 1},
+        remaining_uncertainty="operator must review before any tracked-source application",
+        cleanup_confirmed=cleanup_confirmed,
+        recommendation=recommendation,
+        revised_patch_proposal_id=repair_iteration.revised_patch_proposal_id if repair_iteration else "",
+        repair_iteration_id=repair_iteration.iteration_id if repair_iteration else "",
+    )
+
+
+def make_python_coding_module_v2_closure_authorization(
+    review_package: PythonOperatorReviewPackage,
+    *,
+    disposition: str = "accepted_for_pcm_2_closure",
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonCodingModuleV2ClosureAuthorization:
+    return PythonCodingModuleV2ClosureAuthorization(
+        closure_authorization_id=stable_id("pcm-2-closure-authorization", review_package.review_package_id, issued_sequence),
+        review_package_id=review_package.review_package_id,
+        expected_final_chain_digest=review_package.artifact_chain_digest,
+        authorized_disposition=disposition,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def evaluate_python_coding_module_v2_closure(
+    review_package: PythonOperatorReviewPackage,
+    authorization: PythonCodingModuleV2ClosureAuthorization,
+    *,
+    sequence: int,
+) -> PythonCodingModuleV2ClosureResult:
+    if authorization.review_package_id != review_package.review_package_id:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_incomplete_chain", review_package, authorization)
+    expected_id = stable_id("pcm-2-closure-authorization", review_package.review_package_id, authorization.issued_sequence)
+    if authorization.closure_authorization_id != expected_id or authorization.consumed:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_authorization_replay", review_package, authorization)
+    if authorization.expected_final_chain_digest != review_package.artifact_chain_digest:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_integrity_mismatch", review_package, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.one_shot:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_authorization_replay", review_package, authorization)
+    if sequence > authorization.expiration_sequence or not authorization.closure_authorized:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_authorization_replay", review_package, authorization)
+    if not authorization.application_authorization_prohibited or not authorization.tracked_source_application_prohibited:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_capability_escalation", review_package, authorization)
+    if not authorization.git_operation_prohibited or not authorization.provider_model_use_prohibited:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_capability_escalation", review_package, authorization)
+    if review_package.recommendation not in PCM_2_REVIEW_RECOMMENDATIONS:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_incomplete_chain", review_package, authorization)
+    if not review_package.cleanup_confirmed:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_cleanup_failure", review_package, authorization)
+    if review_package.application_authorization_created or review_package.tracked_source_mutated:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_capability_escalation", review_package, authorization)
+    disposition = authorization.authorized_disposition
+    if disposition not in PCM_2_CLOSURE_DISPOSITIONS:
+        return PythonCodingModuleV2ClosureResult(False, "rejected_incomplete_chain", review_package, authorization)
+    return PythonCodingModuleV2ClosureResult(
+        True,
+        disposition,
+        review_package,
+        authorization,
+        replace(authorization, consumed=True),
+        closure_disposition=disposition,
+        authorization_consumed=True,
     )
 
 
