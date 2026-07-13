@@ -2364,3 +2364,270 @@ def test_e4b_worktree_boundary_and_authorization_failures_do_not_consume(tmp_pat
     denied = gsr.evaluate_application_preflight(denied_eligibility, plan, root=tmp_path, worktree=gsr.ApplicationWorktreeStatus(), sequence=141)
     assert denied.accepted is False
     assert denied.reason == "eligibility_not_accepted"
+
+
+def _e5a_package(
+    tmp_path: Path,
+    *,
+    target_name: str = "safe_target.txt",
+    before: str = "before\n",
+    after: str = "after\n",
+    required_validation_commands: tuple[str, ...] = (),
+) -> tuple[gsr.ApplicationPreflightResult, gsr.ApplicationPlan, Path, gsr.ApplicationWorktreeStatus, str]:
+    eligibility, plan, target, worktree = _e4b_package(tmp_path, target_name=target_name, content=before)
+    post_hash = _sha256_text(after)
+    plan_operation = replace(plan.ordered_target_operations[0], expected_post_application_hash=post_hash)
+    plan = replace(
+        plan,
+        ordered_target_operations=(plan_operation,),
+        expected_post_application_hashes={target_name: post_hash},
+        required_validation_commands=required_validation_commands,
+    )
+    preflight = gsr.evaluate_application_preflight(eligibility, plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert preflight.accepted is True
+    return preflight, plan, target, worktree, after
+
+
+def test_e5a_exact_preflight_performs_one_bounded_application_attempt(tmp_path):
+    preflight, plan, target, worktree, reviewed_after = _e5a_package(tmp_path)
+    unrelated = tmp_path / "unrelated.txt"
+    unrelated.write_text("untouched\n", encoding="utf-8")
+    unrelated_before = hashlib.sha256(unrelated.read_bytes()).hexdigest()
+    authorization_before = asdict(preflight.authorization)
+    target_before_hash = hashlib.sha256(target.read_bytes()).hexdigest()
+
+    result = gsr.execute_governed_application_attempt(
+        preflight,
+        plan,
+        root=tmp_path,
+        reviewed_text_by_target={plan.target_file_set[0]: reviewed_after},
+        worktree=worktree,
+        sequence=142,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "application_attempt_succeeded"
+    assert result.application_started is True
+    assert result.application_performed is True
+    assert result.authorization_consumed is True
+    assert result.consumed_authorization.consumed is True
+    assert result.consumed_authorization.application_started is True
+    assert asdict(preflight.authorization) == authorization_before
+    assert result.application_attempt.application_started is True
+    assert result.application_attempt.application_completed is True
+    assert result.application_attempt.authorization_consumed is True
+    assert result.application_attempt.second_attempt_created is False
+    assert result.evidence.write_count == 1
+    assert result.evidence.bytes_written == len(reviewed_after.encode("utf-8"))
+    assert result.evidence.operations_attempted == ("replace_exact_file",)
+    assert result.evidence.operations_completed == ("replace_exact_file",)
+    assert result.evidence.files_written == (plan.target_file_set[0],)
+    assert result.evidence.files_replaced == (plan.target_file_set[0],)
+    assert result.evidence.pre_application_hashes[plan.target_file_set[0]] == target_before_hash
+    assert result.evidence.post_application_hashes[plan.target_file_set[0]] == plan.expected_post_application_hashes[plan.target_file_set[0]]
+    assert result.evidence.postcondition_matches is True
+    assert result.evidence.rollback_metadata_verified is True
+    assert result.evidence.cleanup_verified is True
+    assert result.evidence.temporary_paths_remaining == ()
+    assert hashlib.sha256(unrelated.read_bytes()).hexdigest() == unrelated_before
+    assert result.evidence.unrelated_files_unchanged is True
+    assert result.evidence.staged_files_before == result.evidence.staged_files_after
+    assert result.git_staged is False
+    assert result.git_committed is False
+    assert result.git_pushed is False
+    assert result.module_activated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+    assert result.automatic_retry is False
+    assert result.second_attempt_created is False
+    assert result.rollback_performed is False
+
+
+def test_e5a_consumed_authorization_reuse_and_prestart_denials_do_not_write(tmp_path):
+    preflight, plan, target, worktree, reviewed_after = _e5a_package(tmp_path)
+    first = gsr.execute_governed_application_attempt(
+        preflight,
+        plan,
+        root=tmp_path,
+        reviewed_text_by_target={plan.target_file_set[0]: reviewed_after},
+        worktree=worktree,
+        sequence=142,
+    )
+    assert first.accepted is True
+    consumed_preflight = replace(
+        preflight,
+        eligibility_result=replace(preflight.eligibility_result, authorization=first.consumed_authorization),
+        authorization=first.consumed_authorization,
+    )
+    second = gsr.execute_governed_application_attempt(
+        consumed_preflight,
+        plan,
+        root=tmp_path,
+        reviewed_text_by_target={plan.target_file_set[0]: reviewed_after},
+        worktree=worktree,
+        sequence=143,
+    )
+    assert second.accepted is False
+    assert second.reason == "consumed"
+    assert second.application_attempt is None
+    assert second.authorization_consumed is False
+
+    fresh_preflight, fresh_plan, fresh_target, fresh_worktree, fresh_after = _e5a_package(tmp_path, target_name="stale.txt")
+    fresh_before = fresh_target.read_bytes()
+    fresh_target.write_text("stale\n", encoding="utf-8")
+    stale = gsr.execute_governed_application_attempt(
+        fresh_preflight,
+        fresh_plan,
+        root=tmp_path,
+        reviewed_text_by_target={fresh_plan.target_file_set[0]: fresh_after},
+        worktree=fresh_worktree,
+        sequence=142,
+    )
+    assert stale.accepted is False
+    assert stale.reason == "stale_precondition"
+    assert stale.application_attempt is None
+    assert stale.authorization_consumed is False
+    assert fresh_target.read_text(encoding="utf-8") == "stale\n"
+    assert fresh_before != fresh_target.read_bytes()
+
+
+def test_e5a_identity_scope_rollback_and_worktree_fail_before_write(tmp_path):
+    preflight, plan, target, worktree, reviewed_after = _e5a_package(tmp_path)
+    before = target.read_bytes()
+    cases = (
+        (replace(plan, application_plan_id="wrong-plan"), "wrong_application_plan", worktree),
+        (replace(plan, application_request_id="wrong-request"), "wrong_application_request", worktree),
+        (replace(plan, application_authorization_id="wrong-authorization"), "wrong_application_authorization", worktree),
+        (replace(plan, artifact_id="wrong-artifact"), "wrong_artifact", worktree),
+        (replace(plan, artifact_digest="wrong-digest"), "wrong_artifact_digest", worktree),
+        (replace(plan, target_file_set=("other.txt",)), "target_file_mismatch", worktree),
+        (replace(plan, ordered_target_operations=(replace(plan.ordered_target_operations[0], operation="add_exact_reviewed_file"),)), "operation_mismatch", worktree),
+        (replace(plan, rollback_metadata=()), "rollback_metadata_missing", worktree),
+        (plan, "staged_target", gsr.ApplicationWorktreeStatus(staged_paths=(plan.target_file_set[0],))),
+        (plan, "conflicted_target", gsr.ApplicationWorktreeStatus(conflicted_paths=(plan.target_file_set[0],))),
+        (plan, "unexpected_dirty_target", gsr.ApplicationWorktreeStatus(modified_paths=(plan.target_file_set[0],))),
+    )
+    for bad_plan, reason, bad_worktree in cases:
+        result = gsr.execute_governed_application_attempt(
+            preflight,
+            bad_plan,
+            root=tmp_path,
+            reviewed_text_by_target={plan.target_file_set[0]: reviewed_after},
+            worktree=bad_worktree,
+            sequence=142,
+        )
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.application_attempt is None
+        assert result.authorization_consumed is False
+        assert target.read_bytes() == before
+
+
+def test_e5a_unsafe_paths_symlink_and_scope_content_fail_before_write(tmp_path):
+    preflight, plan, target, worktree, reviewed_after = _e5a_package(tmp_path)
+    before = target.read_bytes()
+    scope_mismatch = gsr.execute_governed_application_attempt(
+        preflight,
+        plan,
+        root=tmp_path,
+        reviewed_text_by_target={"other.txt": reviewed_after},
+        worktree=worktree,
+        sequence=142,
+    )
+    assert scope_mismatch.reason == "reviewed_content_scope_mismatch"
+    assert scope_mismatch.authorization_consumed is False
+    assert target.read_bytes() == before
+
+    unsafe_plan = replace(
+        plan,
+        target_file_set=("../escape.txt",),
+        ordered_target_operations=(replace(plan.ordered_target_operations[0], target_path="../escape.txt"),),
+        expected_current_hashes={"../escape.txt": "a" * 64},
+    )
+    unsafe = gsr.execute_governed_application_attempt(
+        preflight,
+        unsafe_plan,
+        root=tmp_path,
+        reviewed_text_by_target={"../escape.txt": reviewed_after},
+        worktree=worktree,
+        sequence=142,
+    )
+    assert unsafe.accepted is False
+    assert unsafe.reason in {"target_file_mismatch", "unsafe_target", "forbidden_scope"}
+    assert unsafe.authorization_consumed is False
+    assert target.read_bytes() == before
+
+    symlink_path = tmp_path / "link_e5a.txt"
+    if hasattr(symlink_path, "symlink_to"):
+        symlink_preflight, symlink_plan, symlink_target, symlink_worktree, symlink_after = _e5a_package(tmp_path, target_name="link_e5a.txt")
+        symlink_target.unlink()
+        try:
+            symlink_path.symlink_to(target)
+        except OSError:
+            pass
+        else:
+            symlink = gsr.execute_governed_application_attempt(
+                symlink_preflight,
+                symlink_plan,
+                root=tmp_path,
+                reviewed_text_by_target={symlink_plan.target_file_set[0]: symlink_after},
+                worktree=symlink_worktree,
+                sequence=142,
+            )
+            assert symlink.accepted is False
+            assert symlink.reason == "unsafe_target"
+            assert symlink.authorization_consumed is False
+
+
+def test_e5a_post_start_validation_failure_requires_rollback_without_retry(tmp_path, monkeypatch):
+    preflight, plan, target, worktree, reviewed_after = _e5a_package(
+        tmp_path,
+        target_name="validation.txt",
+        required_validation_commands=("fixture_assertion",),
+    )
+    result = gsr.execute_governed_application_attempt(
+        preflight,
+        plan,
+        root=tmp_path,
+        reviewed_text_by_target={plan.target_file_set[0]: reviewed_after},
+        worktree=worktree,
+        sequence=142,
+        validation_results={"fixture_assertion": False},
+    )
+    assert result.accepted is False
+    assert result.reason == "validation_failed"
+    assert result.authorization_consumed is True
+    assert result.consumed_authorization.consumed is True
+    assert result.application_started is True
+    assert result.application_performed is True
+    assert result.rollback_required is True
+    assert result.rollback_performed is False
+    assert result.automatic_retry is False
+    assert result.second_attempt_created is False
+    assert result.next_request_created is False
+    assert target.read_text(encoding="utf-8") == reviewed_after
+
+    clean_preflight, clean_plan, _clean_target, clean_worktree, clean_after = _e5a_package(tmp_path, target_name="mutation.txt")
+    statuses = iter(((" M reports/RC4_FREEZE_READINESS_FINAL.md",), (" M reports/RC4_FREEZE_READINESS_FINAL.md", " M unrelated.py")))
+    monkeypatch.setattr(gsr, "_git_status_short", lambda: next(statuses))
+    unrelated = gsr.execute_governed_application_attempt(
+        clean_preflight,
+        clean_plan,
+        root=tmp_path,
+        reviewed_text_by_target={clean_plan.target_file_set[0]: clean_after},
+        worktree=clean_worktree,
+        sequence=142,
+    )
+    assert unrelated.accepted is False
+    assert unrelated.reason == "unrelated_mutation_detected"
+    assert unrelated.authorization_consumed is True
+    assert unrelated.rollback_required is True
+    assert unrelated.rollback_performed is False

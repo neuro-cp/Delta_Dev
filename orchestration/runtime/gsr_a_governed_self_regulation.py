@@ -1661,6 +1661,114 @@ class ApplicationPreflightResult:
 
 
 @dataclass(frozen=True)
+class GovernedApplicationAttempt:
+    application_attempt_id: str
+    application_plan_id: str
+    application_request_id: str
+    application_authorization_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    evaluation_id: str
+    disposition_record_id: str
+    application_artifact_id: str
+    application_artifact_digest: str
+    exact_target_file_set: tuple[str, ...]
+    exact_operation_set: tuple[str, ...]
+    expected_pre_application_hashes: dict[str, str]
+    expected_post_application_hashes: dict[str, str]
+    application_sequence: int
+    application_started: bool = False
+    application_completed: bool = False
+    authorization_consumed: bool = False
+    validation_required: bool = True
+    rollback_available: bool = False
+    operator_review_required: bool = True
+    second_attempt_created: bool = False
+    automatic_retry: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationEvidence:
+    application_attempt_id: str
+    target_paths: tuple[str, ...]
+    pre_application_hashes: dict[str, str]
+    post_application_hashes: dict[str, str]
+    target_existence_before: dict[str, bool]
+    target_existence_after: dict[str, bool]
+    operations_attempted: tuple[str, ...]
+    operations_completed: tuple[str, ...]
+    files_written: tuple[str, ...] = ()
+    files_added: tuple[str, ...] = ()
+    files_replaced: tuple[str, ...] = ()
+    files_deleted: tuple[str, ...] = ()
+    write_count: int = 0
+    bytes_written: int = 0
+    postcondition_matches: bool = False
+    target_scope_unchanged: bool = False
+    unrelated_files_unchanged: bool = True
+    git_status_before: tuple[str, ...] = ()
+    git_status_after: tuple[str, ...] = ()
+    staged_files_before: tuple[str, ...] = ()
+    staged_files_after: tuple[str, ...] = ()
+    untracked_files_before: tuple[str, ...] = ()
+    untracked_files_after: tuple[str, ...] = ()
+    validation_results: tuple[dict[str, Any], ...] = ()
+    rollback_metadata_verified: bool = False
+    application_succeeded: bool = False
+    rollback_required: bool = False
+    cleanup_verified: bool = False
+    temporary_paths_remaining: tuple[str, ...] = ()
+    operator_review_required: bool = True
+
+
+@dataclass(frozen=True)
+class GovernedApplicationResult:
+    accepted: bool
+    reason: str
+    preflight: ApplicationPreflightResult
+    application_plan: ApplicationPlan
+    original_authorization: ApplicationAuthorization
+    consumed_authorization: ApplicationAuthorization | None = None
+    application_attempt: GovernedApplicationAttempt | None = None
+    evidence: ApplicationEvidence | None = None
+    application_started: bool = False
+    application_performed: bool = False
+    authorization_consumed: bool = False
+    application_succeeded: bool = False
+    validation_succeeded: bool = False
+    rollback_required: bool = False
+    rollback_performed: bool = False
+    second_attempt_created: bool = False
+    automatic_retry: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    git_staged: bool = False
+    git_committed: bool = False
+    git_pushed: bool = False
+    git_merged: bool = False
+    deployed: bool = False
+    published: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    source_mutated: bool = False
+    patch_created: bool = False
+    patch_applied: bool = False
+    files_written: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class ObjectiveCycleStateBundle:
     cycle: GovernedObjectiveCycle
     observation_ledger_state: dict[str, Any] | None = None
@@ -5110,6 +5218,235 @@ def evaluate_application_preflight(
         target_scope_valid=True,
         live_source_read_only=inspection.live_source_read_only,
         ready_for_future_application=True,
+    )
+
+
+def _git_status_paths(status: tuple[str, ...], *, staged: bool = False, untracked: bool = False) -> tuple[str, ...]:
+    paths: list[str] = []
+    for entry in status:
+        if len(entry) < 4:
+            continue
+        code = entry[:2]
+        path = entry[3:]
+        if untracked and code == "??":
+            paths.append(path)
+        elif staged and code != "??" and code[0] not in {" ", "?"}:
+            paths.append(path)
+    return tuple(paths)
+
+
+def _application_denied_result(
+    reason: str,
+    preflight: ApplicationPreflightResult,
+    plan: ApplicationPlan,
+) -> GovernedApplicationResult:
+    return GovernedApplicationResult(
+        False,
+        reason,
+        preflight,
+        plan,
+        preflight.authorization,
+    )
+
+
+def _target_path_for_application(root: Path, target_path: str) -> Path | None:
+    normalized = _normalized_application_path(target_path)
+    if normalized is None:
+        return None
+    root = root.resolve()
+    resolved = (root / normalized).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        return None
+    return resolved
+
+
+def execute_governed_application_attempt(
+    preflight: ApplicationPreflightResult,
+    application_plan: ApplicationPlan,
+    *,
+    root: Path,
+    reviewed_text_by_target: Mapping[str, str],
+    worktree: ApplicationWorktreeStatus | None = None,
+    sequence: int,
+    validation_results: Mapping[str, bool] | None = None,
+) -> GovernedApplicationResult:
+    if application_plan.application_plan_id != preflight.application_plan.application_plan_id:
+        return _application_denied_result("wrong_application_plan", preflight, application_plan)
+    revalidated = evaluate_application_preflight(
+        preflight.eligibility_result,
+        application_plan,
+        root=root,
+        worktree=worktree,
+        sequence=sequence,
+    )
+    if not revalidated.accepted:
+        return _application_denied_result(revalidated.reason, revalidated, application_plan)
+    if not preflight.accepted or not preflight.ready_for_future_application:
+        return _application_denied_result("preflight_not_accepted", revalidated, application_plan)
+    if preflight.current_target_hashes != revalidated.current_target_hashes:
+        return _application_denied_result("preflight_changed", revalidated, application_plan)
+    if len(application_plan.ordered_target_operations) != 1:
+        return _application_denied_result("multiple_operations_not_supported", revalidated, application_plan)
+    operation = application_plan.ordered_target_operations[0]
+    if operation.operation not in APPLICATION_REPLACE_OPERATIONS:
+        return _application_denied_result("unsupported_application_operation", revalidated, application_plan)
+    if tuple(reviewed_text_by_target) != application_plan.target_file_set:
+        return _application_denied_result("reviewed_content_scope_mismatch", revalidated, application_plan)
+    target_path = _target_path_for_application(root, operation.target_path)
+    if target_path is None:
+        return _application_denied_result("unsafe_target", revalidated, application_plan)
+    if not operation.rollback_expected_hash:
+        return _application_denied_result("rollback_not_exact", revalidated, application_plan)
+
+    git_status_before = _git_status_short()
+    staged_before = _git_status_paths(git_status_before, staged=True)
+    untracked_before = _git_status_paths(git_status_before, untracked=True)
+    attempt_id = stable_id("gsr-e5a-application-attempt", application_plan.application_plan_id, preflight.authorization.application_authorization_id, sequence)
+    consumed_authorization = replace(
+        preflight.authorization,
+        consumed=True,
+        application_started=True,
+        source_mutated=True,
+    )
+    attempt = GovernedApplicationAttempt(
+        application_attempt_id=attempt_id,
+        application_plan_id=application_plan.application_plan_id,
+        application_request_id=application_plan.application_request_id,
+        application_authorization_id=application_plan.application_authorization_id,
+        cycle_id=application_plan.cycle_id,
+        plan_id=application_plan.plan_id,
+        attempt_id=application_plan.attempt_id,
+        evaluation_id=application_plan.evaluation_id,
+        disposition_record_id=application_plan.disposition_record_id,
+        application_artifact_id=application_plan.artifact_id,
+        application_artifact_digest=application_plan.artifact_digest,
+        exact_target_file_set=application_plan.target_file_set,
+        exact_operation_set=tuple(item.operation for item in application_plan.ordered_target_operations),
+        expected_pre_application_hashes=dict(application_plan.expected_current_hashes),
+        expected_post_application_hashes=dict(application_plan.expected_post_application_hashes),
+        application_sequence=sequence,
+        application_started=True,
+        authorization_consumed=True,
+        rollback_available=True,
+    )
+
+    tmp_path = target_path.with_name(f".{target_path.name}.{attempt_id}.tmp")
+    expected_post_hash = application_plan.expected_post_application_hashes.get(operation.target_path)
+    content_bytes = reviewed_text_by_target[operation.target_path].encode("utf-8")
+    validation_map = dict(validation_results or {})
+    cleanup_verified = False
+    temp_remaining: tuple[str, ...] = ()
+    post_hashes: dict[str, str] = {}
+    existence_after: dict[str, bool] = {}
+    operations_completed: tuple[str, ...] = ()
+    write_count = 0
+    bytes_written = 0
+    reason = "application_write_failed"
+    rollback_required = True
+
+    try:
+        target_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_path.write_bytes(content_bytes)
+        tmp_path.replace(target_path)
+        write_count = 1
+        bytes_written = len(content_bytes)
+        operations_completed = (operation.operation,)
+        after_inspection = inspect_application_targets_read_only(root, application_plan.target_file_set)
+        post_hashes = after_inspection.current_target_hashes
+        existence_after = after_inspection.target_existence_map
+        postcondition_matches = bool(expected_post_hash and post_hashes.get(operation.target_path) == expected_post_hash)
+        validation_payload = tuple(
+            {"command": command, "passed": bool(validation_map.get(command, False))}
+            for command in application_plan.required_validation_commands
+        )
+        validation_succeeded = postcondition_matches and all(item["passed"] for item in validation_payload)
+        rollback_required = not validation_succeeded
+        reason = "application_attempt_succeeded" if validation_succeeded else "validation_failed"
+    except OSError as exc:
+        after_inspection = inspect_application_targets_read_only(root, application_plan.target_file_set)
+        post_hashes = after_inspection.current_target_hashes
+        existence_after = after_inspection.target_existence_map
+        postcondition_matches = False
+        validation_payload = ()
+        validation_succeeded = False
+        rollback_required = True
+        reason = f"application_write_failed:{type(exc).__name__}"
+    finally:
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except OSError:
+                pass
+        cleanup_verified = not tmp_path.exists()
+        temp_remaining = (tmp_path.as_posix(),) if tmp_path.exists() else ()
+
+    git_status_after = _git_status_short()
+    staged_after = _git_status_paths(git_status_after, staged=True)
+    untracked_after = _git_status_paths(git_status_after, untracked=True)
+    unrelated_files_unchanged = tuple(path for path in git_status_after if path not in git_status_before) == ()
+    evidence = ApplicationEvidence(
+        application_attempt_id=attempt_id,
+        target_paths=application_plan.target_file_set,
+        pre_application_hashes=dict(revalidated.current_target_hashes),
+        post_application_hashes=post_hashes,
+        target_existence_before=dict(revalidated.target_existence_map),
+        target_existence_after=existence_after,
+        operations_attempted=(operation.operation,),
+        operations_completed=operations_completed,
+        files_written=(operation.target_path,) if write_count else (),
+        files_replaced=(operation.target_path,) if write_count else (),
+        write_count=write_count,
+        bytes_written=bytes_written,
+        postcondition_matches=postcondition_matches,
+        target_scope_unchanged=set(application_plan.target_file_set) == set(post_hashes) if post_hashes else False,
+        unrelated_files_unchanged=unrelated_files_unchanged,
+        git_status_before=git_status_before,
+        git_status_after=git_status_after,
+        staged_files_before=staged_before,
+        staged_files_after=staged_after,
+        untracked_files_before=untracked_before,
+        untracked_files_after=untracked_after,
+        validation_results=validation_payload,
+        rollback_metadata_verified=True,
+        application_succeeded=validation_succeeded,
+        rollback_required=rollback_required,
+        cleanup_verified=cleanup_verified,
+        temporary_paths_remaining=temp_remaining,
+    )
+    completed_attempt = replace(
+        attempt,
+        application_completed=bool(write_count),
+    )
+    accepted = bool(validation_succeeded and cleanup_verified and unrelated_files_unchanged and not staged_after)
+    final_reason = reason
+    if not cleanup_verified:
+        accepted = False
+        final_reason = "cleanup_failed"
+    elif not unrelated_files_unchanged:
+        accepted = False
+        final_reason = "unrelated_mutation_detected"
+    elif staged_after:
+        accepted = False
+        final_reason = "staged_file_detected"
+    return GovernedApplicationResult(
+        accepted,
+        final_reason,
+        revalidated,
+        application_plan,
+        preflight.authorization,
+        consumed_authorization,
+        completed_attempt,
+        evidence,
+        application_started=True,
+        application_performed=bool(write_count),
+        authorization_consumed=True,
+        application_succeeded=accepted,
+        validation_succeeded=validation_succeeded,
+        rollback_required=rollback_required or not accepted,
+        source_mutated=bool(write_count),
+        files_written=bool(write_count),
     )
 
 
