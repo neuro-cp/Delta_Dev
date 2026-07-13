@@ -321,3 +321,68 @@ def test_oar_1g_1h_restart_recovery_and_live_activation_are_explicit():
     ok, reason, _ = gsr.activate_oar_live_runtime(rollback, capability_ids=("language_claim_analysis",))
     assert ok is False
     assert reason == "rollback_required"
+
+
+def test_oar_live_development_bridge_registers_approved_mission_without_starting_runtime():
+    compiled, approval = _compiled_mission()
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-bridge")
+
+    registered = gsr.register_approved_mission_for_development(state, compiled.compiled_objective, approval, sequence=50)
+
+    assert registered.accepted is True
+    assert registered.mission_registered is True
+    assert registered.development_runtime_started is False
+    assert registered.proposal_created is False
+    assert registered.source_application_performed is False
+    assert registered.capability_activated is False
+    assert registered.automatic_continuation is False
+    assert registered.state.development_runtime_mode == "stopped"
+    assert registered.state.active_mission_id == compiled.compiled_objective.compiled_objective_id
+    assert registered.state.approved_mission_ids == (compiled.compiled_objective.compiled_objective_id,)
+
+    duplicate = gsr.register_approved_mission_for_development(registered.state, compiled.compiled_objective, approval, sequence=51)
+    assert duplicate.accepted is False
+    assert duplicate.reason == "duplicate_mission_approval"
+
+    declined = replace(approval, operator_disposition="declined", starts_exactly_one_mission=False)
+    denied = gsr.register_approved_mission_for_development(state, compiled.compiled_objective, declined, sequence=50)
+    assert denied.accepted is False
+    assert denied.reason == "mission_not_approved"
+
+
+def test_oar_live_development_bridge_runs_one_cycle_and_queues_one_proposal_then_pauses():
+    compiled, approval = _compiled_mission()
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-bridge")
+    registered = gsr.register_approved_mission_for_development(state, compiled.compiled_objective, approval, sequence=50)
+
+    cycle = gsr.run_one_oar_development_runtime_cycle(registered.state, compiled.compiled_objective, sequence=60)
+
+    assert cycle.accepted is True
+    assert cycle.development_runtime_started is True
+    assert cycle.development_runtime_paused is True
+    assert cycle.proposal_created is True
+    assert cycle.proposal_queued is True
+    assert cycle.second_cycle_started is False
+    assert cycle.source_application_performed is False
+    assert cycle.capability_promoted is False
+    assert cycle.capability_activated is False
+    assert cycle.provider_called is False
+    assert cycle.model_invoked is False
+    assert cycle.automatic_continuation is False
+    assert cycle.state.development_runtime_mode == "paused"
+    assert cycle.review_item is not None
+    assert cycle.review_item.review_item_id in cycle.state.pending_review_ids
+    assert cycle.review_item.parent_mission_id == compiled.compiled_objective.compiled_objective_id
+    assert cycle.review_item.current_blocker == cycle.selected_capability_id
+    assert cycle.review_item.sandbox_results["classification"] == "not_yet_executed"
+    assert cycle.review_item.rollback_status == "not_required_no_source_application"
+
+    second = gsr.run_one_oar_development_runtime_cycle(cycle.state, compiled.compiled_objective, sequence=60)
+    assert second.accepted is False
+    assert second.reason == "development_cycle_already_completed"
+
+    recovered = gsr.recover_oar_runtime_after_restart(cycle.state, integrity_valid=True)
+    assert recovered.development_runtime_mode == "stopped"
+    duplicate_after_restart = gsr.run_one_oar_development_runtime_cycle(recovered, compiled.compiled_objective, sequence=61)
+    assert duplicate_after_restart.accepted is False
+    assert duplicate_after_restart.reason == "development_cycle_already_completed"

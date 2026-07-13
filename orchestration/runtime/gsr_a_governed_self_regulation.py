@@ -14484,6 +14484,9 @@ class OARRuntimeState:
     runtime_state_id: str
     development_runtime_mode: str = "stopped"
     live_runtime_mode: str = "stopped"
+    approved_mission_ids: tuple[str, ...] = ()
+    active_mission_id: str = ""
+    completed_cycle_ids: tuple[str, ...] = ()
     pending_review_ids: tuple[str, ...] = ()
     declined_review_ids: tuple[str, ...] = ()
     accepted_review_ids: tuple[str, ...] = ()
@@ -14494,6 +14497,45 @@ class OARRuntimeState:
     clean_shutdown: bool = True
     integrity_failure: bool = False
     automatic_resume_performed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OARDevelopmentMissionRegistrationResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    compiled_objective: CompiledMissionObjective | None = None
+    approval: MissionApprovalDisposition | None = None
+    mission_registered: bool = False
+    development_runtime_started: bool = False
+    proposal_created: bool = False
+    source_application_performed: bool = False
+    capability_activated: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class OARDevelopmentRuntimeCycleResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    review_item: OperatorReviewItem | None = None
+    checkpoint_id: str = ""
+    blocker_id: str = ""
+    selected_capability_id: str = ""
+    development_runtime_started: bool = False
+    development_runtime_paused: bool = False
+    proposal_created: bool = False
+    proposal_queued: bool = False
+    second_cycle_started: bool = False
+    source_application_performed: bool = False
+    capability_promoted: bool = False
+    capability_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
@@ -14627,6 +14669,149 @@ def approve_compiled_mission(
         operator_identity=operator_identity,
         issued_sequence=sequence,
         starts_exactly_one_mission=True,
+    )
+
+
+def register_approved_mission_for_development(
+    state: OARRuntimeState,
+    compiled: CompiledMissionObjective,
+    approval: MissionApprovalDisposition,
+    *,
+    sequence: int,
+) -> OARDevelopmentMissionRegistrationResult:
+    if approval.compiled_objective_id != compiled.compiled_objective_id:
+        return OARDevelopmentMissionRegistrationResult(False, "wrong_mission_approval", state, compiled, approval)
+    if approval.operator_disposition != "approved" or not approval.operator_issued or not approval.starts_exactly_one_mission:
+        return OARDevelopmentMissionRegistrationResult(False, "mission_not_approved", state, compiled, approval)
+    if approval.consumed:
+        return OARDevelopmentMissionRegistrationResult(False, "mission_approval_unavailable", state, compiled, approval)
+    if state.active_mission_id and state.active_mission_id != compiled.compiled_objective_id:
+        return OARDevelopmentMissionRegistrationResult(False, "active_mission_conflict", state, compiled, approval)
+    if compiled.compiled_objective_id in state.approved_mission_ids:
+        return OARDevelopmentMissionRegistrationResult(False, "duplicate_mission_approval", state, compiled, approval)
+    updated = replace(
+        state,
+        approved_mission_ids=state.approved_mission_ids + (compiled.compiled_objective_id,),
+        active_mission_id=compiled.compiled_objective_id,
+        development_runtime_mode="stopped",
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return OARDevelopmentMissionRegistrationResult(True, "mission_registered_runtime_stopped", updated, compiled, approval, mission_registered=True)
+
+
+def run_one_oar_development_runtime_cycle(
+    state: OARRuntimeState,
+    compiled: CompiledMissionObjective,
+    *,
+    sequence: int,
+) -> OARDevelopmentRuntimeCycleResult:
+    if compiled.compiled_objective_id not in state.approved_mission_ids or state.active_mission_id != compiled.compiled_objective_id:
+        return OARDevelopmentRuntimeCycleResult(False, "approved_mission_required", state)
+    if state.completed_cycle_ids:
+        return OARDevelopmentRuntimeCycleResult(False, "development_cycle_already_completed", state)
+    if state.development_runtime_mode != "stopped":
+        return OARDevelopmentRuntimeCycleResult(False, "development_runtime_not_stopped", state)
+    cycle_id = stable_id("oar-live-development-cycle", compiled.compiled_objective_id, sequence)
+    if cycle_id in state.completed_cycle_ids:
+        return OARDevelopmentRuntimeCycleResult(False, "duplicate_development_cycle", state)
+
+    cde_request = make_capability_development_mission_request(
+        original_operator_wording=compiled.original_operator_mission,
+        intended_outcome="produce one bounded reviewable proposal for the approved scholarly-language mission",
+        domain="scholarly_language_discussion",
+        constraints=("operator_review_required", "no_network", "no_tracked_source_application"),
+        prohibited_outcomes=("autonomous_git", "capability_self_activation", "permission_expansion"),
+        success_concept="one capability-development proposal reaches Evaluation and runtime pauses",
+        requested_sequence=sequence + 1,
+        maximum_developmental_depth=1,
+        maximum_campaign_count=1,
+    )
+    cde_authorization = make_capability_development_mission_authorization(
+        cde_request,
+        issued_sequence=sequence + 2,
+        expiration_sequence=sequence + 20,
+    )
+    mission_result = interpret_capability_development_mission(cde_request, cde_authorization, sequence=sequence + 3)
+    if not mission_result.accepted or mission_result.mission is None:
+        return OARDevelopmentRuntimeCycleResult(False, mission_result.reason, state)
+    graph_result = build_required_capability_graph(mission_result.mission)
+    if not graph_result.accepted or graph_result.graph is None:
+        return OARDevelopmentRuntimeCycleResult(False, graph_result.reason, state)
+    self_model = build_demonstrated_capability_self_model()
+    analysis = analyze_capability_gaps(graph_result.graph, self_model, mission_result.mission)
+    selection = select_capability_prerequisite(analysis, graph_result.graph)
+    if selection.disposition != "select_capability_for_development":
+        return OARDevelopmentRuntimeCycleResult(False, selection.disposition, state)
+    spec_request = make_capability_specification_request(mission_result.mission, selection, requested_sequence=sequence + 4)
+    spec_authorization = make_capability_specification_authorization(spec_request, issued_sequence=sequence + 5, expiration_sequence=sequence + 20)
+    spec_result = synthesize_capability_specification(mission_result.mission, graph_result.graph, self_model, selection, spec_request, spec_authorization, sequence=sequence + 6)
+    if not spec_result.accepted or spec_result.specification is None:
+        return OARDevelopmentRuntimeCycleResult(False, spec_result.reason, state)
+    options = generate_capability_architecture_options(spec_result.specification)
+    architecture = select_minimum_viable_architecture(spec_result.specification, options)
+    validation_plan = synthesize_capability_validation_plan(spec_result.specification, architecture)
+    implementation_plan = synthesize_capability_implementation_plan(spec_result.specification, architecture, validation_plan)
+    campaign = run_capability_implementation_campaign(spec_result.specification, architecture, validation_plan, implementation_plan, sequence=sequence + 7)
+    if not campaign.accepted:
+        return OARDevelopmentRuntimeCycleResult(False, campaign.reason, state)
+    checkpoint_id = stable_id("oar-live-development-checkpoint", cycle_id, campaign.operator_review_package_id)
+    item = make_evaluation_review_item(
+        parent_mission_id=compiled.compiled_objective_id,
+        compiled_objective_id=compiled.compiled_objective_id,
+        capability_gap_id=selection.selected_gap_id,
+        proposal_id=campaign.operator_review_package_id,
+        parent_mission=compiled.original_operator_mission,
+        current_blocker=selection.selected_capability_id,
+        capability_specification=serialize(spec_result.specification),
+        architecture_alternatives=tuple(options.options),
+        selected_design=serialize(architecture),
+        exact_affected_files=implementation_plan.files_for_modification,
+        full_patch_or_structured_change="planned capability proposal only; no implementation, patch, or tracked-source mutation has been performed",
+        focused_tests=validation_plan.focused_tests,
+        adjacent_regressions=validation_plan.integration_tests,
+        sandbox_results={
+            "classification": "not_yet_executed",
+            "campaign_id": campaign.operator_review_package_id,
+            "doe_objective_id": campaign.doe_objective_id,
+            "gdr_review_item_id": campaign.gdr_review_item_id,
+            "runtime_checkpoint_id": checkpoint_id,
+        },
+        score_change={"planned_scholarly_language_improvement": 0.0},
+        artifact_chain_digest=campaign.pcm_artifact_chain_digest,
+        source_precondition_hashes={path: "not_yet_inspected" for path in implementation_plan.files_for_modification},
+        resources_used=(
+            {"identity": compiled.baseline_evaluation_id, "classification": "planned"},
+            {"identity": checkpoint_id, "classification": "runtime_checkpoint"},
+        ),
+        model_provider_identity="none",
+        uncertainty="proposal is pre-implementation and requires operator review before any execution or application",
+        permission_impact="no permission expansion; application requires later authorization",
+        activation_impact="no activation; activation requires separate authorization",
+        rollback_status="not_required_no_source_application",
+        recommendation="review_before_execution",
+    )
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        completed_cycle_ids=state.completed_cycle_ids + (cycle_id,),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (item.review_item_id,))),
+        last_clean_checkpoint_id=checkpoint_id,
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return OARDevelopmentRuntimeCycleResult(
+        True,
+        "development_proposal_created_runtime_paused",
+        updated,
+        item,
+        checkpoint_id=checkpoint_id,
+        blocker_id=selection.selected_gap_id,
+        selected_capability_id=selection.selected_capability_id,
+        development_runtime_started=True,
+        development_runtime_paused=True,
+        proposal_created=True,
+        proposal_queued=True,
     )
 
 

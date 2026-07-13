@@ -253,5 +253,130 @@ def test_tk_non_mission_text_does_not_trigger_oar_intake():
         assert app._is_oar_language_development_mission(
             "Develop a bounded scholarly language improvement mission."
         ) is True
+        assert app._is_oar_language_development_mission(
+            "Improve your demonstrated ability to comprehend, analyze, and discuss scholarly material."
+        ) is True
     finally:
         root.destroy()
+
+
+def test_tk_accepts_compiled_mission_then_start_runtime_queues_one_proposal():
+    thread_count_before = threading.active_count()
+    child_processes_before = tuple(multiprocessing.active_children())
+    root = tk.Tk()
+    root.withdraw()
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.root = root
+    try:
+        outer = DELTA.ttk.Frame(root)
+        outer.pack(fill=tk.BOTH, expand=True)
+        app.notebook = DELTA.ttk.Notebook(outer)
+        app.notebook.pack(fill=tk.BOTH, expand=True)
+        app.evaluation_tab = DELTA.ttk.Frame(app.notebook, padding=10)
+        app.notebook.add(app.evaluation_tab, text="Evaluation")
+        app.session_history = []
+        app._build_evaluation_tab()
+        app._handle_oar_language_development_mission(
+            "Develop a bounded scholarly language improvement mission."
+        )
+        root.update_idletasks()
+        mission_item = app.evaluation_items.get_children()[0]
+        app.evaluation_items.selection_set(mission_item)
+
+        app._accept_selected_compiled_mission()
+
+        assert app.oar_runtime_state.development_runtime_mode == "stopped"
+        assert app.oar_runtime_state.active_mission_id
+        assert len(app.evaluation_review_items) == 1
+        assert app.evaluation_review_items[0]["status"] == "mission_approved"
+        assert "Start Development Runtime" in app.evaluation_status.get()
+
+        app._start_oar_development_runtime()
+
+        assert app.oar_runtime_state.development_runtime_mode == "paused"
+        assert len(app.evaluation_review_items) == 2
+        proposal = app.evaluation_review_items[1]
+        assert proposal["proposal_id"]
+        assert proposal["parent_mission_id"] == app.oar_runtime_state.active_mission_id
+        assert proposal["sandbox_results"]["classification"] == "not_yet_executed"
+        assert proposal["application_authorized"] is False
+        assert proposal["application_performed"] is False
+        assert proposal["capability_activated"] is False
+        assert "paused after one proposal" in app.evaluation_status.get()
+
+        app._start_oar_development_runtime()
+        assert len(app.evaluation_review_items) == 2
+        assert "did not start" in app.evaluation_status.get()
+    finally:
+        root.destroy()
+
+    assert threading.active_count() == thread_count_before
+    assert tuple(multiprocessing.active_children()) == child_processes_before
+
+
+def test_tk_oar_live_development_state_recovers_stopped_without_duplicate_proposal(monkeypatch, tmp_path):
+    state_path = tmp_path / "oar_live_development_state.json"
+    monkeypatch.setattr(DELTA, "OAR_LIVE_DEVELOPMENT_STATE_PATH", state_path)
+
+    root = tk.Tk()
+    root.withdraw()
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.root = root
+    try:
+        outer = DELTA.ttk.Frame(root)
+        outer.pack(fill=tk.BOTH, expand=True)
+        app.notebook = DELTA.ttk.Notebook(outer)
+        app.notebook.pack(fill=tk.BOTH, expand=True)
+        app.evaluation_tab = DELTA.ttk.Frame(app.notebook, padding=10)
+        app.notebook.add(app.evaluation_tab, text="Evaluation")
+        app.session_history = []
+        app.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+        app.oar_approved_compiled_mission = None
+        app.oar_mission_approval = None
+        app.evaluation_review_items = []
+        app.evaluation_dispositions = []
+        app.oar_live_state_persistence_enabled = True
+        app._build_evaluation_tab()
+        app._handle_oar_language_development_mission(
+            "Improve your demonstrated ability to comprehend, analyze, and discuss scholarly material."
+        )
+        app.evaluation_items.selection_set(app.evaluation_items.get_children()[0])
+        app._accept_selected_compiled_mission()
+        app._start_oar_development_runtime()
+
+        assert state_path.exists()
+        assert app.oar_runtime_state.development_runtime_mode == "paused"
+        assert len(app.evaluation_review_items) == 2
+    finally:
+        root.destroy()
+
+    recovered_root = tk.Tk()
+    recovered_root.withdraw()
+    recovered_app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    recovered_app.root = recovered_root
+    try:
+        outer = DELTA.ttk.Frame(recovered_root)
+        outer.pack(fill=tk.BOTH, expand=True)
+        recovered_app.notebook = DELTA.ttk.Notebook(outer)
+        recovered_app.notebook.pack(fill=tk.BOTH, expand=True)
+        recovered_app.evaluation_tab = DELTA.ttk.Frame(recovered_app.notebook, padding=10)
+        recovered_app.notebook.add(recovered_app.evaluation_tab, text="Evaluation")
+        recovered_app.session_history = []
+        recovered_app.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+        recovered_app.oar_approved_compiled_mission = None
+        recovered_app.oar_mission_approval = None
+        recovered_app.evaluation_review_items = []
+        recovered_app.evaluation_dispositions = []
+        recovered_app.oar_live_state_persistence_enabled = True
+        recovered_app._load_oar_live_development_state()
+        recovered_app._build_evaluation_tab()
+
+        assert recovered_app.oar_runtime_state.development_runtime_mode == "stopped"
+        assert recovered_app.oar_runtime_state.completed_cycle_ids
+        assert recovered_app.oar_approved_compiled_mission is not None
+        assert len(recovered_app.evaluation_review_items) == 2
+        recovered_app._start_oar_development_runtime()
+        assert len(recovered_app.evaluation_review_items) == 2
+        assert "development_cycle_already_completed" in recovered_app.evaluation_status.get()
+    finally:
+        recovered_root.destroy()

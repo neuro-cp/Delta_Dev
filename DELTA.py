@@ -16,6 +16,7 @@ from tkinter import messagebox, scrolledtext, simpledialog, ttk
 ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+OAR_LIVE_DEVELOPMENT_STATE_PATH = ROOT / "data" / "runtime" / "oar_live_development_state.json"
 
 from orchestration.runtime.rc1_operator_console import (  # noqa: E402
     append_observation,
@@ -1453,6 +1454,13 @@ class DeltaApp:
         self.live_runtime_worker_results: queue.Queue[dict[str, object]] = queue.Queue()
         self.live_runtime_request_in_flight = False
         self.pending_live_runtime_controls: list[str] = []
+        self.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+        self.oar_approved_compiled_mission: dict[str, object] | None = None
+        self.oar_mission_approval: dict[str, object] | None = None
+        self.evaluation_review_items: list[dict[str, object]] = []
+        self.evaluation_dispositions: list[dict[str, object]] = []
+        self.oar_live_state_persistence_enabled = True
+        self._load_oar_live_development_state()
         self.provider_manager = ProviderManager(keep_loaded=True)
         self.resident_model_id: str | None = None
         self.resident_lane: str | None = None
@@ -1754,6 +1762,8 @@ class DeltaApp:
 
         controls = ttk.Frame(right)
         controls.pack(fill=tk.X, pady=(0, 6))
+        ttk.Button(controls, text="Accept Mission", command=self._accept_selected_compiled_mission).pack(side=tk.LEFT)
+        ttk.Button(controls, text="Start Development Runtime", command=self._start_oar_development_runtime).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Accept", command=lambda: self._record_evaluation_disposition("accepted")).pack(side=tk.LEFT)
         ttk.Button(controls, text="Decline", command=lambda: self._record_evaluation_disposition("declined")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Needs Modification", command=lambda: self._record_evaluation_disposition("needs_modification")).pack(side=tk.LEFT, padx=(6, 0))
@@ -1762,8 +1772,10 @@ class DeltaApp:
         self.evaluation_detail.pack(fill=tk.BOTH, expand=True)
         self.evaluation_detail.configure(state=tk.DISABLED)
         self.evaluation_snapshot: dict[str, dict[str, object]] = {}
-        self.evaluation_review_items: list[dict[str, object]] = []
-        self.evaluation_dispositions: list[dict[str, object]] = []
+        if not hasattr(self, "evaluation_review_items"):
+            self.evaluation_review_items: list[dict[str, object]] = []
+        if not hasattr(self, "evaluation_dispositions"):
+            self.evaluation_dispositions: list[dict[str, object]] = []
         self._refresh_evaluation_snapshot()
 
     def _build_advanced_tab(self) -> None:
@@ -2008,6 +2020,56 @@ class DeltaApp:
             for item in items
         ]
         self._refresh_evaluation_snapshot()
+        self._persist_oar_live_development_state()
+
+    def _load_oar_live_development_state(self) -> None:
+        if not OAR_LIVE_DEVELOPMENT_STATE_PATH.exists():
+            return
+        try:
+            payload = json.loads(OAR_LIVE_DEVELOPMENT_STATE_PATH.read_text(encoding="utf-8"))
+            runtime_state = payload.get("oar_runtime_state")
+            if isinstance(runtime_state, dict):
+                fields_for_state = {field.name for field in fields(gsr.OARRuntimeState)}
+                recovered = gsr.OARRuntimeState(**{
+                    key: value for key, value in runtime_state.items() if key in fields_for_state
+                })
+                self.oar_runtime_state = gsr.recover_oar_runtime_after_restart(recovered, integrity_valid=True)
+            review_items = payload.get("evaluation_review_items")
+            if isinstance(review_items, list):
+                self.evaluation_review_items = [dict(item) for item in review_items if isinstance(item, dict)]
+            dispositions = payload.get("evaluation_dispositions")
+            if isinstance(dispositions, list):
+                self.evaluation_dispositions = [dict(item) for item in dispositions if isinstance(item, dict)]
+            approved = payload.get("oar_approved_compiled_mission")
+            self.oar_approved_compiled_mission = dict(approved) if isinstance(approved, dict) else None
+            approval = payload.get("oar_mission_approval")
+            self.oar_mission_approval = dict(approval) if isinstance(approval, dict) else None
+        except Exception:  # noqa: BLE001 - corrupt live UI recovery state must fail closed.
+            self.oar_runtime_state = gsr.OARRuntimeState(
+                runtime_state_id="tk-oar-development-runtime",
+                clean_shutdown=False,
+                integrity_failure=True,
+            )
+            self.evaluation_review_items = []
+            self.evaluation_dispositions = []
+            self.oar_approved_compiled_mission = None
+            self.oar_mission_approval = None
+
+    def _persist_oar_live_development_state(self) -> None:
+        if not getattr(self, "oar_live_state_persistence_enabled", False):
+            return
+        payload = {
+            "schema_version": 1,
+            "oar_runtime_state": asdict(self.oar_runtime_state),
+            "oar_approved_compiled_mission": self.oar_approved_compiled_mission,
+            "oar_mission_approval": self.oar_mission_approval,
+            "evaluation_review_items": self.evaluation_review_items,
+            "evaluation_dispositions": self.evaluation_dispositions,
+        }
+        OAR_LIVE_DEVELOPMENT_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        tmp = OAR_LIVE_DEVELOPMENT_STATE_PATH.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+        tmp.replace(OAR_LIVE_DEVELOPMENT_STATE_PATH)
 
     def _selected_evaluation_review_item(self) -> tuple[str, dict[str, object]] | tuple[None, None]:
         selected = self.evaluation_items.selection()
@@ -2037,6 +2099,108 @@ class DeltaApp:
         if not required.issubset(payload):
             return None
         return gsr.OperatorReviewItem(**payload)
+
+    def _compiled_mission_from_details(self, details: dict[str, object]) -> gsr.CompiledMissionObjective | None:
+        payload = details.get("compiled_objective")
+        if not isinstance(payload, dict):
+            payload = {
+                "compiled_objective_id": details.get("compiled_objective_id"),
+                "compilation_request_id": details.get("compilation_request_id", ""),
+                "original_operator_mission": details.get("original_operator_mission"),
+                "mission_family": details.get("mission_family"),
+                "baseline_evaluation_id": details.get("baseline_evaluation_id", ""),
+                "measurable_dimensions": tuple(details.get("measurable_dimensions") or ()),
+                "proposed_baseline_evaluation": details.get("proposed_baseline_evaluation", ""),
+                "success_thresholds": dict(details.get("success_thresholds") or {}),
+                "protected_invariants": tuple(details.get("protected_invariants") or ()),
+                "resource_budgets": dict(details.get("resource_budgets") or {}),
+                "allowed_capabilities": tuple(details.get("allowed_capabilities") or ()),
+                "source_scope": tuple(details.get("source_scope") or ()),
+                "stop_conditions": tuple(details.get("stop_conditions") or ()),
+                "operator_decisions_required": tuple(details.get("operator_decisions_required") or ()),
+                "mission_substituted": bool(details.get("mission_substituted", False)),
+                "hidden_permission_expansion": bool(details.get("hidden_permission_expansion", False)),
+            }
+        field_names = {field.name for field in fields(gsr.CompiledMissionObjective)}
+        filtered = {key: value for key, value in payload.items() if key in field_names}
+        required = {
+            "compiled_objective_id",
+            "compilation_request_id",
+            "original_operator_mission",
+            "mission_family",
+            "baseline_evaluation_id",
+            "measurable_dimensions",
+            "proposed_baseline_evaluation",
+            "success_thresholds",
+            "protected_invariants",
+            "resource_budgets",
+            "allowed_capabilities",
+            "source_scope",
+            "stop_conditions",
+            "operator_decisions_required",
+        }
+        if not required.issubset(filtered):
+            return None
+        return gsr.CompiledMissionObjective(**filtered)
+
+    def _accept_selected_compiled_mission(self) -> None:
+        key, details = self._selected_evaluation_review_item()
+        if details is None:
+            self.evaluation_status.set("No evaluation item selected.")
+            return
+        compiled = self._compiled_mission_from_details(details)
+        if compiled is None:
+            self.evaluation_status.set("Selected item is not a mission compilation.")
+            return
+        if not hasattr(self, "oar_runtime_state"):
+            self.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+        sequence = len(getattr(self, "evaluation_dispositions", [])) + len(getattr(self, "evaluation_review_items", [])) + 1
+        approval = gsr.approve_compiled_mission(compiled, operator_identity="tk_operator", sequence=sequence)
+        result = gsr.register_approved_mission_for_development(self.oar_runtime_state, compiled, approval, sequence=sequence + 1)
+        if not result.accepted:
+            self.evaluation_status.set(f"Mission acceptance denied: {result.reason}.")
+            return
+        self.oar_runtime_state = result.state
+        self.oar_approved_compiled_mission = asdict(compiled)
+        self.oar_mission_approval = asdict(approval)
+        if key and str(key).startswith("review-"):
+            index = int(str(key).split("-", 1)[1]) - 1
+            if 0 <= index < len(self.evaluation_review_items):
+                updated = dict(self.evaluation_review_items[index])
+                updated["status"] = "mission_approved"
+                updated["operator_action"] = "Mission approved. Development Runtime remains stopped until Start Development Runtime is pressed."
+                updated_details = dict(updated.get("details") or {})
+                updated_details["mission_approval"] = asdict(approval)
+                updated_details["runtime_state"] = asdict(self.oar_runtime_state)
+                updated["details"] = updated_details
+                self.evaluation_review_items[index] = updated
+        self._refresh_evaluation_snapshot()
+        self.evaluation_status.set("Mission approved. Development Runtime status: stopped. Next action: Start Development Runtime.")
+        self._persist_oar_live_development_state()
+
+    def _start_oar_development_runtime(self) -> None:
+        if not getattr(self, "oar_approved_compiled_mission", None):
+            self.evaluation_status.set("Development Runtime cannot start: no approved mission is registered.")
+            return
+        compiled = gsr.CompiledMissionObjective(**{
+            key: value
+            for key, value in self.oar_approved_compiled_mission.items()
+            if key in {field.name for field in fields(gsr.CompiledMissionObjective)}
+        })
+        result = gsr.run_one_oar_development_runtime_cycle(
+            self.oar_runtime_state,
+            compiled,
+            sequence=len(self.evaluation_review_items) + len(self.evaluation_dispositions) + 10,
+        )
+        if not result.accepted or result.review_item is None:
+            self.evaluation_status.set(f"Development Runtime did not start: {result.reason}.")
+            return
+        self.oar_runtime_state = result.state
+        self._set_evaluation_review_items([*self.evaluation_review_items, result.review_item])
+        self.evaluation_status.set(
+            f"Development Runtime paused after one proposal. Blocker={result.selected_capability_id}; checkpoint={result.checkpoint_id}."
+        )
+        self._persist_oar_live_development_state()
 
     def _record_evaluation_disposition(self, disposition: str) -> None:
         _key, details = self._selected_evaluation_review_item()
@@ -2096,7 +2260,7 @@ class DeltaApp:
             return False
         if not any(token in normalized for token in ("language", "scholarly", "scholar")):
             return False
-        return any(token in normalized for token in ("mission", "capability", "behavior", "improvement", "development"))
+        return any(token in normalized for token in ("mission", "capability", "ability", "behavior", "improvement", "development"))
 
     def _handle_oar_language_development_mission(self, message: str) -> str:
         sequence = len(self.session_history) + len(self.evaluation_review_items) + 1
@@ -2124,11 +2288,18 @@ class DeltaApp:
             "details": {
                 "original_operator_mission": result.compiled_objective.original_operator_mission,
                 "compiled_objective_id": result.compiled_objective.compiled_objective_id,
+                "compiled_objective": asdict(result.compiled_objective),
+                "compilation_request_id": result.compiled_objective.compilation_request_id,
                 "mission_family": result.compiled_objective.mission_family,
+                "baseline_evaluation_id": result.compiled_objective.baseline_evaluation_id,
                 "measurable_dimensions": result.compiled_objective.measurable_dimensions,
+                "proposed_baseline_evaluation": result.compiled_objective.proposed_baseline_evaluation,
                 "success_thresholds": result.compiled_objective.success_thresholds,
                 "protected_invariants": result.compiled_objective.protected_invariants,
                 "resource_budgets": result.compiled_objective.resource_budgets,
+                "allowed_capabilities": result.compiled_objective.allowed_capabilities,
+                "source_scope": result.compiled_objective.source_scope,
+                "stop_conditions": result.compiled_objective.stop_conditions,
                 "operator_decisions_required": result.compiled_objective.operator_decisions_required,
                 "compilation_evidence": asdict(result.evidence),
                 "mission_started": result.mission_started,
