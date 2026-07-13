@@ -14183,6 +14183,7 @@ class MissionCompilationRequest:
 class MissionCompilationAuthorization:
     compilation_authorization_id: str
     compilation_request_id: str
+    original_operator_mission: str
     authorized_family: str
     baseline_evaluation_id: str
     maximum_capability_campaigns: int
@@ -14526,6 +14527,7 @@ def make_mission_compilation_authorization(
     return MissionCompilationAuthorization(
         compilation_authorization_id=stable_id("oar-1a-mission-compilation-authorization", request.compilation_request_id, issued_sequence),
         compilation_request_id=request.compilation_request_id,
+        original_operator_mission=request.original_operator_mission,
         authorized_family=request.requested_family,
         baseline_evaluation_id=request.baseline_evaluation_id,
         maximum_capability_campaigns=request.maximum_capability_campaigns,
@@ -14544,6 +14546,8 @@ def compile_language_development_mission(
 ) -> MissionCompilationResult:
     if authorization.compilation_request_id != request.compilation_request_id:
         return MissionCompilationResult(False, "wrong_compilation_authorization", request=request, original_authorization=authorization)
+    if authorization.original_operator_mission != request.original_operator_mission:
+        return MissionCompilationResult(False, "mission_wording_substitution_denied", request=request, original_authorization=authorization)
     if authorization.consumed or sequence > authorization.expiration_sequence:
         return MissionCompilationResult(False, "compilation_authorization_unavailable", request=request, original_authorization=authorization)
     if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
