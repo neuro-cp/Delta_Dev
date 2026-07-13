@@ -1222,6 +1222,163 @@ class PythonSourceInspectionResult:
 
 
 @dataclass(frozen=True)
+class PythonBoundedDiagnosisRequest:
+    diagnosis_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    inspection_request_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    module_id: str
+    module_version: str
+    exact_inspected_paths: tuple[str, ...]
+    exact_source_digests: dict[str, str]
+    exact_observation_identities: tuple[str, ...]
+    diagnosis_question: str
+    expected_transition: str
+    diagnosis_category: str
+    expected_symbol: str = ""
+    expected_symbol_kind: str = "function"
+    maximum_finding_count: int = 1
+    diagnosis_only: bool = True
+    code_generation_requested: bool = False
+    patch_proposal_requested: bool = False
+    test_proposal_requested: bool = False
+    execution_requested: bool = False
+    mutation_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonBoundedDiagnosisAuthorization:
+    diagnosis_authorization_id: str
+    diagnosis_request_id: str
+    objective_cycle_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    module_id: str
+    module_version: str
+    authorized_paths: tuple[str, ...]
+    authorized_source_digests: dict[str, str]
+    authorized_diagnosis_question: str
+    authorized_expected_transition: str
+    maximum_finding_count: int
+    issued_sequence: int
+    expiration_sequence: int
+    diagnosis_authorized: bool = True
+    code_generation_prohibited: bool = True
+    patch_proposal_prohibited: bool = True
+    test_proposal_prohibited: bool = True
+    execution_prohibited: bool = True
+    mutation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonBoundedDiagnosticFinding:
+    finding_id: str
+    path: str
+    source_digest: str
+    diagnosis_category: str
+    expected_transition: str
+    observed_structural_evidence: str
+    first_incorrect_or_missing_transition: str
+    responsible_symbol: str
+    responsible_structural_location: str
+    bounded_impact: str
+    evidence_references: tuple[str, ...]
+    confidence: float
+    uncertainty: str
+    alternative_explanation: str
+    finding_count: int = 1
+    diagnosis_only: bool = True
+    recommendation_absent: bool = True
+    code_absent: bool = True
+    patch_absent: bool = True
+    test_proposal_absent: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonBoundedDiagnosisEvidence:
+    diagnosis_attempt_id: str
+    diagnosis_request_id: str
+    diagnosis_authorization_id: str
+    attachment_record_id: str
+    inspection_attempt_id: str
+    inspection_evidence_id: str
+    exact_paths: tuple[str, ...]
+    exact_source_digests: dict[str, str]
+    exact_structural_observation_references: tuple[str, ...]
+    finding: dict[str, Any] | None
+    findings_produced: int
+    maximum_findings: int
+    authorization_consumed: bool
+    diagnosis_started: bool
+    diagnosis_completed: bool
+    structural_evidence_used: bool
+    source_reread: bool = False
+    source_executed: bool = False
+    source_imported: bool = False
+    code_generated: bool = False
+    patch_proposed: bool = False
+    test_proposed: bool = False
+    source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    sandbox_handoff_created: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class PythonBoundedDiagnosisResult:
+    accepted: bool
+    reason: str
+    request: PythonBoundedDiagnosisRequest | None = None
+    original_authorization: PythonBoundedDiagnosisAuthorization | None = None
+    consumed_authorization: PythonBoundedDiagnosisAuthorization | None = None
+    evidence: PythonBoundedDiagnosisEvidence | None = None
+    diagnosis_started: bool = False
+    diagnosis_completed: bool = False
+    authorization_consumed: bool = False
+    finding_created: bool = False
+    finding_count: int = 0
+    source_reread: bool = False
+    source_executed: bool = False
+    source_imported: bool = False
+    code_generated: bool = False
+    patch_proposed: bool = False
+    test_proposed: bool = False
+    sandbox_handoff_created: bool = False
+    source_mutated: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    registry_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class SandboxPlanningState:
     state_version: str
     planning_authorization_ids: tuple[str, ...] = ()
@@ -4278,6 +4435,312 @@ def inspect_python_source_read_only(
         authorization_consumed=True,
         source_read=True,
         ast_parsed=request.ast_parsing_requested,
+    )
+
+
+def python_source_inspection_evidence_id(evidence: PythonSourceInspectionEvidence) -> str:
+    return stable_id("pcm-1c-source-inspection-evidence", evidence.inspection_attempt_id, evidence.exact_paths_inspected, evidence.per_file_digests)
+
+
+def python_source_observation_identity(observation: PythonSourceStructuralObservation) -> str:
+    return stable_id("pcm-1c-structural-observation", observation.path, observation.source_digest, observation.syntax_valid, observation.function_names, observation.class_names, observation.imported_module_names)
+
+
+def make_python_bounded_diagnosis_request(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    *,
+    diagnosis_question: str,
+    expected_transition: str,
+    diagnosis_category: str = "expected_symbol_missing",
+    expected_symbol: str = "",
+    expected_symbol_kind: str = "function",
+    request_sequence: int = 0,
+    **overrides: Any,
+) -> PythonBoundedDiagnosisRequest:
+    evidence = inspection_result.evidence
+    if evidence is None:
+        inspection_attempt_id = ""
+        inspection_evidence_id = ""
+        paths: tuple[str, ...] = ()
+        digests: dict[str, str] = {}
+        observation_ids: tuple[str, ...] = ()
+        inspection_request_id = inspection_result.request.inspection_request_id if inspection_result.request else ""
+    else:
+        observations = tuple(deserialize(PythonSourceStructuralObservation, payload) for payload in evidence.observations)
+        inspection_attempt_id = evidence.inspection_attempt_id
+        inspection_evidence_id = python_source_inspection_evidence_id(evidence)
+        paths = evidence.exact_paths_inspected
+        digests = dict(evidence.per_file_digests)
+        observation_ids = tuple(python_source_observation_identity(observation) for observation in observations)
+        inspection_request_id = evidence.inspection_request_id
+    return PythonBoundedDiagnosisRequest(
+        diagnosis_request_id=stable_id("pcm-1d-bounded-diagnosis-request", attachment_record.attachment_record_id, inspection_attempt_id, diagnosis_question, expected_transition, request_sequence),
+        objective_cycle_id=attachment_record.objective_cycle_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_request_id=inspection_request_id,
+        inspection_attempt_id=inspection_attempt_id,
+        inspection_evidence_id=inspection_evidence_id,
+        module_id=attachment_record.module_id,
+        module_version=attachment_record.module_version,
+        exact_inspected_paths=paths,
+        exact_source_digests=digests,
+        exact_observation_identities=observation_ids,
+        diagnosis_question=diagnosis_question,
+        expected_transition=expected_transition,
+        diagnosis_category=diagnosis_category,
+        expected_symbol=expected_symbol,
+        expected_symbol_kind=expected_symbol_kind,
+        **overrides,
+    )
+
+
+def make_python_bounded_diagnosis_authorization(
+    request: PythonBoundedDiagnosisRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+    **overrides: Any,
+) -> PythonBoundedDiagnosisAuthorization:
+    return PythonBoundedDiagnosisAuthorization(
+        diagnosis_authorization_id=stable_id("pcm-1d-bounded-diagnosis-authorization", request.diagnosis_request_id, issued_sequence),
+        diagnosis_request_id=request.diagnosis_request_id,
+        objective_cycle_id=request.objective_cycle_id,
+        attachment_record_id=request.attachment_record_id,
+        inspection_attempt_id=request.inspection_attempt_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        module_id=request.module_id,
+        module_version=request.module_version,
+        authorized_paths=request.exact_inspected_paths,
+        authorized_source_digests=dict(request.exact_source_digests),
+        authorized_diagnosis_question=request.diagnosis_question,
+        authorized_expected_transition=request.expected_transition,
+        maximum_finding_count=request.maximum_finding_count,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+        **overrides,
+    )
+
+
+def _python_bounded_diagnosis_denial(
+    reason: str,
+    request: PythonBoundedDiagnosisRequest | None,
+    authorization: PythonBoundedDiagnosisAuthorization | None,
+) -> PythonBoundedDiagnosisResult:
+    return PythonBoundedDiagnosisResult(False, reason, request, original_authorization=authorization)
+
+
+def _python_diagnosis_authorization_is_available(authorization: PythonBoundedDiagnosisAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "not_one_shot"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence:
+        return False, "expired"
+    if not authorization.diagnosis_authorized:
+        return False, "wrong_diagnosis_authorization"
+    if not authorization.code_generation_prohibited:
+        return False, "code_generation_permission_present"
+    if not authorization.patch_proposal_prohibited:
+        return False, "patch_proposal_permission_present"
+    if not authorization.test_proposal_prohibited:
+        return False, "test_proposal_permission_present"
+    if not authorization.execution_prohibited:
+        return False, "execution_permission_present"
+    if not authorization.mutation_prohibited:
+        return False, "mutation_permission_present"
+    if not authorization.provider_model_use_prohibited:
+        return False, "provider_or_model_permission_present"
+    return True, "valid"
+
+
+def _python_diagnosis_request_matches_authorization(
+    request: PythonBoundedDiagnosisRequest,
+    authorization: PythonBoundedDiagnosisAuthorization,
+) -> tuple[bool, str]:
+    if authorization.diagnosis_request_id != request.diagnosis_request_id:
+        return False, "wrong_diagnosis_request"
+    expected_id = stable_id("pcm-1d-bounded-diagnosis-authorization", request.diagnosis_request_id, authorization.issued_sequence)
+    if authorization.diagnosis_authorization_id != expected_id:
+        return False, "wrong_diagnosis_authorization"
+    if authorization.objective_cycle_id != request.objective_cycle_id or authorization.attachment_record_id != request.attachment_record_id:
+        return False, "wrong_diagnosis_request"
+    if authorization.inspection_attempt_id != request.inspection_attempt_id:
+        return False, "wrong_inspection_attempt"
+    if authorization.inspection_evidence_id != request.inspection_evidence_id:
+        return False, "wrong_inspection_evidence"
+    if authorization.module_id != request.module_id or authorization.module_version != request.module_version:
+        return False, "wrong_diagnosis_request"
+    if authorization.authorized_paths != request.exact_inspected_paths:
+        return False, "path_mismatch"
+    if authorization.authorized_source_digests != request.exact_source_digests:
+        return False, "source_digest_mismatch"
+    if authorization.authorized_diagnosis_question != request.diagnosis_question:
+        return False, "diagnosis_question_mismatch"
+    if authorization.authorized_expected_transition != request.expected_transition:
+        return False, "expected_transition_mismatch"
+    if authorization.maximum_finding_count != request.maximum_finding_count:
+        return False, "finding_limit_invalid"
+    return True, "valid"
+
+
+def _python_diagnosis_structural_evidence_matches_request(
+    request: PythonBoundedDiagnosisRequest,
+    inspection_result: PythonSourceInspectionResult,
+) -> tuple[bool, str, tuple[PythonSourceStructuralObservation, ...]]:
+    if not inspection_result.accepted:
+        return False, "inspection_not_accepted", ()
+    if not inspection_result.inspection_completed or not inspection_result.source_read:
+        return False, "inspection_not_completed", ()
+    if inspection_result.diagnosis_performed or inspection_result.code_generated or inspection_result.patch_proposed or inspection_result.test_proposed:
+        return False, "wrong_inspection_result", ()
+    if inspection_result.execution_performed or inspection_result.source_mutated:
+        return False, "wrong_inspection_result", ()
+    evidence = inspection_result.evidence
+    if evidence is None:
+        return False, "wrong_inspection_evidence", ()
+    if evidence.inspection_request_id != request.inspection_request_id:
+        return False, "wrong_inspection_request", ()
+    if evidence.inspection_attempt_id != request.inspection_attempt_id:
+        return False, "wrong_inspection_attempt", ()
+    if python_source_inspection_evidence_id(evidence) != request.inspection_evidence_id:
+        return False, "wrong_inspection_evidence", ()
+    if evidence.exact_paths_inspected != request.exact_inspected_paths:
+        return False, "path_mismatch", ()
+    if evidence.per_file_digests != request.exact_source_digests:
+        return False, "source_digest_mismatch", ()
+    observations = tuple(deserialize(PythonSourceStructuralObservation, payload) for payload in evidence.observations)
+    observation_ids = tuple(python_source_observation_identity(observation) for observation in observations)
+    if observation_ids != request.exact_observation_identities:
+        return False, "observation_mismatch", ()
+    return True, "valid", observations
+
+
+def _diagnose_expected_symbol_missing(
+    request: PythonBoundedDiagnosisRequest,
+    evidence: PythonSourceInspectionEvidence,
+    observations: tuple[PythonSourceStructuralObservation, ...],
+) -> PythonBoundedDiagnosticFinding | None:
+    if request.expected_symbol_kind not in {"function", "class", "import"}:
+        return None
+    for observation in observations:
+        symbols = {
+            "function": observation.function_names,
+            "class": observation.class_names,
+            "import": observation.imported_module_names,
+        }[request.expected_symbol_kind]
+        if request.expected_symbol in symbols:
+            return None
+    path = request.exact_inspected_paths[0] if request.exact_inspected_paths else ""
+    digest = request.exact_source_digests.get(path, "")
+    observed = f"{request.expected_symbol_kind}_names={tuple(observations[0].function_names if request.expected_symbol_kind == 'function' else observations[0].class_names if request.expected_symbol_kind == 'class' else observations[0].imported_module_names) if observations else ()}"
+    first_missing = f"expected_{request.expected_symbol_kind}_{request.expected_symbol}_absent_from_structural_observation"
+    return PythonBoundedDiagnosticFinding(
+        finding_id=stable_id("pcm-1d-bounded-finding", request.diagnosis_request_id, path, digest, first_missing),
+        path=path,
+        source_digest=digest,
+        diagnosis_category="expected_symbol_missing",
+        expected_transition=request.expected_transition,
+        observed_structural_evidence=observed,
+        first_incorrect_or_missing_transition=first_missing,
+        responsible_symbol=request.expected_symbol,
+        responsible_structural_location=f"{path}:module_structure",
+        bounded_impact="requested structural contract cannot be confirmed from accepted inspection evidence",
+        evidence_references=(evidence.inspection_attempt_id, request.inspection_evidence_id),
+        confidence=0.82,
+        uncertainty="bounded to structural evidence; source behavior was not executed or semantically reviewed",
+        alternative_explanation="the expected behavior may be implemented indirectly under a different symbol name",
+    )
+
+
+def perform_python_bounded_diagnosis(
+    attachment_record: PythonCodingModuleAttachmentRecord,
+    inspection_result: PythonSourceInspectionResult,
+    request: PythonBoundedDiagnosisRequest,
+    authorization: PythonBoundedDiagnosisAuthorization,
+    *,
+    sequence: int,
+) -> PythonBoundedDiagnosisResult:
+    if attachment_record.attachment_record_id != request.attachment_record_id:
+        return _python_bounded_diagnosis_denial("wrong_attachment_record", request, authorization)
+    if attachment_record.attachment_status != "INERT_ATTACHMENT_RECORD":
+        return _python_bounded_diagnosis_denial("attachment_not_inert", request, authorization)
+    if attachment_record.module_loaded:
+        return _python_bounded_diagnosis_denial("module_loaded", request, authorization)
+    if attachment_record.module_activated:
+        return _python_bounded_diagnosis_denial("module_activated", request, authorization)
+    if attachment_record.capability_execution_enabled:
+        return _python_bounded_diagnosis_denial("active_capability_present", request, authorization)
+    if request.maximum_finding_count != 1:
+        return _python_bounded_diagnosis_denial("finding_limit_invalid", request, authorization)
+    if not request.diagnosis_only:
+        return _python_bounded_diagnosis_denial("wrong_diagnosis_request", request, authorization)
+    if request.code_generation_requested:
+        return _python_bounded_diagnosis_denial("code_generation_permission_present", request, authorization)
+    if request.patch_proposal_requested:
+        return _python_bounded_diagnosis_denial("patch_proposal_permission_present", request, authorization)
+    if request.test_proposal_requested:
+        return _python_bounded_diagnosis_denial("test_proposal_permission_present", request, authorization)
+    if request.execution_requested:
+        return _python_bounded_diagnosis_denial("execution_permission_present", request, authorization)
+    if request.mutation_requested:
+        return _python_bounded_diagnosis_denial("mutation_permission_present", request, authorization)
+    if request.diagnosis_category != "expected_symbol_missing":
+        return _python_bounded_diagnosis_denial("unsupported_diagnosis_category", request, authorization)
+    if not request.expected_symbol.strip() or not request.expected_transition.strip() or not request.diagnosis_question.strip():
+        return _python_bounded_diagnosis_denial("insufficient_structural_evidence", request, authorization)
+    match_ok, match_reason = _python_diagnosis_request_matches_authorization(request, authorization)
+    if not match_ok:
+        return _python_bounded_diagnosis_denial(match_reason, request, authorization)
+    auth_ok, auth_reason = _python_diagnosis_authorization_is_available(authorization, sequence=sequence)
+    if not auth_ok:
+        return _python_bounded_diagnosis_denial(auth_reason, request, authorization)
+    evidence_ok, evidence_reason, observations = _python_diagnosis_structural_evidence_matches_request(request, inspection_result)
+    if not evidence_ok:
+        return _python_bounded_diagnosis_denial(evidence_reason, request, authorization)
+
+    consumed_authorization = replace(authorization, consumed=True)
+    evidence = inspection_result.evidence
+    finding = _diagnose_expected_symbol_missing(request, evidence, observations)
+    reason = "valid" if finding is not None else "no_bounded_finding"
+    diagnosis_evidence = PythonBoundedDiagnosisEvidence(
+        diagnosis_attempt_id=stable_id("pcm-1d-bounded-diagnosis-attempt", request.diagnosis_request_id, authorization.diagnosis_authorization_id, sequence),
+        diagnosis_request_id=request.diagnosis_request_id,
+        diagnosis_authorization_id=authorization.diagnosis_authorization_id,
+        attachment_record_id=attachment_record.attachment_record_id,
+        inspection_attempt_id=request.inspection_attempt_id,
+        inspection_evidence_id=request.inspection_evidence_id,
+        exact_paths=request.exact_inspected_paths,
+        exact_source_digests=dict(request.exact_source_digests),
+        exact_structural_observation_references=request.exact_observation_identities,
+        finding=serialize(finding) if finding is not None else None,
+        findings_produced=1 if finding is not None else 0,
+        maximum_findings=1,
+        authorization_consumed=True,
+        diagnosis_started=True,
+        diagnosis_completed=True,
+        structural_evidence_used=True,
+    )
+    return PythonBoundedDiagnosisResult(
+        True,
+        reason,
+        request,
+        authorization,
+        consumed_authorization,
+        diagnosis_evidence,
+        diagnosis_started=True,
+        diagnosis_completed=True,
+        authorization_consumed=True,
+        finding_created=finding is not None,
+        finding_count=1 if finding is not None else 0,
     )
 
 

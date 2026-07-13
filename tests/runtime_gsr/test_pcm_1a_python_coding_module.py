@@ -484,3 +484,182 @@ def test_pcm_1c_syntax_invalid_source_is_structural_evidence_only(tmp_path):
     assert observation.diagnosis_absent is True
     assert observation.recommendation_absent is True
     _assert_no_pcm_1c_actions(result)
+
+
+def _pcm_1c_result(tmp_path, source: str = "def present():\n    return 1\n"):
+    record = _pcm_1b_record()
+    target = tmp_path / "sample.py"
+    target.write_text(source, encoding="utf-8")
+    request, authorization = _inspection_pair(record)
+    result = gsr.inspect_python_source_read_only(record, request, authorization, root=tmp_path, sequence=509)
+    assert result.accepted is True
+    return record, result
+
+
+def _diagnosis_pair(
+    record: gsr.PythonCodingModuleAttachmentRecord,
+    inspection_result: gsr.PythonSourceInspectionResult,
+    *,
+    expected_symbol: str = "missing_guard",
+    expected_transition: str = "missing_guard_function_present",
+):
+    request = gsr.make_python_bounded_diagnosis_request(
+        record,
+        inspection_result,
+        diagnosis_question="Does the accepted structural evidence contain the expected guard symbol?",
+        expected_transition=expected_transition,
+        expected_symbol=expected_symbol,
+        expected_symbol_kind="function",
+        request_sequence=510,
+    )
+    authorization = gsr.make_python_bounded_diagnosis_authorization(
+        request,
+        issued_sequence=511,
+        expiration_sequence=530,
+    )
+    return request, authorization
+
+
+def _assert_no_pcm_1d_actions(result: gsr.PythonBoundedDiagnosisResult) -> None:
+    assert result.source_reread is False
+    assert result.source_executed is False
+    assert result.source_imported is False
+    assert result.code_generated is False
+    assert result.patch_proposed is False
+    assert result.test_proposed is False
+    assert result.sandbox_handoff_created is False
+    assert result.source_mutated is False
+    assert result.module_loaded is False
+    assert result.module_activated is False
+    assert result.registry_mutated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+
+
+def test_pcm_1d_exact_inspection_evidence_produces_one_bounded_symbol_missing_finding(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path, source="def present():\n    return 1\n")
+    request, authorization = _diagnosis_pair(record, inspection_result)
+
+    result = gsr.perform_python_bounded_diagnosis(record, inspection_result, request, authorization, sequence=512)
+
+    assert result.accepted is True
+    assert result.reason == "valid"
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.authorization_consumed is True
+    assert result.diagnosis_started is True
+    assert result.diagnosis_completed is True
+    assert result.finding_created is True
+    assert result.finding_count == 1
+    assert result.evidence.findings_produced == 1
+    assert result.evidence.maximum_findings == 1
+    assert result.evidence.exact_paths == inspection_result.evidence.exact_paths_inspected
+    assert result.evidence.exact_source_digests == inspection_result.evidence.per_file_digests
+    assert result.evidence.inspection_attempt_id == inspection_result.evidence.inspection_attempt_id
+    assert result.evidence.inspection_evidence_id == request.inspection_evidence_id
+    finding = gsr.deserialize(gsr.PythonBoundedDiagnosticFinding, result.evidence.finding)
+    assert finding.path == "sample.py"
+    assert finding.source_digest == inspection_result.evidence.per_file_digests["sample.py"]
+    assert finding.diagnosis_category == "expected_symbol_missing"
+    assert finding.expected_transition == request.expected_transition
+    assert "function_names" in finding.observed_structural_evidence
+    assert finding.first_incorrect_or_missing_transition == "expected_function_missing_guard_absent_from_structural_observation"
+    assert finding.responsible_symbol == "missing_guard"
+    assert finding.responsible_structural_location == "sample.py:module_structure"
+    assert finding.bounded_impact
+    assert finding.confidence > 0
+    assert finding.uncertainty
+    assert finding.recommendation_absent is True
+    assert finding.code_absent is True
+    assert finding.patch_absent is True
+    assert finding.test_proposal_absent is True
+    _assert_no_pcm_1d_actions(result)
+
+    reuse = gsr.perform_python_bounded_diagnosis(record, inspection_result, request, result.consumed_authorization, sequence=513)
+    assert reuse.accepted is False
+    assert reuse.reason == "consumed"
+    assert reuse.authorization_consumed is False
+
+
+def test_pcm_1d_zero_finding_is_bounded_and_consumes_without_fallback(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path, source="def present():\n    return 1\n")
+    request, authorization = _diagnosis_pair(record, inspection_result, expected_symbol="present")
+
+    result = gsr.perform_python_bounded_diagnosis(record, inspection_result, request, authorization, sequence=512)
+
+    assert result.accepted is True
+    assert result.reason == "no_bounded_finding"
+    assert result.authorization_consumed is True
+    assert result.finding_created is False
+    assert result.finding_count == 0
+    assert result.evidence.finding is None
+    assert result.evidence.findings_produced == 0
+    _assert_no_pcm_1d_actions(result)
+
+
+def test_pcm_1d_identity_and_evidence_mismatches_fail_before_diagnosis(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path)
+    request, authorization = _diagnosis_pair(record, inspection_result)
+    cases = (
+        (replace(record, attachment_record_id="wrong-record"), inspection_result, request, authorization, "wrong_attachment_record"),
+        (replace(record, attachment_status="ACTIVE"), inspection_result, request, authorization, "attachment_not_inert"),
+        (replace(record, module_loaded=True), inspection_result, request, authorization, "module_loaded"),
+        (replace(record, module_activated=True), inspection_result, request, authorization, "module_activated"),
+        (replace(record, capability_execution_enabled=True), inspection_result, request, authorization, "active_capability_present"),
+        (record, replace(inspection_result, accepted=False), request, authorization, "inspection_not_accepted"),
+        (record, replace(inspection_result, inspection_completed=False), request, authorization, "inspection_not_completed"),
+        (record, inspection_result, replace(request, inspection_request_id="wrong-inspection-request"), authorization, "wrong_inspection_request"),
+        (record, inspection_result, replace(request, inspection_attempt_id="wrong-attempt"), authorization, "wrong_inspection_attempt"),
+        (record, inspection_result, replace(request, inspection_evidence_id="wrong-evidence"), authorization, "wrong_inspection_evidence"),
+        (record, inspection_result, replace(request, exact_inspected_paths=("other.py",)), authorization, "path_mismatch"),
+        (record, inspection_result, replace(request, exact_source_digests={"sample.py": "bad"}), authorization, "source_digest_mismatch"),
+        (record, inspection_result, replace(request, exact_observation_identities=("bad",)), authorization, "observation_mismatch"),
+        (record, inspection_result, replace(request, diagnosis_request_id="wrong-diagnosis-request"), authorization, "wrong_diagnosis_request"),
+        (record, inspection_result, request, replace(authorization, diagnosis_authorization_id="wrong-auth"), "wrong_diagnosis_authorization"),
+    )
+
+    for bad_record, bad_inspection, bad_request, bad_authorization, reason in cases:
+        result = gsr.perform_python_bounded_diagnosis(bad_record, bad_inspection, bad_request, bad_authorization, sequence=512)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.diagnosis_started is False
+        _assert_no_pcm_1d_actions(result)
+
+
+def test_pcm_1d_authority_limits_and_permissions_fail_closed(tmp_path):
+    record, inspection_result = _pcm_1c_result(tmp_path)
+    request, authorization = _diagnosis_pair(record, inspection_result)
+    cases = (
+        (request, replace(authorization, operator_authority="DELTA_SELF"), "non_operator_authorization"),
+        (request, replace(authorization, one_shot=False), "not_one_shot"),
+        (request, replace(authorization, consumed=True), "consumed"),
+        (request, replace(authorization, expiration_sequence=511), "expired"),
+        (replace(request, diagnosis_question="different question"), authorization, "diagnosis_question_mismatch"),
+        (replace(request, expected_transition="different transition"), authorization, "expected_transition_mismatch"),
+        (replace(request, maximum_finding_count=2), authorization, "finding_limit_invalid"),
+        (request, replace(authorization, code_generation_prohibited=False), "code_generation_permission_present"),
+        (request, replace(authorization, patch_proposal_prohibited=False), "patch_proposal_permission_present"),
+        (request, replace(authorization, test_proposal_prohibited=False), "test_proposal_permission_present"),
+        (request, replace(authorization, execution_prohibited=False), "execution_permission_present"),
+        (request, replace(authorization, mutation_prohibited=False), "mutation_permission_present"),
+        (request, replace(authorization, provider_model_use_prohibited=False), "provider_or_model_permission_present"),
+        (replace(request, diagnosis_category="broad_review"), authorization, "unsupported_diagnosis_category"),
+        (replace(request, expected_symbol=""), authorization, "insufficient_structural_evidence"),
+    )
+
+    for bad_request, bad_authorization, reason in cases:
+        result = gsr.perform_python_bounded_diagnosis(record, inspection_result, bad_request, bad_authorization, sequence=512)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.diagnosis_started is False
+        _assert_no_pcm_1d_actions(result)
