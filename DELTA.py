@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import asdict, is_dataclass
 import json
 import os
 import queue
@@ -1754,6 +1755,7 @@ class DeltaApp:
         self.evaluation_detail.pack(fill=tk.BOTH, expand=True)
         self.evaluation_detail.configure(state=tk.DISABLED)
         self.evaluation_snapshot: dict[str, dict[str, object]] = {}
+        self.evaluation_review_items: list[dict[str, object]] = []
         self._refresh_evaluation_snapshot()
 
     def _build_advanced_tab(self) -> None:
@@ -1934,7 +1936,26 @@ class DeltaApp:
         self._write_rc5_detail(json.dumps(report, indent=2, sort_keys=True))
 
     def _refresh_evaluation_snapshot(self) -> None:
-        self.evaluation_snapshot = {
+        self.evaluation_snapshot = self._build_evaluation_snapshot()
+        for item in self.evaluation_items.get_children():
+            self.evaluation_items.delete(item)
+        for key, item in self.evaluation_snapshot.items():
+            self.evaluation_items.insert("", tk.END, iid=key, values=(f"{item['title']} [{item['status']}]",))
+        self.evaluation_status.set(
+            "GSR-E3 review surface is read-only. Human/GPT review remains manual; no approval, execution, application, or continuation controls are available."
+        )
+        first_item = next(iter(self.evaluation_snapshot), "")
+        if first_item:
+            self.evaluation_items.selection_set(first_item)
+            self._show_selected_evaluation_item()
+
+    def _build_evaluation_snapshot(self) -> dict[str, dict[str, object]]:
+        if self.evaluation_review_items:
+            return {
+                f"review-{index}": self._normalize_evaluation_review_item(index, item)
+                for index, item in enumerate(self.evaluation_review_items, start=1)
+            }
+        return {
             "e3a": {
                 "title": "GSR-E3-A Evidence Evaluation",
                 "status": "accepted",
@@ -1972,15 +1993,31 @@ class DeltaApp:
                 ],
             },
         }
-        for item in self.evaluation_items.get_children():
-            self.evaluation_items.delete(item)
-        for key, item in self.evaluation_snapshot.items():
-            self.evaluation_items.insert("", tk.END, iid=key, values=(f"{item['title']} [{item['status']}]",))
-        self.evaluation_status.set(
-            "GSR-E3 review surface is read-only. Human/GPT review remains manual; no approval, execution, application, or continuation controls are available."
-        )
-        self.evaluation_items.selection_set("e3a")
-        self._show_selected_evaluation_item()
+
+    def _set_evaluation_review_items(self, items: list[object]) -> None:
+        self.evaluation_review_items = [
+            asdict(item) if is_dataclass(item) else dict(item)
+            for item in items
+        ]
+        self._refresh_evaluation_snapshot()
+
+    def _normalize_evaluation_review_item(self, index: int, item: dict[str, object]) -> dict[str, object]:
+        item_type = str(item.get("item_type") or item.get("type") or "evaluation_item")
+        title = str(item.get("title") or item.get("evaluation_id") or item.get("record_id") or f"Review item {index}")
+        status = str(item.get("status") or item.get("classification") or item.get("operator_disposition") or "available")
+        details = item.get("details", item)
+        return {
+            "title": title,
+            "status": status,
+            "boundary": str(item.get("boundary") or f"Read-only {item_type} display."),
+            "operator_action": str(item.get("operator_action") or "Review manually; this tab provides no approval or execution control."),
+            "details": details,
+            "guarantees": [
+                "Display-only rendering from an in-memory review item.",
+                "No evaluation, disposition, execution request, authorization, lifecycle transition, or continuation is created.",
+                "No file, memory, persistence, provider, model, scheduler, thread, or process side effect is started by this display path.",
+            ],
+        }
 
     def _show_selected_evaluation_item(self) -> None:
         selected = self.evaluation_items.selection()
@@ -1999,6 +2036,8 @@ class DeltaApp:
             "Guarantees:",
         ]
         lines.extend(f"- {value}" for value in item.get("guarantees", []))
+        if "details" in item:
+            lines.extend(["", "Details:", json.dumps(item["details"], indent=2, sort_keys=True, default=str)])
         self._write_evaluation_detail("\n".join(lines))
 
     def _write_evaluation_detail(self, text: str) -> None:

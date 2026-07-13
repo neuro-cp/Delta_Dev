@@ -9,6 +9,7 @@ or authorize itself.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -1389,6 +1390,273 @@ class SandboxEvaluationDispositionResult:
     background_task_started: bool = False
     automatic_continuation: bool = False
     next_request_created: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationArtifact:
+    artifact_id: str
+    artifact_digest: str
+    evaluation_id: str
+    disposition_record_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    request_id: str
+    authorization_id: str
+    evidence_digest: str
+    target_file_set: tuple[str, ...]
+    operation_set: tuple[str, ...]
+    expected_pre_application_hashes: dict[str, str]
+    target_scope: tuple[str, ...]
+    artifact_present: bool = True
+    binary_or_unsupported_content: bool = False
+    module_activation_implied: bool = False
+    scheduler_or_background_implied: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationRequest:
+    application_request_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    request_id: str
+    authorization_id: str
+    evaluation_id: str
+    evidence_digest: str
+    disposition_record_id: str
+    proposed_application_artifact_id: str
+    proposed_application_artifact_digest: str
+    target_scope: tuple[str, ...]
+    target_file_set: tuple[str, ...]
+    expected_pre_application_hashes: dict[str, str]
+    requested_operation_set: tuple[str, ...]
+    requested_sequence: int
+    application_requested: bool = True
+    application_started: bool = False
+    request_consumed: bool = False
+    operator_review_required: bool = True
+    immediate_application_authority: bool = False
+    git_stage_authorized: bool = False
+    git_commit_authorized: bool = False
+    git_push_authorized: bool = False
+    merge_authorized: bool = False
+    deployment_authorized: bool = False
+    publication_authorized: bool = False
+    module_activation_authorized: bool = False
+    provider_model_authorized: bool = False
+    memory_write_authorized: bool = False
+    persistence_authorized: bool = False
+    scheduler_authorized: bool = False
+    thread_authorized: bool = False
+    background_task_authorized: bool = False
+    lifecycle_transition_authorized: bool = False
+    another_execution_authorized: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationAuthorization:
+    application_authorization_id: str
+    application_request_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    evaluation_id: str
+    evidence_digest: str
+    disposition_record_id: str
+    proposed_application_artifact_id: str
+    proposed_application_artifact_digest: str
+    authorized_target_scope: tuple[str, ...]
+    authorized_target_file_set: tuple[str, ...]
+    authorized_operation_set: tuple[str, ...]
+    expected_pre_application_hashes: dict[str, str]
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    application_authorized_metadata: bool = True
+    application_started: bool = False
+    source_mutated: bool = False
+    git_stage_authorized: bool = False
+    git_commit_authorized: bool = False
+    git_push_authorized: bool = False
+    merge_authorized: bool = False
+    deployment_authorized: bool = False
+    publication_authorized: bool = False
+    module_activation_authorized: bool = False
+    provider_model_authorized: bool = False
+    memory_write_authorized: bool = False
+    persistence_authorized: bool = False
+    scheduler_authorized: bool = False
+    thread_authorized: bool = False
+    background_task_authorized: bool = False
+    lifecycle_transition_authorized: bool = False
+    another_execution_authorized: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationEligibilityResult:
+    accepted: bool
+    reason: str
+    evaluation: SandboxEvidenceEvaluation
+    disposition_record: SandboxEvaluationDispositionRecord
+    artifact: ApplicationArtifact | None = None
+    request: ApplicationRequest | None = None
+    authorization: ApplicationAuthorization | None = None
+    eligible_for_future_application: bool = False
+    application_performed: bool = False
+    application_started: bool = False
+    authorization_consumed: bool = False
+    patch_created: bool = False
+    patch_applied: bool = False
+    source_mutated: bool = False
+    files_written: bool = False
+    git_diff_created: bool = False
+    git_staged: bool = False
+    git_committed: bool = False
+    git_pushed: bool = False
+    git_merged: bool = False
+    deployed: bool = False
+    published: bool = False
+    module_loaded: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    execution_started: bool = False
+    execution_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationPlanOperation:
+    sequence: int
+    operation: str
+    target_path: str
+    expected_current_hash: str | None = None
+    expected_post_application_hash: str | None = None
+    expected_absent_before: bool = False
+    rollback_operation: str = ""
+    rollback_artifact_id: str = ""
+    rollback_target_path: str = ""
+    rollback_expected_hash: str | None = None
+
+
+@dataclass(frozen=True)
+class ApplicationPlan:
+    application_plan_id: str
+    application_request_id: str
+    application_authorization_id: str
+    cycle_id: str
+    plan_id: str
+    attempt_id: str
+    evaluation_id: str
+    evidence_digest: str
+    disposition_record_id: str
+    artifact_id: str
+    artifact_digest: str
+    ordered_target_operations: tuple[ApplicationPlanOperation, ...]
+    target_file_set: tuple[str, ...]
+    expected_current_hashes: dict[str, str]
+    expected_post_application_hashes: dict[str, str]
+    rollback_metadata: tuple[dict[str, Any], ...]
+    required_validation_commands: tuple[str, ...] = ()
+    application_sequence: int = 0
+    cleanup_requirements: tuple[str, ...] = ("verify_target_hashes",)
+    operator_review_required: bool = True
+    application_started: bool = False
+    authorization_consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationTargetInspection:
+    inspected_target_paths: tuple[str, ...]
+    current_target_hashes: dict[str, str]
+    target_existence_map: dict[str, bool]
+    target_type_map: dict[str, str]
+    unreadable_targets: tuple[str, ...] = ()
+    oversized_targets: tuple[str, ...] = ()
+    symlink_targets: tuple[str, ...] = ()
+    live_source_read_only: bool = True
+    source_mutated: bool = False
+    files_written: bool = False
+    process_started: bool = False
+    thread_started: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class ApplicationWorktreeStatus:
+    modified_paths: tuple[str, ...] = ()
+    staged_paths: tuple[str, ...] = ()
+    untracked_paths: tuple[str, ...] = ()
+    conflicted_paths: tuple[str, ...] = ()
+    known_dirty_paths: tuple[str, ...] = ()
+    expected_dirty_paths: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class ApplicationPreflightResult:
+    accepted: bool
+    reason: str
+    eligibility_result: ApplicationEligibilityResult
+    application_plan: ApplicationPlan
+    artifact: ApplicationArtifact
+    request: ApplicationRequest
+    authorization: ApplicationAuthorization
+    inspected_target_paths: tuple[str, ...] = ()
+    current_target_hashes: dict[str, str] = field(default_factory=dict)
+    target_existence_map: dict[str, bool] = field(default_factory=dict)
+    target_type_map: dict[str, str] = field(default_factory=dict)
+    worktree_classification: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    preconditions_match: bool = False
+    rollback_ready: bool = False
+    artifact_consistent: bool = False
+    operation_order_valid: bool = False
+    target_scope_valid: bool = False
+    live_source_read_only: bool = True
+    ready_for_future_application: bool = False
+    authorization_consumed: bool = False
+    application_started: bool = False
+    patch_created: bool = False
+    patch_applied: bool = False
+    source_mutated: bool = False
+    files_written: bool = False
+    git_diff_created: bool = False
+    git_staged: bool = False
+    git_committed: bool = False
+    git_pushed: bool = False
+    git_merged: bool = False
+    deployed: bool = False
+    published: bool = False
+    module_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    lifecycle_transition_applied: bool = False
+    next_request_created: bool = False
+    automatic_continuation: bool = False
+    execution_started: bool = False
+    execution_authorized: bool = False
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
@@ -4101,6 +4369,747 @@ def apply_sandbox_evaluation_disposition(
         disposition_applied=True,
         disposition_authority_consumed=True,
         record_created=True,
+    )
+
+
+APPLICATION_ALLOWED_OPERATIONS = (
+    "replace_exact_file",
+    "add_exact_reviewed_file",
+    "delete_exact_reviewed_generated_file",
+    "apply_exact_reviewed_text_change",
+)
+
+
+def make_application_artifact(
+    evaluation: SandboxEvidenceEvaluation,
+    disposition_record: SandboxEvaluationDispositionRecord,
+    *,
+    proposed_application_artifact_id: str,
+    proposed_application_artifact_digest: str,
+    target_file_set: tuple[str, ...],
+    operation_set: tuple[str, ...],
+    expected_pre_application_hashes: dict[str, str],
+    target_scope: tuple[str, ...],
+    artifact_present: bool = True,
+    binary_or_unsupported_content: bool = False,
+    module_activation_implied: bool = False,
+    scheduler_or_background_implied: bool = False,
+) -> ApplicationArtifact:
+    return ApplicationArtifact(
+        artifact_id=proposed_application_artifact_id,
+        artifact_digest=proposed_application_artifact_digest,
+        evaluation_id=evaluation.evaluation_id,
+        disposition_record_id=disposition_record.record_id,
+        cycle_id=evaluation.cycle_id,
+        plan_id=evaluation.plan_id,
+        attempt_id=evaluation.attempt_id,
+        request_id=evaluation.request_id,
+        authorization_id=evaluation.authorization_id,
+        evidence_digest=evaluation.evidence_digest,
+        target_file_set=target_file_set,
+        operation_set=operation_set,
+        expected_pre_application_hashes=dict(expected_pre_application_hashes),
+        target_scope=target_scope,
+        artifact_present=artifact_present,
+        binary_or_unsupported_content=binary_or_unsupported_content,
+        module_activation_implied=module_activation_implied,
+        scheduler_or_background_implied=scheduler_or_background_implied,
+    )
+
+
+def make_application_request(
+    evaluation: SandboxEvidenceEvaluation,
+    disposition_record: SandboxEvaluationDispositionRecord,
+    artifact: ApplicationArtifact,
+    *,
+    requested_sequence: int,
+) -> ApplicationRequest:
+    return ApplicationRequest(
+        application_request_id=stable_id("gsr-e4-application-request", evaluation.evaluation_id, disposition_record.record_id, artifact.artifact_id, requested_sequence),
+        cycle_id=evaluation.cycle_id,
+        plan_id=evaluation.plan_id,
+        attempt_id=evaluation.attempt_id,
+        request_id=evaluation.request_id,
+        authorization_id=evaluation.authorization_id,
+        evaluation_id=evaluation.evaluation_id,
+        evidence_digest=evaluation.evidence_digest,
+        disposition_record_id=disposition_record.record_id,
+        proposed_application_artifact_id=artifact.artifact_id,
+        proposed_application_artifact_digest=artifact.artifact_digest,
+        target_scope=artifact.target_scope,
+        target_file_set=artifact.target_file_set,
+        expected_pre_application_hashes=dict(artifact.expected_pre_application_hashes),
+        requested_operation_set=artifact.operation_set,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_application_authorization(
+    request: ApplicationRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY,
+    one_shot: bool = True,
+    consumed: bool = False,
+) -> ApplicationAuthorization:
+    return ApplicationAuthorization(
+        application_authorization_id=stable_id("gsr-e4-application-authorization", request.application_request_id, issued_sequence),
+        application_request_id=request.application_request_id,
+        cycle_id=request.cycle_id,
+        plan_id=request.plan_id,
+        attempt_id=request.attempt_id,
+        evaluation_id=request.evaluation_id,
+        evidence_digest=request.evidence_digest,
+        disposition_record_id=request.disposition_record_id,
+        proposed_application_artifact_id=request.proposed_application_artifact_id,
+        proposed_application_artifact_digest=request.proposed_application_artifact_digest,
+        authorized_target_scope=request.target_scope,
+        authorized_target_file_set=request.target_file_set,
+        authorized_operation_set=request.requested_operation_set,
+        expected_pre_application_hashes=dict(request.expected_pre_application_hashes),
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_authority=operator_authority,
+        one_shot=one_shot,
+        consumed=consumed,
+    )
+
+
+def _normalized_application_path(path_text: str) -> str | None:
+    text = str(path_text).strip().replace("\\", "/")
+    if not text or "*" in text:
+        return None
+    path = Path(text)
+    if path.is_absolute():
+        return None
+    parts = tuple(part for part in text.split("/") if part)
+    if not parts or any(part in {"..", "."} for part in parts):
+        return None
+    normalized = "/".join(parts)
+    lowered_parts = tuple(part.lower() for part in parts)
+    lowered = normalized.lower()
+    blocked_parts = {".git", ".env", "secrets", "credentials", "keys", "key_material", "delta-75"}
+    if any(part in blocked_parts for part in lowered_parts):
+        return None
+    if lowered.startswith("reports/rc4_"):
+        return None
+    if lowered.startswith((".github/", "deployment/", "deploy/", "dist/", "build/")):
+        return None
+    if lowered.endswith((".env", ".pem", ".key", ".pfx", ".p12")):
+        return None
+    if any(marker in lowered for marker in ("credential", "secret", "token", "password")):
+        return None
+    if lowered.startswith(("data/rc2_developmental_memory/", "data/canonical_memory/", "memory/", "stores/")):
+        return None
+    if lowered.endswith((".db", ".sqlite", ".sqlite3")):
+        return None
+    return normalized
+
+
+def application_target_scope_is_safe(target_file_set: tuple[str, ...], target_scope: tuple[str, ...]) -> tuple[bool, str, tuple[str, ...]]:
+    normalized_files: list[str] = []
+    for path in target_file_set:
+        normalized = _normalized_application_path(path)
+        if normalized is None:
+            return False, "unsafe_target", ()
+        normalized_files.append(normalized)
+    if len(set(normalized_files)) != len(normalized_files):
+        return False, "precondition_mismatch", ()
+    if not normalized_files:
+        return False, "target_file_mismatch", ()
+    normalized_scope: list[str] = []
+    for scope in target_scope:
+        normalized = _normalized_application_path(scope)
+        if normalized is None:
+            return False, "forbidden_scope", ()
+        normalized_scope.append(normalized)
+    if set(normalized_files) != set(normalized_scope):
+        return False, "target_scope_mismatch", tuple(normalized_files)
+    return True, "valid", tuple(normalized_files)
+
+
+def application_preconditions_match(
+    target_file_set: tuple[str, ...],
+    request_hashes: dict[str, str],
+    authorization_hashes: dict[str, str],
+) -> tuple[bool, str]:
+    normalized = tuple(_normalized_application_path(path) or "" for path in target_file_set)
+    if any(not path for path in normalized):
+        return False, "unsafe_target"
+    if set(request_hashes) != set(normalized) or set(authorization_hashes) != set(normalized):
+        return False, "precondition_mismatch"
+    if request_hashes != authorization_hashes:
+        return False, "precondition_mismatch"
+    for digest in request_hashes.values():
+        if not isinstance(digest, str) or len(digest) < 16 or not all(char in "0123456789abcdefABCDEF" for char in digest):
+            return False, "precondition_mismatch"
+    return True, "valid"
+
+
+def application_request_matches_evaluation(evaluation: SandboxEvidenceEvaluation, request: ApplicationRequest) -> tuple[bool, str]:
+    if request.evaluation_id != evaluation.evaluation_id:
+        return False, "wrong_evaluation"
+    if request.cycle_id != evaluation.cycle_id:
+        return False, "wrong_cycle"
+    if request.plan_id != evaluation.plan_id:
+        return False, "wrong_plan"
+    if request.attempt_id != evaluation.attempt_id:
+        return False, "wrong_attempt"
+    if request.request_id != evaluation.request_id:
+        return False, "wrong_execution_request"
+    if request.authorization_id != evaluation.authorization_id:
+        return False, "wrong_execution_authorization"
+    if request.evidence_digest != evaluation.evidence_digest:
+        return False, "wrong_evidence_digest"
+    return True, "valid"
+
+
+def application_request_matches_disposition(record: SandboxEvaluationDispositionRecord, request: ApplicationRequest) -> tuple[bool, str]:
+    if request.disposition_record_id != record.record_id:
+        return False, "wrong_disposition_record"
+    if request.evaluation_id != record.evaluation_id:
+        return False, "wrong_evaluation"
+    if request.cycle_id != record.cycle_id:
+        return False, "wrong_cycle"
+    if request.plan_id != record.plan_id:
+        return False, "wrong_plan"
+    if request.attempt_id != record.attempt_id:
+        return False, "wrong_attempt"
+    if request.request_id != record.request_id:
+        return False, "wrong_execution_request"
+    if request.authorization_id != record.authorization_id:
+        return False, "wrong_execution_authorization"
+    if request.evidence_digest != record.evidence_digest:
+        return False, "wrong_evidence_digest"
+    if record.operator_disposition != "accept_evidence_for_future_application_consideration" or not record.accepted_evidence:
+        return False, "incompatible_disposition"
+    if record.deeper_design_required or record.more_evidence_requested or record.revision_requested or record.another_execution_requested_metadata_only:
+        return False, "deeper_design_required"
+    if record.rejected_evidence or record.lifecycle_closure_requested_metadata_only or record.cleanup_failure_marked or record.live_source_integrity_failure_marked:
+        return False, "incompatible_disposition"
+    if record.application_authorized or record.execution_authorized or record.lifecycle_transition_applied or record.automatic_continuation:
+        return False, "incompatible_disposition"
+    return True, "valid"
+
+
+def application_request_matches_artifact(request: ApplicationRequest, artifact: ApplicationArtifact) -> tuple[bool, str]:
+    if not artifact.artifact_present:
+        return False, "wrong_artifact"
+    if request.proposed_application_artifact_id != artifact.artifact_id:
+        return False, "wrong_artifact"
+    if request.proposed_application_artifact_digest != artifact.artifact_digest:
+        return False, "wrong_artifact_digest"
+    if request.evaluation_id != artifact.evaluation_id:
+        return False, "wrong_evaluation"
+    if request.disposition_record_id != artifact.disposition_record_id:
+        return False, "wrong_disposition_record"
+    if request.cycle_id != artifact.cycle_id:
+        return False, "wrong_cycle"
+    if request.plan_id != artifact.plan_id:
+        return False, "wrong_plan"
+    if request.attempt_id != artifact.attempt_id:
+        return False, "wrong_attempt"
+    if request.request_id != artifact.request_id:
+        return False, "wrong_execution_request"
+    if request.authorization_id != artifact.authorization_id:
+        return False, "wrong_execution_authorization"
+    if request.evidence_digest != artifact.evidence_digest:
+        return False, "wrong_evidence_digest"
+    if request.target_file_set != artifact.target_file_set:
+        return False, "target_file_mismatch"
+    if request.requested_operation_set != artifact.operation_set:
+        return False, "operation_mismatch"
+    if request.expected_pre_application_hashes != artifact.expected_pre_application_hashes:
+        return False, "precondition_mismatch"
+    if request.target_scope != artifact.target_scope:
+        return False, "target_scope_mismatch"
+    if artifact.binary_or_unsupported_content or artifact.module_activation_implied or artifact.scheduler_or_background_implied:
+        return False, "unsupported_operation"
+    return True, "valid"
+
+
+def application_authorization_matches_request(request: ApplicationRequest, authorization: ApplicationAuthorization) -> tuple[bool, str]:
+    if authorization.application_request_id != request.application_request_id:
+        return False, "wrong_application_authorization"
+    if authorization.cycle_id != request.cycle_id:
+        return False, "wrong_cycle"
+    if authorization.plan_id != request.plan_id:
+        return False, "wrong_plan"
+    if authorization.attempt_id != request.attempt_id:
+        return False, "wrong_attempt"
+    if authorization.evaluation_id != request.evaluation_id:
+        return False, "wrong_evaluation"
+    if authorization.evidence_digest != request.evidence_digest:
+        return False, "wrong_evidence_digest"
+    if authorization.disposition_record_id != request.disposition_record_id:
+        return False, "wrong_disposition_record"
+    if authorization.proposed_application_artifact_id != request.proposed_application_artifact_id:
+        return False, "wrong_artifact"
+    if authorization.proposed_application_artifact_digest != request.proposed_application_artifact_digest:
+        return False, "wrong_artifact_digest"
+    if authorization.authorized_target_file_set != request.target_file_set:
+        return False, "target_file_mismatch"
+    if authorization.authorized_operation_set != request.requested_operation_set:
+        return False, "operation_mismatch"
+    if authorization.authorized_target_scope != request.target_scope:
+        return False, "target_scope_mismatch"
+    if authorization.expected_pre_application_hashes != request.expected_pre_application_hashes:
+        return False, "precondition_mismatch"
+    return True, "valid"
+
+
+def application_authorization_is_available(authorization: ApplicationAuthorization, *, sequence: int) -> tuple[bool, str]:
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "non_operator_authorization"
+    if not authorization.one_shot:
+        return False, "wrong_application_authorization"
+    if authorization.consumed:
+        return False, "consumed"
+    if sequence > authorization.expiration_sequence or authorization.issued_sequence > sequence:
+        return False, "expired"
+    if authorization.application_started or authorization.source_mutated:
+        return False, "immediate_application_authority"
+    forbidden_flags = {
+        "git_authority": authorization.git_stage_authorized or authorization.git_commit_authorized or authorization.git_push_authorized or authorization.merge_authorized or authorization.deployment_authorized or authorization.publication_authorized,
+        "module_activation": authorization.module_activation_authorized,
+        "provider_model": authorization.provider_model_authorized,
+        "memory_persistence": authorization.memory_write_authorized or authorization.persistence_authorized,
+        "scheduler_background": authorization.scheduler_authorized or authorization.thread_authorized or authorization.background_task_authorized,
+        "lifecycle": authorization.lifecycle_transition_authorized,
+        "another_execution": authorization.another_execution_authorized,
+        "automatic_continuation": authorization.automatic_continuation,
+    }
+    for reason, observed in forbidden_flags.items():
+        if observed:
+            return False, {
+                "git_authority": "forbidden_scope",
+                "module_activation": "forbidden_scope",
+                "provider_model": "forbidden_scope",
+                "memory_persistence": "forbidden_scope",
+                "scheduler_background": "forbidden_scope",
+                "lifecycle": "forbidden_scope",
+                "another_execution": "forbidden_scope",
+                "automatic_continuation": "forbidden_scope",
+            }[reason]
+    return True, "valid"
+
+
+def application_scope_is_within_authorization(request: ApplicationRequest, authorization: ApplicationAuthorization) -> tuple[bool, str]:
+    return (
+        (True, "valid")
+        if set(request.target_file_set).issubset(set(authorization.authorized_target_file_set))
+        and set(request.requested_operation_set).issubset(set(authorization.authorized_operation_set))
+        and set(request.target_scope).issubset(set(authorization.authorized_target_scope))
+        else (False, "target_scope_mismatch")
+    )
+
+
+def _application_action_authority_forbidden(request: ApplicationRequest) -> tuple[bool, str]:
+    if request.immediate_application_authority or request.application_started:
+        return False, "immediate_application_authority"
+    if request.git_stage_authorized or request.git_commit_authorized or request.git_push_authorized or request.merge_authorized or request.deployment_authorized or request.publication_authorized:
+        return False, "forbidden_scope"
+    if request.module_activation_authorized or request.provider_model_authorized or request.memory_write_authorized or request.persistence_authorized:
+        return False, "forbidden_scope"
+    if request.scheduler_authorized or request.thread_authorized or request.background_task_authorized or request.lifecycle_transition_authorized or request.another_execution_authorized or request.automatic_continuation:
+        return False, "forbidden_scope"
+    return True, "valid"
+
+
+def _application_evaluation_is_eligible(evaluation: SandboxEvidenceEvaluation) -> tuple[bool, str]:
+    if not evaluation.cleanup_verified:
+        return False, "cleanup_not_verified"
+    if not evaluation.live_source_unchanged:
+        return False, "live_source_integrity_failed"
+    if not evaluation.evidence_complete:
+        return False, "evidence_incomplete"
+    if not evaluation.evidence_consistent:
+        return False, "evidence_inconsistent"
+    if not evaluation.accepted_for_operator_review:
+        return False, "evidence_incomplete"
+    if not evaluation.budget_compliant or not evaluation.artifacts_within_policy or not evaluation.writes_within_policy:
+        return False, "forbidden_scope"
+    if evaluation.application_authorized or evaluation.application_performed or evaluation.next_attempt_authorized or evaluation.automatic_continuation or evaluation.execution_authorization_created or evaluation.lifecycle_transition_applied or evaluation.next_request_created:
+        return False, "forbidden_scope"
+    return True, "valid"
+
+
+def evaluate_application_eligibility(
+    evaluation: SandboxEvidenceEvaluation,
+    disposition_record: SandboxEvaluationDispositionRecord,
+    artifact: ApplicationArtifact,
+    request: ApplicationRequest,
+    authorization: ApplicationAuthorization,
+    *,
+    sequence: int,
+) -> ApplicationEligibilityResult:
+    checks = (
+        _application_evaluation_is_eligible(evaluation),
+        application_request_matches_evaluation(evaluation, request),
+        application_request_matches_disposition(disposition_record, request),
+        application_request_matches_artifact(request, artifact),
+        application_authorization_matches_request(request, authorization),
+        application_authorization_is_available(authorization, sequence=sequence),
+        _application_action_authority_forbidden(request),
+        application_target_scope_is_safe(request.target_file_set, request.target_scope)[:2],
+        (False, "unsupported_operation") if not set(request.requested_operation_set).issubset(set(APPLICATION_ALLOWED_OPERATIONS)) else (True, "valid"),
+        application_preconditions_match(request.target_file_set, request.expected_pre_application_hashes, authorization.expected_pre_application_hashes),
+        application_scope_is_within_authorization(request, authorization),
+    )
+    for accepted, reason in checks:
+        if not accepted:
+            return ApplicationEligibilityResult(False, reason, evaluation, disposition_record, artifact, request, authorization)
+    return ApplicationEligibilityResult(
+        True,
+        "valid",
+        evaluation,
+        disposition_record,
+        artifact,
+        request,
+        authorization,
+        eligible_for_future_application=True,
+    )
+
+
+MAX_APPLICATION_PREFLIGHT_TARGET_BYTES = 1_000_000
+APPLICATION_ADD_OPERATIONS = {"add_exact_reviewed_file"}
+APPLICATION_REPLACE_OPERATIONS = {"replace_exact_file", "apply_exact_reviewed_text_change"}
+APPLICATION_DELETE_OPERATIONS = {"delete_exact_reviewed_generated_file"}
+
+
+def _sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _hash_file_read_only(path: Path) -> tuple[bool, str, str]:
+    try:
+        if path.is_symlink():
+            return False, "symlink", ""
+        if not path.exists():
+            return False, "missing", ""
+        if not path.is_file():
+            return False, "not_file", ""
+        if path.stat().st_size > MAX_APPLICATION_PREFLIGHT_TARGET_BYTES:
+            return False, "too_large", ""
+        return True, "valid", _sha256_bytes(path.read_bytes())
+    except OSError:
+        return False, "unreadable", ""
+
+
+def make_application_plan(
+    eligibility_result: ApplicationEligibilityResult,
+    *,
+    ordered_target_operations: tuple[ApplicationPlanOperation, ...],
+    expected_post_application_hashes: dict[str, str] | None = None,
+    rollback_metadata: tuple[dict[str, Any], ...] = (),
+    required_validation_commands: tuple[str, ...] = (),
+    application_sequence: int = 0,
+) -> ApplicationPlan:
+    request = eligibility_result.request
+    authorization = eligibility_result.authorization
+    artifact = eligibility_result.artifact
+    return ApplicationPlan(
+        application_plan_id=stable_id("gsr-e4-application-plan", request.application_request_id, authorization.application_authorization_id, artifact.artifact_id, application_sequence),
+        application_request_id=request.application_request_id,
+        application_authorization_id=authorization.application_authorization_id,
+        cycle_id=request.cycle_id,
+        plan_id=request.plan_id,
+        attempt_id=request.attempt_id,
+        evaluation_id=request.evaluation_id,
+        evidence_digest=request.evidence_digest,
+        disposition_record_id=request.disposition_record_id,
+        artifact_id=artifact.artifact_id,
+        artifact_digest=artifact.artifact_digest,
+        ordered_target_operations=ordered_target_operations,
+        target_file_set=request.target_file_set,
+        expected_current_hashes=dict(request.expected_pre_application_hashes),
+        expected_post_application_hashes=dict(expected_post_application_hashes or {}),
+        rollback_metadata=rollback_metadata,
+        required_validation_commands=required_validation_commands,
+        application_sequence=application_sequence,
+    )
+
+
+def inspect_application_targets_read_only(root: Path, target_file_set: tuple[str, ...]) -> ApplicationTargetInspection:
+    root = root.resolve()
+    inspected: list[str] = []
+    hashes: dict[str, str] = {}
+    exists: dict[str, bool] = {}
+    types: dict[str, str] = {}
+    unreadable: list[str] = []
+    oversized: list[str] = []
+    symlinks: list[str] = []
+    for target in target_file_set:
+        normalized = _normalized_application_path(target)
+        if normalized is None:
+            inspected.append(str(target))
+            exists[str(target)] = False
+            types[str(target)] = "unsafe"
+            unreadable.append(str(target))
+            continue
+        path = (root / normalized).resolve()
+        try:
+            path.relative_to(root)
+        except ValueError:
+            inspected.append(normalized)
+            exists[normalized] = False
+            types[normalized] = "escape"
+            unreadable.append(normalized)
+            continue
+        inspected.append(normalized)
+        exists[normalized] = path.exists()
+        if path.is_symlink():
+            types[normalized] = "symlink"
+            symlinks.append(normalized)
+            continue
+        if path.exists() and path.is_file():
+            ok, reason, digest = _hash_file_read_only(path)
+            types[normalized] = "file" if ok else reason
+            if ok:
+                hashes[normalized] = digest
+            elif reason == "too_large":
+                oversized.append(normalized)
+            else:
+                unreadable.append(normalized)
+        elif path.exists():
+            types[normalized] = "directory"
+        else:
+            types[normalized] = "missing"
+    return ApplicationTargetInspection(
+        inspected_target_paths=tuple(inspected),
+        current_target_hashes=hashes,
+        target_existence_map=exists,
+        target_type_map=types,
+        unreadable_targets=tuple(unreadable),
+        oversized_targets=tuple(oversized),
+        symlink_targets=tuple(symlinks),
+    )
+
+
+def application_plan_matches_eligibility(
+    eligibility_result: ApplicationEligibilityResult,
+    plan: ApplicationPlan,
+) -> tuple[bool, str]:
+    if not eligibility_result.accepted or not eligibility_result.eligible_for_future_application:
+        return False, "eligibility_not_accepted"
+    request = eligibility_result.request
+    authorization = eligibility_result.authorization
+    if plan.application_request_id != request.application_request_id:
+        return False, "wrong_application_request"
+    if plan.application_authorization_id != authorization.application_authorization_id:
+        return False, "wrong_application_authorization"
+    if plan.cycle_id != request.cycle_id:
+        return False, "wrong_application_plan"
+    if plan.plan_id != request.plan_id:
+        return False, "wrong_application_plan"
+    if plan.attempt_id != request.attempt_id:
+        return False, "wrong_application_plan"
+    if plan.evaluation_id != request.evaluation_id:
+        return False, "wrong_evaluation"
+    if plan.disposition_record_id != request.disposition_record_id:
+        return False, "wrong_disposition_record"
+    if plan.evidence_digest != request.evidence_digest:
+        return False, "wrong_evidence_digest"
+    return True, "valid"
+
+
+def application_plan_matches_artifact(plan: ApplicationPlan, artifact: ApplicationArtifact) -> tuple[bool, str]:
+    if plan.artifact_id != artifact.artifact_id:
+        return False, "wrong_artifact"
+    if plan.artifact_digest != artifact.artifact_digest:
+        return False, "wrong_artifact_digest"
+    if plan.target_file_set != artifact.target_file_set:
+        return False, "target_file_mismatch"
+    if tuple(operation.operation for operation in plan.ordered_target_operations) != artifact.operation_set:
+        return False, "operation_mismatch"
+    if plan.expected_current_hashes != artifact.expected_pre_application_hashes:
+        return False, "precondition_mismatch"
+    return True, "valid"
+
+
+def application_plan_matches_authorization(plan: ApplicationPlan, authorization: ApplicationAuthorization) -> tuple[bool, str]:
+    if plan.application_authorization_id != authorization.application_authorization_id:
+        return False, "wrong_application_authorization"
+    if plan.target_file_set != authorization.authorized_target_file_set:
+        return False, "target_file_mismatch"
+    if tuple(operation.operation for operation in plan.ordered_target_operations) != authorization.authorized_operation_set:
+        return False, "operation_mismatch"
+    if plan.expected_current_hashes != authorization.expected_pre_application_hashes:
+        return False, "precondition_mismatch"
+    return True, "valid"
+
+
+def application_plan_operation_order_is_valid(plan: ApplicationPlan) -> tuple[bool, str]:
+    operations = plan.ordered_target_operations
+    if not operations:
+        return False, "operation_order_invalid"
+    sequence_numbers = [operation.sequence for operation in operations]
+    if sequence_numbers != list(range(1, len(operations) + 1)):
+        return False, "operation_order_invalid"
+    targets = [operation.target_path for operation in operations]
+    if len(set(targets)) != len(targets):
+        return False, "duplicate_target"
+    if tuple(targets) != plan.target_file_set:
+        return False, "target_file_mismatch"
+    for operation in operations:
+        if operation.operation not in APPLICATION_ALLOWED_OPERATIONS:
+            return False, "operation_mismatch"
+        if operation.rollback_operation not in {"restore_exact_content", "delete_added_file", "restore_deleted_file"}:
+            return False, "rollback_metadata_missing"
+        if operation.operation in APPLICATION_ADD_OPERATIONS and operation.rollback_operation != "delete_added_file":
+            return False, "rollback_not_exact"
+        if operation.operation in APPLICATION_REPLACE_OPERATIONS and operation.rollback_operation != "restore_exact_content":
+            return False, "rollback_not_exact"
+        if operation.operation in APPLICATION_DELETE_OPERATIONS and operation.rollback_operation != "restore_deleted_file":
+            return False, "rollback_not_exact"
+    return True, "valid"
+
+
+def application_rollback_metadata_is_complete(plan: ApplicationPlan) -> tuple[bool, str]:
+    metadata_by_target = {str(item.get("target_path")): item for item in plan.rollback_metadata}
+    if len(metadata_by_target) != len(plan.rollback_metadata):
+        return False, "rollback_metadata_missing"
+    for operation in plan.ordered_target_operations:
+        item = metadata_by_target.get(operation.target_path)
+        if item is None:
+            return False, "rollback_metadata_missing"
+        if item.get("rollback_operation") != operation.rollback_operation:
+            return False, "rollback_not_exact"
+        if item.get("rollback_target_path") != operation.target_path:
+            return False, "rollback_scope_mismatch"
+        if not item.get("rollback_artifact_id") or item.get("rollback_artifact_id") != operation.rollback_artifact_id:
+            return False, "rollback_artifact_mismatch"
+        if operation.operation in APPLICATION_REPLACE_OPERATIONS | APPLICATION_DELETE_OPERATIONS:
+            if item.get("rollback_expected_hash") != operation.rollback_expected_hash or not operation.rollback_expected_hash:
+                return False, "rollback_not_exact"
+        if str(item.get("requires", "")).lower() in {"network", "provider", "model", "git_reset", "repository_reset"}:
+            return False, "rollback_not_exact"
+    if set(metadata_by_target) != set(plan.target_file_set):
+        return False, "rollback_scope_mismatch"
+    return True, "valid"
+
+
+def application_current_hashes_match(plan: ApplicationPlan, inspection: ApplicationTargetInspection) -> tuple[bool, str]:
+    if inspection.symlink_targets:
+        return False, "unsafe_target"
+    if inspection.oversized_targets:
+        return False, "target_too_large"
+    if inspection.unreadable_targets:
+        return False, "target_unreadable"
+    for operation in plan.ordered_target_operations:
+        target = operation.target_path
+        exists = inspection.target_existence_map.get(target, False)
+        target_type = inspection.target_type_map.get(target)
+        if operation.operation in APPLICATION_ADD_OPERATIONS:
+            if exists:
+                return False, "target_unexpectedly_exists"
+            continue
+        if not exists:
+            return False, "target_missing"
+        if target_type != "file":
+            return False, "target_type_mismatch"
+        expected = plan.expected_current_hashes.get(target)
+        if not expected:
+            return False, "precondition_missing"
+        current = inspection.current_target_hashes.get(target)
+        if current != expected:
+            return False, "stale_precondition"
+    return True, "valid"
+
+
+def application_worktree_boundary_is_safe(
+    plan: ApplicationPlan,
+    worktree: ApplicationWorktreeStatus,
+) -> tuple[bool, str, dict[str, tuple[str, ...]]]:
+    target_set = set(plan.target_file_set)
+    staged = tuple(path for path in worktree.staged_paths if path in target_set)
+    conflicted = tuple(path for path in worktree.conflicted_paths if path in target_set)
+    modified = tuple(path for path in worktree.modified_paths if path in target_set)
+    untracked = tuple(path for path in worktree.untracked_paths if path in target_set)
+    known = tuple(path for path in worktree.known_dirty_paths if path not in target_set)
+    expected = tuple(path for path in worktree.expected_dirty_paths if path not in target_set)
+    classification = {
+        "staged_targets": staged,
+        "conflicted_targets": conflicted,
+        "unexpected_dirty_targets": modified,
+        "untracked_target_collisions": untracked,
+        "known_unrelated_dirty": known,
+        "expected_unrelated_dirty": expected,
+    }
+    if staged:
+        return False, "staged_target", classification
+    if conflicted:
+        return False, "conflicted_target", classification
+    if modified:
+        return False, "unexpected_dirty_target", classification
+    if untracked:
+        return False, "untracked_target_collision", classification
+    return True, "valid", classification
+
+
+def evaluate_application_preflight(
+    eligibility_result: ApplicationEligibilityResult,
+    application_plan: ApplicationPlan,
+    *,
+    root: Path,
+    worktree: ApplicationWorktreeStatus | None = None,
+    sequence: int,
+) -> ApplicationPreflightResult:
+    artifact = eligibility_result.artifact
+    request = eligibility_result.request
+    authorization = eligibility_result.authorization
+    inspection = inspect_application_targets_read_only(root, application_plan.target_file_set)
+    worktree_status = worktree or ApplicationWorktreeStatus()
+    worktree_ok, worktree_reason, worktree_classification = application_worktree_boundary_is_safe(application_plan, worktree_status)
+    checks = (
+        application_plan_matches_eligibility(eligibility_result, application_plan),
+        application_plan_matches_artifact(application_plan, artifact),
+        application_plan_matches_authorization(application_plan, authorization),
+        application_authorization_is_available(authorization, sequence=sequence),
+        application_plan_operation_order_is_valid(application_plan),
+        application_rollback_metadata_is_complete(application_plan),
+        application_target_scope_is_safe(application_plan.target_file_set, application_plan.target_file_set)[:2],
+        application_current_hashes_match(application_plan, inspection),
+        (worktree_ok, worktree_reason),
+    )
+    for accepted, reason in checks:
+        if not accepted:
+            return ApplicationPreflightResult(
+                False,
+                reason,
+                eligibility_result,
+                application_plan,
+                artifact,
+                request,
+                authorization,
+                inspected_target_paths=inspection.inspected_target_paths,
+                current_target_hashes=inspection.current_target_hashes,
+                target_existence_map=inspection.target_existence_map,
+                target_type_map=inspection.target_type_map,
+                worktree_classification=worktree_classification,
+                live_source_read_only=inspection.live_source_read_only,
+            )
+    return ApplicationPreflightResult(
+        True,
+        "valid",
+        eligibility_result,
+        application_plan,
+        artifact,
+        request,
+        authorization,
+        inspected_target_paths=inspection.inspected_target_paths,
+        current_target_hashes=inspection.current_target_hashes,
+        target_existence_map=inspection.target_existence_map,
+        target_type_map=inspection.target_type_map,
+        worktree_classification=worktree_classification,
+        preconditions_match=True,
+        rollback_ready=True,
+        artifact_consistent=True,
+        operation_order_valid=True,
+        target_scope_valid=True,
+        live_source_read_only=inspection.live_source_read_only,
+        ready_for_future_application=True,
     )
 
 

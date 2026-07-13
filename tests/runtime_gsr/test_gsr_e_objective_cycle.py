@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import hashlib
+from dataclasses import asdict
+from pathlib import Path
 from dataclasses import replace
 import json
 from pathlib import Path
@@ -1847,3 +1850,517 @@ def test_e3b_consumed_disposition_reuse_fails_closed():
     assert second.reason == "consumed"
     assert second.consumed_disposition is None
     assert second.disposition_record is None
+
+
+def _e4a_bundle(
+    *,
+    result: gsr.SandboxExecutionResult | None = None,
+    disposition_decision: str = "accept_evidence_for_future_application_consideration",
+    target_file_set: tuple[str, ...] = ("orchestration/runtime/example_target.py",),
+    operation_set: tuple[str, ...] = ("replace_exact_file",),
+    expected_hashes: dict[str, str] | None = None,
+    artifact_digest: str = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+) -> tuple[
+    gsr.SandboxEvidenceEvaluation,
+    gsr.SandboxEvaluationDispositionRecord,
+    gsr.ApplicationArtifact,
+    gsr.ApplicationRequest,
+    gsr.ApplicationAuthorization,
+]:
+    evaluation, disposition_request, disposition = _e3b_triplet(
+        result=result,
+        decision=disposition_decision,
+        sequence=130,
+    )
+    disposition_result = gsr.apply_sandbox_evaluation_disposition(
+        evaluation,
+        disposition_request,
+        disposition,
+        sequence=130,
+    )
+    assert disposition_result.accepted is True
+    record = disposition_result.disposition_record
+    hashes = expected_hashes or {path: "a" * 64 for path in target_file_set}
+    artifact = gsr.make_application_artifact(
+        evaluation,
+        record,
+        proposed_application_artifact_id="artifact-e4a",
+        proposed_application_artifact_digest=artifact_digest,
+        target_file_set=target_file_set,
+        operation_set=operation_set,
+        expected_pre_application_hashes=hashes,
+        target_scope=target_file_set,
+    )
+    request = gsr.make_application_request(
+        evaluation,
+        record,
+        artifact,
+        requested_sequence=140,
+    )
+    authorization = gsr.make_application_authorization(
+        request,
+        issued_sequence=140,
+        expiration_sequence=150,
+    )
+    return evaluation, record, artifact, request, authorization
+
+
+def _e4a_result(**overrides):
+    evaluation, record, artifact, request, authorization = _e4a_bundle()
+    evaluation = overrides.get("evaluation", evaluation)
+    record = overrides.get("record", record)
+    artifact = overrides.get("artifact", artifact)
+    request = overrides.get("request", request)
+    authorization = overrides.get("authorization", authorization)
+    return gsr.evaluate_application_eligibility(
+        evaluation,
+        record,
+        artifact,
+        request,
+        authorization,
+        sequence=overrides.get("sequence", 140),
+    )
+
+
+def test_e4a_exact_accepted_evidence_disposition_artifact_request_and_authorization_are_eligible_only():
+    result = _e4a_result()
+
+    assert result.accepted is True
+    assert result.reason == "valid"
+    assert result.eligible_for_future_application is True
+    assert result.application_started is False
+    assert result.application_performed is False
+    assert result.authorization_consumed is False
+    assert result.patch_created is False
+    assert result.patch_applied is False
+    assert result.source_mutated is False
+    assert result.files_written is False
+    assert result.git_diff_created is False
+    assert result.git_staged is False
+    assert result.git_committed is False
+    assert result.git_pushed is False
+    assert result.git_merged is False
+    assert result.deployed is False
+    assert result.published is False
+    assert result.module_loaded is False
+    assert result.module_activated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+    assert result.execution_started is False
+    assert result.execution_authorized is False
+
+
+def test_e4a_exact_identity_mismatches_fail_closed():
+    evaluation, record, artifact, request, authorization = _e4a_bundle()
+    cases = (
+        ({"request": replace(request, evaluation_id="wrong-eval")}, "wrong_evaluation"),
+        ({"request": replace(request, disposition_record_id="wrong-record")}, "wrong_disposition_record"),
+        ({"request": replace(request, cycle_id="wrong-cycle")}, "wrong_cycle"),
+        ({"request": replace(request, plan_id="wrong-plan")}, "wrong_plan"),
+        ({"request": replace(request, attempt_id="wrong-attempt")}, "wrong_attempt"),
+        ({"request": replace(request, request_id="wrong-exec-request")}, "wrong_execution_request"),
+        ({"request": replace(request, authorization_id="wrong-exec-auth")}, "wrong_execution_authorization"),
+        ({"request": replace(request, evidence_digest="wrong-digest")}, "wrong_evidence_digest"),
+        ({"artifact": replace(artifact, artifact_id="wrong-artifact")}, "wrong_artifact"),
+        ({"artifact": replace(artifact, artifact_digest="wrong-digest")}, "wrong_artifact_digest"),
+        ({"authorization": replace(authorization, application_request_id="wrong-app-request")}, "wrong_application_authorization"),
+    )
+
+    for override, reason in cases:
+        assert _e4a_result(evaluation=evaluation, record=record, artifact=override.get("artifact", artifact), request=override.get("request", request), authorization=override.get("authorization", authorization)).reason == reason
+
+
+def test_e4a_incompatible_evaluation_or_disposition_fails_closed():
+    cleanup_eval, cleanup_record, cleanup_artifact, cleanup_request, cleanup_auth = _e4a_bundle(
+        result=_e3_constructed_result(accepted=False, reason="cleanup_failed", cleanup_verified=False),
+        disposition_decision="mark_cleanup_failure",
+    )
+    integrity_eval, integrity_record, integrity_artifact, integrity_request, integrity_auth = _e4a_bundle(
+        result=_e3_constructed_result(accepted=False, reason="live_source_integrity_failed", live_source_unchanged=False),
+        disposition_decision="mark_live_source_integrity_failure",
+    )
+    incomplete = replace(_e3_constructed_result(), evidence=None)
+    incomplete_eval = gsr.evaluate_sandbox_execution_evidence(incomplete)
+    base_eval, _, _, _, _ = _e4a_bundle()
+    bad_record = replace(_e4a_bundle()[1], operator_disposition="reject_evidence", accepted_evidence=False, rejected_evidence=True)
+
+    assert gsr.evaluate_application_eligibility(cleanup_eval, cleanup_record, cleanup_artifact, cleanup_request, cleanup_auth, sequence=140).reason == "cleanup_not_verified"
+    assert gsr.evaluate_application_eligibility(integrity_eval, integrity_record, integrity_artifact, integrity_request, integrity_auth, sequence=140).reason == "live_source_integrity_failed"
+    assert gsr.evaluate_application_eligibility(incomplete_eval, _e4a_bundle()[1], _e4a_bundle()[2], _e4a_bundle()[3], _e4a_bundle()[4], sequence=140).reason == "evidence_incomplete"
+    assert _e4a_result(evaluation=base_eval, record=bad_record).reason == "incompatible_disposition"
+
+
+def test_e4a_application_request_authorization_scope_artifact_and_precondition_mismatches_fail_closed():
+    evaluation, record, artifact, request, authorization = _e4a_bundle()
+    cases = (
+        (replace(request, target_file_set=("orchestration/runtime/other.py",)), authorization, "target_file_mismatch"),
+        (replace(request, requested_operation_set=("add_exact_reviewed_file",)), authorization, "operation_mismatch"),
+        (replace(request, expected_pre_application_hashes={request.target_file_set[0]: "b" * 64}), authorization, "precondition_mismatch"),
+        (request, replace(authorization, authorized_target_file_set=("orchestration/runtime/other.py",)), "target_file_mismatch"),
+        (request, replace(authorization, expected_pre_application_hashes={request.target_file_set[0]: "b" * 64}), "precondition_mismatch"),
+    )
+
+    for bad_request, bad_authorization, reason in cases:
+        result = gsr.evaluate_application_eligibility(evaluation, record, artifact, bad_request, bad_authorization, sequence=140)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.patch_applied is False
+        assert result.source_mutated is False
+
+    duplicate_files = (request.target_file_set[0], request.target_file_set[0])
+    duplicate_artifact = replace(artifact, target_file_set=duplicate_files, target_scope=duplicate_files)
+    duplicate_request = replace(request, target_file_set=duplicate_files, target_scope=duplicate_files)
+    duplicate_authorization = replace(authorization, authorized_target_file_set=duplicate_files, authorized_target_scope=duplicate_files)
+    duplicate_result = gsr.evaluate_application_eligibility(evaluation, record, duplicate_artifact, duplicate_request, duplicate_authorization, sequence=140)
+    assert duplicate_result.accepted is False
+    assert duplicate_result.reason == "precondition_mismatch"
+
+    unsupported_artifact = replace(artifact, operation_set=("run_shell_command",))
+    unsupported_request = replace(request, requested_operation_set=("run_shell_command",))
+    unsupported_authorization = replace(authorization, authorized_operation_set=("run_shell_command",))
+    unsupported_result = gsr.evaluate_application_eligibility(evaluation, record, unsupported_artifact, unsupported_request, unsupported_authorization, sequence=140)
+    assert unsupported_result.accepted is False
+    assert unsupported_result.reason == "unsupported_operation"
+
+    for unsafe_path in (
+        "../escape.py",
+        "C:/outside.py",
+        "*.py",
+        ".git/config",
+        ".env",
+        "reports/RC4_FREEZE_READINESS_FINAL.md",
+        "DELTA-75/secret.py",
+        ".github/workflows/deploy.yml",
+        "data/canonical_memory/store.sqlite",
+    ):
+        hashes = {unsafe_path: "a" * 64}
+        unsafe_artifact = replace(artifact, target_file_set=(unsafe_path,), target_scope=(unsafe_path,), expected_pre_application_hashes=hashes)
+        unsafe_request = replace(request, target_file_set=(unsafe_path,), target_scope=(unsafe_path,), expected_pre_application_hashes=hashes)
+        unsafe_authorization = replace(authorization, authorized_target_file_set=(unsafe_path,), authorized_target_scope=(unsafe_path,), expected_pre_application_hashes=hashes)
+        unsafe_result = gsr.evaluate_application_eligibility(evaluation, record, unsafe_artifact, unsafe_request, unsafe_authorization, sequence=140)
+        assert unsafe_result.accepted is False
+        assert unsafe_result.reason == "unsafe_target"
+
+
+def test_e4a_operator_authorization_availability_and_forbidden_authority_fail_closed():
+    _, _, _, request, authorization = _e4a_bundle()
+    cases = (
+        (replace(authorization, operator_authority="DELTA_GENERATED"), "non_operator_authorization"),
+        (replace(authorization, consumed=True), "consumed"),
+        (replace(authorization, expiration_sequence=139), "expired"),
+        (replace(authorization, application_started=True), "immediate_application_authority"),
+        (replace(authorization, git_stage_authorized=True), "forbidden_scope"),
+        (replace(authorization, git_commit_authorized=True), "forbidden_scope"),
+        (replace(authorization, git_push_authorized=True), "forbidden_scope"),
+        (replace(authorization, merge_authorized=True), "forbidden_scope"),
+        (replace(authorization, deployment_authorized=True), "forbidden_scope"),
+        (replace(authorization, publication_authorized=True), "forbidden_scope"),
+        (replace(authorization, module_activation_authorized=True), "forbidden_scope"),
+        (replace(authorization, provider_model_authorized=True), "forbidden_scope"),
+        (replace(authorization, memory_write_authorized=True), "forbidden_scope"),
+        (replace(authorization, persistence_authorized=True), "forbidden_scope"),
+        (replace(authorization, scheduler_authorized=True), "forbidden_scope"),
+        (replace(authorization, thread_authorized=True), "forbidden_scope"),
+        (replace(authorization, background_task_authorized=True), "forbidden_scope"),
+        (replace(authorization, lifecycle_transition_authorized=True), "forbidden_scope"),
+        (replace(authorization, another_execution_authorized=True), "forbidden_scope"),
+        (replace(authorization, automatic_continuation=True), "forbidden_scope"),
+        (replace(request, immediate_application_authority=True), "immediate_application_authority"),
+        (replace(request, git_commit_authorized=True), "forbidden_scope"),
+        (replace(request, provider_model_authorized=True), "forbidden_scope"),
+        (replace(request, memory_write_authorized=True), "forbidden_scope"),
+        (replace(request, scheduler_authorized=True), "forbidden_scope"),
+        (replace(request, lifecycle_transition_authorized=True), "forbidden_scope"),
+        (replace(request, another_execution_authorized=True), "forbidden_scope"),
+    )
+
+    for bad_value, reason in cases:
+        if isinstance(bad_value, gsr.ApplicationAuthorization):
+            result = _e4a_result(request=request, authorization=bad_value)
+        else:
+            result = _e4a_result(request=bad_value)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.eligible_for_future_application is False
+        assert result.authorization_consumed is False
+
+
+def _sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def _e4b_package(
+    tmp_path: Path,
+    *,
+    target_name: str = "safe_target.txt",
+    content: str = "before\n",
+    operation: str = "replace_exact_file",
+    create_target: bool = True,
+    worktree: gsr.ApplicationWorktreeStatus | None = None,
+) -> tuple[gsr.ApplicationEligibilityResult, gsr.ApplicationPlan, Path, gsr.ApplicationWorktreeStatus]:
+    target = tmp_path / target_name
+    if create_target:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content.encode("utf-8"))
+    target_hash = _sha256_text(content) if create_target else "0" * 64
+    evaluation, record, artifact, request, authorization = _e4a_bundle(
+        target_file_set=(target_name,),
+        operation_set=(operation,),
+        expected_hashes={target_name: target_hash},
+    )
+    eligibility = gsr.evaluate_application_eligibility(
+        evaluation,
+        record,
+        artifact,
+        request,
+        authorization,
+        sequence=140,
+    )
+    assert eligibility.accepted is True
+    if operation == "add_exact_reviewed_file":
+        rollback_operation = "delete_added_file"
+        rollback_hash = None
+    elif operation == "delete_exact_reviewed_generated_file":
+        rollback_operation = "restore_deleted_file"
+        rollback_hash = target_hash
+    else:
+        rollback_operation = "restore_exact_content"
+        rollback_hash = target_hash
+    plan_operation = gsr.ApplicationPlanOperation(
+        sequence=1,
+        operation=operation,
+        target_path=target_name,
+        expected_current_hash=target_hash if create_target else None,
+        expected_post_application_hash="b" * 64,
+        expected_absent_before=not create_target,
+        rollback_operation=rollback_operation,
+        rollback_artifact_id="rollback-artifact-1",
+        rollback_target_path=target_name,
+        rollback_expected_hash=rollback_hash,
+    )
+    plan = gsr.make_application_plan(
+        eligibility,
+        ordered_target_operations=(plan_operation,),
+        expected_post_application_hashes={target_name: "b" * 64},
+        rollback_metadata=(
+            {
+                "target_path": target_name,
+                "rollback_operation": rollback_operation,
+                "rollback_artifact_id": "rollback-artifact-1",
+                "rollback_target_path": target_name,
+                "rollback_expected_hash": rollback_hash,
+            },
+        ),
+        application_sequence=150,
+    )
+    return eligibility, plan, target, worktree or gsr.ApplicationWorktreeStatus(
+        modified_paths=("reports/RC4_FREEZE_READINESS_FINAL.md", "DELTA.py"),
+        known_dirty_paths=("reports/RC4_FREEZE_READINESS_FINAL.md",),
+        expected_dirty_paths=("DELTA.py", "tests/runtime_gsr/test_gsr_evaluation_tab_ui.py"),
+    )
+
+
+def test_e4b_exact_package_passes_read_only_preflight_without_actions(tmp_path):
+    eligibility, plan, target, worktree = _e4b_package(tmp_path)
+    before_hash = hashlib.sha256(target.read_bytes()).hexdigest()
+    authorization_before = asdict(eligibility.authorization)
+
+    result = gsr.evaluate_application_preflight(eligibility, plan, root=tmp_path, worktree=worktree, sequence=141)
+
+    assert result.accepted is True
+    assert result.reason == "valid"
+    assert result.ready_for_future_application is True
+    assert result.current_target_hashes["safe_target.txt"] == before_hash
+    assert target.read_text(encoding="utf-8") == "before\n"
+    assert asdict(eligibility.authorization) == authorization_before
+    assert result.authorization_consumed is False
+    assert result.application_started is False
+    assert result.patch_created is False
+    assert result.patch_applied is False
+    assert result.source_mutated is False
+    assert result.files_written is False
+    assert result.git_diff_created is False
+    assert result.git_staged is False
+    assert result.git_committed is False
+    assert result.git_pushed is False
+    assert result.git_merged is False
+    assert result.deployed is False
+    assert result.published is False
+    assert result.module_activated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.memory_written is False
+    assert result.persistence_performed is False
+    assert result.scheduler_started is False
+    assert result.thread_started is False
+    assert result.background_task_started is False
+    assert result.lifecycle_transition_applied is False
+    assert result.next_request_created is False
+    assert result.automatic_continuation is False
+    assert result.execution_started is False
+    assert result.execution_authorized is False
+    assert "reports/RC4_FREEZE_READINESS_FINAL.md" in result.worktree_classification["known_unrelated_dirty"]
+    assert "DELTA.py" in result.worktree_classification["expected_unrelated_dirty"]
+
+
+def test_e4b_add_replace_and_delete_target_expectations_are_read_only(tmp_path):
+    add_eligibility, add_plan, add_target, worktree = _e4b_package(
+        tmp_path,
+        target_name="new_file.txt",
+        operation="add_exact_reviewed_file",
+        create_target=False,
+    )
+    add_result = gsr.evaluate_application_preflight(add_eligibility, add_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert add_result.accepted is True
+    assert add_result.target_existence_map["new_file.txt"] is False
+    assert add_target.exists() is False
+
+    replace_eligibility, replace_plan, replace_target, worktree = _e4b_package(tmp_path, target_name="replace_file.txt")
+    replace_result = gsr.evaluate_application_preflight(replace_eligibility, replace_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert replace_result.accepted is True
+    assert replace_result.target_type_map["replace_file.txt"] == "file"
+    assert replace_target.read_text(encoding="utf-8") == "before\n"
+
+    delete_eligibility, delete_plan, delete_target, worktree = _e4b_package(
+        tmp_path,
+        target_name="delete_file.txt",
+        operation="delete_exact_reviewed_generated_file",
+    )
+    delete_result = gsr.evaluate_application_preflight(delete_eligibility, delete_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert delete_result.accepted is True
+    assert delete_target.exists() is True
+
+    add_target.write_text("collision\n", encoding="utf-8")
+    collision = gsr.evaluate_application_preflight(add_eligibility, add_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert collision.accepted is False
+    assert collision.reason == "target_unexpectedly_exists"
+
+
+def test_e4b_plan_artifact_authorization_and_order_mismatches_fail_closed(tmp_path):
+    eligibility, plan, _target, worktree = _e4b_package(tmp_path)
+    cases = (
+        (replace(plan, application_request_id="wrong-request"), "wrong_application_request"),
+        (replace(plan, application_authorization_id="wrong-authorization"), "wrong_application_authorization"),
+        (replace(plan, artifact_id="wrong-artifact"), "wrong_artifact"),
+        (replace(plan, artifact_digest="wrong-digest"), "wrong_artifact_digest"),
+        (replace(plan, evaluation_id="wrong-evaluation"), "wrong_evaluation"),
+        (replace(plan, disposition_record_id="wrong-record"), "wrong_disposition_record"),
+        (replace(plan, evidence_digest="wrong-digest"), "wrong_evidence_digest"),
+        (replace(plan, target_file_set=("other.txt",)), "target_file_mismatch"),
+        (replace(plan, ordered_target_operations=(replace(plan.ordered_target_operations[0], operation="add_exact_reviewed_file"),)), "operation_mismatch"),
+        (replace(plan, ordered_target_operations=(replace(plan.ordered_target_operations[0], sequence=2),)), "operation_order_invalid"),
+        (replace(plan, ordered_target_operations=(plan.ordered_target_operations[0], plan.ordered_target_operations[0])), "operation_mismatch"),
+        (replace(plan, rollback_metadata=()), "rollback_metadata_missing"),
+        (
+            replace(plan, rollback_metadata=({**plan.rollback_metadata[0], "rollback_artifact_id": "wrong"},)),
+            "rollback_artifact_mismatch",
+        ),
+        (
+            replace(plan, rollback_metadata=({**plan.rollback_metadata[0], "rollback_target_path": "other.txt"},)),
+            "rollback_scope_mismatch",
+        ),
+        (
+            replace(plan, ordered_target_operations=(replace(plan.ordered_target_operations[0], rollback_operation="delete_added_file"),), rollback_metadata=({**plan.rollback_metadata[0], "rollback_operation": "delete_added_file"},)),
+            "rollback_not_exact",
+        ),
+    )
+    for bad_plan, reason in cases:
+        result = gsr.evaluate_application_preflight(eligibility, bad_plan, root=tmp_path, worktree=worktree, sequence=141)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+        assert result.source_mutated is False
+
+
+def test_e4b_target_hash_type_size_symlink_and_forbidden_paths_fail_closed(tmp_path):
+    eligibility, plan, target, worktree = _e4b_package(tmp_path)
+    target.write_text("changed\n", encoding="utf-8")
+    stale = gsr.evaluate_application_preflight(eligibility, plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert stale.accepted is False
+    assert stale.reason == "stale_precondition"
+
+    missing_eligibility, missing_plan, _missing_target, worktree = _e4b_package(tmp_path, target_name="missing.txt")
+    (tmp_path / "missing.txt").unlink()
+    missing = gsr.evaluate_application_preflight(missing_eligibility, missing_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert missing.accepted is False
+    assert missing.reason == "target_missing"
+
+    dir_eligibility, dir_plan, dir_target, worktree = _e4b_package(tmp_path, target_name="dir_target")
+    dir_target.unlink()
+    dir_target.mkdir()
+    directory = gsr.evaluate_application_preflight(dir_eligibility, dir_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert directory.accepted is False
+    assert directory.reason == "target_type_mismatch"
+
+    large_eligibility, large_plan, large_target, worktree = _e4b_package(tmp_path, target_name="large.txt", content="x")
+    large_target.write_bytes(b"x" * (gsr.MAX_APPLICATION_PREFLIGHT_TARGET_BYTES + 1))
+    oversized = gsr.evaluate_application_preflight(large_eligibility, large_plan, root=tmp_path, worktree=worktree, sequence=141)
+    assert oversized.accepted is False
+    assert oversized.reason == "target_too_large"
+
+    symlink_path = tmp_path / "link.txt"
+    if hasattr(symlink_path, "symlink_to"):
+        symlink_eligibility, symlink_plan, symlink_target, worktree = _e4b_package(tmp_path, target_name="link.txt")
+        symlink_target.unlink()
+        try:
+            symlink_path.symlink_to(tmp_path / "safe_target.txt")
+        except OSError:
+            pass
+        else:
+            symlink = gsr.evaluate_application_preflight(symlink_eligibility, symlink_plan, root=tmp_path, worktree=worktree, sequence=141)
+            assert symlink.accepted is False
+            assert symlink.reason == "unsafe_target"
+
+    for unsafe_path in ("../escape.py", "C:/outside.py", "*.py", ".git/config", ".env", "reports/RC4_X.md", "DELTA-75/secret.py", "data/canonical_memory/store.sqlite"):
+        unsafe_eligibility, unsafe_plan, _target, worktree = _e4b_package(tmp_path, target_name="safe_again.txt")
+        unsafe_plan = replace(
+            unsafe_plan,
+            target_file_set=(unsafe_path,),
+            ordered_target_operations=(replace(unsafe_plan.ordered_target_operations[0], target_path=unsafe_path),),
+            expected_current_hashes={unsafe_path: "a" * 64},
+            rollback_metadata=({**unsafe_plan.rollback_metadata[0], "target_path": unsafe_path, "rollback_target_path": unsafe_path},),
+        )
+        unsafe = gsr.evaluate_application_preflight(unsafe_eligibility, unsafe_plan, root=tmp_path, worktree=worktree, sequence=141)
+        assert unsafe.accepted is False
+        assert unsafe.reason in {"unsafe_target", "forbidden_scope", "target_file_mismatch"}
+
+
+def test_e4b_worktree_boundary_and_authorization_failures_do_not_consume(tmp_path):
+    eligibility, plan, _target, _worktree = _e4b_package(tmp_path)
+    cases = (
+        (gsr.ApplicationWorktreeStatus(staged_paths=("safe_target.txt",)), "staged_target"),
+        (gsr.ApplicationWorktreeStatus(conflicted_paths=("safe_target.txt",)), "conflicted_target"),
+        (gsr.ApplicationWorktreeStatus(modified_paths=("safe_target.txt",)), "unexpected_dirty_target"),
+        (gsr.ApplicationWorktreeStatus(untracked_paths=("safe_target.txt",)), "untracked_target_collision"),
+    )
+    for worktree, reason in cases:
+        result = gsr.evaluate_application_preflight(eligibility, plan, root=tmp_path, worktree=worktree, sequence=141)
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is False
+
+    consumed = replace(eligibility.authorization, consumed=True)
+    consumed_eligibility = replace(eligibility, authorization=consumed)
+    consumed_result = gsr.evaluate_application_preflight(consumed_eligibility, plan, root=tmp_path, worktree=gsr.ApplicationWorktreeStatus(), sequence=141)
+    assert consumed_result.accepted is False
+    assert consumed_result.reason == "consumed"
+
+    expired = replace(eligibility.authorization, expiration_sequence=140)
+    expired_eligibility = replace(eligibility, authorization=expired)
+    expired_result = gsr.evaluate_application_preflight(expired_eligibility, plan, root=tmp_path, worktree=gsr.ApplicationWorktreeStatus(), sequence=141)
+    assert expired_result.accepted is False
+    assert expired_result.reason == "expired"
+
+    denied_eligibility = replace(eligibility, accepted=False, eligible_for_future_application=False)
+    denied = gsr.evaluate_application_preflight(denied_eligibility, plan, root=tmp_path, worktree=gsr.ApplicationWorktreeStatus(), sequence=141)
+    assert denied.accepted is False
+    assert denied.reason == "eligibility_not_accepted"
