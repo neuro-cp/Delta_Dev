@@ -20744,7 +20744,7 @@ def run_live17_toolchain_pilot(
                 revised = replace(plan, revision_count=plan.revision_count + 1)
                 updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False)
                 return Live17ToolchainResult(True, "toolchain_revised_after_failed_step", updated, revised, tuple(evidence), None, "repair proposal withheld until failed evidence is reviewed", ("failed step preserved",), "Plan revised within original mission; completed prior steps were not repeated.", total_duration_ms=total_ms)
-            break
+            continue
         if step.tool_class == "local_structured_text_extraction":
             tool_request = make_live16_tool_request(
                 mission_id=plan.mission_id,

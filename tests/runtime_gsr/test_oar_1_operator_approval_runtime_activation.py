@@ -3096,6 +3096,33 @@ def test_live_17_failed_middle_step_blocks_dependents_and_revision_preserves_mis
     assert result.completed_steps_not_repeated is True
 
 
+def test_live_18_repair_failed_middle_step_records_blocked_dependents():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-18")
+    plan = gsr.make_live17_toolchain_plan(mission_id="live18-repair", exact_goal="preserve dependent failure evidence")
+    result = gsr.run_live17_toolchain_pilot(
+        state,
+        plan=plan,
+        input_payload="Claim: parser drops constraints.",
+        fail_step_id="step-2-extract",
+    )
+
+    states = {step.step_id: step.completion_state for step in result.step_evidence}
+
+    assert result.accepted is True
+    assert result.reason == "toolchain_paused_after_failure"
+    assert states == {
+        "step-1-inspect": "completed",
+        "step-2-extract": "failed",
+        "step-3-compare": "blocked_dependency",
+        "step-4-validate": "blocked_dependency",
+    }
+    assert len(result.step_evidence) == len(plan.ordered_step_ids)
+    assert all(not step.downstream_eligible for step in result.step_evidence if step.completion_state != "completed")
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
