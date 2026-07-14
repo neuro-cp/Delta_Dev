@@ -16,7 +16,11 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import time
 from typing import Any, Mapping, get_args, get_origin
+from urllib.parse import urlparse
+from urllib.request import Request as UrlRequest
+from urllib.request import urlopen
 
 from orchestration.runtime.delta_1_0_common import safety_metadata as base_safety_metadata
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
@@ -15822,6 +15826,207 @@ class LiveLanguageCapabilityCampaignResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_12_SOURCE_CLASSES = (
+    "authoritative_primary_web_source",
+    "authoritative_secondary_web_source",
+    "official_documentation",
+    "peer_reviewed_or_publisher_record",
+)
+
+LIVE_12_EVIDENCE_CLASSES = (
+    "source_claim",
+    "established_result",
+    "DELTA_interpretation",
+    "advisory_model_interpretation",
+    "contradiction",
+    "unresolved",
+    "insufficient_evidence",
+)
+
+LIVE_12_ADVISORY_OUTPUT_CLASSES = (
+    "candidate_interpretation",
+    "candidate_summary",
+    "candidate_comparison",
+    "candidate_critique",
+    "candidate_conjecture",
+    "insufficient_evidence",
+)
+
+
+@dataclass(frozen=True)
+class Live12WebSourceRequest:
+    request_id: str
+    mission_id: str
+    exact_url: str
+    allowed_domain: str
+    expected_source_type: str
+    retrieval_purpose: str
+    maximum_bytes: int
+    timeout_seconds: int
+    maximum_redirects: int
+    requested_sequence: int
+    expected_content_digest: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12WebSourceAuthorization:
+    authorization_id: str
+    request_id: str
+    mission_id: str
+    exact_url: str
+    allowed_domain: str
+    expected_source_type: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_identity: str
+    one_use_token: str
+    consumed: bool = False
+    revoked: bool = False
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    retrieval_authorized: bool = True
+    provider_authorized: bool = False
+    source_mutation_authorized: bool = False
+    memory_write_authorized: bool = False
+    git_authorized: bool = False
+    autonomous_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12WebSourceRecord:
+    source_id: str
+    exact_requested_url: str
+    exact_final_url: str
+    title: str
+    author_or_publisher: str
+    publication_or_revision_date: str
+    retrieval_time: str
+    http_status: int
+    content_type: str
+    byte_count: int
+    content_digest: str
+    source_classification: str
+    extracted_claims: tuple[str, ...]
+    excerpt_provenance: tuple[str, ...]
+    contradiction_state: str
+    confidence: float
+    uncertainty: str
+    stale_or_changed_content_state: str
+    embedded_instruction_count: int = 0
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12WebRetrievalResult:
+    accepted: bool
+    reason: str
+    request: Live12WebSourceRequest | None = None
+    original_authorization: Live12WebSourceAuthorization | None = None
+    consumed_authorization: Live12WebSourceAuthorization | None = None
+    source_record: Live12WebSourceRecord | None = None
+    authorization_consumed: bool = False
+    elapsed_ms: int = 0
+    retry_count: int = 0
+    provider_called: bool = False
+    model_invoked: bool = False
+    source_instruction_executed: bool = False
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12AdvisoryProviderRequest:
+    request_id: str
+    mission_id: str
+    provider: str
+    model_id: str
+    exact_task: str
+    evidence_digests: tuple[str, ...]
+    system_prompt_digest: str
+    user_prompt_digest: str
+    output_schema: tuple[str, ...]
+    maximum_input_tokens: int
+    maximum_output_tokens: int
+    maximum_cost: float
+    timeout_seconds: int
+    retry_limit: int
+    requested_sequence: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12AdvisoryProviderAuthorization:
+    authorization_id: str
+    request_id: str
+    mission_id: str
+    provider: str
+    model_id: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_identity: str
+    consumed: bool = False
+    revoked: bool = False
+    advisory_only: bool = True
+    action_authority: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12AdvisoryProviderResult:
+    accepted: bool
+    reason: str
+    request: Live12AdvisoryProviderRequest | None = None
+    original_authorization: Live12AdvisoryProviderAuthorization | None = None
+    consumed_authorization: Live12AdvisoryProviderAuthorization | None = None
+    output_classification: str = ""
+    output_digest: str = ""
+    provider_access_status: str = "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED"
+    actual_input_tokens: int = 0
+    actual_output_tokens: int = 0
+    actual_cost: float = 0.0
+    retry_count: int = 0
+    provider_called: bool = False
+    action_authorized: bool = False
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live12EvidenceSynthesisResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    research_task: str
+    sources: tuple[Live12WebSourceRecord, ...]
+    evidence_classes: tuple[str, ...]
+    claims: tuple[LiveScholarClaim, ...]
+    advisory_contributions: tuple[str, ...]
+    contradictions: tuple[str, ...]
+    uncertainty: tuple[str, ...]
+    final_synthesis: str
+    provider_access_status: str
+    retrieval_count: int
+    advisory_call_count: int
+    total_cost: float
+    duration_seconds: float
+    duplicate_call_prevented: bool = True
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -18833,6 +19038,282 @@ def run_live_11_contextual_language_capability_campaign(
         actual_duration_minutes,
         "capability_active_and_language_tasks_improved",
     )
+
+
+def make_live12_web_source_request(
+    *,
+    mission_id: str,
+    exact_url: str,
+    allowed_domain: str,
+    expected_source_type: str,
+    retrieval_purpose: str,
+    requested_sequence: int,
+    maximum_bytes: int = 65536,
+    timeout_seconds: int = 10,
+    maximum_redirects: int = 0,
+    expected_content_digest: str = "",
+) -> Live12WebSourceRequest:
+    return Live12WebSourceRequest(
+        request_id=stable_id("live-12-web-request", mission_id, exact_url, expected_source_type, requested_sequence),
+        mission_id=mission_id,
+        exact_url=exact_url,
+        allowed_domain=allowed_domain,
+        expected_source_type=expected_source_type,
+        retrieval_purpose=retrieval_purpose,
+        maximum_bytes=maximum_bytes,
+        timeout_seconds=timeout_seconds,
+        maximum_redirects=maximum_redirects,
+        requested_sequence=requested_sequence,
+        expected_content_digest=expected_content_digest,
+    )
+
+
+def make_live12_web_source_authorization(
+    request: Live12WebSourceRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+    revoked: bool = False,
+) -> Live12WebSourceAuthorization:
+    return Live12WebSourceAuthorization(
+        authorization_id=stable_id("live-12-web-authorization", request.request_id, operator_identity, issued_sequence),
+        request_id=request.request_id,
+        mission_id=request.mission_id,
+        exact_url=request.exact_url,
+        allowed_domain=request.allowed_domain,
+        expected_source_type=request.expected_source_type,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_identity=operator_identity,
+        one_use_token=stable_id("live-12-one-use", request.request_id, issued_sequence),
+        consumed=consumed,
+        revoked=revoked,
+    )
+
+
+def _live12_url_domain(url: str) -> str:
+    return (urlparse(url).hostname or "").lower()
+
+
+def _live12_extract_title(text: str) -> str:
+    for line in text.splitlines():
+        stripped = line.strip(" \t\r\n#*=-")
+        if 8 <= len(stripped) <= 140:
+            return stripped
+    return "Untitled approved source"
+
+
+def _live12_extract_claims(text: str, limit: int = 5) -> tuple[str, ...]:
+    claims: list[str] = []
+    for raw in text.replace("\r", "\n").split("\n"):
+        line = " ".join(raw.strip().split())
+        if len(line) >= 40 and not line.lower().startswith(("http://", "https://")):
+            claims.append(line[:240])
+        if len(claims) >= limit:
+            break
+    return tuple(claims) or ("source retrieved but no bounded claim line extracted",)
+
+
+def _live12_fetch_url(url: str, timeout_seconds: int, maximum_bytes: int) -> tuple[str, int, str, bytes, float]:
+    started = time.monotonic()
+    request = UrlRequest(url, headers={"User-Agent": "DELTA-LIVE12-governed-retrieval/1.0"})
+    with urlopen(request, timeout=timeout_seconds) as response:
+        status = int(getattr(response, "status", 0) or response.getcode())
+        content_type = response.headers.get("content-type", "")
+        data = response.read(maximum_bytes + 1)
+        final_url = response.geturl()
+    elapsed = time.monotonic() - started
+    return final_url, status, content_type, data, elapsed
+
+
+def retrieve_live12_web_source(
+    request: Live12WebSourceRequest,
+    authorization: Live12WebSourceAuthorization,
+    *,
+    sequence: int,
+    fetcher: Any | None = None,
+    retrieval_time: str = "deterministic-test-time",
+) -> Live12WebRetrievalResult:
+    if request.expected_source_type not in LIVE_12_SOURCE_CLASSES:
+        return Live12WebRetrievalResult(False, "source_class_denied", request, authorization)
+    if authorization.request_id != request.request_id or authorization.mission_id != request.mission_id or authorization.exact_url != request.exact_url or authorization.allowed_domain != request.allowed_domain or authorization.expected_source_type != request.expected_source_type:
+        return Live12WebRetrievalResult(False, "wrong_source_authorization", request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.retrieval_authorized:
+        return Live12WebRetrievalResult(False, "operator_authority_required", request, authorization)
+    if authorization.consumed:
+        return Live12WebRetrievalResult(False, "source_authorization_consumed", request, authorization)
+    if authorization.revoked:
+        return Live12WebRetrievalResult(False, "source_authorization_revoked", request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return Live12WebRetrievalResult(False, "source_authorization_expired", request, authorization)
+    if authorization.provider_authorized or authorization.source_mutation_authorized or authorization.memory_write_authorized or authorization.git_authorized or authorization.autonomous_continuation_authorized:
+        return Live12WebRetrievalResult(False, "source_authorization_overbroad", request, authorization)
+    if request.allowed_domain.startswith("*.") or "*" in request.allowed_domain:
+        return Live12WebRetrievalResult(False, "wildcard_domain_denied", request, authorization)
+    if _live12_url_domain(request.exact_url) != request.allowed_domain.lower():
+        return Live12WebRetrievalResult(False, "url_domain_mismatch", request, authorization)
+    if request.maximum_bytes <= 0 or request.timeout_seconds <= 0 or request.maximum_redirects < 0:
+        return Live12WebRetrievalResult(False, "source_budget_invalid", request, authorization)
+    try:
+        fetch = fetcher if fetcher is not None else _live12_fetch_url
+        final_url, status, content_type, data, elapsed = fetch(request.exact_url, request.timeout_seconds, request.maximum_bytes)
+    except Exception:
+        return Live12WebRetrievalResult(False, "source_retrieval_failed", request, authorization)
+    if len(data) > request.maximum_bytes:
+        return Live12WebRetrievalResult(False, "source_size_exceeded", request, authorization, elapsed_ms=int(elapsed * 1000))
+    if _live12_url_domain(final_url) != request.allowed_domain.lower() or (final_url != request.exact_url and request.maximum_redirects == 0):
+        return Live12WebRetrievalResult(False, "unauthorized_redirect", request, authorization, elapsed_ms=int(elapsed * 1000))
+    if status < 200 or status >= 300:
+        return Live12WebRetrievalResult(False, "http_status_denied", request, authorization, elapsed_ms=int(elapsed * 1000))
+    lowered_type = content_type.lower()
+    if not any(kind in lowered_type for kind in ("text/plain", "text/html", "application/xhtml", "application/xml", "text/markdown")):
+        return Live12WebRetrievalResult(False, "unsupported_content_type", request, authorization, elapsed_ms=int(elapsed * 1000))
+    digest = _sha256_bytes(data)
+    if request.expected_content_digest and digest != request.expected_content_digest:
+        return Live12WebRetrievalResult(False, "source_digest_mismatch", request, authorization, elapsed_ms=int(elapsed * 1000))
+    text = data.decode("utf-8", errors="replace")
+    claims = _live12_extract_claims(text)
+    embedded_count = _live8_embedded_instruction_count(text)
+    record = Live12WebSourceRecord(
+        source_id=stable_id("live-12-web-source", request.request_id, digest),
+        exact_requested_url=request.exact_url,
+        exact_final_url=final_url,
+        title=_live12_extract_title(text),
+        author_or_publisher=request.allowed_domain,
+        publication_or_revision_date="unverified",
+        retrieval_time=retrieval_time,
+        http_status=status,
+        content_type=content_type,
+        byte_count=len(data),
+        content_digest=digest,
+        source_classification=request.expected_source_type,
+        extracted_claims=claims,
+        excerpt_provenance=tuple(f"{final_url}#excerpt-{idx + 1}" for idx, _claim in enumerate(claims)),
+        contradiction_state="none_observed",
+        confidence=0.82 if embedded_count == 0 else 0.62,
+        uncertainty="real source retrieved; publication metadata not independently verified",
+        stale_or_changed_content_state="digest_bound" if request.expected_content_digest else "digest_recorded_no_prior_expectation",
+        embedded_instruction_count=embedded_count,
+    )
+    return Live12WebRetrievalResult(True, "real_web_source_retrieved", request, authorization, replace(authorization, consumed=True), record, authorization_consumed=True, elapsed_ms=int(elapsed * 1000))
+
+
+def make_live12_advisory_provider_request(
+    *,
+    mission_id: str,
+    provider: str,
+    model_id: str,
+    exact_task: str,
+    evidence_digests: tuple[str, ...],
+    system_prompt: str,
+    user_prompt: str,
+    output_schema: tuple[str, ...],
+    requested_sequence: int,
+    maximum_input_tokens: int = 4096,
+    maximum_output_tokens: int = 512,
+    maximum_cost: float = 0.25,
+    timeout_seconds: int = 30,
+    retry_limit: int = 0,
+) -> Live12AdvisoryProviderRequest:
+    return Live12AdvisoryProviderRequest(
+        request_id=stable_id("live-12-provider-request", mission_id, provider, model_id, exact_task, evidence_digests, requested_sequence),
+        mission_id=mission_id,
+        provider=provider,
+        model_id=model_id,
+        exact_task=exact_task,
+        evidence_digests=evidence_digests,
+        system_prompt_digest=_digest_text(system_prompt),
+        user_prompt_digest=_digest_text(user_prompt),
+        output_schema=output_schema,
+        maximum_input_tokens=maximum_input_tokens,
+        maximum_output_tokens=maximum_output_tokens,
+        maximum_cost=maximum_cost,
+        timeout_seconds=timeout_seconds,
+        retry_limit=retry_limit,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live12_advisory_provider_authorization(
+    request: Live12AdvisoryProviderRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+    revoked: bool = False,
+) -> Live12AdvisoryProviderAuthorization:
+    return Live12AdvisoryProviderAuthorization(
+        authorization_id=stable_id("live-12-provider-authorization", request.request_id, operator_identity, issued_sequence),
+        request_id=request.request_id,
+        mission_id=request.mission_id,
+        provider=request.provider,
+        model_id=request.model_id,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_identity=operator_identity,
+        consumed=consumed,
+        revoked=revoked,
+    )
+
+
+def evaluate_live12_advisory_provider_access(
+    request: Live12AdvisoryProviderRequest,
+    authorization: Live12AdvisoryProviderAuthorization,
+    *,
+    sequence: int,
+    provider_configured: bool = False,
+    output_classification: str = "candidate_summary",
+) -> Live12AdvisoryProviderResult:
+    if authorization.request_id != request.request_id or authorization.mission_id != request.mission_id or authorization.provider != request.provider or authorization.model_id != request.model_id:
+        return Live12AdvisoryProviderResult(False, "wrong_provider_authorization", request, authorization)
+    if authorization.consumed:
+        return Live12AdvisoryProviderResult(False, "provider_authorization_consumed", request, authorization)
+    if authorization.revoked:
+        return Live12AdvisoryProviderResult(False, "provider_authorization_revoked", request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return Live12AdvisoryProviderResult(False, "provider_authorization_expired", request, authorization)
+    if not authorization.advisory_only or authorization.action_authority:
+        return Live12AdvisoryProviderResult(False, "provider_action_authority_denied", request, authorization)
+    if output_classification not in LIVE_12_ADVISORY_OUTPUT_CLASSES:
+        return Live12AdvisoryProviderResult(False, "malformed_provider_output", request, authorization)
+    if request.maximum_input_tokens <= 0 or request.maximum_output_tokens <= 0 or request.maximum_cost < 0 or request.timeout_seconds <= 0 or request.retry_limit < 0:
+        return Live12AdvisoryProviderResult(False, "provider_budget_invalid", request, authorization)
+    if not provider_configured:
+        return Live12AdvisoryProviderResult(False, "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", request, authorization, provider_access_status="LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED")
+    return Live12AdvisoryProviderResult(True, "provider_config_present_execution_not_invoked_in_unit_test", request, authorization, replace(authorization, consumed=True), output_classification=output_classification, output_digest=stable_id("live-12-provider-output-placeholder", request.request_id, output_classification), provider_access_status="provider_config_present_execution_not_invoked_in_unit_test")
+
+
+def synthesize_live12_evidence(
+    *,
+    mission_id: str,
+    research_task: str,
+    sources: tuple[Live12WebSourceRecord, ...],
+    advisory_result: Live12AdvisoryProviderResult | None = None,
+    duration_seconds: float = 0.0,
+) -> Live12EvidenceSynthesisResult:
+    if not sources:
+        return Live12EvidenceSynthesisResult(False, "source_evidence_required", mission_id, research_task, (), LIVE_12_EVIDENCE_CLASSES, (), (), (), (), "", "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", 0, 0, 0.0, duration_seconds)
+    claims = tuple(
+        LiveScholarClaim(stable_id("live-12-claim", source.source_id, claim), "source_claim", claim, (source.source_id,), ("exact-source-provenance",))
+        for source in sources
+        for claim in source.extracted_claims[:2]
+    )
+    interpretations = (
+        LiveScholarClaim(stable_id("live-12-delta-interpretation", mission_id, research_task), "DELTA_interpretation", "The approved sources are treated as evidence with bounded provenance; differences remain visible rather than resolved by authority.", tuple(source.source_id for source in sources), ("governed-evidence-synthesis",)),
+    )
+    advisory = ()
+    advisory_count = 0
+    provider_status = "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED"
+    if advisory_result is not None and advisory_result.accepted and advisory_result.output_classification:
+        advisory = (f"{advisory_result.output_classification}:{advisory_result.output_digest}",)
+        advisory_count = 1
+        provider_status = advisory_result.provider_access_status
+    elif advisory_result is not None:
+        provider_status = advisory_result.provider_access_status
+    return Live12EvidenceSynthesisResult(True, "live12_evidence_synthesis_queued", mission_id, research_task, sources, LIVE_12_EVIDENCE_CLASSES, claims + interpretations, advisory, (), tuple(source.uncertainty for source in sources), "Bounded synthesis produced from exact approved sources; advisory output, if present, remains non-authoritative.", provider_status, len(sources), advisory_count, advisory_result.actual_cost if advisory_result else 0.0, duration_seconds)
 
 
 def make_evaluation_review_item(
