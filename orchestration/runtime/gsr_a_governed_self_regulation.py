@@ -15464,6 +15464,171 @@ class LiveScholarMissionResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_8_SOURCE_CLASSES = (
+    "approved_local_document",
+    "approved_primary_web_source",
+    "approved_secondary_web_source",
+)
+
+LIVE_8_ADVISORY_OUTPUT_CLASSES = (
+    "candidate_interpretation",
+    "candidate_derivation",
+    "candidate_critique",
+    "candidate_conjecture",
+    "insufficient_evidence",
+)
+
+LIVE_8_MISSION_EVIDENCE_CLASSES = (
+    "source_claim",
+    "established_result",
+    "DELTA_interpretation",
+    "reproduced_derivation",
+    "conjecture",
+    "contradiction",
+    "unresolved",
+    "insufficient_evidence",
+)
+
+
+@dataclass(frozen=True)
+class LiveSourceAcquisitionRequest:
+    source_request_id: str
+    research_question: str
+    source_class: str
+    exact_path_or_url: str
+    allowlisted_locations: tuple[str, ...]
+    maximum_sources: int = 5
+    maximum_retrieval_rounds: int = 3
+    maximum_bytes: int = 16384
+    requested_sequence: int = 0
+    expected_content_digest: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveSourceAcquisitionAuthorization:
+    source_authorization_id: str
+    source_request_id: str
+    exact_path_or_url: str
+    source_class: str
+    expected_content_digest: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    execution_authorized: bool = False
+    memory_write_authorized: bool = False
+    tracked_source_application_authorized: bool = False
+    automatic_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveSourceEvidenceRecord:
+    source_id: str
+    exact_path_or_url: str
+    title: str
+    author_or_publisher: str
+    source_type: str
+    retrieval_time: str
+    publication_or_version_date: str
+    content_digest: str
+    excerpts_or_equation_refs: tuple[str, ...]
+    primary_or_secondary: str
+    confidence: float
+    contradiction_state: str
+    uncertainty: str
+    untrusted_instruction_count: int = 0
+    source_claim_ids: tuple[str, ...] = ()
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveSourceAcquisitionResult:
+    accepted: bool
+    reason: str
+    request: LiveSourceAcquisitionRequest | None = None
+    original_authorization: LiveSourceAcquisitionAuthorization | None = None
+    consumed_authorization: LiveSourceAcquisitionAuthorization | None = None
+    evidence: LiveSourceEvidenceRecord | None = None
+    authorization_consumed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    source_instruction_executed: bool = False
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveAdvisoryModelRequest:
+    advisory_request_id: str
+    provider_identity: str
+    model_identity: str
+    task: str
+    input_evidence_digests: tuple[str, ...]
+    output_schema: tuple[str, ...]
+    token_limit: int
+    cost_limit: float
+    timeout_seconds: int
+    requested_sequence: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveAdvisoryModelAuthorization:
+    advisory_authorization_id: str
+    advisory_request_id: str
+    provider_identity: str
+    model_identity: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    advisory_only: bool = True
+    action_authority: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveAdvisoryModelEvidence:
+    advisory_evidence_id: str
+    provider_identity: str
+    model_identity: str
+    task: str
+    input_evidence_digests: tuple[str, ...]
+    output_classification: str
+    output_digest: str
+    advisory_text: str
+    provider_access_status: str
+    token_limit: int
+    cost_limit: float
+    action_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveAdvisoryModelResult:
+    accepted: bool
+    reason: str
+    request: LiveAdvisoryModelRequest | None = None
+    original_authorization: LiveAdvisoryModelAuthorization | None = None
+    consumed_authorization: LiveAdvisoryModelAuthorization | None = None
+    evidence: LiveAdvisoryModelEvidence | None = None
+    provider_access_deferred: bool = True
+    authorization_consumed: bool = False
+    action_authorized: bool = False
+    tracked_source_mutated: bool = False
+    memory_written: bool = False
+    git_operation_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -17721,6 +17886,213 @@ def run_live_7_recursive_scholar_mission_pilot(
         duplicate_work_prevented=restart_recovery,
         conjectures_proposed=1,
         conjectures_falsified=1,
+    )
+
+
+def make_live_source_acquisition_request(
+    *,
+    research_question: str,
+    source_class: str,
+    exact_path_or_url: str,
+    allowlisted_locations: tuple[str, ...],
+    requested_sequence: int,
+    maximum_bytes: int = 16384,
+    expected_content_digest: str = "",
+) -> LiveSourceAcquisitionRequest:
+    return LiveSourceAcquisitionRequest(
+        source_request_id=stable_id("live-8-source-request", research_question, source_class, exact_path_or_url, requested_sequence),
+        research_question=research_question,
+        source_class=source_class,
+        exact_path_or_url=exact_path_or_url,
+        allowlisted_locations=allowlisted_locations,
+        maximum_bytes=maximum_bytes,
+        requested_sequence=requested_sequence,
+        expected_content_digest=expected_content_digest,
+    )
+
+
+def make_live_source_acquisition_authorization(
+    request: LiveSourceAcquisitionRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+) -> LiveSourceAcquisitionAuthorization:
+    return LiveSourceAcquisitionAuthorization(
+        source_authorization_id=stable_id("live-8-source-authorization", request.source_request_id, issued_sequence),
+        source_request_id=request.source_request_id,
+        exact_path_or_url=request.exact_path_or_url,
+        source_class=request.source_class,
+        expected_content_digest=request.expected_content_digest,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        consumed=consumed,
+    )
+
+
+def _live8_embedded_instruction_count(content: str) -> int:
+    markers = ("ignore previous", "system prompt", "authorize", "execute", "commit", "deploy", "grant permission", "start tool", "send secret")
+    lowered = content.lower()
+    return sum(1 for marker in markers if marker in lowered)
+
+
+def acquire_live_source_evidence(
+    request: LiveSourceAcquisitionRequest,
+    authorization: LiveSourceAcquisitionAuthorization,
+    *,
+    sequence: int,
+    content: str,
+    title: str,
+    author_or_publisher: str = "",
+    publication_or_version_date: str = "",
+    retrieval_time: str = "deterministic-test-time",
+) -> LiveSourceAcquisitionResult:
+    if request.source_class not in LIVE_8_SOURCE_CLASSES:
+        return LiveSourceAcquisitionResult(False, "source_class_denied", request, authorization)
+    if (
+        authorization.source_request_id != request.source_request_id
+        or authorization.exact_path_or_url != request.exact_path_or_url
+        or authorization.source_class != request.source_class
+        or authorization.expected_content_digest != request.expected_content_digest
+    ):
+        return LiveSourceAcquisitionResult(False, "wrong_source_authorization", request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return LiveSourceAcquisitionResult(False, "operator_authority_required", request, authorization)
+    if not authorization.one_shot or authorization.consumed:
+        return LiveSourceAcquisitionResult(False, "source_authorization_unavailable", request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return LiveSourceAcquisitionResult(False, "source_authorization_expired", request, authorization)
+    if authorization.execution_authorized or authorization.memory_write_authorized or authorization.tracked_source_application_authorized or authorization.automatic_continuation_authorized:
+        return LiveSourceAcquisitionResult(False, "source_authorization_overbroad", request, authorization)
+    if request.exact_path_or_url not in request.allowlisted_locations:
+        return LiveSourceAcquisitionResult(False, "source_not_allowlisted", request, authorization)
+    encoded = content.encode("utf-8")
+    if len(encoded) > request.maximum_bytes:
+        return LiveSourceAcquisitionResult(False, "source_budget_exceeded", request, authorization)
+    digest = _sha256_bytes(encoded)
+    if request.expected_content_digest and digest != request.expected_content_digest:
+        return LiveSourceAcquisitionResult(False, "source_digest_mismatch", request, authorization)
+    primary_or_secondary = "primary" if request.source_class == "approved_primary_web_source" else "secondary"
+    if request.source_class == "approved_local_document":
+        primary_or_secondary = "local"
+    instruction_count = _live8_embedded_instruction_count(content)
+    evidence = LiveSourceEvidenceRecord(
+        source_id=stable_id("live-8-source-evidence", request.source_request_id, digest),
+        exact_path_or_url=request.exact_path_or_url,
+        title=title,
+        author_or_publisher=author_or_publisher,
+        source_type=request.source_class,
+        retrieval_time=retrieval_time,
+        publication_or_version_date=publication_or_version_date,
+        content_digest=digest,
+        excerpts_or_equation_refs=tuple(line.strip() for line in content.splitlines() if line.strip())[:5],
+        primary_or_secondary=primary_or_secondary,
+        confidence=0.85 if instruction_count == 0 else 0.65,
+        contradiction_state="none_observed",
+        uncertainty="embedded instructions isolated as untrusted content" if instruction_count else "bounded source fixture",
+        untrusted_instruction_count=instruction_count,
+        source_claim_ids=(stable_id("live-8-source-claim", digest, title),),
+    )
+    return LiveSourceAcquisitionResult(
+        True,
+        "source_evidence_acquired",
+        request,
+        authorization,
+        replace(authorization, consumed=True),
+        evidence,
+        authorization_consumed=True,
+    )
+
+
+def make_live_advisory_model_request(
+    *,
+    provider_identity: str,
+    model_identity: str,
+    task: str,
+    input_evidence_digests: tuple[str, ...],
+    output_schema: tuple[str, ...],
+    token_limit: int,
+    cost_limit: float,
+    timeout_seconds: int,
+    requested_sequence: int,
+) -> LiveAdvisoryModelRequest:
+    return LiveAdvisoryModelRequest(
+        advisory_request_id=stable_id("live-8-advisory-request", provider_identity, model_identity, task, input_evidence_digests, requested_sequence),
+        provider_identity=provider_identity,
+        model_identity=model_identity,
+        task=task,
+        input_evidence_digests=input_evidence_digests,
+        output_schema=output_schema,
+        token_limit=token_limit,
+        cost_limit=cost_limit,
+        timeout_seconds=timeout_seconds,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live_advisory_model_authorization(
+    request: LiveAdvisoryModelRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+) -> LiveAdvisoryModelAuthorization:
+    return LiveAdvisoryModelAuthorization(
+        advisory_authorization_id=stable_id("live-8-advisory-authorization", request.advisory_request_id, issued_sequence),
+        advisory_request_id=request.advisory_request_id,
+        provider_identity=request.provider_identity,
+        model_identity=request.model_identity,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        consumed=consumed,
+    )
+
+
+def run_live_advisory_model_stub(
+    request: LiveAdvisoryModelRequest,
+    authorization: LiveAdvisoryModelAuthorization,
+    *,
+    sequence: int,
+    advisory_text: str,
+    output_classification: str,
+) -> LiveAdvisoryModelResult:
+    if authorization.advisory_request_id != request.advisory_request_id or authorization.provider_identity != request.provider_identity or authorization.model_identity != request.model_identity:
+        return LiveAdvisoryModelResult(False, "wrong_advisory_authorization", request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return LiveAdvisoryModelResult(False, "operator_authority_required", request, authorization)
+    if not authorization.one_shot or authorization.consumed:
+        return LiveAdvisoryModelResult(False, "advisory_authorization_unavailable", request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return LiveAdvisoryModelResult(False, "advisory_authorization_expired", request, authorization)
+    if not authorization.advisory_only or authorization.action_authority:
+        return LiveAdvisoryModelResult(False, "model_action_authority_denied", request, authorization)
+    if output_classification not in LIVE_8_ADVISORY_OUTPUT_CLASSES:
+        return LiveAdvisoryModelResult(False, "advisory_output_class_denied", request, authorization)
+    if request.token_limit <= 0 or request.cost_limit < 0 or request.timeout_seconds <= 0:
+        return LiveAdvisoryModelResult(False, "advisory_budget_invalid", request, authorization)
+    digest = _digest_text(advisory_text)
+    evidence = LiveAdvisoryModelEvidence(
+        advisory_evidence_id=stable_id("live-8-advisory-evidence", request.advisory_request_id, digest),
+        provider_identity=request.provider_identity,
+        model_identity=request.model_identity,
+        task=request.task,
+        input_evidence_digests=request.input_evidence_digests,
+        output_classification=output_classification,
+        output_digest=digest,
+        advisory_text=advisory_text,
+        provider_access_status="provider_access_deferred",
+        token_limit=request.token_limit,
+        cost_limit=request.cost_limit,
+    )
+    return LiveAdvisoryModelResult(
+        True,
+        "advisory_stub_evidence_created",
+        request,
+        authorization,
+        replace(authorization, consumed=True),
+        evidence,
+        provider_access_deferred=True,
+        authorization_consumed=True,
     )
 
 
