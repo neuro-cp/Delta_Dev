@@ -1765,6 +1765,7 @@ class DeltaApp:
         ttk.Button(controls, text="Accept Mission", command=self._accept_selected_compiled_mission).pack(side=tk.LEFT)
         ttk.Button(controls, text="Start Development Runtime", command=self._start_oar_development_runtime).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Run Fixture Evidence", command=self._execute_selected_fixture_proposal).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Run Tracked-Source Preflight", command=self._run_selected_tracked_source_preflight).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Accept", command=lambda: self._record_evaluation_disposition("accepted")).pack(side=tk.LEFT)
         ttk.Button(controls, text="Decline", command=lambda: self._record_evaluation_disposition("declined")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Needs Modification", command=lambda: self._record_evaluation_disposition("needs_modification")).pack(side=tk.LEFT, padx=(6, 0))
@@ -2083,7 +2084,11 @@ class DeltaApp:
         details = item.get("details", item)
         if not isinstance(details, dict):
             return None, None
-        return key, details
+        raw_item = item.get("_raw_item", {})
+        if not isinstance(raw_item, dict):
+            raw_item = {}
+        merged = {**item, **raw_item, **details}
+        return key, merged
 
     def _oar_review_item_from_details(self, details: dict[str, object]) -> gsr.OperatorReviewItem | None:
         field_names = {field.name for field in fields(gsr.OperatorReviewItem)}
@@ -2235,6 +2240,83 @@ class DeltaApp:
         )
         self._persist_oar_live_development_state()
 
+    def _live_fixture_evidence_from_details(self, details: dict[str, object]) -> gsr.LiveFixtureExecutionEvidenceItem | None:
+        field_names = {field.name for field in fields(gsr.LiveFixtureExecutionEvidenceItem)}
+        payload = {key: value for key, value in details.items() if key in field_names}
+        required = {
+            "review_item_id",
+            "parent_review_item_id",
+            "proposal_id",
+            "proposal_version",
+            "authorization_id",
+            "exact_path",
+            "artifact_chain_digest",
+        }
+        if not required.issubset(payload):
+            return None
+        return gsr.LiveFixtureExecutionEvidenceItem(**payload)
+
+    def _run_selected_tracked_source_preflight(self) -> None:
+        _key, details = self._selected_evaluation_review_item()
+        if details is None:
+            self.evaluation_status.set("No evaluation item selected.")
+            return
+        evidence_item = self._live_fixture_evidence_from_details(details)
+        if evidence_item is None:
+            self.evaluation_status.set("Selected item is not LIVE-2A fixture evidence.")
+            return
+        parent_payload = next(
+            (
+                dict(item)
+                for item in self.evaluation_review_items
+                if str(item.get("review_item_id")) == evidence_item.parent_review_item_id
+            ),
+            None,
+        )
+        if parent_payload is None:
+            self.evaluation_status.set("Tracked-source preflight denied: parent proposal not found.")
+            return
+        item = gsr.OperatorReviewItem(**{
+            key: value
+            for key, value in parent_payload.items()
+            if key in {field.name for field in fields(gsr.OperatorReviewItem)}
+        })
+        sequence = len(self.evaluation_review_items) + len(self.evaluation_dispositions) + 30
+        mapping = gsr.make_live_tracked_source_target_mapping(item)
+        request = gsr.make_live_tracked_source_preflight_request(
+            item,
+            evidence_item,
+            mapping,
+            repository_identity=str(ROOT),
+            branch_identity="codex/delta-cognitive-core",
+            requested_sequence=sequence,
+        )
+        authorization = gsr.make_live_tracked_source_preflight_authorization(
+            request,
+            operator_identity="tk_operator",
+            issued_sequence=sequence,
+            expiration_sequence=sequence + 5,
+        )
+        result = gsr.execute_live_tracked_source_preflight(
+            self.oar_runtime_state,
+            item,
+            evidence_item,
+            request,
+            authorization,
+            sequence=sequence,
+            repository_root=ROOT,
+            current_branch="codex/delta-cognitive-core",
+        )
+        if not result.accepted or result.evidence_review_item is None:
+            self.evaluation_status.set(f"Tracked-source preflight denied: {result.reason}.")
+            return
+        self.oar_runtime_state = result.state
+        self._set_evaluation_review_items([*self.evaluation_review_items, result.evidence_review_item])
+        self.evaluation_status.set(
+            f"Tracked-source preflight queued: {result.evidence.eligibility_classification}. Runtime paused for operator review."
+        )
+        self._persist_oar_live_development_state()
+
     def _record_evaluation_disposition(self, disposition: str) -> None:
         _key, details = self._selected_evaluation_review_item()
         if details is None:
@@ -2365,6 +2447,7 @@ class DeltaApp:
             "status": status,
             "boundary": str(item.get("boundary") or f"Read-only {item_type} display."),
             "operator_action": str(item.get("operator_action") or "Review manually; this tab provides no approval or execution control."),
+            "_raw_item": item,
             "details": details,
             "guarantees": [
                 "Display-only rendering from an in-memory review item.",

@@ -464,3 +464,456 @@ def test_live_2a_mismatch_fails_before_authorization_consumption_and_restart_den
     assert duplicate.accepted is False
     assert duplicate.reason == "fixture_execution_already_completed"
     assert duplicate.execution_performed is False
+
+
+def _live_2a_evidence() -> tuple[gsr.OARRuntimeState, gsr.OperatorReviewItem, gsr.LiveFixtureExecutionEvidenceItem]:
+    state, item = _live_bridge_cycle()
+    authorization = gsr.make_live_fixture_execution_authorization(
+        item,
+        operator_identity="operator",
+        issued_sequence=70,
+        expiration_sequence=75,
+    )
+    result = gsr.execute_live_fixture_proposal(state, item, authorization, sequence=70)
+    assert result.accepted is True
+    assert result.evidence_review_item is not None
+    return result.state, item, result.evidence_review_item
+
+
+def _repo() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _digest(path: str) -> str:
+    return hashlib.sha256((_repo() / path).read_bytes()).hexdigest()
+
+
+def test_live_2b1_current_fixture_proposal_returns_fixture_only_readiness_without_application():
+    state, item, evidence = _live_2a_evidence()
+    mapping = gsr.make_live_tracked_source_target_mapping(item)
+    request = gsr.make_live_tracked_source_preflight_request(
+        item,
+        evidence,
+        mapping,
+        repository_identity=str(_repo()),
+        branch_identity="codex/delta-cognitive-core",
+        requested_sequence=80,
+    )
+    authorization = gsr.make_live_tracked_source_preflight_authorization(
+        request,
+        operator_identity="operator",
+        issued_sequence=80,
+        expiration_sequence=85,
+    )
+
+    result = gsr.execute_live_tracked_source_preflight(
+        state,
+        item,
+        evidence,
+        request,
+        authorization,
+        sequence=80,
+        repository_root=_repo(),
+        current_branch="codex/delta-cognitive-core",
+    )
+
+    assert result.accepted is True
+    assert result.reason == "fixture_only_no_tracked_target"
+    assert result.authorization_consumed is True
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.source_read is False
+    assert result.source_written is False
+    assert result.patch_applied is False
+    assert result.capability_activated is False
+    assert result.git_operation_performed is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+    assert result.evidence.eligibility_classification == "fixture_only_no_tracked_target"
+    assert result.evidence.proposed_tracked_target == ""
+    assert result.evidence.application_not_performed is True
+    assert result.evidence.capability_not_activated is True
+    assert result.evidence_review_item["status"] == "readiness_queued"
+    assert result.evidence_review_item["eligibility_classification"] == "fixture_only_no_tracked_target"
+
+
+def test_live_2b1_explicit_tracked_mapping_can_be_represented_without_authorizing_application():
+    state, item, evidence = _live_2a_evidence()
+    target = "DELTA.py"
+    mapping = gsr.make_live_tracked_source_target_mapping(
+        item,
+        tracked_target_path=target,
+        mapping_origin="explicit_operator_mapping",
+        expected_precondition_digest=_digest(target),
+        application_payload_digest="a" * 64,
+        rollback_plan_present=True,
+        explicit_operator_mapping=True,
+    )
+    request = gsr.make_live_tracked_source_preflight_request(
+        item,
+        evidence,
+        mapping,
+        repository_identity=str(_repo()),
+        branch_identity="codex/delta-cognitive-core",
+        requested_sequence=80,
+    )
+    authorization = gsr.make_live_tracked_source_preflight_authorization(request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+
+    result = gsr.execute_live_tracked_source_preflight(state, item, evidence, request, authorization, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+
+    assert result.accepted is True
+    assert result.reason == "eligible_for_exact_application_authorization"
+    assert result.source_read is True
+    assert result.source_written is False
+    assert result.evidence.proposed_tracked_target == target
+    assert result.evidence.tracked_file_status == "tracked"
+    assert result.evidence.observed_precondition_digest == _digest(target)
+    assert result.evidence.application_payload_status == "present"
+    assert result.evidence.rollback_plan_status == "present"
+    assert result.evidence.next_authorization_required == "LIVE-2B2 exact tracked-source application authorization"
+
+
+def test_live_2b1_does_not_infer_target_from_architecture_metadata_and_denies_stale_or_bad_inputs_before_or_during_preflight():
+    state, item, evidence = _live_2a_evidence()
+    assert any("gsr_a_governed_self_regulation.py" in option.get("affected_subsystems", ()) for option in item.architecture_alternatives)
+
+    mapping = gsr.make_live_tracked_source_target_mapping(item)
+    request = gsr.make_live_tracked_source_preflight_request(item, evidence, mapping, repository_identity=str(_repo()), branch_identity="codex/delta-cognitive-core", requested_sequence=80)
+    authorization = gsr.make_live_tracked_source_preflight_authorization(request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+    fixture_only = gsr.execute_live_tracked_source_preflight(state, item, evidence, request, authorization, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert fixture_only.reason == "fixture_only_no_tracked_target"
+    assert fixture_only.evidence.proposed_tracked_target == ""
+
+    wrong_request = replace(request, artifact_chain_digest="other-chain")
+    wrong = gsr.execute_live_tracked_source_preflight(state, item, evidence, wrong_request, authorization, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert wrong.accepted is False
+    assert wrong.reason == "artifact_chain_mismatch"
+    assert wrong.authorization_consumed is False
+    assert wrong.consumed_authorization is None
+
+    stale_mapping = gsr.make_live_tracked_source_target_mapping(
+        item,
+        tracked_target_path="DELTA.py",
+        mapping_origin="explicit_operator_mapping",
+        expected_precondition_digest="b" * 64,
+        application_payload_digest="a" * 64,
+        rollback_plan_present=True,
+        explicit_operator_mapping=True,
+    )
+    stale_request = gsr.make_live_tracked_source_preflight_request(item, evidence, stale_mapping, repository_identity=str(_repo()), branch_identity="codex/delta-cognitive-core", requested_sequence=80)
+    stale_auth = gsr.make_live_tracked_source_preflight_authorization(stale_request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+    stale = gsr.execute_live_tracked_source_preflight(state, item, evidence, stale_request, stale_auth, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert stale.accepted is True
+    assert stale.reason == "source_digest_stale"
+    assert stale.authorization_consumed is True
+    assert stale.source_read is True
+
+
+def test_live_2b1_repository_branch_path_worktree_payload_and_reuse_denials_are_stable():
+    state, item, evidence = _live_2a_evidence()
+    target = "DELTA.py"
+    mapping = gsr.make_live_tracked_source_target_mapping(
+        item,
+        tracked_target_path=target,
+        mapping_origin="explicit_operator_mapping",
+        expected_precondition_digest=_digest(target),
+        application_payload_digest="",
+        rollback_plan_present=False,
+        explicit_operator_mapping=True,
+    )
+    request = gsr.make_live_tracked_source_preflight_request(item, evidence, mapping, repository_identity=str(_repo()), branch_identity="codex/delta-cognitive-core", requested_sequence=80)
+    authorization = gsr.make_live_tracked_source_preflight_authorization(request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+
+    missing_payload = gsr.execute_live_tracked_source_preflight(state, item, evidence, request, authorization, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert missing_payload.reason == "application_payload_missing"
+    assert missing_payload.evidence.application_payload_status == "missing"
+
+    repo_mismatch = gsr.execute_live_tracked_source_preflight(state, item, evidence, request, authorization, sequence=80, repository_root=_repo().parent, current_branch="codex/delta-cognitive-core")
+    assert repo_mismatch.reason == "repository_mismatch"
+    branch_mismatch = gsr.execute_live_tracked_source_preflight(state, item, evidence, request, authorization, sequence=80, repository_root=_repo(), current_branch="other-branch")
+    assert branch_mismatch.reason == "branch_mismatch"
+
+    bad_path_mapping = replace(mapping, tracked_target_path="../escape.py", explicit_operator_mapping=True)
+    bad_path_request = gsr.make_live_tracked_source_preflight_request(item, evidence, bad_path_mapping, repository_identity=str(_repo()), branch_identity="codex/delta-cognitive-core", requested_sequence=80)
+    bad_path_auth = gsr.make_live_tracked_source_preflight_authorization(bad_path_request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+    bad_path = gsr.execute_live_tracked_source_preflight(state, item, evidence, bad_path_request, bad_path_auth, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert bad_path.reason == "target_path_invalid"
+
+    untracked_mapping = replace(mapping, tracked_target_path="fixture_capability_contract.py", application_payload_digest="a" * 64, rollback_plan_present=True, explicit_operator_mapping=True)
+    untracked_request = gsr.make_live_tracked_source_preflight_request(item, evidence, untracked_mapping, repository_identity=str(_repo()), branch_identity="codex/delta-cognitive-core", requested_sequence=80)
+    untracked_auth = gsr.make_live_tracked_source_preflight_authorization(untracked_request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+    untracked = gsr.execute_live_tracked_source_preflight(state, item, evidence, untracked_request, untracked_auth, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert untracked.reason == "target_not_tracked"
+
+    duplicate = gsr.execute_live_tracked_source_preflight(missing_payload.state, item, evidence, request, replace(authorization, consumed=True), sequence=81, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert duplicate.accepted is False
+    assert duplicate.reason == "tracked_preflight_already_completed"
+
+
+def _eligible_live_2b1(target: str = "DELTA.py") -> tuple[gsr.OARRuntimeState, gsr.LiveTrackedSourcePreflightResult]:
+    state, item, evidence = _live_2a_evidence()
+    mapping = gsr.make_live_tracked_source_target_mapping(
+        item,
+        tracked_target_path=target,
+        mapping_origin="explicit_operator_mapping",
+        expected_precondition_digest=_digest(target),
+        application_payload_digest="a" * 64,
+        rollback_plan_present=True,
+        explicit_operator_mapping=True,
+    )
+    request = gsr.make_live_tracked_source_preflight_request(item, evidence, mapping, repository_identity=str(_repo()), branch_identity="codex/delta-cognitive-core", requested_sequence=80)
+    authorization = gsr.make_live_tracked_source_preflight_authorization(request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+    result = gsr.execute_live_tracked_source_preflight(state, item, evidence, request, authorization, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    assert result.accepted is True
+    assert result.reason == "eligible_for_exact_application_authorization"
+    return result.state, result
+
+
+def _copy_target_to_isolated_repo(tmp_path: Path, target: str = "DELTA.py") -> Path:
+    isolated = tmp_path / "isolated_repo"
+    target_path = isolated / target
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    target_path.write_bytes((_repo() / target).read_bytes())
+    return isolated
+
+
+def _live_2b2_request(preflight: gsr.LiveTrackedSourcePreflightResult, isolated: Path, *, text: str = "# governed live application proof\n") -> gsr.LiveTrackedSourceApplicationRequest:
+    target = preflight.evidence.proposed_tracked_target
+    return gsr.make_live_tracked_source_application_request(
+        preflight,
+        isolated_repository_identity=str(isolated.resolve()),
+        reviewed_text_by_target={target: text},
+        validation_commands=("focused-live-application",),
+        requested_sequence=90,
+    )
+
+
+def test_live_2b2_authorization_is_exact_one_shot_and_does_not_write_before_consumption(tmp_path):
+    _, preflight = _eligible_live_2b1()
+    isolated = _copy_target_to_isolated_repo(tmp_path)
+    request = _live_2b2_request(preflight, isolated)
+    authorization = gsr.make_live_tracked_source_application_authorization(request, operator_identity="operator", issued_sequence=90, expiration_sequence=95)
+
+    wrong = replace(authorization, authorized_payload_digest="b" * 64)
+    denied = gsr.execute_live_tracked_source_application(
+        preflight.state,
+        preflight,
+        request,
+        wrong,
+        isolated_root=isolated,
+        validation_results={"focused-live-application": True},
+        sequence=90,
+    )
+
+    assert denied.accepted is False
+    assert denied.reason == "patch_payload_mismatch"
+    assert denied.authorization_consumed is False
+    assert denied.application_performed is False
+    assert (isolated / "DELTA.py").read_bytes() == (_repo() / "DELTA.py").read_bytes()
+
+    expired = replace(authorization, expiration_sequence=89)
+    denied_expired = gsr.execute_live_tracked_source_application(
+        preflight.state,
+        preflight,
+        request,
+        expired,
+        isolated_root=isolated,
+        validation_results={"focused-live-application": True},
+        sequence=90,
+    )
+    assert denied_expired.reason == "application_authorization_expired"
+    assert denied_expired.authorization_consumed is False
+
+
+def test_live_2b3_2b4_success_applies_exact_change_in_isolated_copy_and_queues_evidence(tmp_path):
+    _, preflight = _eligible_live_2b1()
+    isolated = _copy_target_to_isolated_repo(tmp_path)
+    request = _live_2b2_request(preflight, isolated)
+    authorization = gsr.make_live_tracked_source_application_authorization(request, operator_identity="operator", issued_sequence=90, expiration_sequence=95)
+
+    result = gsr.execute_live_tracked_source_application(
+        preflight.state,
+        preflight,
+        request,
+        authorization,
+        isolated_root=isolated,
+        validation_results={"focused-live-application": True},
+        sequence=90,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "application_validated"
+    assert result.authorization_consumed is True
+    assert authorization.consumed is False
+    assert result.consumed_authorization.consumed is True
+    assert result.application_performed is True
+    assert result.validation_succeeded is True
+    assert result.rollback_performed is False
+    assert result.active_worktree_mutated is False
+    assert result.capability_activated is False
+    assert result.git_operation_performed is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+    assert (isolated / "DELTA.py").read_text(encoding="utf-8") == "# governed live application proof\n"
+    assert (_repo() / "DELTA.py").read_bytes() != (isolated / "DELTA.py").read_bytes()
+    assert result.evidence.classification == "application_validated"
+    assert result.evidence_review_item["status"] == "application_evidence_queued"
+
+    duplicate = gsr.execute_live_tracked_source_application(
+        result.state,
+        preflight,
+        request,
+        replace(authorization, consumed=True),
+        isolated_root=isolated,
+        validation_results={"focused-live-application": True},
+        sequence=91,
+    )
+    assert duplicate.accepted is False
+    assert duplicate.reason == "tracked_application_already_completed"
+
+
+def test_live_2b4_failed_validation_rolls_back_exact_original_hash(tmp_path):
+    _, preflight = _eligible_live_2b1()
+    isolated = _copy_target_to_isolated_repo(tmp_path)
+    original_digest = hashlib.sha256((isolated / "DELTA.py").read_bytes()).hexdigest()
+    request = _live_2b2_request(preflight, isolated)
+    authorization = gsr.make_live_tracked_source_application_authorization(request, operator_identity="operator", issued_sequence=90, expiration_sequence=95)
+
+    result = gsr.execute_live_tracked_source_application(
+        preflight.state,
+        preflight,
+        request,
+        authorization,
+        isolated_root=isolated,
+        validation_results={"focused-live-application": False},
+        sequence=90,
+    )
+
+    assert result.accepted is False
+    assert result.reason == "application_rolled_back"
+    assert result.authorization_consumed is True
+    assert result.application_performed is True
+    assert result.rollback_performed is True
+    assert hashlib.sha256((isolated / "DELTA.py").read_bytes()).hexdigest() == original_digest
+    assert result.evidence.rollback_digests == result.evidence.pre_application_digests
+
+
+def _validated_application(tmp_path: Path) -> tuple[gsr.OARRuntimeState, gsr.LiveTrackedSourceApplicationEvidence]:
+    _, preflight = _eligible_live_2b1()
+    isolated = _copy_target_to_isolated_repo(tmp_path)
+    request = _live_2b2_request(preflight, isolated)
+    authorization = gsr.make_live_tracked_source_application_authorization(request, operator_identity="operator", issued_sequence=90, expiration_sequence=95)
+    result = gsr.execute_live_tracked_source_application(
+        preflight.state,
+        preflight,
+        request,
+        authorization,
+        isolated_root=isolated,
+        validation_results={"focused-live-application": True},
+        sequence=90,
+    )
+    assert result.accepted is True
+    return result.state, result.evidence
+
+
+def test_live_2c_promotion_is_operator_controlled_tiered_and_does_not_activate(tmp_path):
+    state, evidence = _validated_application(tmp_path)
+    request = gsr.make_live_capability_promotion_request(
+        evidence,
+        capability_id="language_claim_representation",
+        capability_version="1",
+        requested_from_tier="integration_tested",
+        requested_to_tier="tracked_source_validated",
+        requested_sequence=100,
+    )
+    authorization = gsr.make_live_capability_promotion_authorization(request, issued_sequence=100, expiration_sequence=105)
+    result = gsr.promote_live_capability_evidence(state, evidence, request, authorization, sequence=100)
+
+    assert result.accepted is True
+    assert result.promoted_tier == "tracked_source_validated"
+    assert result.capability_available is False
+    assert result.capability_active is False
+    assert result.activation_required is True
+    assert result.authorization_consumed is True
+    assert result.consumed_authorization.consumed is True
+    assert "language_claim_representation" not in result.state.active_capability_ids
+
+    skip = gsr.make_live_capability_promotion_request(
+        evidence,
+        capability_id="language_claim_representation",
+        capability_version="1",
+        requested_from_tier="integration_tested",
+        requested_to_tier="available",
+        requested_sequence=101,
+    )
+    skip_auth = gsr.make_live_capability_promotion_authorization(skip, issued_sequence=101, expiration_sequence=106)
+    denied = gsr.promote_live_capability_evidence(state, evidence, skip, skip_auth, sequence=101)
+    assert denied.accepted is False
+    assert denied.reason == "evidence_tier_skip_denied"
+
+    failed = replace(evidence, classification="application_rolled_back", rollback_performed=True)
+    denied_failed = gsr.promote_live_capability_evidence(state, failed, request, authorization, sequence=100)
+    assert denied_failed.reason == "validated_application_required"
+
+
+def _available_capability(tmp_path: Path) -> tuple[gsr.OARRuntimeState, gsr.LiveTrackedSourceApplicationEvidence, gsr.LiveCapabilityPromotionResult]:
+    state, evidence = _validated_application(tmp_path)
+    tiers = (
+        ("integration_tested", "tracked_source_validated"),
+        ("tracked_source_validated", "operator_approved"),
+        ("operator_approved", "available"),
+    )
+    promotion = None
+    for offset, (src, dst) in enumerate(tiers):
+        request = gsr.make_live_capability_promotion_request(
+            evidence,
+            capability_id="language_claim_representation",
+            capability_version="1",
+            requested_from_tier=src,
+            requested_to_tier=dst,
+            requested_sequence=100 + offset,
+        )
+        authorization = gsr.make_live_capability_promotion_authorization(request, issued_sequence=100 + offset, expiration_sequence=110)
+        promotion = gsr.promote_live_capability_evidence(state, evidence, request, authorization, sequence=100 + offset)
+        assert promotion.accepted is True
+        state = promotion.state
+    assert promotion.capability_available is True
+    return state, evidence, promotion
+
+
+def test_live_2d_activation_requires_separate_authorization_and_can_deactivate(tmp_path):
+    state, _, promotion = _available_capability(tmp_path)
+    request = gsr.make_live_capability_activation_request(
+        promotion,
+        capability_version="1",
+        runtime_checkpoint_id="checkpoint-live-2d",
+        allowed_runtime_behavior=("fixture_verification_only",),
+        deactivation_plan_digest="deactivate-" + "a" * 16,
+        requested_sequence=120,
+    )
+    wrong = gsr.make_live_capability_activation_authorization(request, issued_sequence=120, expiration_sequence=125)
+    wrong = replace(wrong, application_authorized=True)
+
+    denied = gsr.activate_live_capability(state, request, wrong, sequence=120, verification_passed=True)
+    assert denied.accepted is False
+    assert denied.reason == "forbidden_authority"
+    assert denied.authorization_consumed is False
+
+    authorization = gsr.make_live_capability_activation_authorization(request, issued_sequence=120, expiration_sequence=125)
+    result = gsr.activate_live_capability(state, request, authorization, sequence=120, verification_passed=True, deactivate_after_verification=True)
+
+    assert result.accepted is True
+    assert result.reason == "activation_verified"
+    assert result.activation_performed is True
+    assert result.deactivation_verified is True
+    assert result.authorization_consumed is True
+    assert result.consumed_authorization.consumed is True
+    assert result.application_performed is False
+    assert result.git_operation_performed is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+    assert "language_claim_representation" not in result.state.active_capability_ids
+    assert "language_claim_representation" in result.state.activated_capability_ids

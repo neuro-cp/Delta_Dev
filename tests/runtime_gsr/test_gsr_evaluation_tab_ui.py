@@ -200,53 +200,49 @@ def test_evaluation_tab_records_oar_dispositions_without_application_side_effect
 def test_tk_live_mission_intake_surfaces_oar_compilation_before_live_routing():
     thread_count_before = threading.active_count()
     child_processes_before = tuple(multiprocessing.active_children())
-    root = tk.Tk()
-    root.withdraw()
     app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
-    app.root = root
-    try:
-        outer = DELTA.ttk.Frame(root)
-        outer.pack(fill=tk.BOTH, expand=True)
-        app.notebook = DELTA.ttk.Notebook(outer)
-        app.notebook.pack(fill=tk.BOTH, expand=True)
-        app.evaluation_tab = DELTA.ttk.Frame(app.notebook, padding=10)
-        app.notebook.add(app.evaluation_tab, text="Evaluation")
-        app._build_evaluation_tab()
-        app.chat_input = DELTA.ttk.Entry(root)
-        app.chat_input.insert(
-            0,
-            "Develop the first small improvement needed for better scholarly language behavior.",
-        )
-        app.mode = tk.StringVar(value="Conversation")
-        app.developer_overlay_enabled = tk.BooleanVar(value=False)
-        app.last_report_inspection = None
-        app.session_history = []
-        app.live_runtime_session = type("ActiveRuntime", (), {"active": True})()
-        app.live_runtime_called = False
-        app._begin_live_runtime_turn = lambda _message: setattr(app, "live_runtime_called", True)
-        app.chat_lines = []
-        app.session_lines = []
-        app._append_chat = lambda speaker, text: app.chat_lines.append((speaker, text))
-        app._append_session = lambda role, content: app.session_lines.append({"role": role, "content": content})
-        app._refresh_state_cards = lambda: None
+    class FakeEntry:
+        def __init__(self, value: str) -> None:
+            self.value = value
 
-        app._send_chat()
+        def get(self) -> str:
+            return self.value
 
-        assert app.live_runtime_called is False
-        assert len(app.evaluation_review_items) == 1
-        item = app.evaluation_review_items[0]
-        assert item["item_type"] == "oar_mission_compilation"
-        assert item["status"] == "pending_operator_review"
-        details = item["details"]
-        assert "scholarly language behavior" in details["original_operator_mission"]
-        assert details["mission_started"] is False
-        assert details["source_application_authorized"] is False
-        assert details["capability_activated"] is False
-        assert details["automatic_continuation"] is False
-        assert app.chat_lines[-1][0] == "DELTA"
-        assert "compiled it for operator review" in app.chat_lines[-1][1]
-    finally:
-        root.destroy()
+        def delete(self, *_args) -> None:
+            self.value = ""
+
+    app.chat_input = FakeEntry("Develop the first small improvement needed for better scholarly language behavior.")
+    app.developer_overlay_enabled = type("Flag", (), {"get": lambda self: False})()
+    app.last_report_inspection = None
+    app.session_history = []
+    app.evaluation_review_items = []
+    app.evaluation_dispositions = []
+    app.oar_live_state_persistence_enabled = False
+    app.live_runtime_session = type("ActiveRuntime", (), {"active": True})()
+    app.live_runtime_called = False
+    app._begin_live_runtime_turn = lambda _message: setattr(app, "live_runtime_called", True)
+    app.chat_lines = []
+    app.session_lines = []
+    app._append_chat = lambda speaker, text: app.chat_lines.append((speaker, text))
+    app._append_session = lambda role, content: app.session_lines.append({"role": role, "content": content})
+    app._refresh_state_cards = lambda: None
+    app._refresh_evaluation_snapshot = lambda: None
+
+    app._send_chat()
+
+    assert app.live_runtime_called is False
+    assert len(app.evaluation_review_items) == 1
+    item = app.evaluation_review_items[0]
+    assert item["item_type"] == "oar_mission_compilation"
+    assert item["status"] == "pending_operator_review"
+    details = item["details"]
+    assert "scholarly language behavior" in details["original_operator_mission"]
+    assert details["mission_started"] is False
+    assert details["source_application_authorized"] is False
+    assert details["capability_activated"] is False
+    assert details["automatic_continuation"] is False
+    assert app.chat_lines[-1][0] == "DELTA"
+    assert "compiled it for operator review" in app.chat_lines[-1][1]
 
     assert threading.active_count() == thread_count_before
     assert tuple(multiprocessing.active_children()) == child_processes_before
@@ -328,38 +324,35 @@ def test_tk_accepts_compiled_mission_then_start_runtime_queues_one_proposal():
 def test_tk_oar_live_development_state_recovers_stopped_without_duplicate_proposal(monkeypatch, tmp_path):
     state_path = tmp_path / "oar_live_development_state.json"
     monkeypatch.setattr(DELTA, "OAR_LIVE_DEVELOPMENT_STATE_PATH", state_path)
-
-    root = tk.Tk()
-    root.withdraw()
     app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
-    app.root = root
-    try:
-        outer = DELTA.ttk.Frame(root)
-        outer.pack(fill=tk.BOTH, expand=True)
-        app.notebook = DELTA.ttk.Notebook(outer)
-        app.notebook.pack(fill=tk.BOTH, expand=True)
-        app.evaluation_tab = DELTA.ttk.Frame(app.notebook, padding=10)
-        app.notebook.add(app.evaluation_tab, text="Evaluation")
-        app.session_history = []
-        app.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
-        app.oar_approved_compiled_mission = None
-        app.oar_mission_approval = None
-        app.evaluation_review_items = []
-        app.evaluation_dispositions = []
-        app.oar_live_state_persistence_enabled = True
-        app._build_evaluation_tab()
-        app._handle_oar_language_development_mission(
-            "Improve your demonstrated ability to comprehend, analyze, and discuss scholarly material."
-        )
-        app.evaluation_items.selection_set(app.evaluation_items.get_children()[0])
-        app._accept_selected_compiled_mission()
-        app._start_oar_development_runtime()
+    request = gsr.make_mission_compilation_request(
+        "Improve your demonstrated ability to comprehend, analyze, and discuss scholarly material.",
+        baseline_evaluation_id="tk-live-language-baseline",
+        requested_sequence=1,
+    )
+    authorization = gsr.make_mission_compilation_authorization(request, issued_sequence=2)
+    compilation = gsr.compile_language_development_mission(request, authorization, sequence=3)
+    mission_approval = gsr.approve_compiled_mission(compilation.compiled_objective, operator_identity="tk_operator", sequence=4)
+    registered = gsr.register_approved_mission_for_development(
+        gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime"),
+        compilation.compiled_objective,
+        mission_approval,
+        sequence=5,
+    )
+    cycle = gsr.run_one_oar_development_runtime_cycle(registered.state, compilation.compiled_objective, sequence=6)
+    app.session_history = []
+    app.oar_runtime_state = cycle.state
+    app.oar_approved_compiled_mission = asdict(compilation.compiled_objective)
+    app.oar_mission_approval = asdict(mission_approval)
+    app.evaluation_review_items = [{"status": "mission_approved", **asdict(compilation.compiled_objective)}, asdict(cycle.review_item)]
+    app.evaluation_dispositions = []
+    app.oar_live_state_persistence_enabled = True
+    app.evaluation_status = _StatusVar()
+    app._persist_oar_live_development_state()
 
-        assert state_path.exists()
-        assert app.oar_runtime_state.development_runtime_mode == "paused"
-        assert len(app.evaluation_review_items) == 2
-    finally:
-        root.destroy()
+    assert state_path.exists()
+    assert app.oar_runtime_state.development_runtime_mode == "paused"
+    assert len(app.evaluation_review_items) == 2
 
     recovered_app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
     recovered_app.session_history = []
@@ -464,3 +457,69 @@ def test_tk_runs_selected_fixture_proposal_and_recovers_without_duplicate_execut
     duplicate = gsr.execute_live_fixture_proposal(recovered_app.oar_runtime_state, item, authorization, sequence=40)
     assert duplicate.accepted is False
     assert duplicate.reason == "fixture_execution_already_completed"
+
+
+def test_tk_runs_tracked_source_preflight_for_fixture_evidence_without_application(monkeypatch, tmp_path):
+    state_path = tmp_path / "oar_live_development_state.json"
+    monkeypatch.setattr(DELTA, "OAR_LIVE_DEVELOPMENT_STATE_PATH", state_path)
+    compiled = gsr.make_mission_compilation_request(
+        "Improve your demonstrated ability to comprehend, analyze, and discuss scholarly material.",
+        baseline_evaluation_id="tk-live-language-baseline",
+        requested_sequence=1,
+    )
+    authorization = gsr.make_mission_compilation_authorization(compiled, issued_sequence=2)
+    compilation = gsr.compile_language_development_mission(compiled, authorization, sequence=3)
+    mission_approval = gsr.approve_compiled_mission(compilation.compiled_objective, operator_identity="tk_operator", sequence=4)
+    registered = gsr.register_approved_mission_for_development(
+        gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime"),
+        compilation.compiled_objective,
+        mission_approval,
+        sequence=5,
+    )
+    cycle = gsr.run_one_oar_development_runtime_cycle(registered.state, compilation.compiled_objective, sequence=6)
+    fixture_authorization = gsr.make_live_fixture_execution_authorization(cycle.review_item, operator_identity="tk_operator", issued_sequence=7, expiration_sequence=12)
+    fixture = gsr.execute_live_fixture_proposal(cycle.state, cycle.review_item, fixture_authorization, sequence=7)
+    assert fixture.accepted is True
+
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.oar_runtime_state = fixture.state
+    app.oar_approved_compiled_mission = asdict(compilation.compiled_objective)
+    app.oar_mission_approval = asdict(mission_approval)
+    app.evaluation_review_items = [asdict(cycle.review_item), asdict(fixture.evidence_review_item)]
+    app.evaluation_dispositions = []
+    app.oar_live_state_persistence_enabled = True
+    app.evaluation_status = _StatusVar()
+    app._selected_evaluation_review_item = lambda: ("review-2", asdict(fixture.evidence_review_item))
+
+    def set_items(items):
+        app.evaluation_review_items = [
+            asdict(item) if hasattr(item, "__dataclass_fields__") else dict(item)
+            for item in items
+        ]
+
+    app._set_evaluation_review_items = set_items
+
+    app._run_selected_tracked_source_preflight()
+    app._persist_oar_live_development_state()
+
+    assert len(app.evaluation_review_items) == 3
+    readiness = app.evaluation_review_items[2]
+    assert readiness["status"] == "readiness_queued"
+    assert readiness["eligibility_classification"] == "fixture_only_no_tracked_target"
+    assert readiness["application_performed"] is False
+    assert readiness["capability_activated"] is False
+    assert readiness["automatic_continuation"] is False
+    assert app.oar_runtime_state.development_runtime_mode == "paused"
+    assert app.oar_runtime_state.completed_tracked_preflight_review_item_ids == (fixture.evidence_review_item.review_item_id,)
+    assert "Tracked-source preflight queued" in app.evaluation_status.get()
+
+    recovered = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    recovered.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+    recovered.oar_approved_compiled_mission = None
+    recovered.oar_mission_approval = None
+    recovered.evaluation_review_items = []
+    recovered.evaluation_dispositions = []
+    recovered.oar_live_state_persistence_enabled = True
+    recovered._load_oar_live_development_state()
+    assert recovered.oar_runtime_state.development_runtime_mode == "stopped"
+    assert len(recovered.evaluation_review_items) == 3

@@ -14488,6 +14488,10 @@ class OARRuntimeState:
     active_mission_id: str = ""
     completed_cycle_ids: tuple[str, ...] = ()
     executed_fixture_review_item_ids: tuple[str, ...] = ()
+    completed_tracked_preflight_review_item_ids: tuple[str, ...] = ()
+    completed_tracked_application_review_item_ids: tuple[str, ...] = ()
+    promoted_capability_ids: tuple[str, ...] = ()
+    activated_capability_ids: tuple[str, ...] = ()
     pending_review_ids: tuple[str, ...] = ()
     declined_review_ids: tuple[str, ...] = ()
     accepted_review_ids: tuple[str, ...] = ()
@@ -14622,6 +14626,392 @@ class LiveFixtureExecutionResult:
     runtime_paused: bool = True
     tracked_source_mutated: bool = False
     capability_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+LIVE_2B1_CLASSIFICATIONS = (
+    "eligible_for_exact_application_authorization",
+    "fixture_only_no_tracked_target",
+    "tracked_target_mapping_required",
+    "application_payload_missing",
+    "unsupported_application_form",
+    "target_not_tracked",
+    "target_not_allowlisted",
+    "target_path_invalid",
+    "source_missing",
+    "source_digest_stale",
+    "proposal_identity_mismatch",
+    "execution_evidence_mismatch",
+    "artifact_chain_mismatch",
+    "repository_mismatch",
+    "branch_mismatch",
+    "worktree_not_clean_for_application",
+    "staged_changes_present",
+    "merge_state_unsafe",
+    "scope_limit_exceeded",
+    "rollback_plan_missing",
+    "capability_activation_required_separately",
+    "operator_decision_required",
+)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourceTargetMapping:
+    mapping_id: str
+    proposal_id: str
+    review_item_id: str
+    fixture_path: str
+    tracked_target_path: str = ""
+    mapping_origin: str = "none"
+    expected_precondition_digest: str = ""
+    application_payload_digest: str = ""
+    rollback_plan_present: bool = False
+    explicit_operator_mapping: bool = False
+    maximum_changed_bytes: int = 4096
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourcePreflightRequest:
+    preflight_request_id: str
+    proposal_id: str
+    proposal_version: int
+    review_item_id: str
+    live_2a_evidence_review_item_id: str
+    compiled_objective_id: str
+    parent_mission_id: str
+    capability_gap_id: str
+    capability_specification_id: str
+    selected_architecture_option_id: str
+    artifact_chain_digest: str
+    runtime_checkpoint_id: str
+    repository_identity: str
+    branch_identity: str
+    target_mapping: LiveTrackedSourceTargetMapping
+    maximum_file_count: int
+    maximum_changed_bytes: int
+    requested_sequence: int
+    application_prohibited: bool = True
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourcePreflightAuthorization:
+    preflight_authorization_id: str
+    preflight_request_id: str
+    operator_identity: str
+    operator_issued: bool
+    one_shot: bool
+    issued_sequence: int
+    expiration_sequence: int
+    repository_identity: str
+    branch_identity: str
+    proposal_id: str
+    review_item_id: str
+    live_2a_evidence_review_item_id: str
+    target_mapping_id: str
+    expected_precondition_digest: str
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    read_only_preflight_authorized: bool = True
+    consumed: bool = False
+    tracked_source_application_prohibited: bool = True
+    mutation_prohibited: bool = True
+    git_prohibited: bool = True
+    activation_prohibited: bool = True
+    provider_model_use_prohibited: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourcePreflightEvidence:
+    readiness_evidence_id: str
+    proposal_id: str
+    proposal_version: int
+    review_item_id: str
+    live_2a_evidence_review_item_id: str
+    preflight_request_id: str
+    preflight_authorization_id: str
+    repository_identity: str
+    branch_identity: str
+    fixture_path: str
+    proposed_tracked_target: str
+    target_mapping_origin: str
+    tracked_file_status: str
+    expected_precondition_digest: str
+    observed_precondition_digest: str
+    application_payload_status: str
+    rollback_plan_status: str
+    maximum_file_count: int
+    maximum_changed_bytes: int
+    worktree_state: dict[str, tuple[str, ...]]
+    eligibility_classification: str
+    denial_reasons: tuple[str, ...]
+    uncertainty: str
+    next_authorization_required: str
+    tracked_source_unchanged: bool = True
+    application_not_performed: bool = True
+    capability_not_activated: bool = True
+    runtime_paused: bool = True
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourcePreflightResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    request: LiveTrackedSourcePreflightRequest | None = None
+    original_authorization: LiveTrackedSourcePreflightAuthorization | None = None
+    consumed_authorization: LiveTrackedSourcePreflightAuthorization | None = None
+    evidence: LiveTrackedSourcePreflightEvidence | None = None
+    evidence_review_item: dict[str, Any] | None = None
+    authorization_consumed: bool = False
+    preflight_started: bool = False
+    source_read: bool = False
+    source_written: bool = False
+    patch_applied: bool = False
+    capability_activated: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    memory_written: bool = False
+    persistence_performed: bool = False
+    scheduler_started: bool = False
+    thread_started: bool = False
+    background_task_started: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourceApplicationRequest:
+    application_request_id: str
+    preflight_evidence_id: str
+    proposal_id: str
+    proposal_version: int
+    review_item_id: str
+    live_2a_evidence_review_item_id: str
+    preflight_request_id: str
+    preflight_authorization_id: str
+    repository_identity: str
+    isolated_repository_identity: str
+    branch_identity: str
+    target_paths: tuple[str, ...]
+    expected_precondition_digests: dict[str, str]
+    reviewed_text_by_target: dict[str, str]
+    reviewed_payload_digest: str
+    validation_commands: tuple[str, ...]
+    rollback_plan_digest: str
+    maximum_file_count: int
+    maximum_changed_bytes: int
+    requested_sequence: int
+    activation_requested: bool = False
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourceApplicationAuthorization:
+    application_authorization_id: str
+    application_request_id: str
+    preflight_evidence_id: str
+    proposal_id: str
+    review_item_id: str
+    repository_identity: str
+    isolated_repository_identity: str
+    branch_identity: str
+    authorized_target_paths: tuple[str, ...]
+    authorized_precondition_digests: dict[str, str]
+    authorized_payload_digest: str
+    authorized_validation_commands: tuple[str, ...]
+    authorized_rollback_plan_digest: str
+    maximum_file_count: int
+    maximum_changed_bytes: int
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    application_authorized: bool = True
+    activation_authorized: bool = False
+    git_authorized: bool = False
+    provider_model_authorized: bool = False
+    automatic_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourceApplicationEvidence:
+    application_evidence_id: str
+    application_request_id: str
+    application_authorization_id: str
+    preflight_evidence_id: str
+    proposal_id: str
+    target_paths: tuple[str, ...]
+    pre_application_digests: dict[str, str]
+    post_application_digests: dict[str, str]
+    rollback_digests: dict[str, str]
+    diff_summary: tuple[str, ...]
+    validation_results: tuple[dict[str, Any], ...]
+    classification: str
+    application_performed: bool
+    rollback_performed: bool = False
+    cleanup_verified: bool = True
+    isolated_repository_identity: str = ""
+    active_worktree_mutated: bool = False
+    capability_activated: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveTrackedSourceApplicationResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    request: LiveTrackedSourceApplicationRequest | None = None
+    original_authorization: LiveTrackedSourceApplicationAuthorization | None = None
+    consumed_authorization: LiveTrackedSourceApplicationAuthorization | None = None
+    evidence: LiveTrackedSourceApplicationEvidence | None = None
+    evidence_review_item: dict[str, Any] | None = None
+    authorization_consumed: bool = False
+    application_started: bool = False
+    application_performed: bool = False
+    validation_succeeded: bool = False
+    rollback_performed: bool = False
+    active_worktree_mutated: bool = False
+    capability_activated: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityPromotionRequest:
+    promotion_request_id: str
+    capability_id: str
+    capability_version: str
+    application_evidence_id: str
+    requested_from_tier: str
+    requested_to_tier: str
+    requested_sequence: int
+    activation_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityPromotionAuthorization:
+    promotion_authorization_id: str
+    promotion_request_id: str
+    capability_id: str
+    application_evidence_id: str
+    authorized_from_tier: str
+    authorized_to_tier: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    activation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityPromotionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    request: LiveCapabilityPromotionRequest | None = None
+    original_authorization: LiveCapabilityPromotionAuthorization | None = None
+    consumed_authorization: LiveCapabilityPromotionAuthorization | None = None
+    promoted_tier: str = ""
+    capability_available: bool = False
+    capability_active: bool = False
+    activation_required: bool = True
+    authorization_consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityActivationRequest:
+    activation_request_id: str
+    capability_id: str
+    capability_version: str
+    application_evidence_id: str
+    promoted_tier: str
+    runtime_checkpoint_id: str
+    allowed_runtime_behavior: tuple[str, ...]
+    deactivation_plan_digest: str
+    requested_sequence: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityActivationAuthorization:
+    activation_authorization_id: str
+    activation_request_id: str
+    capability_id: str
+    capability_version: str
+    application_evidence_id: str
+    promoted_tier: str
+    runtime_checkpoint_id: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    activation_authorized: bool = True
+    application_authorized: bool = False
+    git_authorized: bool = False
+    provider_model_authorized: bool = False
+    automatic_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityActivationEvidence:
+    activation_evidence_id: str
+    activation_request_id: str
+    activation_authorization_id: str
+    capability_id: str
+    capability_version: str
+    runtime_checkpoint_id: str
+    verification_result: str
+    activated: bool
+    deactivated_after_verification: bool
+    runtime_paused: bool = True
+    application_performed: bool = False
+    git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveCapabilityActivationResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    request: LiveCapabilityActivationRequest | None = None
+    original_authorization: LiveCapabilityActivationAuthorization | None = None
+    consumed_authorization: LiveCapabilityActivationAuthorization | None = None
+    evidence: LiveCapabilityActivationEvidence | None = None
+    activation_performed: bool = False
+    deactivation_verified: bool = False
+    authorization_consumed: bool = False
+    application_performed: bool = False
+    git_operation_performed: bool = False
     provider_called: bool = False
     model_invoked: bool = False
     automatic_continuation: bool = False
@@ -15252,6 +15642,860 @@ def execute_live_fixture_proposal(
         provider_called=sandbox_result.provider_called,
         model_invoked=sandbox_result.model_invoked,
         automatic_continuation=sandbox_result.automatic_continuation,
+    )
+
+
+def _current_branch_name() -> str:
+    completed = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=_repo_root(),
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    return completed.stdout.strip()
+
+
+def _path_is_tracked(path: str) -> bool:
+    completed = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", path],
+        cwd=_repo_root(),
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    return completed.returncode == 0
+
+
+def _worktree_state_for_live_preflight() -> dict[str, tuple[str, ...]]:
+    status = _git_status_short()
+    modified: list[str] = []
+    staged: list[str] = []
+    untracked: list[str] = []
+    conflicted: list[str] = []
+    for entry in status:
+        if len(entry) < 4:
+            continue
+        code = entry[:2]
+        path = entry[3:]
+        if code == "??":
+            untracked.append(path)
+            continue
+        if "U" in code:
+            conflicted.append(path)
+        if code[0] not in {" ", "?"}:
+            staged.append(path)
+        if code[1] not in {" ", "?"}:
+            modified.append(path)
+    return {
+        "modified": tuple(modified),
+        "staged": tuple(staged),
+        "untracked": tuple(untracked),
+        "conflicted": tuple(conflicted),
+    }
+
+
+def make_live_tracked_source_target_mapping(
+    review_item: OperatorReviewItem,
+    *,
+    tracked_target_path: str = "",
+    mapping_origin: str = "none",
+    expected_precondition_digest: str = "",
+    application_payload_digest: str = "",
+    rollback_plan_present: bool = False,
+    explicit_operator_mapping: bool = False,
+    maximum_changed_bytes: int = 4096,
+) -> LiveTrackedSourceTargetMapping:
+    fixture_path = review_item.exact_affected_files[0] if review_item.exact_affected_files else ""
+    return LiveTrackedSourceTargetMapping(
+        mapping_id=stable_id(
+            "live-2b1-target-mapping",
+            review_item.review_item_id,
+            review_item.proposal_id,
+            fixture_path,
+            tracked_target_path,
+            mapping_origin,
+            expected_precondition_digest,
+        ),
+        proposal_id=review_item.proposal_id,
+        review_item_id=review_item.review_item_id,
+        fixture_path=fixture_path,
+        tracked_target_path=tracked_target_path,
+        mapping_origin=mapping_origin,
+        expected_precondition_digest=expected_precondition_digest,
+        application_payload_digest=application_payload_digest,
+        rollback_plan_present=rollback_plan_present,
+        explicit_operator_mapping=explicit_operator_mapping,
+        maximum_changed_bytes=maximum_changed_bytes,
+    )
+
+
+def make_live_tracked_source_preflight_request(
+    review_item: OperatorReviewItem,
+    evidence_item: LiveFixtureExecutionEvidenceItem,
+    mapping: LiveTrackedSourceTargetMapping,
+    *,
+    repository_identity: str,
+    branch_identity: str,
+    requested_sequence: int,
+    maximum_file_count: int = 1,
+    maximum_changed_bytes: int = 4096,
+) -> LiveTrackedSourcePreflightRequest:
+    return LiveTrackedSourcePreflightRequest(
+        preflight_request_id=stable_id(
+            "live-2b1-preflight-request",
+            review_item.review_item_id,
+            evidence_item.review_item_id,
+            mapping.mapping_id,
+            repository_identity,
+            branch_identity,
+            requested_sequence,
+        ),
+        proposal_id=review_item.proposal_id,
+        proposal_version=review_item.proposal_version,
+        review_item_id=review_item.review_item_id,
+        live_2a_evidence_review_item_id=evidence_item.review_item_id,
+        compiled_objective_id=review_item.compiled_objective_id,
+        parent_mission_id=review_item.parent_mission_id,
+        capability_gap_id=review_item.capability_gap_id,
+        capability_specification_id=_review_item_capability_specification_id(review_item),
+        selected_architecture_option_id=_review_item_selected_architecture_option_id(review_item),
+        artifact_chain_digest=review_item.artifact_chain_digest,
+        runtime_checkpoint_id=_review_item_runtime_checkpoint_id(review_item),
+        repository_identity=repository_identity,
+        branch_identity=branch_identity,
+        target_mapping=mapping,
+        maximum_file_count=maximum_file_count,
+        maximum_changed_bytes=maximum_changed_bytes,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live_tracked_source_preflight_authorization(
+    request: LiveTrackedSourcePreflightRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+) -> LiveTrackedSourcePreflightAuthorization:
+    return LiveTrackedSourcePreflightAuthorization(
+        preflight_authorization_id=stable_id(
+            "live-2b1-preflight-authorization",
+            request.preflight_request_id,
+            operator_identity,
+            issued_sequence,
+        ),
+        preflight_request_id=request.preflight_request_id,
+        operator_identity=operator_identity,
+        operator_issued=True,
+        one_shot=True,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        repository_identity=request.repository_identity,
+        branch_identity=request.branch_identity,
+        proposal_id=request.proposal_id,
+        review_item_id=request.review_item_id,
+        live_2a_evidence_review_item_id=request.live_2a_evidence_review_item_id,
+        target_mapping_id=request.target_mapping.mapping_id,
+        expected_precondition_digest=request.target_mapping.expected_precondition_digest,
+        consumed=consumed,
+    )
+
+
+def _live_preflight_request_matches(
+    review_item: OperatorReviewItem,
+    evidence_item: LiveFixtureExecutionEvidenceItem,
+    request: LiveTrackedSourcePreflightRequest,
+    authorization: LiveTrackedSourcePreflightAuthorization,
+    *,
+    sequence: int,
+) -> tuple[bool, str]:
+    if request.proposal_id != review_item.proposal_id or request.proposal_version != review_item.proposal_version:
+        return False, "proposal_identity_mismatch"
+    if request.review_item_id != review_item.review_item_id:
+        return False, "proposal_identity_mismatch"
+    if request.live_2a_evidence_review_item_id != evidence_item.review_item_id or evidence_item.parent_review_item_id != review_item.review_item_id:
+        return False, "execution_evidence_mismatch"
+    if request.compiled_objective_id != review_item.compiled_objective_id or request.parent_mission_id != review_item.parent_mission_id:
+        return False, "proposal_identity_mismatch"
+    if request.capability_gap_id != review_item.capability_gap_id:
+        return False, "proposal_identity_mismatch"
+    if request.capability_specification_id != _review_item_capability_specification_id(review_item):
+        return False, "proposal_identity_mismatch"
+    if request.selected_architecture_option_id != _review_item_selected_architecture_option_id(review_item):
+        return False, "proposal_identity_mismatch"
+    if request.artifact_chain_digest != review_item.artifact_chain_digest or request.artifact_chain_digest != evidence_item.artifact_chain_digest:
+        return False, "artifact_chain_mismatch"
+    if request.runtime_checkpoint_id != _review_item_runtime_checkpoint_id(review_item):
+        return False, "proposal_identity_mismatch"
+    mapping = request.target_mapping
+    if mapping.proposal_id != review_item.proposal_id or mapping.review_item_id != review_item.review_item_id:
+        return False, "proposal_identity_mismatch"
+    if mapping.fixture_path != evidence_item.exact_path:
+        return False, "execution_evidence_mismatch"
+    if authorization.preflight_request_id != request.preflight_request_id:
+        return False, "wrong_preflight_authorization"
+    if authorization.repository_identity != request.repository_identity or authorization.branch_identity != request.branch_identity:
+        return False, "wrong_preflight_authorization"
+    if authorization.proposal_id != request.proposal_id or authorization.review_item_id != request.review_item_id:
+        return False, "wrong_preflight_authorization"
+    if authorization.live_2a_evidence_review_item_id != request.live_2a_evidence_review_item_id:
+        return False, "wrong_preflight_authorization"
+    if authorization.target_mapping_id != mapping.mapping_id:
+        return False, "wrong_preflight_authorization"
+    if authorization.expected_precondition_digest != mapping.expected_precondition_digest:
+        return False, "wrong_preflight_authorization"
+    if not authorization.operator_issued or authorization.operator_identity == "" or authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "operator_decision_required"
+    if not authorization.one_shot:
+        return False, "wrong_preflight_authorization"
+    if authorization.consumed:
+        return False, "preflight_authorization_consumed"
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return False, "preflight_authorization_expired"
+    if not authorization.read_only_preflight_authorized:
+        return False, "operator_decision_required"
+    if not (
+        authorization.tracked_source_application_prohibited
+        and authorization.mutation_prohibited
+        and authorization.git_prohibited
+        and authorization.activation_prohibited
+        and authorization.provider_model_use_prohibited
+        and request.application_prohibited
+    ):
+        return False, "operator_decision_required"
+    return True, "valid"
+
+
+def execute_live_tracked_source_preflight(
+    state: OARRuntimeState,
+    review_item: OperatorReviewItem,
+    evidence_item: LiveFixtureExecutionEvidenceItem,
+    request: LiveTrackedSourcePreflightRequest,
+    authorization: LiveTrackedSourcePreflightAuthorization,
+    *,
+    sequence: int,
+    repository_root: Path | None = None,
+    current_branch: str | None = None,
+) -> LiveTrackedSourcePreflightResult:
+    if evidence_item.review_item_id in state.completed_tracked_preflight_review_item_ids:
+        return LiveTrackedSourcePreflightResult(False, "tracked_preflight_already_completed", state, request, authorization)
+    valid, reason = _live_preflight_request_matches(review_item, evidence_item, request, authorization, sequence=sequence)
+    if not valid:
+        return LiveTrackedSourcePreflightResult(False, reason, state, request, authorization)
+
+    mapping = request.target_mapping
+    if request.maximum_file_count != 1 or request.maximum_changed_bytes > mapping.maximum_changed_bytes:
+        classification = "scope_limit_exceeded"
+    elif not mapping.tracked_target_path:
+        classification = "fixture_only_no_tracked_target"
+    elif not mapping.explicit_operator_mapping:
+        classification = "tracked_target_mapping_required"
+    elif _normalized_application_path(mapping.tracked_target_path) is None:
+        classification = "target_path_invalid"
+    else:
+        classification = "operator_decision_required"
+
+    # Authorization is consumed immediately before the first repository/worktree inspection.
+    consumed_authorization = replace(authorization, consumed=True)
+    root = (repository_root or _repo_root()).resolve()
+    actual_repository = str(root)
+    actual_branch = current_branch if current_branch is not None else _current_branch_name()
+    worktree = _worktree_state_for_live_preflight()
+    denial_reasons: list[str] = []
+    source_read = False
+    tracked_status = "not_applicable"
+    observed_digest = ""
+    application_payload_status = "missing"
+    rollback_plan_status = "missing"
+
+    if actual_repository != request.repository_identity:
+        classification = "repository_mismatch"
+        denial_reasons.append("repository_mismatch")
+    if actual_branch != request.branch_identity:
+        classification = "branch_mismatch"
+        denial_reasons.append("branch_mismatch")
+    if worktree["conflicted"]:
+        classification = "merge_state_unsafe"
+        denial_reasons.append("merge_state_unsafe")
+    elif worktree["staged"]:
+        classification = "staged_changes_present"
+        denial_reasons.append("staged_changes_present")
+
+    if mapping.tracked_target_path and classification not in {"repository_mismatch", "branch_mismatch", "merge_state_unsafe", "staged_changes_present"}:
+        normalized = _normalized_application_path(mapping.tracked_target_path)
+        if normalized is None:
+            classification = "target_path_invalid"
+            denial_reasons.append("target_path_invalid")
+            tracked_status = "invalid"
+        elif not _path_is_tracked(normalized):
+            classification = "target_not_tracked"
+            denial_reasons.append("target_not_tracked")
+            tracked_status = "untracked"
+        else:
+            tracked_status = "tracked"
+            inspection = inspect_application_targets_read_only(root, (normalized,))
+            source_read = True
+            observed_digest = inspection.current_target_hashes.get(normalized, "")
+            target_type = inspection.target_type_map.get(normalized, "missing")
+            if not inspection.target_existence_map.get(normalized, False):
+                classification = "source_missing"
+                denial_reasons.append("source_missing")
+            elif target_type == "symlink":
+                classification = "target_path_invalid"
+                denial_reasons.append("target_path_invalid")
+            elif mapping.expected_precondition_digest and observed_digest != mapping.expected_precondition_digest:
+                classification = "source_digest_stale"
+                denial_reasons.append("source_digest_stale")
+            elif not mapping.application_payload_digest:
+                classification = "application_payload_missing"
+                denial_reasons.append("application_payload_missing")
+            elif not mapping.rollback_plan_present:
+                classification = "rollback_plan_missing"
+                denial_reasons.append("rollback_plan_missing")
+            elif classification == "operator_decision_required":
+                classification = "eligible_for_exact_application_authorization"
+                application_payload_status = "present"
+                rollback_plan_status = "present"
+    else:
+        denial_reasons.append("fixture_only_no_tracked_target")
+
+    if mapping.application_payload_digest and application_payload_status == "missing":
+        application_payload_status = "present"
+    if mapping.rollback_plan_present and rollback_plan_status == "missing":
+        rollback_plan_status = "present"
+    if classification not in LIVE_2B1_CLASSIFICATIONS:
+        classification = "operator_decision_required"
+    evidence = LiveTrackedSourcePreflightEvidence(
+        readiness_evidence_id=stable_id("live-2b1-readiness-evidence", request.preflight_request_id, authorization.preflight_authorization_id, classification),
+        proposal_id=review_item.proposal_id,
+        proposal_version=review_item.proposal_version,
+        review_item_id=review_item.review_item_id,
+        live_2a_evidence_review_item_id=evidence_item.review_item_id,
+        preflight_request_id=request.preflight_request_id,
+        preflight_authorization_id=authorization.preflight_authorization_id,
+        repository_identity=request.repository_identity,
+        branch_identity=request.branch_identity,
+        fixture_path=mapping.fixture_path,
+        proposed_tracked_target=mapping.tracked_target_path,
+        target_mapping_origin=mapping.mapping_origin,
+        tracked_file_status=tracked_status,
+        expected_precondition_digest=mapping.expected_precondition_digest,
+        observed_precondition_digest=observed_digest,
+        application_payload_status=application_payload_status,
+        rollback_plan_status=rollback_plan_status,
+        maximum_file_count=request.maximum_file_count,
+        maximum_changed_bytes=request.maximum_changed_bytes,
+        worktree_state=worktree,
+        eligibility_classification=classification,
+        denial_reasons=tuple(dict.fromkeys(denial_reasons or ([classification] if classification != "eligible_for_exact_application_authorization" else []))),
+        uncertainty="preflight only; no source application has been authorized or performed",
+        next_authorization_required="LIVE-2B2 exact tracked-source application authorization" if classification == "eligible_for_exact_application_authorization" else "operator target mapping or revised proposal required",
+    )
+    evidence_item_payload = {
+        "review_item_id": evidence.readiness_evidence_id,
+        "parent_review_item_id": evidence.live_2a_evidence_review_item_id,
+        "status": "readiness_queued",
+        "boundary": "Read-only tracked-source application preflight. No application performed.",
+        "proposal_id": evidence.proposal_id,
+        "proposal_version": evidence.proposal_version,
+        "eligibility_classification": evidence.eligibility_classification,
+        "denial_reasons": evidence.denial_reasons,
+        "tracked_source_unchanged": True,
+        "application_performed": False,
+        "capability_activated": False,
+        "automatic_continuation": False,
+        "details": serialize(evidence),
+        "safety": safety_metadata(),
+    }
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        completed_tracked_preflight_review_item_ids=tuple(dict.fromkeys(state.completed_tracked_preflight_review_item_ids + (evidence_item.review_item_id,))),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (evidence.readiness_evidence_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveTrackedSourcePreflightResult(
+        True,
+        classification,
+        updated,
+        request,
+        authorization,
+        consumed_authorization,
+        evidence,
+        evidence_item_payload,
+        authorization_consumed=True,
+        preflight_started=True,
+        source_read=source_read,
+    )
+
+
+LIVE_CAPABILITY_EVIDENCE_TIERS = (
+    "implemented",
+    "focused_tested",
+    "integration_tested",
+    "tracked_source_validated",
+    "operator_approved",
+    "available",
+)
+
+
+def _digest_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def make_live_tracked_source_application_request(
+    preflight: LiveTrackedSourcePreflightResult,
+    *,
+    isolated_repository_identity: str,
+    reviewed_text_by_target: Mapping[str, str],
+    validation_commands: tuple[str, ...],
+    requested_sequence: int,
+) -> LiveTrackedSourceApplicationRequest:
+    evidence = preflight.evidence
+    request = preflight.request
+    target = evidence.proposed_tracked_target if evidence is not None else ""
+    payload = "".join(str(reviewed_text_by_target.get(path, "")) for path in (target,))
+    return LiveTrackedSourceApplicationRequest(
+        application_request_id=stable_id("live-2b2-application-request", evidence.readiness_evidence_id, isolated_repository_identity, target, requested_sequence),
+        preflight_evidence_id=evidence.readiness_evidence_id,
+        proposal_id=evidence.proposal_id,
+        proposal_version=evidence.proposal_version,
+        review_item_id=evidence.review_item_id,
+        live_2a_evidence_review_item_id=evidence.live_2a_evidence_review_item_id,
+        preflight_request_id=evidence.preflight_request_id,
+        preflight_authorization_id=evidence.preflight_authorization_id,
+        repository_identity=evidence.repository_identity,
+        isolated_repository_identity=isolated_repository_identity,
+        branch_identity=evidence.branch_identity,
+        target_paths=(target,) if target else (),
+        expected_precondition_digests={target: evidence.observed_precondition_digest} if target else {},
+        reviewed_text_by_target=dict(reviewed_text_by_target),
+        reviewed_payload_digest=_digest_text(payload),
+        validation_commands=validation_commands,
+        rollback_plan_digest=stable_id("live-2b2-rollback-plan", evidence.readiness_evidence_id, target, evidence.observed_precondition_digest),
+        maximum_file_count=request.maximum_file_count,
+        maximum_changed_bytes=request.maximum_changed_bytes,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live_tracked_source_application_authorization(
+    request: LiveTrackedSourceApplicationRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+) -> LiveTrackedSourceApplicationAuthorization:
+    return LiveTrackedSourceApplicationAuthorization(
+        application_authorization_id=stable_id("live-2b2-application-authorization", request.application_request_id, operator_identity, issued_sequence),
+        application_request_id=request.application_request_id,
+        preflight_evidence_id=request.preflight_evidence_id,
+        proposal_id=request.proposal_id,
+        review_item_id=request.review_item_id,
+        repository_identity=request.repository_identity,
+        isolated_repository_identity=request.isolated_repository_identity,
+        branch_identity=request.branch_identity,
+        authorized_target_paths=request.target_paths,
+        authorized_precondition_digests=dict(request.expected_precondition_digests),
+        authorized_payload_digest=request.reviewed_payload_digest,
+        authorized_validation_commands=request.validation_commands,
+        authorized_rollback_plan_digest=request.rollback_plan_digest,
+        maximum_file_count=request.maximum_file_count,
+        maximum_changed_bytes=request.maximum_changed_bytes,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        consumed=consumed,
+    )
+
+
+def _live_application_authorization_matches(
+    preflight: LiveTrackedSourcePreflightResult,
+    request: LiveTrackedSourceApplicationRequest,
+    authorization: LiveTrackedSourceApplicationAuthorization,
+    *,
+    sequence: int,
+    isolated_root: Path,
+) -> tuple[bool, str]:
+    if preflight.evidence is None or preflight.reason != "eligible_for_exact_application_authorization":
+        return False, "preflight_not_eligible"
+    evidence = preflight.evidence
+    if request.preflight_evidence_id != evidence.readiness_evidence_id:
+        return False, "wrong_preflight_evidence"
+    if request.proposal_id != evidence.proposal_id or request.proposal_version != evidence.proposal_version or request.review_item_id != evidence.review_item_id:
+        return False, "proposal_identity_mismatch"
+    if request.repository_identity != evidence.repository_identity or request.branch_identity != evidence.branch_identity:
+        return False, "repository_mismatch"
+    if str(isolated_root.resolve()) != request.isolated_repository_identity:
+        return False, "isolated_repository_mismatch"
+    if request.isolated_repository_identity == request.repository_identity:
+        return False, "isolated_repository_required"
+    if request.target_paths != (evidence.proposed_tracked_target,):
+        return False, "target_mismatch"
+    if set(request.reviewed_text_by_target) != set(request.target_paths):
+        return False, "patch_payload_mismatch"
+    expected_payload = "".join(request.reviewed_text_by_target[path] for path in request.target_paths)
+    if request.reviewed_payload_digest != _digest_text(expected_payload):
+        return False, "patch_payload_mismatch"
+    if request.reviewed_payload_digest != authorization.authorized_payload_digest:
+        return False, "patch_payload_mismatch"
+    if request.expected_precondition_digests != authorization.authorized_precondition_digests:
+        return False, "precondition_mismatch"
+    if request.rollback_plan_digest != authorization.authorized_rollback_plan_digest:
+        return False, "rollback_plan_mismatch"
+    if request.validation_commands != authorization.authorized_validation_commands:
+        return False, "validation_plan_mismatch"
+    if request.maximum_file_count != authorization.maximum_file_count or request.maximum_changed_bytes != authorization.maximum_changed_bytes:
+        return False, "scope_limit_mismatch"
+    if authorization.application_request_id != request.application_request_id or authorization.preflight_evidence_id != request.preflight_evidence_id:
+        return False, "wrong_application_authorization"
+    if authorization.repository_identity != request.repository_identity or authorization.isolated_repository_identity != request.isolated_repository_identity:
+        return False, "wrong_application_authorization"
+    if authorization.authorized_target_paths != request.target_paths:
+        return False, "target_mismatch"
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return False, "operator_authority_required"
+    if not authorization.one_shot or not authorization.application_authorized:
+        return False, "wrong_application_authorization"
+    if authorization.consumed:
+        return False, "application_authorization_consumed"
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return False, "application_authorization_expired"
+    if authorization.activation_authorized or authorization.git_authorized or authorization.provider_model_authorized or authorization.automatic_continuation_authorized:
+        return False, "forbidden_authority"
+    if len(request.target_paths) != 1 or len(request.reviewed_text_by_target) != 1:
+        return False, "scope_limit_exceeded"
+    payload_bytes = sum(len(text.encode("utf-8")) for text in request.reviewed_text_by_target.values())
+    if payload_bytes > request.maximum_changed_bytes:
+        return False, "scope_limit_exceeded"
+    return True, "valid"
+
+
+def _hash_isolated_targets(root: Path, targets: tuple[str, ...]) -> dict[str, str]:
+    hashes: dict[str, str] = {}
+    for target in targets:
+        normalized = _normalized_application_path(target)
+        if normalized is None:
+            continue
+        path = (root / normalized).resolve()
+        try:
+            path.relative_to(root.resolve())
+        except ValueError:
+            continue
+        ok, _, digest = _hash_file_read_only(path)
+        if ok:
+            hashes[normalized] = digest
+    return hashes
+
+
+def execute_live_tracked_source_application(
+    state: OARRuntimeState,
+    preflight: LiveTrackedSourcePreflightResult,
+    request: LiveTrackedSourceApplicationRequest,
+    authorization: LiveTrackedSourceApplicationAuthorization,
+    *,
+    isolated_root: Path,
+    validation_results: Mapping[str, bool],
+    sequence: int,
+) -> LiveTrackedSourceApplicationResult:
+    if request.preflight_evidence_id in state.completed_tracked_application_review_item_ids:
+        return LiveTrackedSourceApplicationResult(False, "tracked_application_already_completed", state, request, authorization)
+    valid, reason = _live_application_authorization_matches(preflight, request, authorization, sequence=sequence, isolated_root=isolated_root)
+    if not valid:
+        return LiveTrackedSourceApplicationResult(False, reason, state, request, authorization)
+
+    root = isolated_root.resolve()
+    before = _hash_isolated_targets(root, request.target_paths)
+    if before != request.expected_precondition_digests:
+        return LiveTrackedSourceApplicationResult(False, "precondition_mismatch", state, request, authorization)
+
+    consumed = replace(authorization, consumed=True)
+    target = request.target_paths[0]
+    target_path = (root / target).resolve()
+    try:
+        target_path.relative_to(root)
+    except ValueError:
+        return LiveTrackedSourceApplicationResult(False, "target_path_invalid", state, request, authorization)
+
+    original_bytes = target_path.read_bytes()
+    new_text = request.reviewed_text_by_target[target]
+    target_path.write_text(new_text, encoding="utf-8")
+    after_write = _hash_isolated_targets(root, request.target_paths)
+    validation_payload = tuple({"command": command, "passed": bool(validation_results.get(command, False))} for command in request.validation_commands)
+    validation_succeeded = all(item["passed"] for item in validation_payload)
+    classification = "application_validated" if validation_succeeded else "application_failed_tests"
+    rollback_performed = False
+    rollback_hashes: dict[str, str] = {}
+    if not validation_succeeded:
+        target_path.write_bytes(original_bytes)
+        rollback_performed = True
+        rollback_hashes = _hash_isolated_targets(root, request.target_paths)
+        classification = "application_rolled_back" if rollback_hashes == before else "application_regressed"
+
+    evidence_id = stable_id("live-2b4-application-evidence", request.application_request_id, authorization.application_authorization_id, classification, sequence)
+    diff_summary = (f"{target}: {before.get(target, '')[:12]} -> {after_write.get(target, '')[:12]}",)
+    evidence = LiveTrackedSourceApplicationEvidence(
+        application_evidence_id=evidence_id,
+        application_request_id=request.application_request_id,
+        application_authorization_id=authorization.application_authorization_id,
+        preflight_evidence_id=request.preflight_evidence_id,
+        proposal_id=request.proposal_id,
+        target_paths=request.target_paths,
+        pre_application_digests=before,
+        post_application_digests=after_write,
+        rollback_digests=rollback_hashes,
+        diff_summary=diff_summary,
+        validation_results=validation_payload,
+        classification=classification,
+        application_performed=True,
+        rollback_performed=rollback_performed,
+        isolated_repository_identity=request.isolated_repository_identity,
+    )
+    payload = {
+        "review_item_id": evidence.application_evidence_id,
+        "parent_review_item_id": request.preflight_evidence_id,
+        "status": "application_evidence_queued",
+        "boundary": "Isolated tracked-source application evidence. Capability remains inactive.",
+        "proposal_id": evidence.proposal_id,
+        "classification": evidence.classification,
+        "target_paths": evidence.target_paths,
+        "application_performed": True,
+        "rollback_performed": evidence.rollback_performed,
+        "capability_activated": False,
+        "automatic_continuation": False,
+        "details": serialize(evidence),
+        "safety": safety_metadata(),
+    }
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        completed_tracked_application_review_item_ids=tuple(dict.fromkeys(state.completed_tracked_application_review_item_ids + (request.preflight_evidence_id,))),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (evidence.application_evidence_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    accepted = classification == "application_validated"
+    return LiveTrackedSourceApplicationResult(
+        accepted,
+        classification,
+        updated,
+        request,
+        authorization,
+        consumed,
+        evidence,
+        payload,
+        authorization_consumed=True,
+        application_started=True,
+        application_performed=True,
+        validation_succeeded=accepted,
+        rollback_performed=rollback_performed,
+    )
+
+
+def make_live_capability_promotion_request(
+    application_evidence: LiveTrackedSourceApplicationEvidence,
+    *,
+    capability_id: str,
+    capability_version: str,
+    requested_from_tier: str,
+    requested_to_tier: str,
+    requested_sequence: int,
+) -> LiveCapabilityPromotionRequest:
+    return LiveCapabilityPromotionRequest(
+        promotion_request_id=stable_id("live-2c-promotion-request", application_evidence.application_evidence_id, capability_id, requested_from_tier, requested_to_tier, requested_sequence),
+        capability_id=capability_id,
+        capability_version=capability_version,
+        application_evidence_id=application_evidence.application_evidence_id,
+        requested_from_tier=requested_from_tier,
+        requested_to_tier=requested_to_tier,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live_capability_promotion_authorization(
+    request: LiveCapabilityPromotionRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+) -> LiveCapabilityPromotionAuthorization:
+    return LiveCapabilityPromotionAuthorization(
+        promotion_authorization_id=stable_id("live-2c-promotion-authorization", request.promotion_request_id, issued_sequence),
+        promotion_request_id=request.promotion_request_id,
+        capability_id=request.capability_id,
+        application_evidence_id=request.application_evidence_id,
+        authorized_from_tier=request.requested_from_tier,
+        authorized_to_tier=request.requested_to_tier,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        consumed=consumed,
+    )
+
+
+def promote_live_capability_evidence(
+    state: OARRuntimeState,
+    application_evidence: LiveTrackedSourceApplicationEvidence,
+    request: LiveCapabilityPromotionRequest,
+    authorization: LiveCapabilityPromotionAuthorization,
+    *,
+    sequence: int,
+) -> LiveCapabilityPromotionResult:
+    if application_evidence.classification != "application_validated" or application_evidence.rollback_performed:
+        return LiveCapabilityPromotionResult(False, "validated_application_required", state, request, authorization)
+    if authorization.promotion_request_id != request.promotion_request_id or authorization.application_evidence_id != request.application_evidence_id:
+        return LiveCapabilityPromotionResult(False, "wrong_promotion_authorization", state, request, authorization)
+    if authorization.capability_id != request.capability_id or authorization.authorized_from_tier != request.requested_from_tier or authorization.authorized_to_tier != request.requested_to_tier:
+        return LiveCapabilityPromotionResult(False, "wrong_promotion_authorization", state, request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return LiveCapabilityPromotionResult(False, "operator_authority_required", state, request, authorization)
+    if not authorization.one_shot or authorization.consumed:
+        return LiveCapabilityPromotionResult(False, "promotion_authorization_unavailable", state, request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return LiveCapabilityPromotionResult(False, "promotion_authorization_expired", state, request, authorization)
+    if authorization.activation_authorized or request.activation_requested:
+        return LiveCapabilityPromotionResult(False, "activation_requires_separate_authorization", state, request, authorization)
+    try:
+        from_index = LIVE_CAPABILITY_EVIDENCE_TIERS.index(request.requested_from_tier)
+        to_index = LIVE_CAPABILITY_EVIDENCE_TIERS.index(request.requested_to_tier)
+    except ValueError:
+        return LiveCapabilityPromotionResult(False, "unknown_evidence_tier", state, request, authorization)
+    if to_index != from_index + 1:
+        return LiveCapabilityPromotionResult(False, "evidence_tier_skip_denied", state, request, authorization)
+    if request.requested_to_tier == "tracked_source_validated" and request.requested_from_tier != "integration_tested":
+        return LiveCapabilityPromotionResult(False, "evidence_tier_mismatch", state, request, authorization)
+
+    consumed = replace(authorization, consumed=True)
+    available = request.requested_to_tier == "available"
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        promoted_capability_ids=tuple(dict.fromkeys(state.promoted_capability_ids + (request.capability_id,))),
+        available_capability_ids=tuple(dict.fromkeys(state.available_capability_ids + ((request.capability_id,) if available else ()))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveCapabilityPromotionResult(
+        True,
+        "capability_evidence_promoted",
+        updated,
+        request,
+        authorization,
+        consumed,
+        promoted_tier=request.requested_to_tier,
+        capability_available=available,
+        capability_active=False,
+        activation_required=True,
+        authorization_consumed=True,
+    )
+
+
+def make_live_capability_activation_request(
+    promotion: LiveCapabilityPromotionResult,
+    *,
+    capability_version: str,
+    runtime_checkpoint_id: str,
+    allowed_runtime_behavior: tuple[str, ...],
+    deactivation_plan_digest: str,
+    requested_sequence: int,
+) -> LiveCapabilityActivationRequest:
+    return LiveCapabilityActivationRequest(
+        activation_request_id=stable_id("live-2d-activation-request", promotion.capability_id if hasattr(promotion, "capability_id") else promotion.request.capability_id, runtime_checkpoint_id, requested_sequence),
+        capability_id=promotion.request.capability_id,
+        capability_version=capability_version,
+        application_evidence_id=promotion.request.application_evidence_id,
+        promoted_tier=promotion.promoted_tier,
+        runtime_checkpoint_id=runtime_checkpoint_id,
+        allowed_runtime_behavior=allowed_runtime_behavior,
+        deactivation_plan_digest=deactivation_plan_digest,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live_capability_activation_authorization(
+    request: LiveCapabilityActivationRequest,
+    *,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+) -> LiveCapabilityActivationAuthorization:
+    return LiveCapabilityActivationAuthorization(
+        activation_authorization_id=stable_id("live-2d-activation-authorization", request.activation_request_id, issued_sequence),
+        activation_request_id=request.activation_request_id,
+        capability_id=request.capability_id,
+        capability_version=request.capability_version,
+        application_evidence_id=request.application_evidence_id,
+        promoted_tier=request.promoted_tier,
+        runtime_checkpoint_id=request.runtime_checkpoint_id,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        consumed=consumed,
+    )
+
+
+def activate_live_capability(
+    state: OARRuntimeState,
+    request: LiveCapabilityActivationRequest,
+    authorization: LiveCapabilityActivationAuthorization,
+    *,
+    sequence: int,
+    verification_passed: bool,
+    deactivate_after_verification: bool = False,
+) -> LiveCapabilityActivationResult:
+    if request.capability_id not in state.available_capability_ids or request.promoted_tier != "available":
+        return LiveCapabilityActivationResult(False, "capability_not_available", state, request, authorization)
+    if authorization.activation_request_id != request.activation_request_id or authorization.capability_id != request.capability_id:
+        return LiveCapabilityActivationResult(False, "wrong_activation_authorization", state, request, authorization)
+    if authorization.capability_version != request.capability_version or authorization.application_evidence_id != request.application_evidence_id:
+        return LiveCapabilityActivationResult(False, "wrong_activation_authorization", state, request, authorization)
+    if authorization.promoted_tier != request.promoted_tier or authorization.runtime_checkpoint_id != request.runtime_checkpoint_id:
+        return LiveCapabilityActivationResult(False, "wrong_activation_authorization", state, request, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY:
+        return LiveCapabilityActivationResult(False, "operator_authority_required", state, request, authorization)
+    if not authorization.one_shot or authorization.consumed:
+        return LiveCapabilityActivationResult(False, "activation_authorization_unavailable", state, request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return LiveCapabilityActivationResult(False, "activation_authorization_expired", state, request, authorization)
+    if authorization.application_authorized or authorization.git_authorized or authorization.provider_model_authorized or authorization.automatic_continuation_authorized:
+        return LiveCapabilityActivationResult(False, "forbidden_authority", state, request, authorization)
+    consumed = replace(authorization, consumed=True)
+    active_ids = tuple(dict.fromkeys(state.active_capability_ids + (request.capability_id,)))
+    if deactivate_after_verification:
+        active_ids = tuple(item for item in active_ids if item != request.capability_id)
+    evidence = LiveCapabilityActivationEvidence(
+        activation_evidence_id=stable_id("live-2d-activation-evidence", request.activation_request_id, authorization.activation_authorization_id, verification_passed, deactivate_after_verification),
+        activation_request_id=request.activation_request_id,
+        activation_authorization_id=authorization.activation_authorization_id,
+        capability_id=request.capability_id,
+        capability_version=request.capability_version,
+        runtime_checkpoint_id=request.runtime_checkpoint_id,
+        verification_result="activation_verified" if verification_passed else "activation_verification_failed",
+        activated=verification_passed and not deactivate_after_verification,
+        deactivated_after_verification=deactivate_after_verification,
+    )
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        active_capability_ids=active_ids,
+        activated_capability_ids=tuple(dict.fromkeys(state.activated_capability_ids + (request.capability_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveCapabilityActivationResult(
+        verification_passed,
+        evidence.verification_result,
+        updated,
+        request,
+        authorization,
+        consumed,
+        evidence,
+        activation_performed=verification_passed,
+        deactivation_verified=deactivate_after_verification,
+        authorization_consumed=True,
     )
 
 
