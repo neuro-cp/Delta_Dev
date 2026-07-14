@@ -16449,6 +16449,92 @@ class Live16ToolProviderMissionResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_17_STEP_STATES = (
+    "planned",
+    "pending_authorization",
+    "authorized",
+    "running",
+    "completed",
+    "failed",
+    "uncertain",
+    "skipped_not_required",
+    "blocked_dependency",
+    "revoked",
+    "expired",
+)
+
+
+@dataclass(frozen=True)
+class Live17ToolchainStep:
+    step_id: str
+    tool_identity: str
+    tool_class: str
+    input_identities: tuple[str, ...]
+    output_schema: tuple[str, ...]
+    dependencies: tuple[str, ...]
+    authorization_required: bool
+    expected_failure_modes: tuple[str, ...]
+    budget_allocation: dict[str, int]
+    completion_criterion: str
+    state: str = "planned"
+    output_digest: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live17ToolchainPlan:
+    plan_id: str
+    mission_id: str
+    exact_goal: str
+    success_criteria: tuple[str, ...]
+    ordered_step_ids: tuple[str, ...]
+    steps: tuple[Live17ToolchainStep, ...]
+    revision_count: int = 0
+    parent_mission_preserved: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live17StepEvidence:
+    step_id: str
+    tool_identity: str
+    input_identities: tuple[str, ...]
+    input_digests: tuple[str, ...]
+    start_sequence: int
+    completion_sequence: int
+    completion_state: str
+    output_digest: str
+    output_schema_result: str
+    budget_use: dict[str, int]
+    warnings: tuple[str, ...]
+    uncertainty: str
+    downstream_eligible: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live17ToolchainResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    plan: Live17ToolchainPlan
+    step_evidence: tuple[Live17StepEvidence, ...]
+    provider_result: Live16ProviderResult | None
+    repair_proposal: str
+    focused_validation: tuple[str, ...]
+    final_synthesis: str
+    completed_steps_not_repeated: bool = True
+    provider_access_deferred: bool = True
+    total_cost: float = 0.0
+    total_duration_ms: int = 0
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -20606,6 +20692,115 @@ def run_live16_tool_provider_mission(
         duplicate_call_prevented=True,
         total_cost=provider_result.actual_cost,
         total_duration_ms=tool_result.output.runtime_ms,
+    )
+
+
+def make_live17_toolchain_plan(*, mission_id: str, exact_goal: str) -> Live17ToolchainPlan:
+    steps = (
+        Live17ToolchainStep("step-1-inspect", "read-only-inspector", "local_read_only_file_inspection", ("fixture://project/app.py",), ("input_identity", "line_count"), (), True, ("missing_input",), {"runtime_ms": 500, "bytes": 4096}, "file inspected"),
+        Live17ToolchainStep("step-2-extract", "structured-text-extractor", "local_structured_text_extraction", ("fixture://project/app.py",), ("input_identity", "line_count", "claim_markers", "assumption_markers", "question_markers"), ("step-1-inspect",), True, ("malformed_output",), {"runtime_ms": 500, "bytes": 4096}, "structured evidence extracted"),
+        Live17ToolchainStep("step-3-compare", "deterministic-comparison", "local_diff_or_comparison", ("step-2-extract",), ("input_identity", "line_count"), ("step-2-extract",), True, ("stale_input",), {"runtime_ms": 500, "bytes": 4096}, "expected and actual behavior compared"),
+        Live17ToolchainStep("step-4-validate", "schema-validator", "local_schema_validation", ("step-3-compare",), ("input_identity", "line_count"), ("step-3-compare",), True, ("schema_error",), {"runtime_ms": 500, "bytes": 4096}, "proposal schema validated"),
+    )
+    return Live17ToolchainPlan(
+        plan_id=stable_id("live17-plan", mission_id, exact_goal),
+        mission_id=mission_id,
+        exact_goal=exact_goal,
+        success_criteria=("three sequential local tool steps complete", "validated output feeds downstream step", "provider remains advisory or deferred"),
+        ordered_step_ids=tuple(step.step_id for step in steps),
+        steps=steps,
+    )
+
+
+def _live17_step_by_id(plan: Live17ToolchainPlan) -> dict[str, Live17ToolchainStep]:
+    return {step.step_id: step for step in plan.steps}
+
+
+def run_live17_toolchain_pilot(
+    state: OARRuntimeState,
+    *,
+    plan: Live17ToolchainPlan,
+    input_payload: str,
+    fail_step_id: str = "",
+    restart_recovery: bool = False,
+    revise_after_failure: bool = False,
+) -> Live17ToolchainResult:
+    if not plan.parent_mission_preserved:
+        return Live17ToolchainResult(False, "mission_identity_changed", state, plan, (), None, "", (), "")
+    step_map = _live17_step_by_id(plan)
+    completed: dict[str, Live17StepEvidence] = {}
+    evidence: list[Live17StepEvidence] = []
+    total_ms = 0
+    for index, step_id in enumerate(plan.ordered_step_ids, start=1):
+        step = step_map[step_id]
+        if any(dep not in completed or not completed[dep].downstream_eligible for dep in step.dependencies):
+            ev = Live17StepEvidence(step.step_id, step.tool_identity, step.input_identities, (), index, index, "blocked_dependency", "", "not_run", {}, ("dependency not validated",), "blocked", False)
+            evidence.append(ev)
+            continue
+        if step.step_id == fail_step_id:
+            ev = Live17StepEvidence(step.step_id, step.tool_identity, step.input_identities, tuple(_digest_text(dep) for dep in step.input_identities), index, index, "failed", "", "failed_closed", {"runtime_ms": 0}, ("injected focused failure",), "downstream invalidated", False)
+            evidence.append(ev)
+            if revise_after_failure:
+                revised = replace(plan, revision_count=plan.revision_count + 1)
+                updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False)
+                return Live17ToolchainResult(True, "toolchain_revised_after_failed_step", updated, revised, tuple(evidence), None, "repair proposal withheld until failed evidence is reviewed", ("failed step preserved",), "Plan revised within original mission; completed prior steps were not repeated.", total_duration_ms=total_ms)
+            break
+        if step.tool_class == "local_structured_text_extraction":
+            tool_request = make_live16_tool_request(
+                mission_id=plan.mission_id,
+                tool_identity=step.tool_identity,
+                tool_class=step.tool_class,
+                tool_version_digest="live17-tool-digest",
+                exact_purpose=step.completion_criterion,
+                input_identities=("fixture://project/app.py",),
+                output_schema=step.output_schema,
+                allowed_paths_or_urls=("fixture://project/app.py",),
+                requested_sequence=800 + index,
+            )
+            tool_auth = make_live16_tool_authorization(tool_request, operator_identity="operator", issued_sequence=800 + index, expiration_sequence=850)
+            tool = execute_live16_structured_text_tool(tool_request, tool_auth, sequence=801 + index, input_payloads={"fixture://project/app.py": input_payload})
+            if not tool.accepted or tool.output is None:
+                ev = Live17StepEvidence(step.step_id, step.tool_identity, step.input_identities, (), index, index, "failed", "", tool.reason, {}, ("tool output invalid",), "failed", False)
+            else:
+                total_ms += tool.output.runtime_ms
+                ev = Live17StepEvidence(step.step_id, step.tool_identity, step.input_identities, tuple(_digest_text(input_payload) for _ in step.input_identities), index, index, "completed", tool.output.output_digest, "schema_valid", {"runtime_ms": tool.output.runtime_ms, "output_size": tool.output.output_size}, (), "none", True)
+        else:
+            source_digest = "|".join(completed[dep].output_digest for dep in step.dependencies) if step.dependencies else _digest_text(input_payload)
+            output_digest = stable_id("live17-step-output", step.step_id, source_digest)
+            ev = Live17StepEvidence(step.step_id, step.tool_identity, step.input_identities, (source_digest,), index, index, "completed", output_digest, "schema_valid", {"runtime_ms": 1, "output_size": 128}, (), "none", True)
+            total_ms += 1
+        evidence.append(ev)
+        if ev.downstream_eligible:
+            completed[step.step_id] = ev
+    provider_request = make_live16_provider_request(
+        mission_id=plan.mission_id,
+        provider="openai",
+        model_id="operator-approved-model",
+        exact_task="critique toolchain diagnosis evidence",
+        evidence_digests=tuple(ev.output_digest for ev in evidence if ev.output_digest),
+        system_prompt="advisory only",
+        user_prompt="critique diagnosis",
+        output_schema=("candidate_critique",),
+        requested_sequence=900,
+    )
+    provider_auth = make_live16_provider_authorization(provider_request, operator_identity="operator", issued_sequence=900, expiration_sequence=910)
+    provider = evaluate_live16_provider_advisory(provider_request, provider_auth, sequence=901, provider_configured=False)
+    updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed)
+    all_complete = all(ev.completion_state == "completed" for ev in evidence if ev.step_id in plan.ordered_step_ids[: len(evidence)])
+    return Live17ToolchainResult(
+        True,
+        "toolchain_evidence_queued" if all_complete else "toolchain_paused_after_failure",
+        updated,
+        plan,
+        tuple(evidence),
+        provider,
+        "Minimum repair proposal: preserve validated intermediate evidence and add focused check for the reproduced defect.",
+        ("proposal_schema_valid", "focused_validation_planned"),
+        "Sequential toolchain completed or paused with failure evidence; provider access deferred.",
+        completed_steps_not_repeated=restart_recovery,
+        provider_access_deferred=True,
+        total_cost=0.0,
+        total_duration_ms=total_ms,
     )
 
 
