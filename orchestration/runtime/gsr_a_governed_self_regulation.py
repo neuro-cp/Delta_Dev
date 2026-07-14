@@ -15286,6 +15286,101 @@ class LiveOperatorResponseResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_6_WORK_ITEM_STATES = (
+    "ready",
+    "running",
+    "completed",
+    "blocked_operator_decision",
+    "blocked_capability_gap",
+    "blocked_dependency",
+    "paused_budget",
+    "rejected",
+)
+
+LIVE_6_FINAL_DISPOSITIONS = (
+    "completed",
+    "paused_all_work_blocked",
+    "paused_for_operator",
+    "suspended_stagnation",
+    "suspended_scope_drift",
+    "suspended_integrity_failure",
+    "completed_budget_exhausted",
+    "completed_deadline_reached",
+    "architectural_escalation_required",
+)
+
+
+@dataclass(frozen=True)
+class LiveLongHorizonWorkItem:
+    work_item_id: str
+    parent_mission_id: str
+    original_parent_mission: str
+    description: str
+    branch_id: str
+    state: str = "ready"
+    dependency_ids: tuple[str, ...] = ()
+    required_capability_id: str = ""
+    pending_question_id: str = ""
+    progress_summary: str = ""
+    output_bytes: int = 0
+    cycle_budget: int = 1
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveLongHorizonRuntimeConfig:
+    runtime_id: str
+    parent_mission_id: str
+    original_parent_mission: str
+    maximum_cycles: int = 12
+    maximum_completed_items: int = 8
+    maximum_pending_questions: int = 2
+    maximum_capability_branches: int = 1
+    maximum_applications: int = 1
+    maximum_activations: int = 1
+    maximum_output_bytes: int = 8192
+    deadline_monotonic_seconds: float = 3600.0
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveLongHorizonCheckpoint:
+    checkpoint_id: str
+    runtime_id: str
+    parent_mission_id: str
+    cycle_index: int
+    completed_work_item_ids: tuple[str, ...]
+    blocked_work_item_ids: tuple[str, ...]
+    pending_question_ids: tuple[str, ...]
+    ready_work_item_ids: tuple[str, ...]
+    disposition: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveLongHorizonPilotResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    config: LiveLongHorizonRuntimeConfig
+    work_items: tuple[LiveLongHorizonWorkItem, ...]
+    checkpoints: tuple[LiveLongHorizonCheckpoint, ...]
+    final_disposition: str
+    cycles_run: int = 0
+    completed_count: int = 0
+    pending_question_count: int = 0
+    work_completed_while_question_pending: bool = False
+    runtime_paused: bool = True
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    git_operation_performed: bool = False
+    deployment_performed: bool = False
+    permission_expanded: bool = False
+    background_loop_active: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -17250,6 +17345,170 @@ def apply_live_operator_response(
         bounded_followup_performed=resume_decision.startswith("resume_once"),
         evidence_review_item=payload,
         authorization_consumed=True,
+    )
+
+
+def make_live_long_horizon_runtime_config(
+    compiled: CompiledMissionObjective,
+    *,
+    runtime_id: str = "live-6-local-long-horizon-runtime",
+    maximum_cycles: int = 12,
+    maximum_completed_items: int = 8,
+    maximum_pending_questions: int = 2,
+    deadline_monotonic_seconds: float = 3600.0,
+) -> LiveLongHorizonRuntimeConfig:
+    return LiveLongHorizonRuntimeConfig(
+        runtime_id=runtime_id,
+        parent_mission_id=compiled.compiled_objective_id,
+        original_parent_mission=compiled.original_operator_mission,
+        maximum_cycles=maximum_cycles,
+        maximum_completed_items=maximum_completed_items,
+        maximum_pending_questions=maximum_pending_questions,
+        deadline_monotonic_seconds=deadline_monotonic_seconds,
+    )
+
+
+def make_live_long_horizon_work_item(
+    compiled: CompiledMissionObjective,
+    *,
+    work_item_id: str,
+    description: str,
+    branch_id: str,
+    state: str = "ready",
+    dependency_ids: tuple[str, ...] = (),
+    required_capability_id: str = "",
+    pending_question_id: str = "",
+    output_bytes: int = 128,
+) -> LiveLongHorizonWorkItem:
+    return LiveLongHorizonWorkItem(
+        work_item_id=work_item_id,
+        parent_mission_id=compiled.compiled_objective_id,
+        original_parent_mission=compiled.original_operator_mission,
+        description=description,
+        branch_id=branch_id,
+        state=state,
+        dependency_ids=dependency_ids,
+        required_capability_id=required_capability_id,
+        pending_question_id=pending_question_id,
+        output_bytes=output_bytes,
+    )
+
+
+def _live6_ready_items(items: tuple[LiveLongHorizonWorkItem, ...], completed: set[str], active_capabilities: set[str]) -> tuple[LiveLongHorizonWorkItem, ...]:
+    ready: list[LiveLongHorizonWorkItem] = []
+    for item in items:
+        if item.state != "ready":
+            continue
+        if any(dep not in completed for dep in item.dependency_ids):
+            continue
+        if item.required_capability_id and item.required_capability_id not in active_capabilities:
+            continue
+        ready.append(item)
+    return tuple(ready)
+
+
+def _live6_checkpoint(config: LiveLongHorizonRuntimeConfig, items: tuple[LiveLongHorizonWorkItem, ...], *, cycle_index: int, disposition: str) -> LiveLongHorizonCheckpoint:
+    completed = tuple(item.work_item_id for item in items if item.state == "completed")
+    blocked = tuple(item.work_item_id for item in items if item.state.startswith("blocked") or item.state in {"paused_budget", "rejected"})
+    pending = tuple(item.pending_question_id for item in items if item.pending_question_id and item.state == "blocked_operator_decision")
+    ready = tuple(item.work_item_id for item in items if item.state == "ready")
+    return LiveLongHorizonCheckpoint(
+        checkpoint_id=stable_id("live-6-checkpoint", config.runtime_id, cycle_index, disposition, completed, blocked, pending, ready),
+        runtime_id=config.runtime_id,
+        parent_mission_id=config.parent_mission_id,
+        cycle_index=cycle_index,
+        completed_work_item_ids=completed,
+        blocked_work_item_ids=blocked,
+        pending_question_ids=pending,
+        ready_work_item_ids=ready,
+        disposition=disposition,
+    )
+
+
+def run_live_long_horizon_pilot(
+    state: OARRuntimeState,
+    compiled: CompiledMissionObjective,
+    config: LiveLongHorizonRuntimeConfig,
+    work_items: tuple[LiveLongHorizonWorkItem, ...],
+    *,
+    elapsed_monotonic_seconds: float,
+    repeated_item_limit: int = 2,
+) -> LiveLongHorizonPilotResult:
+    if config.parent_mission_id != compiled.compiled_objective_id or config.original_parent_mission != compiled.original_operator_mission:
+        return LiveLongHorizonPilotResult(False, "suspended_scope_drift", state, config, work_items, (), "suspended_scope_drift")
+    if config.maximum_cycles > 12 or config.maximum_completed_items > 8 or config.maximum_pending_questions > 2:
+        return LiveLongHorizonPilotResult(False, "completed_budget_exhausted", state, config, work_items, (), "completed_budget_exhausted")
+    if elapsed_monotonic_seconds >= config.deadline_monotonic_seconds:
+        checkpoint = _live6_checkpoint(config, work_items, cycle_index=0, disposition="completed_deadline_reached")
+        return LiveLongHorizonPilotResult(True, "completed_deadline_reached", state, config, work_items, (checkpoint,), "completed_deadline_reached")
+    if any(item.parent_mission_id != compiled.compiled_objective_id or item.original_parent_mission != compiled.original_operator_mission for item in work_items):
+        return LiveLongHorizonPilotResult(False, "suspended_scope_drift", state, config, work_items, (), "suspended_scope_drift")
+    if any(item.state not in LIVE_6_WORK_ITEM_STATES for item in work_items):
+        return LiveLongHorizonPilotResult(False, "suspended_integrity_failure", state, config, work_items, (), "suspended_integrity_failure")
+
+    items = list(work_items)
+    completed: set[str] = {item.work_item_id for item in items if item.state == "completed"}
+    active_capabilities = set(state.active_capability_ids)
+    checkpoints: list[LiveLongHorizonCheckpoint] = []
+    run_counts: dict[str, int] = {}
+    cycles = 0
+    work_while_question_pending = any(item.state == "blocked_operator_decision" for item in items)
+    disposition = "paused_all_work_blocked"
+
+    while cycles < config.maximum_cycles and len(completed) < config.maximum_completed_items:
+        pending_questions = tuple(item.pending_question_id for item in items if item.pending_question_id and item.state == "blocked_operator_decision")
+        if len(set(pending_questions)) > config.maximum_pending_questions:
+            disposition = "paused_for_operator"
+            break
+        ready = _live6_ready_items(tuple(items), completed, active_capabilities)
+        if not ready:
+            disposition = "completed" if len(completed) == len(items) else "paused_all_work_blocked"
+            break
+        item = ready[0]
+        run_counts[item.work_item_id] = run_counts.get(item.work_item_id, 0) + 1
+        if run_counts[item.work_item_id] > repeated_item_limit:
+            disposition = "suspended_stagnation"
+            break
+        if item.output_bytes > config.maximum_output_bytes:
+            replacement = replace(item, state="paused_budget", progress_summary="output budget exceeded")
+            items[items.index(item)] = replacement
+            disposition = "completed_budget_exhausted"
+            cycles += 1
+            checkpoints.append(_live6_checkpoint(config, tuple(items), cycle_index=cycles, disposition=disposition))
+            break
+        replacement = replace(item, state="completed", progress_summary=f"completed: {item.description}")
+        items[items.index(item)] = replacement
+        completed.add(item.work_item_id)
+        cycles += 1
+        if pending_questions:
+            work_while_question_pending = True
+        disposition = "completed" if len(completed) == len(items) else "paused_for_operator"
+        checkpoints.append(_live6_checkpoint(config, tuple(items), cycle_index=cycles, disposition=disposition))
+
+    if cycles >= config.maximum_cycles and len(completed) < len(items):
+        disposition = "completed_budget_exhausted"
+    final_checkpoint = _live6_checkpoint(config, tuple(items), cycle_index=cycles, disposition=disposition)
+    if not checkpoints or checkpoints[-1].checkpoint_id != final_checkpoint.checkpoint_id:
+        checkpoints.append(final_checkpoint)
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + final_checkpoint.pending_question_ids)),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveLongHorizonPilotResult(
+        True,
+        disposition,
+        updated,
+        config,
+        tuple(items),
+        tuple(checkpoints),
+        disposition,
+        cycles_run=cycles,
+        completed_count=len(completed),
+        pending_question_count=len(final_checkpoint.pending_question_ids),
+        work_completed_while_question_pending=work_while_question_pending,
     )
 
 

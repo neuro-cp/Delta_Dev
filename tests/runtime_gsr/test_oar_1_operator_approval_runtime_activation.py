@@ -1434,3 +1434,156 @@ def test_live_5_rejection_pause_and_restart_persist_without_duplicate_question()
     paused = gsr.apply_live_operator_response(state, question, pause_auth, sequence=150)
     assert paused.resume_decision == "pause_mission"
     assert paused.bounded_followup_performed is False
+
+
+def _live_6_setup() -> tuple[gsr.OARRuntimeState, gsr.CompiledMissionObjective, gsr.LiveLongHorizonRuntimeConfig]:
+    state, compiled, _request = _live_4_request()
+    config = gsr.make_live_long_horizon_runtime_config(compiled, maximum_cycles=12, deadline_monotonic_seconds=3600.0)
+    state = replace(state, active_capability_ids=("governed_claim_representation",))
+    return state, compiled, config
+
+
+def test_live_6_independent_work_continues_while_branch_waits_for_operator():
+    state, compiled, config = _live_6_setup()
+    blocked = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="operator-branch",
+        description="choose architecture for evidence parser",
+        branch_id="branch-review",
+        state="blocked_operator_decision",
+        pending_question_id="question-1",
+    )
+    independent = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="organize-evidence",
+        description="organize existing evidence",
+        branch_id="branch-independent",
+    )
+    dependent = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="dependent-work",
+        description="dependent analysis",
+        branch_id="branch-review",
+        dependency_ids=("operator-branch",),
+    )
+
+    result = gsr.run_live_long_horizon_pilot(state, compiled, config, (blocked, independent, dependent), elapsed_monotonic_seconds=1.0)
+
+    assert result.accepted is True
+    assert result.work_completed_while_question_pending is True
+    by_id = {item.work_item_id: item for item in result.work_items}
+    assert by_id["organize-evidence"].state == "completed"
+    assert by_id["operator-branch"].state == "blocked_operator_decision"
+    assert by_id["dependent-work"].state == "ready"
+    assert result.final_disposition == "paused_all_work_blocked"
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.git_operation_performed is False
+    assert result.background_loop_active is False
+
+
+def test_live_6_all_work_blocked_global_pause_and_unapproved_capability_not_used():
+    state, compiled, config = _live_6_setup()
+    blocked_question = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="question-blocked",
+        description="waiting for operator",
+        branch_id="branch-a",
+        state="blocked_operator_decision",
+        pending_question_id="question-1",
+    )
+    missing_capability = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="needs-unapproved-capability",
+        description="requires unapproved capability",
+        branch_id="branch-b",
+        required_capability_id="not_approved_capability",
+    )
+
+    result = gsr.run_live_long_horizon_pilot(state, compiled, config, (blocked_question, missing_capability), elapsed_monotonic_seconds=1.0)
+
+    assert result.final_disposition == "paused_all_work_blocked"
+    assert result.completed_count == 0
+    assert {item.state for item in result.work_items} == {"blocked_operator_decision", "ready"}
+    assert result.pending_question_count == 1
+
+
+def test_live_6_operator_response_unblocks_only_bound_branch():
+    state, compiled, config = _live_6_setup()
+    question_state, _compiled, question_result = _live_5_question_state()
+    authorization = gsr.make_live_operator_response_authorization(
+        question_result.question,
+        selected_option="extend_existing_parser",
+        disposition="approve_exact_option",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=160,
+    )
+    response = gsr.apply_live_operator_response(question_state, question_result.question, authorization, sequence=150)
+    assert response.accepted
+    unblocked = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="operator-branch",
+        description="continue approved parser architecture branch",
+        branch_id="branch-review",
+        state="ready",
+    )
+    still_blocked = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="separate-question",
+        description="separate operator question",
+        branch_id="branch-other",
+        state="blocked_operator_decision",
+        pending_question_id="question-2",
+    )
+
+    result = gsr.run_live_long_horizon_pilot(state, compiled, config, (unblocked, still_blocked), elapsed_monotonic_seconds=1.0)
+
+    by_id = {item.work_item_id: item for item in result.work_items}
+    assert by_id["operator-branch"].state == "completed"
+    assert by_id["separate-question"].state == "blocked_operator_decision"
+    assert result.completed_count == 1
+    assert result.pending_question_count == 1
+
+
+def test_live_6_budgets_deadline_stagnation_and_mission_drift_fail_closed():
+    state, compiled, config = _live_6_setup()
+    item = gsr.make_live_long_horizon_work_item(compiled, work_item_id="large-output", description="large output", branch_id="branch", output_bytes=999999)
+    budget = gsr.run_live_long_horizon_pilot(state, compiled, config, (item,), elapsed_monotonic_seconds=1.0)
+    assert budget.final_disposition == "completed_budget_exhausted"
+    assert budget.work_items[0].state == "paused_budget"
+
+    deadline = gsr.run_live_long_horizon_pilot(state, compiled, config, (item,), elapsed_monotonic_seconds=3600.0)
+    assert deadline.final_disposition == "completed_deadline_reached"
+
+    drifted = replace(compiled, original_operator_mission="different mission")
+    drift = gsr.run_live_long_horizon_pilot(state, drifted, config, (item,), elapsed_monotonic_seconds=1.0)
+    assert drift.accepted is False
+    assert drift.final_disposition == "suspended_scope_drift"
+
+    too_broad = replace(config, maximum_cycles=13)
+    denied = gsr.run_live_long_horizon_pilot(state, compiled, too_broad, (), elapsed_monotonic_seconds=1.0)
+    assert denied.reason == "completed_budget_exhausted"
+
+
+def test_live_6_checkpoints_preserve_completed_and_pending_work_after_restart():
+    state, compiled, config = _live_6_setup()
+    blocked = gsr.make_live_long_horizon_work_item(
+        compiled,
+        work_item_id="operator-branch",
+        description="waiting for operator",
+        branch_id="branch-review",
+        state="blocked_operator_decision",
+        pending_question_id="question-1",
+    )
+    ready = gsr.make_live_long_horizon_work_item(compiled, work_item_id="compare-claims", description="compare claims", branch_id="branch-independent")
+
+    result = gsr.run_live_long_horizon_pilot(state, compiled, config, (blocked, ready), elapsed_monotonic_seconds=1.0)
+    recovered = gsr.recover_oar_runtime_after_restart(result.state, integrity_valid=True)
+
+    assert result.checkpoints
+    assert "compare-claims" in result.checkpoints[-1].completed_work_item_ids
+    assert "operator-branch" in result.checkpoints[-1].blocked_work_item_ids
+    assert result.checkpoints[-1].pending_question_ids == ("question-1",)
+    assert recovered.automatic_resume_performed is False
+    assert "question-1" in recovered.pending_review_ids
