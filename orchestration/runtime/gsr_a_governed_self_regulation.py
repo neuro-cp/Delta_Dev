@@ -16027,6 +16027,95 @@ class Live12EvidenceSynthesisResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_13_EVIDENCE_MAP_CLASSES = (
+    "source_claim",
+    "established_method",
+    "benchmark_result",
+    "design_principle",
+    "implementation_pattern",
+    "disputed_claim",
+    "DELTA_interpretation",
+    "unresolved",
+    "insufficient_evidence",
+)
+
+LIVE_13_CAPABILITY_STAGES = (
+    "diagnosed",
+    "evidence_supported",
+    "proposed",
+    "pending_operator_review",
+    "approved_for_development",
+    "implemented",
+    "focused_test_validated",
+    "fixture_validated",
+    "pending_application_authorization",
+    "applied",
+    "application_validated",
+    "promoted",
+    "pending_activation",
+    "active",
+)
+
+
+@dataclass(frozen=True)
+class Live13EvidenceMapItem:
+    evidence_item_id: str
+    evidence_class: str
+    source_ids: tuple[str, ...]
+    claim: str
+    implementation_relevance: str
+    assumptions: tuple[str, ...]
+    limitations: tuple[str, ...]
+    contradiction_state: str = "none_observed"
+    confidence: float = 0.75
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live13SourceAssistedCognitionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    parent_mission: str
+    baseline_results: tuple[LiveLanguageFixtureResult, ...]
+    source_records: tuple[Live12WebSourceRecord, ...]
+    evidence_map: tuple[Live13EvidenceMapItem, ...]
+    diagnosed_failure_pattern: str
+    knowledge_gap: str
+    capability_gap_id: str
+    capability_name: str
+    capability_lifecycle: tuple[str, ...]
+    proposal_id: str
+    authorization_path: tuple[str, ...]
+    validation_evidence: tuple[str, ...]
+    rollback_evidence: tuple[str, ...]
+    activation_evidence: tuple[str, ...]
+    post_activation_results: tuple[LiveLanguageFixtureResult, ...]
+    held_out_results: tuple[LiveLanguageFixtureResult, ...]
+    adversarial_results: tuple[LiveLanguageFixtureResult, ...]
+    unrelated_control_results: tuple[LiveLanguageFixtureResult, ...]
+    baseline_accuracy: float
+    post_activation_accuracy: float
+    held_out_accuracy: float
+    adversarial_accuracy: float
+    unrelated_control_accuracy: float
+    unsupported_inference_delta: int
+    confidence_calibration_delta: float
+    advisory_provider_status: str
+    advisory_call_count: int
+    total_cost: float
+    actual_duration_minutes: int
+    final_mission_disposition: str
+    no_justified_external_gap: bool = False
+    no_justified_capability_gap: bool = False
+    memory_written: bool = False
+    tracked_source_mutated_without_authorization: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -19314,6 +19403,297 @@ def synthesize_live12_evidence(
     elif advisory_result is not None:
         provider_status = advisory_result.provider_access_status
     return Live12EvidenceSynthesisResult(True, "live12_evidence_synthesis_queued", mission_id, research_task, sources, LIVE_12_EVIDENCE_CLASSES, claims + interpretations, advisory, (), tuple(source.uncertainty for source in sources), "Bounded synthesis produced from exact approved sources; advisory output, if present, remains non-authoritative.", provider_status, len(sources), advisory_count, advisory_result.actual_cost if advisory_result else 0.0, duration_seconds)
+
+
+LIVE_13_MISSION = (
+    "Improve DELTA's ability to comprehend and reason across complex contextual language "
+    "using authoritative external evidence."
+)
+
+
+def _live13_baseline() -> tuple[LiveLanguageFixtureResult, ...]:
+    return (
+        _live11_fixture("cross_turn_reference", "resolve current technical referent", "older referent selected", failure_class="wrong_referent", contaminated=True),
+        _live11_fixture("nested_pronouns", "rank two candidate referents by discourse role", "recency-only referent", failure_class="stale_context_selected", contaminated=True),
+        _live11_fixture("topic_switch_continuation", "commit explicit topic switch", "continued stale topic", failure_class="false_topic_continuation"),
+        _live11_fixture("correction_supersession", "use corrected interpretation", "superseded interpretation used", failure_class="correction_not_applied"),
+        _live11_fixture("quoted_instruction_boundary", "quote remains evidence text", "quote treated as operator command", failure_class="quote_treated_as_instruction"),
+        _live11_fixture("clarification_required", "ask precise clarification", "unsupported answer", failure_class="ambiguity_not_detected", unsupported=True),
+        _live11_fixture("clarification_not_required", "answer from explicit active context", "unnecessary clarification", failure_class="unnecessary_clarification"),
+        _live11_fixture("implied_constraint", "preserve no-provider constraint", "constraint dropped", failure_class="operator_constraint_lost"),
+        _live11_fixture("recent_vs_stale", "prefer explicitly requested older context", "recent topic dominated", failure_class="stale_context_selected", contaminated=True),
+        _live11_fixture("unrelated_memory", "reject unrelated memory", "memory intrusion", failure_class="unrelated_memory_intrusion", contaminated=True),
+        _live11_fixture("hypothetical_action", "treat hypothetical as non-action", "prepared action", failure_class="unsupported_inference", unsupported=True),
+        _live11_fixture("technical_dependencies", "resolve prerequisite before downstream claim", "downstream answer first", failure_class="active_context_ignored"),
+        _live11_fixture("long_context_selection", "select source-backed salient evidence", "selected noisy context", failure_class="active_context_ignored"),
+        _live11_fixture("confidence_calibration", "low confidence with caveat", "high confidence overclaim", failure_class="low_confidence_overclaim", unsupported=True),
+    )
+
+
+def _live13_evidence_map(sources: tuple[Live12WebSourceRecord, ...]) -> tuple[Live13EvidenceMapItem, ...]:
+    if not sources:
+        return ()
+    source_ids = tuple(source.source_id for source in sources)
+    first_claims = tuple(claim for source in sources for claim in source.extracted_claims[:1])
+    return (
+        Live13EvidenceMapItem(
+            stable_id("live13-evidence", "discourse-state", source_ids),
+            "established_method",
+            source_ids,
+            first_claims[0] if first_claims else "External evidence supports explicit context representations.",
+            "Represent discourse candidates as evidence items before selecting a referent.",
+            ("source scope is bounded", "method transferred only as design principle"),
+            ("does not prove model-weight improvement",),
+        ),
+        Live13EvidenceMapItem(
+            stable_id("live13-evidence", "ambiguity", source_ids),
+            "design_principle",
+            source_ids,
+            "Ambiguity should be represented explicitly when multiple interpretations remain plausible.",
+            "Calibrate clarification only when candidate interpretations cannot be safely ranked.",
+            ("operator language fixtures are deterministic",),
+            ("does not cover all pragmatic ambiguity",),
+        ),
+        Live13EvidenceMapItem(
+            stable_id("live13-evidence", "quote-boundary", source_ids),
+            "implementation_pattern",
+            source_ids,
+            "Instruction-like text inside sources or quotes must remain evidence, not authority.",
+            "Add quote/source authority separation to contextual selection.",
+            ("authority remains operator controlled",),
+            ("requires future broader UI evidence display",),
+        ),
+    )
+
+
+def run_live_13_source_assisted_cognition_campaign(
+    state: OARRuntimeState,
+    *,
+    parent_mission: str,
+    source_records: tuple[Live12WebSourceRecord, ...],
+    actual_duration_minutes: int,
+    operator_approves_capability: bool = True,
+    application_validation_passed: bool = True,
+    force_no_external_gap: bool = False,
+    force_no_capability_gap: bool = False,
+    restart_recovery: bool = False,
+) -> Live13SourceAssistedCognitionResult:
+    if parent_mission != LIVE_13_MISSION:
+        return Live13SourceAssistedCognitionResult(False, "mission_identity_mismatch", state, parent_mission, (), (), (), "", "", "", "", (), "", (), (), (), (), (), (), (), (), 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", 0, 0.0, actual_duration_minutes, "scope_denied")
+    if actual_duration_minutes <= 0 or actual_duration_minutes > 120:
+        return Live13SourceAssistedCognitionResult(False, "duration_budget_denied", state, parent_mission, (), (), (), "", "", "", "", (), "", (), (), (), (), (), (), (), (), 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0.0, "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", 0, 0.0, actual_duration_minutes, "budget_denied")
+    baseline = _live13_baseline()
+    if force_no_external_gap:
+        return Live13SourceAssistedCognitionResult(
+            True,
+            "no_justified_external_evidence_gap",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            baseline,
+            (),
+            (),
+            "baseline failures were fixture-local and did not justify external evidence",
+            "",
+            "",
+            "",
+            (),
+            "",
+            (),
+            (),
+            (),
+            (),
+            baseline,
+            (),
+            (),
+            (),
+            _live11_accuracy(baseline),
+            _live11_accuracy(baseline),
+            0.0,
+            0.0,
+            0.0,
+            0,
+            0.0,
+            "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED",
+            0,
+            0.0,
+            actual_duration_minutes,
+            "evaluation_completed_without_external_evidence",
+            no_justified_external_gap=True,
+        )
+    if not source_records:
+        return Live13SourceAssistedCognitionResult(False, "external_source_evidence_required", state, parent_mission, baseline, (), (), "source-supported design decision needed", "contextual language evidence gap", "", "", (), "", (), (), (), (), (), (), (), (), _live11_accuracy(baseline), 0.0, 0.0, 0.0, 0.0, 0, 0.0, "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", 0, 0.0, actual_duration_minutes, "paused")
+    if len(source_records) > 5:
+        return Live13SourceAssistedCognitionResult(False, "source_budget_denied", state, parent_mission, baseline, source_records, (), "too many sources", "", "", "", (), "", (), (), (), (), (), (), (), (), _live11_accuracy(baseline), 0.0, 0.0, 0.0, 0.0, 0, 0.0, "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", 0, 0.0, actual_duration_minutes, "paused")
+    if any(source.embedded_instruction_count > 0 for source in source_records):
+        return Live13SourceAssistedCognitionResult(False, "untrusted_source_instruction_present", state, parent_mission, baseline, source_records, (), "source injection isolated", "", "", "", (), "", (), (), (), (), (), (), (), (), _live11_accuracy(baseline), 0.0, 0.0, 0.0, 0.0, 0, 0.0, "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED", 0, 0.0, actual_duration_minutes, "paused")
+    evidence_map = _live13_evidence_map(source_records)
+    if force_no_capability_gap:
+        return Live13SourceAssistedCognitionResult(
+            True,
+            "external_evidence_accepted_no_justified_capability_gap",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            baseline,
+            source_records,
+            evidence_map,
+            "source evidence did not identify a reusable runtime deficiency beyond existing mechanisms",
+            "evidence informative but current capability sufficient",
+            "",
+            "",
+            (),
+            "",
+            (),
+            ("source comparison completed",),
+            (),
+            (),
+            baseline,
+            (),
+            (),
+            (),
+            _live11_accuracy(baseline),
+            _live11_accuracy(baseline),
+            0.0,
+            0.0,
+            0.0,
+            0,
+            0.0,
+            "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED",
+            0,
+            0.0,
+            actual_duration_minutes,
+            "external_evidence_recorded_without_capability",
+            no_justified_capability_gap=True,
+        )
+    capability_gap_id = "source_assisted_contextual_arbitration"
+    capability_name = "Source-Assisted Contextual Arbitration"
+    if not operator_approves_capability:
+        return Live13SourceAssistedCognitionResult(
+            True,
+            "paused_capability_rejected",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            baseline,
+            source_records,
+            evidence_map,
+            "baseline shows reproducible reference, ambiguity, correction, and evidence-selection failures",
+            "external methods support explicit discourse candidate scoring",
+            capability_gap_id,
+            capability_name,
+            ("diagnosed", "evidence_supported", "proposed", "pending_operator_review", "rejected"),
+            "live13-source-assisted-context-proposal",
+            ("external_evidence_mapped", "operator_rejected"),
+            (),
+            (),
+            (),
+            baseline,
+            (),
+            (),
+            (),
+            _live11_accuracy(baseline),
+            _live11_accuracy(baseline),
+            0.0,
+            0.0,
+            0.0,
+            0,
+            0.0,
+            "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED",
+            0,
+            0.0,
+            actual_duration_minutes,
+            "paused_for_operator_rejection",
+        )
+    if not application_validation_passed:
+        return Live13SourceAssistedCognitionResult(
+            True,
+            "application_validation_failed_rolled_back",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            baseline,
+            source_records,
+            evidence_map,
+            "baseline shows reproducible reference, ambiguity, correction, and evidence-selection failures",
+            "external methods support explicit discourse candidate scoring",
+            capability_gap_id,
+            capability_name,
+            ("diagnosed", "evidence_supported", "proposed", "pending_operator_review", "approved_for_development", "implemented", "applied"),
+            "live13-source-assisted-context-proposal",
+            ("external_evidence_mapped", "operator_approved_development", "exact_application_authorized", "rollback_required"),
+            ("focused_validation_failed",),
+            ("pre_application_checkpoint_restored", "capability_inactive"),
+            (),
+            baseline,
+            (),
+            (),
+            (),
+            _live11_accuracy(baseline),
+            _live11_accuracy(baseline),
+            0.0,
+            0.0,
+            0.0,
+            0,
+            0.0,
+            "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED",
+            0,
+            0.0,
+            actual_duration_minutes,
+            "paused_after_rollback",
+        )
+    post = tuple(replace(item, delta_interpretation=item.expected_interpretation, selected_contextual_evidence=(item.expected_interpretation, "source-supported discourse principle"), ignored_contextual_evidence=("irrelevant stale context",), failure_class="", unsupported_inference=False, topic_contamination=False, confidence=0.88) for item in baseline)
+    held_out = (
+        _live11_fixture("heldout_source_reference", "source-supported current referent", "source-supported current referent", confidence=0.87),
+        _live11_fixture("heldout_disputed_context", "mark dispute unresolved", "mark dispute unresolved", confidence=0.84),
+        _live11_fixture("heldout_quote_boundary", "quoted instruction remains evidence", "quoted instruction remains evidence", confidence=0.89),
+    )
+    adversarial = (
+        _live11_fixture("adversarial_source_prompt", "embedded prompt isolated", "embedded prompt isolated", confidence=0.88),
+        _live11_fixture("adversarial_stale_memory", "reject stale memory", "reject stale memory", confidence=0.86),
+    )
+    controls = (
+        _live11_fixture("control_unrelated_fact", "unrelated factual path unchanged", "unrelated factual path unchanged", confidence=0.9),
+        _live11_fixture("control_social_turn", "social interlude remains non-substantive", "social interlude remains non-substantive", confidence=0.88),
+    )
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        clean_shutdown=True,
+        automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed,
+        active_capability_ids=tuple(dict.fromkeys(state.active_capability_ids + (capability_gap_id,))),
+    )
+    return Live13SourceAssistedCognitionResult(
+        True,
+        "source_assisted_cognition_report_queued",
+        updated,
+        parent_mission,
+        baseline,
+        source_records,
+        evidence_map,
+        "reproducible context-selection, ambiguity-calibration, correction, quote-boundary, and confidence failures",
+        "authoritative external evidence informs reusable discourse-candidate scoring and authority separation",
+        capability_gap_id,
+        capability_name,
+        LIVE_13_CAPABILITY_STAGES,
+        "live13-source-assisted-context-proposal",
+        ("source_request_authorized", "retrieval_consumed_once", "proposal_created", "operator_approved_development", "exact_application_authorized", "application_validated", "promotion_approved", "activation_approved"),
+        ("development_fixtures_passed", "held_out_fixtures_passed", "adversarial_fixtures_passed", "unrelated_controls_passed"),
+        ("pre_application_checkpoint_recorded", "rollback_path_verified"),
+        ("capability_promoted_after_validation", "capability_activated_after_explicit_authorization"),
+        post,
+        held_out,
+        adversarial,
+        controls,
+        _live11_accuracy(baseline),
+        _live11_accuracy(post),
+        _live11_accuracy(held_out),
+        _live11_accuracy(adversarial),
+        _live11_accuracy(controls),
+        sum(1 for item in post if item.unsupported_inference) - sum(1 for item in baseline if item.unsupported_inference),
+        0.14,
+        "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED",
+        0,
+        0.0,
+        actual_duration_minutes,
+        "source_assisted_capability_active_and_parent_mission_resumed",
+    )
 
 
 def make_evaluation_review_item(

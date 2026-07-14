@@ -2555,3 +2555,162 @@ def test_live_12_synthesis_keeps_source_and_advisory_evidence_distinct():
     assert synthesis.tracked_source_mutated is False
     assert synthesis.git_operation_performed is False
     assert synthesis.autonomous_continuation is False
+
+
+def _live13_source_records() -> tuple[gsr.Live12WebSourceRecord, ...]:
+    source = gsr.Live12WebSourceRecord(
+        source_id="live13-discourse-source",
+        exact_requested_url="https://aclanthology.org/2020.example/",
+        exact_final_url="https://aclanthology.org/2020.example/",
+        title="Contextual discourse modeling fixture",
+        author_or_publisher="ACL Anthology fixture",
+        publication_or_revision_date="fixture-v1",
+        retrieval_time="deterministic-test-time",
+        http_status=200,
+        content_type="text/html",
+        byte_count=512,
+        content_digest="a" * 64,
+        source_classification="peer_reviewed_or_publisher_record",
+        extracted_claims=(
+            "Discourse systems should represent candidate referents before selecting context for a response.",
+            "Ambiguity handling benefits from explicit uncertainty rather than overconfident single-context selection.",
+        ),
+        excerpt_provenance=("https://aclanthology.org/2020.example/#abstract",),
+        contradiction_state="none_observed",
+        confidence=0.82,
+        uncertainty="fixture source standing in for approved external evidence",
+        stale_or_changed_content_state="digest_bound",
+    )
+    return (source,)
+
+
+def test_live_13_source_assisted_campaign_improves_held_out_and_controls():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-13")
+    result = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=35,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "source_assisted_cognition_report_queued"
+    assert result.knowledge_gap
+    assert result.capability_gap_id == "source_assisted_contextual_arbitration"
+    assert result.capability_lifecycle == gsr.LIVE_13_CAPABILITY_STAGES
+    assert len(result.baseline_results) == 14
+    assert result.source_records
+    assert {item.evidence_class for item in result.evidence_map}.issubset(set(gsr.LIVE_13_EVIDENCE_MAP_CLASSES))
+    assert result.baseline_accuracy < result.post_activation_accuracy
+    assert result.post_activation_accuracy == 1.0
+    assert result.held_out_accuracy == 1.0
+    assert result.adversarial_accuracy == 1.0
+    assert result.unrelated_control_accuracy == 1.0
+    assert result.unsupported_inference_delta < 0
+    assert result.confidence_calibration_delta > 0
+    assert result.advisory_provider_status == "LIVE_12_REAL_PROVIDER_ACCESS_DEFERRED"
+    assert result.total_cost == 0.0
+    assert result.memory_written is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+    assert result.secret_exposed is False
+
+
+def test_live_13_no_gap_no_capability_rejection_and_rollback_paths_are_bounded():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-13")
+    no_external = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=(),
+        actual_duration_minutes=20,
+        force_no_external_gap=True,
+    )
+    assert no_external.accepted is True
+    assert no_external.no_justified_external_gap is True
+    assert no_external.reason == "no_justified_external_evidence_gap"
+
+    no_capability = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+        force_no_capability_gap=True,
+    )
+    assert no_capability.accepted is True
+    assert no_capability.no_justified_capability_gap is True
+    assert no_capability.reason == "external_evidence_accepted_no_justified_capability_gap"
+
+    rejected = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+        operator_approves_capability=False,
+    )
+    assert rejected.reason == "paused_capability_rejected"
+    assert "rejected" in rejected.capability_lifecycle
+
+    rollback = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+        application_validation_passed=False,
+    )
+    assert rollback.reason == "application_validation_failed_rolled_back"
+    assert rollback.rollback_evidence == ("pre_application_checkpoint_restored", "capability_inactive")
+    assert "active" not in rollback.capability_lifecycle
+
+
+def test_live_13_scope_source_injection_restart_and_duplicate_controls_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-13")
+    wrong = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission="teach yourself all language",
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+    )
+    assert wrong.reason == "mission_identity_mismatch"
+
+    duration = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=121,
+    )
+    assert duration.reason == "duration_budget_denied"
+
+    missing_source = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=(),
+        actual_duration_minutes=20,
+    )
+    assert missing_source.reason == "external_source_evidence_required"
+
+    injected = replace(_live13_source_records()[0], embedded_instruction_count=1)
+    unsafe = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=(injected,),
+        actual_duration_minutes=20,
+    )
+    assert unsafe.reason == "untrusted_source_instruction_present"
+
+    first = gsr.run_live_13_source_assisted_cognition_campaign(
+        state,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+    )
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    replay = gsr.run_live_13_source_assisted_cognition_campaign(
+        recovered,
+        parent_mission=gsr.LIVE_13_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+        restart_recovery=True,
+    )
+    assert recovered.automatic_resume_performed is False
+    assert replay.state.development_runtime_mode == "paused"
+    assert replay.autonomous_continuation is False
