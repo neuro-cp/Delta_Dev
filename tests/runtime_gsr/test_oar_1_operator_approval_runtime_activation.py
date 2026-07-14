@@ -2077,3 +2077,172 @@ def test_live_9_scope_duration_source_and_restart_guards_fail_closed():
     assert recovered.automatic_resume_performed is False
     assert replay.duplicate_work_prevented is True
     assert replay.state.development_runtime_mode == "paused"
+
+
+def _live_10_sources() -> tuple[gsr.LiveSourceEvidenceRecord, ...]:
+    contents = (
+        ("local://einstein-hilbert", "approved_local_document", "Einstein-Hilbert action variation yields classical field equations with boundary terms."),
+        ("local://eft-gravity", "approved_local_document", "Effective field theory organizes gravity by leading terms and low-energy suppressed corrections."),
+        ("local://string-effective-action", "approved_local_document", "The string low-energy effective action includes a gravitational term after frame choices."),
+        ("local://spin-two", "approved_local_document", "Massless spin-2 consistency motivates universal gravitational coupling."),
+        ("local://compactification", "approved_local_document", "Compactification assumptions determine lower-dimensional fields and unresolved moduli questions."),
+        ("local://qg-limits", "approved_local_document", "Nonperturbative definition and empirical connection remain unresolved quantum-gravity limitations."),
+    )
+    records: list[gsr.LiveSourceEvidenceRecord] = []
+    for index, (location, source_class, content) in enumerate(contents):
+        request, _ = _source_request(source_class=source_class, location=location, content=content, sequence=300 + index)
+        authorization = gsr.make_live_source_acquisition_authorization(request, issued_sequence=300 + index, expiration_sequence=315)
+        result = gsr.acquire_live_source_evidence(
+            request,
+            authorization,
+            sequence=301 + index,
+            content=content,
+            title=f"LIVE-10 source {index}",
+            author_or_publisher="operator-approved physics fixture",
+        )
+        assert result.accepted is True
+        assert result.evidence is not None
+        records.append(result.evidence)
+    return tuple(records)
+
+
+def test_live_10_bounded_physics_mission_produces_provenance_bound_synthesis():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-10")
+    result = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=_live_10_sources(),
+        actual_duration_minutes=24,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "bounded_mathematical_physics_report_queued"
+    assert result.parent_mission == gsr.LIVE_10_MISSION
+    assert result.actual_duration_minutes == 24
+    assert len(result.branches) == 6
+    assert {branch.branch_id for branch in result.branches} == {
+        "einstein_hilbert",
+        "eft_gravity",
+        "string_effective_action",
+        "massless_spin_2",
+        "compactification",
+        "quantum_gravity_limits",
+    }
+    assert all(branch.exact_question and branch.completion_criterion for branch in result.branches)
+    assert 0 < result.cycles_completed <= 12
+    assert len(result.sources) == 6
+    assert all(claim.evidence_class in gsr.LIVE_10_EVIDENCE_CLASSES for claim in result.claims)
+    assert any(claim.evidence_class == "established_result" for claim in result.claims)
+    assert any(claim.evidence_class == "DELTA_interpretation" for claim in result.claims)
+    assert any(claim.evidence_class == "dimensional_check" for claim in result.claims)
+    assert result.notation_ledger
+    assert result.assumption_ledger
+    assert result.skipped_algebra
+    assert "not a novel physical law" in result.strongest_result
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.network_used is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_10_selective_suspension_and_insufficient_evidence_are_bounded():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-10")
+    result = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=_live_10_sources(),
+        actual_duration_minutes=18,
+        pending_source_question=True,
+        independent_work_available=True,
+        insufficient_evidence_branch="compactification",
+    )
+
+    assert result.accepted is True
+    assert result.selective_suspension_performed is True
+    assert result.independent_work_completed_while_blocked is True
+    compactification = next(branch for branch in result.branches if branch.branch_id == "compactification")
+    assert compactification.state == "blocked"
+    assert compactification.blocker_identity == "operator_source_needed"
+    assert "operator_source_needed" in result.unresolved_steps
+    assert any(claim.evidence_class == "unresolved" for claim in result.claims)
+
+
+def test_live_10_conjecture_falsification_and_restart_duplicate_prevention():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-10")
+    first = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=_live_10_sources(),
+        actual_duration_minutes=20,
+    )
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    replay = gsr.run_live_10_bounded_mathematical_physics_mission(
+        recovered,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=_live_10_sources(),
+        actual_duration_minutes=20,
+        restart_recovery=True,
+    )
+
+    assert first.accepted is True
+    assert any(claim.evidence_class == "falsified" and claim.retired for claim in first.conjectures)
+    assert first.falsification_attempts
+    assert recovered.automatic_resume_performed is False
+    assert replay.state.development_runtime_mode == "paused"
+    assert replay.autonomous_continuation is False
+
+
+def test_live_10_scope_budget_source_and_injection_denials_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-10")
+    sources = _live_10_sources()
+    wrong = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission="solve quantum gravity",
+        source_evidence=sources,
+        actual_duration_minutes=20,
+    )
+    assert wrong.reason == "mission_identity_mismatch"
+
+    long = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=sources,
+        actual_duration_minutes=121,
+    )
+    assert long.reason == "duration_budget_denied"
+
+    no_sources = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=(),
+        actual_duration_minutes=20,
+    )
+    assert no_sources.reason == "source_evidence_required"
+
+    too_many = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=sources + sources,
+        actual_duration_minutes=20,
+    )
+    assert too_many.reason == "source_budget_denied"
+
+    injected = replace(sources[0], untrusted_instruction_count=1)
+    unsafe = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=(injected,),
+        actual_duration_minutes=20,
+    )
+    assert unsafe.reason == "untrusted_source_instruction_present"
+
+    over_budget = gsr.run_live_10_bounded_mathematical_physics_mission(
+        state,
+        parent_mission=gsr.LIVE_10_MISSION,
+        source_evidence=sources,
+        actual_duration_minutes=20,
+        maximum_cycles=13,
+    )
+    assert over_budget.reason == "runtime_budget_denied"

@@ -15663,6 +15663,70 @@ class LiveExtendedScholarCampaignResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_10_EVIDENCE_CLASSES = (
+    "established_result",
+    "source_claim",
+    "reproduced_derivation",
+    "DELTA_interpretation",
+    "dimensional_check",
+    "mathematical_consistency_check",
+    "numerical_observation",
+    "working_hypothesis",
+    "conjecture",
+    "contradiction",
+    "falsified",
+    "unresolved",
+    "insufficient_evidence",
+)
+
+
+@dataclass(frozen=True)
+class LivePhysicsMissionBranch:
+    branch_id: str
+    exact_question: str
+    dependencies: tuple[str, ...]
+    evidence_requirements: tuple[str, ...]
+    assumptions: tuple[str, ...]
+    state: str
+    blocker_identity: str
+    completion_criterion: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LivePhysicsMissionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    parent_mission: str
+    topic: str
+    actual_duration_minutes: int
+    cycles_completed: int
+    branches: tuple[LivePhysicsMissionBranch, ...]
+    sources: tuple[LiveSourceEvidenceRecord, ...]
+    claims: tuple[LiveScholarClaim, ...]
+    derivations: tuple[LiveScholarDerivation, ...]
+    conjectures: tuple[LiveScholarClaim, ...]
+    falsification_attempts: tuple[str, ...]
+    notation_ledger: tuple[str, ...]
+    assumption_ledger: tuple[str, ...]
+    skipped_algebra: tuple[str, ...]
+    unresolved_steps: tuple[str, ...]
+    selective_suspension_performed: bool
+    independent_work_completed_while_blocked: bool
+    capability_gap_ids: tuple[str, ...]
+    final_synthesis: str
+    strongest_result: str
+    strongest_limitation: str
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -18324,6 +18388,113 @@ def run_live_9_extended_scholar_campaign(
         uncertainty="fixture-bounded source set; no claim of novelty or exhaustive scholarship",
         runtime_stability="paused_cleanly_no_background_work",
         duplicate_work_prevented=restart_recovery,
+    )
+
+
+LIVE_10_MISSION = (
+    "Investigate what exact mathematical structures allow Einstein gravity to emerge as a "
+    "low-energy effective description in string theory, and where the major conceptual and technical gaps remain."
+)
+
+
+def _live10_denial(
+    reason: str,
+    state: OARRuntimeState,
+    parent_mission: str,
+    topic: str,
+    duration: int,
+    sources: tuple[LiveSourceEvidenceRecord, ...] = (),
+) -> LivePhysicsMissionResult:
+    return LivePhysicsMissionResult(False, reason, state, parent_mission, topic, duration, 0, (), sources, (), (), (), (), (), (), (), (), False, False, (), "", "", "")
+
+
+def run_live_10_bounded_mathematical_physics_mission(
+    state: OARRuntimeState,
+    *,
+    parent_mission: str,
+    source_evidence: tuple[LiveSourceEvidenceRecord, ...],
+    actual_duration_minutes: int,
+    pending_source_question: bool = False,
+    independent_work_available: bool = True,
+    insufficient_evidence_branch: str = "",
+    restart_recovery: bool = False,
+    maximum_cycles: int = 12,
+    maximum_conjectures: int = 3,
+) -> LivePhysicsMissionResult:
+    topic = "Einstein gravity as a low-energy effective description in string theory"
+    if parent_mission != LIVE_10_MISSION:
+        return _live10_denial("mission_identity_mismatch", state, parent_mission, topic, actual_duration_minutes)
+    if actual_duration_minutes <= 0 or actual_duration_minutes > 120:
+        return _live10_denial("duration_budget_denied", state, parent_mission, topic, actual_duration_minutes)
+    if maximum_cycles > 12 or maximum_conjectures > 3:
+        return _live10_denial("runtime_budget_denied", state, parent_mission, topic, actual_duration_minutes)
+    if not source_evidence:
+        return _live10_denial("source_evidence_required", state, parent_mission, topic, actual_duration_minutes)
+    if len(source_evidence) > 8:
+        return _live10_denial("source_budget_denied", state, parent_mission, topic, actual_duration_minutes, source_evidence)
+    if any(source.untrusted_instruction_count > 0 for source in source_evidence):
+        return _live10_denial("untrusted_source_instruction_present", state, parent_mission, topic, actual_duration_minutes, source_evidence)
+
+    branch_specs = (
+        ("einstein_hilbert", "How does varying the Einstein-Hilbert action yield classical field equations?", (), ("Einstein-Hilbert action source", "variation notes"), ("Lorentzian metric", "boundary terms controlled"), "complete", "", "field-equation route reproduced with skipped algebra explicit"),
+        ("eft_gravity", "How does effective field theory treat gravity at low energy?", ("einstein_hilbert",), ("operator-approved EFT source",), ("energy below cutoff", "local operators suppressed by scale"), "complete", "", "low-energy suppression described without claiming UV completion"),
+        ("string_effective_action", "How does the string worldsheet or low-energy effective action route reach Einstein-frame gravity?", ("einstein_hilbert", "eft_gravity"), ("string effective action source",), ("massless modes included", "field redefinition to Einstein frame"), "blocked" if insufficient_evidence_branch == "string_effective_action" else "complete", "source_detail_insufficient" if insufficient_evidence_branch == "string_effective_action" else "", "Einstein-frame route summarized with gaps visible"),
+        ("massless_spin_2", "How do massless spin-2 dynamics connect to gravitational interactions?", ("einstein_hilbert",), ("spin-2 consistency source",), ("Lorentz invariance", "gauge redundancy"), "complete", "", "spin-2 interpretation compared to geometric route"),
+        ("compactification", "What compactification or dimensional-reduction assumptions are required?", ("string_effective_action",), ("compactification source",), ("extra dimensions compact", "moduli assumptions tracked"), "blocked" if insufficient_evidence_branch == "compactification" else "complete", "operator_source_needed" if insufficient_evidence_branch == "compactification" else "", "compactification assumptions listed without solving stabilization"),
+        ("quantum_gravity_limits", "Which major quantum-gravity limitations remain unresolved?", ("eft_gravity", "string_effective_action", "compactification"), ("limitations source",), ("perturbative domain", "nonperturbative questions remain"), "complete", "", "conceptual and technical gaps preserved"),
+    )
+    branches = tuple(LivePhysicsMissionBranch(*spec) for spec in branch_specs)
+    source_ids = tuple(source.source_id for source in source_evidence)
+    derivations = (
+        LiveScholarDerivation("live10-eh-variation", "bounded Einstein-Hilbert variation", source_ids[0], ("metric variation", "boundary terms skipped"), ("define action", "vary metric", "identify Einstein tensor"), "full boundary-term treatment skipped", True),
+        LiveScholarDerivation("live10-eft-expansion", "effective-action expansion with low-energy suppression", source_ids[min(1, len(source_ids) - 1)], ("cutoff scale", "local curvature operators"), ("separate leading term", "track suppressed corrections"), "does not establish UV completion", True),
+        LiveScholarDerivation("live10-string-effective-action", "string low-energy effective action to Einstein-frame gravity", source_ids[min(2, len(source_ids) - 1)], ("massless closed-string sector", "field-frame transformation"), ("identify graviton mode", "compare leading action"), "compactification and nonperturbative completion unresolved", insufficient_evidence_branch != "string_effective_action"),
+    )
+    conjectures = (
+        LiveScholarClaim("live10-conjecture-unified-route", "weakened" if "weakened" in LIVE_10_EVIDENCE_CLASSES else "conjecture", "A single derivational route might connect all six branches without separate compactification assumptions.", source_ids, ("compactification",), ("Find a required compactification assumption not fixed by the worldsheet route.",)),
+        LiveScholarClaim("live10-conjecture-spin2-sufficient", "falsified", "Massless spin-2 consistency alone is sufficient to recover the full string-theoretic emergence story.", source_ids, ("spin-2",), ("Show that compactification and extra fields remain necessary.",), ("live10-string-effective-action",), True),
+    )[:maximum_conjectures]
+    claims = (
+        LiveScholarClaim("live10-established-eh", "established_result", "Einstein-Hilbert variation is the classical action route to Einstein field equations, with boundary details tracked as skipped algebra.", source_ids, ("variation",), ("live10-eh-variation",)),
+        LiveScholarClaim("live10-source-string", "source_claim", "Approved source evidence links string low-energy effective action to an Einstein-frame gravitational term.", source_ids, ("source-provenance",), ("live10-string-effective-action",)),
+        LiveScholarClaim("live10-delta-interpretation", "DELTA_interpretation", "The emergence claim is best treated as an effective-description relation, not a complete derivation of observed gravity in all regimes.", source_ids, ("interpretation-boundary",)),
+        LiveScholarClaim("live10-dimensional-check", "dimensional_check", "Low-energy corrections are organized by suppression relative to a cutoff or string scale.", source_ids, ("dimension-tracking",), ("live10-eft-expansion",)),
+        LiveScholarClaim("live10-gap-compactification", "unresolved" if insufficient_evidence_branch == "compactification" else "working_hypothesis", "Compactification and moduli assumptions remain a major technical gap.", source_ids, ("extra-dimensions",)),
+        *conjectures,
+    )
+    falsification_attempts = ("spin-2 sufficiency conjecture falsified by compactification and extra-field requirements",)
+    selective = bool(pending_source_question)
+    independent = bool(pending_source_question and independent_work_available)
+    cycles = min(maximum_cycles, 8 if independent else 7)
+    updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed)
+    return LivePhysicsMissionResult(
+        True,
+        "bounded_mathematical_physics_report_queued",
+        updated,
+        parent_mission,
+        topic,
+        actual_duration_minutes,
+        cycles,
+        branches,
+        source_evidence,
+        claims,
+        derivations,
+        conjectures,
+        falsification_attempts,
+        ("g_ab metric", "R Ricci scalar", "alpha-prime string scale correction parameter", "D spacetime dimension"),
+        ("low-energy regime", "operator-approved bounded source set", "compactification details not fully derived"),
+        ("Gibbons-Hawking-York boundary term not expanded", "worldsheet beta-function details summarized", "frame transformation algebra abbreviated"),
+        tuple(branch.blocker_identity for branch in branches if branch.blocker_identity),
+        selective,
+        independent,
+        ("source-governed-physics-claim-map",),
+        final_synthesis=(
+            "Within the bounded evidence set, Einstein gravity appears as the leading low-energy geometric term "
+            "when massless spin-2/string effective-action structures are organized into an Einstein-frame description. "
+            "The major gaps are compactification, moduli stabilization, nonperturbative definition, and empirical connection."
+        ),
+        strongest_result="The accepted evidence supports an effective-description relation, not a novel physical law.",
+        strongest_limitation="The pilot does not resolve quantum gravity or validate compactification dynamics.",
     )
 
 
