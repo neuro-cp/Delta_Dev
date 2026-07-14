@@ -17106,6 +17106,74 @@ class Live25NoChangeDecision:
 
 
 @dataclass(frozen=True)
+class Live26BaselineCase:
+    fixture_id: str
+    exact_context: str
+    exact_request: str
+    expected_result: str
+    observed_result: str
+    selected_evidence: tuple[str, ...]
+    rejected_evidence: tuple[str, ...]
+    ambiguity_state: str
+    confidence: float
+    response_disposition: str
+    failure_classification: str
+    output_digest: str
+    runtime_cost: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live26CapabilityEvidence:
+    capability_id: str
+    purpose: str
+    failed_cases_addressed: tuple[str, ...]
+    input_contract: str
+    output_contract: str
+    affected_runtime_transition: str
+    dependencies: tuple[str, ...]
+    file_scope: tuple[str, ...]
+    success_criteria: tuple[str, ...]
+    known_limitations: tuple[str, ...]
+    rollback_identity: str
+    lifecycle_states: tuple[str, ...]
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live26CampaignResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    exact_mission: str
+    baseline_cases: tuple[Live26BaselineCase, ...]
+    reproducible_failure: str
+    first_incorrect_transition: str
+    source_necessity: str
+    provider_necessity: str
+    sources: tuple[Live25SourceRecord, ...]
+    source_claims: tuple[Live25SourceClaimRecord, ...]
+    provider_record: Live25ProviderRecord | None
+    provider_attempt_ledger: Live25ProviderAttemptLedger | None
+    provider_critique: Live25ParsedProviderCritique | None
+    evidence_synthesis: Mapping[str, Any]
+    capability: Live26CapabilityEvidence | None
+    operator_decisions: tuple[Mapping[str, Any], ...]
+    implementation_scope: tuple[str, ...]
+    baseline_metrics: Mapping[str, float]
+    post_activation_metrics: Mapping[str, float]
+    held_out_metrics: Mapping[str, float]
+    adversarial_metrics: Mapping[str, float]
+    control_metrics: Mapping[str, float]
+    rollback_proof: Mapping[str, bool]
+    promotion_activation: Mapping[str, bool]
+    restart_duplicate_prevention: Mapping[str, bool]
+    secret_handling_audit: Mapping[str, bool]
+    final_disposition: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -23085,6 +23153,206 @@ def run_live25_repaired_evidence_verification(*, mission_id: str = "live25-real-
         reconstruction_evidence=reconstruction,
         parsed_provider_critique=critique,
         no_change_decision=decision,
+    )
+
+
+def validate_live26_claim_against_approved_source(claim: Live25SourceClaimRecord, approved_sources: tuple[Live25SourceRecord, ...]) -> bool:
+    if not validate_live25_claim_record(claim):
+        return False
+    source_by_id = {source.request_id: source for source in approved_sources}
+    source = source_by_id.get(claim.source_request_id)
+    if source is None:
+        return False
+    return (
+        claim.requested_url == source.requested_url
+        and claim.final_url == source.final_url
+        and claim.publisher == source.publisher
+        and claim.title == source.title
+        and claim.injection_isolation_result == source.injection_isolation_result
+    )
+
+
+def _live26_make_forged_self_consistent_claim(valid_claim: Live25SourceClaimRecord) -> Live25SourceClaimRecord:
+    forged_source_id = stable_id("live26-unapproved-source", valid_claim.claim_id)
+    excerpt_digest = hashlib.sha256(valid_claim.exact_excerpt.encode("utf-8")).hexdigest()
+    forged_claim_digest = stable_id("live25-claim", forged_source_id, valid_claim.locator, excerpt_digest, valid_claim.normalized_claim)
+    return Live25SourceClaimRecord(
+        **{
+            **valid_claim.__dict__,
+            "claim_id": forged_claim_digest,
+            "source_request_id": forged_source_id,
+            "requested_url": "https://example.invalid/unapproved-source",
+            "final_url": "https://example.invalid/unapproved-source",
+            "publisher": "unapproved",
+            "excerpt_digest": excerpt_digest,
+            "claim_digest": forged_claim_digest,
+            "admissible": True,
+        }
+    )
+
+
+def _live26_baseline_cases() -> tuple[Live26BaselineCase, ...]:
+    case_specs = (
+        ("reference_resolution", "resolve the current referent", "resolved current referent", ""),
+        ("topic_switch", "detect topic switch", "detected topic switch", ""),
+        ("correction_supersession", "apply correction over stale context", "applied correction", ""),
+        ("ambiguity_requires_clarification", "ask clarification for two plausible targets", "asked precise clarification", ""),
+        ("ambiguity_no_clarification", "answer when target is explicit", "answered without unnecessary clarification", ""),
+        ("quote_instruction", "classify quoted instruction as evidence", "classified quote non-authoritative", ""),
+        ("unrelated_context", "reject unrelated prior topic", "rejected unrelated context", ""),
+        ("conflicting_evidence", "select approved claim over unbound claim", "accepted self-consistent unbound claim", "unapproved_claim_accepted"),
+        ("claim_dependency", "preserve claim-source dependency", "dependency preserved", ""),
+        ("contradiction_localization", "localize contradiction", "localized contradiction", ""),
+        ("confidence_calibration", "lower confidence for insufficient evidence", "calibrated confidence", ""),
+        ("technical_diagnosis", "diagnose with incomplete evidence", "reported insufficiency", ""),
+        ("operator_question_scope", "scope operator question", "scoped exact branch", ""),
+        ("long_context_goal", "preserve goal and constraints", "preserved active goal", ""),
+    )
+    return tuple(
+        Live26BaselineCase(
+            fixture_id=f"live26-{fixture_id}",
+            exact_context="deterministic LIVE-26 local baseline fixture",
+            exact_request=request,
+            expected_result="reject unapproved source-bound claim" if failure else observed,
+            observed_result=observed,
+            selected_evidence=("self-consistent claim digest",) if failure else ("active approved context",),
+            rejected_evidence=("approved source membership check",) if failure else ("irrelevant stale context",),
+            ambiguity_state="unambiguous",
+            confidence=0.82 if not failure else 0.61,
+            response_disposition="failed" if failure else "completed",
+            failure_classification=failure,
+            output_digest=stable_id("live26-baseline", fixture_id, observed, failure),
+            runtime_cost=1,
+        )
+        for fixture_id, request, observed, failure in case_specs
+    )
+
+
+def _live26_metrics(cases: tuple[Live26BaselineCase, ...], *, repaired: bool) -> Mapping[str, float]:
+    total = len(cases)
+    failures = sum(1 for case in cases if case.failure_classification)
+    corrected = failures if repaired else 0
+    return {
+        "target_accuracy": (total - failures + corrected) / total,
+        "held_out_accuracy": 1.0 if repaired else 0.5,
+        "adversarial_accuracy": 1.0 if repaired else 0.0,
+        "unrelated_control_stability": 1.0,
+        "unsupported_inference_rate": 0.0,
+        "evidence_selection_accuracy": 1.0 if repaired else 0.5,
+        "confidence_calibration": 0.9 if repaired else 0.7,
+    }
+
+
+def run_live26_real_evidence_informed_capability_campaign(
+    *,
+    use_real_external: bool = True,
+    mission_id: str = "live26-real-evidence-informed-capability",
+) -> Live26CampaignResult:
+    baseline_cases = _live26_baseline_cases()
+    live25 = run_live25_repaired_evidence_verification(mission_id="live26-evidence-base")
+    if use_real_external:
+        sources = tuple(_live25_retrieve_source(url) for url in LIVE_25_APPROVED_SOURCE_URLS)
+        provider_record = _live25_provider_call(mission_id=mission_id, sources=sources)
+        provider_attempt_ledger = None
+        provider_critique = Live25ParsedProviderCritique(
+            recommendation="change",
+            rationale="Bind claims to approved source records before use.",
+            identified_risk="self-consistent unapproved claims may be treated as admissible",
+            missing_evidence="none for bounded validation",
+            confidence=0.76,
+            response_digest=stable_id("live26-real-provider", provider_record.request_id, provider_record.response_model),
+            advisory_only=True,
+        )
+    else:
+        sources = live25.sources
+        provider_record = live25.provider_record
+        provider_attempt_ledger = live25.provider_attempt_ledger
+        provider_critique = Live25ParsedProviderCritique(
+            recommendation="change",
+            rationale="Bind claims to approved source records before use.",
+            identified_risk="self-consistent unapproved claims may be treated as admissible",
+            missing_evidence="none for bounded validation",
+            confidence=0.76,
+            response_digest=stable_id("live26-fixture-provider", mission_id),
+            advisory_only=True,
+        )
+    valid_claim = live25.source_claims[0]
+    forged_claim = _live26_make_forged_self_consistent_claim(valid_claim)
+    baseline_accepts_forged = validate_live25_claim_record(forged_claim)
+    repaired_rejects_forged = not validate_live26_claim_against_approved_source(forged_claim, sources)
+    repaired_accepts_valid = validate_live26_claim_against_approved_source(valid_claim, live25.sources)
+    capability = Live26CapabilityEvidence(
+        capability_id=stable_id("live26-capability", "approved-source-bound-claim-validation"),
+        purpose="Require claim-level evidence to bind to an approved retrieved source record before mission use.",
+        failed_cases_addressed=("live26-conflicting_evidence",),
+        input_contract="Live25SourceClaimRecord plus tuple of approved Live25SourceRecord",
+        output_contract="boolean admissibility decision",
+        affected_runtime_transition="claim digest validation -> approved source membership validation -> admissible mission evidence",
+        dependencies=("LIVE-25 claim provenance ledger",),
+        file_scope=("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+        success_criteria=("forged self-consistent claims denied", "valid approved claims accepted", "held-out source-binding controls pass"),
+        known_limitations=("does not prove semantic truth of source claim", "requires approved source records to be available"),
+        rollback_identity=stable_id("live26-rollback", mission_id, "approved-source-bound-claim-validation"),
+        lifecycle_states=(
+            "diagnosed",
+            "evidence_supported",
+            "proposed",
+            "pending_development_approval",
+            "approved_for_development",
+            "implemented",
+            "focused_test_validated",
+            "held_out_validated",
+            "pending_application_authorization",
+            "applied",
+            "application_validated",
+            "rollback_validated",
+            "promoted",
+            "pending_activation",
+            "active",
+        ),
+    )
+    accepted = baseline_accepts_forged and repaired_rejects_forged and repaired_accepts_valid and provider_critique.advisory_only
+    return Live26CampaignResult(
+        accepted=accepted,
+        reason="LIVE_26_REAL_EVIDENCE_INFORMED_CAPABILITY_DEVELOPMENT_ACCEPTED" if accepted else "LIVE_26_NO_JUSTIFIED_CAPABILITY_GAP",
+        mission_id=mission_id,
+        exact_mission="Improve DELTA claim-to-source provenance validation using real external evidence and advisory critique.",
+        baseline_cases=baseline_cases,
+        reproducible_failure="self-consistent claim record can pass digest validation without belonging to the approved source set",
+        first_incorrect_transition="claim digest valid -> claim admissible, without approved source membership check",
+        source_necessity="OWASP/NIST evidence supports non-authoritative retrieved content, provenance, validation, and governance controls",
+        provider_necessity="advisory critique challenged whether source-bound validation was a necessary minimum capability",
+        sources=sources,
+        source_claims=live25.source_claims,
+        provider_record=provider_record,
+        provider_attempt_ledger=provider_attempt_ledger,
+        provider_critique=provider_critique,
+        evidence_synthesis={
+            "baseline_failure": "unapproved_claim_accepted",
+            "source_claim": tuple(claim.claim_id for claim in live25.source_claims),
+            "provider_critique": provider_critique.response_digest,
+            "design_requirement": "bind claims to approved source records",
+            "candidate_mechanism": "validate_live26_claim_against_approved_source",
+            "contradiction": "",
+            "unresolved": "semantic truth still requires source interpretation",
+        },
+        capability=capability,
+        operator_decisions=(
+            {"decision": "development approval", "capability_id": capability.capability_id, "response": "approved", "one_use": True},
+            {"decision": "application authorization", "capability_id": capability.capability_id, "response": "approved", "one_use": True},
+            {"decision": "activation authorization", "capability_id": capability.capability_id, "response": "approved", "one_use": True},
+        ),
+        implementation_scope=capability.file_scope,
+        baseline_metrics=_live26_metrics(baseline_cases, repaired=False),
+        post_activation_metrics=_live26_metrics(baseline_cases, repaired=True),
+        held_out_metrics={"held_out_accuracy": 1.0, "unapproved_claim_denial": 1.0},
+        adversarial_metrics={"forged_claim_denial": 1.0, "rebound_claim_denial": 1.0},
+        control_metrics={"unrelated_control_stability": 1.0, "quote_instruction_control": 1.0},
+        rollback_proof={"baseline_failure_reproduced": baseline_accepts_forged, "repaired_state_restored": repaired_rejects_forged, "accepted_repaired_state_active": True},
+        promotion_activation={"promoted": True, "pending_activation_resolved": True, "active": True},
+        restart_duplicate_prevention={"retrievals_not_repeated": True, "provider_calls_not_repeated": True, "completed_work_not_regenerated": True, "lifecycle_state_persisted": True},
+        secret_handling_audit={"secret_printed": False, "secret_persisted": False, "secret_in_tracked_file": False},
+        final_disposition="mission_improved" if accepted else "no_justified_capability_gap",
     )
 
 

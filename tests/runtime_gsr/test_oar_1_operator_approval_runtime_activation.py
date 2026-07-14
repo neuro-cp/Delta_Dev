@@ -3672,6 +3672,55 @@ def test_live_25r_no_change_decision_is_rule_derived_and_has_controls():
     assert gsr._live25_no_change_decision(inadmissible, result.parsed_provider_critique).outcome != "no_change"
 
 
+def test_live_26_baseline_reproduces_unapproved_claim_gap():
+    live25 = gsr.run_live25_repaired_evidence_verification()
+    valid = live25.source_claims[0]
+    forged = gsr._live26_make_forged_self_consistent_claim(valid)
+
+    assert gsr.validate_live25_claim_record(forged) is True
+    assert gsr.validate_live26_claim_against_approved_source(forged, live25.sources) is False
+    assert gsr.validate_live26_claim_against_approved_source(valid, live25.sources) is True
+
+
+def test_live_26_campaign_accepts_one_evidence_informed_capability_without_real_calls():
+    result = gsr.run_live26_real_evidence_informed_capability_campaign(use_real_external=False)
+
+    assert result.accepted is True
+    assert result.reason == "LIVE_26_REAL_EVIDENCE_INFORMED_CAPABILITY_DEVELOPMENT_ACCEPTED"
+    assert result.capability is not None
+    assert result.capability.purpose.startswith("Require claim-level evidence")
+    assert result.first_incorrect_transition == "claim digest valid -> claim admissible, without approved source membership check"
+    assert result.baseline_metrics["target_accuracy"] < result.post_activation_metrics["target_accuracy"]
+    assert result.held_out_metrics["held_out_accuracy"] == 1.0
+    assert result.adversarial_metrics["forged_claim_denial"] == 1.0
+    assert result.control_metrics["unrelated_control_stability"] == 1.0
+    assert result.provider_critique.advisory_only is True
+
+
+def test_live_26_lifecycle_authorization_and_rollback_are_distinct():
+    result = gsr.run_live26_real_evidence_informed_capability_campaign(use_real_external=False)
+    states = result.capability.lifecycle_states
+
+    assert states.index("approved_for_development") < states.index("implemented")
+    assert states.index("pending_application_authorization") < states.index("applied")
+    assert states.index("promoted") < states.index("pending_activation") < states.index("active")
+    assert len(result.operator_decisions) == 3
+    assert [decision["decision"] for decision in result.operator_decisions] == [
+        "development approval",
+        "application authorization",
+        "activation authorization",
+    ]
+    assert result.rollback_proof["baseline_failure_reproduced"] is True
+    assert result.rollback_proof["repaired_state_restored"] is True
+    assert result.promotion_activation["active"] is True
+
+
+def test_live_26_no_gap_control_when_baseline_failure_absent():
+    live25 = gsr.run_live25_repaired_evidence_verification()
+
+    assert all(gsr.validate_live26_claim_against_approved_source(claim, live25.sources) for claim in live25.source_claims)
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
