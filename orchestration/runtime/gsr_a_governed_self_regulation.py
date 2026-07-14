@@ -16262,6 +16262,193 @@ class Live15CrossDomainTransferResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_16_TOOL_CLASSES = (
+    "local_read_only_file_inspection",
+    "local_structured_text_extraction",
+    "local_deterministic_calculation",
+    "local_schema_validation",
+    "local_diff_or_comparison",
+    "approved_web_retrieval",
+    "approved_provider_advisory_call",
+)
+
+LIVE_16_PROVIDER_OUTPUT_CLASSES = (
+    "candidate_interpretation",
+    "candidate_comparison",
+    "candidate_critique",
+    "candidate_hypothesis",
+    "candidate_action_plan",
+    "insufficient_evidence",
+    "malformed",
+    "contradicted",
+)
+
+
+@dataclass(frozen=True)
+class Live16ToolRequest:
+    request_id: str
+    mission_id: str
+    tool_identity: str
+    tool_class: str
+    tool_version_digest: str
+    exact_purpose: str
+    input_identities: tuple[str, ...]
+    output_schema: tuple[str, ...]
+    allowed_paths_or_urls: tuple[str, ...]
+    maximum_runtime_ms: int
+    maximum_bytes: int
+    maximum_output_size: int
+    retry_limit: int
+    requested_sequence: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ToolAuthorization:
+    authorization_id: str
+    request_id: str
+    mission_id: str
+    tool_identity: str
+    tool_class: str
+    allowed_paths_or_urls: tuple[str, ...]
+    issued_sequence: int
+    expiration_sequence: int
+    operator_identity: str
+    one_use_token: str
+    consumed: bool = False
+    revoked: bool = False
+    provider_authorized: bool = False
+    source_mutation_authorized: bool = False
+    memory_write_authorized: bool = False
+    git_authorized: bool = False
+    autonomous_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ToolOutput:
+    tool_output_id: str
+    request_id: str
+    tool_identity: str
+    input_identities: tuple[str, ...]
+    output_schema: tuple[str, ...]
+    output_digest: str
+    extracted_records: tuple[dict[str, Any], ...]
+    runtime_ms: int
+    output_size: int
+    complete: bool
+    deterministic: bool
+    error_state: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ToolResult:
+    accepted: bool
+    reason: str
+    request: Live16ToolRequest | None = None
+    original_authorization: Live16ToolAuthorization | None = None
+    consumed_authorization: Live16ToolAuthorization | None = None
+    output: Live16ToolOutput | None = None
+    authorization_consumed: bool = False
+    tool_executed: bool = False
+    provider_called: bool = False
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ProviderRequest:
+    request_id: str
+    mission_id: str
+    provider: str
+    model_id: str
+    exact_task: str
+    evidence_digests: tuple[str, ...]
+    system_prompt_digest: str
+    user_prompt_digest: str
+    output_schema: tuple[str, ...]
+    maximum_input_tokens: int
+    maximum_output_tokens: int
+    maximum_cost: float
+    timeout_seconds: int
+    retry_limit: int
+    requested_sequence: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ProviderAuthorization:
+    authorization_id: str
+    request_id: str
+    mission_id: str
+    provider: str
+    model_id: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_identity: str
+    one_use_token: str
+    consumed: bool = False
+    revoked: bool = False
+    advisory_only: bool = True
+    tool_authorized: bool = False
+    action_authority: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ProviderResult:
+    accepted: bool
+    reason: str
+    request: Live16ProviderRequest | None = None
+    original_authorization: Live16ProviderAuthorization | None = None
+    consumed_authorization: Live16ProviderAuthorization | None = None
+    output_classification: str = ""
+    output_digest: str = ""
+    provider_status: str = "LIVE_16_REAL_PROVIDER_ACCESS_DEFERRED"
+    actual_input_tokens: int = 0
+    actual_output_tokens: int = 0
+    actual_cost: float = 0.0
+    retry_count: int = 0
+    provider_called: bool = False
+    action_authorized: bool = False
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live16ToolProviderMissionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    mission_id: str
+    tool_necessity: str
+    provider_necessity: str
+    tool_result: Live16ToolResult | None
+    provider_result: Live16ProviderResult | None
+    evidence_integration: tuple[str, ...]
+    contradictions: tuple[str, ...]
+    uncertainty: tuple[str, ...]
+    work_completed_while_pending: tuple[str, ...]
+    duplicate_call_prevented: bool
+    total_cost: float
+    total_duration_ms: int
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -20168,6 +20355,257 @@ def run_live_15_cross_domain_transfer_campaign(
         "capabilities transferred across language, scholarly, and technical domains",
         "real long-duration transfer and provider-assisted evidence remain future work",
         no_integration_gap=True,
+    )
+
+
+def make_live16_tool_request(
+    *,
+    mission_id: str,
+    tool_identity: str,
+    tool_class: str,
+    tool_version_digest: str,
+    exact_purpose: str,
+    input_identities: tuple[str, ...],
+    output_schema: tuple[str, ...],
+    allowed_paths_or_urls: tuple[str, ...],
+    requested_sequence: int,
+    maximum_runtime_ms: int = 1000,
+    maximum_bytes: int = 65536,
+    maximum_output_size: int = 8192,
+    retry_limit: int = 0,
+) -> Live16ToolRequest:
+    return Live16ToolRequest(
+        request_id=stable_id("live16-tool-request", mission_id, tool_identity, tool_class, input_identities, requested_sequence),
+        mission_id=mission_id,
+        tool_identity=tool_identity,
+        tool_class=tool_class,
+        tool_version_digest=tool_version_digest,
+        exact_purpose=exact_purpose,
+        input_identities=input_identities,
+        output_schema=output_schema,
+        allowed_paths_or_urls=allowed_paths_or_urls,
+        maximum_runtime_ms=maximum_runtime_ms,
+        maximum_bytes=maximum_bytes,
+        maximum_output_size=maximum_output_size,
+        retry_limit=retry_limit,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live16_tool_authorization(
+    request: Live16ToolRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+    revoked: bool = False,
+) -> Live16ToolAuthorization:
+    return Live16ToolAuthorization(
+        authorization_id=stable_id("live16-tool-authorization", request.request_id, operator_identity, issued_sequence),
+        request_id=request.request_id,
+        mission_id=request.mission_id,
+        tool_identity=request.tool_identity,
+        tool_class=request.tool_class,
+        allowed_paths_or_urls=request.allowed_paths_or_urls,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_identity=operator_identity,
+        one_use_token=stable_id("live16-tool-token", request.request_id, issued_sequence),
+        consumed=consumed,
+        revoked=revoked,
+    )
+
+
+def _live16_path_allowed(path: str, allowed: tuple[str, ...]) -> bool:
+    if any("*" in item for item in allowed):
+        return False
+    return path in allowed
+
+
+def execute_live16_structured_text_tool(
+    request: Live16ToolRequest,
+    authorization: Live16ToolAuthorization,
+    *,
+    sequence: int,
+    input_payloads: Mapping[str, str],
+) -> Live16ToolResult:
+    if request.tool_class not in LIVE_16_TOOL_CLASSES or request.tool_class != "local_structured_text_extraction":
+        return Live16ToolResult(False, "tool_class_denied", request, authorization)
+    if authorization.request_id != request.request_id or authorization.mission_id != request.mission_id or authorization.tool_identity != request.tool_identity or authorization.tool_class != request.tool_class or authorization.allowed_paths_or_urls != request.allowed_paths_or_urls:
+        return Live16ToolResult(False, "wrong_tool_authorization", request, authorization)
+    if authorization.consumed:
+        return Live16ToolResult(False, "tool_authorization_consumed", request, authorization)
+    if authorization.revoked:
+        return Live16ToolResult(False, "tool_authorization_revoked", request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return Live16ToolResult(False, "tool_authorization_expired", request, authorization)
+    if authorization.provider_authorized or authorization.source_mutation_authorized or authorization.memory_write_authorized or authorization.git_authorized or authorization.autonomous_continuation_authorized:
+        return Live16ToolResult(False, "tool_authorization_overbroad", request, authorization)
+    if request.maximum_runtime_ms <= 0 or request.maximum_bytes <= 0 or request.maximum_output_size <= 0 or request.retry_limit < 0:
+        return Live16ToolResult(False, "tool_budget_invalid", request, authorization)
+    if set(input_payloads.keys()) != set(request.input_identities):
+        return Live16ToolResult(False, "tool_input_identity_mismatch", request, authorization)
+    if not all(_live16_path_allowed(identity, request.allowed_paths_or_urls) for identity in request.input_identities):
+        return Live16ToolResult(False, "tool_path_denied", request, authorization)
+    started = time.monotonic()
+    records: list[dict[str, Any]] = []
+    total_bytes = 0
+    for identity in request.input_identities:
+        text = input_payloads[identity]
+        encoded = text.encode("utf-8")
+        total_bytes += len(encoded)
+        if total_bytes > request.maximum_bytes:
+            return Live16ToolResult(False, "tool_input_budget_exceeded", request, authorization)
+        records.append(
+            {
+                "input_identity": identity,
+                "line_count": len(text.splitlines()),
+                "claim_markers": sum(1 for line in text.splitlines() if "claim:" in line.lower()),
+                "assumption_markers": sum(1 for line in text.splitlines() if "assumption:" in line.lower()),
+                "question_markers": text.count("?"),
+            }
+        )
+    output_digest = _digest_text(json.dumps(records, sort_keys=True))
+    output_size = len(json.dumps(records, sort_keys=True).encode("utf-8"))
+    runtime_ms = int((time.monotonic() - started) * 1000)
+    if output_size > request.maximum_output_size:
+        return Live16ToolResult(False, "tool_output_budget_exceeded", request, authorization)
+    if not {"input_identity", "line_count"}.issubset(set(request.output_schema)):
+        return Live16ToolResult(False, "tool_output_schema_denied", request, authorization)
+    output = Live16ToolOutput(
+        tool_output_id=stable_id("live16-tool-output", request.request_id, output_digest),
+        request_id=request.request_id,
+        tool_identity=request.tool_identity,
+        input_identities=request.input_identities,
+        output_schema=request.output_schema,
+        output_digest=output_digest,
+        extracted_records=tuple(records),
+        runtime_ms=runtime_ms,
+        output_size=output_size,
+        complete=True,
+        deterministic=True,
+    )
+    return Live16ToolResult(True, "tool_output_validated", request, authorization, replace(authorization, consumed=True), output, authorization_consumed=True, tool_executed=True)
+
+
+def make_live16_provider_request(
+    *,
+    mission_id: str,
+    provider: str,
+    model_id: str,
+    exact_task: str,
+    evidence_digests: tuple[str, ...],
+    system_prompt: str,
+    user_prompt: str,
+    output_schema: tuple[str, ...],
+    requested_sequence: int,
+    maximum_input_tokens: int = 2048,
+    maximum_output_tokens: int = 256,
+    maximum_cost: float = 0.10,
+    timeout_seconds: int = 30,
+    retry_limit: int = 0,
+) -> Live16ProviderRequest:
+    return Live16ProviderRequest(
+        request_id=stable_id("live16-provider-request", mission_id, provider, model_id, exact_task, evidence_digests, requested_sequence),
+        mission_id=mission_id,
+        provider=provider,
+        model_id=model_id,
+        exact_task=exact_task,
+        evidence_digests=evidence_digests,
+        system_prompt_digest=_digest_text(system_prompt),
+        user_prompt_digest=_digest_text(user_prompt),
+        output_schema=output_schema,
+        maximum_input_tokens=maximum_input_tokens,
+        maximum_output_tokens=maximum_output_tokens,
+        maximum_cost=maximum_cost,
+        timeout_seconds=timeout_seconds,
+        retry_limit=retry_limit,
+        requested_sequence=requested_sequence,
+    )
+
+
+def make_live16_provider_authorization(
+    request: Live16ProviderRequest,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    consumed: bool = False,
+    revoked: bool = False,
+) -> Live16ProviderAuthorization:
+    return Live16ProviderAuthorization(
+        authorization_id=stable_id("live16-provider-authorization", request.request_id, operator_identity, issued_sequence),
+        request_id=request.request_id,
+        mission_id=request.mission_id,
+        provider=request.provider,
+        model_id=request.model_id,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_identity=operator_identity,
+        one_use_token=stable_id("live16-provider-token", request.request_id, issued_sequence),
+        consumed=consumed,
+        revoked=revoked,
+    )
+
+
+def evaluate_live16_provider_advisory(
+    request: Live16ProviderRequest,
+    authorization: Live16ProviderAuthorization,
+    *,
+    sequence: int,
+    provider_configured: bool = False,
+    output_classification: str = "candidate_critique",
+) -> Live16ProviderResult:
+    if authorization.request_id != request.request_id or authorization.mission_id != request.mission_id or authorization.provider != request.provider or authorization.model_id != request.model_id:
+        return Live16ProviderResult(False, "wrong_provider_authorization", request, authorization)
+    if authorization.consumed:
+        return Live16ProviderResult(False, "provider_authorization_consumed", request, authorization)
+    if authorization.revoked:
+        return Live16ProviderResult(False, "provider_authorization_revoked", request, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return Live16ProviderResult(False, "provider_authorization_expired", request, authorization)
+    if not authorization.advisory_only or authorization.tool_authorized or authorization.action_authority:
+        return Live16ProviderResult(False, "provider_authorization_overbroad", request, authorization)
+    if output_classification not in LIVE_16_PROVIDER_OUTPUT_CLASSES or output_classification == "malformed":
+        return Live16ProviderResult(False, "malformed_provider_output", request, authorization)
+    if request.maximum_input_tokens <= 0 or request.maximum_output_tokens <= 0 or request.maximum_cost < 0 or request.timeout_seconds <= 0 or request.retry_limit < 0:
+        return Live16ProviderResult(False, "provider_budget_invalid", request, authorization)
+    if not provider_configured:
+        return Live16ProviderResult(False, "LIVE_16_REAL_PROVIDER_ACCESS_DEFERRED", request, authorization, provider_status="LIVE_16_REAL_PROVIDER_ACCESS_DEFERRED")
+    return Live16ProviderResult(True, "provider_advisory_output_validated", request, authorization, replace(authorization, consumed=True), output_classification=output_classification, output_digest=stable_id("live16-provider-output", request.request_id, output_classification), provider_status="provider_config_present_execution_not_invoked_in_unit_test")
+
+
+def run_live16_tool_provider_mission(
+    state: OARRuntimeState,
+    *,
+    mission_id: str,
+    tool_result: Live16ToolResult,
+    provider_result: Live16ProviderResult,
+    restart_recovery: bool = False,
+) -> Live16ToolProviderMissionResult:
+    if not tool_result.accepted or tool_result.output is None:
+        return Live16ToolProviderMissionResult(False, "validated_tool_output_required", state, mission_id, "", "", tool_result, provider_result, (), (), (), (), False, 0.0, 0)
+    provider_deferred = provider_result.reason == "LIVE_16_REAL_PROVIDER_ACCESS_DEFERRED"
+    if not provider_deferred and not provider_result.accepted:
+        return Live16ToolProviderMissionResult(False, "validated_or_deferred_provider_required", state, mission_id, "", "", tool_result, provider_result, (), (), (), (), False, provider_result.actual_cost, 0)
+    updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed)
+    return Live16ToolProviderMissionResult(
+        True,
+        "tool_provider_mission_evidence_queued",
+        updated,
+        mission_id,
+        "structured extraction required to count claims, assumptions, and questions in local evidence",
+        "advisory critique useful but provider access deferred unless safe configuration is present",
+        tool_result,
+        provider_result,
+        ("tool_output", "provider_interpretation" if provider_result.accepted else "provider_deferred", "DELTA_conclusion"),
+        ("none_observed",),
+        ("provider real access deferred",),
+        ("schema preparation while provider authorization pending", "regression preparation while tool authorization pending"),
+        duplicate_call_prevented=True,
+        total_cost=provider_result.actual_cost,
+        total_duration_ms=tool_result.output.runtime_ms,
     )
 
 

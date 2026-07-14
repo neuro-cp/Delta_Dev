@@ -2918,3 +2918,136 @@ def test_live_15_later_rollback_preserves_earlier_capabilities_and_restart_pause
     assert recovered.automatic_resume_performed is False
     assert replay.state.development_runtime_mode == "paused"
     assert replay.autonomous_continuation is False
+
+
+def _live16_tool_request() -> gsr.Live16ToolRequest:
+    return gsr.make_live16_tool_request(
+        mission_id="live16-tool-provider",
+        tool_identity="structured-text-extractor",
+        tool_class="local_structured_text_extraction",
+        tool_version_digest="tool-digest-v1",
+        exact_purpose="extract claim and assumption markers from local evidence",
+        input_identities=("local://evidence/doc1",),
+        output_schema=("input_identity", "line_count", "claim_markers", "assumption_markers", "question_markers"),
+        allowed_paths_or_urls=("local://evidence/doc1",),
+        requested_sequence=700,
+    )
+
+
+def test_live_16_authorized_local_tool_execution_validates_schema_and_integrity():
+    request = _live16_tool_request()
+    authorization = gsr.make_live16_tool_authorization(request, operator_identity="operator", issued_sequence=700, expiration_sequence=710)
+    result = gsr.execute_live16_structured_text_tool(
+        request,
+        authorization,
+        sequence=701,
+        input_payloads={"local://evidence/doc1": "Claim: context selection matters.\nAssumption: source evidence remains advisory.\nQuestion?"},
+    )
+
+    assert result.accepted is True
+    assert result.reason == "tool_output_validated"
+    assert result.authorization_consumed is True
+    assert result.tool_executed is True
+    assert result.output is not None
+    assert result.output.complete is True
+    assert result.output.deterministic is True
+    assert result.output.extracted_records[0]["claim_markers"] == 1
+    assert result.output.extracted_records[0]["assumption_markers"] == 1
+    assert result.provider_called is False
+    assert result.memory_written is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_16_tool_denials_for_paths_revocation_provider_scope_and_duplicates():
+    request = _live16_tool_request()
+    authorization = gsr.make_live16_tool_authorization(request, operator_identity="operator", issued_sequence=700, expiration_sequence=710)
+
+    wrong_input = gsr.execute_live16_structured_text_tool(request, authorization, sequence=701, input_payloads={"local://other": "Claim: no"})
+    assert wrong_input.reason == "tool_input_identity_mismatch"
+
+    wildcard = replace(request, allowed_paths_or_urls=("local://*",))
+    wildcard_auth = gsr.make_live16_tool_authorization(wildcard, operator_identity="operator", issued_sequence=700, expiration_sequence=710)
+    wildcard_result = gsr.execute_live16_structured_text_tool(wildcard, wildcard_auth, sequence=701, input_payloads={"local://evidence/doc1": "Claim: no"})
+    assert wildcard_result.reason == "tool_path_denied"
+
+    revoked = replace(authorization, revoked=True)
+    revoked_result = gsr.execute_live16_structured_text_tool(request, revoked, sequence=701, input_payloads={"local://evidence/doc1": "Claim: no"})
+    assert revoked_result.reason == "tool_authorization_revoked"
+
+    overbroad = replace(authorization, provider_authorized=True)
+    overbroad_result = gsr.execute_live16_structured_text_tool(request, overbroad, sequence=701, input_payloads={"local://evidence/doc1": "Claim: no"})
+    assert overbroad_result.reason == "tool_authorization_overbroad"
+
+    first = gsr.execute_live16_structured_text_tool(request, authorization, sequence=701, input_payloads={"local://evidence/doc1": "Claim: yes"})
+    replay = gsr.execute_live16_structured_text_tool(request, first.consumed_authorization, sequence=702, input_payloads={"local://evidence/doc1": "Claim: yes"})
+    assert replay.reason == "tool_authorization_consumed"
+
+
+def test_live_16_provider_authorization_is_separate_and_deferred_safely():
+    request = gsr.make_live16_provider_request(
+        mission_id="live16-tool-provider",
+        provider="openai",
+        model_id="operator-approved-model",
+        exact_task="critique structured evidence",
+        evidence_digests=("digest-1",),
+        system_prompt="advisory only",
+        user_prompt="critique",
+        output_schema=("candidate_critique",),
+        requested_sequence=720,
+    )
+    authorization = gsr.make_live16_provider_authorization(request, operator_identity="operator", issued_sequence=720, expiration_sequence=730)
+    deferred = gsr.evaluate_live16_provider_advisory(request, authorization, sequence=721, provider_configured=False)
+    assert deferred.accepted is False
+    assert deferred.reason == "LIVE_16_REAL_PROVIDER_ACCESS_DEFERRED"
+    assert deferred.provider_called is False
+    assert deferred.consumed_authorization is None
+
+    malformed = gsr.evaluate_live16_provider_advisory(request, authorization, sequence=721, provider_configured=True, output_classification="malformed")
+    assert malformed.reason == "malformed_provider_output"
+
+    overbroad = replace(authorization, tool_authorized=True)
+    denied = gsr.evaluate_live16_provider_advisory(request, overbroad, sequence=721, provider_configured=True)
+    assert denied.reason == "provider_authorization_overbroad"
+
+
+def test_live_16_complete_tool_plus_provider_deferred_mission_and_restart():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-16")
+    tool_request = _live16_tool_request()
+    tool_auth = gsr.make_live16_tool_authorization(tool_request, operator_identity="operator", issued_sequence=700, expiration_sequence=710)
+    tool = gsr.execute_live16_structured_text_tool(
+        tool_request,
+        tool_auth,
+        sequence=701,
+        input_payloads={"local://evidence/doc1": "Claim: context selection matters.\nAssumption: provider output is advisory."},
+    )
+    provider_request = gsr.make_live16_provider_request(
+        mission_id="live16-tool-provider",
+        provider="openai",
+        model_id="operator-approved-model",
+        exact_task="critique structured evidence",
+        evidence_digests=(tool.output.output_digest,),
+        system_prompt="advisory only",
+        user_prompt="critique",
+        output_schema=("candidate_critique",),
+        requested_sequence=720,
+    )
+    provider_auth = gsr.make_live16_provider_authorization(provider_request, operator_identity="operator", issued_sequence=720, expiration_sequence=730)
+    provider = gsr.evaluate_live16_provider_advisory(provider_request, provider_auth, sequence=721, provider_configured=False)
+    mission = gsr.run_live16_tool_provider_mission(state, mission_id="live16-tool-provider", tool_result=tool, provider_result=provider)
+
+    assert mission.accepted is True
+    assert mission.reason == "tool_provider_mission_evidence_queued"
+    assert mission.tool_result is tool
+    assert mission.provider_result is provider
+    assert mission.duplicate_call_prevented is True
+    assert mission.total_cost == 0.0
+    assert mission.memory_written is False
+    assert mission.git_operation_performed is False
+    assert mission.autonomous_continuation is False
+
+    recovered = gsr.recover_oar_runtime_after_restart(mission.state, integrity_valid=True)
+    replay = gsr.run_live16_tool_provider_mission(recovered, mission_id="live16-tool-provider", tool_result=tool, provider_result=provider, restart_recovery=True)
+    assert recovered.automatic_resume_performed is False
+    assert replay.state.development_runtime_mode == "paused"
