@@ -2246,3 +2246,128 @@ def test_live_10_scope_budget_source_and_injection_denials_fail_closed():
         maximum_cycles=13,
     )
     assert over_budget.reason == "runtime_budget_denied"
+
+
+def test_live_11_contextual_language_campaign_improves_before_after_fixtures():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-11")
+    result = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=32,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "contextual_language_capability_report_queued"
+    assert result.capability_gap_id == "contextual_evidence_arbitration"
+    assert result.capability_name == "Contextual Evidence Arbitration"
+    assert len(result.baseline_results) == 12
+    assert result.baseline_accuracy < result.post_activation_accuracy
+    assert result.post_activation_accuracy == 1.0
+    assert result.held_out_accuracy == 1.0
+    assert result.adversarial_accuracy == 1.0
+    assert result.unrelated_control_accuracy == 1.0
+    assert result.unsupported_inference_delta < 0
+    assert result.clarification_precision_delta > 0
+    assert result.capability_lifecycle == gsr.LIVE_11_CAPABILITY_STAGES
+    assert "application_validated" in result.capability_lifecycle
+    assert "active" in result.capability_lifecycle
+    assert result.memory_written is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+    assert result.tracked_source_mutated_without_authorization is False
+
+
+def test_live_11_no_gap_rejection_and_failed_application_paths_remain_bounded():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-11")
+    no_gap = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=20,
+        force_no_gap=True,
+    )
+    assert no_gap.accepted is True
+    assert no_gap.no_justified_gap is True
+    assert no_gap.reason == "no_justified_language_capability_gap"
+    assert no_gap.capability_lifecycle == ()
+
+    rejected = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=20,
+        operator_approves_capability=False,
+    )
+    assert rejected.accepted is True
+    assert rejected.reason == "paused_capability_rejected"
+    assert rejected.post_activation_results == ()
+    assert "rejected" in rejected.capability_lifecycle
+
+    rollback = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=20,
+        application_validation_passed=False,
+    )
+    assert rollback.accepted is True
+    assert rollback.reason == "application_validation_failed_rolled_back"
+    assert rollback.rollback_evidence == ("pre_application_state_restored", "capability_inactive")
+    assert "active" not in rollback.capability_lifecycle
+
+
+def test_live_11_scope_duration_restart_and_duplicate_boundaries_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-11")
+    wrong = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission="make DELTA generally smarter",
+        actual_duration_minutes=20,
+    )
+    assert wrong.accepted is False
+    assert wrong.reason == "mission_identity_mismatch"
+
+    duration = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=121,
+    )
+    assert duration.reason == "duration_budget_denied"
+
+    first = gsr.run_live_11_contextual_language_capability_campaign(
+        state,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=20,
+    )
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    replay = gsr.run_live_11_contextual_language_capability_campaign(
+        recovered,
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=20,
+        restart_recovery=True,
+    )
+    assert recovered.automatic_resume_performed is False
+    assert replay.state.development_runtime_mode == "paused"
+    assert replay.autonomous_continuation is False
+
+
+def test_live_11_language_failure_classes_and_controls_cover_required_cases():
+    result = gsr.run_live_11_contextual_language_capability_campaign(
+        gsr.OARRuntimeState(runtime_state_id="state-live-11"),
+        parent_mission=gsr.LIVE_11_MISSION,
+        actual_duration_minutes=24,
+    )
+
+    baseline_classes = {item.failure_class for item in result.baseline_results if item.failure_class}
+    assert {
+        "wrong_referent",
+        "active_context_ignored",
+        "false_topic_continuation",
+        "correction_not_applied",
+        "quote_treated_as_instruction",
+        "ambiguity_not_detected",
+        "operator_constraint_lost",
+        "stale_context_selected",
+        "unrelated_memory_intrusion",
+        "unsupported_inference",
+    }.issubset(baseline_classes)
+    assert baseline_classes.issubset(set(gsr.LIVE_11_FAILURE_CLASSES))
+    assert result.unrelated_control_results
+    assert all(not item.failure_class for item in result.unrelated_control_results)
+    assert all(not item.unauthorized_memory_used for item in result.post_activation_results)

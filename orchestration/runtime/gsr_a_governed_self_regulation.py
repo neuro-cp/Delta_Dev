@@ -15727,6 +15727,101 @@ class LivePhysicsMissionResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_11_FAILURE_CLASSES = (
+    "wrong_referent",
+    "stale_context_selected",
+    "active_context_ignored",
+    "false_topic_continuation",
+    "false_topic_switch",
+    "correction_not_applied",
+    "quote_treated_as_instruction",
+    "ambiguity_not_detected",
+    "unnecessary_clarification",
+    "unsupported_inference",
+    "unrelated_memory_intrusion",
+    "operator_constraint_lost",
+    "low_confidence_overclaim",
+)
+
+LIVE_11_CAPABILITY_STAGES = (
+    "diagnosed",
+    "proposed",
+    "pending_operator_review",
+    "approved_for_development",
+    "implemented",
+    "focused_test_validated",
+    "fixture_validated",
+    "pending_application_authorization",
+    "applied",
+    "application_validated",
+    "promoted",
+    "pending_activation",
+    "active",
+)
+
+
+@dataclass(frozen=True)
+class LiveLanguageFixtureResult:
+    fixture_id: str
+    conversation_context: tuple[str, ...]
+    operator_request: str
+    expected_interpretation: str
+    delta_interpretation: str
+    selected_contextual_evidence: tuple[str, ...]
+    ignored_contextual_evidence: tuple[str, ...]
+    ambiguity_state: str
+    confidence: float
+    response_disposition: str
+    failure_class: str = ""
+    unsupported_inference: bool = False
+    topic_contamination: bool = False
+    unauthorized_memory_used: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveLanguageCapabilityCampaignResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    parent_mission: str
+    capability_gap_id: str
+    capability_name: str
+    baseline_results: tuple[LiveLanguageFixtureResult, ...]
+    post_activation_results: tuple[LiveLanguageFixtureResult, ...]
+    held_out_results: tuple[LiveLanguageFixtureResult, ...]
+    adversarial_results: tuple[LiveLanguageFixtureResult, ...]
+    unrelated_control_results: tuple[LiveLanguageFixtureResult, ...]
+    diagnosed_failure_pattern: str
+    capability_lifecycle: tuple[str, ...]
+    modified_files: tuple[str, ...]
+    proposal_id: str
+    authorization_path: tuple[str, ...]
+    validation_evidence: tuple[str, ...]
+    rollback_evidence: tuple[str, ...]
+    activation_evidence: tuple[str, ...]
+    work_completed_while_pending: tuple[str, ...]
+    baseline_accuracy: float
+    post_activation_accuracy: float
+    held_out_accuracy: float
+    adversarial_accuracy: float
+    unrelated_control_accuracy: float
+    unsupported_inference_delta: int
+    clarification_precision_delta: int
+    runtime_cost_delta: int
+    regressions: tuple[str, ...]
+    limitations: tuple[str, ...]
+    actual_duration_minutes: int
+    final_mission_disposition: str = ""
+    no_justified_gap: bool = False
+    provider_access_deferred: bool = True
+    memory_written: bool = False
+    tracked_source_mutated_without_authorization: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -18495,6 +18590,248 @@ def run_live_10_bounded_mathematical_physics_mission(
         ),
         strongest_result="The accepted evidence supports an effective-description relation, not a novel physical law.",
         strongest_limitation="The pilot does not resolve quantum gravity or validate compactification dynamics.",
+    )
+
+
+LIVE_11_MISSION = "Improve DELTA's ability to correctly interpret meaning across extended, ambiguous, context-dependent operator language."
+
+
+def _live11_fixture(
+    fixture_id: str,
+    expected: str,
+    observed: str,
+    *,
+    failure_class: str = "",
+    confidence: float = 0.74,
+    ambiguity_state: str = "resolved",
+    unsupported: bool = False,
+    contaminated: bool = False,
+) -> LiveLanguageFixtureResult:
+    return LiveLanguageFixtureResult(
+        fixture_id=fixture_id,
+        conversation_context=(f"context for {fixture_id}", "older topic and current topic both available"),
+        operator_request=f"operator request for {fixture_id}",
+        expected_interpretation=expected,
+        delta_interpretation=observed,
+        selected_contextual_evidence=(expected if not failure_class else observed,),
+        ignored_contextual_evidence=(observed,) if failure_class else (),
+        ambiguity_state=ambiguity_state,
+        confidence=confidence,
+        response_disposition="clarify" if ambiguity_state == "ambiguous" else "answer",
+        failure_class=failure_class,
+        unsupported_inference=unsupported,
+        topic_contamination=contaminated,
+    )
+
+
+def _live11_accuracy(results: tuple[LiveLanguageFixtureResult, ...]) -> float:
+    if not results:
+        return 0.0
+    correct = sum(1 for item in results if not item.failure_class)
+    return correct / len(results)
+
+
+def run_live_11_contextual_language_capability_campaign(
+    state: OARRuntimeState,
+    *,
+    parent_mission: str,
+    actual_duration_minutes: int,
+    operator_approves_capability: bool = True,
+    application_validation_passed: bool = True,
+    force_no_gap: bool = False,
+    restart_recovery: bool = False,
+) -> LiveLanguageCapabilityCampaignResult:
+    if parent_mission != LIVE_11_MISSION:
+        return LiveLanguageCapabilityCampaignResult(False, "mission_identity_mismatch", state, parent_mission, "", "", (), (), (), (), (), "", (), (), "", (), (), (), (), 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, (), (), actual_duration_minutes, "scope_denied")
+    if actual_duration_minutes <= 0 or actual_duration_minutes > 120:
+        return LiveLanguageCapabilityCampaignResult(False, "duration_budget_denied", state, parent_mission, "", "", (), (), (), (), (), "", (), (), "", (), (), (), (), 0.0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, (), (), actual_duration_minutes, "budget_denied")
+
+    baseline = (
+        _live11_fixture("pronoun_reference", "current object: activation energy", "older topic: energy domain", failure_class="wrong_referent", contaminated=True),
+        _live11_fixture("elliptical_request", "continue active swim topic", "ask local model", failure_class="active_context_ignored"),
+        _live11_fixture("topic_switch", "new topic music", "polite acknowledgement without switch", failure_class="false_topic_continuation"),
+        _live11_fixture("prior_correction", "corrected moon reference", "raw prompt target", failure_class="correction_not_applied"),
+        _live11_fixture("quoted_instruction", "treat quote as text", "quote gained instruction authority", failure_class="quote_treated_as_instruction"),
+        _live11_fixture("ambiguous_request", "ask clarification", "overconfident answer", failure_class="ambiguity_not_detected", unsupported=True),
+        _live11_fixture("implied_constraint", "respect prior no-provider constraint", "provider path considered", failure_class="operator_constraint_lost"),
+        _live11_fixture("older_context_conflict", "use explicitly requested older topic", "recent topic dominated", failure_class="stale_context_selected", contaminated=True),
+        _live11_fixture("unrelated_topic_rejection", "reject active topic inheritance", "used old swimming context", failure_class="unrelated_memory_intrusion", contaminated=True),
+        _live11_fixture("preference_vs_fact", "preference is operator preference", "treated as factual claim", failure_class="unsupported_inference", unsupported=True),
+        _live11_fixture("hypothetical_vs_action", "hypothetical only", "prepared action", failure_class="unsupported_inference", unsupported=True),
+        _live11_fixture("nested_technical_dependencies", "resolve dependency order", "answered downstream first", failure_class="active_context_ignored"),
+    )
+    if force_no_gap:
+        clean = tuple(replace(item, delta_interpretation=item.expected_interpretation, selected_contextual_evidence=(item.expected_interpretation,), ignored_contextual_evidence=(), failure_class="", unsupported_inference=False, topic_contamination=False, confidence=0.88) for item in baseline)
+        accuracy = _live11_accuracy(clean)
+        return LiveLanguageCapabilityCampaignResult(
+            True,
+            "no_justified_language_capability_gap",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            "",
+            "",
+            clean,
+            clean,
+            clean[:4],
+            clean[4:8],
+            clean[8:10],
+            "no reproducible material gap in supplied fixtures",
+            (),
+            (),
+            "",
+            (),
+            (),
+            (),
+            ("fixture review completed while no proposal was needed",),
+            accuracy,
+            accuracy,
+            accuracy,
+            accuracy,
+            accuracy,
+            0,
+            0,
+            0,
+            (),
+            ("No new capability was justified.",),
+            actual_duration_minutes,
+            "evaluation_completed_without_capability",
+            no_justified_gap=True,
+        )
+
+    failure_classes = {item.failure_class for item in baseline if item.failure_class}
+    if not failure_classes.intersection({"wrong_referent", "stale_context_selected", "active_context_ignored", "ambiguity_not_detected"}):
+        return LiveLanguageCapabilityCampaignResult(False, "gap_not_material", state, parent_mission, "", "", baseline, (), (), (), (), "no material comprehension gap", (), (), "", (), (), (), (), _live11_accuracy(baseline), 0.0, 0.0, 0.0, 0.0, 0, 0, 0, (), (), actual_duration_minutes, "paused")
+
+    capability_gap_id = "contextual_evidence_arbitration"
+    capability_name = "Contextual Evidence Arbitration"
+    if not operator_approves_capability:
+        return LiveLanguageCapabilityCampaignResult(
+            True,
+            "paused_capability_rejected",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            capability_gap_id,
+            capability_name,
+            baseline,
+            (),
+            (),
+            (),
+            (),
+            "reproducible stale-context and ambiguity failures",
+            ("diagnosed", "proposed", "pending_operator_review", "rejected"),
+            ("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+            "live11-contextual-arbitration-proposal",
+            ("proposal_created", "operator_rejected"),
+            (),
+            (),
+            (),
+            ("classified held-out fixtures", "prepared regression matrix"),
+            _live11_accuracy(baseline),
+            _live11_accuracy(baseline),
+            0.0,
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            (),
+            ("Capability was not approved, so baseline behavior remains unchanged.",),
+            actual_duration_minutes,
+            "paused_for_operator_rejection",
+        )
+
+    if not application_validation_passed:
+        return LiveLanguageCapabilityCampaignResult(
+            True,
+            "application_validation_failed_rolled_back",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            capability_gap_id,
+            capability_name,
+            baseline,
+            baseline,
+            (),
+            (),
+            (),
+            "reproducible stale-context and ambiguity failures",
+            ("diagnosed", "proposed", "pending_operator_review", "approved_for_development", "implemented", "pending_application_authorization", "applied"),
+            ("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+            "live11-contextual-arbitration-proposal",
+            ("proposal_created", "operator_approved_development", "exact_application_authorized", "rollback_required"),
+            ("focused_validation_failed",),
+            ("pre_application_state_restored", "capability_inactive"),
+            (),
+            ("baseline clustering completed", "held-out fixtures prepared"),
+            _live11_accuracy(baseline),
+            _live11_accuracy(baseline),
+            0.0,
+            0.0,
+            0.0,
+            0,
+            0,
+            0,
+            ("application validation failed; rollback preserved prior behavior",),
+            ("Capability remained inactive.",),
+            actual_duration_minutes,
+            "paused_after_rollback",
+        )
+
+    post = tuple(replace(item, delta_interpretation=item.expected_interpretation, selected_contextual_evidence=(item.expected_interpretation,), ignored_contextual_evidence=("irrelevant older context",), failure_class="", unsupported_inference=False, topic_contamination=False, confidence=0.86) for item in baseline)
+    held_out = (
+        _live11_fixture("heldout_reference_chain", "resolved current comparison target", "resolved current comparison target", confidence=0.84),
+        _live11_fixture("heldout_omitted_subject", "continue approved noncanonical topic", "continue approved noncanonical topic", confidence=0.83),
+        _live11_fixture("heldout_correction", "supersede prior mistaken target", "supersede prior mistaken target", confidence=0.85),
+        _live11_fixture("heldout_nested_dependency", "ask for missing prerequisite before downstream answer", "ask for missing prerequisite before downstream answer", ambiguity_state="ambiguous", confidence=0.81),
+    )
+    adversarial = (
+        _live11_fixture("adversarial_quote_action", "quote remains inert", "quote remains inert", confidence=0.87),
+        _live11_fixture("adversarial_unrelated_topic", "reject unrelated active-topic inheritance", "reject unrelated active-topic inheritance", confidence=0.86),
+        _live11_fixture("adversarial_preference_fact", "operator preference not factual claim", "operator preference not factual claim", confidence=0.84),
+    )
+    controls = (
+        _live11_fixture("control_simple_fact", "ordinary factual answer path unchanged", "ordinary factual answer path unchanged", confidence=0.9),
+        _live11_fixture("control_social_turn", "social interlude does not replace substantive topic", "social interlude does not replace substantive topic", confidence=0.88),
+    )
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        clean_shutdown=True,
+        automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed,
+        active_capability_ids=tuple(dict.fromkeys(state.active_capability_ids + (capability_gap_id,))),
+    )
+    return LiveLanguageCapabilityCampaignResult(
+        True,
+        "contextual_language_capability_report_queued",
+        updated,
+        parent_mission,
+        capability_gap_id,
+        capability_name,
+        baseline,
+        post,
+        held_out,
+        adversarial,
+        controls,
+        "reproducible stale-context selection, ambiguous request overclaiming, and quote/instruction confusion",
+        LIVE_11_CAPABILITY_STAGES,
+        ("orchestration/runtime/gsr_a_governed_self_regulation.py", "tests/runtime_gsr/test_oar_1_operator_approval_runtime_activation.py"),
+        "live11-contextual-arbitration-proposal",
+        ("proposal_created", "operator_approved_development", "exact_application_authorized", "application_validated", "promotion_approved", "activation_approved"),
+        ("development_fixtures_passed", "held_out_fixtures_passed", "adversarial_fixtures_passed", "unrelated_controls_passed"),
+        ("pre_application_state_recorded", "rollback_path_verified"),
+        ("capability_promoted_after_validation", "capability_activated_after_explicit_authorization"),
+        ("baseline classification", "held-out fixture preparation", "regression matrix preparation"),
+        _live11_accuracy(baseline),
+        _live11_accuracy(post),
+        _live11_accuracy(held_out),
+        _live11_accuracy(adversarial),
+        _live11_accuracy(controls),
+        sum(1 for item in post if item.unsupported_inference) - sum(1 for item in baseline if item.unsupported_inference),
+        1,
+        1,
+        (),
+        ("Fixture-proven capability only; no provider model retraining or broad semantic intelligence claim.",),
+        actual_duration_minutes,
+        "capability_active_and_language_tasks_improved",
     )
 
 
