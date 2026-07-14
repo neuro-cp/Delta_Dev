@@ -14490,6 +14490,7 @@ class OARRuntimeState:
     executed_fixture_review_item_ids: tuple[str, ...] = ()
     completed_tracked_preflight_review_item_ids: tuple[str, ...] = ()
     completed_tracked_application_review_item_ids: tuple[str, ...] = ()
+    completed_mission_progress_item_ids: tuple[str, ...] = ()
     promoted_capability_ids: tuple[str, ...] = ()
     activated_capability_ids: tuple[str, ...] = ()
     pending_review_ids: tuple[str, ...] = ()
@@ -15012,6 +15013,92 @@ class LiveCapabilityActivationResult:
     authorization_consumed: bool = False
     application_performed: bool = False
     git_operation_performed: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveParentMissionCheckpoint:
+    mission_checkpoint_id: str
+    parent_mission_id: str
+    compiled_objective_id: str
+    original_parent_mission: str
+    capability_gap_id: str
+    runtime_checkpoint_id: str
+    remaining_mission_budgets: dict[str, int]
+    previous_completed_work: tuple[str, ...] = ()
+    current_blocker_state: str = "blocked_by_capability_gap"
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveMissionResumptionRequest:
+    resumption_request_id: str
+    parent_mission_id: str
+    compiled_objective_id: str
+    original_parent_mission: str
+    capability_gap_id: str
+    capability_id: str
+    capability_version: str
+    application_evidence_id: str
+    promoted_tier: str
+    activation_evidence_id: str
+    mission_checkpoint_id: str
+    runtime_checkpoint_id: str
+    requested_sequence: int
+    maximum_work_items: int = 1
+    provider_model_requested: bool = False
+    tracked_source_mutation_requested: bool = False
+    another_capability_campaign_requested: bool = False
+    automatic_continuation_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveMissionProgressEvidence:
+    mission_progress_evidence_id: str
+    resumption_request_id: str
+    parent_mission_id: str
+    compiled_objective_id: str
+    original_parent_mission: str
+    capability_gap_id: str
+    capability_id: str
+    capability_version: str
+    blocker_outcome: str
+    mission_work_item_id: str
+    mission_work_item: str
+    mission_progress_result: str
+    new_blocker_id: str = ""
+    operator_question: str = ""
+    parent_mission_unchanged: bool = True
+    mission_progress_recorded: bool = True
+    runtime_paused: bool = True
+    tracked_source_mutated: bool = False
+    capability_campaign_started: bool = False
+    capability_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveMissionResumptionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    request: LiveMissionResumptionRequest | None = None
+    checkpoint: LiveParentMissionCheckpoint | None = None
+    activation_evidence: LiveCapabilityActivationEvidence | None = None
+    progress_evidence: LiveMissionProgressEvidence | None = None
+    evidence_review_item: dict[str, Any] | None = None
+    blocker_closed: bool = False
+    mission_progress_performed: bool = False
+    runtime_paused: bool = True
+    tracked_source_mutated: bool = False
+    capability_campaign_started: bool = False
     provider_called: bool = False
     model_invoked: bool = False
     automatic_continuation: bool = False
@@ -16496,6 +16583,162 @@ def activate_live_capability(
         activation_performed=verification_passed,
         deactivation_verified=deactivate_after_verification,
         authorization_consumed=True,
+    )
+
+
+LIVE_3_BLOCKER_OUTCOMES = (
+    "blocker_closed_resume_mission",
+    "blocker_not_closed",
+    "activation_not_sufficient",
+    "mission_checkpoint_stale",
+    "mission_identity_mismatch",
+    "operator_decision_required",
+    "new_capability_gap_detected",
+    "mission_not_feasible_within_limits",
+)
+
+
+def make_live_parent_mission_checkpoint(
+    compiled: CompiledMissionObjective,
+    review_item: OperatorReviewItem,
+    *,
+    runtime_checkpoint_id: str,
+    remaining_mission_budgets: Mapping[str, int] | None = None,
+    previous_completed_work: tuple[str, ...] = (),
+) -> LiveParentMissionCheckpoint:
+    return LiveParentMissionCheckpoint(
+        mission_checkpoint_id=stable_id("live-3-parent-mission-checkpoint", compiled.compiled_objective_id, review_item.capability_gap_id, runtime_checkpoint_id),
+        parent_mission_id=compiled.compiled_objective_id,
+        compiled_objective_id=compiled.compiled_objective_id,
+        original_parent_mission=compiled.original_operator_mission,
+        capability_gap_id=review_item.capability_gap_id,
+        runtime_checkpoint_id=runtime_checkpoint_id,
+        remaining_mission_budgets=dict(remaining_mission_budgets or compiled.resource_budgets),
+        previous_completed_work=previous_completed_work,
+    )
+
+
+def make_live_mission_resumption_request(
+    checkpoint: LiveParentMissionCheckpoint,
+    activation: LiveCapabilityActivationEvidence,
+    *,
+    application_evidence_id: str,
+    promoted_tier: str,
+    requested_sequence: int,
+) -> LiveMissionResumptionRequest:
+    return LiveMissionResumptionRequest(
+        resumption_request_id=stable_id("live-3-mission-resumption-request", checkpoint.mission_checkpoint_id, activation.activation_evidence_id, requested_sequence),
+        parent_mission_id=checkpoint.parent_mission_id,
+        compiled_objective_id=checkpoint.compiled_objective_id,
+        original_parent_mission=checkpoint.original_parent_mission,
+        capability_gap_id=checkpoint.capability_gap_id,
+        capability_id=activation.capability_id,
+        capability_version=activation.capability_version,
+        application_evidence_id=application_evidence_id,
+        promoted_tier=promoted_tier,
+        activation_evidence_id=activation.activation_evidence_id,
+        mission_checkpoint_id=checkpoint.mission_checkpoint_id,
+        runtime_checkpoint_id=checkpoint.runtime_checkpoint_id,
+        requested_sequence=requested_sequence,
+    )
+
+
+def resume_parent_mission_once_live(
+    state: OARRuntimeState,
+    compiled: CompiledMissionObjective,
+    checkpoint: LiveParentMissionCheckpoint,
+    activation: LiveCapabilityActivationEvidence,
+    request: LiveMissionResumptionRequest,
+    *,
+    sequence: int,
+    blocker_closed_evidence: bool,
+    new_blocker_id: str = "",
+) -> LiveMissionResumptionResult:
+    if request.resumption_request_id in state.completed_mission_progress_item_ids:
+        return LiveMissionResumptionResult(False, "mission_resumption_already_completed", state, request, checkpoint, activation)
+    if request.parent_mission_id != compiled.compiled_objective_id or checkpoint.parent_mission_id != compiled.compiled_objective_id:
+        return LiveMissionResumptionResult(False, "mission_identity_mismatch", state, request, checkpoint, activation)
+    if request.original_parent_mission != compiled.original_operator_mission or checkpoint.original_parent_mission != compiled.original_operator_mission:
+        return LiveMissionResumptionResult(False, "mission_identity_mismatch", state, request, checkpoint, activation)
+    if request.mission_checkpoint_id != checkpoint.mission_checkpoint_id or request.runtime_checkpoint_id != checkpoint.runtime_checkpoint_id:
+        return LiveMissionResumptionResult(False, "mission_checkpoint_stale", state, request, checkpoint, activation)
+    if request.activation_evidence_id != activation.activation_evidence_id or not activation.activated:
+        return LiveMissionResumptionResult(False, "activation_not_sufficient", state, request, checkpoint, activation)
+    if request.capability_id != activation.capability_id or request.capability_version != activation.capability_version:
+        return LiveMissionResumptionResult(False, "activation_not_sufficient", state, request, checkpoint, activation)
+    if request.capability_id not in state.active_capability_ids:
+        return LiveMissionResumptionResult(False, "activation_not_sufficient", state, request, checkpoint, activation)
+    if request.promoted_tier not in {"available", "active"}:
+        return LiveMissionResumptionResult(False, "activation_not_sufficient", state, request, checkpoint, activation)
+    if request.provider_model_requested or request.tracked_source_mutation_requested or request.another_capability_campaign_requested or request.automatic_continuation_requested:
+        return LiveMissionResumptionResult(False, "operator_decision_required", state, request, checkpoint, activation)
+    if request.maximum_work_items != 1:
+        return LiveMissionResumptionResult(False, "operator_decision_required", state, request, checkpoint, activation)
+    if not checkpoint.remaining_mission_budgets or any(value <= 0 for value in checkpoint.remaining_mission_budgets.values()):
+        return LiveMissionResumptionResult(False, "mission_not_feasible_within_limits", state, request, checkpoint, activation)
+
+    if not blocker_closed_evidence:
+        outcome = "blocker_not_closed"
+        work_item = ""
+        progress = "No mission work performed because blocker closure was not evidenced."
+        accepted = False
+    else:
+        outcome = "new_capability_gap_detected" if new_blocker_id else "blocker_closed_resume_mission"
+        work_item = "produce_one_bounded_evidence_linked_claim_representation"
+        progress = (
+            "Using the activated capability, DELTA recorded one bounded mission-progress item: "
+            "a governed claim representation can now be used as the next evidence-linked investigation primitive."
+        )
+        accepted = True
+    evidence = LiveMissionProgressEvidence(
+        mission_progress_evidence_id=stable_id("live-3-mission-progress-evidence", request.resumption_request_id, outcome, sequence),
+        resumption_request_id=request.resumption_request_id,
+        parent_mission_id=request.parent_mission_id,
+        compiled_objective_id=request.compiled_objective_id,
+        original_parent_mission=request.original_parent_mission,
+        capability_gap_id=request.capability_gap_id,
+        capability_id=request.capability_id,
+        capability_version=request.capability_version,
+        blocker_outcome=outcome,
+        mission_work_item_id=stable_id("live-3-mission-work-item", request.resumption_request_id, work_item, sequence) if work_item else "",
+        mission_work_item=work_item,
+        mission_progress_result=progress,
+        new_blocker_id=new_blocker_id if accepted else "",
+        capability_activated=False,
+    )
+    payload = {
+        "review_item_id": evidence.mission_progress_evidence_id,
+        "parent_review_item_id": request.activation_evidence_id,
+        "status": "mission_progress_queued",
+        "boundary": "LIVE-3 one-cycle parent mission resumption evidence. Runtime paused.",
+        "parent_mission_id": evidence.parent_mission_id,
+        "blocker_outcome": evidence.blocker_outcome,
+        "mission_work_item": evidence.mission_work_item,
+        "tracked_source_mutated": False,
+        "capability_campaign_started": False,
+        "automatic_continuation": False,
+        "details": serialize(evidence),
+        "safety": safety_metadata(),
+    }
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        completed_mission_progress_item_ids=tuple(dict.fromkeys(state.completed_mission_progress_item_ids + (request.resumption_request_id,))),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (evidence.mission_progress_evidence_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveMissionResumptionResult(
+        accepted,
+        outcome,
+        updated,
+        request,
+        checkpoint,
+        activation,
+        evidence,
+        payload,
+        blocker_closed=blocker_closed_evidence,
+        mission_progress_performed=accepted,
     )
 
 

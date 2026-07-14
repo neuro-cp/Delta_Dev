@@ -917,3 +917,170 @@ def test_live_2d_activation_requires_separate_authorization_and_can_deactivate(t
     assert result.automatic_continuation is False
     assert "language_claim_representation" not in result.state.active_capability_ids
     assert "language_claim_representation" in result.state.activated_capability_ids
+
+
+def _active_capability_for_live_3(tmp_path: Path) -> tuple[
+    gsr.CompiledMissionObjective,
+    gsr.OperatorReviewItem,
+    gsr.OARRuntimeState,
+    gsr.LiveTrackedSourceApplicationEvidence,
+    gsr.LiveCapabilityPromotionResult,
+    gsr.LiveCapabilityActivationEvidence,
+]:
+    compiled, approval = _compiled_mission()
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-bridge")
+    registered = gsr.register_approved_mission_for_development(state, compiled.compiled_objective, approval, sequence=50)
+    cycle = gsr.run_one_oar_development_runtime_cycle(registered.state, compiled.compiled_objective, sequence=60)
+    assert cycle.review_item is not None
+    item = cycle.review_item
+    fixture_auth = gsr.make_live_fixture_execution_authorization(item, operator_identity="operator", issued_sequence=70, expiration_sequence=75)
+    fixture = gsr.execute_live_fixture_proposal(cycle.state, item, fixture_auth, sequence=70)
+    assert fixture.evidence_review_item is not None
+    target = "DELTA.py"
+    mapping = gsr.make_live_tracked_source_target_mapping(
+        item,
+        tracked_target_path=target,
+        mapping_origin="explicit_operator_mapping",
+        expected_precondition_digest=_digest(target),
+        application_payload_digest="a" * 64,
+        rollback_plan_present=True,
+        explicit_operator_mapping=True,
+    )
+    preflight_request = gsr.make_live_tracked_source_preflight_request(
+        item,
+        fixture.evidence_review_item,
+        mapping,
+        repository_identity=str(_repo()),
+        branch_identity="codex/delta-cognitive-core",
+        requested_sequence=80,
+    )
+    preflight_auth = gsr.make_live_tracked_source_preflight_authorization(preflight_request, operator_identity="operator", issued_sequence=80, expiration_sequence=85)
+    preflight = gsr.execute_live_tracked_source_preflight(fixture.state, item, fixture.evidence_review_item, preflight_request, preflight_auth, sequence=80, repository_root=_repo(), current_branch="codex/delta-cognitive-core")
+    isolated = _copy_target_to_isolated_repo(tmp_path)
+    app_request = _live_2b2_request(preflight, isolated)
+    app_auth = gsr.make_live_tracked_source_application_authorization(app_request, operator_identity="operator", issued_sequence=90, expiration_sequence=95)
+    application = gsr.execute_live_tracked_source_application(preflight.state, preflight, app_request, app_auth, isolated_root=isolated, validation_results={"focused-live-application": True}, sequence=90)
+    assert application.evidence is not None
+    state = application.state
+    evidence = application.evidence
+    promotion = None
+    for offset, (src, dst) in enumerate((
+        ("integration_tested", "tracked_source_validated"),
+        ("tracked_source_validated", "operator_approved"),
+        ("operator_approved", "available"),
+    )):
+        promotion_request = gsr.make_live_capability_promotion_request(
+            evidence,
+            capability_id=item.current_blocker,
+            capability_version="1",
+            requested_from_tier=src,
+            requested_to_tier=dst,
+            requested_sequence=100 + offset,
+        )
+        promotion_auth = gsr.make_live_capability_promotion_authorization(promotion_request, issued_sequence=100 + offset, expiration_sequence=110)
+        promotion = gsr.promote_live_capability_evidence(state, evidence, promotion_request, promotion_auth, sequence=100 + offset)
+        assert promotion.accepted is True
+        state = promotion.state
+    activation_request = gsr.make_live_capability_activation_request(
+        promotion,
+        capability_version="1",
+        runtime_checkpoint_id="checkpoint-live-3",
+        allowed_runtime_behavior=("one_bounded_mission_progress_cycle",),
+        deactivation_plan_digest="deactivate-" + "b" * 16,
+        requested_sequence=120,
+    )
+    activation_auth = gsr.make_live_capability_activation_authorization(activation_request, issued_sequence=120, expiration_sequence=125)
+    activation = gsr.activate_live_capability(state, activation_request, activation_auth, sequence=120, verification_passed=True, deactivate_after_verification=False)
+    assert activation.accepted is True
+    assert activation.evidence is not None
+    return compiled.compiled_objective, item, activation.state, evidence, promotion, activation.evidence
+
+
+def test_live_3_resumes_exact_parent_mission_and_records_one_progress_item(tmp_path):
+    compiled, item, state, application_evidence, promotion, activation_evidence = _active_capability_for_live_3(tmp_path)
+    checkpoint = gsr.make_live_parent_mission_checkpoint(compiled, item, runtime_checkpoint_id="checkpoint-live-3")
+    request = gsr.make_live_mission_resumption_request(
+        checkpoint,
+        activation_evidence,
+        application_evidence_id=application_evidence.application_evidence_id,
+        promoted_tier=promotion.promoted_tier,
+        requested_sequence=130,
+    )
+
+    result = gsr.resume_parent_mission_once_live(state, compiled, checkpoint, activation_evidence, request, sequence=130, blocker_closed_evidence=True)
+
+    assert result.accepted is True
+    assert result.reason == "blocker_closed_resume_mission"
+    assert result.blocker_closed is True
+    assert result.mission_progress_performed is True
+    assert result.progress_evidence.original_parent_mission == compiled.original_operator_mission
+    assert result.progress_evidence.parent_mission_unchanged is True
+    assert result.progress_evidence.mission_work_item
+    assert result.evidence_review_item["status"] == "mission_progress_queued"
+    assert result.state.development_runtime_mode == "paused"
+    assert result.tracked_source_mutated is False
+    assert result.capability_campaign_started is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+
+    duplicate = gsr.resume_parent_mission_once_live(result.state, compiled, checkpoint, activation_evidence, request, sequence=131, blocker_closed_evidence=True)
+    assert duplicate.accepted is False
+    assert duplicate.reason == "mission_resumption_already_completed"
+
+
+def test_live_3_denies_inactive_or_stale_or_mismatched_parent_mission(tmp_path):
+    compiled, item, state, application_evidence, promotion, activation_evidence = _active_capability_for_live_3(tmp_path)
+    checkpoint = gsr.make_live_parent_mission_checkpoint(compiled, item, runtime_checkpoint_id="checkpoint-live-3")
+    request = gsr.make_live_mission_resumption_request(
+        checkpoint,
+        activation_evidence,
+        application_evidence_id=application_evidence.application_evidence_id,
+        promoted_tier=promotion.promoted_tier,
+        requested_sequence=130,
+    )
+
+    inactive_state = replace(state, active_capability_ids=())
+    inactive = gsr.resume_parent_mission_once_live(inactive_state, compiled, checkpoint, activation_evidence, request, sequence=130, blocker_closed_evidence=True)
+    assert inactive.accepted is False
+    assert inactive.reason == "activation_not_sufficient"
+
+    stale_request = replace(request, runtime_checkpoint_id="old-checkpoint")
+    stale = gsr.resume_parent_mission_once_live(state, compiled, checkpoint, activation_evidence, stale_request, sequence=130, blocker_closed_evidence=True)
+    assert stale.accepted is False
+    assert stale.reason == "mission_checkpoint_stale"
+
+    rewritten = replace(compiled, original_operator_mission="do an easier mission")
+    mismatch = gsr.resume_parent_mission_once_live(state, rewritten, checkpoint, activation_evidence, request, sequence=130, blocker_closed_evidence=True)
+    assert mismatch.accepted is False
+    assert mismatch.reason == "mission_identity_mismatch"
+
+
+def test_live_3_blocker_evidence_and_new_blocker_remain_bounded(tmp_path):
+    compiled, item, state, application_evidence, promotion, activation_evidence = _active_capability_for_live_3(tmp_path)
+    checkpoint = gsr.make_live_parent_mission_checkpoint(compiled, item, runtime_checkpoint_id="checkpoint-live-3")
+    request = gsr.make_live_mission_resumption_request(
+        checkpoint,
+        activation_evidence,
+        application_evidence_id=application_evidence.application_evidence_id,
+        promoted_tier=promotion.promoted_tier,
+        requested_sequence=130,
+    )
+
+    not_closed = gsr.resume_parent_mission_once_live(state, compiled, checkpoint, activation_evidence, request, sequence=130, blocker_closed_evidence=False)
+    assert not_closed.accepted is False
+    assert not_closed.reason == "blocker_not_closed"
+    assert not_closed.mission_progress_performed is False
+    assert not_closed.capability_campaign_started is False
+
+    new_blocker = gsr.resume_parent_mission_once_live(state, compiled, checkpoint, activation_evidence, request, sequence=130, blocker_closed_evidence=True, new_blocker_id="bounded_evidence_source_parser")
+    assert new_blocker.accepted is True
+    assert new_blocker.reason == "new_capability_gap_detected"
+    assert new_blocker.progress_evidence.new_blocker_id == "bounded_evidence_source_parser"
+    assert new_blocker.capability_campaign_started is False
+    assert new_blocker.automatic_continuation is False
+
+    broad = replace(request, another_capability_campaign_requested=True)
+    denied = gsr.resume_parent_mission_once_live(state, compiled, checkpoint, activation_evidence, broad, sequence=130, blocker_closed_evidence=True)
+    assert denied.accepted is False
+    assert denied.reason == "operator_decision_required"
