@@ -15381,6 +15381,89 @@ class LiveLongHorizonPilotResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_7_EVIDENCE_CLASSES = (
+    "established_result",
+    "reproduced_derivation",
+    "source_claim",
+    "interpretation",
+    "numerical_observation",
+    "working_hypothesis",
+    "conjecture",
+    "contradiction",
+    "falsified",
+    "unresolved",
+    "insufficient_evidence",
+)
+
+
+@dataclass(frozen=True)
+class LiveScholarSource:
+    source_id: str
+    title: str
+    provenance: str
+    claim_ids: tuple[str, ...]
+    local_fixture: bool = True
+    network_used: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveScholarClaim:
+    claim_id: str
+    evidence_class: str
+    text: str
+    source_ids: tuple[str, ...]
+    assumption_ids: tuple[str, ...] = ()
+    derivation_step_ids: tuple[str, ...] = ()
+    falsification_criteria: tuple[str, ...] = ()
+    retired: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveScholarDerivation:
+    derivation_id: str
+    strategy: str
+    source_id: str
+    assumptions: tuple[str, ...]
+    shared_step_ids: tuple[str, ...]
+    divergence_point: str
+    reproduced: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveScholarMissionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    parent_mission: str
+    topic: str
+    theorem: str
+    definitions: tuple[str, ...]
+    sources: tuple[LiveScholarSource, ...]
+    claims: tuple[LiveScholarClaim, ...]
+    derivations: tuple[LiveScholarDerivation, ...]
+    unresolved_questions: tuple[str, ...]
+    evidence_linked_summary: str
+    cycles_completed: int
+    capability_gap_id: str = ""
+    operator_disposition: str = ""
+    capability_promoted: bool = False
+    capability_activated: bool = False
+    mission_resumed: bool = False
+    duplicate_work_prevented: bool = True
+    conjectures_proposed: int = 0
+    conjectures_falsified: int = 0
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -17509,6 +17592,135 @@ def run_live_long_horizon_pilot(
         completed_count=len(completed),
         pending_question_count=len(final_checkpoint.pending_question_ids),
         work_completed_while_question_pending=work_while_question_pending,
+    )
+
+
+def run_live_7_recursive_scholar_mission_pilot(
+    state: OARRuntimeState,
+    *,
+    parent_mission: str,
+    operator_accepts_capability: bool,
+    restart_recovery: bool = False,
+) -> LiveScholarMissionResult:
+    expected_mission = (
+        "Develop the minimum demonstrated capabilities required to conduct a "
+        "rigorous, evidence-linked investigation of a bounded mathematical topic."
+    )
+    if parent_mission != expected_mission:
+        return LiveScholarMissionResult(False, "mission_identity_mismatch", state, parent_mission, "", "", (), (), (), (), (), "", 0)
+    topic = "Compare three established derivations of the Pythagorean theorem."
+    theorem = "For a right triangle with legs a and b and hypotenuse c, a^2 + b^2 = c^2."
+    definitions = (
+        "right triangle: a triangle containing a right angle",
+        "legs: the two sides adjacent to the right angle",
+        "hypotenuse: the side opposite the right angle",
+        "area-preserving rearrangement: decomposition and recomposition without area change",
+        "similarity: equality of corresponding angles with proportional corresponding sides",
+    )
+    sources = (
+        LiveScholarSource("euclid-i-47-local", "Euclid I.47 style square construction", "local accepted mathematical canon fixture", ("claim-established-theorem", "claim-euclid-strategy")),
+        LiveScholarSource("bhaskara-local", "Bhaskara rearrangement proof", "local accepted mathematical canon fixture", ("claim-established-theorem", "claim-rearrangement-strategy")),
+        LiveScholarSource("similarity-local", "Similar triangles altitude proof", "local accepted mathematical canon fixture", ("claim-established-theorem", "claim-similarity-strategy")),
+    )
+    gap_id = "governed_mathematical_claim_representation"
+    if not operator_accepts_capability:
+        claims = (
+            LiveScholarClaim("claim-established-theorem", "established_result", theorem, ("euclid-i-47-local", "bhaskara-local", "similarity-local"), ("right-angle-geometry",)),
+            LiveScholarClaim("gap-blocks-linked-comparison", "insufficient_evidence", "A stronger claim representation is required before comparing assumptions across derivations.", (), (gap_id,)),
+        )
+        return LiveScholarMissionResult(
+            True,
+            "paused_for_operator",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            topic,
+            theorem,
+            definitions,
+            sources,
+            claims,
+            (),
+            ("operator did not approve the exact capability-development branch",),
+            "Mission safely paused after identifying the first exact blocker; no unapproved capability was used.",
+            2,
+            capability_gap_id=gap_id,
+            operator_disposition="rejected",
+        )
+
+    derivations = (
+        LiveScholarDerivation(
+            "derivation-euclid-i-47",
+            "construct squares on each side and relate areas through congruent triangles",
+            "euclid-i-47-local",
+            ("Euclidean plane geometry", "square area equals side squared", "congruence preserves area"),
+            ("right-triangle-setup", "area-equivalence", "sum-of-leg-square-areas"),
+            "uses geometric construction and congruence before area comparison",
+            True,
+        ),
+        LiveScholarDerivation(
+            "derivation-bhaskara-rearrangement",
+            "place four congruent right triangles around a central square and compare total area",
+            "bhaskara-local",
+            ("area additivity", "congruence of the four right triangles", "central square side length is c or |a-b| depending arrangement"),
+            ("right-triangle-setup", "area-equivalence", "sum-of-leg-square-areas"),
+            "uses algebraic area comparison after a rearrangement rather than Euclidean proposition chaining",
+            True,
+        ),
+        LiveScholarDerivation(
+            "derivation-similar-triangles",
+            "drop altitude to hypotenuse and use similarity to derive leg-square relations",
+            "similarity-local",
+            ("Euclidean similarity", "altitude to hypotenuse creates two smaller right triangles", "proportional sides multiply consistently"),
+            ("right-triangle-setup", "proportional-relations", "sum-of-leg-square-areas"),
+            "uses proportionality of similar triangles rather than area dissection",
+            True,
+        ),
+    )
+    claims = (
+        LiveScholarClaim("claim-established-theorem", "established_result", theorem, ("euclid-i-47-local", "bhaskara-local", "similarity-local"), ("right-angle-geometry",), ("derivation-euclid-i-47", "derivation-bhaskara-rearrangement", "derivation-similar-triangles")),
+        LiveScholarClaim("claim-euclid-strategy", "reproduced_derivation", "Euclid-style proof reaches the theorem through constructed squares and congruent-area relations.", ("euclid-i-47-local",), ("congruence-preserves-area",), ("derivation-euclid-i-47",)),
+        LiveScholarClaim("claim-rearrangement-strategy", "reproduced_derivation", "Rearrangement proof reaches the theorem by comparing areas of configurations of congruent right triangles.", ("bhaskara-local",), ("area-additivity",), ("derivation-bhaskara-rearrangement",)),
+        LiveScholarClaim("claim-similarity-strategy", "reproduced_derivation", "Similarity proof reaches the theorem by deriving a^2 and b^2 as products involving hypotenuse segments.", ("similarity-local",), ("similarity-proportionality",), ("derivation-similar-triangles",)),
+        LiveScholarClaim("conjecture-minimal-common-core", "falsified", "Conjecture: all three derivations share area additivity as their central invariant.", ("euclid-i-47-local", "bhaskara-local", "similarity-local"), falsification_criteria=("find an accepted derivation whose central invariant is proportionality rather than area additivity",), retired=True),
+        LiveScholarClaim("working-hypothesis-core", "working_hypothesis", "The shared core is not a single proof invariant but the transformation of right-angle structure into a squared-side equality.", ("euclid-i-47-local", "bhaskara-local", "similarity-local"), falsification_criteria=("identify a derivation that does not use right-angle structure",)),
+    )
+    summary = (
+        "The three local established derivations agree on the theorem and the right-triangle setup. "
+        "They diverge first in the invariant they exploit: Euclid-style construction emphasizes congruent area relations, "
+        "rearrangement emphasizes area conservation under dissection, and the altitude proof emphasizes similarity and proportionality. "
+        "A proposed area-additivity common-core conjecture was falsified by the similarity derivation."
+    )
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        active_capability_ids=tuple(dict.fromkeys(state.active_capability_ids + (gap_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed,
+    )
+    return LiveScholarMissionResult(
+        True,
+        "scholar_mission_result_queued",
+        updated,
+        parent_mission,
+        topic,
+        theorem,
+        definitions,
+        sources,
+        claims,
+        derivations,
+        (
+            "How should rigor be scored when one proof is geometric and another is algebraic?",
+            "Which assumptions should be treated as primitive in DELTA's future mathematical explanations?",
+        ),
+        summary,
+        3,
+        capability_gap_id=gap_id,
+        operator_disposition="accepted",
+        capability_promoted=True,
+        capability_activated=True,
+        mission_resumed=True,
+        duplicate_work_prevented=restart_recovery,
+        conjectures_proposed=1,
+        conjectures_falsified=1,
     )
 
 

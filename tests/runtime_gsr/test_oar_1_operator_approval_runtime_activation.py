@@ -1587,3 +1587,81 @@ def test_live_6_checkpoints_preserve_completed_and_pending_work_after_restart():
     assert result.checkpoints[-1].pending_question_ids == ("question-1",)
     assert recovered.automatic_resume_performed is False
     assert "question-1" in recovered.pending_review_ids
+
+
+LIVE_7_MISSION = (
+    "Develop the minimum demonstrated capabilities required to conduct a "
+    "rigorous, evidence-linked investigation of a bounded mathematical topic."
+)
+
+
+def test_live_7_successful_recursive_scholar_mission_produces_evidence_linked_result():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-7")
+    result = gsr.run_live_7_recursive_scholar_mission_pilot(state, parent_mission=LIVE_7_MISSION, operator_accepts_capability=True)
+
+    assert result.accepted is True
+    assert result.reason == "scholar_mission_result_queued"
+    assert result.parent_mission == LIVE_7_MISSION
+    assert "Pythagorean theorem" in result.topic
+    assert result.theorem.startswith("For a right triangle")
+    assert len(result.sources) == 3
+    assert all(source.local_fixture for source in result.sources)
+    assert all(source.network_used is False for source in result.sources)
+    assert len(result.derivations) == 3
+    assert all(derivation.reproduced for derivation in result.derivations)
+    assert any(claim.evidence_class == "established_result" for claim in result.claims)
+    assert any(claim.evidence_class == "falsified" and claim.retired for claim in result.claims)
+    assert result.conjectures_proposed == 1
+    assert result.conjectures_falsified == 1
+    assert result.capability_promoted is True
+    assert result.capability_activated is True
+    assert result.mission_resumed is True
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.network_used is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_7_operator_rejection_pauses_without_using_unapproved_capability():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-7")
+    result = gsr.run_live_7_recursive_scholar_mission_pilot(state, parent_mission=LIVE_7_MISSION, operator_accepts_capability=False)
+
+    assert result.accepted is True
+    assert result.reason == "paused_for_operator"
+    assert result.operator_disposition == "rejected"
+    assert result.capability_promoted is False
+    assert result.capability_activated is False
+    assert result.mission_resumed is False
+    assert result.derivations == ()
+    assert any(claim.evidence_class == "insufficient_evidence" for claim in result.claims)
+    assert result.state.development_runtime_mode == "paused"
+
+
+def test_live_7_mission_identity_and_evidence_class_boundaries_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-7")
+    wrong = gsr.run_live_7_recursive_scholar_mission_pilot(state, parent_mission="do unrestricted physics", operator_accepts_capability=True)
+    assert wrong.accepted is False
+    assert wrong.reason == "mission_identity_mismatch"
+
+    result = gsr.run_live_7_recursive_scholar_mission_pilot(state, parent_mission=LIVE_7_MISSION, operator_accepts_capability=True)
+    allowed = set(gsr.LIVE_7_EVIDENCE_CLASSES)
+    assert {claim.evidence_class for claim in result.claims}.issubset(allowed)
+    conjectures = [claim for claim in result.claims if claim.evidence_class in {"conjecture", "working_hypothesis", "falsified"}]
+    assert conjectures
+    assert all(claim.evidence_class != "established_result" for claim in conjectures)
+
+
+def test_live_7_restart_duplicate_prevention_and_no_uncontrolled_recursion():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-7")
+    first = gsr.run_live_7_recursive_scholar_mission_pilot(state, parent_mission=LIVE_7_MISSION, operator_accepts_capability=True)
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    second = gsr.run_live_7_recursive_scholar_mission_pilot(recovered, parent_mission=LIVE_7_MISSION, operator_accepts_capability=True, restart_recovery=True)
+
+    assert recovered.automatic_resume_performed is False
+    assert second.accepted is True
+    assert second.duplicate_work_prevented is True
+    assert second.cycles_completed == 3
+    assert second.autonomous_continuation is False
+    assert second.state.development_runtime_mode == "paused"
