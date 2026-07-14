@@ -3123,6 +3123,88 @@ def test_live_18_repair_failed_middle_step_records_blocked_dependents():
     assert result.autonomous_continuation is False
 
 
+def test_live_19_real_tool_source_operator_mission_provider_deferred():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-19", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live19_operator_intervention_mission(state)
+
+    assert result.accepted is True
+    assert result.reason == "operator_intervention_mission_evidence_queued"
+    assert len(result.tool_results) == 2
+    assert all(tool.accepted and tool.authorization_consumed for tool in result.tool_results)
+    assert result.source_result is not None and result.source_result.accepted is True
+    assert result.source_result.authorization_consumed is True
+    assert result.provider_result is not None
+    assert result.provider_result.reason == "LIVE_16_REAL_PROVIDER_ACCESS_DEFERRED"
+    assert result.operator_question is not None
+    assert result.operator_question.dependent_work_paused is True
+    assert result.operator_question.independent_work_allowed is True
+    assert result.operator_response is not None and result.operator_response.consumed is True
+    assert "source-independent validation plan prepared" in result.work_completed_while_pending
+    assert {"local_tool_output", "external_source_claim", "DELTA_interpretation", "operator_decision", "final_mission_conclusion"}.issubset(set(result.evidence_layers))
+    assert result.duplicate_tool_call_prevented is True
+    assert result.duplicate_source_call_prevented is True
+    assert result.duplicate_provider_call_prevented is True
+    assert result.provider_access_deferred is True
+    assert result.memory_written is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_19_operator_response_binding_and_selective_suspension_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-19", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live19_operator_intervention_mission(state, invalid_response=True)
+
+    assert result.accepted is False
+    assert result.reason == "operator_response_not_permitted"
+    assert result.operator_question is not None
+    assert result.operator_question.dependent_work_paused is True
+    assert result.operator_question.independent_work_allowed is True
+    assert result.operator_response is not None and result.operator_response.consumed is False
+    assert result.source_result is not None and result.source_result.accepted is True
+    assert "source-independent validation plan prepared" in result.work_completed_while_pending
+    assert result.tracked_source_mutated is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_19_source_provider_and_injection_denials_preserve_authority():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-19", development_runtime_mode="paused", clean_shutdown=True)
+    source_denied = gsr.run_live19_operator_intervention_mission(state, source_authorized=False)
+    assert source_denied.accepted is False
+    assert source_denied.reason == "url_domain_mismatch"
+    assert source_denied.source_result is not None
+    assert source_denied.source_result.authorization_consumed is False
+
+    provider_denied = gsr.run_live19_operator_intervention_mission(state, provider_authorized=False, provider_configured=True)
+    assert provider_denied.accepted is False
+    assert provider_denied.reason == "provider_authorization_revoked"
+    assert provider_denied.provider_result is not None
+    assert provider_denied.provider_result.provider_called is False
+
+    injected = gsr.run_live19_operator_intervention_mission(state, prompt_injection_source=True)
+    assert injected.accepted is True
+    assert injected.source_result is not None and injected.source_result.source_record is not None
+    assert injected.source_result.source_record.embedded_instruction_count >= 2
+    assert injected.memory_written is False
+    assert injected.git_operation_performed is False
+
+
+def test_live_19_restart_prevents_duplicate_work_and_preserves_pause():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-19", development_runtime_mode="paused", clean_shutdown=True)
+    first = gsr.run_live19_operator_intervention_mission(state)
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    replay = gsr.run_live19_operator_intervention_mission(recovered, restart_recovery=True)
+
+    assert first.accepted is True
+    assert recovered.automatic_resume_performed is False
+    assert replay.accepted is True
+    assert replay.interruption_recovered is True
+    assert replay.duplicate_tool_call_prevented is True
+    assert replay.duplicate_source_call_prevented is True
+    assert replay.duplicate_provider_call_prevented is True
+    assert replay.state.development_runtime_mode == "paused"
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
