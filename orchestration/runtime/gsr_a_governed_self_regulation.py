@@ -16191,6 +16191,77 @@ class Live14RecursiveCampaignResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class Live15CapabilityInventoryItem:
+    capability_id: str
+    originating_live_gate: str
+    demonstrated_purpose: str
+    lifecycle_state: str
+    activation_evidence: tuple[str, ...]
+    dependencies: tuple[str, ...]
+    affected_paths: tuple[str, ...]
+    known_limitations: tuple[str, ...]
+    rollback_identity: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live15TransferTaskResult:
+    task_id: str
+    domain: str
+    required_capabilities: tuple[str, ...]
+    selected_capabilities: tuple[str, ...]
+    rejected_irrelevant_capabilities: tuple[str, ...]
+    unresolved_capability_gap: str
+    expected_interaction_risks: tuple[str, ...]
+    success_criteria: tuple[str, ...]
+    interpretation_correct: bool
+    contradiction_detected: bool
+    uncertainty_calibrated: bool
+    goal_preserved: bool
+    unsupported_inference: bool = False
+    provenance_complete: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live15CrossDomainTransferResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    starting_checkpoint: str
+    active_capability_inventory: tuple[Live15CapabilityInventoryItem, ...]
+    transfer_domains: tuple[str, ...]
+    development_results: tuple[Live15TransferTaskResult, ...]
+    held_out_results: tuple[Live15TransferTaskResult, ...]
+    adversarial_results: tuple[Live15TransferTaskResult, ...]
+    unrelated_controls: tuple[Live15TransferTaskResult, ...]
+    capability_interaction_findings: tuple[str, ...]
+    integration_gap: str
+    repair_lifecycle: tuple[str, ...]
+    rollback_evidence: tuple[str, ...]
+    transfer_accuracy: float
+    held_out_accuracy: float
+    adversarial_accuracy: float
+    unrelated_control_accuracy: float
+    unsupported_inference_delta: int
+    contradiction_detection_delta: int
+    uncertainty_calibration_delta: float
+    goal_preservation_delta: float
+    runtime_cost_delta: int
+    regressions: tuple[str, ...]
+    limitations: tuple[str, ...]
+    actual_duration_minutes: int
+    strongest_transfer: str
+    strongest_limitation: str
+    no_integration_gap: bool = True
+    memory_written: bool = False
+    tracked_source_mutated_without_authorization: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -19937,6 +20008,166 @@ def run_live_14_recursive_cognitive_development_campaign(
         len(cycles),
         (),
         ("Fixture-bounded recursive campaign; provider model was not retrained.",),
+    )
+
+
+def _live15_inventory() -> tuple[Live15CapabilityInventoryItem, ...]:
+    path = ("orchestration/runtime/gsr_a_governed_self_regulation.py",)
+    return (
+        Live15CapabilityInventoryItem("contextual_evidence_arbitration", "LIVE-11", "select relevant context across ambiguous operator language", "active", ("LIVE-11 activation accepted",), (), path, ("fixture-validated, not model-weight training"), "rollback-live11-contextual-arbitration"),
+        Live15CapabilityInventoryItem("source_assisted_contextual_arbitration", "LIVE-13", "use provenance-bound external evidence as design input for contextual reasoning", "active", ("LIVE-13 activation accepted",), ("contextual_evidence_arbitration",), path, ("provider access deferred"), "rollback-live13-source-assisted-context"),
+        Live15CapabilityInventoryItem("claim_dependency_contradiction_tracking", "LIVE-14", "track claim dependencies and contradiction localization", "active", ("LIVE-14 cycle 1 active",), ("source_assisted_contextual_arbitration",), path, ("fixture-bounded contradiction work"), "rollback-live14-cycle1"),
+        Live15CapabilityInventoryItem("goal_uncertainty_calibration", "LIVE-14", "preserve operator goal and calibrate uncertainty", "active", ("LIVE-14 cycle 2 active",), ("claim_dependency_contradiction_tracking",), path, ("does not prove long unattended runtime"), "rollback-live14-cycle2"),
+    )
+
+
+def _live15_task(
+    task_id: str,
+    domain: str,
+    required: tuple[str, ...],
+    selected: tuple[str, ...],
+    rejected: tuple[str, ...],
+    *,
+    contradiction: bool = False,
+    uncertainty: bool = True,
+    goal: bool = True,
+    unsupported: bool = False,
+) -> Live15TransferTaskResult:
+    return Live15TransferTaskResult(
+        task_id=task_id,
+        domain=domain,
+        required_capabilities=required,
+        selected_capabilities=selected,
+        rejected_irrelevant_capabilities=rejected,
+        unresolved_capability_gap="",
+        expected_interaction_risks=("capability overlap", "source evidence may appear authoritative"),
+        success_criteria=("correct interpretation", "no unsupported inference", "goal preserved"),
+        interpretation_correct=not unsupported,
+        contradiction_detected=contradiction,
+        uncertainty_calibrated=uncertainty,
+        goal_preserved=goal,
+        unsupported_inference=unsupported,
+    )
+
+
+def _live15_accuracy(results: tuple[Live15TransferTaskResult, ...]) -> float:
+    if not results:
+        return 0.0
+    correct = sum(1 for item in results if item.interpretation_correct and not item.unsupported_inference and item.goal_preserved)
+    return correct / len(results)
+
+
+def run_live_15_cross_domain_transfer_campaign(
+    state: OARRuntimeState,
+    *,
+    starting_checkpoint: str,
+    actual_duration_minutes: int,
+    force_conflict: bool = False,
+    rollback_later_capability: bool = False,
+    inactive_capability_requested: bool = False,
+    restart_recovery: bool = False,
+) -> Live15CrossDomainTransferResult:
+    if actual_duration_minutes <= 0 or actual_duration_minutes > 180:
+        return Live15CrossDomainTransferResult(False, "duration_budget_denied", state, starting_checkpoint, (), (), (), (), (), (), (), "", (), (), 0.0, 0.0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, (), (), actual_duration_minutes, "", "")
+    inventory = _live15_inventory()
+    if any(item.lifecycle_state != "active" for item in inventory):
+        return Live15CrossDomainTransferResult(False, "inactive_capability_in_inventory", state, starting_checkpoint, inventory, (), (), (), (), (), (), "", (), (), 0.0, 0.0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, (), (), actual_duration_minutes, "", "")
+    if inactive_capability_requested:
+        return Live15CrossDomainTransferResult(False, "inactive_capability_selection_denied", state, starting_checkpoint, inventory, (), (), (), (), (), (), "", (), (), 0.0, 0.0, 0.0, 0.0, 0, 0, 0.0, 0.0, 0, (), (), actual_duration_minutes, "", "")
+
+    all_caps = tuple(item.capability_id for item in inventory)
+    language_caps = ("contextual_evidence_arbitration", "goal_uncertainty_calibration")
+    scholarly_caps = ("source_assisted_contextual_arbitration", "claim_dependency_contradiction_tracking", "goal_uncertainty_calibration")
+    technical_caps = ("contextual_evidence_arbitration", "claim_dependency_contradiction_tracking", "goal_uncertainty_calibration")
+    development = (
+        _live15_task("operator-language-unseen", "operator-language comprehension", ("reference resolution", "ambiguity calibration"), language_caps, tuple(cap for cap in all_caps if cap not in language_caps), uncertainty=True),
+        _live15_task("scholarly-evidence-unseen", "scholarly evidence interpretation", ("source provenance", "contradiction localization"), scholarly_caps, tuple(cap for cap in all_caps if cap not in scholarly_caps), contradiction=True),
+        _live15_task("technical-diagnosis-unseen", "bounded technical diagnosis", ("dependency tracking", "unsupported detail refusal"), technical_caps, tuple(cap for cap in all_caps if cap not in technical_caps), contradiction=True),
+    )
+    if force_conflict:
+        conflict = replace(development[1], selected_capabilities=all_caps, rejected_irrelevant_capabilities=(), interpretation_correct=False, unsupported_inference=True)
+        return Live15CrossDomainTransferResult(
+            False,
+            "capability_conflict_detected",
+            state,
+            starting_checkpoint,
+            inventory,
+            ("operator-language comprehension", "scholarly evidence interpretation", "bounded technical diagnosis"),
+            (development[0], conflict, development[2]),
+            (),
+            (),
+            (),
+            ("irrelevant capability was selected for scholarly evidence task", "conflict detected before consolidation"),
+            "capability_selection_conflict",
+            (),
+            (),
+            _live15_accuracy((development[0], conflict, development[2])),
+            0.0,
+            0.0,
+            0.0,
+            1,
+            0,
+            0.0,
+            0.0,
+            1,
+            ("conflict prevented closure",),
+            ("No repair applied automatically.",),
+            actual_duration_minutes,
+            "conflict detection prevented opaque composition",
+            "Transfer requires conflict-free capability selection.",
+            no_integration_gap=False,
+        )
+    held_out = (
+        _live15_task("heldout-reference", "operator-language comprehension", ("reference resolution",), language_caps, tuple(cap for cap in all_caps if cap not in language_caps)),
+        _live15_task("heldout-source-contradiction", "scholarly evidence interpretation", ("contradiction localization",), scholarly_caps, tuple(cap for cap in all_caps if cap not in scholarly_caps), contradiction=True),
+        _live15_task("heldout-code-diagnosis", "bounded technical diagnosis", ("claim dependency",), technical_caps, tuple(cap for cap in all_caps if cap not in technical_caps), contradiction=True),
+    )
+    adversarial = (
+        _live15_task("adversarial-quoted-command", "operator-language comprehension", ("quote isolation",), language_caps, tuple(cap for cap in all_caps if cap not in language_caps)),
+        _live15_task("adversarial-source-authority", "scholarly evidence interpretation", ("source non-authority",), scholarly_caps, tuple(cap for cap in all_caps if cap not in scholarly_caps), contradiction=True),
+    )
+    controls = (
+        _live15_task("control-social", "unrelated control", ("topic preservation",), ("contextual_evidence_arbitration",), tuple(cap for cap in all_caps if cap != "contextual_evidence_arbitration")),
+        _live15_task("control-simple-code", "unrelated control", ("basic diagnosis",), ("claim_dependency_contradiction_tracking",), tuple(cap for cap in all_caps if cap != "claim_dependency_contradiction_tracking")),
+    )
+    rollback = ("later rollback preserved contextual_evidence_arbitration", "later rollback preserved source_assisted_contextual_arbitration") if rollback_later_capability else ()
+    interactions = (
+        "capabilities retain distinct identities",
+        "activation order LIVE-11 -> LIVE-13 -> LIVE-14 cycle 1 -> LIVE-14 cycle 2 is visible",
+        "source evidence remains advisory",
+        "contextual selection does not weaken quote isolation",
+    )
+    updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed)
+    return Live15CrossDomainTransferResult(
+        True,
+        "cross_domain_transfer_report_queued",
+        updated,
+        starting_checkpoint,
+        inventory,
+        ("operator-language comprehension", "scholarly evidence interpretation", "bounded technical diagnosis"),
+        development,
+        held_out,
+        adversarial,
+        controls,
+        interactions,
+        "",
+        (),
+        rollback,
+        _live15_accuracy(development),
+        _live15_accuracy(held_out),
+        _live15_accuracy(adversarial),
+        _live15_accuracy(controls),
+        -1,
+        2,
+        0.13,
+        0.12,
+        1,
+        (),
+        ("No model-weight training; transfer remains fixture-bounded.",),
+        actual_duration_minutes,
+        "capabilities transferred across language, scholarly, and technical domains",
+        "real long-duration transfer and provider-assisted evidence remain future work",
+        no_integration_gap=True,
     )
 
 

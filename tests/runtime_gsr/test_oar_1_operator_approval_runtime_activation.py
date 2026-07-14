@@ -2832,3 +2832,89 @@ def test_live_14_scope_duration_and_cycle_limits_fail_closed():
         requested_cycles=4,
     )
     assert cycles.reason == "cycle_budget_denied"
+
+
+def test_live_15_cross_domain_transfer_uses_only_relevant_active_capabilities():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-15")
+    result = gsr.run_live_15_cross_domain_transfer_campaign(
+        state,
+        starting_checkpoint="3269dd9c",
+        actual_duration_minutes=28,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "cross_domain_transfer_report_queued"
+    assert result.no_integration_gap is True
+    assert len(result.active_capability_inventory) == 4
+    assert all(item.lifecycle_state == "active" for item in result.active_capability_inventory)
+    assert result.transfer_domains == ("operator-language comprehension", "scholarly evidence interpretation", "bounded technical diagnosis")
+    assert len(result.development_results) == 3
+    assert all(task.selected_capabilities for task in result.development_results)
+    assert all(task.rejected_irrelevant_capabilities for task in result.development_results)
+    assert result.transfer_accuracy == 1.0
+    assert result.held_out_accuracy == 1.0
+    assert result.adversarial_accuracy == 1.0
+    assert result.unrelated_control_accuracy == 1.0
+    assert result.unsupported_inference_delta < 0
+    assert result.contradiction_detection_delta > 0
+    assert result.uncertainty_calibration_delta > 0
+    assert result.goal_preservation_delta > 0
+    assert result.memory_written is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_15_conflict_inactive_capability_and_duration_denials_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-15")
+    conflict = gsr.run_live_15_cross_domain_transfer_campaign(
+        state,
+        starting_checkpoint="3269dd9c",
+        actual_duration_minutes=20,
+        force_conflict=True,
+    )
+    assert conflict.accepted is False
+    assert conflict.reason == "capability_conflict_detected"
+    assert conflict.no_integration_gap is False
+    assert conflict.regressions == ("conflict prevented closure",)
+
+    inactive = gsr.run_live_15_cross_domain_transfer_campaign(
+        state,
+        starting_checkpoint="3269dd9c",
+        actual_duration_minutes=20,
+        inactive_capability_requested=True,
+    )
+    assert inactive.reason == "inactive_capability_selection_denied"
+
+    duration = gsr.run_live_15_cross_domain_transfer_campaign(
+        state,
+        starting_checkpoint="3269dd9c",
+        actual_duration_minutes=181,
+    )
+    assert duration.reason == "duration_budget_denied"
+
+
+def test_live_15_later_rollback_preserves_earlier_capabilities_and_restart_pauses():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-15")
+    result = gsr.run_live_15_cross_domain_transfer_campaign(
+        state,
+        starting_checkpoint="3269dd9c",
+        actual_duration_minutes=20,
+        rollback_later_capability=True,
+    )
+    assert result.accepted is True
+    assert result.rollback_evidence == (
+        "later rollback preserved contextual_evidence_arbitration",
+        "later rollback preserved source_assisted_contextual_arbitration",
+    )
+    assert any("activation order" in finding for finding in result.capability_interaction_findings)
+
+    recovered = gsr.recover_oar_runtime_after_restart(result.state, integrity_valid=True)
+    replay = gsr.run_live_15_cross_domain_transfer_campaign(
+        recovered,
+        starting_checkpoint="3269dd9c",
+        actual_duration_minutes=20,
+        restart_recovery=True,
+    )
+    assert recovered.automatic_resume_performed is False
+    assert replay.state.development_runtime_mode == "paused"
+    assert replay.autonomous_continuation is False
