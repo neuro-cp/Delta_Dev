@@ -3560,6 +3560,118 @@ def test_live_24_repair_computes_improvement_metrics_from_fixtures(tmp_path):
     assert improvement.activated is True
 
 
+def test_live_25_fixture_sources_preserve_provenance_and_no_change_decision():
+    result = gsr.run_live25_real_source_provider_campaign(use_real_sources=False, use_real_provider=False)
+
+    assert result.accepted is False
+    assert len(result.sources) == 3
+    assert all(source.request_id and source.content_digest for source in result.sources)
+    assert all(source.injection_isolation_result for source in result.sources)
+    assert result.provider_record is None
+    assert result.functional_improvement.startswith("no justified implementation change")
+    assert result.secret_handling_audit["secret_printed"] is False
+
+
+def test_live_25_provider_record_contract_is_advisory_only():
+    record = gsr.Live25ProviderRecord(
+        request_id="provider-1",
+        provider="OpenAI",
+        configured_model="gpt-4.1-mini",
+        response_model="gpt-4.1-mini",
+        system_prompt_digest="system-digest",
+        user_prompt_digest="user-digest",
+        token_usage={"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
+        cost_result="unavailable_from_provider_response",
+        retry_count=0,
+        timeout_seconds=30,
+        output_schema_result="passed",
+        advisory_only=True,
+        fallback_provider_used=False,
+        duplicate_replay_denied=True,
+    )
+
+    assert record.advisory_only is True
+    assert record.fallback_provider_used is False
+    assert record.duplicate_replay_denied is True
+    assert record.cost_result == "unavailable_from_provider_response"
+
+
+def test_live_25r_claim_level_provenance_is_bound_to_excerpt_and_source():
+    result = gsr.run_live25_repaired_evidence_verification()
+
+    assert result.accepted is True
+    assert len(result.sources) == 3
+    assert len(result.source_claims) >= 6
+    assert all(gsr.validate_live25_claim_record(claim) for claim in result.source_claims)
+    assert len({claim.normalized_claim for claim in result.source_claims}) == len(result.source_claims)
+    claim = result.source_claims[0]
+    rebound = gsr.Live25SourceClaimRecord(
+        **{**claim.__dict__, "source_request_id": result.source_claims[-1].source_request_id}
+    )
+    assert gsr.validate_live25_claim_record(rebound) is False
+    missing_locator = gsr.Live25SourceClaimRecord(**{**claim.__dict__, "locator": "", "admissible": False})
+    assert gsr.validate_live25_claim_record(missing_locator) is False
+
+
+def test_live_25r_provider_attempt_ledger_records_failed_and_successful_attempts():
+    result = gsr.run_live25_repaired_evidence_verification()
+    ledger = result.provider_attempt_ledger
+
+    assert ledger is not None
+    assert ledger.total_attempts == 2
+    assert ledger.failed_attempts == 1
+    assert ledger.successful_attempts == 1
+    assert ledger.retries_used == 1
+    assert ledger.terminal_attempt == 2
+    assert ledger.final_schema_state == "valid"
+    assert ledger.attempts[0].schema_validation_result == "schema_validation_failed"
+    assert ledger.attempts[1].schema_validation_result == "completed_schema_valid"
+    assert result.provider_record.retry_count == 1
+
+
+def test_live_25r_replay_denial_and_reconstruction_preserve_counts():
+    result = gsr.run_live25_repaired_evidence_verification()
+    replay = result.replay_denial_evidence
+    reconstruction = result.reconstruction_evidence
+
+    assert replay is not None
+    assert replay.denial_reason == "completed_request_identity_present"
+    assert replay.transport_invocation_count_after == replay.transport_invocation_count_before
+    assert replay.retrieval_invocation_count_after == replay.retrieval_invocation_count_before
+    assert replay.attempt_count_after == replay.attempt_count_before
+    assert replay.token_totals_after == replay.token_totals_before
+    assert reconstruction is not None
+    assert reconstruction.mission_identity_preserved is True
+    assert reconstruction.source_claims_preserved is True
+    assert reconstruction.provider_attempts_present_once is True
+    assert reconstruction.aggregate_retry_accounting_exact is True
+    assert reconstruction.no_additional_charge_attempt is True
+
+
+def test_live_25r_no_change_decision_is_rule_derived_and_has_controls():
+    result = gsr.run_live25_repaired_evidence_verification()
+    decision = result.no_change_decision
+
+    assert decision is not None
+    assert decision.outcome == "no_change"
+    assert "provider_identifies_no_material_gap" in decision.satisfied_conditions
+    assert "claim_level_provenance_present" in decision.satisfied_conditions
+    provider_change = gsr.Live25ParsedProviderCritique(
+        recommendation="change",
+        rationale="try a change",
+        identified_risk="unknown",
+        missing_evidence="",
+        confidence=0.5,
+        response_digest="provider-change",
+        advisory_only=True,
+    )
+    assert gsr._live25_no_change_decision(result.source_claims, provider_change).outcome != "no_change"
+    assert gsr._live25_no_change_decision(result.source_claims, result.parsed_provider_critique, contradictory_claims_present=True).outcome != "no_change"
+    assert gsr._live25_no_change_decision(result.source_claims, result.parsed_provider_critique, material_failure_present=True).outcome != "no_change"
+    inadmissible = (gsr.Live25SourceClaimRecord(**{**result.source_claims[0].__dict__, "admissible": False}),) + result.source_claims[1:]
+    assert gsr._live25_no_change_decision(inadmissible, result.parsed_provider_critique).outcome != "no_change"
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

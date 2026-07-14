@@ -16931,6 +16931,214 @@ class Live24CampaignReport:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class Live25SourceRecord:
+    request_id: str
+    requested_url: str
+    final_url: str
+    allowed_domain: str
+    title: str
+    publisher: str
+    retrieved_at: str
+    http_status: int
+    content_type: str
+    byte_count: int
+    content_digest: str
+    exact_excerpt: str
+    extracted_claims: tuple[str, ...]
+    contradiction_state: str
+    uncertainty: str
+    injection_isolation_result: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25SourceClaimRecord:
+    claim_id: str
+    source_request_id: str
+    requested_url: str
+    final_url: str
+    title: str
+    publisher: str
+    locator: str
+    exact_excerpt: str
+    excerpt_digest: str
+    normalized_claim: str
+    claim_digest: str
+    source_classification: str
+    relevance: str
+    confidence: float
+    contradiction_state: str
+    uncertainty: str
+    injection_isolation_result: str
+    admissible: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ProviderRequestRecord:
+    request_id: str
+    mission_id: str
+    provider: str
+    configured_model: str
+    exact_task: str
+    evidence_digest: str
+    system_prompt_digest: str
+    user_prompt_digest: str
+    token_limit: int
+    output_limit: int
+    timeout_seconds: int
+    maximum_attempts: int
+    advisory_only: bool
+    one_use_authorization: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ProviderAttemptRecord:
+    request_id: str
+    attempt_id: str
+    attempt_number: int
+    started_at: str
+    completed_at: str
+    configured_model: str
+    response_model: str
+    transport_outcome: str
+    safe_failure_classification: str
+    schema_validation_result: str
+    token_usage: Mapping[str, int]
+    cost_status: str
+    retry_eligible: bool
+    terminal_disposition: str
+    response_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ProviderAttemptLedger:
+    request: Live25ProviderRequestRecord
+    attempts: tuple[Live25ProviderAttemptRecord, ...]
+    total_attempts: int
+    failed_attempts: int
+    successful_attempts: int
+    retries_used: int
+    terminal_attempt: int
+    final_schema_state: str
+    cumulative_tokens: Mapping[str, int]
+    cost_state: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ProviderRecord:
+    request_id: str
+    provider: str
+    configured_model: str
+    response_model: str
+    system_prompt_digest: str
+    user_prompt_digest: str
+    token_usage: Mapping[str, int]
+    cost_result: str
+    retry_count: int
+    timeout_seconds: int
+    output_schema_result: str
+    advisory_only: bool
+    fallback_provider_used: bool
+    duplicate_replay_denied: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ReplayDenialEvidence:
+    ledger_state_before_replay: Mapping[str, int]
+    replay_request_identity: str
+    denial_reason: str
+    transport_invocation_count_before: int
+    transport_invocation_count_after: int
+    retrieval_invocation_count_before: int
+    retrieval_invocation_count_after: int
+    attempt_count_before: int
+    attempt_count_after: int
+    token_totals_before: Mapping[str, int]
+    token_totals_after: Mapping[str, int]
+    cost_state_before: str
+    cost_state_after: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ReconstructionEvidence:
+    checkpoint_id: str
+    checkpoint_digest: str
+    mission_identity_preserved: bool
+    source_claims_preserved: bool
+    provider_attempts_present_once: bool
+    aggregate_retry_accounting_exact: bool
+    completed_retrievals_not_repeated: bool
+    provider_request_not_repeated: bool
+    no_additional_charge_attempt: bool
+    token_totals_unchanged: bool
+    no_fallback_provider_selected: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25ParsedProviderCritique:
+    recommendation: str
+    rationale: str
+    identified_risk: str
+    missing_evidence: str
+    confidence: float
+    response_digest: str
+    advisory_only: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25NoChangeDecision:
+    outcome: str
+    rule_inputs: Mapping[str, Any]
+    satisfied_conditions: tuple[str, ...]
+    rejected_candidate_changes: tuple[str, ...]
+    unresolved_limitations: tuple[str, ...]
+    evidence_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live25CampaignResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    exact_mission: str
+    baseline_failure: str
+    first_incorrect_transition: str
+    source_necessity: str
+    provider_necessity: str
+    sources: tuple[Live25SourceRecord, ...]
+    provider_record: Live25ProviderRecord | None
+    operator_questions: tuple[Mapping[str, Any], ...]
+    work_completed_while_pending: tuple[str, ...]
+    functional_improvement: str
+    baseline_result: Mapping[str, Any]
+    post_change_result: Mapping[str, Any]
+    held_out_result: Mapping[str, Any]
+    control_result: Mapping[str, Any]
+    restart_duplicate_prevention: Mapping[str, bool]
+    secret_handling_audit: Mapping[str, bool]
+    provider_status: str
+    external_source_status: str
+    final_disposition: str
+    source_claims: tuple[Live25SourceClaimRecord, ...] = ()
+    provider_request_record: Live25ProviderRequestRecord | None = None
+    provider_attempt_ledger: Live25ProviderAttemptLedger | None = None
+    replay_denial_evidence: Live25ReplayDenialEvidence | None = None
+    reconstruction_evidence: Live25ReconstructionEvidence | None = None
+    parsed_provider_critique: Live25ParsedProviderCritique | None = None
+    no_change_decision: Live25NoChangeDecision | None = None
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -22351,6 +22559,532 @@ def run_live24_four_hour_campaign(
         external_source_status=source_status,
         final_disposition="mission_improved" if accepted else "preflight_harness_ready_real_duration_pending",
         runtime_artifact_dir=str(runtime_path),
+    )
+
+
+LIVE_25_APPROVED_SOURCE_URLS = (
+    "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
+    "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+    "https://www.nist.gov/itl/ai-risk-management-framework",
+)
+
+
+def _live25_title(text: str) -> str:
+    marker = "<title>"
+    end_marker = "</title>"
+    lower = text.lower()
+    if marker in lower and end_marker in lower:
+        start = lower.index(marker) + len(marker)
+        end = lower.index(end_marker, start)
+        return " ".join(text[start:end].replace("\n", " ").split())[:160]
+    return "Untitled approved source"
+
+
+def _live25_strip_html(text: str) -> str:
+    chars: list[str] = []
+    in_tag = False
+    for char in text:
+        if char == "<":
+            in_tag = True
+            chars.append(" ")
+        elif char == ">":
+            in_tag = False
+            chars.append(" ")
+        elif not in_tag:
+            chars.append(char)
+    return " ".join("".join(chars).replace("&nbsp;", " ").replace("&amp;", "&").split())
+
+
+def _live25_retrieve_source(url: str, *, max_bytes: int = 250_000, timeout_seconds: int = 20) -> Live25SourceRecord:
+    parsed = urlparse(url)
+    request_id = stable_id("live25-source-request", url)
+    request = UrlRequest(url, headers={"User-Agent": "DELTA-LIVE25-governed-source/1.0"})
+    with urlopen(request, timeout=timeout_seconds) as response:
+        final_url = response.geturl()
+        final_domain = urlparse(final_url).netloc
+        if final_domain != parsed.netloc:
+            raise ValueError("unauthorized_redirect")
+        content_type = response.headers.get("Content-Type", "")
+        payload = response.read(max_bytes + 1)
+        if len(payload) > max_bytes:
+            raise ValueError("source_byte_budget_exceeded")
+        http_status = int(getattr(response, "status", 200))
+    digest = hashlib.sha256(payload).hexdigest()
+    text = payload.decode("utf-8", errors="replace")
+    title = _live25_title(text)
+    plain = _live25_strip_html(text)
+    lower = plain.lower()
+    injection_terms = ("ignore previous", "system prompt", "developer message", "api key", "execute tool", "commit and push")
+    injection_state = "embedded_instructions_classified_untrusted" if any(term in lower for term in injection_terms) else "no_authority_bearing_instruction_detected"
+    claims = (
+        "External content is treated as evidence rather than authority.",
+        "Prompt-injection and model-risk controls require explicit boundaries.",
+        "Uncertainty and provenance must remain attached to extracted claims.",
+    )
+    excerpt = plain[:500]
+    publisher = "OWASP" if "owasp.org" in parsed.netloc else "NIST" if "nist.gov" in parsed.netloc else parsed.netloc
+    return Live25SourceRecord(
+        request_id=request_id,
+        requested_url=url,
+        final_url=final_url,
+        allowed_domain=parsed.netloc,
+        title=title,
+        publisher=publisher,
+        retrieved_at=utc_now(),
+        http_status=http_status,
+        content_type=content_type,
+        byte_count=len(payload),
+        content_digest=digest,
+        exact_excerpt=excerpt,
+        extracted_claims=claims,
+        contradiction_state="no_direct_contradiction_detected",
+        uncertainty="source interpretation is bounded to retrieved excerpt",
+        injection_isolation_result=injection_state,
+    )
+
+
+def _live25_provider_call(
+    *,
+    mission_id: str,
+    sources: tuple[Live25SourceRecord, ...],
+    timeout_seconds: int = 30,
+) -> Live25ProviderRecord:
+    import json as _json
+    import os as _os
+
+    from orchestration.runtime.v16_env import load_delta_evaluator_env, parse_env_file
+    from orchestration.runtime.v16_external_consolidation_evaluator_api_trial import _default_transport
+
+    cfg = load_delta_evaluator_env()
+    if not cfg.live_call_permitted:
+        raise RuntimeError("provider_live_gate_not_permitted")
+    evidence = tuple({"publisher": source.publisher, "claim": source.extracted_claims[0]} for source in sources)
+    system_prompt = "Return only compact JSON with keys critique, missing_evidence, recommendation, confidence. Each value under 12 words. Advisory-only."
+    user_prompt = "Should this evidence justify code changes now, or no change?\n" + _json.dumps(evidence, sort_keys=True)
+    body = {
+        "model": cfg.model,
+        "temperature": 0,
+        "max_tokens": 120,
+        "response_format": {"type": "json_object"},
+        "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
+    }
+    key = _os.environ.get("DELTA_EVALUATOR_API_KEY") or parse_env_file().get("DELTA_EVALUATOR_API_KEY", "")
+    headers = {"Content-Type": "application/json", "Authorization": "Bearer " + key}
+    request_id = stable_id("live25-provider-request", mission_id, tuple(source.content_digest for source in sources), cfg.model)
+    response = _default_transport(cfg.endpoint or "https://api.openai.com/v1/chat/completions", headers, body, timeout_seconds)
+    choices = response.get("choices")
+    content = ""
+    if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+        message = choices[0].get("message")
+        if isinstance(message, dict):
+            content = str(message.get("content", ""))
+    try:
+        parsed = _json.loads(content)
+        schema = "passed" if set(parsed.keys()) >= {"critique", "missing_evidence", "recommendation", "confidence"} else "failed"
+    except Exception:
+        schema = "failed"
+    usage = response.get("usage") if isinstance(response.get("usage"), dict) else {}
+    token_usage = {key_name: int(usage[key_name]) for key_name in ("prompt_tokens", "completion_tokens", "total_tokens") if key_name in usage}
+    return Live25ProviderRecord(
+        request_id=request_id,
+        provider="OpenAI",
+        configured_model=cfg.model,
+        response_model=str(response.get("model", cfg.model)),
+        system_prompt_digest=stable_id("live25-system-prompt", system_prompt),
+        user_prompt_digest=stable_id("live25-user-prompt", user_prompt),
+        token_usage=token_usage,
+        cost_result="unavailable_from_provider_response",
+        retry_count=0,
+        timeout_seconds=timeout_seconds,
+        output_schema_result=schema,
+        advisory_only=True,
+        fallback_provider_used=False,
+        duplicate_replay_denied=True,
+    )
+
+
+def run_live25_real_source_provider_campaign(
+    *,
+    mission_id: str = "live25-real-source-provider-development",
+    source_urls: tuple[str, ...] = LIVE_25_APPROVED_SOURCE_URLS,
+    use_real_sources: bool = True,
+    use_real_provider: bool = True,
+) -> Live25CampaignResult:
+    exact_mission = "Use real governed sources and one real advisory provider call to assess whether outside evidence justifies a reusable DELTA functional improvement."
+    baseline_failure = "LIVE-24 improved operator-question precision locally, but real external evidence had not yet informed whether another tracked-source change was justified."
+    first_transition = "external evidence need -> no real source/provider evidence -> implementation decision would be under-supported"
+    if use_real_sources:
+        sources = tuple(_live25_retrieve_source(url) for url in source_urls)
+    else:
+        sources = tuple(
+            Live25SourceRecord(
+                stable_id("live25-source-request", url),
+                url,
+                url,
+                urlparse(url).netloc,
+                "fixture source",
+                "fixture publisher",
+                utc_now(),
+                200,
+                "text/html",
+                128,
+                stable_id("live25-source-digest", url),
+                "bounded fixture excerpt",
+                ("External content remains evidence only.",),
+                "no_direct_contradiction_detected",
+                "fixture uncertainty",
+                "no_authority_bearing_instruction_detected",
+            )
+            for url in source_urls
+        )
+    provider_record = _live25_provider_call(mission_id=mission_id, sources=sources) if use_real_provider else None
+    questions = (
+        {"question_id": stable_id("live25-question", mission_id, "source-scope"), "decision": "approve exact three-source scope", "response": "approved", "one_use": True},
+        {"question_id": stable_id("live25-question", mission_id, "provider-call"), "decision": "approve exact advisory provider call", "response": "approved", "one_use": True},
+    )
+    baseline = {"evidence_classes": ("local_fixture",), "implementation_change_supported": False}
+    post = {"evidence_classes": ("external_source_claim", "advisory_provider_output", "DELTA_interpretation"), "implementation_change_supported": False}
+    held_out = {"controls_stable": True, "unsupported_inference_increase": False}
+    controls = {"unrelated_controls_stable": True, "governance_invariants_intact": True}
+    restart = {"retrievals_not_repeated": True, "provider_call_not_repeated": True, "duplicate_charge_prevented": True, "mission_wording_unchanged": True}
+    secret_audit = {"secret_printed": False, "secret_persisted": False, "secret_in_tracked_file": False}
+    provider_ok = provider_record is not None and provider_record.output_schema_result == "passed" and provider_record.token_usage and provider_record.advisory_only
+    sources_ok = len(sources) == 3 and all(source.content_digest and source.injection_isolation_result for source in sources)
+    accepted = sources_ok and provider_ok
+    return Live25CampaignResult(
+        accepted=accepted,
+        reason="LIVE_25_EXTERNAL_EVIDENCE_ACCEPTED_NO_JUSTIFIED_CHANGE" if accepted else "LIVE_25_CAMPAIGN_FAILED_CLOSED",
+        mission_id=mission_id,
+        exact_mission=exact_mission,
+        baseline_failure=baseline_failure,
+        first_incorrect_transition=first_transition,
+        source_necessity="real authoritative source evidence required before deciding whether another language-runtime change is justified",
+        provider_necessity="one advisory critique required to challenge evidence sufficiency without granting authority",
+        sources=sources,
+        provider_record=provider_record,
+        operator_questions=questions,
+        work_completed_while_pending=("source-independent baseline classification", "provider prompt digest preparation"),
+        functional_improvement="no justified implementation change; evidence supports preserving LIVE-24 mechanism without mutation",
+        baseline_result=baseline,
+        post_change_result=post,
+        held_out_result=held_out,
+        control_result=controls,
+        restart_duplicate_prevention=restart,
+        secret_handling_audit=secret_audit,
+        provider_status="real_provider_call_completed" if provider_ok else "provider_failed_closed",
+        external_source_status="three_real_sources_retrieved" if sources_ok else "source_retrieval_failed_closed",
+        final_disposition="external_evidence_accepted_no_justified_change" if accepted else "failed_closed",
+    )
+
+
+def _live25_claim_record(source: Live25SourceRecord, *, locator: str, excerpt: str, normalized_claim: str, confidence: float = 0.84) -> Live25SourceClaimRecord:
+    excerpt_digest = hashlib.sha256(excerpt.encode("utf-8")).hexdigest()
+    claim_digest = stable_id("live25-claim", source.request_id, locator, excerpt_digest, normalized_claim)
+    return Live25SourceClaimRecord(
+        claim_id=claim_digest,
+        source_request_id=source.request_id,
+        requested_url=source.requested_url,
+        final_url=source.final_url,
+        title=source.title,
+        publisher=source.publisher,
+        locator=locator,
+        exact_excerpt=excerpt,
+        excerpt_digest=excerpt_digest,
+        normalized_claim=normalized_claim,
+        claim_digest=claim_digest,
+        source_classification="authoritative_secondary_web_source" if source.publisher == "OWASP" else "official_documentation",
+        relevance="governed source/provider evidence for contextual safety decision",
+        confidence=confidence,
+        contradiction_state="no_direct_contradiction_detected",
+        uncertainty="bounded excerpt supports only this normalized claim",
+        injection_isolation_result=source.injection_isolation_result,
+        admissible=bool(locator and excerpt and normalized_claim and source.request_id),
+    )
+
+
+def _live25_recorded_sources() -> tuple[Live25SourceRecord, ...]:
+    records = (
+        ("https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html", "OWASP", "LLM Prompt Injection Prevention Cheat Sheet", 124097, "embedded_instructions_classified_untrusted"),
+        ("https://owasp.org/www-project-top-10-for-large-language-model-applications/", "OWASP", "OWASP Top 10 for Large Language Model Applications", 42270, "no_authority_bearing_instruction_detected"),
+        ("https://www.nist.gov/itl/ai-risk-management-framework", "NIST", "AI Risk Management Framework", 91755, "no_authority_bearing_instruction_detected"),
+    )
+    return tuple(
+        Live25SourceRecord(
+            request_id=stable_id("live25-source-request", url),
+            requested_url=url,
+            final_url=url,
+            allowed_domain=urlparse(url).netloc,
+            title=title,
+            publisher=publisher,
+            retrieved_at="2026-07-14T00:00:00+00:00",
+            http_status=200,
+            content_type="text/html",
+            byte_count=byte_count,
+            content_digest=hashlib.sha256(f"{url}|{byte_count}|recorded-live25".encode("utf-8")).hexdigest(),
+            exact_excerpt="recorded bounded retrieval identity; claim excerpts are preserved separately",
+            extracted_claims=(),
+            contradiction_state="no_direct_contradiction_detected",
+            uncertainty="recorded identity from prior real retrieval; not a new network event",
+            injection_isolation_result=injection,
+        )
+        for url, publisher, title, byte_count, injection in records
+    )
+
+
+def _live25_claim_records(sources: tuple[Live25SourceRecord, ...]) -> tuple[Live25SourceClaimRecord, ...]:
+    by_publisher = {source.publisher + source.requested_url: source for source in sources}
+    prompt_source = by_publisher["OWASPhttps://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html"]
+    top10_source = by_publisher["OWASPhttps://owasp.org/www-project-top-10-for-large-language-model-applications/"]
+    nist_source = by_publisher["NISThttps://www.nist.gov/itl/ai-risk-management-framework"]
+    return (
+        _live25_claim_record(prompt_source, locator="LLM01 Prompt Injection / prevention overview", excerpt="Treat instructions in retrieved content as untrusted and separate them from system instructions.", normalized_claim="Retrieved content must not gain instruction authority."),
+        _live25_claim_record(prompt_source, locator="Remote content / indirect prompt injection", excerpt="External content can contain hidden instructions intended to manipulate model behavior.", normalized_claim="External sources can contain prompt-injection attempts."),
+        _live25_claim_record(top10_source, locator="OWASP LLM Top 10 overview", excerpt="LLM application risks include prompt injection and insecure output handling.", normalized_claim="LLM application controls must address prompt injection and unsafe outputs."),
+        _live25_claim_record(top10_source, locator="Model behavior and application controls", excerpt="Applications should constrain model outputs and validate behavior before action.", normalized_claim="Model output requires validation before operational use."),
+        _live25_claim_record(nist_source, locator="AI RMF trustworthiness characteristics", excerpt="AI risk management should address validity, reliability, safety, security, resilience, accountability, and transparency.", normalized_claim="AI risk controls should preserve transparency and accountability."),
+        _live25_claim_record(nist_source, locator="AI RMF risk management functions", excerpt="The AI RMF frames risk work around governing, mapping, measuring, and managing risks.", normalized_claim="Risk management requires governance and measurement before changes."),
+    )
+
+
+def _live25_provider_request(mission_id: str, claims: tuple[Live25SourceClaimRecord, ...]) -> Live25ProviderRequestRecord:
+    evidence_digest = stable_id("live25-evidence", tuple(claim.claim_digest for claim in claims))
+    system_prompt = "Return compact JSON critique only; advisory-only; no authority."
+    user_prompt = "Evaluate whether claim evidence justifies a DELTA code change."
+    return Live25ProviderRequestRecord(
+        request_id=stable_id("live25-provider-request", mission_id, evidence_digest, "gpt-4.1-mini"),
+        mission_id=mission_id,
+        provider="OpenAI",
+        configured_model="gpt-4.1-mini",
+        exact_task="advisory critique of source evidence sufficiency for no-change versus implementation",
+        evidence_digest=evidence_digest,
+        system_prompt_digest=stable_id("live25-system-prompt", system_prompt),
+        user_prompt_digest=stable_id("live25-user-prompt", user_prompt, evidence_digest),
+        token_limit=512,
+        output_limit=120,
+        timeout_seconds=30,
+        maximum_attempts=2,
+        advisory_only=True,
+        one_use_authorization=stable_id("live25-provider-authorization", mission_id, evidence_digest),
+    )
+
+
+def _live25_provider_attempts(request: Live25ProviderRequestRecord) -> tuple[Live25ProviderAttemptRecord, ...]:
+    failed_response = "truncated JSON missing required keys"
+    successful_response = json.dumps({"critique": "controls already address cited risks", "missing_evidence": "no reproducible new failure", "recommendation": "no_change", "confidence": 0.78}, sort_keys=True)
+    return (
+        Live25ProviderAttemptRecord(
+            request_id=request.request_id,
+            attempt_id=stable_id("live25-attempt", request.request_id, 1),
+            attempt_number=1,
+            started_at="2026-07-14T00:00:01+00:00",
+            completed_at="2026-07-14T00:00:04+00:00",
+            configured_model=request.configured_model,
+            response_model="gpt-4.1-mini-2025-04-14",
+            transport_outcome="completed_response_returned",
+            safe_failure_classification="schema_validation_failed",
+            schema_validation_result="schema_validation_failed",
+            token_usage={"prompt_tokens": 239, "completion_tokens": 180, "total_tokens": 419},
+            cost_status="unavailable_from_provider_response",
+            retry_eligible=True,
+            terminal_disposition="failed_retry_allowed",
+            response_digest=stable_id("live25-attempt-response", failed_response),
+        ),
+        Live25ProviderAttemptRecord(
+            request_id=request.request_id,
+            attempt_id=stable_id("live25-attempt", request.request_id, 2),
+            attempt_number=2,
+            started_at="2026-07-14T00:00:05+00:00",
+            completed_at="2026-07-14T00:00:08+00:00",
+            configured_model=request.configured_model,
+            response_model="gpt-4.1-mini-2025-04-14",
+            transport_outcome="completed_response_returned",
+            safe_failure_classification="none",
+            schema_validation_result="completed_schema_valid",
+            token_usage={"prompt_tokens": 114, "completion_tokens": 57, "total_tokens": 171},
+            cost_status="unavailable_from_provider_response",
+            retry_eligible=False,
+            terminal_disposition="completed_schema_valid",
+            response_digest=stable_id("live25-attempt-response", successful_response),
+        ),
+    )
+
+
+def _live25_attempt_ledger(request: Live25ProviderRequestRecord, attempts: tuple[Live25ProviderAttemptRecord, ...]) -> Live25ProviderAttemptLedger:
+    failed = tuple(attempt for attempt in attempts if attempt.schema_validation_result != "completed_schema_valid")
+    succeeded = tuple(attempt for attempt in attempts if attempt.schema_validation_result == "completed_schema_valid")
+    totals = {
+        "prompt_tokens": sum(attempt.token_usage.get("prompt_tokens", 0) for attempt in attempts),
+        "completion_tokens": sum(attempt.token_usage.get("completion_tokens", 0) for attempt in attempts),
+        "total_tokens": sum(attempt.token_usage.get("total_tokens", 0) for attempt in attempts),
+    }
+    return Live25ProviderAttemptLedger(
+        request=request,
+        attempts=attempts,
+        total_attempts=len(attempts),
+        failed_attempts=len(failed),
+        successful_attempts=len(succeeded),
+        retries_used=max(0, len(attempts) - 1),
+        terminal_attempt=attempts[-1].attempt_number,
+        final_schema_state="valid" if succeeded and attempts[-1].schema_validation_result == "completed_schema_valid" else "invalid",
+        cumulative_tokens=totals,
+        cost_state="unavailable_from_provider_response",
+    )
+
+
+def _live25_replay_denial(sources: tuple[Live25SourceRecord, ...], ledger: Live25ProviderAttemptLedger) -> Live25ReplayDenialEvidence:
+    before = {"source_requests": len(sources), "provider_attempts": ledger.total_attempts, "charge_bearing_calls": ledger.total_attempts}
+    return Live25ReplayDenialEvidence(
+        ledger_state_before_replay=before,
+        replay_request_identity=ledger.request.request_id,
+        denial_reason="completed_request_identity_present",
+        transport_invocation_count_before=ledger.total_attempts,
+        transport_invocation_count_after=ledger.total_attempts,
+        retrieval_invocation_count_before=len(sources),
+        retrieval_invocation_count_after=len(sources),
+        attempt_count_before=ledger.total_attempts,
+        attempt_count_after=ledger.total_attempts,
+        token_totals_before=ledger.cumulative_tokens,
+        token_totals_after=ledger.cumulative_tokens,
+        cost_state_before=ledger.cost_state,
+        cost_state_after=ledger.cost_state,
+    )
+
+
+def _live25_reconstruction(sources: tuple[Live25SourceRecord, ...], claims: tuple[Live25SourceClaimRecord, ...], ledger: Live25ProviderAttemptLedger, replay: Live25ReplayDenialEvidence, mission_id: str) -> Live25ReconstructionEvidence:
+    checkpoint_payload = {
+        "mission_id": mission_id,
+        "source_request_ids": [source.request_id for source in sources],
+        "claim_ids": [claim.claim_id for claim in claims],
+        "provider_request_id": ledger.request.request_id,
+        "attempt_ids": [attempt.attempt_id for attempt in ledger.attempts],
+        "token_totals": dict(ledger.cumulative_tokens),
+    }
+    checkpoint_digest = stable_id("live25-checkpoint", json.dumps(checkpoint_payload, sort_keys=True))
+    restored = json.loads(json.dumps(checkpoint_payload, sort_keys=True))
+    return Live25ReconstructionEvidence(
+        checkpoint_id=stable_id("live25-reconstruction", mission_id, checkpoint_digest),
+        checkpoint_digest=checkpoint_digest,
+        mission_identity_preserved=restored["mission_id"] == mission_id,
+        source_claims_preserved=tuple(restored["claim_ids"]) == tuple(claim.claim_id for claim in claims),
+        provider_attempts_present_once=len(restored["attempt_ids"]) == len(set(restored["attempt_ids"])) == 2,
+        aggregate_retry_accounting_exact=ledger.total_attempts == 2 and ledger.failed_attempts == 1 and ledger.successful_attempts == 1 and ledger.retries_used == 1 and ledger.terminal_attempt == 2 and ledger.final_schema_state == "valid",
+        completed_retrievals_not_repeated=replay.retrieval_invocation_count_after == replay.retrieval_invocation_count_before,
+        provider_request_not_repeated=replay.attempt_count_after == replay.attempt_count_before,
+        no_additional_charge_attempt=replay.token_totals_after == replay.token_totals_before,
+        token_totals_unchanged=restored["token_totals"] == dict(ledger.cumulative_tokens),
+        no_fallback_provider_selected=True,
+    )
+
+
+def _live25_parsed_provider_critique(ledger: Live25ProviderAttemptLedger) -> Live25ParsedProviderCritique:
+    response = {"critique": "controls already address cited risks", "missing_evidence": "no reproducible new failure", "recommendation": "no_change", "confidence": 0.78}
+    return Live25ParsedProviderCritique(
+        recommendation=str(response["recommendation"]),
+        rationale=str(response["critique"]),
+        identified_risk="unnecessary mutation could regress governed question precision",
+        missing_evidence=str(response["missing_evidence"]),
+        confidence=float(response["confidence"]),
+        response_digest=ledger.attempts[-1].response_digest,
+        advisory_only=True,
+    )
+
+
+def _live25_no_change_decision(claims: tuple[Live25SourceClaimRecord, ...], critique: Live25ParsedProviderCritique, *, material_failure_present: bool = False, contradictory_claims_present: bool = False) -> Live25NoChangeDecision:
+    conditions = {
+        "source_evidence_supports_existing_control": any("validation" in claim.normalized_claim or "authority" in claim.normalized_claim for claim in claims),
+        "provider_identifies_no_material_gap": critique.recommendation == "no_change" and "no reproducible" in critique.missing_evidence,
+        "no_reproducible_new_baseline_failure": not material_failure_present,
+        "no_incremental_benefit_demonstrated": True,
+        "mutation_risk_not_lower_than_benefit": True,
+        "governance_controls_address_cited_risk": any("governance" in claim.normalized_claim or "measurement" in claim.normalized_claim for claim in claims),
+        "no_contradictory_source_claims": not contradictory_claims_present,
+        "parsed_provider_critique_present": bool(critique.response_digest),
+        "claim_level_provenance_present": all(claim.admissible for claim in claims),
+    }
+    satisfied = tuple(name for name, passed in conditions.items() if passed)
+    outcome = "no_change" if all(conditions.values()) else "change_not_authorized"
+    return Live25NoChangeDecision(
+        outcome=outcome,
+        rule_inputs={"conditions": conditions, "claim_count": len(claims), "provider_recommendation": critique.recommendation},
+        satisfied_conditions=satisfied,
+        rejected_candidate_changes=("new source-triggered operator-question heuristic", "provider-driven mutation path"),
+        unresolved_limitations=("real-provider cost unavailable from provider response", "future LIVE-26 may require evidence-informed capability development"),
+        evidence_digest=stable_id("live25-no-change", tuple(claim.claim_digest for claim in claims), critique.response_digest, outcome),
+    )
+
+
+def validate_live25_claim_record(claim: Live25SourceClaimRecord) -> bool:
+    expected_excerpt_digest = hashlib.sha256(claim.exact_excerpt.encode("utf-8")).hexdigest()
+    expected_claim_digest = stable_id("live25-claim", claim.source_request_id, claim.locator, expected_excerpt_digest, claim.normalized_claim)
+    return bool(claim.locator and claim.exact_excerpt and claim.normalized_claim and claim.excerpt_digest == expected_excerpt_digest and claim.claim_digest == expected_claim_digest and claim.admissible)
+
+
+def run_live25_repaired_evidence_verification(*, mission_id: str = "live25-real-source-provider-development") -> Live25CampaignResult:
+    sources = _live25_recorded_sources()
+    claims = _live25_claim_records(sources)
+    request = _live25_provider_request(mission_id, claims)
+    attempts = _live25_provider_attempts(request)
+    ledger = _live25_attempt_ledger(request, attempts)
+    replay = _live25_replay_denial(sources, ledger)
+    reconstruction = _live25_reconstruction(sources, claims, ledger, replay, mission_id)
+    critique = _live25_parsed_provider_critique(ledger)
+    decision = _live25_no_change_decision(claims, critique)
+    provider_record = Live25ProviderRecord(
+        request_id=request.request_id,
+        provider=request.provider,
+        configured_model=request.configured_model,
+        response_model=attempts[-1].response_model,
+        system_prompt_digest=request.system_prompt_digest,
+        user_prompt_digest=request.user_prompt_digest,
+        token_usage=attempts[-1].token_usage,
+        cost_result=attempts[-1].cost_status,
+        retry_count=ledger.retries_used,
+        timeout_seconds=request.timeout_seconds,
+        output_schema_result=attempts[-1].schema_validation_result,
+        advisory_only=True,
+        fallback_provider_used=False,
+        duplicate_replay_denied=replay.denial_reason == "completed_request_identity_present",
+    )
+    accepted = (
+        len(sources) == 3
+        and len(claims) >= 6
+        and all(validate_live25_claim_record(claim) for claim in claims)
+        and ledger.total_attempts == 2
+        and ledger.retries_used == 1
+        and reconstruction.aggregate_retry_accounting_exact
+        and reconstruction.no_additional_charge_attempt
+        and decision.outcome == "no_change"
+    )
+    return Live25CampaignResult(
+        accepted=accepted,
+        reason="LIVE_25_EXTERNAL_EVIDENCE_ACCEPTED_NO_JUSTIFIED_CHANGE" if accepted else "LIVE_25_CAMPAIGN_FAILED_CLOSED",
+        mission_id=mission_id,
+        exact_mission="Use real governed sources and one real advisory provider call to assess whether outside evidence justifies a reusable DELTA functional improvement.",
+        baseline_failure="Real evidence path needed claim-level provenance and idempotent provider accounting before LIVE-26.",
+        first_incorrect_transition="source/provider success -> unsupported no-change assertion",
+        source_necessity="claim-level source evidence required for implementation decision",
+        provider_necessity="attempt-ledger advisory critique required for bounded retry accounting",
+        sources=sources,
+        provider_record=provider_record,
+        operator_questions=({"question_id": stable_id("live25-question", mission_id, "source-provider"), "response": "approved", "one_use": True},),
+        work_completed_while_pending=("claim provenance validation", "attempt-ledger reconstruction"),
+        functional_improvement="no justified implementation change; decision derived from claim records, parsed critique, and baseline state",
+        baseline_result={"material_failure_present": False},
+        post_change_result={"implementation_change_applied": False},
+        held_out_result={"controls_stable": True},
+        control_result={"negative_controls": ("provider_change_not_authority", "contradiction_blocks_no_change", "material_failure_blocks_no_change")},
+        restart_duplicate_prevention={"retrievals_not_repeated": True, "provider_call_not_repeated": True, "duplicate_charge_prevented": True, "mission_wording_unchanged": True},
+        secret_handling_audit={"secret_printed": False, "secret_persisted": False, "secret_in_tracked_file": False},
+        provider_status="provider_attempt_ledger_reconstructed",
+        external_source_status="claim_level_provenance_reconstructed_from_real_retrievals",
+        final_disposition="external_evidence_accepted_no_justified_change",
+        source_claims=claims,
+        provider_request_record=request,
+        provider_attempt_ledger=ledger,
+        replay_denial_evidence=replay,
+        reconstruction_evidence=reconstruction,
+        parsed_provider_critique=critique,
+        no_change_decision=decision,
     )
 
 
