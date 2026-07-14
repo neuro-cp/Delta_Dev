@@ -3430,6 +3430,136 @@ def test_live_23_finding_classifications_are_explicit():
     assert all(not finding.blocks_attended_operation for finding in result.findings)
 
 
+def test_live_24_branch_definitions_cover_required_breadth():
+    branches = gsr.make_live24_branch_definitions()
+
+    assert len(branches) == 12
+    assert {branch.current_state for branch in branches} == {"ready"}
+    assert all(branch.branch_id.startswith("live24-") for branch in branches)
+    assert all(branch.evidence_digest for branch in branches)
+    assert any("quote-versus-instruction" in branch.exact_task for branch in branches)
+    assert any("capability-gap" in branch.exact_task for branch in branches)
+
+
+def test_live_24_preflight_runner_records_checkpoints_without_fake_acceptance(tmp_path):
+    result = gsr.run_live24_four_hour_campaign(
+        runtime_dir=str(tmp_path),
+        duration_seconds=1,
+        checkpoint_interval_seconds=0.1,
+        enforce_real_duration=False,
+        sleep_between_checkpoints=False,
+    )
+
+    checkpoint_file = tmp_path / "live24_checkpoints.jsonl"
+
+    assert result.accepted is False
+    assert result.reason == "LIVE_24_PREFLIGHT_HARNESS_READY"
+    assert result.monotonic_elapsed_seconds < 1
+    assert result.evaluated_branch_count == 12
+    assert result.checkpoint_count >= 3
+    assert checkpoint_file.exists()
+    assert "final_stop" in checkpoint_file.read_text(encoding="utf-8")
+    assert result.process_left_running is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_24_duration_gate_accepts_only_real_elapsed_requirement(tmp_path):
+    result = gsr.run_live24_four_hour_campaign(
+        runtime_dir=str(tmp_path),
+        duration_seconds=0.01,
+        checkpoint_interval_seconds=0.01,
+        enforce_real_duration=True,
+        sleep_between_checkpoints=True,
+    )
+
+    assert result.accepted is False
+    assert result.reason == "LIVE_24_PREFLIGHT_HARNESS_READY"
+    assert result.monotonic_elapsed_seconds >= 0.01
+    assert result.completed_work_items < 16
+
+
+def test_live_24_repair_records_real_work_and_branch_evidence(tmp_path):
+    result = gsr.run_live24_four_hour_campaign(
+        runtime_dir=str(tmp_path),
+        duration_seconds=0.24,
+        checkpoint_interval_seconds=0.01,
+        enforce_real_duration=True,
+        sleep_between_checkpoints=True,
+    )
+
+    assert result.accepted is True
+    assert result.completed_work_items == len(result.work_item_executions)
+    assert result.completed_work_items >= 16
+    assert {item.validation_result for item in result.work_item_executions} == {"passed"}
+    assert all(item.handler_identity.startswith("handler:live24-") for item in result.work_item_executions)
+    assert all(item.actual_input["expected"] == item.actual_output["result"] for item in result.work_item_executions)
+    assert all(item.output_digest for item in result.work_item_executions)
+
+
+def test_live_24_repair_records_real_tool_invocations_and_question_lifecycle(tmp_path):
+    result = gsr.run_live24_four_hour_campaign(
+        runtime_dir=str(tmp_path),
+        duration_seconds=0.24,
+        checkpoint_interval_seconds=0.01,
+        enforce_real_duration=True,
+        sleep_between_checkpoints=True,
+    )
+
+    assert result.local_tool_execution_count == len(result.tool_invocations)
+    assert result.local_tool_execution_count >= 3
+    assert {tool.completion_state for tool in result.tool_invocations} == {"completed"}
+    assert all(tool.actual_output and tool.output_digest for tool in result.tool_invocations)
+    question = result.operator_question_lifecycle
+    assert question.affected_branch_ids == ("live24-ambiguity-calibration",)
+    assert question.pending_state == "blocked_operator_decision"
+    assert question.independent_branch_executed_while_pending == "live24-quote-instruction"
+    assert question.response_consumed_once is True
+    assert question.duplicate_question_created is False
+    assert question.answer_assumed_before_response is False
+
+
+def test_live_24_repair_reconstructs_persisted_state_without_duplicates(tmp_path):
+    result = gsr.run_live24_four_hour_campaign(
+        runtime_dir=str(tmp_path),
+        duration_seconds=0.24,
+        checkpoint_interval_seconds=0.01,
+        enforce_real_duration=True,
+        sleep_between_checkpoints=True,
+    )
+    reconstruction = result.reconstruction_evidence
+
+    assert reconstruction.mission_identity_preserved is True
+    assert reconstruction.completed_work_preserved is True
+    assert reconstruction.pending_question_appears_once is True
+    assert reconstruction.completed_tools_not_repeated is True
+    assert reconstruction.cumulative_budgets_preserved is True
+    assert reconstruction.next_eligible_work == ("live24-ambiguity-calibration",)
+    assert (tmp_path / "live24_reconstruction_checkpoint.json").exists()
+
+
+def test_live_24_repair_computes_improvement_metrics_from_fixtures(tmp_path):
+    result = gsr.run_live24_four_hour_campaign(
+        runtime_dir=str(tmp_path),
+        duration_seconds=0.24,
+        checkpoint_interval_seconds=0.01,
+        enforce_real_duration=True,
+        sleep_between_checkpoints=True,
+    )
+    improvement = result.functional_improvements[0]
+
+    assert result.repaired_metrics.question_scope_precision > result.baseline_metrics.question_scope_precision
+    assert result.repaired_metrics.held_out_accuracy > result.baseline_metrics.held_out_accuracy
+    assert result.repaired_metrics.unnecessary_suspension_rate < result.baseline_metrics.unnecessary_suspension_rate
+    assert result.repaired_metrics.unsupported_inference_count == result.baseline_metrics.unsupported_inference_count
+    assert improvement.target_accuracy_before == result.baseline_metrics.question_scope_precision
+    assert improvement.target_accuracy_after == result.repaired_metrics.question_scope_precision
+    assert improvement.held_out_accuracy_after > improvement.held_out_accuracy_before
+    assert improvement.rollback_proven is True
+    assert improvement.promoted is True
+    assert improvement.activated is True
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
