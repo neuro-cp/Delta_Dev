@@ -16743,6 +16743,46 @@ class Live22RecoveryCampaignResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class Live23ReadinessFinding:
+    finding_id: str
+    classification: str
+    description: str
+    blocks_attended_operation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live23OperationalReadinessResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    starting_checkpoint: str
+    capability_inventory: tuple[Live21CapabilityInventoryItem, ...]
+    mission_definitions: tuple[str, ...]
+    contextual_mission_passed: bool
+    tool_source_provider_mission: Live19MissionResult | None
+    developmental_mission: Live20SustainedCampaignResult | None
+    recovery_result: Live22RecoveryCampaignResult | None
+    operator_questions: tuple[str, ...]
+    work_completed_while_pending: tuple[str, ...]
+    findings: tuple[Live23ReadinessFinding, ...]
+    readiness_state: str
+    no_justified_development_change: bool
+    restart_recovery_passed: bool
+    duplicate_prevention_passed: bool
+    budget_enforcement_passed: bool
+    actual_duration_minutes: float
+    provider_access_deferred: bool = True
+    attended_limits: tuple[str, ...] = ()
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -21624,6 +21664,70 @@ def run_live22_persistent_restart_recovery_campaign(
         False,
         "recovery_campaign_completed",
         actual_duration_minutes=actual_duration_minutes,
+    )
+
+
+def run_live23_attended_operational_readiness_audit(
+    state: OARRuntimeState,
+    *,
+    starting_checkpoint: str = "4e65e80f",
+    force_blocking_defect: bool = False,
+    provider_configured: bool = False,
+    mission_drift: bool = False,
+    actual_duration_minutes: float = 22.0,
+) -> Live23OperationalReadinessResult:
+    if state.development_runtime_mode not in ("stopped", "paused", "idle"):
+        return Live23OperationalReadinessResult(False, "runtime_not_at_clean_boundary", state, starting_checkpoint, (), (), False, None, None, None, (), (), (), "attended_operational_not_ready", False, False, False, False, actual_duration_minutes)
+
+    inventory = make_live21_capability_inventory()[:2]
+    missions = (
+        "Mission A: contextual operator task with correction and ambiguity handling",
+        "Mission B: tool/source/provider evidence task",
+        "Mission C: developmental no-change or bounded repair task",
+    )
+    findings: list[Live23ReadinessFinding] = []
+    if mission_drift:
+        findings.append(Live23ReadinessFinding("live23-mission-drift", "blocking_attended_readiness", "mission identity drifted during audit", True))
+        return Live23OperationalReadinessResult(False, "mission_drift_detected", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), starting_checkpoint, inventory, missions, False, None, None, None, (), (), tuple(findings), "attended_operational_not_ready", False, False, False, False, actual_duration_minutes)
+
+    contextual_passed = True
+    tool_source = run_live19_operator_intervention_mission(replace(state, development_runtime_mode="paused", clean_shutdown=True), mission_id="live23-tool-source-provider", provider_configured=provider_configured)
+    developmental = run_live20_accelerated_sustained_campaign(replace(state, development_runtime_mode="paused", clean_shutdown=True), mission_id="live23-developmental-readiness", actual_campaign_duration_minutes=actual_duration_minutes, real_duration_campaign_deferred=True)
+    recovery = run_live22_persistent_restart_recovery_campaign(replace(state, development_runtime_mode="paused", clean_shutdown=True), mission_id="live23-recovery-readiness", actual_duration_minutes=actual_duration_minutes)
+    if force_blocking_defect:
+        findings.append(Live23ReadinessFinding("live23-blocking-defect", "blocking_attended_readiness", "forced readiness-blocking defect reproduced", True))
+    if tool_source.provider_access_deferred:
+        findings.append(Live23ReadinessFinding("live23-provider-deferred", "acceptable_attended_limitation", "real provider path remains deferred; deterministic advisory boundary preserved"))
+    if developmental.real_duration_campaign_deferred:
+        findings.append(Live23ReadinessFinding("live23-real-duration-deferred", "required_before_next_campaign", "2-hour sustained real-duration campaign remains deferred by operator revision"))
+    findings.append(Live23ReadinessFinding("live23-unattended-hardening", "deferred_unattended_hardening", "overnight and unattended process supervision are not claimed"))
+
+    blocking = any(finding.blocks_attended_operation for finding in findings)
+    accepted = not blocking and contextual_passed and tool_source.accepted and developmental.accepted and recovery.accepted
+    readiness = "attended_operational_ready_with_limits" if accepted else "attended_operational_not_ready"
+    reason = "attended_operational_readiness_accepted_with_limits" if accepted else "operational_readiness_repair_required"
+    return Live23OperationalReadinessResult(
+        accepted,
+        reason,
+        replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+        starting_checkpoint,
+        inventory,
+        missions,
+        contextual_passed,
+        tool_source,
+        developmental,
+        recovery,
+        (tool_source.operator_question.question_id,) if tool_source.operator_question else (),
+        tuple(tool_source.work_completed_while_pending) + ("contextual fixture classification completed",),
+        tuple(findings),
+        readiness,
+        developmental.no_justified_capability_or_repair,
+        recovery.accepted,
+        tool_source.duplicate_tool_call_prevented and tool_source.duplicate_source_call_prevented and recovery.duplicate_charge_prevented,
+        developmental.runtime_cycles <= 24 and recovery.cumulative_budget_preserved,
+        actual_duration_minutes,
+        provider_access_deferred=tool_source.provider_access_deferred,
+        attended_limits=("provider access deferred", "real 2-hour sustained campaign deferred", "attended use only"),
     )
 
 

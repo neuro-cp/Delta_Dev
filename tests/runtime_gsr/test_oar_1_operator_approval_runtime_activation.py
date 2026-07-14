@@ -3381,6 +3381,55 @@ def test_live_22_uncertain_state_requires_reconciliation_without_autonomy():
     assert result.autonomous_continuation is False
 
 
+def test_live_23_attended_operational_readiness_accepts_with_limits():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-23", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live23_attended_operational_readiness_audit(state)
+
+    assert result.accepted is True
+    assert result.reason == "attended_operational_readiness_accepted_with_limits"
+    assert result.readiness_state == "attended_operational_ready_with_limits"
+    assert len(result.mission_definitions) == 3
+    assert result.contextual_mission_passed is True
+    assert result.tool_source_provider_mission is not None and result.tool_source_provider_mission.accepted is True
+    assert result.developmental_mission is not None and result.developmental_mission.accepted is True
+    assert result.recovery_result is not None and result.recovery_result.accepted is True
+    assert result.operator_questions
+    assert result.no_justified_development_change is True
+    assert result.restart_recovery_passed is True
+    assert result.duplicate_prevention_passed is True
+    assert result.budget_enforcement_passed is True
+    assert "provider access deferred" in result.attended_limits
+    assert "real 2-hour sustained campaign deferred" in result.attended_limits
+    assert result.memory_written is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_23_blocks_on_mission_drift_or_readiness_defect():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-23", development_runtime_mode="paused", clean_shutdown=True)
+    drift = gsr.run_live23_attended_operational_readiness_audit(state, mission_drift=True)
+    assert drift.accepted is False
+    assert drift.reason == "mission_drift_detected"
+    assert drift.readiness_state == "attended_operational_not_ready"
+
+    blocking = gsr.run_live23_attended_operational_readiness_audit(state, force_blocking_defect=True)
+    assert blocking.accepted is False
+    assert blocking.reason == "operational_readiness_repair_required"
+    assert any(finding.classification == "blocking_attended_readiness" for finding in blocking.findings)
+
+
+def test_live_23_finding_classifications_are_explicit():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-23", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live23_attended_operational_readiness_audit(state)
+
+    classifications = {finding.classification for finding in result.findings}
+    assert "acceptable_attended_limitation" in classifications
+    assert "required_before_next_campaign" in classifications
+    assert "deferred_unattended_hardening" in classifications
+    assert all(not finding.blocks_attended_operation for finding in result.findings)
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
