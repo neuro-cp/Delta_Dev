@@ -1084,3 +1084,131 @@ def test_live_3_blocker_evidence_and_new_blocker_remain_bounded(tmp_path):
     denied = gsr.resume_parent_mission_once_live(state, compiled, checkpoint, activation_evidence, broad, sequence=130, blocker_closed_evidence=True)
     assert denied.accepted is False
     assert denied.reason == "operator_decision_required"
+
+
+def _live_4_request() -> tuple[gsr.OARRuntimeState, gsr.CompiledMissionObjective, gsr.LiveMultiCycleMissionRequest]:
+    compiled_result, _approval = _compiled_mission()
+    compiled = compiled_result.compiled_objective
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-4", approved_mission_ids=(compiled.compiled_objective_id,), active_mission_id=compiled.compiled_objective_id)
+    request = gsr.make_live_multi_cycle_mission_request(compiled, starting_checkpoint_id="checkpoint-live-4", requested_sequence=140)
+    return state, compiled, request
+
+
+def test_live_4_three_cycle_success_preserves_one_parent_mission_and_limits():
+    state, compiled, request = _live_4_request()
+    cycles = (
+        gsr.LiveMissionCycleInput(1, "checkpoint-live-4-a", "inspect bounded claim", "claim represented"),
+        gsr.LiveMissionCycleInput(2, "checkpoint-live-4-b", "compare evidence link", "evidence link checked"),
+        gsr.LiveMissionCycleInput(3, "checkpoint-live-4-c", "summarize bounded result", "mission work complete"),
+    )
+
+    result = gsr.run_live_multi_cycle_mission(state, compiled, request, cycles)
+
+    assert result.accepted is True
+    assert result.reason == "complete_mission"
+    assert result.mission_completed is True
+    assert len(result.cycle_records) == 3
+    assert {record.parent_mission_id for record in result.cycle_records} == {compiled.compiled_objective_id}
+    assert all(record.original_parent_mission == compiled.original_operator_mission for record in result.cycle_records)
+    assert result.capability_campaign_count == 0
+    assert result.application_count == 0
+    assert result.activation_count == 0
+    assert result.state.development_runtime_mode == "paused"
+    assert result.tracked_source_mutated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+
+
+def test_live_4_evidenced_blocker_can_trigger_one_campaign_and_resume():
+    state, compiled, request = _live_4_request()
+    cycles = (
+        gsr.LiveMissionCycleInput(1, "checkpoint-live-4-a", "attempt source-bound claim", "blocked by parser", blocker_id="bounded_source_parser", blocker_evidenced=True, capability_campaign_approved=True, capability_closes_blocker=True),
+        gsr.LiveMissionCycleInput(2, "checkpoint-live-4-b", "resume after parser", "progress after approved capability"),
+    )
+
+    result = gsr.run_live_multi_cycle_mission(state, compiled, request, cycles)
+
+    assert result.accepted is True
+    assert result.cycle_records[0].decision == "resume_after_capability_approval"
+    assert result.cycle_records[0].capability_campaign_started is True
+    assert result.cycle_records[0].capability_integrated is True
+    assert result.capability_campaign_count == 1
+    assert result.application_count == 1
+    assert result.activation_count == 1
+    assert result.cycle_records[1].mission_resumed is True
+
+    second_blocker = cycles + (
+        gsr.LiveMissionCycleInput(3, "checkpoint-live-4-c", "second blocker", "blocked again", blocker_id="another_gap", blocker_evidenced=True, capability_campaign_approved=True, capability_closes_blocker=True),
+    )
+    exhausted = gsr.run_live_multi_cycle_mission(state, compiled, request, second_blocker)
+    assert exhausted.reason == "complete_budget_exhausted"
+    assert exhausted.capability_campaign_count == 1
+
+
+def test_live_4_rejection_stagnation_drift_and_scope_expansion_stop_cleanly():
+    state, compiled, request = _live_4_request()
+
+    rejected = gsr.run_live_multi_cycle_mission(
+        state,
+        compiled,
+        request,
+        (gsr.LiveMissionCycleInput(1, "checkpoint-live-4-a", "blocked work", "operator rejected", blocker_id="gap", blocker_evidenced=True, operator_rejected=True),),
+    )
+    assert rejected.reason == "pause_for_operator"
+    assert rejected.capability_campaign_count == 0
+
+    stagnation = gsr.run_live_multi_cycle_mission(
+        state,
+        compiled,
+        request,
+        (
+            gsr.LiveMissionCycleInput(1, "checkpoint-live-4-a", "blocked work", "still blocked", blocker_id="gap", blocker_evidenced=True),
+            gsr.LiveMissionCycleInput(2, "checkpoint-live-4-b", "retry blocked work", "still blocked", blocker_id="gap", blocker_evidenced=True),
+        ),
+    )
+    assert stagnation.reason == "pause_for_operator"
+    assert stagnation.automatic_continuation is False
+
+    drift = gsr.run_live_multi_cycle_mission(
+        state,
+        compiled,
+        request,
+        (gsr.LiveMissionCycleInput(1, "checkpoint-live-4-a", "drift", "drift", parent_mission_override="different mission"),),
+    )
+    assert drift.accepted is False
+    assert drift.reason == "suspend_scope_drift"
+
+    broad = gsr.run_live_multi_cycle_mission(
+        state,
+        compiled,
+        request,
+        (gsr.LiveMissionCycleInput(1, "checkpoint-live-4-a", "needs scope", "scope expansion required", scope_expansion_required=True),),
+    )
+    assert broad.reason == "pause_for_operator"
+
+
+def test_live_4_denies_bad_cycle_order_budget_and_forbidden_authority():
+    state, compiled, request = _live_4_request()
+
+    bad_order = gsr.run_live_multi_cycle_mission(
+        state,
+        compiled,
+        request,
+        (gsr.LiveMissionCycleInput(2, "checkpoint-live-4-b", "out of order", "bad"),),
+    )
+    assert bad_order.accepted is False
+    assert bad_order.reason == "cycle_order_invalid"
+
+    too_many = replace(request, maximum_mission_cycles=4)
+    denied_budget = gsr.run_live_multi_cycle_mission(state, compiled, too_many, ())
+    assert denied_budget.accepted is False
+    assert denied_budget.reason == "budget_scope_invalid"
+
+    forbidden = replace(request, provider_model_requested=True)
+    denied_forbidden = gsr.run_live_multi_cycle_mission(state, compiled, forbidden, ())
+    assert denied_forbidden.reason == "operator_decision_required"
+
+    rewritten = replace(compiled, original_operator_mission="new mission")
+    denied_drift = gsr.run_live_multi_cycle_mission(state, rewritten, request, ())
+    assert denied_drift.reason == "mission_identity_mismatch"

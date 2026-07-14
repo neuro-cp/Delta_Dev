@@ -15105,6 +15105,78 @@ class LiveMissionResumptionResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class LiveMultiCycleMissionRequest:
+    multi_cycle_request_id: str
+    parent_mission_id: str
+    original_parent_mission: str
+    starting_checkpoint_id: str
+    maximum_mission_cycles: int = 3
+    maximum_capability_campaigns: int = 1
+    maximum_applications: int = 1
+    maximum_activations: int = 1
+    requested_sequence: int = 0
+    automatic_continuation_requested: bool = False
+    provider_model_requested: bool = False
+    tracked_source_mutation_requested: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveMissionCycleInput:
+    cycle_index: int
+    checkpoint_id: str
+    work_item: str
+    progress_summary: str
+    blocker_id: str = ""
+    blocker_evidenced: bool = False
+    capability_campaign_approved: bool = False
+    capability_closes_blocker: bool = False
+    operator_rejected: bool = False
+    scope_expansion_required: bool = False
+    parent_mission_override: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveMissionCycleRecord:
+    cycle_record_id: str
+    cycle_index: int
+    parent_mission_id: str
+    original_parent_mission: str
+    checkpoint_id: str
+    work_item: str
+    decision: str
+    progress_summary: str
+    blocker_id: str = ""
+    capability_campaign_started: bool = False
+    capability_integrated: bool = False
+    mission_resumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveMultiCycleMissionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    request: LiveMultiCycleMissionRequest | None = None
+    cycle_records: tuple[LiveMissionCycleRecord, ...] = ()
+    final_decision: str = ""
+    mission_completed: bool = False
+    paused_for_operator: bool = False
+    capability_campaign_count: int = 0
+    application_count: int = 0
+    activation_count: int = 0
+    runtime_paused: bool = True
+    tracked_source_mutated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    git_operation_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -16739,6 +16811,137 @@ def resume_parent_mission_once_live(
         payload,
         blocker_closed=blocker_closed_evidence,
         mission_progress_performed=accepted,
+    )
+
+
+LIVE_4_RUNTIME_DECISIONS = (
+    "continue_mission_cycle",
+    "pause_for_operator",
+    "begin_one_capability_campaign",
+    "resume_after_capability_approval",
+    "complete_mission",
+    "suspend_stagnation",
+    "suspend_scope_drift",
+    "suspend_integrity_failure",
+    "complete_budget_exhausted",
+    "architectural_escalation_required",
+)
+
+
+def make_live_multi_cycle_mission_request(
+    compiled: CompiledMissionObjective,
+    *,
+    starting_checkpoint_id: str,
+    requested_sequence: int,
+    maximum_mission_cycles: int = 3,
+) -> LiveMultiCycleMissionRequest:
+    return LiveMultiCycleMissionRequest(
+        multi_cycle_request_id=stable_id("live-4-multi-cycle-request", compiled.compiled_objective_id, starting_checkpoint_id, requested_sequence),
+        parent_mission_id=compiled.compiled_objective_id,
+        original_parent_mission=compiled.original_operator_mission,
+        starting_checkpoint_id=starting_checkpoint_id,
+        maximum_mission_cycles=maximum_mission_cycles,
+        requested_sequence=requested_sequence,
+    )
+
+
+def run_live_multi_cycle_mission(
+    state: OARRuntimeState,
+    compiled: CompiledMissionObjective,
+    request: LiveMultiCycleMissionRequest,
+    cycle_inputs: tuple[LiveMissionCycleInput, ...],
+    *,
+    repeated_blocker_limit: int = 2,
+) -> LiveMultiCycleMissionResult:
+    if request.parent_mission_id != compiled.compiled_objective_id or request.original_parent_mission != compiled.original_operator_mission:
+        return LiveMultiCycleMissionResult(False, "mission_identity_mismatch", state, request)
+    if request.maximum_mission_cycles > 3 or request.maximum_capability_campaigns != 1 or request.maximum_applications != 1 or request.maximum_activations != 1:
+        return LiveMultiCycleMissionResult(False, "budget_scope_invalid", state, request)
+    if request.automatic_continuation_requested or request.provider_model_requested or request.tracked_source_mutation_requested:
+        return LiveMultiCycleMissionResult(False, "operator_decision_required", state, request)
+    if len(cycle_inputs) > request.maximum_mission_cycles:
+        return LiveMultiCycleMissionResult(False, "complete_budget_exhausted", state, request)
+    if not cycle_inputs:
+        return LiveMultiCycleMissionResult(False, "pause_for_operator", state, request)
+
+    campaign_count = 0
+    application_count = 0
+    activation_count = 0
+    records: list[LiveMissionCycleRecord] = []
+    blocker_counts: dict[str, int] = {}
+    final_decision = "pause_for_operator"
+
+    for expected_index, cycle in enumerate(cycle_inputs, start=1):
+        if cycle.cycle_index != expected_index:
+            return LiveMultiCycleMissionResult(False, "cycle_order_invalid", state, request, tuple(records))
+        if cycle.parent_mission_override and cycle.parent_mission_override != compiled.original_operator_mission:
+            return LiveMultiCycleMissionResult(False, "suspend_scope_drift", state, request, tuple(records), final_decision="suspend_scope_drift")
+        if cycle.scope_expansion_required:
+            final_decision = "pause_for_operator"
+            decision = final_decision
+        elif cycle.operator_rejected:
+            final_decision = "pause_for_operator"
+            decision = final_decision
+        elif cycle.blocker_id and cycle.blocker_evidenced:
+            blocker_counts[cycle.blocker_id] = blocker_counts.get(cycle.blocker_id, 0) + 1
+            if blocker_counts[cycle.blocker_id] >= repeated_blocker_limit and not cycle.capability_closes_blocker:
+                final_decision = "suspend_stagnation"
+                decision = final_decision
+            elif not cycle.capability_campaign_approved:
+                final_decision = "pause_for_operator"
+                decision = final_decision
+            elif campaign_count >= request.maximum_capability_campaigns:
+                final_decision = "complete_budget_exhausted"
+                decision = final_decision
+            else:
+                campaign_count += 1
+                application_count += 1
+                activation_count += 1
+                final_decision = "resume_after_capability_approval" if cycle.capability_closes_blocker else "begin_one_capability_campaign"
+                decision = final_decision
+        else:
+            final_decision = "complete_mission" if expected_index == len(cycle_inputs) else "continue_mission_cycle"
+            decision = final_decision
+
+        record = LiveMissionCycleRecord(
+            cycle_record_id=stable_id("live-4-cycle-record", request.multi_cycle_request_id, cycle.cycle_index, cycle.checkpoint_id, decision),
+            cycle_index=cycle.cycle_index,
+            parent_mission_id=compiled.compiled_objective_id,
+            original_parent_mission=compiled.original_operator_mission,
+            checkpoint_id=cycle.checkpoint_id,
+            work_item=cycle.work_item,
+            decision=decision,
+            progress_summary=cycle.progress_summary,
+            blocker_id=cycle.blocker_id,
+            capability_campaign_started=decision in {"begin_one_capability_campaign", "resume_after_capability_approval"},
+            capability_integrated=decision == "resume_after_capability_approval",
+            mission_resumed=decision in {"resume_after_capability_approval", "continue_mission_cycle", "complete_mission"},
+        )
+        records.append(record)
+        if decision in {"pause_for_operator", "suspend_stagnation", "suspend_scope_drift", "complete_budget_exhausted", "architectural_escalation_required"}:
+            break
+
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        completed_mission_progress_item_ids=tuple(dict.fromkeys(state.completed_mission_progress_item_ids + tuple(record.cycle_record_id for record in records))),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + ((records[-1].cycle_record_id,) if records else ()))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    accepted = final_decision in {"complete_mission", "resume_after_capability_approval", "continue_mission_cycle", "pause_for_operator", "suspend_stagnation", "complete_budget_exhausted"}
+    return LiveMultiCycleMissionResult(
+        accepted,
+        final_decision,
+        updated,
+        request,
+        tuple(records),
+        final_decision=final_decision,
+        mission_completed=final_decision == "complete_mission",
+        paused_for_operator=final_decision == "pause_for_operator",
+        capability_campaign_count=campaign_count,
+        application_count=application_count,
+        activation_count=activation_count,
     )
 
 
