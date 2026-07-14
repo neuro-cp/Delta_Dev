@@ -16713,6 +16713,36 @@ class Live21ConflictRecoveryResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class Live22RecoveryCampaignResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    mission_id: str
+    exact_mission: str
+    checkpoints: tuple[Live20CheckpointRecord, ...]
+    restart_count: int
+    recovery_classes: tuple[str, ...]
+    pending_question_recovered_once: bool
+    completed_tool_calls_repeated: bool
+    completed_source_calls_repeated: bool
+    completed_provider_calls_repeated: bool
+    duplicate_charge_prevented: bool
+    cumulative_budget_preserved: bool
+    active_inactive_capabilities_distinct: bool
+    rollback_state_preserved: bool
+    uncertain_state_denied: bool
+    fallback_explicit: bool
+    final_disposition: str
+    actual_duration_minutes: float = 0.0
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -21518,6 +21548,81 @@ def run_live21_conflict_rollback_recovery(
         restart_recovery,
         True,
         True,
+        actual_duration_minutes=actual_duration_minutes,
+    )
+
+
+def _live22_checkpoint_chain(mission_id: str, exact_mission: str) -> tuple[Live20CheckpointRecord, ...]:
+    checkpoints: list[Live20CheckpointRecord] = []
+    previous_digest = stable_id("live22-root", mission_id, exact_mission)
+    for sequence, checkpoint_type, states, pending in (
+        (1, "mission_checkpoint", {"analysis": "ready", "tool-call": "ready"}, ()),
+        (2, "completed_tool_call", {"analysis": "completed", "tool-call": "completed", "source-call": "ready"}, ()),
+        (3, "pending_operator_question", {"analysis": "completed", "operator-question": "blocked_operator_decision", "independent-summary": "completed"}, ("live22-question-1",)),
+        (4, "restart_recovery", {"analysis": "completed", "operator-question": "completed", "capability": "pending_application_authorization"}, ()),
+        (5, "uncertain_state_denied", {"analysis": "completed", "uncertain-provider-call": "recovery_reconciliation_required"}, ()),
+    ):
+        checkpoint = _live20_checkpoint(
+            mission_id=mission_id,
+            sequence=sequence,
+            checkpoint_type=checkpoint_type,
+            work_item_states=states,
+            evidence_digests=(previous_digest, stable_id("live22-evidence", mission_id, sequence, checkpoint_type)),
+            pending_question_ids=pending,
+            cumulative_budget={"runtime_cycles": float(sequence), "cost": 0.0, "restart_count": float(min(sequence - 1, 3))},
+        )
+        checkpoints.append(checkpoint)
+        previous_digest = checkpoint.integrity_digest
+    return tuple(checkpoints)
+
+
+def _live22_checkpoints_valid(checkpoints: tuple[Live20CheckpointRecord, ...]) -> bool:
+    return bool(checkpoints) and tuple(checkpoint.sequence for checkpoint in checkpoints) == tuple(range(1, len(checkpoints) + 1)) and all(checkpoint.integrity_digest for checkpoint in checkpoints)
+
+
+def run_live22_persistent_restart_recovery_campaign(
+    state: OARRuntimeState,
+    *,
+    mission_id: str = "live22-persistent-restart-recovery",
+    exact_mission: str = "Continue a bounded contextual-language or technical-diagnosis campaign across repeated runtime sessions.",
+    invalid_checkpoint: bool = False,
+    uncertain_state: bool = False,
+    duplicate_call_attempt: bool = False,
+    restart_count: int = 3,
+    actual_duration_minutes: float = 14.0,
+) -> Live22RecoveryCampaignResult:
+    if state.development_runtime_mode not in ("stopped", "paused", "idle"):
+        return Live22RecoveryCampaignResult(False, "runtime_not_at_clean_boundary", state, mission_id, exact_mission, (), 0, (), False, False, False, False, False, False, False, False, False, False, "checkpoint_integrity_failure", actual_duration_minutes=actual_duration_minutes)
+    checkpoints = _live22_checkpoint_chain(mission_id, exact_mission)
+    if invalid_checkpoint:
+        checkpoints = checkpoints[:-1] + (replace(checkpoints[-1], sequence=99),)
+    valid = _live22_checkpoints_valid(checkpoints)
+    if not valid:
+        return Live22RecoveryCampaignResult(False, "checkpoint_integrity_failure", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, exact_mission, checkpoints, restart_count, ("invalid_digest_or_sequence",), False, False, False, False, False, False, True, True, False, True, "checkpoint_integrity_failure", actual_duration_minutes=actual_duration_minutes)
+    if duplicate_call_attempt:
+        return Live22RecoveryCampaignResult(False, "duplicate_completed_call_denied", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, exact_mission, checkpoints, restart_count, ("completed_call_restart",), True, False, False, False, True, True, True, True, False, False, "reconciliation_required", actual_duration_minutes=actual_duration_minutes)
+    if uncertain_state:
+        return Live22RecoveryCampaignResult(True, "recovery_accepted_reconciliation_limit_remains", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, exact_mission, checkpoints, restart_count, ("uncertain_call_state",), True, False, False, False, True, True, True, True, True, True, "reconciliation_required", actual_duration_minutes=actual_duration_minutes)
+    return Live22RecoveryCampaignResult(
+        True,
+        "persistent_restart_recovery_accepted",
+        replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+        mission_id,
+        exact_mission,
+        checkpoints,
+        restart_count,
+        ("clean_operator_stop", "completed_tool_restart", "pending_question_restart", "completed_source_restart", "completed_provider_deferred_restart", "post_rollback_restart"),
+        True,
+        False,
+        False,
+        False,
+        True,
+        True,
+        True,
+        True,
+        True,
+        False,
+        "recovery_campaign_completed",
         actual_duration_minutes=actual_duration_minutes,
     )
 

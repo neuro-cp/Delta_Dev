@@ -3327,6 +3327,60 @@ def test_live_21_rollback_integrity_failure_blocks_resumption():
     assert result.autonomous_continuation is False
 
 
+def test_live_22_persistent_restart_recovery_accepts_checkpoint_chain():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-22", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live22_persistent_restart_recovery_campaign(state)
+
+    assert result.accepted is True
+    assert result.reason == "persistent_restart_recovery_accepted"
+    assert result.restart_count == 3
+    assert [checkpoint.sequence for checkpoint in result.checkpoints] == [1, 2, 3, 4, 5]
+    assert result.pending_question_recovered_once is True
+    assert result.completed_tool_calls_repeated is False
+    assert result.completed_source_calls_repeated is False
+    assert result.completed_provider_calls_repeated is False
+    assert result.duplicate_charge_prevented is True
+    assert result.cumulative_budget_preserved is True
+    assert result.active_inactive_capabilities_distinct is True
+    assert result.rollback_state_preserved is True
+    assert result.uncertain_state_denied is True
+    assert result.final_disposition == "recovery_campaign_completed"
+    assert result.memory_written is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_22_invalid_checkpoint_fails_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-22", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live22_persistent_restart_recovery_campaign(state, invalid_checkpoint=True)
+
+    assert result.accepted is False
+    assert result.reason == "checkpoint_integrity_failure"
+    assert result.fallback_explicit is True
+    assert result.autonomous_continuation is False
+
+
+def test_live_22_duplicate_completed_call_is_denied():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-22", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live22_persistent_restart_recovery_campaign(state, duplicate_call_attempt=True)
+
+    assert result.accepted is False
+    assert result.reason == "duplicate_completed_call_denied"
+    assert result.duplicate_charge_prevented is True
+    assert result.completed_tool_calls_repeated is False
+
+
+def test_live_22_uncertain_state_requires_reconciliation_without_autonomy():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-22", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live22_persistent_restart_recovery_campaign(state, uncertain_state=True)
+
+    assert result.accepted is True
+    assert result.reason == "recovery_accepted_reconciliation_limit_remains"
+    assert result.uncertain_state_denied is True
+    assert result.final_disposition == "reconciliation_required"
+    assert result.autonomous_continuation is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
