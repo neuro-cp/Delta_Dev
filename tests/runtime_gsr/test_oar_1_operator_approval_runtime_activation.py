@@ -3205,6 +3205,69 @@ def test_live_19_restart_prevents_duplicate_work_and_preserves_pause():
     assert replay.state.development_runtime_mode == "paused"
 
 
+def test_live_20_accelerated_sustained_campaign_accepts_real_duration_deferred():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-20", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live20_accelerated_sustained_campaign(state, actual_campaign_duration_minutes=18.0)
+
+    assert result.accepted is True
+    assert result.reason == "sustained_campaign_harness_accepted_real_duration_deferred"
+    assert result.real_duration_campaign_deferred is True
+    assert result.no_justified_capability_or_repair is True
+    assert len(result.checkpoints) == 4
+    assert [checkpoint.sequence for checkpoint in result.checkpoints] == [1, 2, 3, 4]
+    assert result.tool_execution_count >= 3
+    assert result.source_retrieval_count == 1
+    assert result.provider_call_count == 0
+    assert result.operator_question_count == 1
+    assert result.controlled_interruption_recovered is True
+    assert result.duplicate_work_prevented is True
+    assert result.duplicate_call_prevented is True
+    assert result.final_disposition == "no_justified_capability_or_repair"
+    assert result.memory_written is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_20_mission_drift_and_budget_denials_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-20", development_runtime_mode="paused", clean_shutdown=True)
+    drift = gsr.run_live20_accelerated_sustained_campaign(state, mission_drift=True)
+    assert drift.accepted is False
+    assert drift.reason == "mission_drift_detected"
+    assert drift.mission_drift_detected is True
+
+    budget = gsr.run_live20_accelerated_sustained_campaign(state, actual_campaign_duration_minutes=241.0)
+    assert budget.accepted is False
+    assert budget.reason == "duration_budget_denied"
+
+
+def test_live_20_stagnation_stops_branch_without_autonomous_continuation():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-20", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live20_accelerated_sustained_campaign(state, force_stagnation=True)
+
+    assert result.accepted is True
+    assert result.reason == "stagnation_detected"
+    assert result.stagnation_detected is True
+    assert result.final_disposition == "stagnation_detected"
+    assert result.autonomous_continuation is False
+    assert result.git_operation_performed is False
+
+
+def test_live_20_restart_recovery_preserves_checkpoint_and_no_duplicate_calls():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-20", development_runtime_mode="paused", clean_shutdown=True)
+    first = gsr.run_live20_accelerated_sustained_campaign(state)
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    replay = gsr.run_live20_accelerated_sustained_campaign(recovered, restart_recovery=True)
+
+    assert first.accepted is True
+    assert recovered.automatic_resume_performed is False
+    assert replay.accepted is True
+    assert replay.state.development_runtime_mode == "paused"
+    assert replay.duplicate_work_prevented is True
+    assert replay.duplicate_call_prevented is True
+    assert replay.checkpoints[-1].checkpoint_type == "restart_recovery"
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

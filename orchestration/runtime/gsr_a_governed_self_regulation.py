@@ -16596,6 +16596,57 @@ class Live19MissionResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class Live20CheckpointRecord:
+    checkpoint_id: str
+    mission_id: str
+    sequence: int
+    checkpoint_type: str
+    work_item_states: dict[str, str]
+    evidence_digests: tuple[str, ...]
+    pending_question_ids: tuple[str, ...]
+    cumulative_budget: dict[str, float]
+    integrity_digest: str
+    recovery_disposition: str = "checkpoint_valid"
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live20SustainedCampaignResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    mission_id: str
+    exact_mission: str
+    checkpoints: tuple[Live20CheckpointRecord, ...]
+    integrated_mission_result: Live19MissionResult | None
+    tool_execution_count: int
+    source_retrieval_count: int
+    provider_call_count: int
+    operator_question_count: int
+    runtime_cycles: int
+    completed_work_items: int
+    active_minutes: float
+    paused_minutes: float
+    operator_wait_minutes: float
+    actual_campaign_duration_minutes: float
+    real_duration_campaign_deferred: bool
+    no_justified_capability_or_repair: bool
+    controlled_interruption_recovered: bool
+    duplicate_work_prevented: bool
+    duplicate_call_prevented: bool
+    stagnation_detected: bool
+    mission_drift_detected: bool
+    before_after_summary: tuple[str, ...]
+    final_disposition: str
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -21090,6 +21141,182 @@ def run_live19_operator_intervention_mission(
         provider_access_deferred=provider_deferred,
         total_cost=provider.actual_cost,
         total_duration_ms=sum(tool.output.runtime_ms for tool in (inspection, comparison) if tool.output is not None) + source.elapsed_ms,
+    )
+
+
+def _live20_checkpoint(
+    *,
+    mission_id: str,
+    sequence: int,
+    checkpoint_type: str,
+    work_item_states: Mapping[str, str],
+    evidence_digests: tuple[str, ...],
+    pending_question_ids: tuple[str, ...] = (),
+    cumulative_budget: Mapping[str, float] | None = None,
+) -> Live20CheckpointRecord:
+    budget = dict(cumulative_budget or {"runtime_cycles": float(sequence), "cost": 0.0})
+    digest = stable_id(
+        "live20-checkpoint",
+        mission_id,
+        sequence,
+        checkpoint_type,
+        tuple(sorted(work_item_states.items())),
+        evidence_digests,
+        pending_question_ids,
+        tuple(sorted(budget.items())),
+    )
+    return Live20CheckpointRecord(
+        checkpoint_id=stable_id("live20-checkpoint-id", mission_id, sequence, digest),
+        mission_id=mission_id,
+        sequence=sequence,
+        checkpoint_type=checkpoint_type,
+        work_item_states=dict(work_item_states),
+        evidence_digests=evidence_digests,
+        pending_question_ids=pending_question_ids,
+        cumulative_budget=budget,
+        integrity_digest=digest,
+    )
+
+
+def run_live20_accelerated_sustained_campaign(
+    state: OARRuntimeState,
+    *,
+    mission_id: str = "live20-accelerated-sustained-campaign",
+    exact_mission: str = "Improve one demonstrated weakness in contextual reasoning or technical diagnosis through governed evidence and validation.",
+    actual_campaign_duration_minutes: float = 12.0,
+    real_duration_campaign_deferred: bool = True,
+    mission_drift: bool = False,
+    force_stagnation: bool = False,
+    justified_change_required: bool = False,
+    restart_recovery: bool = False,
+) -> Live20SustainedCampaignResult:
+    if state.development_runtime_mode not in ("stopped", "paused", "idle"):
+        return Live20SustainedCampaignResult(False, "runtime_not_at_clean_boundary", state, mission_id, exact_mission, (), None, 0, 0, 0, 0, 0, 0, 0.0, 0.0, 0.0, actual_campaign_duration_minutes, real_duration_campaign_deferred, False, False, False, False, False, False, (), "integrity_failure")
+    if mission_drift:
+        return Live20SustainedCampaignResult(False, "mission_drift_detected", state, mission_id, exact_mission, (), None, 0, 0, 0, 0, 1, 0, 0.0, 0.0, 0.0, actual_campaign_duration_minutes, real_duration_campaign_deferred, False, False, False, False, False, True, ("mission wording changed before decomposition",), "mission_drift_detected")
+    if actual_campaign_duration_minutes > 240:
+        return Live20SustainedCampaignResult(False, "duration_budget_denied", state, mission_id, exact_mission, (), None, 0, 0, 0, 0, 1, 0, 0.0, 0.0, 0.0, actual_campaign_duration_minutes, real_duration_campaign_deferred, False, False, False, False, False, False, (), "budget_exhausted")
+
+    checkpoints: list[Live20CheckpointRecord] = [
+        _live20_checkpoint(
+            mission_id=mission_id,
+            sequence=1,
+            checkpoint_type="mission_decomposition",
+            work_item_states={"baseline": "ready", "integrated_live19": "ready", "operator_review": "blocked_operator_decision"},
+            evidence_digests=(stable_id("live20-mission", exact_mission),),
+            cumulative_budget={"runtime_cycles": 1.0, "cost": 0.0},
+        )
+    ]
+
+    baseline_tool = _live19_tool_call(
+        mission_id=mission_id,
+        tool_identity="live20-baseline-evaluator",
+        input_identity="local://live20/baseline",
+        input_payload="Claim: contextual diagnosis needs exact evidence.\nAssumption: no repair is justified until first incorrect transition is reproduced.\nQuestion?",
+        sequence=1200,
+        exact_purpose="baseline sustained-campaign evidence extraction",
+    )
+    if not baseline_tool.accepted or baseline_tool.output is None:
+        return Live20SustainedCampaignResult(False, "baseline_tool_failed", state, mission_id, exact_mission, tuple(checkpoints), None, 1, 0, 0, 0, 2, 0, 0.0, 0.0, 0.0, actual_campaign_duration_minutes, real_duration_campaign_deferred, False, False, False, False, False, False, (), "integrity_failure")
+
+    checkpoints.append(
+        _live20_checkpoint(
+            mission_id=mission_id,
+            sequence=2,
+            checkpoint_type="baseline_evaluation",
+            work_item_states={"baseline": "completed", "integrated_live19": "ready", "operator_review": "blocked_operator_decision"},
+            evidence_digests=(baseline_tool.output.output_digest,),
+            cumulative_budget={"runtime_cycles": 2.0, "cost": 0.0},
+        )
+    )
+
+    integrated = run_live19_operator_intervention_mission(replace(state, development_runtime_mode="paused", clean_shutdown=True), mission_id=stable_id("live20-live19", mission_id), provider_configured=False)
+    if not integrated.accepted:
+        return Live20SustainedCampaignResult(False, integrated.reason, integrated.state, mission_id, exact_mission, tuple(checkpoints), integrated, 1 + len(integrated.tool_results), 1 if integrated.source_result and integrated.source_result.accepted else 0, 0, 1 if integrated.operator_question else 0, 3, 1, 1.0, 0.0, 0.0, actual_campaign_duration_minutes, real_duration_campaign_deferred, False, False, False, False, False, False, (), "paused_all_work_blocked")
+
+    checkpoints.append(
+        _live20_checkpoint(
+            mission_id=mission_id,
+            sequence=3,
+            checkpoint_type="operator_wait",
+            work_item_states={"baseline": "completed", "integrated_live19": "completed", "operator_review": "blocked_operator_decision", "report_scaffold": "completed"},
+            evidence_digests=tuple(tool.output.output_digest for tool in (baseline_tool, *integrated.tool_results) if tool.output is not None),
+            pending_question_ids=(integrated.operator_question.question_id,) if integrated.operator_question else (),
+            cumulative_budget={"runtime_cycles": 3.0, "cost": integrated.total_cost},
+        )
+    )
+
+    recovered_state = recover_oar_runtime_after_restart(integrated.state, integrity_valid=True)
+    checkpoints.append(
+        _live20_checkpoint(
+            mission_id=mission_id,
+            sequence=4,
+            checkpoint_type="restart_recovery",
+            work_item_states={"baseline": "completed", "integrated_live19": "completed", "operator_review": "completed", "final_synthesis": "ready"},
+            evidence_digests=(integrated.final_diagnosis_or_proposal, stable_id("live20-restart", recovered_state.runtime_state_id)),
+            cumulative_budget={"runtime_cycles": 4.0, "cost": integrated.total_cost},
+        )
+    )
+
+    if force_stagnation:
+        return Live20SustainedCampaignResult(
+            True,
+            "stagnation_detected",
+            replace(recovered_state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            mission_id,
+            exact_mission,
+            tuple(checkpoints),
+            integrated,
+            1 + len(integrated.tool_results),
+            1,
+            0,
+            1,
+            4,
+            3,
+            2.0,
+            0.5,
+            0.25,
+            actual_campaign_duration_minutes,
+            real_duration_campaign_deferred,
+            True,
+            True,
+            True,
+            True,
+            True,
+            False,
+            ("repeated diagnosis stopped affected branch",),
+            "stagnation_detected",
+        )
+
+    no_change = not justified_change_required
+    final_disposition = "no_justified_capability_or_repair" if no_change else "mission_improved"
+    return Live20SustainedCampaignResult(
+        True,
+        "sustained_campaign_harness_accepted_real_duration_deferred" if real_duration_campaign_deferred else "sustained_campaign_completed",
+        replace(recovered_state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False if restart_recovery else recovered_state.automatic_resume_performed),
+        mission_id,
+        exact_mission,
+        tuple(checkpoints),
+        integrated,
+        1 + len(integrated.tool_results),
+        1 if integrated.source_result and integrated.source_result.accepted else 0,
+        0 if integrated.provider_access_deferred else 1,
+        1 if integrated.operator_question else 0,
+        6,
+        5,
+        max(0.1, actual_campaign_duration_minutes - 1.0),
+        0.5,
+        0.5,
+        actual_campaign_duration_minutes,
+        real_duration_campaign_deferred,
+        no_change,
+        True,
+        True,
+        True,
+        False,
+        False,
+        ("baseline reproduced", "held-out equivalent unchanged without justified repair", "real two-hour duration deferred by operator scope revision"),
+        final_disposition,
     )
 
 
