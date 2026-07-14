@@ -3,11 +3,22 @@ from __future__ import annotations
 import multiprocessing
 import threading
 import tkinter as tk
-from dataclasses import asdict, replace
+from dataclasses import asdict, fields, replace
 from pathlib import Path
 
 import DELTA
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr
+
+
+class _StatusVar:
+    def __init__(self) -> None:
+        self.value = ""
+
+    def set(self, value: str) -> None:
+        self.value = value
+
+    def get(self) -> str:
+        return self.value
 
 
 def _evaluation_fixture() -> gsr.SandboxEvidenceEvaluation:
@@ -350,33 +361,106 @@ def test_tk_oar_live_development_state_recovers_stopped_without_duplicate_propos
     finally:
         root.destroy()
 
-    recovered_root = tk.Tk()
-    recovered_root.withdraw()
     recovered_app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
-    recovered_app.root = recovered_root
-    try:
-        outer = DELTA.ttk.Frame(recovered_root)
-        outer.pack(fill=tk.BOTH, expand=True)
-        recovered_app.notebook = DELTA.ttk.Notebook(outer)
-        recovered_app.notebook.pack(fill=tk.BOTH, expand=True)
-        recovered_app.evaluation_tab = DELTA.ttk.Frame(recovered_app.notebook, padding=10)
-        recovered_app.notebook.add(recovered_app.evaluation_tab, text="Evaluation")
-        recovered_app.session_history = []
-        recovered_app.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
-        recovered_app.oar_approved_compiled_mission = None
-        recovered_app.oar_mission_approval = None
-        recovered_app.evaluation_review_items = []
-        recovered_app.evaluation_dispositions = []
-        recovered_app.oar_live_state_persistence_enabled = True
-        recovered_app._load_oar_live_development_state()
-        recovered_app._build_evaluation_tab()
+    recovered_app.session_history = []
+    recovered_app.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+    recovered_app.oar_approved_compiled_mission = None
+    recovered_app.oar_mission_approval = None
+    recovered_app.evaluation_review_items = []
+    recovered_app.evaluation_dispositions = []
+    recovered_app.oar_live_state_persistence_enabled = True
+    recovered_app.evaluation_status = _StatusVar()
+    recovered_app._load_oar_live_development_state()
 
-        assert recovered_app.oar_runtime_state.development_runtime_mode == "stopped"
-        assert recovered_app.oar_runtime_state.completed_cycle_ids
-        assert recovered_app.oar_approved_compiled_mission is not None
-        assert len(recovered_app.evaluation_review_items) == 2
-        recovered_app._start_oar_development_runtime()
-        assert len(recovered_app.evaluation_review_items) == 2
-        assert "development_cycle_already_completed" in recovered_app.evaluation_status.get()
-    finally:
-        recovered_root.destroy()
+    assert recovered_app.oar_runtime_state.development_runtime_mode == "stopped"
+    assert recovered_app.oar_runtime_state.completed_cycle_ids
+    assert recovered_app.oar_approved_compiled_mission is not None
+    assert len(recovered_app.evaluation_review_items) == 2
+    recovered_app._start_oar_development_runtime()
+    assert len(recovered_app.evaluation_review_items) == 2
+    assert "development_cycle_already_completed" in recovered_app.evaluation_status.get()
+
+
+def test_tk_runs_selected_fixture_proposal_and_recovers_without_duplicate_execution(monkeypatch, tmp_path):
+    state_path = tmp_path / "oar_live_development_state.json"
+    monkeypatch.setattr(DELTA, "OAR_LIVE_DEVELOPMENT_STATE_PATH", state_path)
+
+    compiled = gsr.make_mission_compilation_request(
+        "Improve your demonstrated ability to comprehend, analyze, and discuss scholarly material.",
+        baseline_evaluation_id="tk-live-language-baseline",
+        requested_sequence=1,
+    )
+    authorization = gsr.make_mission_compilation_authorization(compiled, issued_sequence=2)
+    compilation = gsr.compile_language_development_mission(compiled, authorization, sequence=3)
+    mission_approval = gsr.approve_compiled_mission(compilation.compiled_objective, operator_identity="tk_operator", sequence=4)
+    registered = gsr.register_approved_mission_for_development(
+        gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime"),
+        compilation.compiled_objective,
+        mission_approval,
+        sequence=5,
+    )
+    cycle = gsr.run_one_oar_development_runtime_cycle(registered.state, compilation.compiled_objective, sequence=6)
+    assert cycle.review_item is not None
+
+    app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    app.session_history = []
+    app.oar_runtime_state = cycle.state
+    app.oar_approved_compiled_mission = asdict(compilation.compiled_objective)
+    app.oar_mission_approval = asdict(mission_approval)
+    app.evaluation_review_items = [asdict(cycle.review_item)]
+    app.evaluation_dispositions = []
+    app.oar_live_state_persistence_enabled = True
+    app.evaluation_status = _StatusVar()
+
+    def set_items(items):
+        app.evaluation_review_items = [
+            asdict(item) if hasattr(item, "__dataclass_fields__") else dict(item)
+            for item in items
+        ]
+
+    app._selected_evaluation_review_item = lambda: ("review-1", asdict(cycle.review_item))
+    app._set_evaluation_review_items = set_items
+
+    app._execute_selected_fixture_proposal()
+    app._persist_oar_live_development_state()
+
+    assert len(app.evaluation_review_items) == 2
+    evidence = app.evaluation_review_items[1]
+    assert evidence["status"] == "evidence_queued"
+    assert evidence["proposal_id"] == app.evaluation_review_items[0]["proposal_id"]
+    assert evidence["operation_performed"] == "python_compile_fixture"
+    assert evidence["cleanup_result"] == "verified"
+    assert evidence["application_performed"] is False
+    assert evidence["capability_activated"] is False
+    assert evidence["automatic_continuation"] is False
+    assert app.oar_runtime_state.development_runtime_mode == "paused"
+    assert app.oar_runtime_state.executed_fixture_review_item_ids == (app.evaluation_review_items[0]["review_item_id"],)
+    assert "Fixture evidence queued" in app.evaluation_status.get()
+
+    recovered_app = DELTA.DeltaApp.__new__(DELTA.DeltaApp)
+    recovered_app.session_history = []
+    recovered_app.oar_runtime_state = gsr.OARRuntimeState(runtime_state_id="tk-oar-development-runtime")
+    recovered_app.oar_approved_compiled_mission = None
+    recovered_app.oar_mission_approval = None
+    recovered_app.evaluation_review_items = []
+    recovered_app.evaluation_dispositions = []
+    recovered_app.oar_live_state_persistence_enabled = True
+    recovered_app.evaluation_status = _StatusVar()
+    recovered_app._load_oar_live_development_state()
+
+    assert recovered_app.oar_runtime_state.development_runtime_mode == "stopped"
+    assert len(recovered_app.evaluation_review_items) == 2
+    item = gsr.OperatorReviewItem(**{
+        key: value
+        for key, value in recovered_app.evaluation_review_items[0].items()
+        if key in {field.name for field in fields(gsr.OperatorReviewItem)}
+    })
+    authorization = gsr.make_live_fixture_execution_authorization(
+        item,
+        operator_identity="tk_operator",
+        issued_sequence=40,
+        expiration_sequence=45,
+    )
+    duplicate = gsr.execute_live_fixture_proposal(recovered_app.oar_runtime_state, item, authorization, sequence=40)
+    assert duplicate.accepted is False
+    assert duplicate.reason == "fixture_execution_already_completed"

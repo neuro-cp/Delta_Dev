@@ -1764,6 +1764,7 @@ class DeltaApp:
         controls.pack(fill=tk.X, pady=(0, 6))
         ttk.Button(controls, text="Accept Mission", command=self._accept_selected_compiled_mission).pack(side=tk.LEFT)
         ttk.Button(controls, text="Start Development Runtime", command=self._start_oar_development_runtime).pack(side=tk.LEFT, padx=(6, 0))
+        ttk.Button(controls, text="Run Fixture Evidence", command=self._execute_selected_fixture_proposal).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Accept", command=lambda: self._record_evaluation_disposition("accepted")).pack(side=tk.LEFT)
         ttk.Button(controls, text="Decline", command=lambda: self._record_evaluation_disposition("declined")).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(controls, text="Needs Modification", command=lambda: self._record_evaluation_disposition("needs_modification")).pack(side=tk.LEFT, padx=(6, 0))
@@ -2199,6 +2200,38 @@ class DeltaApp:
         self._set_evaluation_review_items([*self.evaluation_review_items, result.review_item])
         self.evaluation_status.set(
             f"Development Runtime paused after one proposal. Blocker={result.selected_capability_id}; checkpoint={result.checkpoint_id}."
+        )
+        self._persist_oar_live_development_state()
+
+    def _execute_selected_fixture_proposal(self) -> None:
+        _key, details = self._selected_evaluation_review_item()
+        if details is None:
+            self.evaluation_status.set("No evaluation item selected.")
+            return
+        item = self._oar_review_item_from_details(details)
+        if item is None:
+            self.evaluation_status.set("Selected item is not a queued executable proposal.")
+            return
+        sequence = len(self.evaluation_review_items) + len(self.evaluation_dispositions) + 20
+        authorization = gsr.make_live_fixture_execution_authorization(
+            item,
+            operator_identity="tk_operator",
+            issued_sequence=sequence,
+            expiration_sequence=sequence + 5,
+        )
+        result = gsr.execute_live_fixture_proposal(
+            self.oar_runtime_state,
+            item,
+            authorization,
+            sequence=sequence,
+        )
+        if not result.accepted or result.evidence_review_item is None:
+            self.evaluation_status.set(f"Fixture execution denied: {result.reason}.")
+            return
+        self.oar_runtime_state = result.state
+        self._set_evaluation_review_items([*self.evaluation_review_items, result.evidence_review_item])
+        self.evaluation_status.set(
+            f"Fixture evidence queued for {item.proposal_id}. Runtime paused for operator review."
         )
         self._persist_oar_live_development_state()
 

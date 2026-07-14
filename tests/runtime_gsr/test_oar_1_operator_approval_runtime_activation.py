@@ -386,3 +386,81 @@ def test_oar_live_development_bridge_runs_one_cycle_and_queues_one_proposal_then
     duplicate_after_restart = gsr.run_one_oar_development_runtime_cycle(recovered, compiled.compiled_objective, sequence=61)
     assert duplicate_after_restart.accepted is False
     assert duplicate_after_restart.reason == "development_cycle_already_completed"
+
+
+def _live_bridge_cycle() -> tuple[gsr.OARRuntimeState, gsr.OperatorReviewItem]:
+    compiled, approval = _compiled_mission()
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-bridge")
+    registered = gsr.register_approved_mission_for_development(state, compiled.compiled_objective, approval, sequence=50)
+    cycle = gsr.run_one_oar_development_runtime_cycle(registered.state, compiled.compiled_objective, sequence=60)
+    assert cycle.accepted is True
+    assert cycle.review_item is not None
+    return cycle.state, cycle.review_item
+
+
+def test_live_2a_exact_queued_proposal_executes_one_fixture_and_queues_evidence():
+    state, item = _live_bridge_cycle()
+    authorization = gsr.make_live_fixture_execution_authorization(
+        item,
+        operator_identity="operator",
+        issued_sequence=70,
+        expiration_sequence=75,
+    )
+
+    result = gsr.execute_live_fixture_proposal(state, item, authorization, sequence=70)
+
+    assert result.accepted is True
+    assert result.reason == "fixture_execution_evidence_queued"
+    assert result.authorization_consumed is True
+    assert authorization.consumed is False
+    assert result.consumed_authorization is not None
+    assert result.consumed_authorization.consumed is True
+    assert result.execution_performed is True
+    assert result.evidence_item_queued is True
+    assert result.runtime_paused is True
+    assert result.tracked_source_mutated is False
+    assert result.capability_activated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+    assert result.sandbox_result is not None
+    assert result.sandbox_result.cleanup_verified is True
+    assert result.sandbox_result.live_source_unchanged is True
+    assert result.sandbox_evaluation is not None
+    assert result.sandbox_evaluation.accepted_for_operator_review is True
+    assert result.sandbox_evaluation.classification == "execution_succeeded"
+    assert result.evidence_review_item is not None
+    assert result.evidence_review_item.parent_review_item_id == item.review_item_id
+    assert result.evidence_review_item.proposal_id == item.proposal_id
+    assert result.evidence_review_item.exact_path == "fixture_capability_contract.py"
+    assert result.evidence_review_item.cleanup_result == "verified"
+    assert result.evidence_review_item.capability_remains_inactive is True
+    assert result.evidence_review_item.tracked_source_unchanged is True
+    assert result.evidence_review_item.application_performed is False
+    assert result.evidence_review_item.automatic_continuation is False
+
+
+def test_live_2a_mismatch_fails_before_authorization_consumption_and_restart_denies_duplicate():
+    state, item = _live_bridge_cycle()
+    authorization = gsr.make_live_fixture_execution_authorization(
+        item,
+        operator_identity="operator",
+        issued_sequence=70,
+        expiration_sequence=75,
+    )
+    wrong = replace(authorization, artifact_chain_digest="other-digest")
+
+    denied = gsr.execute_live_fixture_proposal(state, item, wrong, sequence=70)
+    assert denied.accepted is False
+    assert denied.reason == "wrong_artifact_chain_digest"
+    assert denied.authorization_consumed is False
+    assert denied.execution_performed is False
+    assert denied.consumed_authorization is None
+
+    result = gsr.execute_live_fixture_proposal(state, item, authorization, sequence=70)
+    assert result.accepted is True
+    recovered = gsr.recover_oar_runtime_after_restart(result.state, integrity_valid=True)
+    duplicate = gsr.execute_live_fixture_proposal(recovered, item, replace(authorization, consumed=True), sequence=71)
+    assert duplicate.accepted is False
+    assert duplicate.reason == "fixture_execution_already_completed"
+    assert duplicate.execution_performed is False

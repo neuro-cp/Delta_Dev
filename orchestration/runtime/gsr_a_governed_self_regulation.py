@@ -14487,6 +14487,7 @@ class OARRuntimeState:
     approved_mission_ids: tuple[str, ...] = ()
     active_mission_id: str = ""
     completed_cycle_ids: tuple[str, ...] = ()
+    executed_fixture_review_item_ids: tuple[str, ...] = ()
     pending_review_ids: tuple[str, ...] = ()
     declined_review_ids: tuple[str, ...] = ()
     accepted_review_ids: tuple[str, ...] = ()
@@ -14532,6 +14533,94 @@ class OARDevelopmentRuntimeCycleResult:
     second_cycle_started: bool = False
     source_application_performed: bool = False
     capability_promoted: bool = False
+    capability_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveFixtureExecutionAuthorization:
+    fixture_execution_authorization_id: str
+    review_item_id: str
+    proposal_id: str
+    proposal_version: int
+    compiled_objective_id: str
+    parent_mission_id: str
+    capability_gap_id: str
+    capability_specification_id: str
+    selected_architecture_option_id: str
+    artifact_chain_digest: str
+    runtime_checkpoint_id: str
+    exact_affected_path: str
+    source_precondition_state: str
+    maximum_file_count: int
+    maximum_byte_count: int
+    execution_type: str
+    operator_identity: str
+    operator_disposition: str
+    issued_sequence: int
+    expiration_sequence: int
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    tracked_source_application_authorized: bool = False
+    capability_activation_authorized: bool = False
+    provider_model_use_authorized: bool = False
+    automatic_continuation_authorized: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveFixtureExecutionEvidenceItem:
+    review_item_id: str
+    parent_review_item_id: str
+    status: str
+    boundary: str
+    proposal_id: str
+    proposal_version: int
+    authorization_id: str
+    fixture_workspace_identity: str
+    exact_path: str
+    precondition_hash: str
+    postcondition_hash: str
+    operation_performed: str
+    focused_validation_result: str
+    exit_status: int
+    stdout_summary: str
+    stderr_summary: str
+    cleanup_result: str
+    artifact_chain_digest: str
+    capability_remains_inactive: bool = True
+    tracked_source_unchanged: bool = True
+    operator_review_required: bool = True
+    runtime_paused: bool = True
+    automatic_continuation: bool = False
+    application_authorized: bool = False
+    application_performed: bool = False
+    capability_activated: bool = False
+    immutable: bool = True
+    details: dict[str, Any] = field(default_factory=dict)
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveFixtureExecutionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    review_item: OperatorReviewItem | None = None
+    original_authorization: LiveFixtureExecutionAuthorization | None = None
+    consumed_authorization: LiveFixtureExecutionAuthorization | None = None
+    sandbox_result: SandboxExecutionResult | None = None
+    sandbox_evaluation: SandboxEvidenceEvaluation | None = None
+    evidence_review_item: LiveFixtureExecutionEvidenceItem | None = None
+    authorization_consumed: bool = False
+    execution_performed: bool = False
+    evidence_item_queued: bool = False
+    runtime_paused: bool = True
+    tracked_source_mutated: bool = False
     capability_activated: bool = False
     provider_called: bool = False
     model_invoked: bool = False
@@ -14812,6 +14901,357 @@ def run_one_oar_development_runtime_cycle(
         development_runtime_paused=True,
         proposal_created=True,
         proposal_queued=True,
+    )
+
+
+LIVE_2A_FIXTURE_EXECUTION_TYPE = "governed_fixture_python_compile"
+
+
+def _review_item_capability_specification_id(review_item: OperatorReviewItem) -> str:
+    return str(review_item.capability_specification.get("specification_id") or "")
+
+
+def _review_item_selected_architecture_option_id(review_item: OperatorReviewItem) -> str:
+    return str(review_item.selected_design.get("selected_option_id") or "")
+
+
+def _review_item_runtime_checkpoint_id(review_item: OperatorReviewItem) -> str:
+    return str(review_item.sandbox_results.get("runtime_checkpoint_id") or "")
+
+
+def make_live_fixture_execution_authorization(
+    review_item: OperatorReviewItem,
+    *,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    maximum_file_count: int = 1,
+    maximum_byte_count: int = 4096,
+) -> LiveFixtureExecutionAuthorization:
+    exact_path = review_item.exact_affected_files[0] if review_item.exact_affected_files else ""
+    return LiveFixtureExecutionAuthorization(
+        fixture_execution_authorization_id=stable_id(
+            "live-2a-fixture-execution-authorization",
+            review_item.review_item_id,
+            review_item.proposal_id,
+            review_item.artifact_chain_digest,
+            operator_identity,
+            issued_sequence,
+        ),
+        review_item_id=review_item.review_item_id,
+        proposal_id=review_item.proposal_id,
+        proposal_version=review_item.proposal_version,
+        compiled_objective_id=review_item.compiled_objective_id,
+        parent_mission_id=review_item.parent_mission_id,
+        capability_gap_id=review_item.capability_gap_id,
+        capability_specification_id=_review_item_capability_specification_id(review_item),
+        selected_architecture_option_id=_review_item_selected_architecture_option_id(review_item),
+        artifact_chain_digest=review_item.artifact_chain_digest,
+        runtime_checkpoint_id=_review_item_runtime_checkpoint_id(review_item),
+        exact_affected_path=exact_path,
+        source_precondition_state=str(review_item.source_precondition_hashes.get(exact_path, "")),
+        maximum_file_count=maximum_file_count,
+        maximum_byte_count=maximum_byte_count,
+        execution_type=LIVE_2A_FIXTURE_EXECUTION_TYPE,
+        operator_identity=operator_identity,
+        operator_disposition="approve_fixture_execution",
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+    )
+
+
+def _live_fixture_authorization_matches_review_item(
+    review_item: OperatorReviewItem,
+    authorization: LiveFixtureExecutionAuthorization,
+    *,
+    sequence: int,
+) -> tuple[bool, str]:
+    if review_item.status != "queued":
+        return False, "proposal_not_queued"
+    if authorization.review_item_id != review_item.review_item_id:
+        return False, "wrong_review_item"
+    if authorization.proposal_id != review_item.proposal_id or authorization.proposal_version != review_item.proposal_version:
+        return False, "wrong_proposal"
+    if authorization.compiled_objective_id != review_item.compiled_objective_id:
+        return False, "wrong_compiled_objective"
+    if authorization.parent_mission_id != review_item.parent_mission_id:
+        return False, "wrong_parent_mission"
+    if authorization.capability_gap_id != review_item.capability_gap_id:
+        return False, "wrong_capability_gap"
+    if authorization.capability_specification_id != _review_item_capability_specification_id(review_item):
+        return False, "wrong_capability_specification"
+    if authorization.selected_architecture_option_id != _review_item_selected_architecture_option_id(review_item):
+        return False, "wrong_architecture_option"
+    if authorization.artifact_chain_digest != review_item.artifact_chain_digest:
+        return False, "wrong_artifact_chain_digest"
+    if authorization.runtime_checkpoint_id != _review_item_runtime_checkpoint_id(review_item):
+        return False, "wrong_runtime_checkpoint"
+    if len(review_item.exact_affected_files) != 1 or authorization.maximum_file_count != 1:
+        return False, "fixture_scope_not_single_file"
+    if authorization.exact_affected_path != review_item.exact_affected_files[0]:
+        return False, "wrong_fixture_path"
+    if _safe_relative_workspace_path(authorization.exact_affected_path) is False:
+        return False, "unsafe_fixture_path"
+    if authorization.source_precondition_state != str(review_item.source_precondition_hashes.get(authorization.exact_affected_path, "")):
+        return False, "wrong_source_precondition"
+    if authorization.execution_type != LIVE_2A_FIXTURE_EXECUTION_TYPE:
+        return False, "wrong_execution_type"
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or authorization.operator_disposition != "approve_fixture_execution":
+        return False, "operator_fixture_authority_required"
+    if not authorization.one_shot:
+        return False, "authorization_not_one_shot"
+    if authorization.consumed:
+        return False, "authorization_already_consumed"
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return False, "authorization_expired"
+    forbidden = (
+        authorization.tracked_source_application_authorized,
+        authorization.capability_activation_authorized,
+        authorization.provider_model_use_authorized,
+        authorization.automatic_continuation_authorized,
+    )
+    if any(forbidden):
+        return False, "forbidden_authority_present"
+    if review_item.application_authorized or review_item.application_performed or review_item.capability_activated:
+        return False, "proposal_already_operational"
+    if review_item.model_provider_identity != "none":
+        return False, "provider_model_identity_present"
+    return True, "valid"
+
+
+def _live_fixture_cycle(review_item: OperatorReviewItem, authorization: LiveFixtureExecutionAuthorization, *, sequence: int) -> GovernedObjectiveCycle:
+    return GovernedObjectiveCycle(
+        cycle_id=stable_id("live-2a-fixture-cycle", review_item.review_item_id, authorization.fixture_execution_authorization_id),
+        objective_id=review_item.compiled_objective_id,
+        objective_snapshot={
+            "proposal_id": review_item.proposal_id,
+            "review_item_id": review_item.review_item_id,
+            "capability_gap_id": review_item.capability_gap_id,
+        },
+        current_stage="future_sandbox_execution_eligible",
+        current_substage="live_fixture_execution",
+        sequence=sequence,
+        cycle_status="operator_authorized_fixture_execution",
+        active_artifact_type="operator_review_item",
+        active_artifact_id=review_item.review_item_id,
+        completed_stage_markers=("live_development_proposal_queued",),
+        operator_attention_required=True,
+    )
+
+
+def _live_fixture_plan_state(
+    review_item: OperatorReviewItem,
+    authorization: LiveFixtureExecutionAuthorization,
+    *,
+    sequence: int,
+) -> tuple[SandboxPlanningState, SandboxEvaluationPlan]:
+    plan = SandboxEvaluationPlan(
+        plan_id=stable_id("live-2a-fixture-plan", review_item.review_item_id, authorization.fixture_execution_authorization_id),
+        proposal_id=review_item.proposal_id,
+        disposable_workspace="required",
+        test_selection=("python_compile_fixture",),
+        live_runtime_evidence_requirements=("operator_review_required", "tracked_source_unchanged", "capability_inactive"),
+        provider_model_restrictions=("no_provider", "no_local_model"),
+        memory_write_restrictions=("no_memory_write",),
+        success_criteria=("fixture_compiles", "cleanup_verified", "live_source_unchanged"),
+        failure_criteria=("compile_failed", "cleanup_failed", "live_source_changed"),
+        rollback_proof=("not_required_fixture_only",),
+        artifact_retention_policy="evidence_summary_only",
+        repository_snapshot_description="live proposal fixture execution without tracked-source application",
+        files_or_components_in_scope=(authorization.exact_affected_path,),
+        forbidden_files_or_components=("DELTA-75", "tracked_source_application"),
+        allowed_tool_classes=("compiler",),
+        forbidden_tool_classes=("provider", "local_model", "network"),
+        allowed_command_categories=("python_compile",),
+        forbidden_command_categories=("shell", "git", "network"),
+        focused_test_requirements=review_item.focused_tests,
+        adjacent_test_requirements=review_item.adjacent_regressions,
+        network_restrictions=("no_network",),
+        source_mutation_restrictions=("no_tracked_source_application",),
+        rollback_proof_requirements=("tracked_source_unchanged",),
+        cleanup_proof_requirements=("workspace_removed",),
+        execution_budget_metadata=("one_command", "one_file", f"max_bytes={authorization.maximum_byte_count}"),
+        plan_only_status="PLAN_ONLY",
+        operator_review_status="approved_for_future_sandbox_execution",
+        creation_sequence=sequence,
+        workspace_creation_prohibited=True,
+        sandbox_execution_prohibited=True,
+        command_execution_prohibited=True,
+        source_mutation_prohibited=True,
+        module_loading_prohibited=True,
+        application_prohibited=True,
+        persistence_prohibited=True,
+    )
+    state = SandboxPlanningState(
+        state_version="live-2a-fixture",
+        sandbox_plans=(serialize(plan),),
+        future_sandbox_execution_eligible_plans=(plan.plan_id,),
+        pending_plan_review_queue=(),
+        plan_ids_by_proposal={review_item.proposal_id: (plan.plan_id,)},
+    )
+    return state, plan
+
+
+def _live_fixture_content(review_item: OperatorReviewItem) -> str:
+    capability_id = str(review_item.capability_specification.get("capability_id") or review_item.current_blocker)
+    purpose = str(review_item.capability_specification.get("purpose") or "governed fixture capability contract")
+    return (
+        "\"\"\"Disposable LIVE-2A fixture generated from an exact queued proposal.\n"
+        "This file is materialized only inside a temporary sandbox workspace.\n"
+        "\"\"\"\n\n"
+        f"CAPABILITY_ID = {capability_id!r}\n"
+        f"PROPOSAL_ID = {review_item.proposal_id!r}\n"
+        f"ARTIFACT_CHAIN_DIGEST = {review_item.artifact_chain_digest!r}\n"
+        f"PURPOSE = {purpose!r}\n"
+        "CAPABILITY_ACTIVE = False\n"
+        "TRACKED_SOURCE_APPLICATION_PERFORMED = False\n"
+    )
+
+
+def execute_live_fixture_proposal(
+    state: OARRuntimeState,
+    review_item: OperatorReviewItem,
+    authorization: LiveFixtureExecutionAuthorization,
+    *,
+    sequence: int,
+) -> LiveFixtureExecutionResult:
+    if review_item.review_item_id in state.executed_fixture_review_item_ids:
+        return LiveFixtureExecutionResult(False, "fixture_execution_already_completed", state, review_item, authorization)
+    accepted, reason = _live_fixture_authorization_matches_review_item(review_item, authorization, sequence=sequence)
+    if not accepted:
+        return LiveFixtureExecutionResult(False, reason, state, review_item, authorization)
+    if authorization.exact_affected_path not in review_item.source_precondition_hashes:
+        return LiveFixtureExecutionResult(False, "missing_source_precondition", state, review_item, authorization)
+    fixture_content = _live_fixture_content(review_item)
+    if len(fixture_content.encode("utf-8")) > authorization.maximum_byte_count:
+        return LiveFixtureExecutionResult(False, "fixture_byte_budget_exceeded", state, review_item, authorization)
+
+    cycle = _live_fixture_cycle(review_item, authorization, sequence=sequence)
+    planning_state, plan = _live_fixture_plan_state(review_item, authorization, sequence=sequence)
+    request = make_sandbox_execution_request(
+        cycle,
+        plan,
+        requested_scope=("future_disposable_sandbox_execution_attempt",),
+        requested_workspace_policy=(
+            "disposable_workspace_required",
+            "cleanup_required",
+            "cleanup_verification_required",
+            "no_production_path_access",
+            "no_credential_access",
+            "no_home_directory_access",
+            "no_external_drive_access",
+            "no_environment_secret_inheritance",
+        ),
+        requested_tool_allowlist=("compiler",),
+        requested_command_allowlist=("python_compile",),
+        requested_network_policy=("no_network",),
+        requested_execution_budget={
+            "max_commands": 1,
+            "max_tool_calls": 1,
+            "max_processes": 1,
+            "max_artifact_count": 8,
+            "max_workspace_writes": 8,
+            "max_retries": 1,
+            "max_elapsed_units": 20,
+            "max_output_bytes": 2048,
+        },
+        requested_artifact_output_policy=("disposable_evidence_artifacts",),
+        requested_execution_sequence=sequence,
+    )
+    sandbox_authorization = make_sandbox_execution_authorization(
+        request,
+        authorized_scope=("future_disposable_sandbox_execution_attempt",),
+        authorized_workspace_policy=request.requested_workspace_policy,
+        authorized_tool_allowlist=("compiler",),
+        authorized_command_allowlist=("python_compile",),
+        authorized_network_policy=("no_network",),
+        authorized_execution_budget=request.requested_execution_budget,
+        authorized_artifact_output_policy=("disposable_evidence_artifacts",),
+        expires_after_sequence=sequence + 5,
+    )
+    sandbox_result = execute_disposable_sandbox_attempt(
+        cycle,
+        planning_state,
+        plan,
+        request,
+        sandbox_authorization,
+        command_name="python_compile",
+        command_arguments=(authorization.exact_affected_path,),
+        fixture_files={authorization.exact_affected_path: fixture_content},
+        sequence=sequence,
+    )
+    evaluation = evaluate_sandbox_execution_evidence(sandbox_result)
+    consumed = replace(authorization, consumed=True) if sandbox_result.authorization_consumed else None
+    post_hash = make_sandbox_evidence_digest(sandbox_result.evidence) if sandbox_result.evidence is not None else ""
+    evidence_item = LiveFixtureExecutionEvidenceItem(
+        review_item_id=stable_id("live-2a-evidence-review-item", review_item.review_item_id, authorization.fixture_execution_authorization_id, evaluation.evaluation_id),
+        parent_review_item_id=review_item.review_item_id,
+        status="evidence_queued",
+        boundary="Governed disposable fixture execution evidence. Operator review required.",
+        proposal_id=review_item.proposal_id,
+        proposal_version=review_item.proposal_version,
+        authorization_id=authorization.fixture_execution_authorization_id,
+        fixture_workspace_identity=sandbox_result.attempt.workspace_root if sandbox_result.attempt is not None else "",
+        exact_path=authorization.exact_affected_path,
+        precondition_hash=authorization.source_precondition_state,
+        postcondition_hash=post_hash,
+        operation_performed="python_compile_fixture" if sandbox_result.execution_performed else "none",
+        focused_validation_result=evaluation.classification,
+        exit_status=sandbox_result.evidence.return_code if sandbox_result.evidence is not None else -1,
+        stdout_summary=sandbox_result.evidence.stdout_summary if sandbox_result.evidence is not None else "",
+        stderr_summary=sandbox_result.evidence.stderr_summary if sandbox_result.evidence is not None else "",
+        cleanup_result=sandbox_result.evidence.cleanup_result if sandbox_result.evidence is not None else "not_started",
+        artifact_chain_digest=review_item.artifact_chain_digest,
+        capability_remains_inactive=not sandbox_result.module_activated,
+        tracked_source_unchanged=sandbox_result.live_source_unchanged,
+        operator_review_required=True,
+        runtime_paused=True,
+        automatic_continuation=False,
+        application_authorized=False,
+        application_performed=False,
+        capability_activated=False,
+        details={
+            "proposal_id": review_item.proposal_id,
+            "proposal_version": review_item.proposal_version,
+            "parent_review_item_id": review_item.review_item_id,
+            "compiled_objective_id": review_item.compiled_objective_id,
+            "parent_mission_id": review_item.parent_mission_id,
+            "capability_gap_id": review_item.capability_gap_id,
+            "capability_specification_id": authorization.capability_specification_id,
+            "selected_architecture_option_id": authorization.selected_architecture_option_id,
+            "runtime_checkpoint_id": authorization.runtime_checkpoint_id,
+            "sandbox_evaluation": serialize(evaluation),
+            "sandbox_execution_result": serialize(sandbox_result),
+            "consumed_fixture_authorization": serialize(consumed) if consumed is not None else None,
+        },
+    )
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        executed_fixture_review_item_ids=tuple(dict.fromkeys(state.executed_fixture_review_item_ids + (review_item.review_item_id,))),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (evidence_item.review_item_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveFixtureExecutionResult(
+        sandbox_result.accepted and evaluation.accepted_for_operator_review,
+        "fixture_execution_evidence_queued" if evaluation.accepted_for_operator_review else evaluation.reason,
+        updated,
+        review_item,
+        authorization,
+        consumed,
+        sandbox_result,
+        evaluation,
+        evidence_item,
+        authorization_consumed=sandbox_result.authorization_consumed,
+        execution_performed=sandbox_result.execution_performed,
+        evidence_item_queued=evaluation.accepted_for_operator_review,
+        runtime_paused=True,
+        tracked_source_mutated=sandbox_result.source_mutated,
+        capability_activated=sandbox_result.module_activated,
+        provider_called=sandbox_result.provider_called,
+        model_invoked=sandbox_result.model_invoked,
+        automatic_continuation=sandbox_result.automatic_continuation,
     )
 
 
