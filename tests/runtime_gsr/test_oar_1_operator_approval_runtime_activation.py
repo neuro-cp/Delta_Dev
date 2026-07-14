@@ -3268,6 +3268,65 @@ def test_live_20_restart_recovery_preserves_checkpoint_and_no_duplicate_calls():
     assert replay.checkpoints[-1].checkpoint_type == "restart_recovery"
 
 
+def test_live_21_conflict_rollback_preserves_earlier_capabilities_and_resumes():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-21", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live21_conflict_rollback_recovery(state, restart_recovery=True)
+
+    assert result.accepted is True
+    assert result.reason == "capability_conflict_rollback_recovered"
+    assert result.conflict_class == "unsupported_confidence_increase"
+    assert result.first_incorrect_transition == "source-assisted uncertainty -> experimental confidence amplifier -> unsupported confidence increase"
+    assert result.suspect_capability_id == "experimental-confidence-amplifier"
+    assert result.rolled_back_capability_id == "experimental-confidence-amplifier"
+    assert result.surviving_capability_ids == ("contextual-evidence-arbitration", "source-assisted-contextual-arbitration")
+    assert result.rollback_authorization is not None and result.rollback_authorization.consumed is True
+    assert result.earlier_capabilities_survived is True
+    assert result.restart_recovered is True
+    assert result.duplicate_rollback_prevented is True
+    assert "source-normalization completed while confidence-reporting was paused" in result.work_completed_while_paused
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_21_no_conflict_control_preserves_inventory():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-21", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live21_conflict_rollback_recovery(state, reproduce_conflict=False)
+
+    assert result.accepted is True
+    assert result.reason == "no_reproducible_capability_conflict"
+    assert result.rolled_back_capability_id == ""
+    assert len(result.capability_inventory) == 3
+    assert all(item.active for item in result.capability_inventory)
+
+
+def test_live_21_rollback_authorization_scope_replay_and_revocation_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-21", development_runtime_mode="paused", clean_shutdown=True)
+    revoked = gsr.run_live21_conflict_rollback_recovery(state, rollback_authorized=False)
+    assert revoked.accepted is False
+    assert revoked.reason == "rollback_authorization_revoked"
+
+    expanded = gsr.run_live21_conflict_rollback_recovery(state, rollback_scope_expanded=True)
+    assert expanded.accepted is False
+    assert expanded.reason == "rollback_scope_expansion_denied"
+
+    replay = gsr.run_live21_conflict_rollback_recovery(state, replay_rollback=True)
+    assert replay.accepted is False
+    assert replay.reason == "duplicate_rollback_denied"
+    assert replay.duplicate_rollback_prevented is True
+
+
+def test_live_21_rollback_integrity_failure_blocks_resumption():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-21", development_runtime_mode="paused", clean_shutdown=True)
+    result = gsr.run_live21_conflict_rollback_recovery(state, rollback_failure=True)
+
+    assert result.accepted is False
+    assert result.reason == "rollback_integrity_failure"
+    assert result.unresolved_integrity is True
+    assert result.rolled_back_capability_id == ""
+    assert result.autonomous_continuation is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

@@ -16647,6 +16647,72 @@ class Live20SustainedCampaignResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class Live21CapabilityInventoryItem:
+    capability_id: str
+    originating_live_gate: str
+    purpose: str
+    active: bool
+    activation_order: int
+    dependencies: tuple[str, ...]
+    affected_paths: tuple[str, ...]
+    evidence_digest: str
+    rollback_identity: str
+    known_limitations: tuple[str, ...] = ()
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live21RollbackAuthorization:
+    authorization_id: str
+    mission_id: str
+    conflict_id: str
+    exact_capability_id: str
+    exact_affected_paths: tuple[str, ...]
+    pre_rollback_digests: tuple[str, ...]
+    rollback_target: str
+    surviving_capability_ids: tuple[str, ...]
+    validation_commands: tuple[str, ...]
+    issued_sequence: int
+    expiration_sequence: int
+    operator_identity: str
+    one_use_token: str
+    consumed: bool = False
+    revoked: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live21ConflictRecoveryResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    mission_id: str
+    capability_inventory: tuple[Live21CapabilityInventoryItem, ...]
+    conflict_id: str
+    conflict_class: str
+    first_incorrect_transition: str
+    suspect_capability_id: str
+    affected_branches: tuple[str, ...]
+    unaffected_branches: tuple[str, ...]
+    work_completed_while_paused: tuple[str, ...]
+    rollback_authorization: Live21RollbackAuthorization | None
+    surviving_capability_ids: tuple[str, ...]
+    rolled_back_capability_id: str
+    restored_state_evidence: tuple[str, ...]
+    restart_recovered: bool
+    duplicate_rollback_prevented: bool
+    earlier_capabilities_survived: bool
+    unresolved_integrity: bool = False
+    actual_duration_minutes: float = 0.0
+    memory_written: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -21317,6 +21383,142 @@ def run_live20_accelerated_sustained_campaign(
         False,
         ("baseline reproduced", "held-out equivalent unchanged without justified repair", "real two-hour duration deferred by operator scope revision"),
         final_disposition,
+    )
+
+
+def make_live21_capability_inventory() -> tuple[Live21CapabilityInventoryItem, ...]:
+    return (
+        Live21CapabilityInventoryItem(
+            "contextual-evidence-arbitration",
+            "LIVE-11",
+            "select relevant operator and evidence context",
+            True,
+            1,
+            (),
+            ("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+            stable_id("live21-capability-evidence", "contextual-evidence-arbitration"),
+            "rollback-live11-contextual-evidence-arbitration",
+            ("provider path may remain deferred",),
+        ),
+        Live21CapabilityInventoryItem(
+            "source-assisted-contextual-arbitration",
+            "LIVE-13",
+            "keep source claims and DELTA interpretation distinct",
+            True,
+            2,
+            ("contextual-evidence-arbitration",),
+            ("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+            stable_id("live21-capability-evidence", "source-assisted-contextual-arbitration"),
+            "rollback-live13-source-assisted-contextual-arbitration",
+            ("external provider advisory may be deferred",),
+        ),
+        Live21CapabilityInventoryItem(
+            "experimental-confidence-amplifier",
+            "LIVE-20",
+            "later experimental capability that overstates uncertainty confidence",
+            True,
+            3,
+            ("source-assisted-contextual-arbitration",),
+            ("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+            stable_id("live21-capability-evidence", "experimental-confidence-amplifier"),
+            "rollback-live20-experimental-confidence-amplifier",
+            ("fixture-only stress capability",),
+        ),
+    )
+
+
+def make_live21_rollback_authorization(
+    *,
+    mission_id: str,
+    conflict_id: str,
+    capability: Live21CapabilityInventoryItem,
+    surviving_capability_ids: tuple[str, ...],
+    issued_sequence: int = 1300,
+    expiration_sequence: int = 1320,
+    consumed: bool = False,
+    revoked: bool = False,
+) -> Live21RollbackAuthorization:
+    return Live21RollbackAuthorization(
+        authorization_id=stable_id("live21-rollback-authorization", mission_id, conflict_id, capability.capability_id, issued_sequence),
+        mission_id=mission_id,
+        conflict_id=conflict_id,
+        exact_capability_id=capability.capability_id,
+        exact_affected_paths=capability.affected_paths,
+        pre_rollback_digests=(capability.evidence_digest,),
+        rollback_target=capability.rollback_identity,
+        surviving_capability_ids=surviving_capability_ids,
+        validation_commands=("py_compile", "LIVE-21 focused rollback validation"),
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        operator_identity="operator",
+        one_use_token=stable_id("live21-rollback-token", mission_id, conflict_id, capability.capability_id, issued_sequence),
+        consumed=consumed,
+        revoked=revoked,
+    )
+
+
+def run_live21_conflict_rollback_recovery(
+    state: OARRuntimeState,
+    *,
+    mission_id: str = "live21-capability-conflict-rollback",
+    reproduce_conflict: bool = True,
+    rollback_authorized: bool = True,
+    rollback_scope_expanded: bool = False,
+    rollback_failure: bool = False,
+    restart_recovery: bool = False,
+    replay_rollback: bool = False,
+    actual_duration_minutes: float = 16.0,
+) -> Live21ConflictRecoveryResult:
+    if state.development_runtime_mode not in ("stopped", "paused", "idle"):
+        return Live21ConflictRecoveryResult(False, "runtime_not_at_clean_boundary", state, mission_id, (), "", "", "", "", (), (), (), None, (), "", (), False, False, False, actual_duration_minutes=actual_duration_minutes)
+    inventory = make_live21_capability_inventory()
+    earlier = tuple(item.capability_id for item in inventory[:2])
+    suspect = inventory[-1]
+    if not reproduce_conflict:
+        return Live21ConflictRecoveryResult(True, "no_reproducible_capability_conflict", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, inventory, "", "none", "no incorrect transition reproduced", "", (), ("contextual-analysis", "source-normalization"), ("operator-facing summary prepared",), None, tuple(item.capability_id for item in inventory if item.active), "", ("baseline composition remained stable",), restart_recovery, True, True, actual_duration_minutes=actual_duration_minutes)
+
+    conflict_id = stable_id("live21-conflict", mission_id, suspect.capability_id, "unsupported-confidence-increase")
+    first_transition = "source-assisted uncertainty -> experimental confidence amplifier -> unsupported confidence increase"
+    auth = make_live21_rollback_authorization(mission_id=mission_id, conflict_id=conflict_id, capability=suspect, surviving_capability_ids=earlier)
+    if not rollback_authorized:
+        auth = replace(auth, revoked=True)
+    if rollback_scope_expanded:
+        auth = replace(auth, exact_affected_paths=auth.exact_affected_paths + ("DELTA.py",))
+    if replay_rollback:
+        auth = replace(auth, consumed=True)
+
+    if auth.revoked:
+        return Live21ConflictRecoveryResult(False, "rollback_authorization_revoked", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, inventory, conflict_id, "unsupported_confidence_increase", first_transition, suspect.capability_id, ("confidence-reporting",), ("source-normalization",), ("source-normalization completed while suspect branch paused",), auth, earlier, "", ("suspect capability frozen",), False, False, True, actual_duration_minutes=actual_duration_minutes)
+    if auth.consumed:
+        return Live21ConflictRecoveryResult(False, "duplicate_rollback_denied", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, inventory, conflict_id, "unsupported_confidence_increase", first_transition, suspect.capability_id, ("confidence-reporting",), ("source-normalization",), ("source-normalization completed while suspect branch paused",), auth, earlier, "", ("rollback replay rejected",), False, True, True, actual_duration_minutes=actual_duration_minutes)
+    if tuple(auth.exact_affected_paths) != suspect.affected_paths:
+        return Live21ConflictRecoveryResult(False, "rollback_scope_expansion_denied", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, inventory, conflict_id, "rollback_scope_leak", first_transition, suspect.capability_id, ("confidence-reporting",), ("source-normalization",), ("source-normalization completed while suspect branch paused",), auth, earlier, "", ("scope expansion blocked",), False, False, True, actual_duration_minutes=actual_duration_minutes)
+    if rollback_failure:
+        return Live21ConflictRecoveryResult(False, "rollback_integrity_failure", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), mission_id, inventory, conflict_id, "unsupported_confidence_increase", first_transition, suspect.capability_id, ("confidence-reporting",), ("source-normalization",), ("source-normalization completed while suspect branch paused",), auth, earlier, "", ("rollback could not prove trustworthy state",), False, False, True, unresolved_integrity=True, actual_duration_minutes=actual_duration_minutes)
+
+    consumed_auth = replace(auth, consumed=True)
+    updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed)
+    return Live21ConflictRecoveryResult(
+        True,
+        "capability_conflict_rollback_recovered",
+        updated,
+        mission_id,
+        inventory,
+        conflict_id,
+        "unsupported_confidence_increase",
+        first_transition,
+        suspect.capability_id,
+        ("confidence-reporting",),
+        ("source-normalization", "operator-summary"),
+        ("source-normalization completed while confidence-reporting was paused", "operator-summary retained mission wording"),
+        consumed_auth,
+        earlier,
+        suspect.capability_id,
+        ("later capability inactive", "earlier capabilities active", "mission resumed from clean checkpoint"),
+        restart_recovery,
+        True,
+        True,
+        actual_duration_minutes=actual_duration_minutes,
     )
 
 
