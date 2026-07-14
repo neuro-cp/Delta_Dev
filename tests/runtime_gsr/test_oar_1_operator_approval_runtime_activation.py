@@ -1212,3 +1212,225 @@ def test_live_4_denies_bad_cycle_order_budget_and_forbidden_authority():
     rewritten = replace(compiled, original_operator_mission="new mission")
     denied_drift = gsr.run_live_multi_cycle_mission(state, rewritten, request, ())
     assert denied_drift.reason == "mission_identity_mismatch"
+
+
+def _live_5_question_state() -> tuple[gsr.OARRuntimeState, gsr.CompiledMissionObjective, gsr.LiveOperatorQuestionResult]:
+    state, compiled, _request = _live_4_request()
+    question = gsr.create_live_operator_question(
+        state,
+        compiled,
+        category="architecture_choice_required",
+        blocked_work_item_id="work-item-1",
+        blocker_id="ambiguous_source_parser_architecture",
+        runtime_checkpoint_id="checkpoint-live-5",
+        evidence_digest="e" * 64,
+        prompt="Choose the bounded parser architecture for blocker ambiguous_source_parser_architecture.",
+        evidence_references=("cycle-record-1", "preflight-evidence-1"),
+        available_options=("extend_existing_parser", "defer_parser"),
+        tradeoffs=("extend_existing_parser reuses accepted contracts", "defer_parser pauses mission safely"),
+        safest_default="defer_parser",
+        exact_decision_required="select one listed architecture option",
+        expiration_sequence=160,
+    )
+    assert question.accepted is True
+    assert question.question is not None
+    return question.state, compiled, question
+
+
+def test_live_5_genuine_blocker_creates_one_precise_evaluation_question():
+    state, compiled, question = _live_5_question_state()
+
+    assert question.reason == "operator_question_queued"
+    assert question.question.category == "architecture_choice_required"
+    assert question.question.parent_mission_id == compiled.compiled_objective_id
+    assert question.question.original_parent_mission == compiled.original_operator_mission
+    assert question.question.blocker_id == "ambiguous_source_parser_architecture"
+    assert question.question.available_options == ("extend_existing_parser", "defer_parser")
+    assert question.evidence_review_item["status"] == "operator_question_queued"
+    assert state.active_operator_question_ids == (question.question.question_id,)
+    assert state.development_runtime_mode == "paused"
+    assert question.automatic_continuation is False
+
+    duplicate = gsr.create_live_operator_question(
+        state,
+        compiled,
+        category="architecture_choice_required",
+        blocked_work_item_id="work-item-1",
+        blocker_id="ambiguous_source_parser_architecture",
+        runtime_checkpoint_id="checkpoint-live-5",
+        evidence_digest="e" * 64,
+        prompt="Choose the bounded parser architecture for blocker ambiguous_source_parser_architecture.",
+        evidence_references=("cycle-record-1",),
+        available_options=("extend_existing_parser",),
+        tradeoffs=("reuse accepted contracts",),
+        safest_default="extend_existing_parser",
+        exact_decision_required="select one listed architecture option",
+        expiration_sequence=160,
+    )
+    assert duplicate.accepted is False
+    assert duplicate.reason == "active_question_exists"
+
+
+def test_live_5_generic_or_incomplete_question_fails_closed():
+    state, compiled, _request = _live_4_request()
+    generic = gsr.create_live_operator_question(
+        state,
+        compiled,
+        category="architecture_choice_required",
+        blocked_work_item_id="work-item-1",
+        blocker_id="gap",
+        runtime_checkpoint_id="checkpoint-live-5",
+        evidence_digest="e" * 64,
+        prompt="What should I do next?",
+        evidence_references=("evidence",),
+        available_options=("option",),
+        tradeoffs=("tradeoff",),
+        safest_default="option",
+        exact_decision_required="select option",
+        expiration_sequence=160,
+    )
+    assert generic.accepted is False
+    assert generic.reason == "generic_question_denied"
+
+    invalid_category = gsr.create_live_operator_question(
+        state,
+        compiled,
+        category="ordinary_uncertainty",
+        blocked_work_item_id="work-item-1",
+        blocker_id="gap",
+        runtime_checkpoint_id="checkpoint-live-5",
+        evidence_digest="e" * 64,
+        prompt="Choose a bounded option based on the provided evidence.",
+        evidence_references=("evidence",),
+        available_options=("option",),
+        tradeoffs=("tradeoff",),
+        safest_default="option",
+        exact_decision_required="select option",
+        expiration_sequence=160,
+    )
+    assert invalid_category.accepted is False
+    assert invalid_category.reason == "question_category_denied"
+
+
+def test_live_5_exact_operator_response_resumes_once_and_replay_fails():
+    state, _compiled, question_result = _live_5_question_state()
+    question = question_result.question
+    authorization = gsr.make_live_operator_response_authorization(
+        question,
+        selected_option="extend_existing_parser",
+        disposition="approve_exact_option",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=160,
+    )
+
+    result = gsr.apply_live_operator_response(state, question, authorization, sequence=150)
+
+    assert result.accepted is True
+    assert result.reason == "operator_response_applied"
+    assert result.resume_decision == "resume_once"
+    assert result.bounded_followup_performed is True
+    assert result.authorization_consumed is True
+    assert result.consumed_authorization.consumed is True
+    assert result.state.active_operator_question_ids == ()
+    assert question.question_id in result.state.completed_operator_question_ids
+    assert result.tracked_source_mutated is False
+    assert result.capability_activated is False
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.automatic_continuation is False
+
+    replay = gsr.apply_live_operator_response(result.state, question, result.consumed_authorization, sequence=151)
+    assert replay.accepted is False
+    assert replay.reason == "question_not_active"
+
+
+def test_live_5_substituted_expired_or_free_text_response_fails_closed():
+    state, _compiled, question_result = _live_5_question_state()
+    question = question_result.question
+    wrong = gsr.make_live_operator_response_authorization(
+        question,
+        selected_option="extend_existing_parser",
+        disposition="approve_exact_option",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=160,
+    )
+    wrong = replace(wrong, evidence_digest="bad")
+    denied_wrong = gsr.apply_live_operator_response(state, question, wrong, sequence=150)
+    assert denied_wrong.accepted is False
+    assert denied_wrong.reason == "wrong_question_authorization"
+
+    expired = gsr.make_live_operator_response_authorization(
+        question,
+        selected_option="extend_existing_parser",
+        disposition="approve_exact_option",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=151,
+    )
+    denied_expired = gsr.apply_live_operator_response(state, question, expired, sequence=152)
+    assert denied_expired.reason == "response_authorization_expired"
+
+    free_text = gsr.make_live_operator_response_authorization(
+        question,
+        selected_option="extend_existing_parser",
+        disposition="approve_exact_option",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=160,
+        allowed_scope_change="also use network",
+    )
+    denied_free_text = gsr.apply_live_operator_response(state, question, free_text, sequence=150)
+    assert denied_free_text.reason == "free_text_scope_denied"
+
+
+def test_live_5_rejection_pause_and_restart_persist_without_duplicate_question():
+    state, compiled, question_result = _live_5_question_state()
+    recovered = gsr.recover_oar_runtime_after_restart(state, integrity_valid=True)
+    assert recovered.active_operator_question_ids == state.active_operator_question_ids
+    assert recovered.automatic_resume_performed is False
+
+    duplicate = gsr.create_live_operator_question(
+        recovered,
+        compiled,
+        category="architecture_choice_required",
+        blocked_work_item_id="work-item-1",
+        blocker_id="ambiguous_source_parser_architecture",
+        runtime_checkpoint_id="checkpoint-live-5",
+        evidence_digest="e" * 64,
+        prompt="Choose the bounded parser architecture for blocker ambiguous_source_parser_architecture.",
+        evidence_references=("cycle-record-1",),
+        available_options=("extend_existing_parser",),
+        tradeoffs=("reuse accepted contracts",),
+        safest_default="extend_existing_parser",
+        exact_decision_required="select one listed architecture option",
+        expiration_sequence=160,
+    )
+    assert duplicate.reason == "active_question_exists"
+
+    question = question_result.question
+    authorization = gsr.make_live_operator_response_authorization(
+        question,
+        selected_option="defer_parser",
+        disposition="reject_all_options",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=160,
+    )
+    rejected = gsr.apply_live_operator_response(state, question, authorization, sequence=150)
+    assert rejected.accepted is True
+    assert rejected.resume_decision == "reject_path"
+    assert rejected.bounded_followup_performed is False
+
+    pause_auth = gsr.make_live_operator_response_authorization(
+        question,
+        selected_option="defer_parser",
+        disposition="pause_mission",
+        operator_identity="operator",
+        issued_sequence=150,
+        expiration_sequence=160,
+    )
+    paused = gsr.apply_live_operator_response(state, question, pause_auth, sequence=150)
+    assert paused.resume_decision == "pause_mission"
+    assert paused.bounded_followup_performed is False

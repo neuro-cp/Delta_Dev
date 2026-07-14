@@ -14491,6 +14491,8 @@ class OARRuntimeState:
     completed_tracked_preflight_review_item_ids: tuple[str, ...] = ()
     completed_tracked_application_review_item_ids: tuple[str, ...] = ()
     completed_mission_progress_item_ids: tuple[str, ...] = ()
+    active_operator_question_ids: tuple[str, ...] = ()
+    completed_operator_question_ids: tuple[str, ...] = ()
     promoted_capability_ids: tuple[str, ...] = ()
     activated_capability_ids: tuple[str, ...] = ()
     pending_review_ids: tuple[str, ...] = ()
@@ -15173,6 +15175,113 @@ class LiveMultiCycleMissionResult:
     provider_called: bool = False
     model_invoked: bool = False
     git_operation_performed: bool = False
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+LIVE_5_QUESTION_CATEGORIES = (
+    "permission_expansion_required",
+    "source_scope_decision_required",
+    "architecture_choice_required",
+    "metric_conflict_requires_operator",
+    "resource_budget_change_required",
+    "mission_clarification_required",
+    "capability_activation_required",
+    "tracked_source_application_required",
+    "protected_invariant_conflict",
+    "architectural_escalation_required",
+)
+
+LIVE_5_OPERATOR_DISPOSITIONS = (
+    "approve_exact_option",
+    "reject_all_options",
+    "request_narrow_revision",
+    "expand_exact_scope",
+    "keep_current_scope",
+    "increase_exact_budget",
+    "keep_current_budget",
+    "pause_mission",
+    "suspend_mission",
+    "architectural_review_required",
+)
+
+
+@dataclass(frozen=True)
+class LiveOperatorQuestion:
+    question_id: str
+    question_version: int
+    category: str
+    parent_mission_id: str
+    original_parent_mission: str
+    blocked_work_item_id: str
+    blocker_id: str
+    runtime_checkpoint_id: str
+    evidence_digest: str
+    prompt: str
+    evidence_references: tuple[str, ...]
+    autonomous_continuation_prohibited_reason: str
+    available_options: tuple[str, ...]
+    tradeoffs: tuple[str, ...]
+    safest_default: str
+    no_response_consequence: str
+    exact_decision_required: str
+    expiration_sequence: int
+    operator_review_required: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveOperatorQuestionResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    question: LiveOperatorQuestion | None = None
+    evidence_review_item: dict[str, Any] | None = None
+    question_created: bool = False
+    runtime_paused: bool = True
+    automatic_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveOperatorResponseAuthorization:
+    response_authorization_id: str
+    question_id: str
+    question_version: int
+    parent_mission_id: str
+    blocker_id: str
+    runtime_checkpoint_id: str
+    evidence_digest: str
+    selected_option: str
+    disposition: str
+    operator_identity: str
+    issued_sequence: int
+    expiration_sequence: int
+    allowed_scope_change: str = ""
+    allowed_budget_change: int = 0
+    operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
+    one_shot: bool = True
+    consumed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class LiveOperatorResponseResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    question: LiveOperatorQuestion | None = None
+    original_authorization: LiveOperatorResponseAuthorization | None = None
+    consumed_authorization: LiveOperatorResponseAuthorization | None = None
+    resume_decision: str = ""
+    bounded_followup_performed: bool = False
+    evidence_review_item: dict[str, Any] | None = None
+    authorization_consumed: bool = False
+    runtime_paused: bool = True
+    tracked_source_mutated: bool = False
+    capability_activated: bool = False
+    provider_called: bool = False
+    model_invoked: bool = False
     automatic_continuation: bool = False
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
@@ -16942,6 +17051,205 @@ def run_live_multi_cycle_mission(
         capability_campaign_count=campaign_count,
         application_count=application_count,
         activation_count=activation_count,
+    )
+
+
+def _live_question_is_generic(prompt: str) -> bool:
+    lowered = " ".join(str(prompt).lower().strip().split())
+    generic = (
+        "what should i do next",
+        "should i continue",
+        "can i improve myself",
+        "which option do you prefer",
+    )
+    return any(text in lowered for text in generic)
+
+
+def create_live_operator_question(
+    state: OARRuntimeState,
+    compiled: CompiledMissionObjective,
+    *,
+    category: str,
+    blocked_work_item_id: str,
+    blocker_id: str,
+    runtime_checkpoint_id: str,
+    evidence_digest: str,
+    prompt: str,
+    evidence_references: tuple[str, ...],
+    available_options: tuple[str, ...],
+    tradeoffs: tuple[str, ...],
+    safest_default: str,
+    exact_decision_required: str,
+    expiration_sequence: int,
+) -> LiveOperatorQuestionResult:
+    if state.active_operator_question_ids:
+        return LiveOperatorQuestionResult(False, "active_question_exists", state)
+    if category not in LIVE_5_QUESTION_CATEGORIES:
+        return LiveOperatorQuestionResult(False, "question_category_denied", state)
+    if _live_question_is_generic(prompt):
+        return LiveOperatorQuestionResult(False, "generic_question_denied", state)
+    required_text = (prompt, blocked_work_item_id, blocker_id, runtime_checkpoint_id, evidence_digest, safest_default, exact_decision_required)
+    if any(not str(item).strip() for item in required_text) or not evidence_references or not available_options or not tradeoffs:
+        return LiveOperatorQuestionResult(False, "question_context_incomplete", state)
+    question_id = stable_id("live-5-operator-question", compiled.compiled_objective_id, blocker_id, runtime_checkpoint_id, evidence_digest, category)
+    if question_id in state.completed_operator_question_ids or question_id in state.active_operator_question_ids:
+        return LiveOperatorQuestionResult(False, "duplicate_question_denied", state)
+    question = LiveOperatorQuestion(
+        question_id=question_id,
+        question_version=1,
+        category=category,
+        parent_mission_id=compiled.compiled_objective_id,
+        original_parent_mission=compiled.original_operator_mission,
+        blocked_work_item_id=blocked_work_item_id,
+        blocker_id=blocker_id,
+        runtime_checkpoint_id=runtime_checkpoint_id,
+        evidence_digest=evidence_digest,
+        prompt=prompt,
+        evidence_references=evidence_references,
+        autonomous_continuation_prohibited_reason="operator judgment is required by the explicit LIVE-5 boundary",
+        available_options=available_options,
+        tradeoffs=tradeoffs,
+        safest_default=safest_default,
+        no_response_consequence="pause_mission",
+        exact_decision_required=exact_decision_required,
+        expiration_sequence=expiration_sequence,
+    )
+    payload = {
+        "review_item_id": question.question_id,
+        "status": "operator_question_queued",
+        "boundary": "LIVE-5 governed operator question. Runtime paused.",
+        "category": question.category,
+        "parent_mission_id": question.parent_mission_id,
+        "blocker_id": question.blocker_id,
+        "prompt": question.prompt,
+        "available_options": question.available_options,
+        "automatic_continuation": False,
+        "details": serialize(question),
+        "safety": safety_metadata(),
+    }
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        active_operator_question_ids=(question.question_id,),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (question.question_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveOperatorQuestionResult(True, "operator_question_queued", updated, question, payload, question_created=True)
+
+
+def make_live_operator_response_authorization(
+    question: LiveOperatorQuestion,
+    *,
+    selected_option: str,
+    disposition: str,
+    operator_identity: str,
+    issued_sequence: int,
+    expiration_sequence: int,
+    allowed_scope_change: str = "",
+    allowed_budget_change: int = 0,
+    consumed: bool = False,
+) -> LiveOperatorResponseAuthorization:
+    return LiveOperatorResponseAuthorization(
+        response_authorization_id=stable_id("live-5-response-authorization", question.question_id, question.question_version, selected_option, disposition, issued_sequence),
+        question_id=question.question_id,
+        question_version=question.question_version,
+        parent_mission_id=question.parent_mission_id,
+        blocker_id=question.blocker_id,
+        runtime_checkpoint_id=question.runtime_checkpoint_id,
+        evidence_digest=question.evidence_digest,
+        selected_option=selected_option,
+        disposition=disposition,
+        operator_identity=operator_identity,
+        issued_sequence=issued_sequence,
+        expiration_sequence=expiration_sequence,
+        allowed_scope_change=allowed_scope_change,
+        allowed_budget_change=allowed_budget_change,
+        consumed=consumed,
+    )
+
+
+def apply_live_operator_response(
+    state: OARRuntimeState,
+    question: LiveOperatorQuestion,
+    authorization: LiveOperatorResponseAuthorization,
+    *,
+    sequence: int,
+) -> LiveOperatorResponseResult:
+    if question.question_id not in state.active_operator_question_ids:
+        return LiveOperatorResponseResult(False, "question_not_active", state, question, authorization)
+    if authorization.question_id != question.question_id or authorization.question_version != question.question_version:
+        return LiveOperatorResponseResult(False, "wrong_question_authorization", state, question, authorization)
+    if authorization.parent_mission_id != question.parent_mission_id or authorization.blocker_id != question.blocker_id:
+        return LiveOperatorResponseResult(False, "wrong_question_authorization", state, question, authorization)
+    if authorization.runtime_checkpoint_id != question.runtime_checkpoint_id or authorization.evidence_digest != question.evidence_digest:
+        return LiveOperatorResponseResult(False, "wrong_question_authorization", state, question, authorization)
+    if authorization.operator_authority != OPERATOR_CONTROLLED_AUTHORITY or not authorization.operator_identity:
+        return LiveOperatorResponseResult(False, "operator_authority_required", state, question, authorization)
+    if not authorization.one_shot or authorization.consumed:
+        return LiveOperatorResponseResult(False, "response_authorization_unavailable", state, question, authorization)
+    if sequence < authorization.issued_sequence or sequence > authorization.expiration_sequence:
+        return LiveOperatorResponseResult(False, "response_authorization_expired", state, question, authorization)
+    if authorization.disposition not in LIVE_5_OPERATOR_DISPOSITIONS:
+        return LiveOperatorResponseResult(False, "operator_disposition_denied", state, question, authorization)
+    if authorization.selected_option not in question.available_options and authorization.disposition not in {"reject_all_options", "pause_mission", "suspend_mission", "architectural_review_required"}:
+        return LiveOperatorResponseResult(False, "selected_option_not_available", state, question, authorization)
+    if authorization.allowed_scope_change and authorization.disposition != "expand_exact_scope":
+        return LiveOperatorResponseResult(False, "free_text_scope_denied", state, question, authorization)
+    if authorization.allowed_budget_change and authorization.disposition != "increase_exact_budget":
+        return LiveOperatorResponseResult(False, "free_text_budget_denied", state, question, authorization)
+
+    decision_by_disposition = {
+        "approve_exact_option": "resume_once",
+        "reject_all_options": "reject_path",
+        "request_narrow_revision": "revise_once",
+        "expand_exact_scope": "resume_once_with_exact_scope",
+        "keep_current_scope": "resume_once",
+        "increase_exact_budget": "resume_once_with_exact_budget",
+        "keep_current_budget": "resume_once",
+        "pause_mission": "pause_mission",
+        "suspend_mission": "suspend_mission",
+        "architectural_review_required": "architectural_review_required",
+    }
+    resume_decision = decision_by_disposition[authorization.disposition]
+    consumed = replace(authorization, consumed=True)
+    evidence_id = stable_id("live-5-response-evidence", question.question_id, authorization.response_authorization_id, resume_decision)
+    payload = {
+        "review_item_id": evidence_id,
+        "parent_review_item_id": question.question_id,
+        "status": "operator_response_applied",
+        "boundary": "LIVE-5 operator response applied once. Runtime paused.",
+        "resume_decision": resume_decision,
+        "selected_option": authorization.selected_option,
+        "disposition": authorization.disposition,
+        "automatic_continuation": False,
+        "details": {
+            "question": serialize(question),
+            "authorization": serialize(consumed),
+            "resume_decision": resume_decision,
+        },
+        "safety": safety_metadata(),
+    }
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        active_operator_question_ids=tuple(item for item in state.active_operator_question_ids if item != question.question_id),
+        completed_operator_question_ids=tuple(dict.fromkeys(state.completed_operator_question_ids + (question.question_id,))),
+        pending_review_ids=tuple(dict.fromkeys(state.pending_review_ids + (evidence_id,))),
+        clean_shutdown=True,
+        automatic_resume_performed=False,
+    )
+    return LiveOperatorResponseResult(
+        True,
+        "operator_response_applied",
+        updated,
+        question,
+        authorization,
+        consumed,
+        resume_decision=resume_decision,
+        bounded_followup_performed=resume_decision.startswith("resume_once"),
+        evidence_review_item=payload,
+        authorization_consumed=True,
     )
 
 
