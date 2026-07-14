@@ -2714,3 +2714,121 @@ def test_live_13_scope_source_injection_restart_and_duplicate_controls_fail_clos
     assert recovered.automatic_resume_performed is False
     assert replay.state.development_runtime_mode == "paused"
     assert replay.autonomous_continuation is False
+
+
+def test_live_14_two_cycle_recursive_campaign_preserves_parent_and_composition():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-14")
+    result = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=45,
+        requested_cycles=2,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "recursive_cognitive_development_report_queued"
+    assert result.parent_mission == gsr.LIVE_14_MISSION
+    assert len(result.cycles) == 2
+    assert all(cycle.independently_justified for cycle in result.cycles)
+    assert [cycle.activation_order for cycle in result.cycles] == [1, 2]
+    assert result.cycles[0].capability_name != result.cycles[1].capability_name
+    assert result.contextual_accuracy_change > 0
+    assert result.unsupported_inference_change < 0
+    assert result.contradiction_detection_change > 0
+    assert result.confidence_calibration_change > 0
+    assert result.goal_drift_change < 0
+    assert result.final_disposition == "mission_improved"
+    assert result.memory_written is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_14_no_gap_rejection_and_unnecessary_extra_cycle_are_bounded():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-14")
+    no_gap = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        actual_duration_minutes=20,
+        requested_cycles=0,
+    )
+    assert no_gap.accepted is True
+    assert no_gap.no_justified_gap is True
+    assert no_gap.final_disposition == "no_justified_capability_gap"
+
+    rejected = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=20,
+        reject_first_capability=True,
+    )
+    assert rejected.accepted is True
+    assert rejected.final_disposition == "capability_rejected"
+    assert "rejected" in rejected.cycles[0].lifecycle
+
+    unnecessary = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=30,
+        requested_cycles=2,
+        request_unnecessary_third_cycle=True,
+    )
+    assert unnecessary.accepted is False
+    assert unnecessary.reason == "unnecessary_additional_cycle_denied"
+
+
+def test_live_14_later_rollback_preserves_earlier_capability_and_restart_pauses():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-14")
+    result = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=30,
+        requested_cycles=2,
+        rollback_second_capability=True,
+    )
+    assert result.accepted is True
+    assert result.final_disposition == "capability_rolled_back"
+    assert result.cycles[1].rollback_performed is True
+    assert result.cycles[1].rollback_preserved_prior_capabilities is True
+    assert result.promotion_activation_evidence == ("live14-cycle-1-promotion-activation",)
+
+    recovered = gsr.recover_oar_runtime_after_restart(result.state, integrity_valid=True)
+    replay = gsr.run_live_14_recursive_cognitive_development_campaign(
+        recovered,
+        parent_mission=gsr.LIVE_14_MISSION,
+        source_records=_live13_source_records(),
+        actual_duration_minutes=30,
+        requested_cycles=1,
+        restart_recovery=True,
+    )
+    assert recovered.automatic_resume_performed is False
+    assert replay.state.development_runtime_mode == "paused"
+    assert replay.autonomous_continuation is False
+
+
+def test_live_14_scope_duration_and_cycle_limits_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-14")
+    wrong = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission="make an opaque cognition upgrade",
+        actual_duration_minutes=20,
+    )
+    assert wrong.reason == "mission_identity_mismatch"
+
+    duration = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        actual_duration_minutes=241,
+    )
+    assert duration.reason == "duration_budget_denied"
+
+    cycles = gsr.run_live_14_recursive_cognitive_development_campaign(
+        state,
+        parent_mission=gsr.LIVE_14_MISSION,
+        actual_duration_minutes=20,
+        requested_cycles=4,
+    )
+    assert cycles.reason == "cycle_budget_denied"

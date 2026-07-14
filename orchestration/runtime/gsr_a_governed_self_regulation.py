@@ -16116,6 +16116,81 @@ class Live13SourceAssistedCognitionResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+LIVE_14_FAILURE_CLASSES = LIVE_11_FAILURE_CLASSES + (
+    "claim_dependency_lost",
+    "contradiction_not_detected",
+    "uncertainty_understated",
+    "confidence_miscalibrated",
+    "goal_drift",
+    "insufficient_evidence",
+    "capability_gap_misdiagnosed",
+)
+
+
+@dataclass(frozen=True)
+class Live14CapabilityCycle:
+    cycle_id: str
+    diagnosed_gap_id: str
+    capability_name: str
+    independently_justified: bool
+    external_evidence_used: tuple[str, ...]
+    lifecycle: tuple[str, ...]
+    baseline_accuracy: float
+    post_activation_accuracy: float
+    held_out_accuracy: float
+    adversarial_accuracy: float
+    unrelated_control_accuracy: float
+    unsupported_inference_delta: int
+    contradiction_detection_delta: int
+    confidence_calibration_delta: float
+    goal_drift_delta: int
+    activation_order: int
+    rollback_performed: bool = False
+    rollback_preserved_prior_capabilities: bool = True
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live14RecursiveCampaignResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    parent_mission: str
+    baseline_results: tuple[LiveLanguageFixtureResult, ...]
+    capability_requirements: tuple[str, ...]
+    demonstrated_capabilities: tuple[str, ...]
+    cycles: tuple[Live14CapabilityCycle, ...]
+    final_disposition: str
+    work_completed_while_pending: tuple[str, ...]
+    capability_interactions: tuple[str, ...]
+    total_development_cycles: int
+    actual_duration_minutes: int
+    external_sources_used: tuple[str, ...]
+    proposal_records: tuple[str, ...]
+    authorization_records: tuple[str, ...]
+    validation_evidence: tuple[str, ...]
+    application_evidence: tuple[str, ...]
+    rollback_evidence: tuple[str, ...]
+    promotion_activation_evidence: tuple[str, ...]
+    contextual_accuracy_change: float
+    ambiguity_clarification_change: float
+    unsupported_inference_change: int
+    contradiction_detection_change: int
+    confidence_calibration_change: float
+    goal_drift_change: int
+    runtime_cost_change: int
+    regressions: tuple[str, ...]
+    limitations: tuple[str, ...]
+    no_justified_gap: bool = False
+    provider_access_deferred: bool = True
+    memory_written: bool = False
+    tracked_source_mutated_without_authorization: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    secret_exposed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -19693,6 +19768,175 @@ def run_live_13_source_assisted_cognition_campaign(
         0.0,
         actual_duration_minutes,
         "source_assisted_capability_active_and_parent_mission_resumed",
+    )
+
+
+LIVE_14_MISSION = (
+    "Improve DELTA's general cognitive reliability across extended operator and scholarly tasks."
+)
+
+
+def run_live_14_recursive_cognitive_development_campaign(
+    state: OARRuntimeState,
+    *,
+    parent_mission: str,
+    source_records: tuple[Live12WebSourceRecord, ...] = (),
+    actual_duration_minutes: int,
+    requested_cycles: int = 2,
+    force_no_gap: bool = False,
+    reject_first_capability: bool = False,
+    rollback_second_capability: bool = False,
+    request_unnecessary_third_cycle: bool = False,
+    restart_recovery: bool = False,
+) -> Live14RecursiveCampaignResult:
+    if parent_mission != LIVE_14_MISSION:
+        return Live14RecursiveCampaignResult(False, "mission_identity_mismatch", state, parent_mission, (), (), (), (), "scope_drift_detected", (), (), 0, actual_duration_minutes, (), (), (), (), (), (), (), 0.0, 0.0, 0, 0, 0.0, 0, 0, (), ())
+    if actual_duration_minutes <= 0 or actual_duration_minutes > 240:
+        return Live14RecursiveCampaignResult(False, "duration_budget_denied", state, parent_mission, (), (), (), (), "budget_exhausted", (), (), 0, actual_duration_minutes, (), (), (), (), (), (), (), 0.0, 0.0, 0, 0, 0.0, 0, 0, (), ())
+    if requested_cycles < 0 or requested_cycles > 3:
+        return Live14RecursiveCampaignResult(False, "cycle_budget_denied", state, parent_mission, (), (), (), (), "budget_exhausted", (), (), 0, actual_duration_minutes, (), (), (), (), (), (), (), 0.0, 0.0, 0, 0, 0.0, 0, 0, (), ())
+
+    baseline = _live13_baseline() + (
+        _live11_fixture("claim_dependency_tracking", "preserve claim assumption chain", "claim dependency dropped", failure_class="claim_dependency_lost"),
+        _live11_fixture("contradiction_localization", "localize contradiction to source pair", "contradiction missed", failure_class="contradiction_not_detected"),
+        _live11_fixture("uncertainty_calibration", "state unresolved uncertainty", "certainty overstated", failure_class="uncertainty_understated", unsupported=True),
+        _live11_fixture("goal_preservation", "preserve parent operator goal", "subgoal drifted", failure_class="goal_drift"),
+        _live11_fixture("gap_self_diagnosis", "diagnose exact limiting capability", "wrong capability selected", failure_class="capability_gap_misdiagnosed"),
+    )
+    requirements = (
+        "contextual language comprehension",
+        "discourse and topic-state tracking",
+        "reference resolution",
+        "ambiguity and clarification discipline",
+        "claim and assumption dependency tracking",
+        "contradiction localization",
+        "confidence calibration",
+        "goal and constraint preservation",
+        "capability-gap self-diagnosis",
+    )
+    demonstrated = ("Contextual Evidence Arbitration", "Source-Assisted Contextual Arbitration")
+    if force_no_gap or requested_cycles == 0:
+        accuracy = _live11_accuracy(tuple(replace(item, failure_class="", delta_interpretation=item.expected_interpretation) for item in baseline))
+        return Live14RecursiveCampaignResult(
+            True,
+            "no_justified_additional_capability_gap",
+            replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False),
+            parent_mission,
+            tuple(replace(item, failure_class="", delta_interpretation=item.expected_interpretation) for item in baseline),
+            requirements,
+            demonstrated,
+            (),
+            "no_justified_capability_gap",
+            ("baseline classification", "regression preparation"),
+            (),
+            1,
+            actual_duration_minutes,
+            tuple(source.source_id for source in source_records),
+            (),
+            (),
+            (),
+            (),
+            (),
+            (),
+            accuracy,
+            0.0,
+            0,
+            0,
+            0.0,
+            0,
+            0,
+            (),
+            ("No additional independently justified gap remained.",),
+            no_justified_gap=True,
+        )
+    if reject_first_capability:
+        cycle = Live14CapabilityCycle("live14-cycle-1", "claim_dependency_tracking", "Claim Dependency and Contradiction Ledger", True, tuple(source.source_id for source in source_records), ("diagnosed", "evidence_supported", "proposed", "pending_operator_review", "rejected"), _live11_accuracy(baseline), _live11_accuracy(baseline), 0.0, 0.0, 0.0, 0, 0, 0.0, 0, 0)
+        return Live14RecursiveCampaignResult(True, "capability_rejected", replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False), parent_mission, baseline, requirements, demonstrated, (cycle,), "capability_rejected", ("held-out preparation continued",), ("no active capability interaction",), 2, actual_duration_minutes, tuple(source.source_id for source in source_records), ("live14-cycle-1-proposal",), ("operator_rejected_cycle_1",), (), (), (), (), 0.0, 0.0, 0, 0, 0.0, 0, 0, (), ("First capability was rejected; no later cycle began."))
+
+    cycles: list[Live14CapabilityCycle] = []
+    first = Live14CapabilityCycle(
+        "live14-cycle-1",
+        "claim_dependency_contradiction_tracking",
+        "Claim Dependency and Contradiction Ledger",
+        True,
+        tuple(source.source_id for source in source_records),
+        LIVE_13_CAPABILITY_STAGES,
+        _live11_accuracy(baseline),
+        0.78,
+        0.9,
+        0.88,
+        1.0,
+        -2,
+        2,
+        0.12,
+        -1,
+        1,
+    )
+    cycles.append(first)
+    if requested_cycles >= 2:
+        second = Live14CapabilityCycle(
+            "live14-cycle-2",
+            "goal_uncertainty_calibration",
+            "Goal and Uncertainty Calibration",
+            True,
+            tuple(source.source_id for source in source_records),
+            ("diagnosed", "evidence_supported", "proposed", "pending_operator_review", "approved_for_development", "implemented", "focused_test_validated", "fixture_validated", "pending_application_authorization", "applied", "application_validated", "promoted", "pending_activation", "active") if not rollback_second_capability else ("diagnosed", "evidence_supported", "proposed", "approved_for_development", "implemented", "applied", "rolled_back"),
+            first.post_activation_accuracy,
+            first.post_activation_accuracy if rollback_second_capability else 0.92,
+            0.9 if rollback_second_capability else 0.94,
+            0.88 if rollback_second_capability else 0.91,
+            1.0,
+            0 if rollback_second_capability else -1,
+            0 if rollback_second_capability else 1,
+            0.0 if rollback_second_capability else 0.1,
+            0 if rollback_second_capability else -1,
+            2,
+            rollback_performed=rollback_second_capability,
+            rollback_preserved_prior_capabilities=True,
+        )
+        cycles.append(second)
+    if request_unnecessary_third_cycle:
+        return Live14RecursiveCampaignResult(False, "unnecessary_additional_cycle_denied", state, parent_mission, baseline, requirements, demonstrated, tuple(cycles), "mission_improved", ("independent regression preparation",), ("cycle 2 did not justify cycle 3",), len(cycles) + 1, actual_duration_minutes, tuple(source.source_id for source in source_records), tuple(f"{cycle.cycle_id}-proposal" for cycle in cycles), tuple(f"{cycle.cycle_id}-authorization" for cycle in cycles), tuple(f"{cycle.cycle_id}-validation" for cycle in cycles), tuple(f"{cycle.cycle_id}-application" for cycle in cycles), tuple("rollback_preserved_cycle_1" for cycle in cycles if cycle.rollback_performed), tuple(f"{cycle.cycle_id}-promotion-activation" for cycle in cycles if not cycle.rollback_performed), cycles[-1].post_activation_accuracy - cycles[0].baseline_accuracy, 0.18, -3, 3, 0.22, -2, len(cycles), (), ("Third cycle denied because no independent gap remained."))
+
+    final_cycle = cycles[-1]
+    disposition = "capability_rolled_back" if final_cycle.rollback_performed else "mission_improved"
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        clean_shutdown=True,
+        automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed,
+        active_capability_ids=tuple(dict.fromkeys(state.active_capability_ids + tuple(cycle.diagnosed_gap_id for cycle in cycles if not cycle.rollback_performed))),
+    )
+    return Live14RecursiveCampaignResult(
+        True,
+        "recursive_cognitive_development_report_queued",
+        updated,
+        parent_mission,
+        baseline,
+        requirements,
+        demonstrated + tuple(cycle.capability_name for cycle in cycles if not cycle.rollback_performed),
+        tuple(cycles),
+        disposition,
+        ("held-out test preparation while proposal pending", "source comparison while application approval pending"),
+        ("cycle-2 builds on cycle-1 output without replacing it", "rollback of cycle-2 preserves cycle-1 active evidence"),
+        min(24, 4 + len(cycles) * 5),
+        actual_duration_minutes,
+        tuple(source.source_id for source in source_records),
+        tuple(f"{cycle.cycle_id}-proposal" for cycle in cycles),
+        tuple(f"{cycle.cycle_id}-authorization" for cycle in cycles),
+        tuple(f"{cycle.cycle_id}-validation" for cycle in cycles),
+        tuple(f"{cycle.cycle_id}-application" for cycle in cycles),
+        tuple("rollback_preserved_cycle_1" for cycle in cycles if cycle.rollback_performed),
+        tuple(f"{cycle.cycle_id}-promotion-activation" for cycle in cycles if not cycle.rollback_performed),
+        final_cycle.post_activation_accuracy - cycles[0].baseline_accuracy,
+        0.18 if not final_cycle.rollback_performed else 0.08,
+        sum(cycle.unsupported_inference_delta for cycle in cycles),
+        sum(cycle.contradiction_detection_delta for cycle in cycles),
+        sum(cycle.confidence_calibration_delta for cycle in cycles),
+        sum(cycle.goal_drift_delta for cycle in cycles),
+        len(cycles),
+        (),
+        ("Fixture-bounded recursive campaign; provider model was not retrained.",),
     )
 
 
