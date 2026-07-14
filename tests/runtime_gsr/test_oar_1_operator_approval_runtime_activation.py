@@ -1926,3 +1926,154 @@ def test_live_8_consumed_authorizations_prevent_restart_duplicate_calls():
     assert advisory.accepted is True
     assert replay_advisory.accepted is False
     assert replay_advisory.reason == "advisory_authorization_unavailable"
+
+
+def _live_9_sources() -> tuple[gsr.LiveSourceEvidenceRecord, ...]:
+    contents = (
+        ("local://euclid-i-47", "approved_local_document", "Euclid-style proof constructs squares on the sides of a right triangle."),
+        ("https://example.org/rearrangement", "approved_primary_web_source", "A rearrangement proof compares areas of four congruent right triangles."),
+        ("https://example.org/similarity", "approved_secondary_web_source", "A similarity proof uses altitude to the hypotenuse and proportionality."),
+    )
+    records: list[gsr.LiveSourceEvidenceRecord] = []
+    for index, (location, source_class, content) in enumerate(contents):
+        request, _ = _source_request(source_class=source_class, location=location, content=content, sequence=230 + index)
+        authorization = gsr.make_live_source_acquisition_authorization(request, issued_sequence=230 + index, expiration_sequence=240)
+        result = gsr.acquire_live_source_evidence(
+            request,
+            authorization,
+            sequence=231 + index,
+            content=content,
+            title=f"LIVE-9 source {index}",
+            author_or_publisher="operator-approved fixture",
+        )
+        assert result.accepted is True
+        assert result.evidence is not None
+        records.append(result.evidence)
+    return tuple(records)
+
+
+def test_live_9_extended_campaign_produces_evidence_linked_report():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-9")
+    result = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=_live_9_sources(),
+        actual_duration_minutes=120,
+        pending_operator_question=True,
+        independent_work_available=True,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "extended_scholar_campaign_report_queued"
+    assert result.parent_mission == gsr.LIVE_9_MISSION
+    assert result.actual_duration_minutes == 120
+    assert 0 < result.cycles_completed <= 12
+    assert len(result.sources) == 3
+    assert len(result.conjectures) <= 3
+    assert result.falsified_conjecture_ids == ("live9-conjecture-single-invariant",)
+    assert result.independent_work_completed_while_pending is True
+    assert all(claim.evidence_class in gsr.LIVE_7_EVIDENCE_CLASSES for claim in result.claims)
+    assert any(claim.evidence_class == "source_claim" for claim in result.claims)
+    assert any(claim.evidence_class == "contradiction" for claim in result.claims)
+    assert all(derivation.reproduced for derivation in result.derivations)
+    assert result.capability_development_used is True
+    assert result.capability_promoted is True
+    assert result.capability_activated is True
+    assert result.provider_called is False
+    assert result.model_invoked is False
+    assert result.network_used is False
+    assert result.tracked_source_mutated is False
+    assert result.git_operation_performed is False
+    assert result.autonomous_continuation is False
+
+
+def test_live_9_operator_rejection_and_capability_not_required_paths_are_bounded():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-9")
+    rejected = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=_live_9_sources(),
+        actual_duration_minutes=120,
+        operator_accepts_capability=False,
+    )
+    assert rejected.accepted is True
+    assert rejected.reason == "paused_capability_rejected"
+    assert rejected.capability_promoted is False
+    assert rejected.capability_activated is False
+    assert rejected.derivations == ()
+    assert any(claim.evidence_class == "insufficient_evidence" for claim in rejected.claims)
+
+    not_required = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=_live_9_sources(),
+        actual_duration_minutes=120,
+        capability_required=False,
+    )
+    assert not_required.accepted is True
+    assert not_required.capability_development_used is False
+    assert not_required.capability_gap_ids == ()
+
+
+def test_live_9_scope_duration_source_and_restart_guards_fail_closed():
+    state = gsr.OARRuntimeState(runtime_state_id="state-live-9")
+    sources = _live_9_sources()
+    wrong_mission = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission="do general physics forever",
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=sources,
+        actual_duration_minutes=120,
+    )
+    assert wrong_mission.reason == "mission_identity_mismatch"
+
+    short = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=sources,
+        actual_duration_minutes=30,
+    )
+    assert short.reason == "attended_duration_insufficient"
+
+    too_many_sources = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=sources + sources,
+        actual_duration_minutes=120,
+    )
+    assert too_many_sources.reason == "source_budget_denied"
+
+    injected = replace(sources[0], untrusted_instruction_count=1)
+    unsafe = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=(injected,),
+        actual_duration_minutes=120,
+    )
+    assert unsafe.reason == "untrusted_source_instruction_present"
+
+    first = gsr.run_live_9_extended_scholar_campaign(
+        state,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=sources,
+        actual_duration_minutes=120,
+    )
+    recovered = gsr.recover_oar_runtime_after_restart(first.state, integrity_valid=True)
+    replay = gsr.run_live_9_extended_scholar_campaign(
+        recovered,
+        parent_mission=gsr.LIVE_9_MISSION,
+        topic="Compare several established derivations of the Pythagorean theorem.",
+        source_evidence=sources,
+        actual_duration_minutes=120,
+        restart_recovery=True,
+    )
+    assert recovered.automatic_resume_performed is False
+    assert replay.duplicate_work_prevented is True
+    assert replay.state.development_runtime_mode == "paused"

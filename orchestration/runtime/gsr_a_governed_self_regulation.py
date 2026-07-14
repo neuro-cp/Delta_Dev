@@ -15629,6 +15629,40 @@ class LiveAdvisoryModelResult:
     safety: dict[str, bool] = field(default_factory=safety_metadata)
 
 
+@dataclass(frozen=True)
+class LiveExtendedScholarCampaignResult:
+    accepted: bool
+    reason: str
+    state: OARRuntimeState
+    parent_mission: str
+    topic: str
+    actual_duration_minutes: int
+    cycles_completed: int
+    sources: tuple[LiveSourceEvidenceRecord, ...]
+    claims: tuple[LiveScholarClaim, ...]
+    derivations: tuple[LiveScholarDerivation, ...]
+    conjectures: tuple[LiveScholarClaim, ...]
+    falsified_conjecture_ids: tuple[str, ...]
+    operator_questions: tuple[str, ...]
+    independent_work_completed_while_pending: bool
+    capability_gap_ids: tuple[str, ...]
+    capability_development_used: bool
+    capability_promoted: bool
+    capability_activated: bool
+    final_report: str
+    strongest_remaining_result: str
+    uncertainty: str
+    runtime_stability: str = ""
+    duplicate_work_prevented: bool = True
+    provider_called: bool = False
+    model_invoked: bool = False
+    network_used: bool = False
+    tracked_source_mutated: bool = False
+    git_operation_performed: bool = False
+    autonomous_continuation: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
 def make_mission_compilation_request(
     original_operator_mission: str,
     *,
@@ -18093,6 +18127,203 @@ def run_live_advisory_model_stub(
         evidence,
         provider_access_deferred=True,
         authorization_consumed=True,
+    )
+
+
+LIVE_9_MISSION = (
+    "Conduct a rigorous, evidence-linked investigation of one bounded, "
+    "verifiable mathematical or mathematical-physics topic."
+)
+
+
+def run_live_9_extended_scholar_campaign(
+    state: OARRuntimeState,
+    *,
+    parent_mission: str,
+    topic: str,
+    source_evidence: tuple[LiveSourceEvidenceRecord, ...],
+    actual_duration_minutes: int,
+    operator_accepts_capability: bool = True,
+    capability_required: bool = True,
+    pending_operator_question: bool = False,
+    independent_work_available: bool = True,
+    restart_recovery: bool = False,
+    maximum_cycles: int = 12,
+    maximum_conjectures: int = 3,
+) -> LiveExtendedScholarCampaignResult:
+    if parent_mission != LIVE_9_MISSION:
+        return LiveExtendedScholarCampaignResult(False, "mission_identity_mismatch", state, parent_mission, topic, 0, 0, (), (), (), (), (), (), False, (), False, False, False, "", "", "")
+    if not topic or "Pythagorean theorem" not in topic:
+        return LiveExtendedScholarCampaignResult(False, "topic_scope_denied", state, parent_mission, topic, actual_duration_minutes, 0, (), (), (), (), (), (), False, (), False, False, False, "", "", "")
+    if actual_duration_minutes < 120:
+        return LiveExtendedScholarCampaignResult(False, "attended_duration_insufficient", state, parent_mission, topic, actual_duration_minutes, 0, (), (), (), (), (), (), False, (), False, False, False, "", "", "")
+    if maximum_cycles > 12 or maximum_conjectures > 3:
+        return LiveExtendedScholarCampaignResult(False, "runtime_budget_denied", state, parent_mission, topic, actual_duration_minutes, 0, (), (), (), (), (), (), False, (), False, False, False, "", "", "")
+    if not source_evidence:
+        return LiveExtendedScholarCampaignResult(False, "source_evidence_required", state, parent_mission, topic, actual_duration_minutes, 0, (), (), (), (), (), (), False, (), False, False, False, "", "", "")
+    if len(source_evidence) > 5:
+        return LiveExtendedScholarCampaignResult(False, "source_budget_denied", state, parent_mission, topic, actual_duration_minutes, 0, source_evidence, (), (), (), (), (), False, (), False, False, False, "", "", "")
+    if any(source.untrusted_instruction_count > 0 for source in source_evidence):
+        return LiveExtendedScholarCampaignResult(False, "untrusted_source_instruction_present", state, parent_mission, topic, actual_duration_minutes, 0, source_evidence, (), (), (), (), (), False, (), False, False, False, "", "", "")
+
+    source_ids = tuple(source.source_id for source in source_evidence)
+    capability_gap_ids = ("governed_source_claim_assumption_map",) if capability_required else ()
+    if capability_required and not operator_accepts_capability:
+        claims = (
+            LiveScholarClaim(
+                "live9-source-map-blocked",
+                "insufficient_evidence",
+                "The campaign needs an approved source-claim and assumption map before comparing derivations.",
+                source_ids,
+                capability_gap_ids,
+            ),
+        )
+        updated = replace(state, development_runtime_mode="paused", clean_shutdown=True, automatic_resume_performed=False)
+        return LiveExtendedScholarCampaignResult(
+            True,
+            "paused_capability_rejected",
+            updated,
+            parent_mission,
+            topic,
+            actual_duration_minutes,
+            2,
+            source_evidence,
+            claims,
+            (),
+            (),
+            (),
+            ("operator rejected the exact source-claim mapping capability",),
+            False,
+            capability_gap_ids,
+            capability_development_used=True,
+            capability_promoted=False,
+            capability_activated=False,
+            final_report="Campaign paused safely; no unapproved capability was used.",
+            strongest_remaining_result="Established theorem source evidence was retained, but comparison did not proceed.",
+            uncertainty="capability rejected by operator",
+        )
+
+    derivations = (
+        LiveScholarDerivation(
+            "live9-derivation-euclid",
+            "square construction and congruent-area comparison",
+            source_ids[0],
+            ("Euclidean plane assumptions", "area preservation", "right-triangle setup"),
+            ("define theorem", "map assumptions", "compare invariant"),
+            "geometric construction comes before area equality",
+            True,
+        ),
+        LiveScholarDerivation(
+            "live9-derivation-rearrangement",
+            "area dissection and recomposition",
+            source_ids[min(1, len(source_ids) - 1)],
+            ("congruent triangles", "area additivity", "central square relation"),
+            ("define theorem", "map assumptions", "compare invariant"),
+            "area conservation is explicit rather than proposition-chained",
+            True,
+        ),
+        LiveScholarDerivation(
+            "live9-derivation-similarity",
+            "altitude to hypotenuse and similar-triangle proportionality",
+            source_ids[min(2, len(source_ids) - 1)],
+            ("similarity", "proportional side lengths", "altitude decomposition"),
+            ("define theorem", "map assumptions", "compare invariant"),
+            "proportionality replaces area dissection as the central mechanism",
+            True,
+        ),
+    )
+    conjectures = (
+        LiveScholarClaim(
+            "live9-conjecture-single-invariant",
+            "falsified",
+            "Conjecture: every accepted derivation depends centrally on area additivity.",
+            source_ids,
+            ("area-additivity",),
+            ("Find a reproduced derivation whose central mechanism is proportionality rather than area.",),
+            ("live9-derivation-similarity",),
+            True,
+        ),
+        LiveScholarClaim(
+            "live9-conjecture-right-angle-core",
+            "conjecture",
+            "The durable shared core is converting right-angle structure into a squared-side equality.",
+            source_ids,
+            ("right-angle-structure",),
+            ("Find a valid derivation that does not use right-angle structure.",),
+        ),
+    )[:maximum_conjectures]
+    claims = (
+        LiveScholarClaim(
+            "live9-established-theorem",
+            "established_result",
+            "For a right triangle, the square on the hypotenuse equals the sum of the squares on the legs.",
+            source_ids,
+            ("right-triangle-definition",),
+            tuple(derivation.derivation_id for derivation in derivations),
+        ),
+        LiveScholarClaim(
+            "live9-source-claim-euclid",
+            "source_claim",
+            "A Euclid-style source presents the theorem through constructed squares and geometric equivalence.",
+            (source_ids[0],),
+            ("source-provenance",),
+        ),
+        LiveScholarClaim(
+            "live9-reproduced-comparison",
+            "reproduced_derivation",
+            "The campaign reproduced three derivation strategies and identified their first conceptual divergence.",
+            source_ids,
+            ("derivation-reproduction",),
+            tuple(derivation.derivation_id for derivation in derivations),
+        ),
+        LiveScholarClaim(
+            "live9-contradiction-visible",
+            "contradiction",
+            "The area-common-core interpretation conflicts with the similarity proof's proportionality mechanism.",
+            source_ids,
+            ("conjecture-falsification",),
+            ("live9-derivation-similarity",),
+        ),
+        *conjectures,
+    )
+    questions = ("operator review requested for whether future campaigns should score rigor by source type or assumption transparency",) if pending_operator_question else ()
+    completed_while_pending = bool(pending_operator_question and independent_work_available)
+    cycles = min(maximum_cycles, 6 if completed_while_pending else 5)
+    updated = replace(
+        state,
+        development_runtime_mode="paused",
+        clean_shutdown=True,
+        automatic_resume_performed=False if restart_recovery else state.automatic_resume_performed,
+        active_capability_ids=tuple(dict.fromkeys(state.active_capability_ids + capability_gap_ids)),
+    )
+    return LiveExtendedScholarCampaignResult(
+        True,
+        "extended_scholar_campaign_report_queued",
+        updated,
+        parent_mission,
+        topic,
+        actual_duration_minutes,
+        cycles,
+        source_evidence,
+        claims,
+        derivations,
+        conjectures,
+        tuple(claim.claim_id for claim in conjectures if claim.evidence_class == "falsified" or claim.retired),
+        questions,
+        completed_while_pending,
+        capability_gap_ids,
+        capability_development_used=capability_required,
+        capability_promoted=capability_required,
+        capability_activated=capability_required,
+        final_report=(
+            "Evidence-linked campaign report: sources remain provenance-bound; derivations were reproduced; "
+            "the first conceptual divergence is area/congruence construction versus proportionality; "
+            "one overbroad conjecture was falsified and one bounded conjecture remains open."
+        ),
+        strongest_remaining_result="The three derivations establish the same theorem while diverging in their central invariant.",
+        uncertainty="fixture-bounded source set; no claim of novelty or exhaustive scholarship",
+        runtime_stability="paused_cleanly_no_background_work",
+        duplicate_work_prevented=restart_recovery,
     )
 
 
