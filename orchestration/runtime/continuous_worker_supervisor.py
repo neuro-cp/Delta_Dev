@@ -28,6 +28,7 @@ from orchestration.runtime.continuous_runtime_controller import (
     restore_continuous_mission_restart_state,
     start_continuous_runtime_controller,
 )
+from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
 
 
@@ -48,6 +49,7 @@ class ContinuousWorkerSupervisor:
     backoff_seconds: float = 0.25
     max_relaunches: int = 3
     complete_transition_once: bool = False
+    execute_active_subgoal: bool = False
     process: subprocess.Popen[str] | None = None
     relaunch_count: int = 0
     last_worker_pid: int = 0
@@ -78,6 +80,7 @@ def initialize_supervisor_state(
     backoff_seconds: float = 0.25,
     max_relaunches: int = 3,
     complete_transition_once: bool = False,
+    execute_active_subgoal: bool = False,
 ) -> ContinuousWorkerSupervisor:
     root = Path(supervisor_root)
     repo = Path(repository_root).resolve()
@@ -114,6 +117,7 @@ def initialize_supervisor_state(
         backoff_seconds=backoff_seconds,
         max_relaunches=max_relaunches,
         complete_transition_once=complete_transition_once,
+        execute_active_subgoal=execute_active_subgoal,
     )
 
 
@@ -143,6 +147,8 @@ def start_supervised_worker(supervisor: ContinuousWorkerSupervisor) -> Continuou
     ]
     if supervisor.complete_transition_once:
         command.append("--complete-transition-once")
+    if supervisor.execute_active_subgoal:
+        command.append("--execute-active-subgoal")
     env = dict(os.environ)
     env.pop("PYTHONPATH", None)
     env["PYTHONNOUSERSITE"] = "1"
@@ -163,6 +169,7 @@ def start_supervised_worker(supervisor: ContinuousWorkerSupervisor) -> Continuou
             "timestamp": utc_now(),
             "worker_pid": process.pid,
             "relaunch_count": supervisor.relaunch_count,
+            "repository_root": str(supervisor.repository_root),
             "restart_session_id": _read_json(supervisor.supervisor_root / RESTART_STATE).get("session_id"),
             "intentional_stop": False,
             "mission_lifecycle_owner": "continuous_runtime_controller",
@@ -188,6 +195,7 @@ def poll_supervisor_once(supervisor: ContinuousWorkerSupervisor) -> ContinuousWo
                 "timestamp": utc_now(),
                 "worker_pid": process.pid,
                 "relaunch_count": supervisor.relaunch_count,
+                "repository_root": str(supervisor.repository_root),
                 "intentional_stop": (supervisor.supervisor_root / INTENTIONAL_STOP).exists(),
                 "mission_lifecycle_owner": "continuous_runtime_controller",
             },
@@ -254,6 +262,7 @@ def worker_main(argv: list[str] | None = None) -> int:
     parser.add_argument("--supervisor-root", required=True)
     parser.add_argument("--heartbeat-interval", type=float, default=0.25)
     parser.add_argument("--complete-transition-once", action="store_true")
+    parser.add_argument("--execute-active-subgoal", action="store_true")
     args = parser.parse_args(argv)
     root = Path(args.supervisor_root)
     try:
@@ -262,6 +271,17 @@ def worker_main(argv: list[str] | None = None) -> int:
         session_id = str(restart_state.get("session_id") or "")
         controller = start_continuous_runtime_controller(session_id=session_id)
         controller = restore_continuous_mission_restart_state(controller, restart_state)
+        if args.execute_active_subgoal and controller.continuous_active_subgoal and not (root / "subgoal_execution_completed.json").exists():
+            supervisor_status = _read_json(root / SUPERVISOR_STATUS)
+            repository_root = Path(str(supervisor_status.get("repository_root") or ".")).resolve()
+            controller, execution = execute_continuous_active_subgoal(
+                controller,
+                artifact_root=root / "development",
+                repository_root=repository_root,
+                python_executable=sys.executable,
+            )
+            _atomic_write_json(root / "subgoal_execution_completed.json", execution.as_dict())
+            _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
         if args.complete_transition_once and controller.continuous_active_subgoal and not (root / TRANSITION_MARKER).exists():
             record = _worker_reassessment_record(controller)
             controller = consume_continuous_capability_reassessment(controller, record)
