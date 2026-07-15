@@ -675,6 +675,38 @@ def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGo
             completion_rationale=f"derived after {completed_goal.main_goal_id} because the broad objective explicitly requires articulate self-direction",
             next_main_goal_candidates=(),
         )
+    if completed_goal.normalized_objective == "grounded_operator_communication" and _is_developmental_direction(contract.original_operator_goal):
+        objective = "Develop meaningful-progress and stall detection for unattended developmental work"
+        normalized = "meaningful_progress_stall_detection"
+        criteria = (
+            "meaningful_transition_tracking",
+            "stalled_execution_detection",
+            "observation_mode_reactivation_or_honest_block",
+        )
+        return MainGoalContract(
+            main_goal_id=stable_id("continuous-main-goal", contract.mission_id, normalized, gained),
+            parent_mission_id=contract.mission_id,
+            original_objective=objective,
+            normalized_objective=normalized,
+            success_criteria=criteria,
+            evidence_requirements=("transition_ledger", "stalled_execution_record", "observation_reactivation_or_block_record"),
+            prerequisite_graph={
+                "meaningful_transition_tracking": (),
+                "stalled_execution_detection": ("meaningful_transition_tracking",),
+                "observation_mode_reactivation_or_honest_block": ("stalled_execution_detection",),
+            },
+            known_subgoals=(),
+            active_subgoal="",
+            completed_subgoals=(),
+            blocked_subgoals=(),
+            rejected_strategies=(),
+            newly_discovered_prerequisites=("stalled_execution_detection",),
+            residual_uncertainty="unattended development must distinguish meaningful work from liveness before free-running claims",
+            capability_changes=gained,
+            disposition="active",
+            completion_rationale=f"derived after {completed_goal.main_goal_id} because observation without meaningful work must be diagnosed instead of silently idling",
+            next_main_goal_candidates=(),
+        )
     if completed_goal.normalized_objective == "real_continuous_mission_execution":
         objective = "Improve autonomous evidence discovery and weakness formulation"
         normalized = "autonomous_evidence_discovery"

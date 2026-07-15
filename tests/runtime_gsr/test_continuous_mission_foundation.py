@@ -382,6 +382,44 @@ def test_articulate_development_goal_derives_grounded_communication_after_resour
     assert communication_subgoal[0]["affected_capability"] == "state_grounded_progress_summary"
 
 
+def test_grounded_communication_derives_meaningful_progress_stall_detection():
+    controller = start_continuous_runtime_controller(session_id="meaningful-progress-followup")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    first = MainGoalContract(**controller.continuous_main_goal)
+    records = ()
+    current = first
+    for expected in (
+        "developmental_self_assessment",
+        "developmental_self_direction_evidence",
+        "resource_backed_developmental_insight",
+        "grounded_operator_communication",
+    ):
+        assert current.normalized_objective == expected
+        goal_records = tuple(
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed",
+                    "successful_mechanism": criterion,
+                    "reassessment": "satisfied",
+                }
+            )
+            for criterion in current.success_criteria
+        )
+        records += goal_records
+        assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+        next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+        if expected != "grounded_operator_communication":
+            assert next_goal is not None
+            current = next_goal
+
+    assert next_goal is not None
+    assert next_goal.normalized_objective == "meaningful_progress_stall_detection"
+    evidence = derive_subgoal_evidence_for_main_goal(next_goal, records, max_items=1)
+    assert evidence[0]["affected_capability"] == "meaningful_transition_tracking"
+
+
 def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():
     objective = compile_long_horizon_objective("Become capable of mastering the sciences")
     knowledge = (
