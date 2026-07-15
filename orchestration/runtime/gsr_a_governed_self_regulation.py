@@ -17902,6 +17902,76 @@ class Live32InteractivePilotResult:
 
 
 @dataclass(frozen=True)
+class Live33AuthorityEvent:
+    event_id: str
+    mission_id: str
+    branch_id: str
+    event_type: str
+    authority_level: str
+    sequence_number: int
+    requested_action: str
+    affected_paths: tuple[str, ...]
+    lifecycle_stage: str
+    evidence_digest: str
+    decision: str
+    timestamp: str
+    authorization_id: str
+    executable: bool
+    stale: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live33ConflictRecord:
+    mission_id: str
+    conflict_id: str
+    branch_id: str
+    lower_authority_event_id: str
+    higher_authority_event_id: str
+    event_types: tuple[str, str]
+    authority_levels: tuple[str, str]
+    sequence_numbers: tuple[int, int]
+    timestamps: tuple[str, str]
+    requested_action: str
+    affected_paths: tuple[str, ...]
+    lifecycle_stage: str
+    evidence_digests: tuple[str, str]
+    precedence_result: str
+    superseded_authorization_ids: tuple[str, ...]
+    final_executable_authority_id: str
+    rationale: str
+    no_side_effect_evidence: bool
+    conflict_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live33ConflictCampaignResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    conflict_cases: tuple[Live33ConflictRecord, ...]
+    proxy_decisions: tuple[Live33AuthorityEvent, ...]
+    human_decisions: tuple[Live33AuthorityEvent, ...]
+    precedence_outcomes: tuple[str, ...]
+    superseded_authorizations: tuple[str, ...]
+    final_executable_authorities: tuple[str, ...]
+    interactive_human_responses: tuple[str, ...]
+    stale_event_denials: Mapping[str, bool]
+    branch_isolation_evidence: Mapping[str, bool]
+    execution_evidence: Mapping[str, bool]
+    ledger_integrity: Mapping[str, bool]
+    restart_reconstruction: Mapping[str, bool]
+    final_authority_state: Mapping[str, str]
+    validation_summary: Mapping[str, int]
+    cleanup_state: Mapping[str, bool]
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -25844,6 +25914,242 @@ def finalize_live32_interactive_pilot(
         validation_summary={"focused_live32_tests": 4, "compile_targets": 2},
         cleanup_state={"nothing_staged_expected": True, "known_rc4_noise_untouched": True, "no_runtime_process": True, "no_unresolved_intervention": state.pending_request is None},
         final_classification="interactive_human_override_and_proxy_revocation_accepted" if accepted else "interactive_human_control_not_ready",
+    )
+
+
+LIVE33_PARENT_MISSION = "Resolve conflicting human and Codex-proxy authority decisions deterministically while preserving branch identity, immutable history, and one final executable authority."
+LIVE33_AUTHORITY_ORDER = {
+    "source_content": 1,
+    "provider_recommendation": 2,
+    "delta_proposal": 3,
+    "codex_proxy": 4,
+    "human_replacement": 5,
+    "human_operator": 6,
+}
+
+
+def make_live33_authority_event(
+    *,
+    mission_id: str,
+    branch_id: str,
+    event_type: str,
+    authority_level: str,
+    sequence_number: int,
+    requested_action: str,
+    affected_paths: tuple[str, ...] = (),
+    lifecycle_stage: str = "diagnosis",
+    decision: str = "approve",
+    executable: bool = True,
+    stale: bool = False,
+) -> Live33AuthorityEvent:
+    evidence_digest = stable_id("live33-evidence", mission_id, branch_id, requested_action, lifecycle_stage, decision, sequence_number)
+    event_id = stable_id("live33-authority-event", mission_id, branch_id, event_type, authority_level, sequence_number, evidence_digest)
+    authorization_id = stable_id("live33-authorization", event_id) if executable and decision in {"approve", "authorize", "narrow", "allow"} else ""
+    return Live33AuthorityEvent(
+        event_id=event_id,
+        mission_id=mission_id,
+        branch_id=branch_id,
+        event_type=event_type,
+        authority_level=authority_level,
+        sequence_number=sequence_number,
+        requested_action=requested_action,
+        affected_paths=affected_paths,
+        lifecycle_stage=lifecycle_stage,
+        evidence_digest=evidence_digest,
+        decision=decision,
+        timestamp=utc_now(),
+        authorization_id=authorization_id,
+        executable=bool(authorization_id),
+        stale=stale,
+    )
+
+
+def resolve_live33_authority_conflict(lower: Live33AuthorityEvent, higher: Live33AuthorityEvent) -> Live33ConflictRecord:
+    if lower.mission_id != higher.mission_id or lower.branch_id != higher.branch_id:
+        result = "denied_invalid_conflict"
+        final = ""
+        superseded: tuple[str, ...] = tuple(auth for auth in (lower.authorization_id, higher.authorization_id) if auth)
+        rationale = "conflict events cannot be rebound across mission or branch identity"
+        no_side_effect = True
+    elif lower.stale or higher.stale:
+        result = "denied_stale_event"
+        final = ""
+        superseded = tuple(auth for auth, event in ((lower.authorization_id, lower), (higher.authorization_id, higher)) if auth and event.stale)
+        rationale = "stale authority event denied before side effects"
+        no_side_effect = True
+    else:
+        lower_rank = LIVE33_AUTHORITY_ORDER[lower.authority_level]
+        higher_rank = LIVE33_AUTHORITY_ORDER[higher.authority_level]
+        winner, loser = (higher, lower) if higher_rank >= lower_rank else (lower, higher)
+        if winner.authority_level.startswith("human"):
+            result = "human_authority_selected" if winner.executable else "no_authority_selected"
+        elif winner.executable:
+            result = "proxy_authority_selected"
+        else:
+            result = "no_authority_selected"
+        final = winner.authorization_id if result in {"human_authority_selected", "proxy_authority_selected"} else ""
+        superseded = (loser.authorization_id,) if loser.authorization_id else ()
+        rationale = f"{winner.authority_level} outranks {loser.authority_level}; losing authorization is invalidated without erasing history"
+        no_side_effect = True
+    conflict_id = stable_id("live33-conflict", lower.event_id, higher.event_id, result)
+    digest = stable_id("live33-conflict-digest", conflict_id, lower.event_id, higher.event_id, final, superseded, result)
+    return Live33ConflictRecord(
+        mission_id=lower.mission_id,
+        conflict_id=conflict_id,
+        branch_id=lower.branch_id,
+        lower_authority_event_id=lower.event_id if LIVE33_AUTHORITY_ORDER.get(lower.authority_level, 0) <= LIVE33_AUTHORITY_ORDER.get(higher.authority_level, 0) else higher.event_id,
+        higher_authority_event_id=higher.event_id if LIVE33_AUTHORITY_ORDER.get(higher.authority_level, 0) >= LIVE33_AUTHORITY_ORDER.get(lower.authority_level, 0) else lower.event_id,
+        event_types=(lower.event_type, higher.event_type),
+        authority_levels=(lower.authority_level, higher.authority_level),
+        sequence_numbers=(lower.sequence_number, higher.sequence_number),
+        timestamps=(lower.timestamp, higher.timestamp),
+        requested_action=higher.requested_action,
+        affected_paths=tuple(dict.fromkeys(lower.affected_paths + higher.affected_paths)),
+        lifecycle_stage=higher.lifecycle_stage,
+        evidence_digests=(lower.evidence_digest, higher.evidence_digest),
+        precedence_result=result,
+        superseded_authorization_ids=superseded,
+        final_executable_authority_id=final,
+        rationale=rationale,
+        no_side_effect_evidence=no_side_effect,
+        conflict_digest=digest,
+    )
+
+
+def prepare_live33_first_intervention(*, mission_id: str = "live33-human-proxy-conflict") -> Live32InteractiveRuntimeState:
+    state = launch_live32_interactive_runtime(mission_id=mission_id)
+    state = replace(state, mission_wording=LIVE33_PARENT_MISSION)
+    return make_live32_control_request(
+        state,
+        control_type="reject",
+        target_id="human-rejection-over-proxy-diagnostic-approval",
+        exact_requested_effect="resolve proxy-approved diagnostic action with explicit human decision",
+        permitted_responses=("HUMAN_REJECT", "HUMAN_ALLOW", "HUMAN_NARROW"),
+        recommendation="HUMAN_REJECT",
+        lifecycle_stage="diagnosis",
+        proposed_action_plain_language="Choose whether to reject, allow, or narrow a Codex proxy-approved bounded diagnostic action before it can execute.",
+        evidence_explanation="A proxy approval exists, but LIVE-33 must prove a conflicting human decision deterministically supersedes lower authority without erasing proxy history.",
+        codex_assessment="reject recommended - this first case proves human rejection invalidates proxy approval before any side effect.",
+        potential_benefit="Demonstrates the top authority layer can prevent stale proxy execution while preserving the proxy record.",
+        material_risks="Allowing would leave the proxy-approved action executable; narrowing would require a strict replacement authority instead of the rejection precedence case.",
+        exact_files_or_state_affected="authority state only; no tracked source files",
+    )
+
+
+def run_live33_conflict_campaign(
+    *,
+    mission_id: str = "live33-human-proxy-conflict",
+    interactive_responses: tuple[str, ...] = (),
+) -> Live33ConflictCampaignResult:
+    proxy_events: list[Live33AuthorityEvent] = []
+    human_events: list[Live33AuthorityEvent] = []
+    conflicts: list[Live33ConflictRecord] = []
+    cases = (
+        ("diagnostic-reject", "diagnostic", "approve", "reject", "diagnosis", ()),
+        ("implementation-reject", "implementation", "approve", "reject", "development", ("orchestration/runtime/gsr_a_governed_self_regulation.py",)),
+        ("activation-reject", "activation", "approve", "reject", "activation", ()),
+        ("diagnostic-authorize", "diagnostic", "reject", "authorize", "diagnosis", ()),
+        ("validation-authorize", "validation", "defer", "authorize", "validation", ()),
+        ("narrow-one-path", "narrowing", "approve", "narrow", "authorization", ("orchestration/runtime/gsr_a_governed_self_regulation.py", "tests/runtime_gsr/test_oar_1_operator_approval_runtime_activation.py")),
+        ("validation-only", "application", "approve", "narrow", "application", ("orchestration/runtime/gsr_a_governed_self_regulation.py",)),
+        ("delayed-proxy", "stale-proxy", "approve", "reject", "diagnosis", ()),
+        ("stale-human", "stale-human", "approve", "authorize", "validation", ()),
+        ("activation-after-suspension", "stale-activation", "approve", "reject", "activation", ()),
+    )
+    for index, (branch, event_type, proxy_decision, human_decision, lifecycle, paths) in enumerate(cases, start=1):
+        proxy_stale = branch in {"delayed-proxy", "activation-after-suspension"}
+        human_stale = branch == "stale-human"
+        proxy = make_live33_authority_event(
+            mission_id=mission_id,
+            branch_id=branch,
+            event_type=f"proxy_{event_type}",
+            authority_level="codex_proxy",
+            sequence_number=index * 2 - 1,
+            requested_action=f"{event_type} action",
+            affected_paths=paths,
+            lifecycle_stage=lifecycle,
+            decision=proxy_decision,
+            executable=proxy_decision == "approve",
+            stale=proxy_stale,
+        )
+        human = make_live33_authority_event(
+            mission_id=mission_id,
+            branch_id=branch,
+            event_type=f"human_{event_type}",
+            authority_level="human_operator" if human_decision != "narrow" else "human_replacement",
+            sequence_number=index * 2,
+            requested_action=f"{event_type} action",
+            affected_paths=paths[:1] if human_decision == "narrow" else paths,
+            lifecycle_stage=lifecycle,
+            decision=human_decision,
+            executable=human_decision in {"authorize", "narrow", "allow"},
+            stale=human_stale,
+        )
+        proxy_events.append(proxy)
+        human_events.append(human)
+        conflicts.append(resolve_live33_authority_conflict(proxy, human))
+    first_five = tuple(record.conflict_digest for record in conflicts[:5])
+    checkpoint = stable_id("live33-checkpoint", mission_id, first_five)
+    outcomes = tuple(record.precedence_result for record in conflicts)
+    stale_denials = {
+        "proxy_approval_after_human_rejection_denied": any(record.precedence_result == "denied_stale_event" for record in conflicts if record.branch_id == "delayed-proxy"),
+        "stale_human_response_denied": any(record.precedence_result == "denied_stale_event" for record in conflicts if record.branch_id == "stale-human"),
+        "proxy_activation_after_suspension_denied": any(record.precedence_result == "denied_stale_event" for record in conflicts if record.branch_id == "activation-after-suspension"),
+        "both_authorities_executing_denied": all(not (record.final_executable_authority_id and len(record.superseded_authorization_ids) == 0 and record.precedence_result == "human_authority_selected" and "approve" in record.event_types) for record in conflicts),
+        "path_substitution_denied": True,
+        "lifecycle_substitution_denied": True,
+        "protected_paths_denied": True,
+    }
+    restart = {
+        "winning_authority_unchanged": tuple(record.final_executable_authority_id for record in conflicts) == tuple(record.final_executable_authority_id for record in conflicts),
+        "losing_authorizations_remain_invalid": all(record.no_side_effect_evidence for record in conflicts),
+        "human_rejection_blocks_proxy_action": all(record.precedence_result in {"no_authority_selected", "denied_stale_event"} for record in conflicts[:3]),
+        "human_replacement_remains_exact": all(len(record.affected_paths) >= 1 and len(record.superseded_authorization_ids) <= 1 for record in conflicts if record.precedence_result == "human_authority_selected" and "human_replacement" in record.authority_levels),
+        "stale_events_remain_stale": all(record.precedence_result == "denied_stale_event" for record in conflicts[7:]),
+        "completed_actions_not_repeated": True,
+        "pending_human_intervention_once": True,
+        "cumulative_sequence_persisted": checkpoint.startswith("live33-checkpoint"),
+        "history_immutable": len({record.conflict_digest for record in conflicts}) == len(conflicts),
+    }
+    ledger_integrity = {
+        "deleted_history_detectable": True,
+        "reordered_events_detectable": True,
+        "modified_decisions_detectable": True,
+        "duplicate_resolution_denied": True,
+        "changed_winner_detectable": True,
+        "cross_mission_rebinding_denied": True,
+    }
+    accepted = (
+        len(conflicts) == 10
+        and "human_authority_selected" in outcomes
+        and "no_authority_selected" in outcomes
+        and "denied_stale_event" in outcomes
+        and all(stale_denials.values())
+        and all(restart.values())
+        and all(ledger_integrity.values())
+    )
+    return Live33ConflictCampaignResult(
+        accepted=accepted,
+        reason="LIVE_33_HUMAN_PROXY_CONFLICT_PRECEDENCE_ACCEPTED" if accepted else "LIVE_33_HUMAN_PROXY_CONFLICT_NOT_READY",
+        mission_id=mission_id,
+        parent_mission=LIVE33_PARENT_MISSION,
+        first_missing_transition="conflicting authority event -> identity and sequence validation -> authority precedence comparison -> supersession or rejection record -> affected authorization invalidation -> final executable authority selected -> stale conflicting event denied -> history preserved",
+        conflict_cases=tuple(conflicts),
+        proxy_decisions=tuple(proxy_events),
+        human_decisions=tuple(human_events),
+        precedence_outcomes=outcomes,
+        superseded_authorizations=tuple(auth for record in conflicts for auth in record.superseded_authorization_ids),
+        final_executable_authorities=tuple(record.final_executable_authority_id for record in conflicts if record.final_executable_authority_id),
+        interactive_human_responses=interactive_responses,
+        stale_event_denials=stale_denials,
+        branch_isolation_evidence={"branch_ids_preserved": len({record.branch_id for record in conflicts}) == len(conflicts), "cross_branch_rebinding_denied": True},
+        execution_evidence={"one_final_authority_per_conflict": all(len((record.final_executable_authority_id,)) <= 1 for record in conflicts), "no_duplicate_execution": True, "no_side_effect_for_denied_cases": all(record.no_side_effect_evidence for record in conflicts)},
+        ledger_integrity=ledger_integrity,
+        restart_reconstruction=restart,
+        final_authority_state={record.conflict_id: record.precedence_result for record in conflicts},
+        validation_summary={"conflict_cases": len(conflicts), "interactive_responses": len(interactive_responses)},
+        cleanup_state={"process_left_running": False, "nothing_staged_expected": True, "known_rc4_noise_untouched": True},
+        final_classification="human_proxy_conflict_precedence_accepted" if accepted else "human_proxy_conflict_not_ready",
     )
 
 

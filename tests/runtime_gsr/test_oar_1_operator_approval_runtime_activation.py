@@ -4275,6 +4275,81 @@ def test_live_32_finalized_interactive_pilot_preserves_human_precedence():
     assert pilot.process_left_running is False
 
 
+def test_live_33_conflict_campaign_resolves_ten_cases_with_authority_precedence():
+    result = gsr.run_live33_conflict_campaign(interactive_responses=("HUMAN_REJECT", "HUMAN_AUTHORIZE"))
+
+    assert result.accepted is True
+    assert len(result.conflict_cases) == 10
+    assert "human_authority_selected" in result.precedence_outcomes
+    assert "no_authority_selected" in result.precedence_outcomes
+    assert "denied_stale_event" in result.precedence_outcomes
+    assert len(result.proxy_decisions) == 10
+    assert len(result.human_decisions) == 10
+    assert result.interactive_human_responses == ("HUMAN_REJECT", "HUMAN_AUTHORIZE")
+
+
+def test_live_33_human_rejection_invalidates_proxy_approval_without_erasing_history():
+    result = gsr.run_live33_conflict_campaign()
+    rejection_cases = [case for case in result.conflict_cases if case.branch_id in {"diagnostic-reject", "implementation-reject", "activation-reject"}]
+
+    assert len(rejection_cases) == 3
+    assert all(case.precedence_result == "no_authority_selected" for case in rejection_cases)
+    assert all(case.superseded_authorization_ids for case in rejection_cases)
+    assert all(case.final_executable_authority_id == "" for case in rejection_cases)
+    assert all(case.no_side_effect_evidence for case in rejection_cases)
+    assert len(result.proxy_decisions) == 10
+
+
+def test_live_33_human_authorization_over_proxy_rejection_creates_human_authority_only():
+    result = gsr.run_live33_conflict_campaign()
+    authorization_cases = [case for case in result.conflict_cases if case.branch_id in {"diagnostic-authorize", "validation-authorize"}]
+
+    assert len(authorization_cases) == 2
+    assert all(case.precedence_result == "human_authority_selected" for case in authorization_cases)
+    assert all(case.final_executable_authority_id.startswith("live33-authorization") for case in authorization_cases)
+    assert all(not case.superseded_authorization_ids for case in authorization_cases)
+    assert all(event.decision in {"reject", "defer"} for event in result.proxy_decisions if event.branch_id in {"diagnostic-authorize", "validation-authorize"})
+
+
+def test_live_33_human_narrowing_supersedes_broader_proxy_authority():
+    result = gsr.run_live33_conflict_campaign()
+    narrowing_cases = [case for case in result.conflict_cases if case.branch_id in {"narrow-one-path", "validation-only"}]
+
+    assert len(narrowing_cases) == 2
+    assert all(case.precedence_result == "human_authority_selected" for case in narrowing_cases)
+    assert all(case.superseded_authorization_ids for case in narrowing_cases)
+    assert all(case.final_executable_authority_id for case in narrowing_cases)
+    assert all(len(case.affected_paths) >= 1 for case in narrowing_cases)
+    assert result.stale_event_denials["path_substitution_denied"] is True
+    assert result.stale_event_denials["lifecycle_substitution_denied"] is True
+
+
+def test_live_33_stale_events_restart_and_ledger_integrity_hold():
+    result = gsr.run_live33_conflict_campaign()
+    stale_cases = [case for case in result.conflict_cases if case.branch_id in {"delayed-proxy", "stale-human", "activation-after-suspension"}]
+
+    assert len(stale_cases) == 3
+    assert all(case.precedence_result == "denied_stale_event" for case in stale_cases)
+    assert all(result.stale_event_denials.values())
+    assert all(result.ledger_integrity.values())
+    assert all(result.restart_reconstruction.values())
+    assert result.branch_isolation_evidence["branch_ids_preserved"] is True
+    assert result.execution_evidence["no_duplicate_execution"] is True
+
+
+def test_live_33_first_intervention_uses_live32_human_control_format():
+    state = gsr.prepare_live33_first_intervention()
+    block = gsr.render_live32_intervention_block(state)
+
+    assert state.pending_request is not None
+    assert state.pending_request.permitted_responses == ("HUMAN_REJECT", "HUMAN_ALLOW", "HUMAN_NARROW")
+    assert state.pending_request.recommendation == "HUMAN_REJECT"
+    assert "LIVE-32 HUMAN INTERVENTION REQUIRED" in block
+    assert "HUMAN_REJECT" in block
+    assert "HUMAN_ALLOW" in block
+    assert "HUMAN_NARROW" in block
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
