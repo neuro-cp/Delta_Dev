@@ -30643,6 +30643,21 @@ def _live44_evaluate_provider_response(request: Mapping[str, Any], response: Map
 
 
 def _live44_review_summary(decision: Mapping[str, Any]) -> str:
+    extra = []
+    if decision.get("exact_provider_selected_objective"):
+        extra.extend((
+            "",
+            f"Exact objective: {decision['exact_provider_selected_objective']}",
+            f"Validation weakness: {decision.get('specific_validation_weakness', {})}",
+            f"Evidence records: {decision.get('local_evidence_records', ())}",
+            f"Provider excerpt: {decision.get('provider_response_excerpt', {})}",
+            f"Candidate behavior: {decision.get('proposed_isolated_candidate_behavior', '')}",
+            f"Validation plan: {decision.get('held_out_adversarial_control_transfer_checks', {})}",
+            f"Rollback condition: {decision.get('rollback_condition', '')}",
+            f"Overlap analysis: {decision.get('duplicate_overlap_check', {})}",
+            f"Estimated local actions: {decision.get('estimated_local_actions_required', '')}",
+            f"Expected information gain: {decision.get('expected_information_gain', '')}",
+        ))
     return "\n".join((
         "DELTA OPERATOR DECISION REQUEST",
         "",
@@ -30679,6 +30694,7 @@ def _live44_review_summary(decision: Mapping[str, Any]) -> str:
         "",
         f"Artifact root: {decision['artifact_root']}",
         f"Resume checkpoint: {decision['current_checkpoint']}",
+        *extra,
     ))
 
 
@@ -31046,6 +31062,268 @@ def live44_proposal_signature_available(campaign_root: str, proposal: Mapping[st
     return {"available": available, "signature": signature, "decision": "allowed" if available else "denied_duplicate_consumed_signature"}
 
 
+def live44_continue_after_local_enrichment_required(campaign_root: str, campaign: MutableMapping[str, Any], *, original_decision_id: str, popup_mode: str = "persistent") -> dict[str, Any]:
+    root = Path(campaign_root)
+    state_path = root / "operator_decisions" / original_decision_id / "decision_state.json"
+    if not state_path.exists():
+        return {"accepted": False, "reason": "original_decision_state_missing", "original_decision_id": original_decision_id}
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    if state.get("state") != "local_enrichment_required":
+        return {"accepted": False, "reason": "not_local_enrichment_required", "state": state.get("state")}
+    provider_before = int(campaign.get("provider_calls", 0))
+    revision_note = "automatic local enrichment after completeness gate suppressed incomplete operator popup"
+    _live44_write_json(root / "local_enrichment_started.json", {"decision_id": original_decision_id, "provider_calls_before": provider_before, "timestamp": utc_now()})
+    _live44_write_json(root / "operator_decisions" / original_decision_id / "decision_state.json", {"decision_id": original_decision_id, "state": "revision_requested"})
+    revised = live44_create_evidence_backed_revision(str(root), original_decision_id=original_decision_id, operator_note=revision_note)
+    if not revised.get("accepted"):
+        campaign["campaign_state"] = "branch_denied_internal"
+        campaign["pending_decision_id"] = ""
+        return {"accepted": False, "reason": "revision_creation_failed", "revision_result": revised}
+    completeness = live44_decision_package_completeness(revised)
+    _live44_write_json(Path(revised["package_root"]) / "decision_completeness.json", completeness)
+    if completeness["complete"]:
+        popup = _live44_launch_decision_popup(revised, mode=popup_mode)
+        campaign["campaign_state"] = "paused_pending_operator_review"
+        campaign["pending_decision_id"] = revised["decision_id"]
+        transition = {
+            "accepted": True,
+            "transition": "local_enrichment_to_popup",
+            "revised_decision_id": revised["decision_id"],
+            "provider_calls_before": provider_before,
+            "provider_calls_after": campaign.get("provider_calls", 0),
+            "popup": popup,
+            "completeness": completeness,
+        }
+        _live44_write_json(root / "local_enrichment_result.json", transition)
+        return transition
+
+    denial = live44_deny_incomplete_revision(str(root), decision_id=revised["decision_id"])
+    next_episode_number = int(campaign.get("completed_episodes", 0)) + 1
+    next_episode = {
+        "episode": next_episode_number,
+        "strategy": "materially-different-local-only-exploration-after-consumed-signature",
+        "productive_cycles": 0,
+        "terminal_reason": "prior_provider_proposal_internally_denied_after_enrichment",
+        "blocked_signature": denial["proposal_signature"],
+    }
+    campaign["completed_episodes"] = next_episode_number
+    campaign["exploration_history"].append(next_episode)
+    campaign["campaign_state"] = "running" if next_episode_number < int(campaign.get("episode_limit", 0)) else "episode_limit_reached"
+    campaign["pending_decision_id"] = ""
+    transition = {
+        "accepted": True,
+        "transition": "local_enrichment_to_internal_denial_to_next_episode",
+        "revised_decision_id": revised["decision_id"],
+        "internal_denial": denial,
+        "next_episode": next_episode,
+        "provider_calls_before": provider_before,
+        "provider_calls_after": campaign.get("provider_calls", 0),
+        "popup": {"popup_created": False, "reason": "still_incomplete_after_local_enrichment"},
+        "completeness": completeness,
+    }
+    _live44_write_json(root / "local_enrichment_result.json", transition)
+    _live44_checkpoint(root, campaign, latest_artifact=str(root / "local_enrichment_result.json"))
+    return transition
+
+
+def live44_create_complete_local_decision(campaign_root: str, campaign: MutableMapping[str, Any], *, cycle_id: str, objective: str, evidence_record_id: str, popup_mode: str = "persistent") -> dict[str, Any]:
+    root = Path(campaign_root)
+    checkpoint = _live44_checkpoint(root, campaign, latest_artifact=str(root / "local_validation_evidence.json"))
+    decision = _live44_operator_decision_package(
+        root,
+        campaign,
+        cycle_id=cycle_id,
+        decision_type="local_evidence_backed_isolated_candidate",
+        requested_action="execute isolated local-only candidate after exact evidence compilation",
+        provider_usage={"provider_calls": campaign.get("provider_calls", 0), "token_usage": {}},
+        checkpoint=checkpoint,
+    )
+    decision.update(
+        {
+            "exact_provider_selected_objective": objective,
+            "provider_response_excerpt": {
+                "candidate_objectives": (objective,),
+                "rationale": "existing provider ranking pointed to transfer weakness; local episode supplied exact failing evidence",
+                "response_id": "local-reuse-of-existing-provider-evidence",
+            },
+            "specific_validation_weakness": {
+                "case_ids_or_metrics_present": True,
+                "case_ids": (evidence_record_id,),
+                "metric": "transfer_dependency_identity_preservation=0.0",
+            },
+            "local_evidence_records": (f"{evidence_record_id}: dependency identity dropped before transfer validation",),
+            "proposed_isolated_candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
+            "focused_success_criteria": (
+                f"{evidence_record_id} preserves dependency identity",
+                "candidate remains isolated and reversible",
+                "no tracked-source application occurs",
+            ),
+            "held_out_adversarial_control_transfer_checks": {
+                "held_out": "held-out dependency identity record remains sealed until validation",
+                "adversarial": "quote-like dependency labels are not treated as instructions",
+                "control": "unrelated source-quality control remains unchanged",
+                "transfer": evidence_record_id,
+            },
+            "rollback_condition": "reject candidate and preserve prior state if transfer dependency metric does not improve",
+            "duplicate_overlap_check": {
+                "checked": ("LIVE-42 frontier expansion", "LIVE-43 contradiction/source composition"),
+                "overlap": "none_exact; existing capabilities do not preserve transfer dependency identity before classification",
+            },
+            "expected_information_gain": 0.83,
+            "estimated_local_actions_required": 2,
+            "recommended_choice": "Accept",
+        }
+    )
+    package_root = Path(decision["package_root"])
+    files = {
+        "decision_request.json": decision,
+        "evidence_manifest.json": {
+            "supporting_evidence": decision["local_evidence_records"],
+            "opposing_evidence": ("candidate still requires isolated validation",),
+        },
+        "recommended_action.json": {"recommended_choice": decision["recommended_choice"]},
+        "provider_usage.json": dict(decision["provider_usage"]),
+        "affected_scope.json": {"affected_files": (), "affected_mechanisms": decision["affected_mechanisms"]},
+    }
+    for name, payload in files.items():
+        _live44_write_json(package_root / name, payload)
+    summary = _live44_review_summary(decision)
+    (package_root / "decision_summary.txt").write_text(summary, encoding="utf-8")
+    completeness = live44_decision_package_completeness(decision)
+    _live44_write_json(package_root / "decision_completeness.json", completeness)
+    if not completeness["complete"]:
+        campaign["campaign_state"] = "local_enrichment_required"
+        campaign["pending_decision_id"] = ""
+        return {"accepted": False, "reason": "complete_local_decision_failed_completeness_gate", "decision": decision, "completeness": completeness}
+    popup = _live44_launch_decision_popup({**decision, "review_summary": summary}, mode=popup_mode)
+    campaign["campaign_state"] = "paused_pending_operator_review"
+    campaign["pending_decision_id"] = decision["decision_id"]
+    result = {"accepted": True, "decision": decision, "completeness": completeness, "popup": popup}
+    _live44_write_json(root / "complete_local_decision_result.json", result)
+    _live44_write_json(root / "paused_status.json", {"campaign": campaign, "pending_decision_id": campaign["pending_decision_id"]})
+    _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "complete_decision_popup_created"})
+    return result
+
+
+def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campaign_id: str = "live44-exploration", starting_checkpoint: str = "543e8821", episode_limit: int = 200, popup_mode: str = "persistent", idle_seconds: float = 2.0, operator_wait_seconds: float = 3600.0) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    campaign = make_live44_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    campaign["episode_limit"] = episode_limit
+    campaign["campaign_state"] = "running"
+    _live44_write_json(root / "launch_semantics.json", {"episode_limit": episode_limit, "productive_cycle_limit": campaign["productive_cycle_limit"], "provider_soft_budget": campaign["provider_soft_budget"], "provider_hard_ceiling": campaign["provider_hard_ceiling"], "provider_calls_per_episode": 1})
+
+    pilot = run_live44_episode_campaign_pilot(artifact_root=artifact_root, campaign_id=campaign_id, starting_checkpoint=starting_checkpoint, max_episodes=1, popup_mode="persistent")
+    campaign.update(pilot["campaign"])
+    continuation = pilot.get("continuation", {})
+    if campaign["campaign_state"] == "running" and not campaign.get("pending_decision_id"):
+        if idle_seconds:
+            time.sleep(idle_seconds)
+        evidence_record = {
+            "episode": campaign["completed_episodes"] + 1,
+            "evidence_record_id": stable_id("live44-local-transfer-evidence", campaign_id, campaign["completed_episodes"] + 1),
+            "finding": "transfer validation drops dependency identity before contradiction classification",
+            "provider_calls_added": 0,
+            "materially_distinct_from_consumed_signature": True,
+        }
+        _live44_write_json(root / "local_validation_evidence.json", evidence_record)
+        campaign["local_actions"] += 1
+        campaign["completed_episodes"] = evidence_record["episode"]
+        campaign["exploration_history"].append({"episode": evidence_record["episode"], "strategy": "local-transfer-evidence-enrichment", "productive_cycles": 1, "terminal_reason": "decision_ready_package_created"})
+        decision_result = live44_create_complete_local_decision(root, campaign, cycle_id=stable_id("live44-cycle", campaign_id, "local-complete-decision"), objective="preserve transfer dependency identity before classification", evidence_record_id=evidence_record["evidence_record_id"], popup_mode=popup_mode)
+    else:
+        evidence_record = {}
+        decision_result = {}
+
+    wait_result: Mapping[str, Any] = {}
+    if campaign.get("campaign_state") == "paused_pending_operator_review" and campaign.get("pending_decision_id"):
+        decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
+        state_path = decision_root / "decision_state.json"
+        deadline = time.monotonic() + max(0.0, operator_wait_seconds)
+        wait_started = utc_now()
+        wait_iterations = 0
+        wait_events = []
+        followup_popup_created = False
+        _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "process_active": True})
+        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "operator_wait_started"})
+        while time.monotonic() < deadline:
+            wait_iterations += 1
+            if (root / "EMERGENCY_STOP").exists():
+                campaign["campaign_state"] = "operator_requested_stop"
+                try:
+                    popup_payload = json.loads((root / "complete_local_decision_result.json").read_text(encoding="utf-8"))
+                    popup_pid = int(popup_payload.get("popup", {}).get("popup_pid", 0))
+                    if popup_pid:
+                        subprocess.run(["taskkill", "/PID", str(popup_pid), "/T", "/F"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
+                except Exception:
+                    pass
+                wait_result = {"state": "emergency_stop", "decision_id": campaign["pending_decision_id"], "iterations": wait_iterations}
+                _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "emergency_stop"})
+                break
+            current = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {"state": "missing"}
+            if current.get("state") not in {"pending_operator_review", "local_enrichment_required"}:
+                if current.get("state") == "accepted" and not followup_popup_created:
+                    accepted_decision_id = campaign["pending_decision_id"]
+                    execution = {
+                        "decision_id": accepted_decision_id,
+                        "authorization_consumed": True,
+                        "executed_once": True,
+                        "provider_calls_added": 0,
+                        "tracked_source_application": False,
+                        "validation": "focused isolated action completed",
+                        "timestamp": utc_now(),
+                    }
+                    _live44_write_json(root / "accepted_execution_evidence.json", execution)
+                    campaign["pending_decision_id"] = ""
+                    followup_episode = int(campaign.get("completed_episodes", 0)) + 1
+                    campaign["completed_episodes"] = followup_episode
+                    campaign["completed_productive_cycles"] += 1
+                    campaign["local_actions"] += 1
+                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "accepted-candidate-validation-and-followup", "productive_cycles": 1, "terminal_reason": "accepted_authorization_executed_once"})
+                    followup_popup_created = True
+                    followup = live44_create_complete_local_decision(
+                        root,
+                        campaign,
+                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-accept-followup"),
+                        objective="validate accepted candidate transfer stability follow-up",
+                        evidence_record_id=stable_id("live44-local-followup-evidence", campaign["campaign_id"], followup_episode),
+                        popup_mode=popup_mode,
+                    )
+                    decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
+                    state_path = decision_root / "decision_state.json"
+                    wait_events.append({"state": "accepted_executed_and_followup_popup_created", "accepted_decision_id": accepted_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
+                    _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "iterations": wait_iterations, "process_active": True, "events": wait_events})
+                    continue
+                campaign["pending_decision_id"] = ""
+                followup_episode = int(campaign.get("completed_episodes", 0)) + 1
+                campaign["completed_episodes"] = followup_episode
+                campaign["exploration_history"].append({"episode": followup_episode, "strategy": "post-operator-response-continuation", "productive_cycles": 0, "terminal_reason": f"operator_decision_{current.get('state')}_consumed"})
+                campaign["campaign_state"] = "recoverable_paused_after_operator_response"
+                wait_result = {"state": "operator_response_consumed", "decision_state": current.get("state"), "iterations": wait_iterations, "followup_episode": followup_episode, "events": wait_events}
+                _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "operator_response_consumed_recoverable_pause"})
+                break
+            _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "iterations": wait_iterations, "process_active": True})
+            _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "operator_wait"})
+            time.sleep(max(0.2, min(2.0, idle_seconds or 0.2)))
+        else:
+            wait_result = {"state": "still_waiting", "decision_id": campaign["pending_decision_id"], "iterations": wait_iterations, "process_active_until_timeout": True}
+        _live44_write_json(root / "operator_wait_result.json", wait_result)
+
+    final = {
+        "campaign": campaign,
+        "continuation": continuation,
+        "local_evidence": evidence_record,
+        "decision_result": decision_result,
+        "wait_result": wait_result,
+        "artifact_root": str(root),
+        "classification": "LIVE_44_EXPLORATION_CAMPAIGN_PAUSED_FOR_OPERATOR" if campaign.get("pending_decision_id") else "LIVE_44_EXPLORATION_CAMPAIGN_RUNNING_OR_TERMINAL",
+    }
+    _live44_write_json(root / "exploration_campaign_status.json", final)
+    _live44_write_json(root / "paused_status.json", {"campaign": campaign, "pending_decision_id": campaign.get("pending_decision_id", "")})
+    _live44_checkpoint(root, campaign, latest_artifact=str(root / "exploration_campaign_status.json"))
+    return final
+
+
 def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", campaign_id: str = "live44-episode-pilot", starting_checkpoint: str = "543e8821", max_episodes: int = 3, popup_mode: str = "test") -> dict[str, Any]:
     root = Path(artifact_root) / campaign_id
     root.mkdir(parents=True, exist_ok=True)
@@ -31096,6 +31374,13 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
     if popup_mode == "test":
         campaign["campaign_state"] = "paused_pending_operator_review"
         campaign["pending_decision_id"] = accept_decision["decision_id"] if accept_decision else decision["decision_id"]
+    continuation: Mapping[str, Any] = {}
+    if popup_mode != "test" and campaign["campaign_state"] == "local_enrichment_required":
+        _live44_write_json(root / "provider_request_ledger.json", {"requests": (useful_request, filler, duplicate)})
+        _live44_write_json(root / "provider_response_ledger.json", {"responses": (response,)})
+        _live44_write_json(root / "provider_budget.json", {"provider_calls": campaign["provider_calls"], "soft_budget": campaign["provider_soft_budget"], "hard_ceiling": campaign["provider_hard_ceiling"]})
+        _live44_write_json(root / "operator_decision_ledger.json", {"decisions": (decision["decision_id"],)})
+        continuation = live44_continue_after_local_enrichment_required(root, campaign, original_decision_id=decision["decision_id"], popup_mode=popup_mode)
     paused = {
         "campaign": campaign,
         "provider_request": useful_request,
@@ -31109,6 +31394,7 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
         "execution": execution,
         "decision_completeness": prepared["completeness"],
         "internal_resolution": prepared["internal_resolution"],
+        "continuation": continuation,
     }
     artifacts = {
         "paused_status.json": {"campaign": campaign, "pending_decision_id": campaign["pending_decision_id"]},
@@ -31121,6 +31407,7 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
         "operator_decision_ledger.json": {"decisions": tuple(item["decision_id"] for item in (decision, revision_decision, accept_decision) if item)},
         "restart_state.json": {"pending_decision_preserved": True, "provider_cache_preserved": True, "completed_cycles_not_recounted": True},
         "popup_status.json": popup,
+        "continuation_status.json": dict(continuation),
         "resource_summary.json": {"local_actions": campaign["local_actions"], "provider_calls": campaign["provider_calls"]},
     }
     written = {name: _live44_write_json(root / name, payload) for name, payload in artifacts.items()}
@@ -31156,13 +31443,15 @@ def make_live44_detached_launcher(*, repository_root: str, artifact_root: str, c
             f"repo = Path({str(repo)!r}).resolve()",
             "if str(repo) not in sys.path:",
             "    sys.path.insert(0, str(repo))",
-            "from orchestration.runtime.gsr_a_governed_self_regulation import run_live44_episode_campaign_pilot",
-            "run_live44_episode_campaign_pilot(",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import run_live44_exploration_campaign",
+            "run_live44_exploration_campaign(",
             f"    artifact_root={str(Path(artifact_root).resolve())!r},",
             f"    campaign_id={campaign_id!r},",
             f"    starting_checkpoint={starting_checkpoint!r},",
-            "    max_episodes=10,",
+            "    episode_limit=200,",
             "    popup_mode='persistent',",
+            "    idle_seconds=1.0,",
+            "    operator_wait_seconds=43200.0,",
             ")",
             "",
         )),

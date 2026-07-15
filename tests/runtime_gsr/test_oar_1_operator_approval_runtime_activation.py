@@ -5832,7 +5832,7 @@ def test_live_44_incomplete_package_is_not_surfaced_to_operator(tmp_path, monkey
     assert internal["operator_popup_suppressed"] is True
     assert internal["resolution"] == "local_enrichment_required"
     assert json.loads((root / "popup_status.json").read_text(encoding="utf-8"))["popup_created"] is False
-    assert result["campaign"]["campaign_state"] == "local_enrichment_required"
+    assert result["campaign"]["campaign_state"] == "running"
 
 
 def test_live_44_incomplete_revision_is_denied_and_signature_consumed(tmp_path, monkeypatch):
@@ -5891,6 +5891,59 @@ def test_live_44_complete_package_can_launch_operator_popup(tmp_path, monkeypatc
     assert prepared["internal_resolution"] is None
 
 
+def test_live_44_local_enrichment_continues_to_next_episode_without_provider_growth(tmp_path, monkeypatch):
+    class FailingProcess:
+        def __init__(self, *args, **kwargs):
+            raise AssertionError("incomplete enrichment should not launch a popup")
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", FailingProcess)
+    result = gsr.run_live44_episode_campaign_pilot(artifact_root=str(tmp_path), campaign_id="live44-enrichment", max_episodes=2, popup_mode="persistent")
+    root = Path(result["artifact_root"])
+    continuation = json.loads((root / "continuation_status.json").read_text(encoding="utf-8"))
+    provider_budget = json.loads((root / "provider_budget.json").read_text(encoding="utf-8"))
+    consumed = json.loads((root / "consumed_proposal_signatures.json").read_text(encoding="utf-8"))
+    replay = gsr.live44_proposal_signature_available(str(root), json.loads((root / "operator_decisions" / continuation["revised_decision_id"] / "decision_request.json").read_text(encoding="utf-8")))
+
+    assert continuation["transition"] == "local_enrichment_to_internal_denial_to_next_episode"
+    assert continuation["internal_denial"]["proposal_signature_consumed"] is True
+    assert continuation["popup"]["popup_created"] is False
+    assert continuation["provider_calls_before"] == continuation["provider_calls_after"] == 1
+    assert provider_budget["provider_calls"] == 1
+    assert continuation["next_episode"]["strategy"] == "materially-different-local-only-exploration-after-consumed-signature"
+    assert consumed["signatures"] == [continuation["internal_denial"]["proposal_signature"]]
+    assert replay["available"] is False
+    assert result["campaign"]["campaign_state"] == "running"
+    assert result["campaign"]["completed_episodes"] == 3
+
+
+def test_live_44_persistent_runner_reaches_complete_popup_after_three_episodes(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4246
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    result = gsr.run_live44_exploration_campaign(
+        artifact_root=str(tmp_path),
+        campaign_id="live44-persistent",
+        starting_checkpoint="d06ef6f2",
+        episode_limit=200,
+        popup_mode="persistent",
+        idle_seconds=0,
+        operator_wait_seconds=0,
+    )
+    root = Path(result["artifact_root"])
+    status = json.loads((root / "exploration_campaign_status.json").read_text(encoding="utf-8"))
+    popup = result["decision_result"]["popup"]
+
+    assert result["campaign"]["completed_episodes"] == 3
+    assert result["campaign"]["campaign_state"] == "paused_pending_operator_review"
+    assert result["campaign"]["pending_decision_id"]
+    assert result["campaign"]["provider_calls"] == 1
+    assert popup["popup_created"] is True
+    assert result["continuation"]["transition"] == "local_enrichment_to_internal_denial_to_next_episode"
+    assert result["local_evidence"]["materially_distinct_from_consumed_signature"] is True
+    assert status["campaign"]["completed_episodes"] == 3
+
+
 def test_live_44_accept_deny_revision_transitions(tmp_path):
     campaign = gsr.make_live44_campaign(campaign_id="live44-transitions", starting_checkpoint="543e8821")
     checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
@@ -5931,6 +5984,9 @@ def test_live_44_detached_launcher_binds_repo(tmp_path):
 
     assert launcher["accepted"] is True
     assert Path(launcher["launcher_path"]).exists()
+    launcher_text = Path(launcher["launcher_path"]).read_text(encoding="utf-8")
+    assert "run_live44_exploration_campaign" in launcher_text
+    assert "run_live44_episode_campaign_pilot" not in launcher_text
     assert denied["accepted"] is False
 
 
