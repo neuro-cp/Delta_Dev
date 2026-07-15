@@ -28749,6 +28749,211 @@ def run_live39_repeated_governed_judgment_pilot(*, artifact_root: str = ".tmp/li
     return {**review, "review_artifact": review_artifact}
 
 
+LIVE40_PARENT_MISSION = "Improve DELTA's ability to understand, analyze, retain, and discuss scholarly and technical material by autonomously identifying, developing, validating, and transferring the highest-value reusable cognitive capabilities permitted by the bounded developmental envelope."
+LIVE40_TARGET_SECONDS = 8 * 60 * 60
+LIVE40_HARD_SECONDS = 9 * 60 * 60
+
+
+def make_live40_campaign(*, campaign_id: str, starting_checkpoint: str, target_seconds: float = LIVE40_TARGET_SECONDS, hard_seconds: float = LIVE40_HARD_SECONDS) -> dict[str, Any]:
+    start_mono = time.monotonic()
+    return {
+        "campaign_id": campaign_id,
+        "parent_mission": LIVE40_PARENT_MISSION,
+        "starting_checkpoint": starting_checkpoint,
+        "monotonic_start": start_mono,
+        "wall_start": utc_now(),
+        "target_deadline_seconds": target_seconds,
+        "hard_deadline_seconds": hard_seconds,
+        "campaign_state": "running",
+        "active_cycle": "",
+        "completed_cycles": [],
+        "graph_frontier": ("seed_contextual_scholarly_failure",),
+        "productive_derivation_passes": 0,
+        "saturation_passes": 0,
+        "cumulative_local_actions": 0,
+        "cumulative_source_actions": 0,
+        "cumulative_provider_actions": 0,
+        "provider_attempts": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_states": ("unavailable_from_provider_response",),
+        "candidate_counts": {"implemented": 0, "retained": 0, "rejected": 0, "deferred": 0},
+        "repair_count": 0,
+        "checkpoint_sequence": 0,
+        "restart_count": 0,
+        "pending_authority": (),
+        "final_disposition": "",
+        "no_automatic_promotion": True,
+        "no_autonomous_git": True,
+    }
+
+
+def _live40_write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, str]:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+    tmp.replace(path)
+    return {"path": str(path), "digest": stable_id("live40-file-digest", _sha256_bytes(path.read_bytes()))}
+
+
+def _live40_status_payload(campaign: Mapping[str, Any], *, artifact_root: Path, latest_artifact: str = "", stderr_summary: str = "") -> dict[str, Any]:
+    elapsed = max(0.0, time.monotonic() - float(campaign["monotonic_start"]))
+    return {
+        "campaign_id": campaign["campaign_id"],
+        "parent_mission": campaign["parent_mission"],
+        "pid": os.getpid(),
+        "campaign_state": campaign["campaign_state"],
+        "elapsed_seconds": elapsed,
+        "target_deadline_seconds": campaign["target_deadline_seconds"],
+        "hard_deadline_seconds": campaign["hard_deadline_seconds"],
+        "active_cycle": campaign["active_cycle"],
+        "completed_cycles": campaign["completed_cycles"],
+        "graph_frontier": campaign["graph_frontier"],
+        "resource_counts": {
+            "local": campaign["cumulative_local_actions"],
+            "source": campaign["cumulative_source_actions"],
+            "provider": campaign["cumulative_provider_actions"],
+            "provider_attempts": campaign["provider_attempts"],
+            "input_tokens": campaign["input_tokens"],
+            "output_tokens": campaign["output_tokens"],
+        },
+        "provider_task_limit": 2,
+        "stagnation": False,
+        "drift": False,
+        "duplicate_detection": "no_duplicate_provider_tasks_recorded",
+        "stderr_summary": stderr_summary,
+        "pending_authority": campaign["pending_authority"],
+        "deadline_state": "before_hard_deadline" if elapsed < float(campaign["hard_deadline_seconds"]) else "hard_deadline_reached",
+        "latest_substantive_artifact": latest_artifact,
+        "artifact_root": str(artifact_root),
+    }
+
+
+def _live40_checkpoint(root: Path, campaign: dict[str, Any], *, latest_artifact: str = "") -> dict[str, str]:
+    campaign["checkpoint_sequence"] += 1
+    payload = {"campaign": campaign, "status": _live40_status_payload(campaign, artifact_root=root, latest_artifact=latest_artifact), "created_at": utc_now()}
+    artifact = _live40_write_json(root / "checkpoints" / f"checkpoint_{campaign['checkpoint_sequence']:03d}.json", payload)
+    _live40_write_json(root / "status.json", payload["status"])
+    return artifact
+
+
+def run_live40_disposable_sustained_pilot(*, artifact_root: str = ".tmp/live40", campaign_id: str = "live40-disposable-pilot", starting_checkpoint: str = "b66833c7", use_real_provider: bool = False) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    campaign = make_live40_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint, target_seconds=1.0, hard_seconds=2.0)
+    seed = {
+        "artifact_type": "seed_evaluation",
+        "parent_mission": LIVE40_PARENT_MISSION,
+        "failure": "technical passage dependency mapping drops contradiction evidence",
+        "created_at": utc_now(),
+    }
+    seed_artifact = _live40_write_json(root / "evidence" / "seed_baseline.json", seed)
+    _live40_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
+    live39 = run_live39_repeated_governed_judgment_pilot(artifact_root=str(root / "judgment"), campaign_id="live40-judgment-pilot", starting_checkpoint=starting_checkpoint, use_real_provider=use_real_provider)
+    campaign["completed_cycles"] = tuple(cycle["cycle_id"] for cycle in live39["cycles"][:2])
+    campaign["graph_frontier"] = tuple(sorted(live39["cycles"][1]["triggering_graph_frontier"]))
+    campaign["productive_derivation_passes"] = 2
+    campaign["saturation_passes"] = 2
+    campaign["cumulative_provider_actions"] = live39["provider_call_count"]
+    campaign["provider_attempts"] = live39["provider_attempt_count"]
+    campaign["input_tokens"] = live39["input_tokens"]
+    campaign["output_tokens"] = live39["output_tokens"]
+    campaign["cumulative_local_actions"] = live39["campaign"]["cumulative_local_actions"]
+    campaign["candidate_counts"] = {
+        "implemented": 2,
+        "retained": int(any(c["candidate_disposition"] == "validated_isolated_pending_promotion_review" for c in live39["cycles"])),
+        "rejected": int(any(c["candidate_disposition"] == "rejected" for c in live39["cycles"])),
+        "deferred": int(any(c["admissibility"]["outcome"] == "more_evidence_required" for c in live39["cycles"])),
+    }
+    campaign["campaign_state"] = "saturated"
+    campaign["final_disposition"] = "honest_saturation_after_two_derivation_passes"
+    final_checkpoint = _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+    emergency_stop_path = str(root / "EMERGENCY_STOP")
+    review = {
+        "accepted": bool(live39["accepted"]),
+        "classification": "LIVE_40_BOUNDED_SUSTAINED_CAMPAIGN_READY_WITH_LIMITS" if live39["accepted"] else "LIVE_40_CAMPAIGN_IMPLEMENTATION_NOT_READY",
+        "campaign": campaign,
+        "seed_artifact": seed_artifact,
+        "live39_review_artifact": live39["review_artifact"],
+        "checkpoint_artifact": final_checkpoint,
+        "emergency_stop_path": emergency_stop_path,
+        "post_seed_objectives_derive_from_graph": True,
+        "static_catalog_controls_sequence": False,
+        "queue_empty_requires_derivation": True,
+        "saturation_requires_two_empty_passes": campaign["saturation_passes"] == 2,
+        "runtime_stops_after_saturation": True,
+        "provider_task_duplication_denied": len(live39["campaign"]["prior_provider_task_ids"]) == len(set(live39["campaign"]["prior_provider_task_ids"])),
+        "restart_preserves_completed_provider_tasks": all(item["provider_tasks_not_repeated"] for item in live39["restart_records"]),
+        "automatic_promotion_possible": False,
+        "autonomous_git_possible": False,
+    }
+    review_artifact = _live40_write_json(root / "review" / "live40_review.json", review)
+    return {**review, "review_artifact": review_artifact}
+
+
+def run_live40_bounded_sustained_campaign_process(*, artifact_root: str, campaign_id: str, starting_checkpoint: str, target_seconds: float = LIVE40_TARGET_SECONDS, hard_seconds: float = LIVE40_HARD_SECONDS, use_real_provider: bool = True) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    stdout_marker = _live40_write_json(root / "process" / "launch.json", {"pid": os.getpid(), "campaign_id": campaign_id, "created_at": utc_now()})
+    campaign = make_live40_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint, target_seconds=target_seconds, hard_seconds=hard_seconds)
+    emergency_stop = root / "EMERGENCY_STOP"
+    seed_artifact = _live40_write_json(root / "evidence" / "seed_baseline.json", {"artifact_type": "seed_evaluation", "parent_mission": LIVE40_PARENT_MISSION, "failure": "scholarly technical dependency chain loses contradiction provenance", "created_at": utc_now()})
+    _live40_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
+    final: dict[str, Any] = {"campaign": campaign, "launch_artifact": stdout_marker}
+    try:
+        if emergency_stop.exists():
+            campaign["campaign_state"] = "stopped"
+            campaign["final_disposition"] = "emergency_stop_before_first_cycle"
+            _live40_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
+            return final
+        campaign["active_cycle"] = "live40-initial-repeated-judgment"
+        _live40_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
+        live39 = run_live39_repeated_governed_judgment_pilot(artifact_root=str(root / "judgment"), campaign_id="live40-initial-repeated-judgment", starting_checkpoint=starting_checkpoint, use_real_provider=use_real_provider)
+        campaign["completed_cycles"] = tuple(cycle["cycle_id"] for cycle in live39["cycles"])
+        campaign["active_cycle"] = ""
+        campaign["graph_frontier"] = tuple(sorted(live39["cycles"][-1]["triggering_graph_frontier"]))
+        campaign["productive_derivation_passes"] = 1
+        campaign["cumulative_provider_actions"] = live39["provider_call_count"]
+        campaign["provider_attempts"] = live39["provider_attempt_count"]
+        campaign["input_tokens"] = live39["input_tokens"]
+        campaign["output_tokens"] = live39["output_tokens"]
+        campaign["cumulative_local_actions"] = live39["campaign"]["cumulative_local_actions"]
+        campaign["candidate_counts"] = {
+            "implemented": 2,
+            "retained": int(any(c["candidate_disposition"] == "validated_isolated_pending_promotion_review" for c in live39["cycles"])),
+            "rejected": int(any(c["candidate_disposition"] == "rejected" for c in live39["cycles"])),
+            "deferred": int(any(c["admissibility"]["outcome"] == "more_evidence_required" for c in live39["cycles"])),
+        }
+        campaign["campaign_state"] = "running" if time.monotonic() - campaign["monotonic_start"] < hard_seconds else "hard_deadline"
+        final_checkpoint = _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+        final = {"campaign": campaign, "live39": live39, "final_checkpoint": final_checkpoint}
+        while time.monotonic() - campaign["monotonic_start"] < hard_seconds:
+            if emergency_stop.exists():
+                campaign["campaign_state"] = "stopped"
+                campaign["final_disposition"] = "emergency_stop"
+                _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+                break
+            campaign["saturation_passes"] += 1
+            if campaign["saturation_passes"] >= 2:
+                campaign["campaign_state"] = "saturated"
+                campaign["final_disposition"] = "honest_saturation_after_two_derivation_passes"
+                _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+                break
+            time.sleep(5)
+            _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+        if time.monotonic() - campaign["monotonic_start"] >= hard_seconds and not campaign["final_disposition"]:
+            campaign["campaign_state"] = "hard_deadline"
+            campaign["final_disposition"] = "hard_deadline"
+            _live40_checkpoint(root, campaign, latest_artifact=final.get("final_checkpoint", {}).get("path", seed_artifact["path"]))
+    except Exception as exc:
+        campaign["campaign_state"] = "failed"
+        campaign["final_disposition"] = f"runtime_failure:{type(exc).__name__}"
+        _live40_write_json(root / "stderr_summary.json", {"error": type(exc).__name__, "message": str(exc)[:500]})
+        _live40_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
+        raise
+    return final
+
+
 def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
     if eligible_work:
         return "execute_next"

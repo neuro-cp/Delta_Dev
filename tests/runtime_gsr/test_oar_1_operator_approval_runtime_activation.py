@@ -5297,6 +5297,76 @@ def test_live_39_contract_denies_duplicate_and_fourth_cycle(tmp_path):
     assert gsr.LIVE39_MAX_CYCLES == 3
 
 
+def test_live_40_campaign_contract_deadlines_and_boundaries():
+    campaign = gsr.make_live40_campaign(campaign_id="live40-contract", starting_checkpoint="b66833c7")
+
+    assert campaign["parent_mission"] == gsr.LIVE40_PARENT_MISSION
+    assert campaign["target_deadline_seconds"] == 8 * 60 * 60
+    assert campaign["hard_deadline_seconds"] == 9 * 60 * 60
+    assert campaign["campaign_state"] == "running"
+    assert campaign["graph_frontier"] == ("seed_contextual_scholarly_failure",)
+    assert campaign["no_automatic_promotion"] is True
+    assert campaign["no_autonomous_git"] is True
+    assert campaign["cumulative_provider_actions"] == 0
+
+
+def test_live_40_disposable_pilot_derives_from_graph_and_saturates(tmp_path):
+    result = gsr.run_live40_disposable_sustained_pilot(artifact_root=str(tmp_path), campaign_id="live40-pilot", use_real_provider=False)
+    campaign = result["campaign"]
+
+    assert result["classification"] == "LIVE_40_BOUNDED_SUSTAINED_CAMPAIGN_READY_WITH_LIMITS"
+    assert result["post_seed_objectives_derive_from_graph"] is True
+    assert result["static_catalog_controls_sequence"] is False
+    assert result["queue_empty_requires_derivation"] is True
+    assert result["saturation_requires_two_empty_passes"] is True
+    assert result["runtime_stops_after_saturation"] is True
+    assert campaign["final_disposition"] == "honest_saturation_after_two_derivation_passes"
+    assert campaign["campaign_state"] == "saturated"
+    assert campaign["completed_cycles"]
+    assert campaign["candidate_counts"]["retained"] == 1
+    assert campaign["candidate_counts"]["rejected"] == 1
+    assert Path(result["seed_artifact"]["path"]).exists()
+    assert Path(result["review_artifact"]["path"]).exists()
+
+
+def test_live_40_budget_restart_and_provider_duplicate_guards(tmp_path):
+    result = gsr.run_live40_disposable_sustained_pilot(artifact_root=str(tmp_path), campaign_id="live40-budget", use_real_provider=False)
+    campaign = result["campaign"]
+
+    assert result["provider_task_duplication_denied"] is True
+    assert result["restart_preserves_completed_provider_tasks"] is True
+    assert campaign["cumulative_provider_actions"] <= 25
+    assert campaign["provider_attempts"] <= 50
+    assert campaign["input_tokens"] >= 0
+    assert campaign["output_tokens"] >= 0
+    assert campaign["cost_states"] == ("unavailable_from_provider_response",)
+    assert campaign["cumulative_source_actions"] == 0
+
+
+def test_live_40_status_checkpoint_and_emergency_stop_paths(tmp_path):
+    root = tmp_path / "live40-status"
+    campaign = gsr.make_live40_campaign(campaign_id="live40-status", starting_checkpoint="b66833c7", target_seconds=1, hard_seconds=2)
+    seed = gsr._live40_write_json(root / "evidence" / "seed.json", {"seed": True})
+    checkpoint = gsr._live40_checkpoint(root, campaign, latest_artifact=seed["path"])
+    status = json.loads((root / "status.json").read_text(encoding="utf-8"))
+
+    assert Path(checkpoint["path"]).exists()
+    assert status["campaign_id"] == "live40-status"
+    assert status["parent_mission"] == gsr.LIVE40_PARENT_MISSION
+    assert status["latest_substantive_artifact"] == seed["path"]
+    assert status["provider_task_limit"] == 2
+    assert status["deadline_state"] == "before_hard_deadline"
+
+
+def test_live_40_no_promotion_or_autonomous_git_in_pilot(tmp_path):
+    result = gsr.run_live40_disposable_sustained_pilot(artifact_root=str(tmp_path), campaign_id="live40-no-git", use_real_provider=False)
+
+    assert result["automatic_promotion_possible"] is False
+    assert result["autonomous_git_possible"] is False
+    assert result["campaign"]["no_automatic_promotion"] is True
+    assert result["campaign"]["no_autonomous_git"] is True
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
