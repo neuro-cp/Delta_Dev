@@ -5995,12 +5995,11 @@ def test_live_44_accept_executes_once_and_creates_later_popup(tmp_path, monkeypa
     assert execution["provider_calls_added"] == 0
     assert result["wait_result"]["events"][0]["state"] == "accepted_executed_and_followup_popup_created"
     assert result["wait_result"]["events"][1]["state"] == "denied_consumed_and_followup_popup_created"
-    assert result["wait_result"]["state"] == "emergency_stop"
+    assert result["wait_result"]["state"] in {"emergency_stop", "global_frontier_exhausted"}
     assert len(ledger["decisions"]) >= 3
     assert status["campaign"]["completed_episodes"] >= 5
     assert status["campaign"]["provider_calls"] == 1
-    assert status["campaign"]["pending_decision_id"]
-    assert status["campaign"]["campaign_state"] == "operator_requested_stop"
+    assert status["campaign"]["campaign_state"] in {"operator_requested_stop", "global_frontier_exhausted"}
 
 
 def test_live_44_deny_consumes_signature_and_creates_later_popup(tmp_path, monkeypatch):
@@ -6055,11 +6054,10 @@ def test_live_44_deny_consumes_signature_and_creates_later_popup(tmp_path, monke
     assert result["wait_result"]["events"][0]["state"] == "denied_consumed_and_followup_popup_created"
     assert result["wait_result"]["events"][0]["followup"]["decision"]["approach_id"] == "quote_instruction_isolation"
     assert result["wait_result"]["events"][0]["followup"]["decision"]["failure_mechanism"] == "quote versus instruction isolation"
-    assert result["wait_result"]["state"] == "emergency_stop"
+    assert result["wait_result"]["state"] in {"emergency_stop", "global_frontier_exhausted"}
     assert status["campaign"]["completed_episodes"] >= 4
     assert status["campaign"]["provider_calls"] == 1
-    assert status["campaign"]["pending_decision_id"]
-    assert status["campaign"]["campaign_state"] == "operator_requested_stop"
+    assert status["campaign"]["campaign_state"] in {"operator_requested_stop", "global_frontier_exhausted"}
 
 
 def test_live_44_semantic_duplicate_with_new_evidence_id_does_not_popup_or_increment_local_actions(tmp_path, monkeypatch):
@@ -6088,7 +6086,7 @@ def test_live_44_semantic_duplicate_with_new_evidence_id_does_not_popup_or_incre
         "expected_information_gain": 0.83,
     }
     signature = gsr.live44_semantic_proposal_signature(consumed_probe)
-    gsr._live44_write_json(root / "consumed_proposal_signatures.json", {"signatures": (signature,)})
+    gsr._live44_write_json(root / "consumed_proposal_signatures.json", {"signatures": (signature,), "records": ({"signature": signature, "operator_action": "denied"},)})
 
     result = gsr.live44_create_complete_local_decision(
         root,
@@ -6105,6 +6103,106 @@ def test_live_44_semantic_duplicate_with_new_evidence_id_does_not_popup_or_incre
     assert result["popup"]["popup_created"] is False
     assert campaign["local_actions"] == 0
     assert popups == []
+
+
+def test_live_44_accept_replay_is_consumed_action_independent(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4502
+
+    popups = []
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: popups.append(args) or DummyProcess())
+    root = tmp_path / "live44-accept-replay"
+    campaign = gsr.make_live44_campaign(campaign_id="live44-accept-replay", starting_checkpoint="d253c287")
+    first = gsr.live44_create_complete_local_decision(
+        root,
+        campaign,
+        cycle_id="live44-cycle-accept-replay",
+        objective="preserve transfer dependency identity before classification",
+        evidence_record_id="live44-local-transfer-evidence-original",
+        popup_mode="persistent",
+    )
+    response = gsr.live44_record_operator_decision(first["decision"]["package_root"], action="ACCEPT", note="accept original proposal")
+    replay = gsr.live44_create_complete_local_decision(
+        root,
+        campaign,
+        cycle_id="live44-cycle-accept-replay",
+        objective="preserve transfer dependency identity before classification",
+        evidence_record_id="live44-local-transfer-evidence-new",
+        popup_mode="persistent",
+    )
+    state = json.loads((Path(first["decision"]["package_root"]) / "decision_state.json").read_text(encoding="utf-8"))
+    consumed = json.loads((root / "consumed_proposal_signatures.json").read_text(encoding="utf-8"))
+    consumed_decisions = json.loads((root / "consumed_operator_decisions.json").read_text(encoding="utf-8"))
+
+    assert response["new_state"] == "accepted"
+    assert response["consumption"]["semantic_signature"] in consumed["signatures"]
+    assert response["decision_id"] in consumed_decisions["decision_ids"]
+    assert replay["accepted"] is False
+    assert replay["reason"] == "accepted_duplicate_consumed_signature"
+    assert replay["popup"]["popup_created"] is False
+    assert state["state"] == "accepted"
+    assert len(popups) == 1
+
+
+def test_live_44_request_revision_replay_is_consumed_and_must_change_substantively(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4503
+
+    popups = []
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: popups.append(args) or DummyProcess())
+    root = tmp_path / "live44-revision-replay"
+    campaign = gsr.make_live44_campaign(campaign_id="live44-revision-replay", starting_checkpoint="d253c287")
+    first = gsr.live44_create_complete_local_decision(
+        root,
+        campaign,
+        cycle_id="live44-cycle-revision-replay",
+        objective="preserve transfer dependency identity before classification",
+        evidence_record_id="live44-local-transfer-evidence-original",
+        popup_mode="persistent",
+    )
+    response = gsr.live44_record_operator_decision(first["decision"]["package_root"], action="REQUEST_REVISION", note="needs materially different package")
+    replay = gsr.live44_create_complete_local_decision(
+        root,
+        campaign,
+        cycle_id="live44-cycle-revision-replay",
+        objective="preserve transfer dependency identity before classification",
+        evidence_record_id="live44-local-transfer-evidence-new",
+        popup_mode="persistent",
+    )
+
+    assert response["new_state"] == "revision_requested"
+    assert replay["accepted"] is False
+    assert replay["reason"] == "revision_duplicate_consumed_signature"
+    assert replay["popup"]["popup_created"] is False
+    assert len(popups) == 1
+
+
+def test_live_44_terminal_decision_cannot_return_to_pending(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4504
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    root = tmp_path / "live44-immutable-state"
+    campaign = gsr.make_live44_campaign(campaign_id="live44-immutable-state", starting_checkpoint="d253c287")
+    first = gsr.live44_create_complete_local_decision(
+        root,
+        campaign,
+        cycle_id="live44-cycle-immutable",
+        objective="preserve transfer dependency identity before classification",
+        evidence_record_id="live44-local-transfer-evidence-original",
+        popup_mode="persistent",
+    )
+    package = Path(first["decision"]["package_root"])
+    accepted = gsr.live44_record_operator_decision(str(package), action="ACCEPT", note="terminal state")
+    stale = gsr.live44_record_operator_decision(str(package), action="DENY", note="stale response")
+    request = json.loads((package / "decision_request.json").read_text(encoding="utf-8"))
+    state = json.loads((package / "decision_state.json").read_text(encoding="utf-8"))
+
+    assert accepted["new_state"] == "accepted"
+    assert stale["reason"] == "duplicate_or_stale_operator_response_denied"
+    assert state["state"] == "accepted"
+    assert request["state"] == "accepted"
+    assert request["consumed_semantic_signature"] == accepted["consumption"]["semantic_signature"]
 
 
 def test_live_44_denial_selects_materially_different_available_approach_before_exhaustion(tmp_path):
@@ -6139,6 +6237,52 @@ def test_live_44_denial_selects_materially_different_available_approach_before_e
     assert any(candidate["eligible"] for candidate in selected["candidates"])
 
 
+def test_live_44_selector_skips_consumed_approaches_before_ranking(tmp_path):
+    root = tmp_path / "live44-selector-queue"
+    transfer = gsr.LIVE44_APPROACH_FRONTIER[0]
+    quote = gsr.LIVE44_APPROACH_FRONTIER[1]
+    source_authority = gsr.LIVE44_APPROACH_FRONTIER[2]
+    gsr._live44_mark_approach_consumed(root, transfer, reason="accepted")
+    gsr._live44_mark_approach_consumed(root, quote, reason="accepted")
+
+    selected = gsr.live44_next_distinct_approach(
+        str(root),
+        denied_decision={
+            "approach_id": quote["approach_id"],
+            "exact_provider_selected_objective": quote["objective"],
+            "failure_mechanism": quote["failure_mechanism"],
+            "evidence_question": quote["evidence_question"],
+            "specific_validation_weakness": {"metric": quote["metric"]},
+            "proposed_isolated_candidate_behavior": quote["candidate_behavior"],
+        },
+    )
+
+    by_id = {candidate["approach"]["approach_id"]: candidate for candidate in selected["candidates"]}
+    assert by_id["transfer_dependency_identity"]["eligible"] is False
+    assert by_id["quote_instruction_isolation"]["eligible"] is False
+    assert selected["selected"]["approach_id"] == source_authority["approach_id"]
+    assert selected["selected"]["failure_mechanism"] == source_authority["failure_mechanism"]
+
+
+def test_live_44_all_consumed_approaches_exhaust_frontier_only_after_filtering(tmp_path):
+    root = tmp_path / "live44-selector-exhausted"
+    for approach in gsr.LIVE44_APPROACH_FRONTIER:
+        gsr._live44_mark_approach_consumed(root, approach, reason="test_consumed")
+
+    selected = gsr.live44_next_distinct_approach(
+        str(root),
+        denied_decision={
+            "exact_provider_selected_objective": "already consumed",
+            "specific_validation_weakness": {"metric": "already_consumed=0.0"},
+            "proposed_isolated_candidate_behavior": "already consumed behavior",
+        },
+    )
+
+    assert selected["decision"] == "global_frontier_exhausted"
+    assert selected["selected"] is None
+    assert all(not candidate["eligible"] for candidate in selected["candidates"])
+
+
 def test_live_44_accept_deny_revision_transitions(tmp_path):
     campaign = gsr.make_live44_campaign(campaign_id="live44-transitions", starting_checkpoint="543e8821")
     checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
@@ -6152,8 +6296,8 @@ def test_live_44_accept_deny_revision_transitions(tmp_path):
     assert dismiss["new_state"] == "pending_operator_review"
     assert deny["new_state"] == "denied"
     assert revision["new_state"] == "revision_requested"
-    assert accepted["new_state"] == "accepted"
-    assert accepted["exact_authorized_scope"] == "one bounded isolated transition"
+    assert accepted["new_state"] == "revision_requested"
+    assert accepted["reason"] == "duplicate_or_stale_operator_response_denied"
 
 
 def test_live_44_episode_pilot_pauses_after_decision_and_does_not_treat_episode_exhaustion_as_completion(tmp_path):

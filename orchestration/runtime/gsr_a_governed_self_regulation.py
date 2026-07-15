@@ -30698,9 +30698,28 @@ def _live44_review_summary(decision: Mapping[str, Any]) -> str:
     ))
 
 
-def _live44_operator_decision_package(root: Path, campaign: MutableMapping[str, Any], *, cycle_id: str, decision_type: str, requested_action: str, provider_usage: Mapping[str, Any], checkpoint: Mapping[str, Any]) -> dict[str, Any]:
+def _live44_operator_decision_package(root: Path, campaign: MutableMapping[str, Any], *, cycle_id: str, decision_type: str, requested_action: str, provider_usage: Mapping[str, Any], checkpoint: Mapping[str, Any], persist: bool = True) -> dict[str, Any]:
     decision_id = stable_id("live44-decision", campaign["campaign_id"], cycle_id, decision_type, requested_action)
     package_root = root / "operator_decisions" / decision_id
+    existing_state_path = package_root / "decision_state.json"
+    if existing_state_path.exists():
+        existing_state = json.loads(existing_state_path.read_text(encoding="utf-8"))
+        if existing_state.get("state") not in {"pending_operator_review", "local_enrichment_required"}:
+            existing_request_path = package_root / "decision_request.json"
+            existing_request = json.loads(existing_request_path.read_text(encoding="utf-8")) if existing_request_path.exists() else {}
+            return {
+                **existing_request,
+                "campaign_id": campaign["campaign_id"],
+                "cycle_id": existing_request.get("cycle_id", cycle_id),
+                "decision_id": decision_id,
+                "decision_type": existing_request.get("decision_type", decision_type),
+                "requested_action": existing_request.get("requested_action", requested_action),
+                "provider_usage": dict(provider_usage),
+                "current_checkpoint": checkpoint.get("path", ""),
+                "state": existing_state.get("state"),
+                "package_root": str(package_root),
+                "review_summary": (package_root / "decision_summary.txt").read_text(encoding="utf-8") if (package_root / "decision_summary.txt").exists() else "",
+            }
     decision = {
         "campaign_id": campaign["campaign_id"],
         "cycle_id": cycle_id,
@@ -30727,6 +30746,9 @@ def _live44_operator_decision_package(root: Path, campaign: MutableMapping[str, 
         "artifact_root": str(root),
         "state": "pending_operator_review",
     }
+    summary = _live44_review_summary(decision)
+    if not persist:
+        return {**decision, "package_root": str(package_root), "review_summary": summary}
     files = {
         "decision_request.json": decision,
         "evidence_manifest.json": {"supporting_evidence": decision["strongest_supporting_evidence"], "opposing_evidence": decision["strongest_opposing_evidence"]},
@@ -30740,7 +30762,6 @@ def _live44_operator_decision_package(root: Path, campaign: MutableMapping[str, 
     }
     for name, payload in files.items():
         _live44_write_json(package_root / name, payload)
-    summary = _live44_review_summary(decision)
     (package_root / "decision_summary.txt").write_text(summary, encoding="utf-8")
     campaign["pending_decision_id"] = decision_id
     campaign["campaign_state"] = "paused_pending_operator_review"
@@ -30841,7 +30862,31 @@ def _live44_launch_decision_popup(decision: Mapping[str, Any], *, mode: str = "t
             "        status.config(text=f'Failed to record decision: {exc}')",
             "root = tk.Tk()",
             "root.title(payload['title'])",
-            "tk.Label(root, text=payload['review_summary'], justify='left', padx=12, pady=12).pack()",
+            "root.geometry('760x520')",
+            "root.minsize(560, 360)",
+            "summary_frame = tk.Frame(root); summary_frame.pack(fill='both', expand=True, padx=8, pady=8)",
+            "scrollbar = tk.Scrollbar(summary_frame); scrollbar.pack(side='right', fill='y')",
+            "summary = tk.Text(summary_frame, wrap='word', width=82, height=20, yscrollcommand=scrollbar.set)",
+            "summary.insert('1.0', payload['review_summary'])",
+            "summary.configure(state='disabled')",
+            "summary.pack(side='left', fill='both', expand=True)",
+            "scrollbar.config(command=summary.yview)",
+            "def copy_selection(event=None):",
+            "    try:",
+            "        selected = summary.get('sel.first', 'sel.last')",
+            "    except tk.TclError:",
+            "        selected = payload['review_summary']",
+            "    root.clipboard_clear(); root.clipboard_append(selected)",
+            "    return 'break'",
+            "def select_all(event=None):",
+            "    summary.tag_add('sel', '1.0', 'end-1c')",
+            "    summary.focus_set()",
+            "    return 'break'",
+            "summary.bind('<Control-c>', copy_selection)",
+            "summary.bind('<Control-C>', copy_selection)",
+            "summary.bind('<Control-a>', select_all)",
+            "summary.bind('<Control-A>', select_all)",
+            "summary.focus_set()",
             "buttons = tk.Frame(root); buttons.pack(pady=8)",
             "tk.Button(buttons, text='Open Evidence Folder', command=lambda: os.startfile(artifact_root)).pack(side='left', padx=3)",
             "tk.Button(buttons, text='Copy Review Summary', command=lambda: (root.clipboard_clear(), root.clipboard_append(payload['review_summary']))).pack(side='left', padx=3)",
@@ -30860,11 +30905,23 @@ def _live44_launch_decision_popup(decision: Mapping[str, Any], *, mode: str = "t
 
 
 def live44_record_operator_decision(package_root: str, *, action: str, note: str = "") -> dict[str, Any]:
-    state_path = Path(package_root) / "decision_state.json"
+    package = Path(package_root)
+    state_path = package / "decision_state.json"
     state = json.loads(state_path.read_text(encoding="utf-8"))
     prior = state["state"]
+    if prior != "pending_operator_review":
+        return {
+            "decision_id": state["decision_id"],
+            "prior_state": prior,
+            "new_state": prior,
+            "exact_operator_action": action,
+            "accepted": False,
+            "reason": "duplicate_or_stale_operator_response_denied",
+            "timestamp": utc_now(),
+        }
     transitions = {"ACCEPT": "accepted", "DENY": "denied", "REQUEST_REVISION": "revision_requested", "DISMISS": "pending_operator_review"}
     new_state = transitions[action]
+    decision_request = json.loads((package / "decision_request.json").read_text(encoding="utf-8"))
     result = {
         "decision_id": state["decision_id"],
         "prior_state": prior,
@@ -30874,11 +30931,19 @@ def live44_record_operator_decision(package_root: str, *, action: str, note: str
         "approved_budget": {"provider_calls": 0, "local_actions": 1} if new_state == "accepted" else {},
         "operator_note": note,
         "timestamp": utc_now(),
-        "checkpoint": json.loads((Path(package_root) / "resume_checkpoint.json").read_text(encoding="utf-8")),
+        "checkpoint": json.loads((package / "resume_checkpoint.json").read_text(encoding="utf-8")),
         "artifact_digest": "",
     }
+    if new_state != "pending_operator_review":
+        campaign_root = package.parent.parent
+        result["consumption"] = _live44_consume_terminal_operator_decision(campaign_root, decision_request, operator_action=action, new_state=new_state, note=note)
     result["artifact_digest"] = _live41_digest(result)
-    _live44_write_json(Path(package_root) / "decision_result.json", result)
+    _live44_write_json(package / "decision_result.json", result)
+    if new_state != "pending_operator_review":
+        decision_request["state"] = new_state
+        decision_request["terminal_operator_action"] = action
+        decision_request["consumed_semantic_signature"] = result["consumption"]["semantic_signature"]
+        _live44_write_json(package / "decision_request.json", decision_request)
     _live44_write_json(state_path, {"decision_id": state["decision_id"], "state": new_state})
     return result
 
@@ -31072,9 +31137,84 @@ def live44_proposal_signature_available(campaign_root: str, proposal: Mapping[st
     root = Path(campaign_root)
     signature = live44_semantic_proposal_signature(proposal)
     consumed_path = root / "consumed_proposal_signatures.json"
-    consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
+    consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": [], "records": []}
     available = signature not in set(consumed.get("signatures", ()))
-    return {"available": available, "signature": signature, "decision": "allowed" if available else "denied_duplicate_consumed_signature"}
+    action = ""
+    for record in consumed.get("records", ()):
+        if record.get("signature") == signature:
+            action = str(record.get("operator_action", record.get("reason", ""))).lower()
+            break
+    if action == "revision_requested":
+        duplicate_reason = "revision_duplicate_consumed_signature"
+    else:
+        duplicate_reason = f"{action}_duplicate_consumed_signature" if action in {"accepted", "denied"} else "duplicate_consumed_signature"
+    return {"available": available, "signature": signature, "decision": "allowed" if available else duplicate_reason, "consumed_action": action}
+
+
+def _live44_consumed_decision_pair(decision: Mapping[str, Any]) -> str:
+    return stable_id("live44-decision-pair", decision.get("cycle_id", ""), decision.get("decision_id", ""))
+
+
+def live44_consumed_decision_available(campaign_root: str, decision: Mapping[str, Any]) -> dict[str, Any]:
+    root = Path(campaign_root)
+    path = root / "consumed_operator_decisions.json"
+    consumed = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"decision_ids": [], "cycle_decision_pairs": [], "records": []}
+    pair = _live44_consumed_decision_pair(decision)
+    decision_id = str(decision.get("decision_id", ""))
+    blocked = decision_id in set(consumed.get("decision_ids", ())) or pair in set(consumed.get("cycle_decision_pairs", ()))
+    action = ""
+    for record in consumed.get("records", ()):
+        if record.get("decision_id") == decision_id or record.get("cycle_decision_pair") == pair:
+            action = str(record.get("operator_action", "")).lower()
+            break
+    return {"available": not blocked, "decision_id": decision_id, "cycle_decision_pair": pair, "decision": "allowed" if not blocked else f"{action}_decision_replay_blocked", "consumed_action": action}
+
+
+def _live44_consume_terminal_operator_decision(root: Path, decision: Mapping[str, Any], *, operator_action: str, new_state: str, note: str = "") -> dict[str, Any]:
+    signature = live44_semantic_proposal_signature(decision)
+    pair = _live44_consumed_decision_pair(decision)
+    decision_id = str(decision.get("decision_id", ""))
+    proposal_path = root / "consumed_proposal_signatures.json"
+    proposals = json.loads(proposal_path.read_text(encoding="utf-8")) if proposal_path.exists() else {"signatures": [], "records": []}
+    proposals["signatures"] = tuple(dict.fromkeys(tuple(proposals.get("signatures", ())) + (signature,)))
+    proposal_records = tuple(proposals.get("records", ())) + ({
+        "signature": signature,
+        "decision_id": decision_id,
+        "cycle_id": decision.get("cycle_id", ""),
+        "operator_action": new_state,
+        "note": note,
+        "timestamp": utc_now(),
+    },)
+    proposals["records"] = proposal_records
+    _live44_write_json(proposal_path, proposals)
+    decision_path = root / "consumed_operator_decisions.json"
+    consumed = json.loads(decision_path.read_text(encoding="utf-8")) if decision_path.exists() else {"decision_ids": [], "cycle_decision_pairs": [], "records": []}
+    consumed["decision_ids"] = tuple(dict.fromkeys(tuple(consumed.get("decision_ids", ())) + (decision_id,)))
+    consumed["cycle_decision_pairs"] = tuple(dict.fromkeys(tuple(consumed.get("cycle_decision_pairs", ())) + (pair,)))
+    consumed["records"] = tuple(consumed.get("records", ())) + ({
+        "decision_id": decision_id,
+        "cycle_id": decision.get("cycle_id", ""),
+        "cycle_decision_pair": pair,
+        "semantic_signature": signature,
+        "operator_action": new_state,
+        "exact_operator_action": operator_action,
+        "note": note,
+        "timestamp": utc_now(),
+    },)
+    _live44_write_json(decision_path, consumed)
+    _live44_mark_approach_consumed(
+        root,
+        {
+            "approach_id": decision.get("approach_id", ""),
+            "objective": decision.get("exact_provider_selected_objective", ""),
+            "failure_mechanism": decision.get("failure_mechanism", ""),
+            "evidence_question": decision.get("evidence_question", ""),
+            "metric": decision.get("specific_validation_weakness", {}).get("metric", ""),
+            "candidate_behavior": decision.get("proposed_isolated_candidate_behavior", ""),
+        },
+        reason=f"operator_{new_state}",
+    )
+    return {"decision_id": decision_id, "cycle_decision_pair": pair, "semantic_signature": signature, "operator_action": new_state}
 
 
 LIVE44_APPROACH_FRONTIER: tuple[dict[str, Any], ...] = (
@@ -31103,21 +31243,131 @@ LIVE44_APPROACH_FRONTIER: tuple[dict[str, Any], ...] = (
         "information_gain": 0.79,
     },
     {
-        "approach_id": "source_quality_scope_disambiguation",
-        "objective": "distinguish source-quality conflict from factual contradiction",
-        "failure_mechanism": "source quality versus factual contradiction",
-        "evidence_question": "does contradiction handling separate source-quality weakness from direct factual disagreement",
-        "metric": "source_quality_scope_disambiguation=0.0",
-        "evidence_prefix": "live44-local-source-quality-evidence",
-        "finding": "source-quality weakness can be mislabeled as factual contradiction",
-        "candidate_behavior": "preserve source-quality and scope labels before contradiction classification",
-        "overlap": "partial_with_LIVE43; composition remains unproven for source-quality conflict handling",
+        "approach_id": "source_authority_conflict",
+        "objective": "separate source authority conflict from factual contradiction",
+        "failure_mechanism": "source authority conflict handling",
+        "evidence_question": "does contradiction handling distinguish source authority mismatch from direct factual disagreement",
+        "metric": "source_authority_conflict=0.0",
+        "evidence_prefix": "live44-local-source-authority-evidence",
+        "finding": "source authority mismatch can be mislabeled as factual contradiction",
+        "candidate_behavior": "preserve authority, scope, and source-quality labels before contradiction classification",
+        "overlap": "partial_with_LIVE43; composition remains unproven for source authority conflict handling",
         "information_gain": 0.76,
+    },
+    {
+        "approach_id": "contradictory_evidence_reconciliation",
+        "objective": "reconcile contradictory evidence without false resolution",
+        "failure_mechanism": "contradictory evidence reconciliation",
+        "evidence_question": "does the runtime preserve two incompatible supported claims without selecting an unsupported winner",
+        "metric": "contradictory_evidence_reconciliation=0.0",
+        "evidence_prefix": "live44-local-contradiction-reconciliation-evidence",
+        "finding": "conflicting supported claims can be prematurely resolved",
+        "candidate_behavior": "represent incompatible supported claims as unresolved contradiction with both evidence links",
+        "overlap": "partial_with_LIVE43; retained contradiction localization has not been tested for reconciliation behavior",
+        "information_gain": 0.75,
+    },
+    {
+        "approach_id": "missing_premise_detection",
+        "objective": "detect missing premise before contradiction classification",
+        "failure_mechanism": "missing premise detection",
+        "evidence_question": "does the reasoning path identify an unstated dependency before labeling a contradiction",
+        "metric": "missing_premise_detection=0.0",
+        "evidence_prefix": "live44-local-missing-premise-evidence",
+        "finding": "unstated premise can be skipped before contradiction classification",
+        "candidate_behavior": "extract required but unstated premises before contradiction or transfer scoring",
+        "overlap": "none_exact; prior capabilities preserve spans but do not identify missing premises",
+        "information_gain": 0.74,
+    },
+    {
+        "approach_id": "provenance_retention",
+        "objective": "retain claim provenance through transfer validation",
+        "failure_mechanism": "claim provenance retention",
+        "evidence_question": "does transfer validation preserve source span identity for each carried claim",
+        "metric": "provenance_retention=0.0",
+        "evidence_prefix": "live44-local-provenance-retention-evidence",
+        "finding": "claim provenance can be dropped while the claim text survives",
+        "candidate_behavior": "carry source span provenance alongside claim text through validation",
+        "overlap": "partial_with_LIVE43; retained provenance has not been tested through transfer validation",
+        "information_gain": 0.73,
+    },
+    {
+        "approach_id": "transfer_failure_localization",
+        "objective": "localize transfer failure before proposing repair",
+        "failure_mechanism": "transfer failure localization",
+        "evidence_question": "does validation identify the exact transition where a held-out transfer case fails",
+        "metric": "transfer_failure_localization=0.0",
+        "evidence_prefix": "live44-local-transfer-localization-evidence",
+        "finding": "transfer failure can be recorded without localizing the first incorrect transition",
+        "candidate_behavior": "record first incorrect transfer transition before candidate design",
+        "overlap": "none_exact; dependency preservation does not localize transfer failure transitions",
+        "information_gain": 0.72,
+    },
+    {
+        "approach_id": "control_case_preservation",
+        "objective": "preserve unrelated control cases while narrowing failures",
+        "failure_mechanism": "control-case preservation",
+        "evidence_question": "does a proposed local repair avoid changing unrelated control classifications",
+        "metric": "control_case_preservation=0.0",
+        "evidence_prefix": "live44-local-control-case-evidence",
+        "finding": "narrow failure repair may perturb unrelated control classification",
+        "candidate_behavior": "validate target failure repair against unrelated control examples before retention",
+        "overlap": "none_exact; current frontier does not require control stability before isolated candidate approval",
+        "information_gain": 0.71,
+    },
+    {
+        "approach_id": "ambiguity_classification",
+        "objective": "classify ambiguous evidence as unresolved rather than contradicted",
+        "failure_mechanism": "ambiguity classification",
+        "evidence_question": "does the classifier preserve ambiguity when evidence is insufficient for contradiction",
+        "metric": "ambiguity_classification=0.0",
+        "evidence_prefix": "live44-local-ambiguity-evidence",
+        "finding": "ambiguous evidence can be forced into contradiction classification",
+        "candidate_behavior": "route insufficient or ambiguous evidence to unresolved state before contradiction scoring",
+        "overlap": "none_exact; ambiguity handling remains separate from source-quality and quote isolation",
+        "information_gain": 0.70,
+    },
+    {
+        "approach_id": "evidence_sufficiency_threshold",
+        "objective": "require sufficient evidence before operator decision popup",
+        "failure_mechanism": "evidence sufficiency threshold",
+        "evidence_question": "does the completeness gate distinguish decision-ready evidence from merely plausible evidence",
+        "metric": "evidence_sufficiency_threshold=0.0",
+        "evidence_prefix": "live44-local-sufficiency-threshold-evidence",
+        "finding": "plausible but under-supported evidence can reach operator review",
+        "candidate_behavior": "score evidence sufficiency before opening operator decision requests",
+        "overlap": "partial_with_LIVE44 completeness gate; threshold calibration remains unproven",
+        "information_gain": 0.69,
+    },
+    {
+        "approach_id": "held_out_generalization",
+        "objective": "verify held-out generalization after local candidate success",
+        "failure_mechanism": "held-out generalization",
+        "evidence_question": "does a candidate that fixes the target case also improve sealed held-out cases",
+        "metric": "held_out_generalization=0.0",
+        "evidence_prefix": "live44-local-heldout-generalization-evidence",
+        "finding": "target-case improvement can fail to generalize to held-out evidence",
+        "candidate_behavior": "require held-out improvement before retaining an isolated candidate",
+        "overlap": "none_exact; current local candidate flow can validate target evidence without held-out proof",
+        "information_gain": 0.68,
+    },
+    {
+        "approach_id": "false_positive_suppression",
+        "objective": "suppress false-positive contradiction classifications",
+        "failure_mechanism": "false-positive suppression",
+        "evidence_question": "does the classifier avoid labeling compatible or unrelated claims as contradictions",
+        "metric": "false_positive_suppression=0.0",
+        "evidence_prefix": "live44-local-false-positive-evidence",
+        "finding": "compatible or unrelated claims can be marked as contradictions",
+        "candidate_behavior": "add compatibility and unrelated-control checks before contradiction classification",
+        "overlap": "none_exact; source-quality and ambiguity handling do not directly suppress false positives",
+        "information_gain": 0.67,
     },
 )
 
 
 def live44_approach_signature(approach: Mapping[str, Any]) -> str:
+    if approach.get("approach_id"):
+        return stable_id("live44-approach", approach.get("approach_id", ""))
     payload = {
         "approach_id": approach.get("approach_id", ""),
         "objective": approach.get("objective", ""),
@@ -31149,19 +31399,34 @@ def _live44_mark_approach_consumed(root: Path, approach: Mapping[str, Any], *, r
 def live44_next_distinct_approach(campaign_root: str, *, denied_decision: Mapping[str, Any]) -> dict[str, Any]:
     root = Path(campaign_root)
     consumed = _live44_consumed_approach_signatures(root)
+    consumed_proposals = json.loads((root / "consumed_proposal_signatures.json").read_text(encoding="utf-8")) if (root / "consumed_proposal_signatures.json").exists() else {"signatures": []}
+    consumed_proposal_signatures = set(consumed_proposals.get("signatures", ()))
     denied_objective = _live44_normalized_semantic_text(denied_decision.get("exact_provider_selected_objective", ""))
     denied_behavior = _live44_normalized_semantic_text(denied_decision.get("proposed_isolated_candidate_behavior", ""))
     denied_metric = _live44_normalized_semantic_text(denied_decision.get("specific_validation_weakness", {}).get("metric", ""))
     candidates = []
     for index, approach in enumerate(LIVE44_APPROACH_FRONTIER):
         signature = live44_approach_signature(approach)
+        proposal_probe = {
+            "exact_provider_selected_objective": approach["objective"],
+            "provider_response_excerpt": {
+                "candidate_objectives": (approach["objective"],),
+                "rationale": "existing provider ranking pointed to transfer weakness; local episode supplied exact failing evidence",
+                "response_id": "local-reuse-of-existing-provider-evidence",
+            },
+            "specific_validation_weakness": {"metric": approach["metric"]},
+            "proposed_isolated_candidate_behavior": approach["candidate_behavior"],
+            "duplicate_overlap_check": {"overlap": approach["overlap"]},
+            "expected_information_gain": approach["information_gain"],
+        }
+        proposal_signature = live44_semantic_proposal_signature(proposal_probe)
         same_mechanism = (
             _live44_normalized_semantic_text(approach["objective"]) == denied_objective
             or _live44_normalized_semantic_text(approach["candidate_behavior"]) == denied_behavior
             or _live44_normalized_semantic_text(approach["metric"]) == denied_metric
         )
-        eligible = signature not in consumed and not same_mechanism
-        candidates.append({"approach": approach, "signature": signature, "eligible": eligible, "reason": "eligible_distinct_approach" if eligible else "consumed_or_same_mechanism", "rank": index})
+        eligible = signature not in consumed and proposal_signature not in consumed_proposal_signatures and not same_mechanism
+        candidates.append({"approach": approach, "signature": signature, "proposal_signature": proposal_signature, "eligible": eligible, "reason": "eligible_distinct_approach" if eligible else "consumed_approach_or_proposal_or_same_mechanism", "rank": index})
     selected = next((candidate for candidate in candidates if candidate["eligible"]), None)
     result = {"selected": selected["approach"] if selected else None, "selected_signature": selected["signature"] if selected else "", "candidates": candidates, "decision": "selected_distinct_approach" if selected else "global_frontier_exhausted"}
     _live44_write_json(root / "approach_frontier_selection.json", result)
@@ -31250,6 +31515,7 @@ def live44_create_complete_local_decision(campaign_root: str, campaign: MutableM
         requested_action="execute isolated local-only candidate after exact evidence compilation",
         provider_usage={"provider_calls": campaign.get("provider_calls", 0), "token_usage": {}},
         checkpoint=checkpoint,
+        persist=False,
     )
     decision.update(
         {
@@ -31291,31 +31557,57 @@ def live44_create_complete_local_decision(campaign_root: str, campaign: MutableM
         }
     )
     package_root = Path(decision["package_root"])
+    existing_state_path = package_root / "decision_state.json"
+    if existing_state_path.exists():
+        existing_state = json.loads(existing_state_path.read_text(encoding="utf-8"))
+        if existing_state.get("state") not in {"pending_operator_review", "local_enrichment_required"}:
+            availability = live44_proposal_signature_available(str(root), decision)
+            decision_availability = live44_consumed_decision_available(str(root), decision)
+            replay_state = availability["decision"] if not availability["available"] else decision_availability["decision"]
+            _live44_write_json(package_root / "replay_blocked.json", {"reason": replay_state, "signature_check": availability, "decision_replay_check": decision_availability, "attempted_evidence_record_id": evidence_record_id, "timestamp": utc_now()})
+            campaign["pending_decision_id"] = ""
+            return {"accepted": False, "reason": replay_state, "decision": decision, "signature_check": availability, "decision_replay_check": decision_availability, "popup": {"popup_created": False, "reason": "terminal_decision_is_immutable"}}
+    summary = _live44_review_summary(decision)
+    completeness = live44_decision_package_completeness(decision)
+    if not completeness["complete"]:
+        campaign["campaign_state"] = "local_enrichment_required"
+        campaign["pending_decision_id"] = ""
+        _live44_write_json(package_root / "decision_completeness.json", completeness)
+        return {"accepted": False, "reason": "complete_local_decision_failed_completeness_gate", "decision": decision, "completeness": completeness}
+    availability = live44_proposal_signature_available(str(root), decision)
+    if not availability["available"]:
+        replay_state = availability["decision"]
+        decision["state"] = replay_state
+        _live44_write_json(package_root / "replay_blocked.json", {"reason": replay_state, "signature_check": availability, "attempted_decision": decision, "timestamp": utc_now()})
+        campaign["pending_decision_id"] = ""
+        return {"accepted": False, "reason": replay_state, "decision": decision, "completeness": completeness, "signature_check": availability, "popup": {"popup_created": False, "reason": "semantic_proposal_already_consumed"}}
+    decision_availability = live44_consumed_decision_available(str(root), decision)
+    if not decision_availability["available"]:
+        replay_state = decision_availability["decision"]
+        decision["state"] = replay_state
+        _live44_write_json(package_root / "replay_blocked.json", {"reason": replay_state, "decision_replay_check": decision_availability, "attempted_decision": decision, "timestamp": utc_now()})
+        campaign["pending_decision_id"] = ""
+        return {"accepted": False, "reason": replay_state, "decision": decision, "completeness": completeness, "decision_replay_check": decision_availability, "popup": {"popup_created": False, "reason": "decision_or_cycle_pair_already_consumed"}}
     files = {
         "decision_request.json": decision,
         "evidence_manifest.json": {
             "supporting_evidence": decision["local_evidence_records"],
             "opposing_evidence": ("candidate still requires isolated validation",),
         },
+        "alternatives.json": {"alternatives": decision["alternatives"]},
+        "risk_assessment.json": {"risks": decision["risks"], "reversibility": decision["reversibility"]},
         "recommended_action.json": {"recommended_choice": decision["recommended_choice"]},
         "provider_usage.json": dict(decision["provider_usage"]),
         "affected_scope.json": {"affected_files": (), "affected_mechanisms": decision["affected_mechanisms"]},
+        "resume_checkpoint.json": {"checkpoint": checkpoint},
+        "decision_state.json": {"decision_id": decision["decision_id"], "state": "pending_operator_review"},
+        "decision_completeness.json": completeness,
+        "proposal_signature_check.json": availability,
+        "decision_replay_check.json": decision_availability,
     }
     for name, payload in files.items():
         _live44_write_json(package_root / name, payload)
-    summary = _live44_review_summary(decision)
     (package_root / "decision_summary.txt").write_text(summary, encoding="utf-8")
-    completeness = live44_decision_package_completeness(decision)
-    _live44_write_json(package_root / "decision_completeness.json", completeness)
-    if not completeness["complete"]:
-        campaign["campaign_state"] = "local_enrichment_required"
-        campaign["pending_decision_id"] = ""
-        return {"accepted": False, "reason": "complete_local_decision_failed_completeness_gate", "decision": decision, "completeness": completeness}
-    availability = live44_proposal_signature_available(str(root), decision)
-    _live44_write_json(package_root / "proposal_signature_check.json", availability)
-    if not availability["available"]:
-        _live44_write_json(package_root / "decision_state.json", {"decision_id": decision["decision_id"], "state": "denied_duplicate_consumed_signature"})
-        return {"accepted": False, "reason": "denied_duplicate_consumed_signature", "decision": decision, "completeness": completeness, "signature_check": availability, "popup": {"popup_created": False, "reason": "semantic_proposal_already_consumed"}}
     popup = _live44_launch_decision_popup({**decision, "review_summary": summary}, mode=popup_mode)
     campaign["campaign_state"] = "paused_pending_operator_review"
     campaign["pending_decision_id"] = decision["decision_id"]
@@ -31389,6 +31681,7 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
             if current.get("state") not in {"pending_operator_review", "local_enrichment_required"}:
                 if current.get("state") == "accepted":
                     accepted_decision_id = campaign["pending_decision_id"]
+                    accepted_decision = json.loads((decision_root / "decision_request.json").read_text(encoding="utf-8"))
                     execution = {
                         "decision_id": accepted_decision_id,
                         "authorization_consumed": True,
@@ -31404,15 +31697,47 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                     campaign["completed_episodes"] = followup_episode
                     campaign["completed_productive_cycles"] += 1
                     campaign["local_actions"] += 1
-                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "accepted-candidate-validation-and-followup", "productive_cycles": 1, "terminal_reason": "accepted_authorization_executed_once"})
+                    approach_selection = live44_next_distinct_approach(str(root), denied_decision=accepted_decision)
+                    if not approach_selection.get("selected"):
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        campaign["pending_decision_id"] = ""
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": "no_materially_distinct_approach_available_after_accept",
+                            "accepted_decision_id": accepted_decision_id,
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                            "approach_selection": approach_selection,
+                        }
+                        _live44_write_json(root / "approach_frontier_exhausted.json", wait_result)
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "no_materially_distinct_approach_available_after_accept"})
+                        break
+                    next_approach = dict(approach_selection["selected"])
+                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "accepted-candidate-validation-and-distinct-followup", "productive_cycles": 1, "terminal_reason": "accepted_authorization_executed_once", "next_approach_id": next_approach.get("approach_id"), "failure_mechanism": next_approach.get("failure_mechanism"), "evidence_question": next_approach.get("evidence_question")})
                     followup = live44_create_complete_local_decision(
                         root,
                         campaign,
-                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-accept-followup"),
-                        objective="validate accepted candidate transfer stability follow-up",
-                        evidence_record_id=stable_id("live44-local-followup-evidence", campaign["campaign_id"], followup_episode),
+                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-accept-followup", next_approach.get("approach_id")),
+                        objective=str(next_approach["objective"]),
+                        evidence_record_id=stable_id(str(next_approach["evidence_prefix"]), campaign["campaign_id"], followup_episode),
                         popup_mode=popup_mode,
+                        approach=next_approach,
                     )
+                    if not followup.get("accepted"):
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        campaign["pending_decision_id"] = ""
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": followup.get("reason", "accepted_followup_unavailable"),
+                            "accepted_decision_id": accepted_decision_id,
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                            "approach_selection": approach_selection,
+                        }
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "accepted_followup_unavailable"})
+                        break
                     decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
                     state_path = decision_root / "decision_state.json"
                     wait_events.append({"state": "accepted_executed_and_followup_popup_created", "accepted_decision_id": accepted_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
@@ -31505,18 +31830,18 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                     followup = live44_create_complete_local_decision(
                         root,
                         campaign,
-                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-deny-followup"),
+                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-deny-followup", next_approach.get("approach_id")),
                         objective=followup_objective,
                         evidence_record_id=followup_evidence_id,
                         popup_mode=popup_mode,
                         approach=next_approach,
                     )
-                    if not followup.get("accepted") and followup.get("reason") == "denied_duplicate_consumed_signature":
+                    if not followup.get("accepted"):
                         campaign["campaign_state"] = "global_frontier_exhausted"
                         campaign["pending_decision_id"] = ""
                         wait_result = {
                             "state": "global_frontier_exhausted",
-                            "reason": "denied_duplicate_consumed_signature",
+                            "reason": followup.get("reason", "denied_followup_unavailable"),
                             "denied_decision_id": denied_decision_id,
                             "blocked_signature": followup.get("signature_check", {}).get("signature"),
                             "iterations": wait_iterations,
@@ -31529,6 +31854,58 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                     decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
                     state_path = decision_root / "decision_state.json"
                     wait_events.append({"state": "denied_consumed_and_followup_popup_created", "denied_decision_id": denied_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
+                    _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "iterations": wait_iterations, "process_active": True, "events": wait_events})
+                    continue
+                if current.get("state") == "revision_requested":
+                    revision_decision_id = campaign["pending_decision_id"]
+                    revision_decision = json.loads((decision_root / "decision_request.json").read_text(encoding="utf-8"))
+                    campaign["pending_decision_id"] = ""
+                    followup_episode = int(campaign.get("completed_episodes", 0)) + 1
+                    approach_selection = live44_next_distinct_approach(str(root), denied_decision=revision_decision)
+                    if not approach_selection.get("selected"):
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": "no_materially_distinct_approach_available_after_revision",
+                            "revision_decision_id": revision_decision_id,
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                            "approach_selection": approach_selection,
+                        }
+                        _live44_write_json(root / "approach_frontier_exhausted.json", wait_result)
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "no_materially_distinct_approach_available_after_revision"})
+                        break
+                    next_approach = dict(approach_selection["selected"])
+                    campaign["completed_episodes"] = followup_episode
+                    campaign["local_actions"] += 1
+                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "revision-requested-materially-different-followup", "productive_cycles": 0, "terminal_reason": "revision_requested_signature_consumed_and_distinct_episode_started", "next_approach_id": next_approach.get("approach_id"), "failure_mechanism": next_approach.get("failure_mechanism"), "evidence_question": next_approach.get("evidence_question")})
+                    followup = live44_create_complete_local_decision(
+                        root,
+                        campaign,
+                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-revision-followup", next_approach.get("approach_id")),
+                        objective=str(next_approach["objective"]),
+                        evidence_record_id=stable_id(str(next_approach["evidence_prefix"]), campaign["campaign_id"], followup_episode),
+                        popup_mode=popup_mode,
+                        approach=next_approach,
+                    )
+                    if not followup.get("accepted"):
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        campaign["pending_decision_id"] = ""
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": followup.get("reason", "revision_followup_unavailable"),
+                            "revision_decision_id": revision_decision_id,
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                            "approach_selection": approach_selection,
+                        }
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "revision_followup_unavailable"})
+                        break
+                    decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
+                    state_path = decision_root / "decision_state.json"
+                    wait_events.append({"state": "revision_requested_consumed_and_followup_popup_created", "revision_decision_id": revision_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
                     _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "iterations": wait_iterations, "process_active": True, "events": wait_events})
                     continue
                 campaign["pending_decision_id"] = ""
