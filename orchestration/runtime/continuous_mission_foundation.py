@@ -597,6 +597,9 @@ def assess_main_goal_completion(
     satisfied = satisfied_main_goal_criteria(main_goal, knowledge_ledger)
     missing = tuple(item for item in main_goal.success_criteria if item not in set(satisfied))
     if not missing:
+        completion_rationale = "all required criteria have satisfied evidence"
+        if main_goal.next_main_goal_candidates and main_goal.completion_rationale:
+            completion_rationale = f"{completion_rationale}; prior_active_rationale={main_goal.completion_rationale}"
         return MainGoalContract(
             **{
                 **main_goal.as_dict(),
@@ -604,7 +607,7 @@ def assess_main_goal_completion(
                 "capability_changes": tuple(dict.fromkeys(capability_changes + satisfied)),
                 "disposition": "satisfied",
                 "residual_uncertainty": "success criteria satisfied by capability knowledge ledger",
-                "completion_rationale": "all required criteria have satisfied evidence",
+                "completion_rationale": completion_rationale,
             }
         )
     if eligible_frontier_exists:

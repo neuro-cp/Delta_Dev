@@ -460,6 +460,20 @@ def test_meaningful_progress_derives_autonomous_evidence_acquisition():
     assert "idle_resource_efficiency" in next_goal.next_main_goal_candidates
     assert "selected from ranked developmental next-goal candidates" in next_goal.completion_rationale
     assert "resource_need=local_artifact_mining_first" in next_goal.completion_rationale
+    completion_records = records + tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in next_goal.success_criteria
+    )
+    completed_next_goal = assess_main_goal_completion(next_goal, completion_records, eligible_frontier_exists=False)
+    assert "prior_active_rationale=selected from ranked developmental next-goal candidates" in completed_next_goal.completion_rationale
     evidence = derive_subgoal_evidence_for_main_goal(next_goal, records, max_items=1)
     assert evidence[0]["affected_capability"] == "frontier_uncertainty_scan"
 
