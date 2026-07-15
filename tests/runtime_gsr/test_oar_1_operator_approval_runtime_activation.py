@@ -5944,6 +5944,60 @@ def test_live_44_persistent_runner_reaches_complete_popup_after_three_episodes(t
     assert status["campaign"]["completed_episodes"] == 3
 
 
+def test_live_44_accept_executes_once_and_creates_later_popup(tmp_path, monkeypatch):
+    class DummyProcess:
+        next_pid = 4300
+
+        def __init__(self):
+            type(self).next_pid += 1
+            self.pid = type(self).next_pid
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    decision_actions = {"count": 0}
+
+    def operator_sleep(_seconds):
+        root = tmp_path / "live44-accept-resume"
+        paused_path = root / "paused_status.json"
+        if not paused_path.exists():
+            return
+        pending = json.loads(paused_path.read_text(encoding="utf-8")).get("pending_decision_id")
+        if not pending:
+            return
+        package = root / "operator_decisions" / pending
+        state = json.loads((package / "decision_state.json").read_text(encoding="utf-8"))["state"]
+        if state != "pending_operator_review":
+            return
+        decision_actions["count"] += 1
+        if decision_actions["count"] == 1:
+            gsr.live44_record_operator_decision(str(package), action="ACCEPT", note="test accepts first complete popup")
+        elif decision_actions["count"] == 2:
+            gsr.live44_record_operator_decision(str(package), action="DENY", note="test denies follow-up popup to end smoke")
+
+    monkeypatch.setattr(gsr.time, "sleep", operator_sleep)
+    result = gsr.run_live44_exploration_campaign(
+        artifact_root=str(tmp_path),
+        campaign_id="live44-accept-resume",
+        starting_checkpoint="d06ef6f2",
+        episode_limit=200,
+        popup_mode="persistent",
+        idle_seconds=0.1,
+        operator_wait_seconds=5,
+    )
+    root = Path(result["artifact_root"])
+    execution = json.loads((root / "accepted_execution_evidence.json").read_text(encoding="utf-8"))
+    ledger = json.loads((root / "operator_decision_ledger.json").read_text(encoding="utf-8"))
+    status = json.loads((root / "exploration_campaign_status.json").read_text(encoding="utf-8"))
+
+    assert execution["executed_once"] is True
+    assert execution["authorization_consumed"] is True
+    assert execution["provider_calls_added"] == 0
+    assert result["wait_result"]["events"][0]["state"] == "accepted_executed_and_followup_popup_created"
+    assert len(ledger["decisions"]) >= 3
+    assert status["campaign"]["completed_episodes"] >= 5
+    assert status["campaign"]["provider_calls"] == 1
+    assert status["campaign"]["campaign_state"] == "recoverable_paused_after_operator_response"
+
+
 def test_live_44_accept_deny_revision_transitions(tmp_path):
     campaign = gsr.make_live44_campaign(campaign_id="live44-transitions", starting_checkpoint="543e8821")
     checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")

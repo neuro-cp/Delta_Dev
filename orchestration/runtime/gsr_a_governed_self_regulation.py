@@ -31199,7 +31199,12 @@ def live44_create_complete_local_decision(campaign_root: str, campaign: MutableM
     campaign["campaign_state"] = "paused_pending_operator_review"
     campaign["pending_decision_id"] = decision["decision_id"]
     result = {"accepted": True, "decision": decision, "completeness": completeness, "popup": popup}
+    ledger_path = root / "operator_decision_ledger.json"
+    ledger = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path.exists() else {"decisions": []}
+    ledger["decisions"] = tuple(dict.fromkeys(tuple(ledger.get("decisions", ())) + (decision["decision_id"],)))
+    _live44_write_json(ledger_path, ledger)
     _live44_write_json(root / "complete_local_decision_result.json", result)
+    _live44_write_json(root / "popup_status.json", popup)
     _live44_write_json(root / "paused_status.json", {"campaign": campaign, "pending_decision_id": campaign["pending_decision_id"]})
     _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "complete_decision_popup_created"})
     return result
