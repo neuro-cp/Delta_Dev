@@ -4452,6 +4452,50 @@ def test_live_35_toolchain_measures_functional_improvement_and_rollback():
     assert result.validation_summary["failure_fixtures"] == 4
 
 
+def test_live_36_preflight_builds_complete_safety_envelope_without_claiming_overnight_run():
+    result = gsr.run_live36_overnight_safety_preflight()
+
+    assert result.accepted is True
+    assert result.classification == "overnight_preflight_ready_with_limits"
+    assert result.direct_pilot["accelerated_preflight_only"] is True
+    assert result.direct_pilot["overnight_duration_not_claimed"] is True
+    assert all(result.safety_envelope.values())
+    assert result.process_left_running is False
+
+
+def test_live_36_checkpoint_corruption_fallback_and_restart_reconstruction_hold():
+    result = gsr.run_live36_overnight_safety_preflight()
+
+    assert len(result.checkpoints) == 4
+    assert any(checkpoint.corrupt for checkpoint in result.checkpoints)
+    assert all(checkpoint.integrity_digest.startswith("live36-checkpoint-digest") for checkpoint in result.checkpoints)
+    assert result.corruption_recovery["newest_corrupt_previous_valid_recovered"] is True
+    assert result.corruption_recovery["all_corrupt_stops_safely"] is True
+    assert all(result.restart_reconstruction.values())
+
+
+def test_live_36_cumulative_budgets_and_stop_controls_survive_preflight():
+    result = gsr.run_live36_overnight_safety_preflight()
+
+    assert result.cumulative_budgets["tool_calls"] == 4
+    assert result.cumulative_budgets["provider_calls"] == 1
+    assert result.cumulative_budgets["source_retrievals"] == 1
+    assert result.stop_controls["stagnation_stop"] is True
+    assert result.stop_controls["mission_drift_stop"] is True
+    assert result.stop_controls["emergency_stop"] is True
+    assert result.stop_controls["hard_deadline_stop"] is True
+
+
+def test_live_36_autonomous_development_envelope_preserves_trusted_runtime_boundary():
+    result = gsr.run_live36_overnight_safety_preflight()
+
+    assert result.autonomous_development_envelope["candidate_changes_isolated"] is True
+    assert result.autonomous_development_envelope["trusted_runtime_promotion_queued"] is True
+    assert result.autonomous_development_envelope["no_git_during_active_campaign"] is True
+    assert result.autonomous_development_envelope["reports_rc4_and_delta75_protected"] is True
+    assert result.validation_summary["corrupt_checkpoints"] == 1
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

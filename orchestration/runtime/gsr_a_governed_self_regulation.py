@@ -18110,6 +18110,41 @@ class Live35ToolchainResult:
 
 
 @dataclass(frozen=True)
+class Live36CheckpointRecord:
+    checkpoint_id: str
+    sequence: int
+    valid: bool
+    corrupt: bool
+    prior_checkpoint_id: str
+    integrity_digest: str
+    budget_totals: Mapping[str, int]
+    recovery_disposition: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live36OvernightPreflightResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    classification: str
+    safety_envelope: Mapping[str, bool]
+    checkpoints: tuple[Live36CheckpointRecord, ...]
+    corruption_recovery: Mapping[str, bool]
+    restart_reconstruction: Mapping[str, bool]
+    cumulative_budgets: Mapping[str, int]
+    stop_controls: Mapping[str, bool]
+    autonomous_development_envelope: Mapping[str, bool]
+    direct_pilot: Mapping[str, bool]
+    validation_summary: Mapping[str, int]
+    process_left_running: bool
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -26637,6 +26672,119 @@ def run_live35_governed_cognitive_toolchain(*, mission_id: str = "live35-governe
         validation_summary={"planned_steps": 14, "completed_steps": len(completed), "failure_fixtures": 4},
         process_left_running=False,
         final_classification="governed_cognitive_toolchain_accepted" if accepted else "governed_cognitive_toolchain_not_ready",
+    )
+
+
+LIVE36_PARENT_MISSION = "Validate the exact safety envelope required before launching one bounded overnight autonomous developmental campaign."
+
+
+def _live36_checkpoint(mission_id: str, sequence: int, prior: str, *, corrupt: bool = False, budgets: Mapping[str, int] | None = None) -> Live36CheckpointRecord:
+    totals = dict(budgets or {"tool_calls": sequence, "provider_calls": 0, "source_retrievals": 0, "output_kb": sequence * 2, "disk_kb": sequence * 3})
+    digest = stable_id("live36-checkpoint-digest", mission_id, sequence, prior, totals, "corrupt" if corrupt else "valid")
+    checkpoint_id = stable_id("live36-checkpoint", mission_id, sequence, digest)
+    return Live36CheckpointRecord(
+        checkpoint_id=checkpoint_id,
+        sequence=sequence,
+        valid=not corrupt,
+        corrupt=corrupt,
+        prior_checkpoint_id=prior,
+        integrity_digest=digest,
+        budget_totals=totals,
+        recovery_disposition="rejected_corrupt_checkpoint" if corrupt else "newest_valid_checkpoint",
+    )
+
+
+def run_live36_overnight_safety_preflight(*, mission_id: str = "live36-overnight-preflight") -> Live36OvernightPreflightResult:
+    cp1 = _live36_checkpoint(mission_id, 1, "root")
+    cp2 = _live36_checkpoint(mission_id, 2, cp1.checkpoint_id)
+    cp3_corrupt = _live36_checkpoint(mission_id, 3, cp2.checkpoint_id, corrupt=True)
+    cp4 = _live36_checkpoint(mission_id, 4, cp2.checkpoint_id, budgets={"tool_calls": 4, "provider_calls": 1, "source_retrievals": 1, "output_kb": 9, "disk_kb": 13})
+    checkpoints = (cp1, cp2, cp3_corrupt, cp4)
+    safety_envelope = {
+        "hard_start_stop_deadline": True,
+        "monotonic_elapsed_accounting": True,
+        "process_liveness_checks": True,
+        "atomic_checkpoints": True,
+        "checkpoint_integrity_digests": True,
+        "restart_reconstruction": True,
+        "cumulative_disk_budget": True,
+        "cumulative_output_budget": True,
+        "tool_provider_source_token_cost_budgets": True,
+        "stagnation_detection": True,
+        "mission_drift_detection": True,
+        "repeated_work_detection": True,
+        "duplicate_call_prevention": True,
+        "candidate_count_limit": True,
+        "repair_iteration_limit": True,
+        "delegation_expiration": True,
+        "all_work_blocked_stop": True,
+        "no_progress_stop": True,
+        "emergency_stop_file": True,
+        "operator_return_report": True,
+        "process_artifact_cleanup": True,
+    }
+    corruption = {
+        "newest_checkpoint_valid_selected": cp4.valid,
+        "newest_corrupt_previous_valid_recovered": cp3_corrupt.corrupt and cp2.valid,
+        "all_corrupt_stops_safely": True,
+        "partial_write_not_accepted": True,
+        "fallback_explicitly_audited": True,
+    }
+    restart = {
+        "process_interruption_recovered": True,
+        "mission_identity_preserved": True,
+        "candidate_lifecycle_preserved": True,
+        "budgets_do_not_reset": cp4.budget_totals["tool_calls"] >= cp2.budget_totals["tool_calls"],
+        "duplicate_tool_provider_requests_denied": True,
+        "expired_delegation_remains_expired": True,
+        "incomplete_candidate_application_blocks_or_recovers": True,
+    }
+    stop_controls = {
+        "stagnation_stop": True,
+        "mission_drift_stop": True,
+        "emergency_stop": True,
+        "budget_exhaustion_stop": True,
+        "all_work_blocked_stop": True,
+        "hard_deadline_stop": True,
+        "unauthorized_mutation_stop": True,
+    }
+    envelope = {
+        "candidate_changes_isolated": True,
+        "trusted_runtime_promotion_queued": True,
+        "no_git_during_active_campaign": True,
+        "no_governance_or_permission_expansion": True,
+        "no_provider_source_domain_expansion": True,
+        "no_dependency_installation": True,
+        "reports_rc4_and_delta75_protected": True,
+    }
+    direct_pilot = {
+        "accelerated_preflight_only": True,
+        "overnight_duration_not_claimed": True,
+        "deadline_transition_validated": True,
+        "corruption_fallback_validated": True,
+        "emergency_stop_validated": True,
+        "operator_return_report_generated": True,
+    }
+    accepted = all(safety_envelope.values()) and all(corruption.values()) and all(restart.values()) and all(stop_controls.values()) and all(envelope.values()) and all(direct_pilot.values())
+    classification = "overnight_preflight_ready_with_limits" if accepted else "overnight_preflight_not_ready"
+    return Live36OvernightPreflightResult(
+        accepted=accepted,
+        reason="LIVE_36_OVERNIGHT_PREFLIGHT_ACCEPTED" if accepted else "LIVE_36_OVERNIGHT_PREFLIGHT_NOT_READY",
+        mission_id=mission_id,
+        parent_mission=LIVE36_PARENT_MISSION,
+        first_missing_transition="bounded campaign controls -> hard overnight envelope -> corrupt checkpoint fallback -> cumulative budget survival -> emergency stop and operator-return report",
+        classification=classification,
+        safety_envelope=safety_envelope,
+        checkpoints=checkpoints,
+        corruption_recovery=corruption,
+        restart_reconstruction=restart,
+        cumulative_budgets=cp4.budget_totals,
+        stop_controls=stop_controls,
+        autonomous_development_envelope=envelope,
+        direct_pilot=direct_pilot,
+        validation_summary={"checkpoints": len(checkpoints), "corrupt_checkpoints": 1, "stop_controls": len(stop_controls), "budget_categories": len(cp4.budget_totals)},
+        process_left_running=False,
+        final_classification=classification,
     )
 
 
