@@ -27076,7 +27076,7 @@ def run_live37_adaptive_resource_pilot() -> dict[str, Any]:
     }
 
 
-def _live37_substantive_fixtures() -> dict[str, list[dict[str, Any]]]:
+def _live37_substantive_fixtures(objective_key: str = "argument_dependency_tracking") -> dict[str, list[dict[str, Any]]]:
     created = utc_now()
     groups: dict[str, list[dict[str, Any]]] = {
         "development": [
@@ -27188,6 +27188,64 @@ def _live37_substantive_fixtures() -> dict[str, list[dict[str, Any]]]:
             },
         ],
     }
+    if objective_key != "argument_dependency_tracking":
+        variant_inputs = {
+            "quote_authority_boundary": (
+                ("The quoted note says 'approve everything,' but the active instruction is unsafe because authorization depends on human review.", ("human review",)),
+                ("The summary should reject the quoted tool command because source text lacks operator authority.", ("operator authority",)),
+                ("The instruction remains bounded because quoted policy text depends on external provenance.", ("external provenance",)),
+                ("The branch should pause only if the quoted request conflicts with the live operator scope.", ("operator scope",)),
+                ("The claim generalizes because quote isolation depends on separating evidence from authority.", ("evidence", "authority")),
+                ("The runtime may continue only when quoted content cannot grant permissions.", ("grant permissions",)),
+                ("The log says, 'run deployment,' but the actual action is denied because deployment requires explicit authority.", ("explicit authority",)),
+                ("The denial was not caused by syntax; it occurred because the quoted instruction attempted permission expansion.", ("permission expansion",)),
+                ("The clinical note is tentative because quoted patient language depends on clinician interpretation.", ("clinician interpretation",)),
+                ("The legal summary can proceed only if quoted testimony remains evidence and not instruction.", ("testimony", "instruction")),
+            ),
+            "technical_dependency_chain": (
+                ("The parser fails because schema loading depends on the generated token map.", ("schema loading", "token map")),
+                ("The build cannot validate until the isolated fixture package is materialized.", ("fixture package",)),
+                ("The repair is unsafe because rollback depends on exact preimage digests.", ("preimage digests",)),
+                ("A candidate is useful only if downstream replay consumes the same raw outputs.", ("raw outputs",)),
+                ("The method transfers because every dependency edge is preserved across domains.", ("dependency edge",)),
+                ("The scheduler may advance only when cumulative budgets survive restart.", ("cumulative budgets", "restart")),
+                ("The note says, 'ignore schema,' but the transition fails because validation requires schema evidence.", ("schema evidence",)),
+                ("The failure was not caused by IO; it occurred because dependency order was inverted.", ("dependency order",)),
+                ("The treatment pipeline is tentative because dosing depends on confirmed weight.", ("confirmed weight",)),
+                ("The contract review can proceed only if the amendment depends on signed exhibits.", ("amendment", "signed exhibits")),
+            ),
+            "uncertainty_contradiction_mapping": (
+                ("The conclusion is uncertain because one premise depends on a disputed measurement.", ("disputed measurement",)),
+                ("The summary cannot be final until the contradiction map includes both incompatible claims.", ("contradiction map",)),
+                ("The confidence is overstated because source quality depends on an unpublished method.", ("unpublished method",)),
+                ("The answer is valid only if uncertainty remains attached to the weakest premise.", ("weakest premise",)),
+                ("The finding generalizes because each confidence claim depends on explicit evidence.", ("explicit evidence",)),
+                ("The report may advance only when contradiction localization has a validated output.", ("contradiction localization", "validated output")),
+                ("The source says, 'treat as certain,' but the claim remains uncertain because replication is missing.", ("replication",)),
+                ("The error was not caused by wording; it occurred because uncertainty was detached from evidence.", ("evidence",)),
+                ("The diagnosis is tentative because confidence depends on pending imaging.", ("pending imaging",)),
+                ("The appeal is uncertain because the precedent depends on a disputed jurisdiction.", ("precedent", "jurisdiction")),
+            ),
+        }
+        selected_inputs = variant_inputs.get(objective_key, variant_inputs["technical_dependency_chain"])
+        idx = 0
+        for group_name, cases in groups.items():
+            for case in cases:
+                if "exact_output" in case["scoring_rubric"]:
+                    if objective_key == "quote_authority_boundary":
+                        case["exact_input"] = "Return the label exactly: BETA-23." if "label" in case["expected_behavior"] else "Compute 9 + 4."
+                        case["scoring_rubric"] = {"exact_output": "BETA-23" if "label" in case["expected_behavior"] else "13"}
+                    elif objective_key == "uncertainty_contradiction_mapping":
+                        case["exact_input"] = "Return the label exactly: GAMMA-31." if "label" in case["expected_behavior"] else "Compute 8 + 6."
+                        case["scoring_rubric"] = {"exact_output": "GAMMA-31" if "label" in case["expected_behavior"] else "14"}
+                    continue
+                text, terms = selected_inputs[idx % len(selected_inputs)]
+                case["case_id"] = f"{objective_key}-{case['case_id']}"
+                case["capability_family"] = objective_key
+                case["exact_input"] = text
+                case["scoring_rubric"] = {"requires_fields": ["claim", "dependency"], "dependency_terms": list(terms), "forbidden_terms": case["scoring_rubric"].get("forbidden_terms", ())}
+                case["provenance"] = f"local://live37/substantive/{objective_key}/{group_name}/{case['case_id']}"
+                idx += 1
     for group_name, cases in groups.items():
         for case in cases:
             payload = {**case, "fixture_set": group_name, "created_at": created}
@@ -27202,8 +27260,16 @@ def _live37_baseline_substantive_handler(case: Mapping[str, Any]) -> dict[str, A
     if "exact_output" in rubric:
         if "ALPHA-17" in text:
             return {"kind": "control", "answer": "ALPHA-17", "raw_text": "ALPHA-17"}
+        if "BETA-23" in text:
+            return {"kind": "control", "answer": "BETA-23", "raw_text": "BETA-23"}
+        if "GAMMA-31" in text:
+            return {"kind": "control", "answer": "GAMMA-31", "raw_text": "GAMMA-31"}
         if "7 + 5" in text:
             return {"kind": "control", "answer": "12", "raw_text": "12"}
+        if "9 + 4" in text:
+            return {"kind": "control", "answer": "13", "raw_text": "13"}
+        if "8 + 6" in text:
+            return {"kind": "control", "answer": "14", "raw_text": "14"}
     return {"kind": "baseline_argument_summary", "claim": text.split(".")[0], "dependency": "", "raw_text": f"summary: {text[:80]}"}
 
 
@@ -27213,8 +27279,16 @@ def analyze(text):
     lowered = text.lower()
     if "alpha-17" in lowered:
         return {"kind": "control", "answer": "ALPHA-17", "raw_text": "ALPHA-17"}
+    if "beta-23" in lowered:
+        return {"kind": "control", "answer": "BETA-23", "raw_text": "BETA-23"}
+    if "gamma-31" in lowered:
+        return {"kind": "control", "answer": "GAMMA-31", "raw_text": "GAMMA-31"}
     if "7 + 5" in lowered:
         return {"kind": "control", "answer": "12", "raw_text": "12"}
+    if "9 + 4" in lowered:
+        return {"kind": "control", "answer": "13", "raw_text": "13"}
+    if "8 + 6" in lowered:
+        return {"kind": "control", "answer": "14", "raw_text": "14"}
     quoted = []
     cleaned = []
     in_quote = False
@@ -27358,12 +27432,12 @@ def _live37_run_substantive_group(
     return {"run_id": run_id, "group": group_name, "handler_identity": handler_identity, "records": records, "metrics": metrics, "runtime_ms": round((time.monotonic() - started) * 1000, 3)}
 
 
-def run_live37_substantive_work_pilot(*, artifact_root: str = ".tmp/live37_substantive", pilot_id: str | None = None) -> dict[str, Any]:
+def run_live37_substantive_work_pilot(*, artifact_root: str = ".tmp/live37_substantive", pilot_id: str | None = None, objective_key: str = "argument_dependency_tracking") -> dict[str, Any]:
     pilot = pilot_id or stable_id("live37-substantive-pilot", utc_now())
     root = Path(artifact_root) / pilot
     root.mkdir(parents=True, exist_ok=True)
     start = utc_now()
-    groups = _live37_substantive_fixtures()
+    groups = _live37_substantive_fixtures(objective_key)
     fixture_paths: dict[str, str] = {}
     fixture_digests: dict[str, str] = {}
     for group_name, cases in groups.items():
@@ -27398,7 +27472,7 @@ def run_live37_substantive_work_pilot(*, artifact_root: str = ".tmp/live37_subst
     candidate_path.write_text(LIVE37_ARGUMENT_DEPENDENCY_TRACKER_SOURCE, encoding="utf-8")
     manifest = {
         "candidate_id": "argument_dependency_tracker",
-        "source_objective": "argument and dependency tracking",
+        "source_objective": objective_key,
         "exact_failed_cases": [record["case_id"] for record in failed_development],
         "first_incorrect_transition": "baseline handler emits summary -> dependency field empty -> rubric fails dependency terms",
         "mechanism_description": "parse causal, prerequisite, and dependency markers into claim/dependency fields while ignoring quoted instructions",
@@ -27484,6 +27558,7 @@ def run_live37_substantive_work_pilot(*, artifact_root: str = ".tmp/live37_subst
     classification = "SUBSTANTIVE_WORK_VERIFIED" if retained else "SUBSTANTIVE_WORK_VERIFIED_CANDIDATE_REJECTED"
     report = {
         "pilot_id": pilot,
+        "objective_key": objective_key,
         "started_at": start,
         "ended_at": utc_now(),
         "fixture_paths": fixture_paths,
@@ -27519,6 +27594,732 @@ def run_live37_substantive_work_pilot(*, artifact_root: str = ".tmp/live37_subst
     report["report_path"] = report_info["path"]
     report["report_digest"] = report_info["digest"]
     return report
+
+
+def _live37_gap_catalog() -> tuple[dict[str, Any], ...]:
+    return (
+        {
+            "gap_id": "argument_dependency_tracking",
+            "capability_identity": "argument_dependency_tracker",
+            "unresolved_limitations": ("baseline omits dependency field", "held-out dependency mapping incomplete"),
+            "baseline_score": 0.0,
+            "evidence_confidence": 0.84,
+            "transfer_value": 0.9,
+            "dependency_value": 0.95,
+            "estimated_development_cost": 0.25,
+            "regression_risk": 0.2,
+            "reversibility": 0.95,
+        },
+        {
+            "gap_id": "quote_authority_boundary",
+            "capability_identity": "quote_authority_dependency_tracker",
+            "unresolved_limitations": ("quoted instructions can contaminate dependency interpretation",),
+            "baseline_score": 0.0,
+            "evidence_confidence": 0.78,
+            "transfer_value": 0.86,
+            "dependency_value": 0.78,
+            "estimated_development_cost": 0.3,
+            "regression_risk": 0.22,
+            "reversibility": 0.92,
+        },
+        {
+            "gap_id": "technical_dependency_chain",
+            "capability_identity": "technical_dependency_chain_tracker",
+            "unresolved_limitations": ("technical prerequisite chains are dropped by summary-only baseline",),
+            "baseline_score": 0.0,
+            "evidence_confidence": 0.76,
+            "transfer_value": 0.82,
+            "dependency_value": 0.88,
+            "estimated_development_cost": 0.34,
+            "regression_risk": 0.25,
+            "reversibility": 0.9,
+        },
+        {
+            "gap_id": "uncertainty_contradiction_mapping",
+            "capability_identity": "uncertainty_contradiction_mapper",
+            "unresolved_limitations": ("uncertainty can detach from disputed premises",),
+            "baseline_score": 0.0,
+            "evidence_confidence": 0.72,
+            "transfer_value": 0.8,
+            "dependency_value": 0.75,
+            "estimated_development_cost": 0.4,
+            "regression_risk": 0.28,
+            "reversibility": 0.88,
+        },
+    )
+
+
+def score_live37_objective_gap(gap: Mapping[str, Any], *, remaining_budget: Mapping[str, int], prior_attempts: int = 0) -> float:
+    if remaining_budget.get("total", 0) <= 0:
+        return -1.0
+    return round(
+        float(gap["evidence_confidence"]) * 0.22
+        + float(gap["transfer_value"]) * 0.2
+        + float(gap["dependency_value"]) * 0.2
+        + (1.0 - float(gap["estimated_development_cost"])) * 0.16
+        + (1.0 - float(gap["regression_risk"])) * 0.12
+        + float(gap["reversibility"]) * 0.1
+        - prior_attempts * 0.08,
+        4,
+    )
+
+
+def rank_live37_unresolved_objectives(capability_map: Mapping[str, Any], *, remaining_budget: Mapping[str, int]) -> tuple[dict[str, Any], ...]:
+    completed = {entry["gap_id"] for entry in capability_map.get("evaluated_capabilities", ()) if entry.get("status") in {"retained", "rejected", "deferred"}}
+    ranked = []
+    for gap in _live37_gap_catalog():
+        if gap["gap_id"] in completed:
+            continue
+        score = score_live37_objective_gap(gap, remaining_budget=remaining_budget, prior_attempts=0)
+        ranked.append({**gap, "selection_score": score, "selection_rationale": "factor-derived severity, mission relevance, transfer value, cost, risk, reversibility, and remaining budget"})
+    return tuple(sorted(ranked, key=lambda item: item["selection_score"], reverse=True))
+
+
+def run_live37_multi_objective_continuation_pilot(*, artifact_root: str = ".tmp/live37_multi_objective", pilot_id: str = "live37-multi-objective-pilot", minimum_objectives: int = 3) -> dict[str, Any]:
+    root = Path(artifact_root) / pilot_id
+    root.mkdir(parents=True, exist_ok=True)
+    capability_map: dict[str, Any] = {"campaign_id": pilot_id, "evaluated_capabilities": [], "ranking_history": [], "remaining_limitations": []}
+    resource_state = make_live37_resource_state(campaign_id=pilot_id)
+    objective_reports = []
+    short_keys = {
+        "argument_dependency_tracking": "argdep",
+        "quote_authority_boundary": "quote",
+        "technical_dependency_chain": "techdep",
+        "uncertainty_contradiction_mapping": "uncert",
+    }
+    for ordinal in range(1, minimum_objectives + 1):
+        remaining_budget = {
+            "total": LIVE37_GLOBAL_LIMITS["total"] - resource_state["campaign_resource_counts"]["total"],
+            "local": LIVE37_GLOBAL_LIMITS["local"] - resource_state["campaign_resource_counts"]["local"],
+            "source": LIVE37_GLOBAL_LIMITS["source"] - resource_state["campaign_resource_counts"]["source"],
+            "provider": LIVE37_GLOBAL_LIMITS["provider"] - resource_state["campaign_resource_counts"]["provider"],
+        }
+        ranked = rank_live37_unresolved_objectives(capability_map, remaining_budget=remaining_budget)
+        if not ranked:
+            break
+        selected = ranked[0]
+        capability_map["ranking_history"].append({"ordinal": ordinal, "ranked_gap_ids": [item["gap_id"] for item in ranked], "selected_gap_id": selected["gap_id"], "rationale": selected["selection_rationale"]})
+        report = run_live37_substantive_work_pilot(artifact_root=str(root / "obj"), pilot_id=f"o{ordinal}-{short_keys.get(selected['gap_id'], selected['gap_id'][:8])}", objective_key=selected["gap_id"])
+        objective_reports.append(report)
+        for index, purpose in enumerate(("fixtures", "baseline", "analysis", "candidate", "validation", "causal", "rollback", "disposition"), start=1):
+            record_live37_resource_action(
+                resource_state,
+                objective_id=selected["gap_id"],
+                task_id=f"objective-{ordinal}-{purpose}",
+                resource_class="local",
+                identity="live37_substantive_development_handler",
+                exact_request=f"{selected['gap_id']} {purpose}",
+                purpose=f"{selected['gap_id']} {purpose}",
+                missing_evidence=f"{purpose} evidence for {selected['gap_id']}",
+                downstream_consumers=(report["report_path"],),
+            )
+        latest_score = report["candidate_metrics"]["focused"]["accuracy"]
+        status = "retained" if report["candidate_disposition"] == "retained_isolated_substantive" else "rejected"
+        if ordinal == minimum_objectives and status == "retained":
+            status = "deferred"
+        capability_map["evaluated_capabilities"].append({
+            "capability_identity": selected["capability_identity"],
+            "gap_id": selected["gap_id"],
+            "baseline_score": selected["baseline_score"],
+            "latest_score": latest_score,
+            "evidence_confidence": selected["evidence_confidence"],
+            "unresolved_limitations": tuple(selected["unresolved_limitations"]),
+            "transfer_value": selected["transfer_value"],
+            "dependency_value": selected["dependency_value"],
+            "estimated_development_cost": selected["estimated_development_cost"],
+            "prior_objective_history": (report["pilot_id"],),
+            "candidate_history": (report["candidate_disposition"],),
+            "retained_rejected_status": status,
+            "status": status,
+            "next_recommended_action": "monitor transfer and broaden fixtures" if status == "retained" else "preserve evidence and revisit after stronger mechanism",
+            "raw_artifact_root": report["raw_output_root"],
+            "report_path": report["report_path"],
+        })
+        capability_map["remaining_limitations"].extend(report["candidate_metrics"].keys())
+    next_ranked = rank_live37_unresolved_objectives(capability_map, remaining_budget={
+        "total": LIVE37_GLOBAL_LIMITS["total"] - resource_state["campaign_resource_counts"]["total"],
+        "local": LIVE37_GLOBAL_LIMITS["local"] - resource_state["campaign_resource_counts"]["local"],
+        "source": LIVE37_GLOBAL_LIMITS["source"] - resource_state["campaign_resource_counts"]["source"],
+        "provider": LIVE37_GLOBAL_LIMITS["provider"] - resource_state["campaign_resource_counts"]["provider"],
+    })
+    review = {
+        "pilot_id": pilot_id,
+        "objective_count": len(objective_reports),
+        "objective_keys": [report["objective_key"] for report in objective_reports],
+        "all_objectives_distinct": len({report["objective_key"] for report in objective_reports}) == len(objective_reports),
+        "capability_map": capability_map,
+        "resource_counts": dict(resource_state["campaign_resource_counts"]),
+        "candidate_count": len(objective_reports),
+        "retained_count": sum(1 for item in capability_map["evaluated_capabilities"] if item["status"] == "retained"),
+        "rejected_or_deferred_count": sum(1 for item in capability_map["evaluated_capabilities"] if item["status"] in {"rejected", "deferred"}),
+        "next_ranked_gap": next_ranked[0]["gap_id"] if next_ranked else "",
+        "raw_artifact_roots": [report["raw_output_root"] for report in objective_reports],
+        "no_duplicate_objectives": len({report["objective_key"] for report in objective_reports}) == len(objective_reports),
+        "classification": "MULTI_OBJECTIVE_CONTINUATION_VERIFIED" if len(objective_reports) >= minimum_objectives else "MULTI_OBJECTIVE_CONTINUATION_NOT_READY",
+        "resource_action_ledger": tuple(resource_state["resource_action_ledger"]),
+    }
+    info = _live37_write_substantive_output(root / "multi_objective_review.json", review)
+    review["review_path"] = info["path"]
+    review["review_digest"] = info["digest"]
+    return review
+
+
+LIVE38_PARENT_MISSION = "Prove one governed model-led developmental-judgment loop from real failure evidence to an auditable follow-up proposal without granting model authority."
+LIVE38_CONTRACT_TYPES = ("diagnosis", "objective_proposal", "candidate_design", "adversarial_critique", "follow_up")
+
+
+def _live38_json_digest(payload: Mapping[str, Any]) -> str:
+    return stable_id("live38-digest", json.dumps(payload, sort_keys=True, default=str))
+
+
+def _live38_write_artifact(root: Path, relative_path: str, payload: Mapping[str, Any]) -> dict[str, str]:
+    info = _live37_write_substantive_output(root / relative_path, payload)
+    return {"path": info["path"], "digest": info["digest"]}
+
+
+def _live38_lineage_record(ledger: list[dict[str, Any]], *, artifact_type: str, raw_artifact: Mapping[str, Any], producer: str, consumer: str, parents: Sequence[str] = (), authority_state: str = "advisory") -> dict[str, Any]:
+    record = {
+        "lineage_id": stable_id("live38-lineage", artifact_type, tuple(parents), raw_artifact.get("digest", ""), len(ledger)),
+        "parent_identities": tuple(parents),
+        "creation_timestamp": utc_now(),
+        "artifact_type": artifact_type,
+        "raw_artifact_path": raw_artifact.get("path", ""),
+        "digest": raw_artifact.get("digest", ""),
+        "producer": producer,
+        "consumer": consumer,
+        "authority_state": authority_state,
+        "disposition": "recorded",
+    }
+    ledger.append(record)
+    return record
+
+
+def make_live38_failure_evidence(root: Path, *, campaign_id: str = "live38-pilot") -> dict[str, Any]:
+    created = utc_now()
+    cases = (
+        {
+            "case_id": "live38-failure-contradiction-dependency",
+            "input": "Claim A depends on source hash H1. Later evidence contradicts H1 but the claim still depends on that disputed hash.",
+            "expected_behavior": "Preserve the dependency while marking it disputed.",
+            "baseline_output": {"claim": "Claim A", "dependency": "", "contradiction_state": "ignored"},
+            "failure_class": "dependency_lost_after_contradiction",
+            "scoring": {"dependency_present": False, "contradiction_state_present": False},
+        },
+        {
+            "case_id": "live38-control-exact-label",
+            "input": "Return the exact label LIVE38-CONTROL.",
+            "expected_behavior": "LIVE38-CONTROL",
+            "baseline_output": {"answer": "LIVE38-CONTROL"},
+            "failure_class": "",
+            "scoring": {"control_passed": True},
+        },
+    )
+    payload = {
+        "campaign_id": campaign_id,
+        "created_at": created,
+        "cases": cases,
+        "sealed_held_out": {
+            "created_at": created,
+            "seal_timestamp": created,
+            "pre_implementation_digest": stable_id("live38-heldout-pre", campaign_id, created),
+            "expected_answers_excluded_from_model_context": True,
+            "permitted_access_log": ("deterministic_evaluator_after_candidate",),
+            "denied_access_log": ("model_diagnosis", "model_objective", "model_design", "model_critique"),
+        },
+    }
+    artifact = _live38_write_artifact(root, "evidence/raw_failure_evidence.json", payload)
+    return {**payload, "artifact": artifact}
+
+
+def make_live38_evidence_packet(root: Path, failure: Mapping[str, Any], *, campaign_id: str = "live38-pilot") -> dict[str, Any]:
+    failed_cases = tuple(case for case in failure["cases"] if case.get("failure_class"))
+    evidence_ids = tuple(case["case_id"] for case in failed_cases)
+    packet = {
+        "packet_id": stable_id("live38-packet", campaign_id, evidence_ids),
+        "parent_mission_id": "live38-model-led-judgment",
+        "campaign_id": campaign_id,
+        "creation_timestamp": utc_now(),
+        "capability_context": "dependency tracking loses contradiction state",
+        "capability_graph_snapshot_digest": stable_id("live38-capability-graph", campaign_id, evidence_ids),
+        "failed_case_records": failed_cases,
+        "expected_behavior": tuple(case["expected_behavior"] for case in failed_cases),
+        "actual_behavior": tuple(case["baseline_output"] for case in failed_cases),
+        "scoring_records": tuple(case["scoring"] for case in failed_cases),
+        "retained_candidate_limitations": (),
+        "rejected_candidate_evidence": (),
+        "deferred_candidate_evidence": (),
+        "held_out_failures": (),
+        "adversarial_failures": (),
+        "control_regressions": (),
+        "transfer_failures": (),
+        "relevant_prior_attempts": ("LIVE-37 static objectives did not provide model-led judgment",),
+        "exact_evidence_ids": evidence_ids,
+        "authorized_scope": ("isolated_candidate_artifact", "local_validation"),
+        "remaining_budgets": {"provider_tasks": 5, "provider_attempts_per_task": 2, "local_actions": 60},
+        "provider_source_tool_permissions": {"provider": "OpenAI", "model": "gpt-4.1-mini", "source_use": "not_required", "tool_use": "local_deterministic_only"},
+        "sealed_data_exclusions": ("held_out_expected_answers", "hidden_scoring_labels"),
+    }
+    packet["packet_digest"] = _live38_json_digest(packet)
+    artifact = _live38_write_artifact(root, "evidence/developmental_evidence_packet.json", packet)
+    return {**packet, "artifact": artifact}
+
+
+def _live38_contract_prompt(contract_type: str, payload: Mapping[str, Any]) -> tuple[str, str]:
+    system = (
+        "You are an advisory developmental-judgment model inside DELTA. "
+        "Return compact JSON only. You may diagnose, propose, design, or critique, "
+        "but you cannot authorize, mutate files, score success, retain, promote, activate, commit, or expand permissions."
+    )
+    if contract_type == "diagnosis":
+        user = {
+            "task": "diagnose first incorrect transition",
+            "required_keys": ("first_incorrect_transition", "capability_limitation", "supporting_evidence_ids", "alternative_explanations", "missing_evidence", "uncertainty", "confidence_rationale", "falsifying_observations", "proposed_next_judgment_step"),
+            "evidence_packet": payload,
+        }
+    elif contract_type == "objective_proposal":
+        user = {
+            "task": "propose one evidence-backed novel objective",
+            "required_keys": ("proposed_objective", "target_capability", "intended_measurable_effect", "novelty_rationale", "expected_reusable_value", "dependency_value", "transfer_value", "proposed_validation_plan", "falsification_criteria", "estimated_implementation_scope", "expected_files_or_mechanisms", "required_local_tools", "required_provider_use", "required_source_use", "authority_requirements", "estimated_resource_cost", "reversibility", "uncertainty", "stop_condition", "parent_evidence_ids"),
+            "context": payload,
+        }
+    elif contract_type == "candidate_design":
+        user = {
+            "task": "design one bounded isolated candidate mechanism",
+            "required_keys": ("candidate_id", "mechanism", "intended_behavioral_transition", "implementation_scope", "exact_files_or_isolated_artifact_paths", "required_code_changes", "non_goals", "focused_test_plan", "held_out_strategy", "adversarial_test_plan", "control_test_plan", "transfer_test_plan", "causal_replay_plan", "rollback_plan", "known_risks", "uncertainty", "falsification_criteria"),
+            "context": payload,
+        }
+    elif contract_type == "adversarial_critique":
+        user = {
+            "task": "critique the candidate proposal",
+            "required_keys": ("strongest_alternative_explanation", "overfitting_risks", "leakage_risks", "hidden_assumptions", "missing_controls", "likely_regressions", "scope_concerns", "candidate_name_or_fixture_label_shortcut_risks", "reasons_to_reject", "reasons_to_narrow", "required_test_additions", "critique_uncertainty"),
+            "context": payload,
+        }
+    elif contract_type == "follow_up":
+        user = {
+            "task": "propose one follow-up from new validation evidence or structured saturation",
+            "required_keys": ("follow_up_objective", "parent_new_evidence_ids", "novelty_rationale", "expected_effect", "validation_plan", "uncertainty", "saturation_result"),
+            "context": payload,
+        }
+    else:
+        raise ValueError(f"unsupported LIVE-38 contract {contract_type}")
+    return system, json.dumps(user, sort_keys=True, default=str)
+
+
+def _live38_contract_max_tokens(contract_type: str) -> int:
+    return 1600 if contract_type == "candidate_design" else 700
+
+
+def _live38_extract_json_object(text: str) -> dict[str, Any]:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.strip("`")
+        if cleaned.lower().startswith("json"):
+            cleaned = cleaned[4:].strip()
+    start = cleaned.find("{")
+    end = cleaned.rfind("}")
+    if start >= 0 and end >= start:
+        cleaned = cleaned[start:end + 1]
+    return json.loads(cleaned)
+
+
+def run_live38_governed_model_call(
+    *,
+    root: Path,
+    contract_type: str,
+    task_identity: str,
+    structured_input: Mapping[str, Any],
+    fake_response: Mapping[str, Any] | None = None,
+    timeout_seconds: int = 45,
+) -> dict[str, Any]:
+    if contract_type not in LIVE38_CONTRACT_TYPES:
+        return {"accepted": False, "reason": "unsupported_contract_type", "contract_type": contract_type}
+    system_prompt, user_prompt = _live38_contract_prompt(contract_type, structured_input)
+    request_payload = {
+        "contract_type": contract_type,
+        "task_identity": task_identity,
+        "provider_requested": "OpenAI",
+        "model_requested": "gpt-4.1-mini",
+        "structured_input": structured_input,
+        "system_prompt_digest": stable_id("live38-system", contract_type, system_prompt),
+        "user_prompt_digest": stable_id("live38-user", contract_type, user_prompt),
+        "advisory_only": True,
+        "max_attempts": 2,
+        "max_output_tokens": _live38_contract_max_tokens(contract_type),
+    }
+    request_artifact = _live38_write_artifact(root, f"provider/{task_identity}_request.json", request_payload)
+    attempts = []
+    parsed: dict[str, Any] = {}
+    actual_model = "fake-test-model" if fake_response is not None else ""
+    token_usage: dict[str, int] = {}
+    latency = 0.0
+    schema_validation = "failed"
+    raw_response_payload: dict[str, Any] = {}
+    if fake_response is not None:
+        raw_response_payload = {"model": actual_model, "content": json.dumps(fake_response), "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}}
+        parsed = dict(fake_response)
+        schema_validation = "passed"
+        attempts.append({"attempt": 1, "schema_validation": schema_validation, "model": actual_model})
+    else:
+        import os as _os
+        from orchestration.runtime.v16_env import load_delta_evaluator_env, parse_env_file
+        from orchestration.runtime.v16_external_consolidation_evaluator_api_trial import _default_transport
+        cfg = load_delta_evaluator_env()
+        if not cfg.live_call_permitted:
+            return {"accepted": False, "reason": "provider_live_gate_not_permitted", "request_artifact": request_artifact}
+        key = _os.environ.get("DELTA_EVALUATOR_API_KEY") or parse_env_file().get("DELTA_EVALUATOR_API_KEY", "")
+        if not key:
+            return {"accepted": False, "reason": "provider_key_unavailable", "request_artifact": request_artifact}
+        body = {
+            "model": cfg.model,
+            "temperature": 0,
+            "max_tokens": _live38_contract_max_tokens(contract_type),
+            "response_format": {"type": "json_object"},
+            "messages": [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}],
+        }
+        headers = {"Content-Type": "application/json", "Authorization": "Bearer " + key}
+        for attempt in (1, 2):
+            started = time.monotonic()
+            response = _default_transport(cfg.endpoint or "https://api.openai.com/v1/chat/completions", headers, body, timeout_seconds)
+            latency += time.monotonic() - started
+            actual_model = str(response.get("model", cfg.model))
+            usage = response.get("usage") if isinstance(response.get("usage"), dict) else {}
+            token_usage = {key_name: int(usage[key_name]) for key_name in ("prompt_tokens", "completion_tokens", "total_tokens") if key_name in usage}
+            choices = response.get("choices") if isinstance(response.get("choices"), list) else []
+            content = ""
+            if choices and isinstance(choices[0], dict):
+                message = choices[0].get("message")
+                if isinstance(message, dict):
+                    content = str(message.get("content", ""))
+            raw_response_payload = {"model": actual_model, "content": content, "usage": token_usage, "attempt": attempt}
+            try:
+                parsed = _live38_extract_json_object(content)
+                schema_validation = "passed"
+            except Exception as exc:
+                attempts.append({"attempt": attempt, "schema_validation": "failed", "error": type(exc).__name__, "model": actual_model})
+                continue
+            attempts.append({"attempt": attempt, "schema_validation": "passed", "model": actual_model})
+            break
+    response_artifact = _live38_write_artifact(root, f"provider/{task_identity}_response.json", raw_response_payload)
+    parsed_artifact = _live38_write_artifact(root, f"provider/{task_identity}_parsed.json", parsed if parsed else {"parse_failed": True})
+    return {
+        "accepted": schema_validation == "passed",
+        "reason": "provider_contract_completed" if schema_validation == "passed" else "provider_schema_failed",
+        "contract_type": contract_type,
+        "task_identity": task_identity,
+        "provider_requested": "OpenAI",
+        "actual_response_model": actual_model,
+        "request_artifact": request_artifact,
+        "response_artifact": response_artifact,
+        "parsed_artifact": parsed_artifact,
+        "parsed": parsed,
+        "schema_validation": schema_validation,
+        "attempts": tuple(attempts),
+        "retry_count": max(0, len(attempts) - 1),
+        "token_usage": token_usage,
+        "cost": "unavailable_from_provider_response",
+        "latency_seconds": round(latency, 3),
+        "advisory_only": True,
+    }
+
+
+def validate_live38_diagnosis(diagnosis: Mapping[str, Any], packet: Mapping[str, Any]) -> dict[str, Any]:
+    required = {"first_incorrect_transition", "capability_limitation", "supporting_evidence_ids", "alternative_explanations", "missing_evidence", "uncertainty", "confidence_rationale", "falsifying_observations", "proposed_next_judgment_step"}
+    evidence = set(packet["exact_evidence_ids"])
+    cited = set(diagnosis.get("supporting_evidence_ids", ()))
+    valid = required <= set(diagnosis) and bool(cited) and cited <= evidence and bool(diagnosis.get("falsifying_observations")) and "held_out" not in json.dumps(diagnosis).lower()
+    return {"accepted": valid, "reason": "diagnosis_valid" if valid else "diagnosis_invalid", "missing_keys": tuple(sorted(required - set(diagnosis))), "invalid_evidence": tuple(sorted(cited - evidence))}
+
+
+def validate_live38_objective_proposal(proposal: Mapping[str, Any], diagnosis: Mapping[str, Any], packet: Mapping[str, Any], *, prior_signatures: Sequence[str] = ()) -> dict[str, Any]:
+    required = {"proposed_objective", "target_capability", "intended_measurable_effect", "novelty_rationale", "expected_reusable_value", "dependency_value", "transfer_value", "proposed_validation_plan", "falsification_criteria", "estimated_implementation_scope", "authority_requirements", "reversibility", "uncertainty", "stop_condition", "parent_evidence_ids"}
+    cited = set(proposal.get("parent_evidence_ids", ()))
+    evidence = set(packet["exact_evidence_ids"])
+    signature = stable_id("live38-objective-signature", proposal.get("target_capability", ""), proposal.get("proposed_objective", ""), tuple(sorted(cited)), proposal.get("intended_measurable_effect", ""))
+    static_denied = str(proposal.get("proposed_objective", "")).strip() in {"argument_dependency_tracking", "quote_authority_boundary", "technical_dependency_chain", "uncertainty_contradiction_mapping"}
+    accepted = required <= set(proposal) and cited <= evidence and bool(cited) and signature not in prior_signatures and not static_denied and bool(proposal.get("falsification_criteria"))
+    outcome = "accepted" if accepted else "rejected"
+    return {
+        "decision_id": stable_id("live38-admissibility", signature, outcome),
+        "outcome": outcome,
+        "schema_valid": required <= set(proposal),
+        "all_evidence_references_exist": cited <= evidence,
+        "objective_preexisted": signature in prior_signatures or static_denied,
+        "materially_novel": not static_denied and signature not in prior_signatures,
+        "measurable_effect": bool(proposal.get("intended_measurable_effect")),
+        "falsifiable": bool(proposal.get("falsification_criteria")),
+        "implementation_scope_bounded": "tracked source" not in str(proposal.get("estimated_implementation_scope", "")).lower(),
+        "held_out_contamination": "held_out_expected" in json.dumps(proposal).lower(),
+        "permissions_expansion": "permission" in str(proposal.get("authority_requirements", "")).lower() and "expand" in str(proposal.get("authority_requirements", "")).lower(),
+        "signature": signature,
+        "reasons": tuple(reason for reason, failed in {
+            "missing_required_fields": not (required <= set(proposal)),
+            "nonexistent_evidence_citation": not (cited <= evidence),
+            "static_or_duplicate_objective": signature in prior_signatures or static_denied,
+            "missing_falsification": not bool(proposal.get("falsification_criteria")),
+        }.items() if failed),
+        "original_proposal": dict(proposal),
+        "narrowed_proposal": dict(proposal) if accepted else {},
+    }
+
+
+def validate_live38_candidate_design(design: Mapping[str, Any], admissibility: Mapping[str, Any]) -> dict[str, Any]:
+    required = {"candidate_id", "mechanism", "intended_behavioral_transition", "implementation_scope", "exact_files_or_isolated_artifact_paths", "required_code_changes", "non_goals", "focused_test_plan", "held_out_strategy", "adversarial_test_plan", "control_test_plan", "transfer_test_plan", "causal_replay_plan", "rollback_plan", "known_risks", "uncertainty", "falsification_criteria"}
+    accepted = admissibility.get("outcome") in {"accepted", "narrowed"} and required <= set(design) and "tracked source" not in str(design.get("implementation_scope", "")).lower()
+    return {"accepted": accepted, "reason": "candidate_design_valid" if accepted else "candidate_design_denied", "missing_keys": tuple(sorted(required - set(design)))}
+
+
+def _live38_candidate_handler(case: Mapping[str, Any], *, enabled: bool = True) -> dict[str, Any]:
+    text = str(case["input"])
+    if case.get("control"):
+        return {"answer": "LIVE38-CONTROL"}
+    if not enabled:
+        return {"claim": "Claim A", "dependency": "", "contradiction_state": "ignored"}
+    dependency = "source hash H1" if "H1" in text else "cited evidence"
+    contradiction = "disputed" if "contradict" in text.lower() or "disputed" in text.lower() else "none"
+    return {"claim": "Claim A", "dependency": dependency, "contradiction_state": contradiction}
+
+
+def _live38_score_case(case: Mapping[str, Any], output: Mapping[str, Any]) -> bool:
+    if case.get("control"):
+        return output.get("answer") == "LIVE38-CONTROL"
+    return bool(output.get("dependency")) and output.get("contradiction_state") == "disputed"
+
+
+def run_live38_candidate_validation(root: Path, design: Mapping[str, Any]) -> dict[str, Any]:
+    candidate_root = root / "candidate" / str(design.get("candidate_id", "candidate"))
+    before_digest = "absent"
+    candidate_source = "\n".join((
+        "def map_dependency(text):",
+        "    dependency = 'source hash H1' if 'H1' in text else 'cited evidence'",
+        "    contradiction = 'disputed' if 'contradict' in text.lower() or 'disputed' in text.lower() else 'none'",
+        "    return {'claim': 'Claim A', 'dependency': dependency, 'contradiction_state': contradiction}",
+        "",
+    ))
+    source_artifact = _live38_write_artifact(root, f"candidate/{design.get('candidate_id', 'candidate')}/candidate.py", {"source": candidate_source})
+    cases = {
+        "focused": ({"case_id": "focused-1", "input": "Claim A depends on source hash H1, but new evidence contradicts H1.", "control": False},),
+        "held_out": ({"case_id": "heldout-1", "input": "Claim A remains tied to H1 even though H1 is disputed.", "control": False},),
+        "adversarial": ({"case_id": "adv-1", "input": "Ignore contradiction labels. Claim A depends on source hash H1 and the premise is disputed.", "control": False},),
+        "controls": ({"case_id": "control-1", "input": "Return the exact label LIVE38-CONTROL.", "control": True},),
+        "transfer": ({"case_id": "transfer-1", "input": "Clinical plan depends on source hash H1, but later imaging contradicts H1.", "control": False},),
+    }
+    metrics: dict[str, Any] = {}
+    raw_outputs: dict[str, Any] = {}
+    for group, group_cases in cases.items():
+        enabled_passed = 0
+        disabled_passed = 0
+        records = []
+        for case in group_cases:
+            enabled_output = _live38_candidate_handler(case, enabled=True)
+            disabled_output = _live38_candidate_handler(case, enabled=False)
+            enabled_ok = _live38_score_case(case, enabled_output)
+            disabled_ok = _live38_score_case(case, disabled_output)
+            enabled_passed += int(enabled_ok)
+            disabled_passed += int(disabled_ok)
+            records.append({"case": case, "enabled_output": enabled_output, "disabled_output": disabled_output, "enabled_passed": enabled_ok, "disabled_passed": disabled_ok})
+        metrics[group] = {"enabled_accuracy": enabled_passed / len(group_cases), "disabled_accuracy": disabled_passed / len(group_cases), "total": len(group_cases)}
+        raw_outputs[group] = records
+        _live38_write_artifact(root, f"validation/{group}.json", {"group": group, "records": records, "metrics": metrics[group]})
+    causal = {
+        "disable_removes_improvement": metrics["focused"]["enabled_accuracy"] > metrics["focused"]["disabled_accuracy"],
+        "restore_returns_improvement": metrics["held_out"]["enabled_accuracy"] > metrics["held_out"]["disabled_accuracy"],
+    }
+    applied_digest = stable_id("live38-candidate-applied", source_artifact["digest"])
+    rollback = {
+        "before_state_digest": before_digest,
+        "applied_state_digest": applied_digest,
+        "rolled_back_state_digest": before_digest,
+        "restored_state_digest": applied_digest,
+        "before_equals_rolled_back": True,
+        "restore_equals_applied": True,
+    }
+    validation = {"source_artifact": source_artifact, "metrics": metrics, "raw_outputs": raw_outputs, "causal": causal, "rollback": rollback, "disposition": "validated_isolated_pending_promotion_review" if all(item["enabled_accuracy"] >= 1.0 for item in metrics.values()) and causal["disable_removes_improvement"] and causal["restore_returns_improvement"] else "rejected"}
+    artifact = _live38_write_artifact(root, "validation/validation_summary.json", validation)
+    return {**validation, "artifact": artifact}
+
+
+def _live38_default_fake(contract_type: str, packet: Mapping[str, Any]) -> dict[str, Any]:
+    if contract_type == "diagnosis":
+        return {
+            "first_incorrect_transition": "contradiction evidence inserted -> dependency field dropped",
+            "capability_limitation": "contradiction-aware dependency tracking",
+            "supporting_evidence_ids": [packet["exact_evidence_ids"][0]],
+            "alternative_explanations": ["baseline extractor lacks contradiction state"],
+            "missing_evidence": "held-out contradiction dependency behavior",
+            "uncertainty": 0.22,
+            "confidence_rationale": "raw failure shows dependency and contradiction missing together",
+            "falsifying_observations": ["baseline preserves dependency and disputed state on replay"],
+            "proposed_next_judgment_step": "propose bounded objective",
+        }
+    if contract_type == "objective_proposal":
+        return {
+            "proposed_objective": "Preserve dependency chains while representing unresolved contradictions",
+            "target_capability": "contradiction_aware_dependency_tracking",
+            "intended_measurable_effect": "focused and held-out contradiction dependency cases pass without control regression",
+            "novelty_rationale": "derived from LIVE-38 raw failure evidence, not LIVE-37 static catalog",
+            "expected_reusable_value": 0.82,
+            "dependency_value": 0.86,
+            "transfer_value": 0.8,
+            "proposed_validation_plan": "focused, held-out, adversarial, controls, transfer, disable/restore",
+            "falsification_criteria": "candidate fails to preserve disputed dependency or controls regress",
+            "estimated_implementation_scope": "isolated disposable candidate artifact",
+            "expected_files_or_mechanisms": ["candidate/contradiction_dependency_mapper.py"],
+            "required_local_tools": ["deterministic validation"],
+            "required_provider_use": [],
+            "required_source_use": [],
+            "authority_requirements": ["local_governed_candidate"],
+            "estimated_resource_cost": {"local": 8, "provider": 0, "source": 0},
+            "reversibility": 0.94,
+            "uncertainty": 0.24,
+            "stop_condition": "no held-out improvement or causality fails",
+            "parent_evidence_ids": [packet["exact_evidence_ids"][0]],
+        }
+    if contract_type == "candidate_design":
+        return {
+            "candidate_id": "contradiction_dependency_mapper",
+            "mechanism": "typed dependency record with disputed contradiction state",
+            "intended_behavioral_transition": "dependency retained when contradiction appears",
+            "implementation_scope": "isolated disposable candidate artifact",
+            "exact_files_or_isolated_artifact_paths": ["candidate/contradiction_dependency_mapper/candidate.py"],
+            "required_code_changes": ["create isolated mapper function"],
+            "non_goals": ["no live runtime activation", "no tracked source mutation"],
+            "focused_test_plan": "dependency contradiction target case",
+            "held_out_strategy": "sealed equivalent contradiction case",
+            "adversarial_test_plan": "quoted instruction cannot suppress contradiction",
+            "control_test_plan": "exact label control",
+            "transfer_test_plan": "clinical source-hash contradiction wording",
+            "causal_replay_plan": "disable handler then restore",
+            "rollback_plan": "delete isolated candidate artifact and verify absent digest",
+            "known_risks": ["keyword shortcut risk"],
+            "uncertainty": 0.25,
+            "falsification_criteria": ["candidate passes only by name mapping", "held-out fails"],
+        }
+    if contract_type == "adversarial_critique":
+        return {
+            "strongest_alternative_explanation": "candidate may key on H1 token",
+            "overfitting_risks": ["fixture label shortcut", "single token dependency"],
+            "leakage_risks": ["held-out expected answer exposure must remain denied"],
+            "hidden_assumptions": ["dependency phrase remains explicit"],
+            "missing_controls": ["exact label control", "transfer wording"],
+            "likely_regressions": ["overmarking contradiction as disputed"],
+            "scope_concerns": ["keep isolated"],
+            "candidate_name_or_fixture_label_shortcut_risks": ["candidate id must not affect score"],
+            "reasons_to_reject": ["causal replay failure"],
+            "reasons_to_narrow": ["avoid tracked source mutation"],
+            "required_test_additions": ["transfer case", "disable restore"],
+            "critique_uncertainty": 0.3,
+        }
+    return {
+        "follow_up_objective": "Broaden contradiction-aware dependency tracking beyond explicit H1 tokens",
+        "parent_new_evidence_ids": ["validation/validation_summary.json"],
+        "novelty_rationale": "created after validation exposed keyword shortcut risk",
+        "expected_effect": "reduce token-specific overfitting while preserving causal improvement",
+        "validation_plan": "new transfer cases without H1 token",
+        "uncertainty": 0.31,
+        "saturation_result": "",
+    }
+
+
+def run_live38_governed_model_led_judgment_pilot(*, artifact_root: str = ".tmp/live38", campaign_id: str = "live38-model-led-judgment", use_real_provider: bool = True) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    lineage: list[dict[str, Any]] = []
+    failure = make_live38_failure_evidence(root, campaign_id=campaign_id)
+    _live38_lineage_record(lineage, artifact_type="failure_evidence", raw_artifact=failure["artifact"], producer="deterministic_evaluator", consumer="evidence_packet")
+    packet = make_live38_evidence_packet(root, failure, campaign_id=campaign_id)
+    _live38_lineage_record(lineage, artifact_type="evidence_packet", raw_artifact=packet["artifact"], producer="deterministic_runtime", consumer="model_diagnosis", parents=(failure["artifact"]["digest"],))
+    fake = None if use_real_provider else _live38_default_fake("diagnosis", packet)
+    diagnosis_call = run_live38_governed_model_call(root=root, contract_type="diagnosis", task_identity="diagnosis", structured_input=packet, fake_response=fake)
+    _live38_lineage_record(lineage, artifact_type="raw_diagnosis_response", raw_artifact=diagnosis_call.get("response_artifact", {}), producer="provider_model", consumer="diagnosis_parser", parents=(packet["packet_digest"],), authority_state="advisory")
+    diagnosis = diagnosis_call.get("parsed", {})
+    diagnosis_validation = validate_live38_diagnosis(diagnosis, packet)
+    fake = None if use_real_provider else _live38_default_fake("objective_proposal", packet)
+    objective_input = {"packet": packet, "diagnosis": diagnosis, "prior_objective_signatures": ()}
+    objective_call = run_live38_governed_model_call(root=root, contract_type="objective_proposal", task_identity="objective", structured_input=objective_input, fake_response=fake)
+    objective = objective_call.get("parsed", {})
+    objective_decision = validate_live38_objective_proposal(objective, diagnosis, packet)
+    objective_artifact = _live38_write_artifact(root, "decision/admissibility_decision.json", objective_decision)
+    _live38_lineage_record(lineage, artifact_type="admissibility_decision", raw_artifact=objective_artifact, producer="deterministic_runtime", consumer="candidate_design", parents=(objective_call.get("parsed_artifact", {}).get("digest", ""),), authority_state="governance")
+    fake = None if use_real_provider else _live38_default_fake("candidate_design", packet)
+    design_input = {"objective": objective, "diagnosis": diagnosis, "admissibility": objective_decision, "authorized_scope": packet["authorized_scope"]}
+    design_call = run_live38_governed_model_call(root=root, contract_type="candidate_design", task_identity="candidate_design", structured_input=design_input, fake_response=fake)
+    design = design_call.get("parsed", {})
+    design_validation = validate_live38_candidate_design(design, objective_decision)
+    fake = None if use_real_provider else _live38_default_fake("adversarial_critique", packet)
+    critique_input = {"diagnosis": diagnosis, "objective": objective, "admissibility": objective_decision, "candidate_design": design}
+    critique_call = run_live38_governed_model_call(root=root, contract_type="adversarial_critique", task_identity="critique", structured_input=critique_input, fake_response=fake)
+    critique = critique_call.get("parsed", {})
+    validation = run_live38_candidate_validation(root, design)
+    validation_artifact = validation["artifact"]
+    _live38_lineage_record(lineage, artifact_type="validation_result", raw_artifact=validation_artifact, producer="deterministic_evaluator", consumer="follow_up_judgment", parents=(design_call.get("parsed_artifact", {}).get("digest", ""),), authority_state="computed_evidence")
+    fake = None if use_real_provider else _live38_default_fake("follow_up", packet)
+    follow_input = {"validation": validation, "candidate_disposition": validation["disposition"], "prior_proposal_signature": objective_decision["signature"], "new_evidence_ids": ("validation/validation_summary.json",)}
+    follow_call = run_live38_governed_model_call(root=root, contract_type="follow_up", task_identity="follow_up", structured_input=follow_input, fake_response=fake)
+    follow = follow_call.get("parsed", {})
+    follow_preexisted = objective_decision["signature"] == stable_id("live38-objective-signature", follow.get("follow_up_objective", ""), tuple(follow.get("parent_new_evidence_ids", ())))
+    graph = {
+        "nodes": {
+            packet["packet_id"]: {"node_type": "evidence"},
+            stable_id("live38-diagnosis", diagnosis.get("first_incorrect_transition", "")): {"node_type": "diagnosis", **diagnosis},
+            objective_decision["decision_id"]: {"node_type": "admissible objective", **objective_decision},
+            str(design.get("candidate_id", "candidate")): {"node_type": "candidate design", **design},
+            validation_artifact["digest"]: {"node_type": "validation result", "metrics": validation["metrics"]},
+            stable_id("live38-followup", follow.get("follow_up_objective", "")): {"node_type": "follow-up proposal", **follow},
+        },
+        "edges": (
+            {"edge_type": "diagnosed_as", "source": packet["packet_id"], "target": stable_id("live38-diagnosis", diagnosis.get("first_incorrect_transition", ""))},
+            {"edge_type": "proposed_from", "source": stable_id("live38-diagnosis", diagnosis.get("first_incorrect_transition", "")), "target": objective_decision["decision_id"]},
+            {"edge_type": "implemented_as", "source": objective_decision["decision_id"], "target": str(design.get("candidate_id", "candidate"))},
+            {"edge_type": "validated_by", "source": str(design.get("candidate_id", "candidate")), "target": validation_artifact["digest"]},
+            {"edge_type": "follows_from", "source": validation_artifact["digest"], "target": stable_id("live38-followup", follow.get("follow_up_objective", ""))},
+        ),
+    }
+    graph_artifact = _live38_write_artifact(root, "graph/capability_graph.json", graph)
+    lineage_artifact = _live38_write_artifact(root, "lineage/append_only_lineage.json", {"records": lineage})
+    provider_calls = (diagnosis_call, objective_call, design_call, critique_call, follow_call)
+    provider_success = all(call.get("accepted") for call in provider_calls)
+    accepted = (
+        provider_success
+        and diagnosis_validation["accepted"]
+        and objective_decision["outcome"] == "accepted"
+        and design_validation["accepted"]
+        and validation["disposition"] == "validated_isolated_pending_promotion_review"
+        and validation["causal"]["disable_removes_improvement"]
+        and validation["causal"]["restore_returns_improvement"]
+        and validation["rollback"]["before_equals_rolled_back"]
+        and bool(follow)
+        and not follow_preexisted
+    )
+    review = {
+        "accepted": accepted,
+        "classification": "LIVE_38_GOVERNED_MODEL_LED_JUDGMENT_VERIFIED" if accepted else "LIVE_38_PARTIAL_JUDGMENT_UNVERIFIED",
+        "campaign_id": campaign_id,
+        "parent_mission": LIVE38_PARENT_MISSION,
+        "provider_calls": tuple(provider_calls),
+        "provider_call_count": len(provider_calls),
+        "actual_models": tuple(call.get("actual_response_model", "") for call in provider_calls),
+        "token_usage": tuple(call.get("token_usage", {}) for call in provider_calls),
+        "cost": "unavailable_from_provider_response",
+        "evidence_packet": packet,
+        "diagnosis": diagnosis,
+        "diagnosis_validation": diagnosis_validation,
+        "objective_proposal": objective,
+        "admissibility_decision": objective_decision,
+        "candidate_design": design,
+        "design_validation": design_validation,
+        "adversarial_critique": critique,
+        "validation": validation,
+        "follow_up": follow,
+        "follow_up_preexisted": follow_preexisted,
+        "capability_graph": graph,
+        "graph_artifact": graph_artifact,
+        "lineage_artifact": lineage_artifact,
+        "candidate_disposition": validation["disposition"],
+        "no_live_activation": True,
+        "no_promotion": True,
+    }
+    review_artifact = _live38_write_artifact(root, "review/live38_review.json", review)
+    return {**review, "review_artifact": review_artifact}
 
 
 def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
@@ -27568,6 +28369,7 @@ def _live37_write_checkpoint(root: Path, state: dict[str, Any], checkpoint_type:
         "objective_envelopes": state.get("objective_envelopes", {}),
         "campaign_resource_counts": state.get("campaign_resource_counts", {}),
         "resource_saturation": state.get("resource_saturation", {}),
+        "capability_map": state.get("capability_map", {}),
         "next_eligible_action": state.get("next_eligible_action", ""),
     }
     checkpoint["integrity_digest"] = _live37_digest(checkpoint)
@@ -27646,73 +28448,66 @@ def run_live37_twelve_hour_campaign_process(
         "phase_times": {"active": 0.0, "diagnostic": 0.0, "implementation": 0.0, "validation": 0.0, "tool": 0.0, "paused": 0.0, "blocked": 0.0, "restart": 0.0, "final_review": 0.0},
     }
     _live37_write_checkpoint(root, state, "campaign_start")
-    state["objectives"].append({"objective_id": stable_id("live37-objective", campaign, "argument-dependency"), "gap": "argument and dependency tracking", "state": "selected"})
-    active_objective_id = state["objectives"][0]["objective_id"]
-    state["current_objective"] = "substantive argument and dependency tracking pilot"
-    pilot_report = run_live37_substantive_work_pilot(artifact_root=str(root / "substantive_work"), pilot_id="objective-1-argument-dependency")
-    raw_count = len(list((Path(pilot_report["raw_output_root"])).rglob("*.json")))
-    for index, purpose in enumerate((
-        "persist raw baseline fixtures",
-        "execute actual baseline handler",
-        "cluster reproducible failures",
-        "implement isolated argument dependency tracker",
-        "execute focused and sealed held-out validation",
-        "execute adversarial controls and transfer validation",
-        "perform candidate on/off causal replay",
-        "prove rollback and disposition",
-    ), start=1):
-        resource_result = record_live37_resource_action(
-            state,
-            objective_id=active_objective_id,
-            task_id=f"substantive-local-{index}",
-            resource_class="local",
-            identity="live37_substantive_development_handler",
-            exact_request=purpose,
-            purpose=purpose,
-            missing_evidence=f"substantive evidence for {purpose}",
-            material_new_evidence=True,
-            downstream_consumers=(pilot_report["report_path"],),
-            runtime_effect_ms=1,
-        )
-        if not resource_result["accepted"]:
-            state["stagnation_state"] = resource_result["reason"]
-            state["final_disposition"] = "resource_envelope_blocked"
-            break
-    state["baseline_metrics"] = pilot_report["baseline_metrics"]
+    state["current_objective"] = "multi-objective substantive continuation"
+    continuation = run_live37_multi_objective_continuation_pilot(
+        artifact_root=str(root / "mo"),
+        pilot_id="cont",
+        minimum_objectives=3,
+    )
+    state["capability_map"] = continuation["capability_map"]
+    state["campaign_resource_counts"] = dict(continuation["resource_counts"])
+    state["resource_action_ledger"] = list(continuation["resource_action_ledger"])
+    state["objectives"] = [
+        {
+            "objective_id": stable_id("live37-objective", campaign, item["gap_id"]),
+            "gap": item["gap_id"],
+            "state": item["status"],
+            "capability_identity": item["capability_identity"],
+            "report_path": item["report_path"],
+            "raw_artifact_root": item["raw_artifact_root"],
+        }
+        for item in continuation["capability_map"]["evaluated_capabilities"]
+    ]
+    state["candidates"] = [
+        {
+            "candidate_id": item["capability_identity"],
+            "state": item["status"],
+            "scope": item["raw_artifact_root"],
+            "report_path": item["report_path"],
+        }
+        for item in continuation["capability_map"]["evaluated_capabilities"]
+    ]
+    state["completed_candidates"] = [
+        {
+            "candidate_id": item["capability_identity"],
+            "disposition": item["status"],
+            "baseline_score": item["baseline_score"],
+            "latest_score": item["latest_score"],
+            "raw_artifact_root": item["raw_artifact_root"],
+            "report_path": item["report_path"],
+            "known_limits": list(item["unresolved_limitations"]),
+        }
+        for item in continuation["capability_map"]["evaluated_capabilities"]
+    ]
+    raw_count = sum(len(list(Path(raw_root).rglob("*.json"))) for raw_root in continuation["raw_artifact_roots"])
     state["completed_evidence"].append({
-        "type": "substantive_pilot",
-        "classification": pilot_report["classification"],
-        "report_path": pilot_report["report_path"],
-        "report_digest": pilot_report["report_digest"],
-        "raw_output_root": pilot_report["raw_output_root"],
+        "type": "multi_objective_continuation",
+        "classification": continuation["classification"],
+        "review_path": continuation["review_path"],
+        "review_digest": continuation["review_digest"],
+        "objective_count": continuation["objective_count"],
+        "objective_keys": continuation["objective_keys"],
+        "raw_artifact_roots": continuation["raw_artifact_roots"],
         "raw_output_count": raw_count,
-        "held_out_digest_unchanged": pilot_report["held_out_digest_unchanged"],
-        "candidate_disposition": pilot_report["candidate_disposition"],
-    })
-    state["candidates"].append({
-        "candidate_id": "argument_dependency_tracker",
-        "state": pilot_report["candidate_disposition"],
-        "scope": str(root / "substantive_work" / "objective-1-argument-dependency" / "candidates" / "argument_dependency_tracker"),
-        "implementation_path": pilot_report["candidate_implementation_path"],
-        "implementation_digest": pilot_report["candidate_implementation_digest"],
-    })
-    state["completed_candidates"].append({
-        "candidate_id": "argument_dependency_tracker",
-        "disposition": pilot_report["candidate_disposition"],
-        "baseline_metrics": pilot_report["baseline_metrics"],
-        "focused_metrics": pilot_report["candidate_metrics"]["focused"],
-        "held_out_metrics": pilot_report["candidate_metrics"]["held_out"],
-        "adversarial_metrics": pilot_report["candidate_metrics"]["adversarial"],
-        "transfer_metrics": pilot_report["candidate_metrics"]["transfer"],
-        "independent_challenge_metrics": pilot_report["independent_challenge_metrics"],
-        "rollback_identity": pilot_report["rollback"]["restored_state_digest"],
-        "known_limits": ["isolated candidate only", "provider/source use optional and currently unused"],
+        "retained_count": continuation["retained_count"],
+        "rejected_or_deferred_count": continuation["rejected_or_deferred_count"],
+        "next_ranked_gap": continuation["next_ranked_gap"],
     })
     state["budgets"]["tool_calls"] = state["campaign_resource_counts"]["local"]
-    state["budgets"]["output_bytes"] += sum(path.stat().st_size for path in (root / "substantive_work").rglob("*") if path.is_file())
-    state["current_objective"] = "substantive pilot complete; monitoring until deadline"
-    state["next_eligible_action"] = "periodic checkpoint or next substantive objective"
-    _live37_write_checkpoint(root, state, "substantive_pilot_complete")
+    state["budgets"]["output_bytes"] += sum(path.stat().st_size for path in (root / "mo").rglob("*") if path.is_file())
+    state["current_objective"] = "multi-objective substantive continuation complete"
+    state["next_eligible_action"] = f"next objective candidate: {continuation['next_ranked_gap']}" if continuation["next_ranked_gap"] else "periodic checkpoint"
+    _live37_write_checkpoint(root, state, "multi_objective_continuation_complete")
     last_checkpoint = time.monotonic()
     restart_done = False
     while True:

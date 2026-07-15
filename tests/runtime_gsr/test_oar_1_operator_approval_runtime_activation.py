@@ -4581,7 +4581,7 @@ def test_live_37_scheduler_executes_eligible_work_without_poll_sleep(tmp_path):
     assert result["budgets"]["tool_calls"] >= 8
     assert result["monotonic_elapsed_seconds"] < 2.0
     assert result["completed_evidence"][0]["raw_output_count"] >= 30
-    assert result["completed_evidence"][0]["classification"] == "SUBSTANTIVE_WORK_VERIFIED"
+    assert result["completed_evidence"][0]["classification"] == "MULTI_OBJECTIVE_CONTINUATION_VERIFIED"
 
 
 def test_live_37_scheduler_distinguishes_idle_blocked_waiting_and_checkpoint():
@@ -4613,7 +4613,7 @@ def test_live_37_short_validation_campaign_preserves_no_duplicate_work(tmp_path)
 
     assert len(action_ids) == len(set(action_ids))
     assert result["budgets"]["tool_calls"] == len(action_ids)
-    assert result["completed_candidates"][0]["disposition"] == "retained_isolated_substantive"
+    assert result["completed_candidates"][0]["disposition"] in {"retained", "deferred", "rejected"}
 
 
 def test_live_37_adaptive_resource_envelope_bands_and_objective_limits():
@@ -5050,6 +5050,160 @@ def test_live_37_substantive_metadata_or_lifecycle_only_cannot_be_retained(tmp_p
     assert no_causal["improvement_removed_when_disabled"] is False
     assert report["lifecycle_labels_sufficient"] is False
     assert report["candidate_disposition"] == "retained_isolated_substantive"
+
+
+def test_live_37_objective_ranking_is_factor_derived_and_excludes_completed_gaps():
+    remaining = {"total": 380, "local": 240, "source": 120, "provider": 20}
+    initial = gsr.rank_live37_unresolved_objectives({"evaluated_capabilities": []}, remaining_budget=remaining)
+
+    assert len(initial) >= 3
+    assert [item["selection_score"] for item in initial] == sorted((item["selection_score"] for item in initial), reverse=True)
+    assert "factor-derived" in initial[0]["selection_rationale"]
+
+    completed_map = {"evaluated_capabilities": [{"gap_id": initial[0]["gap_id"], "status": "retained"}]}
+    after_completed = gsr.rank_live37_unresolved_objectives(completed_map, remaining_budget=remaining)
+    assert after_completed[0]["gap_id"] != initial[0]["gap_id"]
+
+
+def test_live_37_multi_objective_continuation_updates_capability_map_and_raw_artifacts(tmp_path):
+    review = gsr.run_live37_multi_objective_continuation_pilot(artifact_root=str(tmp_path), pilot_id="multi")
+    evaluated = review["capability_map"]["evaluated_capabilities"]
+
+    assert review["classification"] == "MULTI_OBJECTIVE_CONTINUATION_VERIFIED"
+    assert review["objective_count"] >= 3
+    assert review["all_objectives_distinct"] is True
+    assert review["no_duplicate_objectives"] is True
+    assert len(review["capability_map"]["ranking_history"]) >= 3
+    assert len(evaluated) >= 3
+    assert review["candidate_count"] == review["objective_count"]
+    assert review["rejected_or_deferred_count"] >= 1
+    assert review["resource_counts"]["local"] >= 24
+    assert review["resource_counts"]["total"] == review["resource_counts"]["local"]
+    assert len(review["resource_action_ledger"]) == review["resource_counts"]["local"]
+    for raw_root in review["raw_artifact_roots"]:
+        raw_path = Path(raw_root)
+        assert raw_path.exists()
+        assert list(raw_path.rglob("*.json"))
+    assert Path(review["review_path"]).exists()
+
+
+def test_live_37_twelve_hour_process_uses_multi_objective_continuation(tmp_path):
+    state = gsr.run_live37_twelve_hour_campaign_process(
+        artifact_root=str(tmp_path),
+        campaign_id="runtime-multi-objective",
+        target_duration_seconds=0.05,
+        minimum_duration_seconds=0.0,
+        hard_duration_seconds=1.0,
+        checkpoint_interval_seconds=0.01,
+    )
+    evidence = [item for item in state["completed_evidence"] if item["type"] == "multi_objective_continuation"]
+
+    assert evidence
+    assert evidence[0]["objective_count"] >= 3
+    assert len(state["capability_map"]["evaluated_capabilities"]) >= 3
+    assert len(state["completed_candidates"]) >= 3
+    assert state["campaign_resource_counts"]["local"] >= 24
+    assert "substantive pilot complete; monitoring until deadline" not in state["current_objective"]
+    checkpoint_text = (tmp_path / "runtime-multi-objective" / "checkpoints.jsonl").read_text(encoding="utf-8")
+    assert "multi_objective_continuation_complete" in checkpoint_text
+
+
+def test_live_38_evidence_packet_excludes_sealed_answers_and_has_raw_digest(tmp_path):
+    failure = gsr.make_live38_failure_evidence(tmp_path, campaign_id="live38-test")
+    packet = gsr.make_live38_evidence_packet(tmp_path, failure, campaign_id="live38-test")
+
+    assert Path(failure["artifact"]["path"]).exists()
+    assert Path(packet["artifact"]["path"]).exists()
+    assert packet["failed_case_records"]
+    assert packet["exact_evidence_ids"] == ("live38-failure-contradiction-dependency",)
+    assert "held_out_expected_answers" in packet["sealed_data_exclusions"]
+    assert packet["packet_digest"] == gsr._live38_json_digest({k: v for k, v in packet.items() if k not in {"artifact", "packet_digest"}})
+
+
+def test_live_38_model_contract_artifacts_and_provider_output_non_authoritative(tmp_path):
+    failure = gsr.make_live38_failure_evidence(tmp_path, campaign_id="live38-contract")
+    packet = gsr.make_live38_evidence_packet(tmp_path, failure, campaign_id="live38-contract")
+    response = gsr._live38_default_fake("diagnosis", packet)
+    call = gsr.run_live38_governed_model_call(
+        root=tmp_path,
+        contract_type="diagnosis",
+        task_identity="diagnosis",
+        structured_input=packet,
+        fake_response=response,
+    )
+
+    assert call["accepted"] is True
+    assert call["advisory_only"] is True
+    assert call["actual_response_model"] == "fake-test-model"
+    assert Path(call["request_artifact"]["path"]).exists()
+    assert Path(call["response_artifact"]["path"]).exists()
+    assert Path(call["parsed_artifact"]["path"]).exists()
+    assert call["retry_count"] == 0
+    request = json.loads(Path(call["request_artifact"]["path"]).read_text(encoding="utf-8"))
+    assert request["max_output_tokens"] == gsr._live38_contract_max_tokens("diagnosis")
+    assert gsr._live38_contract_max_tokens("candidate_design") > gsr._live38_contract_max_tokens("diagnosis")
+
+
+def test_live_38_diagnosis_and_objective_admissibility_denials(tmp_path):
+    failure = gsr.make_live38_failure_evidence(tmp_path, campaign_id="live38-admit")
+    packet = gsr.make_live38_evidence_packet(tmp_path, failure, campaign_id="live38-admit")
+    diagnosis = gsr._live38_default_fake("diagnosis", packet)
+    bad_diagnosis = {**diagnosis, "supporting_evidence_ids": ["missing-evidence"]}
+    proposal = gsr._live38_default_fake("objective_proposal", packet)
+    static_proposal = {**proposal, "proposed_objective": "argument_dependency_tracking"}
+
+    assert gsr.validate_live38_diagnosis(diagnosis, packet)["accepted"] is True
+    assert gsr.validate_live38_diagnosis(bad_diagnosis, packet)["accepted"] is False
+    accepted = gsr.validate_live38_objective_proposal(proposal, diagnosis, packet)
+    denied = gsr.validate_live38_objective_proposal(static_proposal, diagnosis, packet)
+
+    assert accepted["outcome"] == "accepted"
+    assert accepted["materially_novel"] is True
+    assert denied["outcome"] == "rejected"
+    assert denied["objective_preexisted"] is True
+
+
+def test_live_38_candidate_design_cannot_mutate_trusted_source(tmp_path):
+    failure = gsr.make_live38_failure_evidence(tmp_path, campaign_id="live38-design")
+    packet = gsr.make_live38_evidence_packet(tmp_path, failure, campaign_id="live38-design")
+    diagnosis = gsr._live38_default_fake("diagnosis", packet)
+    proposal = gsr._live38_default_fake("objective_proposal", packet)
+    decision = gsr.validate_live38_objective_proposal(proposal, diagnosis, packet)
+    design = gsr._live38_default_fake("candidate_design", packet)
+    tracked = {**design, "implementation_scope": "tracked source mutation"}
+
+    assert gsr.validate_live38_candidate_design(design, decision)["accepted"] is True
+    assert gsr.validate_live38_candidate_design(tracked, decision)["accepted"] is False
+
+
+def test_live_38_candidate_validation_proves_causality_rollback_and_pending_promotion(tmp_path):
+    design = {"candidate_id": "contradiction_dependency_mapper"}
+    validation = gsr.run_live38_candidate_validation(tmp_path, design)
+
+    assert validation["metrics"]["focused"]["enabled_accuracy"] > validation["metrics"]["focused"]["disabled_accuracy"]
+    assert validation["metrics"]["held_out"]["enabled_accuracy"] > validation["metrics"]["held_out"]["disabled_accuracy"]
+    assert validation["metrics"]["controls"]["enabled_accuracy"] == 1.0
+    assert validation["causal"]["disable_removes_improvement"] is True
+    assert validation["causal"]["restore_returns_improvement"] is True
+    assert validation["rollback"]["before_equals_rolled_back"] is True
+    assert validation["rollback"]["restore_equals_applied"] is True
+    assert validation["disposition"] == "validated_isolated_pending_promotion_review"
+
+
+def test_live_38_full_judgment_loop_with_injected_model_outputs(tmp_path):
+    result = gsr.run_live38_governed_model_led_judgment_pilot(artifact_root=str(tmp_path), campaign_id="live38-fake", use_real_provider=False)
+
+    assert result["accepted"] is True
+    assert result["classification"] == "LIVE_38_GOVERNED_MODEL_LED_JUDGMENT_VERIFIED"
+    assert result["provider_call_count"] == 5
+    assert result["admissibility_decision"]["outcome"] == "accepted"
+    assert result["candidate_disposition"] == "validated_isolated_pending_promotion_review"
+    assert result["follow_up"]["parent_new_evidence_ids"] == ["validation/validation_summary.json"]
+    assert result["follow_up_preexisted"] is False
+    assert Path(result["lineage_artifact"]["path"]).exists()
+    assert Path(result["graph_artifact"]["path"]).exists()
+    assert result["no_live_activation"] is True
+    assert result["no_promotion"] is True
 
 
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():

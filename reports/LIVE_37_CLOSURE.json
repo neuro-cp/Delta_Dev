@@ -1,0 +1,37 @@
+{
+  "gate": "LIVE-37",
+  "starting_checkpoint": "1d433da5 Replace LIVE-37 rehearsal with substantive development",
+  "closure_classification": "substantive_governed_development_verified_dynamic_developmental_judgment_not_verified",
+  "verified": [
+    "substantive governed candidate work",
+    "isolated candidate validation",
+    "causal enable_disable evidence",
+    "resource-governed scheduler execution",
+    "controlled emergency stop and checkpoint preservation"
+  ],
+  "not_verified": [
+    "model-led developmental judgment",
+    "dynamic objective derivation from discovered limitations",
+    "external research use during the active LIVE-37 run",
+    "persistent integration into future reasoning"
+  ],
+  "first_missing_transition": "real failure evidence -> advisory model diagnosis -> advisory model objective proposal -> deterministic admissibility decision -> governed candidate design and validation",
+  "preserved_boundary": {
+    "model_authority": "advisory_only",
+    "deterministic_runtime_authority": [
+      "evidence integrity",
+      "novelty checks",
+      "scope and budget enforcement",
+      "execution",
+      "held-out sealing",
+      "scoring",
+      "rollback",
+      "disposition",
+      "promotion boundaries"
+    ]
+  },
+  "final_statement": [
+    "LIVE-37 SUBSTANTIVE GOVERNED DEVELOPMENT VERIFIED",
+    "LIVE-37 DYNAMIC DEVELOPMENTAL JUDGMENT NOT VERIFIED"
+  ]
+}
