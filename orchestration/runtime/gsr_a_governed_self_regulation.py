@@ -31062,7 +31062,6 @@ def live44_semantic_proposal_signature(proposal: Mapping[str, Any]) -> str:
         "provider_response": proposal.get("provider_response_excerpt", {}),
         "candidate_behavior": proposal.get("proposed_isolated_candidate_behavior", ""),
         "metric": proposal.get("specific_validation_weakness", {}).get("metric", ""),
-        "rollback_condition": proposal.get("rollback_condition", ""),
         "overlap": proposal.get("duplicate_overlap_check", {}).get("overlap", ""),
         "expected_information_gain": proposal.get("expected_information_gain", ""),
     }
@@ -31076,6 +31075,97 @@ def live44_proposal_signature_available(campaign_root: str, proposal: Mapping[st
     consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
     available = signature not in set(consumed.get("signatures", ()))
     return {"available": available, "signature": signature, "decision": "allowed" if available else "denied_duplicate_consumed_signature"}
+
+
+LIVE44_APPROACH_FRONTIER: tuple[dict[str, Any], ...] = (
+    {
+        "approach_id": "transfer_dependency_identity",
+        "objective": "evaluate alternate local-only transfer evidence path after denial",
+        "failure_mechanism": "transfer dependency identity preservation",
+        "evidence_question": "does transfer validation preserve dependency identifiers before classification",
+        "metric": "transfer_dependency_identity_preservation=0.0",
+        "evidence_prefix": "live44-local-deny-followup-evidence",
+        "finding": "dependency identity dropped before transfer validation",
+        "candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
+        "overlap": "none_exact; existing capabilities do not preserve transfer dependency identity before classification",
+        "information_gain": 0.83,
+    },
+    {
+        "approach_id": "quote_instruction_isolation",
+        "objective": "test quote-like dependency labels without treating them as instructions",
+        "failure_mechanism": "quote versus instruction isolation",
+        "evidence_question": "does the classifier preserve quoted dependency text as evidence rather than executable instruction",
+        "metric": "quote_instruction_isolation=0.0",
+        "evidence_prefix": "live44-local-quote-isolation-evidence",
+        "finding": "quote-like dependency label risks being treated as instruction text",
+        "candidate_behavior": "isolate quoted dependency labels as evidence spans before classification",
+        "overlap": "none_exact; prior retained capabilities do not combine quote isolation with dependency preservation",
+        "information_gain": 0.79,
+    },
+    {
+        "approach_id": "source_quality_scope_disambiguation",
+        "objective": "distinguish source-quality conflict from factual contradiction",
+        "failure_mechanism": "source quality versus factual contradiction",
+        "evidence_question": "does contradiction handling separate source-quality weakness from direct factual disagreement",
+        "metric": "source_quality_scope_disambiguation=0.0",
+        "evidence_prefix": "live44-local-source-quality-evidence",
+        "finding": "source-quality weakness can be mislabeled as factual contradiction",
+        "candidate_behavior": "preserve source-quality and scope labels before contradiction classification",
+        "overlap": "partial_with_LIVE43; composition remains unproven for source-quality conflict handling",
+        "information_gain": 0.76,
+    },
+)
+
+
+def live44_approach_signature(approach: Mapping[str, Any]) -> str:
+    payload = {
+        "approach_id": approach.get("approach_id", ""),
+        "objective": approach.get("objective", ""),
+        "failure_mechanism": approach.get("failure_mechanism", ""),
+        "evidence_question": approach.get("evidence_question", ""),
+        "metric": approach.get("metric", ""),
+        "candidate_behavior": approach.get("candidate_behavior", ""),
+    }
+    return stable_id("live44-approach", _live44_normalized_semantic_text(payload))
+
+
+def _live44_consumed_approach_signatures(root: Path) -> set[str]:
+    path = root / "consumed_approach_signatures.json"
+    consumed = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"signatures": []}
+    return set(consumed.get("signatures", ()))
+
+
+def _live44_mark_approach_consumed(root: Path, approach: Mapping[str, Any], *, reason: str) -> str:
+    signature = live44_approach_signature(approach)
+    path = root / "consumed_approach_signatures.json"
+    consumed = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"signatures": [], "records": []}
+    consumed["signatures"] = tuple(dict.fromkeys(tuple(consumed.get("signatures", ())) + (signature,)))
+    records = tuple(consumed.get("records", ())) + ({"signature": signature, "approach_id": approach.get("approach_id", ""), "reason": reason, "timestamp": utc_now()},)
+    consumed["records"] = records
+    _live44_write_json(path, consumed)
+    return signature
+
+
+def live44_next_distinct_approach(campaign_root: str, *, denied_decision: Mapping[str, Any]) -> dict[str, Any]:
+    root = Path(campaign_root)
+    consumed = _live44_consumed_approach_signatures(root)
+    denied_objective = _live44_normalized_semantic_text(denied_decision.get("exact_provider_selected_objective", ""))
+    denied_behavior = _live44_normalized_semantic_text(denied_decision.get("proposed_isolated_candidate_behavior", ""))
+    denied_metric = _live44_normalized_semantic_text(denied_decision.get("specific_validation_weakness", {}).get("metric", ""))
+    candidates = []
+    for index, approach in enumerate(LIVE44_APPROACH_FRONTIER):
+        signature = live44_approach_signature(approach)
+        same_mechanism = (
+            _live44_normalized_semantic_text(approach["objective"]) == denied_objective
+            or _live44_normalized_semantic_text(approach["candidate_behavior"]) == denied_behavior
+            or _live44_normalized_semantic_text(approach["metric"]) == denied_metric
+        )
+        eligible = signature not in consumed and not same_mechanism
+        candidates.append({"approach": approach, "signature": signature, "eligible": eligible, "reason": "eligible_distinct_approach" if eligible else "consumed_or_same_mechanism", "rank": index})
+    selected = next((candidate for candidate in candidates if candidate["eligible"]), None)
+    result = {"selected": selected["approach"] if selected else None, "selected_signature": selected["signature"] if selected else "", "candidates": candidates, "decision": "selected_distinct_approach" if selected else "global_frontier_exhausted"}
+    _live44_write_json(root / "approach_frontier_selection.json", result)
+    return result
 
 
 def live44_continue_after_local_enrichment_required(campaign_root: str, campaign: MutableMapping[str, Any], *, original_decision_id: str, popup_mode: str = "persistent") -> dict[str, Any]:
@@ -31142,8 +31232,15 @@ def live44_continue_after_local_enrichment_required(campaign_root: str, campaign
     return transition
 
 
-def live44_create_complete_local_decision(campaign_root: str, campaign: MutableMapping[str, Any], *, cycle_id: str, objective: str, evidence_record_id: str, popup_mode: str = "persistent") -> dict[str, Any]:
+def live44_create_complete_local_decision(campaign_root: str, campaign: MutableMapping[str, Any], *, cycle_id: str, objective: str, evidence_record_id: str, popup_mode: str = "persistent", approach: Mapping[str, Any] | None = None) -> dict[str, Any]:
     root = Path(campaign_root)
+    approach = dict(approach or {})
+    objective = str(approach.get("objective", objective))
+    metric = str(approach.get("metric", "transfer_dependency_identity_preservation=0.0"))
+    finding = str(approach.get("finding", "dependency identity dropped before transfer validation"))
+    candidate_behavior = str(approach.get("candidate_behavior", "preserve dependency identifiers before transfer and contradiction classification"))
+    overlap = str(approach.get("overlap", "none_exact; existing capabilities do not preserve transfer dependency identity before classification"))
+    information_gain = float(approach.get("information_gain", 0.83))
     checkpoint = _live44_checkpoint(root, campaign, latest_artifact=str(root / "local_validation_evidence.json"))
     decision = _live44_operator_decision_package(
         root,
@@ -31165,12 +31262,12 @@ def live44_create_complete_local_decision(campaign_root: str, campaign: MutableM
             "specific_validation_weakness": {
                 "case_ids_or_metrics_present": True,
                 "case_ids": (evidence_record_id,),
-                "metric": "transfer_dependency_identity_preservation=0.0",
+                "metric": metric,
             },
-            "local_evidence_records": (f"{evidence_record_id}: dependency identity dropped before transfer validation",),
-            "proposed_isolated_candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
+            "local_evidence_records": (f"{evidence_record_id}: {finding}",),
+            "proposed_isolated_candidate_behavior": candidate_behavior,
             "focused_success_criteria": (
-                f"{evidence_record_id} preserves dependency identity",
+                f"{evidence_record_id} improves {metric.split('=')[0]}",
                 "candidate remains isolated and reversible",
                 "no tracked-source application occurs",
             ),
@@ -31180,12 +31277,15 @@ def live44_create_complete_local_decision(campaign_root: str, campaign: MutableM
                 "control": "unrelated source-quality control remains unchanged",
                 "transfer": evidence_record_id,
             },
-            "rollback_condition": "reject candidate and preserve prior state if transfer dependency metric does not improve",
+            "rollback_condition": f"reject candidate and preserve prior state if {metric.split('=')[0]} does not improve",
             "duplicate_overlap_check": {
                 "checked": ("LIVE-42 frontier expansion", "LIVE-43 contradiction/source composition"),
-                "overlap": "none_exact; existing capabilities do not preserve transfer dependency identity before classification",
+                "overlap": overlap,
             },
-            "expected_information_gain": 0.83,
+            "approach_id": approach.get("approach_id", "transfer_dependency_identity"),
+            "failure_mechanism": approach.get("failure_mechanism", "transfer dependency identity preservation"),
+            "evidence_question": approach.get("evidence_question", "does transfer validation preserve dependency identifiers before classification"),
+            "expected_information_gain": information_gain,
             "estimated_local_actions_required": 2,
             "recommended_choice": "Accept",
         }
@@ -31335,10 +31435,39 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                         "timestamp": utc_now(),
                     }
                     _live44_write_json(root / "denied_decision_evidence.json", denial_evidence)
+                    _live44_mark_approach_consumed(
+                        root,
+                        {
+                            "approach_id": denied_decision.get("approach_id", ""),
+                            "objective": denied_decision.get("exact_provider_selected_objective", ""),
+                            "failure_mechanism": denied_decision.get("failure_mechanism", ""),
+                            "evidence_question": denied_decision.get("evidence_question", ""),
+                            "metric": denied_decision.get("specific_validation_weakness", {}).get("metric", ""),
+                            "candidate_behavior": denied_decision.get("proposed_isolated_candidate_behavior", ""),
+                        },
+                        reason="operator_denied_decision",
+                    )
                     campaign["pending_decision_id"] = ""
                     followup_episode = int(campaign.get("completed_episodes", 0)) + 1
-                    followup_objective = "evaluate alternate local-only transfer evidence path after denial"
-                    followup_evidence_id = stable_id("live44-local-deny-followup-evidence", campaign["campaign_id"], followup_episode)
+                    approach_selection = live44_next_distinct_approach(str(root), denied_decision=denied_decision)
+                    if not approach_selection.get("selected"):
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        campaign["pending_decision_id"] = ""
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": "no_materially_distinct_approach_available",
+                            "denied_decision_id": denied_decision_id,
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                            "approach_selection": approach_selection,
+                        }
+                        _live44_write_json(root / "approach_frontier_exhausted.json", wait_result)
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "no_materially_distinct_approach_available"})
+                        break
+                    next_approach = dict(approach_selection["selected"])
+                    followup_objective = str(next_approach["objective"])
+                    followup_evidence_id = stable_id(str(next_approach["evidence_prefix"]), campaign["campaign_id"], followup_episode)
                     followup_probe = {
                         "requested_action": "execute isolated local-only candidate after exact evidence compilation",
                         "exact_provider_selected_objective": followup_objective,
@@ -31347,12 +31476,12 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                             "rationale": "existing provider ranking pointed to transfer weakness; local episode supplied exact failing evidence",
                             "response_id": "local-reuse-of-existing-provider-evidence",
                         },
-                        "specific_validation_weakness": {"metric": "transfer_dependency_identity_preservation=0.0", "case_ids": (followup_evidence_id,)},
-                        "local_evidence_records": (f"{followup_evidence_id}: dependency identity dropped before transfer validation",),
-                        "proposed_isolated_candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
-                        "rollback_condition": "reject candidate and preserve prior state if transfer dependency metric does not improve",
-                        "duplicate_overlap_check": {"overlap": "none_exact; existing capabilities do not preserve transfer dependency identity before classification"},
-                        "expected_information_gain": 0.83,
+                        "specific_validation_weakness": {"metric": next_approach["metric"], "case_ids": (followup_evidence_id,)},
+                        "local_evidence_records": (f"{followup_evidence_id}: {next_approach['finding']}",),
+                        "proposed_isolated_candidate_behavior": next_approach["candidate_behavior"],
+                        "rollback_condition": f"reject candidate and preserve prior state if {str(next_approach['metric']).split('=')[0]} does not improve",
+                        "duplicate_overlap_check": {"overlap": next_approach["overlap"]},
+                        "expected_information_gain": next_approach["information_gain"],
                     }
                     followup_availability = live44_proposal_signature_available(str(root), followup_probe)
                     if not followup_availability["available"]:
@@ -31372,7 +31501,7 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                         break
                     campaign["completed_episodes"] = followup_episode
                     campaign["local_actions"] += 1
-                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "denied-proposal-materially-different-local-exploration", "productive_cycles": 0, "terminal_reason": "denied_signature_consumed_and_new_episode_started", "blocked_signature": signature})
+                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "denied-proposal-materially-different-local-exploration", "productive_cycles": 0, "terminal_reason": "denied_signature_consumed_and_new_episode_started", "blocked_signature": signature, "next_approach_id": next_approach.get("approach_id"), "failure_mechanism": next_approach.get("failure_mechanism"), "evidence_question": next_approach.get("evidence_question")})
                     followup = live44_create_complete_local_decision(
                         root,
                         campaign,
@@ -31380,6 +31509,7 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                         objective=followup_objective,
                         evidence_record_id=followup_evidence_id,
                         popup_mode=popup_mode,
+                        approach=next_approach,
                     )
                     if not followup.get("accepted") and followup.get("reason") == "denied_duplicate_consumed_signature":
                         campaign["campaign_state"] = "global_frontier_exhausted"

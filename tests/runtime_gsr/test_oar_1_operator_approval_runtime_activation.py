@@ -6053,13 +6053,13 @@ def test_live_44_deny_consumes_signature_and_creates_later_popup(tmp_path, monke
     assert denial["provider_calls_added"] == 0
     assert denial["proposal_signature"] in consumed["signatures"]
     assert result["wait_result"]["events"][0]["state"] == "denied_consumed_and_followup_popup_created"
-    assert result["wait_result"]["state"] == "global_frontier_exhausted"
-    assert result["wait_result"]["reason"] == "denied_duplicate_consumed_signature"
-    assert (root / "duplicate_denial_blocked.json").exists()
+    assert result["wait_result"]["events"][0]["followup"]["decision"]["approach_id"] == "quote_instruction_isolation"
+    assert result["wait_result"]["events"][0]["followup"]["decision"]["failure_mechanism"] == "quote versus instruction isolation"
+    assert result["wait_result"]["state"] == "emergency_stop"
     assert status["campaign"]["completed_episodes"] >= 4
     assert status["campaign"]["provider_calls"] == 1
-    assert status["campaign"]["pending_decision_id"] == ""
-    assert status["campaign"]["campaign_state"] == "global_frontier_exhausted"
+    assert status["campaign"]["pending_decision_id"]
+    assert status["campaign"]["campaign_state"] == "operator_requested_stop"
 
 
 def test_live_44_semantic_duplicate_with_new_evidence_id_does_not_popup_or_increment_local_actions(tmp_path, monkeypatch):
@@ -6105,6 +6105,38 @@ def test_live_44_semantic_duplicate_with_new_evidence_id_does_not_popup_or_incre
     assert result["popup"]["popup_created"] is False
     assert campaign["local_actions"] == 0
     assert popups == []
+
+
+def test_live_44_denial_selects_materially_different_available_approach_before_exhaustion(tmp_path):
+    root = tmp_path / "live44-approach-frontier"
+    denied_decision = {
+        "approach_id": "transfer_dependency_identity",
+        "exact_provider_selected_objective": "evaluate alternate local-only transfer evidence path after denial",
+        "failure_mechanism": "transfer dependency identity preservation",
+        "evidence_question": "does transfer validation preserve dependency identifiers before classification",
+        "specific_validation_weakness": {"metric": "transfer_dependency_identity_preservation=0.0"},
+        "proposed_isolated_candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
+    }
+    gsr._live44_mark_approach_consumed(
+        root,
+        {
+            "approach_id": denied_decision["approach_id"],
+            "objective": denied_decision["exact_provider_selected_objective"],
+            "failure_mechanism": denied_decision["failure_mechanism"],
+            "evidence_question": denied_decision["evidence_question"],
+            "metric": denied_decision["specific_validation_weakness"]["metric"],
+            "candidate_behavior": denied_decision["proposed_isolated_candidate_behavior"],
+        },
+        reason="test_denied_transfer",
+    )
+
+    selected = gsr.live44_next_distinct_approach(str(root), denied_decision=denied_decision)
+
+    assert selected["decision"] == "selected_distinct_approach"
+    assert selected["selected"]["approach_id"] == "quote_instruction_isolation"
+    assert selected["selected"]["failure_mechanism"] != denied_decision["failure_mechanism"]
+    assert selected["selected"]["evidence_question"] != denied_decision["evidence_question"]
+    assert any(candidate["eligible"] for candidate in selected["candidates"])
 
 
 def test_live_44_accept_deny_revision_transitions(tmp_path):
