@@ -178,3 +178,76 @@ def test_worker_execution_mode_persists_result_and_restarts_without_duplicate(tm
         request_intentional_worker_stop(tmp_path, reason="test_complete")
         if supervisor.process is not None:
             supervisor.process.wait(timeout=5)
+
+
+def test_worker_execution_mode_continues_to_next_distinct_subgoal(tmp_path: Path):
+    from orchestration.runtime.continuous_worker_supervisor import (
+        initialize_supervisor_state,
+        request_intentional_worker_stop,
+        start_supervised_worker,
+    )
+    from orchestration.runtime.continuous_runtime_controller import export_continuous_mission_restart_state
+
+    controller = start_continuous_runtime_controller(session_id="executor-worker-multi")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = assess_continuous_mission_runtime(
+        controller,
+        (
+            {
+                "evidence_source": "bridge defect",
+                "observed_behavior": "first executable weakness",
+                "first_incorrect_transition": "active subgoal one -> no executor",
+                "affected_capability": "continuous_subgoal_execution_bridge",
+                "baseline_metric": "continuous_subgoal_execution_bridge=0.0",
+                "confidence": 0.94,
+                "operator_value": 0.96,
+                "severity": 0.9,
+                "estimated_implementation_breadth": "small",
+                "validation_method": "multi_subgoal_worker",
+            },
+            {
+                "evidence_source": "resource defect",
+                "observed_behavior": "second executable weakness",
+                "first_incorrect_transition": "next active subgoal -> worker returned to heartbeat",
+                "affected_capability": "secondary_executor_bridge",
+                "baseline_metric": "secondary_executor_bridge=0.0",
+                "confidence": 0.8,
+                "operator_value": 0.91,
+                "severity": 0.72,
+                "estimated_implementation_breadth": "small",
+                "validation_method": "multi_subgoal_worker",
+            },
+        ),
+    )
+    controller = queue_continuous_mission_sandbox_work(select_continuous_mission_subgoal(refresh_continuous_mission_frontier(controller)))
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        execute_active_subgoal=True,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        ledger_path = tmp_path / "subgoal_execution_ledger.json"
+        import time
+
+        deadline = time.monotonic() + 10
+        ledger = {"executions": []}
+        while time.monotonic() < deadline:
+            if ledger_path.exists():
+                ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+                if len(ledger["executions"]) >= 2:
+                    break
+            time.sleep(0.05)
+        assert len(ledger["executions"]) >= 2
+        subgoals = [item["subgoal_id"] for item in ledger["executions"]]
+        assert len(set(subgoals)) == len(subgoals)
+        assert (tmp_path / f"subgoal_execution_{subgoals[0]}.json").exists()
+        assert (tmp_path / f"subgoal_execution_{subgoals[1]}.json").exists()
+    finally:
+        request_intentional_worker_stop(tmp_path, reason="test_complete")
+        if supervisor.process is not None:
+            supervisor.process.wait(timeout=5)

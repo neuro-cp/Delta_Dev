@@ -38,6 +38,7 @@ RESTART_STATE = "restart_state.json"
 INTENTIONAL_STOP = "intentional_stop.json"
 WORKER_BOOTSTRAP = "continuous_worker_bootstrap.py"
 TRANSITION_MARKER = "transition_completed.json"
+SUBGOAL_EXECUTION_LEDGER = "subgoal_execution_ledger.json"
 
 
 @dataclass
@@ -271,17 +272,6 @@ def worker_main(argv: list[str] | None = None) -> int:
         session_id = str(restart_state.get("session_id") or "")
         controller = start_continuous_runtime_controller(session_id=session_id)
         controller = restore_continuous_mission_restart_state(controller, restart_state)
-        if args.execute_active_subgoal and controller.continuous_active_subgoal and not (root / "subgoal_execution_completed.json").exists():
-            supervisor_status = _read_json(root / SUPERVISOR_STATUS)
-            repository_root = Path(str(supervisor_status.get("repository_root") or ".")).resolve()
-            controller, execution = execute_continuous_active_subgoal(
-                controller,
-                artifact_root=root / "development",
-                repository_root=repository_root,
-                python_executable=sys.executable,
-            )
-            _atomic_write_json(root / "subgoal_execution_completed.json", execution.as_dict())
-            _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(controller))
         if args.complete_transition_once and controller.continuous_active_subgoal and not (root / TRANSITION_MARKER).exists():
             record = _worker_reassessment_record(controller)
             controller = consume_continuous_capability_reassessment(controller, record)
@@ -300,6 +290,8 @@ def worker_main(argv: list[str] | None = None) -> int:
             if (root / INTENTIONAL_STOP).exists():
                 _write_worker_status(root, controller, "stopped_intentionally")
                 return 0
+            if args.execute_active_subgoal and controller.continuous_active_subgoal:
+                controller = _execute_next_worker_subgoal(root, controller)
             _write_worker_status(root, controller, "running")
             time.sleep(max(0.05, args.heartbeat_interval))
     except Exception as exc:  # noqa: BLE001 - worker must fail closed and preserve error evidence.
@@ -313,6 +305,49 @@ def worker_main(argv: list[str] | None = None) -> int:
             },
         )
         return 2
+
+
+def _execute_next_worker_subgoal(root: Path, controller: Any) -> Any:
+    subgoal = dict(controller.continuous_active_subgoal or {})
+    subgoal_id = str(subgoal.get("subgoal_id") or "")
+    if not subgoal_id:
+        return controller
+    ledger_path = root / SUBGOAL_EXECUTION_LEDGER
+    ledger = _read_json(ledger_path) if ledger_path.exists() else {"executions": []}
+    consumed = {str(item.get("subgoal_id")) for item in ledger.get("executions", [])}
+    if subgoal_id in consumed:
+        _atomic_write_json(
+            root / "stalled_execution.json",
+            {
+                "timestamp": utc_now(),
+                "reason": "active_subgoal_already_consumed_worker_waiting_for_controller_transition",
+                "subgoal_id": subgoal_id,
+            },
+        )
+        return controller
+    supervisor_status = _read_json(root / SUPERVISOR_STATUS)
+    repository_root = Path(str(supervisor_status.get("repository_root") or ".")).resolve()
+    updated, execution = execute_continuous_active_subgoal(
+        controller,
+        artifact_root=root / "development",
+        repository_root=repository_root,
+        python_executable=sys.executable,
+    )
+    event = {
+        "timestamp": utc_now(),
+        "subgoal_id": subgoal_id,
+        "disposition": execution.disposition,
+        "accepted": execution.accepted,
+        "campaign_root": execution.campaign_root,
+        "next_state": updated.continuous_mission_state,
+        "next_subgoal_id": (updated.continuous_active_subgoal or {}).get("subgoal_id", ""),
+    }
+    ledger["executions"] = list(ledger.get("executions", [])) + [event]
+    _atomic_write_json(ledger_path, ledger)
+    _atomic_write_json(root / "subgoal_execution_completed.json", execution.as_dict())
+    _atomic_write_json(root / f"subgoal_execution_{subgoal_id}.json", execution.as_dict())
+    _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(updated))
+    return updated
 
 
 def _validate_restart_state(restart_state: Mapping[str, Any]) -> None:

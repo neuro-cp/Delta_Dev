@@ -133,7 +133,10 @@ def execute_continuous_active_subgoal(
     resource_usage: list[ResourceUseRecord] = []
     if _subgoal_requests_model(subgoal):
         local_model_adapter = local_model_adapter or _default_local_model_adapter
-        model_result = dict(local_model_adapter({"subgoal": subgoal, "source_inspection": source_inspection}))
+        try:
+            model_result = dict(local_model_adapter({"subgoal": subgoal, "source_inspection": source_inspection}))
+        except Exception as exc:  # noqa: BLE001 - advisory local model failure must not fabricate completion.
+            model_result = {"model_id": "configured_local_model", "result": "local_model_failed", "error": f"{type(exc).__name__}: {exc}"}
         resource_usage.append(
             ResourceUseRecord(
                 "local_model",
@@ -145,7 +148,14 @@ def execute_continuous_active_subgoal(
         )
     if _subgoal_requests_reference(subgoal):
         reference_adapter = reference_adapter or _default_reference_adapter
-        reference_result = dict(reference_adapter({"subgoal": subgoal}))
+        try:
+            reference_result = dict(reference_adapter({"subgoal": subgoal}))
+        except Exception as exc:  # noqa: BLE001 - reference failure is evidence, not authority or completion.
+            reference_result = {
+                "source": "governed_reference",
+                "result": "reference_failed",
+                "provenance": {"error": f"{type(exc).__name__}: {exc}"},
+            }
         resource_usage.append(
             ResourceUseRecord(
                 "built_in_reference",
