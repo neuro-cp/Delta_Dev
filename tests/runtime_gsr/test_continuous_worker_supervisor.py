@@ -268,3 +268,167 @@ def test_reassessment_record_uses_current_subgoal_not_duplicate_lifecycle(tmp_pa
         assert controller.continuous_active_subgoal["weakness_id"] in marker
     finally:
         _cleanup(supervisor)
+
+
+def test_observation_mode_discovers_evidence_and_executes_new_subgoal(tmp_path: Path):
+    controller = start_continuous_runtime_controller(session_id="worker-observation-discovery")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        active_work_item="runtime_currently_stable_no_immediate_high_value_work",
+    )
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        ledger_path = tmp_path / "subgoal_execution_ledger.json"
+        deadline = time.monotonic() + 10
+        ledger = {"executions": []}
+        while time.monotonic() < deadline:
+            if ledger_path.exists():
+                import json
+
+                ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+                if ledger["executions"]:
+                    break
+            time.sleep(0.05)
+
+        assert ledger["executions"]
+        assert (tmp_path / "observation_evidence_ledger.json").exists()
+        assert (tmp_path / "observation_requeue.json").exists()
+        assert ledger["executions"][0]["accepted"] is True
+    finally:
+        _cleanup(supervisor)
+
+
+def test_application_boundary_subgoal_pauses_for_existing_operator_path(tmp_path: Path):
+    controller = start_continuous_runtime_controller(session_id="worker-application-boundary")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = assess_continuous_mission_runtime(
+        controller,
+        (
+            {
+                "evidence_source": "application boundary probe",
+                "observed_behavior": "application boundary should pause instead of auto-satisfying",
+                "first_incorrect_transition": "validated candidate -> non-application disposition -> operator path untested",
+                "affected_capability": "application_gate_exercise_coverage",
+                "baseline_metric": "application_gate_exercise_coverage=0.0",
+                "confidence": 0.85,
+                "operator_value": 0.9,
+                "severity": 0.8,
+                "estimated_implementation_breadth": "small",
+                "validation_method": "worker_application_boundary",
+            },
+        ),
+    )
+    controller = queue_continuous_mission_sandbox_work(select_continuous_mission_subgoal(refresh_continuous_mission_frontier(controller)))
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        deadline = time.monotonic() + 10
+        status = {}
+        while time.monotonic() < deadline:
+            status = wait_for_worker_status(tmp_path)
+            if status["continuous_mission_state"] == "awaiting_operator_application":
+                break
+            time.sleep(0.05)
+
+        assert status["continuous_mission_state"] == "awaiting_operator_application"
+        assert status["pending_application_decision_id"]
+        ledger = (tmp_path / "subgoal_execution_ledger.json").read_text(encoding="utf-8")
+        assert "awaiting_operator_application" in ledger
+    finally:
+        _cleanup(supervisor)
+
+
+def test_operator_application_reject_response_clears_boundary_and_continues(tmp_path: Path):
+    controller = start_continuous_runtime_controller(session_id="worker-operator-reject")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    controller = assess_continuous_mission_runtime(
+        controller,
+        (
+            {
+                "evidence_source": "application boundary probe",
+                "observed_behavior": "application boundary should accept operator response",
+                "first_incorrect_transition": "application pause -> no worker response bridge",
+                "affected_capability": "application_gate_exercise_coverage",
+                "baseline_metric": "application_gate_exercise_coverage=0.0",
+                "confidence": 0.85,
+                "operator_value": 0.9,
+                "severity": 0.8,
+                "estimated_implementation_breadth": "small",
+                "validation_method": "worker_application_boundary",
+            },
+            {
+                "evidence_source": "followup probe",
+                "observed_behavior": "next distinct work remains available",
+                "first_incorrect_transition": "operator decision -> runner should continue",
+                "affected_capability": "post_operator_continuation",
+                "baseline_metric": "post_operator_continuation=0.0",
+                "confidence": 0.84,
+                "operator_value": 0.87,
+                "severity": 0.72,
+                "estimated_implementation_breadth": "small",
+                "validation_method": "worker_application_boundary",
+            },
+        ),
+    )
+    controller = queue_continuous_mission_sandbox_work(select_continuous_mission_subgoal(refresh_continuous_mission_frontier(controller)))
+    supervisor = initialize_supervisor_state(
+        supervisor_root=tmp_path,
+        repository_root=Path.cwd(),
+        restart_state=export_continuous_mission_restart_state(controller),
+        python_executable=sys.executable,
+        heartbeat_interval_seconds=0.05,
+        backoff_seconds=0.01,
+        max_relaunches=1,
+        execute_active_subgoal=True,
+    )
+    supervisor = start_supervised_worker(supervisor)
+    try:
+        deadline = time.monotonic() + 10
+        decision_id = ""
+        while time.monotonic() < deadline:
+            status = wait_for_worker_status(tmp_path)
+            decision_id = status.get("pending_application_decision_id") or ""
+            if decision_id:
+                break
+            time.sleep(0.05)
+        assert decision_id
+        (tmp_path / "operator_application_decision.json").write_text(
+            '{"decision_id": "%s", "action": "REJECT_CANDIDATE"}\n' % decision_id,
+            encoding="utf-8-sig",
+        )
+
+        deadline = time.monotonic() + 10
+        status = {}
+        while time.monotonic() < deadline:
+            status = wait_for_worker_status(tmp_path)
+            if status.get("pending_application_decision_id") == "" and status["continuous_mission_state"] != "awaiting_operator_application":
+                break
+            time.sleep(0.05)
+
+        assert status.get("pending_application_decision_id") == ""
+        assert (tmp_path / "operator_application_decision_ledger.json").exists()
+        assert not (tmp_path / "operator_application_decision.json").exists()
+    finally:
+        _cleanup(supervisor)

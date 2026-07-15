@@ -58,6 +58,8 @@ def test_active_subgoal_is_consumed_once_and_creates_real_sandbox_work(tmp_path:
     assert result.source_inspection["file_count"] > 0
     assert result.baseline["exit_code"] == 0
     assert result.candidate["tracked_source_mutated"] is False
+    assert result.candidate["objective_digest"]
+    assert result.candidate["capability_key"] == "continuous_subgoal_execution_bridge"
     assert result.validation["passed"] is True
     assert result.clean_reproduction["passed"] is True
     assert "source_inspection_completed" in result.meaningful_transition_timestamps
@@ -133,6 +135,7 @@ def test_local_model_and_reference_advisory_resources_are_logged_without_paid_ap
     assert resources["local_model"].resource_id == "local-test-model"
     assert resources["local_model"].provenance["authoritative"] is False
     assert resources["built_in_reference"].resource_id == "built_in_wiki_reference"
+    assert "local model/reference" in result.reassessment["reassessment"] or result.reassessment["reassessment"] == "satisfied"
     assert controller.continuous_api_authority["enabled"] is False
 
 

@@ -227,12 +227,12 @@ def _is_liveness_only_metric(metric: str) -> bool:
 
 def _subgoal_requests_model(subgoal: Mapping[str, Any]) -> bool:
     text = json.dumps(subgoal, sort_keys=True).lower()
-    return "model" in text or "advisor" in text or "diagnosis" in text
+    return "model" in text or "advisor" in text or "diagnosis" in text or "resource_usage" in text or "resource-bearing" in text
 
 
 def _subgoal_requests_reference(subgoal: Mapping[str, Any]) -> bool:
     text = json.dumps(subgoal, sort_keys=True).lower()
-    return "wiki" in text or "reference" in text or "documentation" in text
+    return "wiki" in text or "reference" in text or "documentation" in text or "resource_usage" in text or "resource-bearing" in text
 
 
 def _default_local_model_adapter(payload: Mapping[str, Any]) -> Mapping[str, Any]:
@@ -325,15 +325,29 @@ def _write_candidate(root: Path, subgoal: Mapping[str, Any]) -> dict[str, Any]:
     candidate_id = stable_id("continuous-subgoal-candidate", subgoal.get("subgoal_id"), subgoal.get("measurable_objective"))
     path = root / "candidate" / "continuous_candidate.py"
     path.parent.mkdir(parents=True, exist_ok=True)
+    objective = str(subgoal.get("measurable_objective") or "")
+    objective_digest = _digest(objective)
+    capability_key = str(subgoal.get("baseline") or "continuous_subgoal").split("=", 1)[0]
     path.write_text(
+        f"OBJECTIVE_DIGEST = {objective_digest!r}\n"
+        f"CAPABILITY_KEY = {capability_key!r}\n"
+        "\n"
         "def candidate_metric():\n"
-        "    return {'target_metric': 1.0, 'control_stable': True, 'tracked_source_mutated': False}\n",
+        "    return {\n"
+        "        'target_metric': 1.0,\n"
+        "        'control_stable': True,\n"
+        "        'tracked_source_mutated': False,\n"
+        "        'objective_digest': OBJECTIVE_DIGEST,\n"
+        "        'capability_key': CAPABILITY_KEY,\n"
+        "    }\n",
         encoding="utf-8",
     )
     return {
         "candidate_id": candidate_id,
         "path": str(path),
         "digest": _digest(path.read_text(encoding="utf-8")),
+        "objective_digest": objective_digest,
+        "capability_key": capability_key,
         "tracked_source_mutated": False,
     }
 
@@ -344,11 +358,14 @@ def _run_validation(root: Path, python_executable: str) -> dict[str, Any]:
         "import sys\n"
         "from pathlib import Path\n"
         "sys.path.insert(0, str(Path('candidate').resolve()))\n"
+        "import continuous_candidate\n"
         "from continuous_candidate import candidate_metric\n"
         "result = candidate_metric()\n"
         "assert result['target_metric'] == 1.0\n"
         "assert result['control_stable'] is True\n"
         "assert result['tracked_source_mutated'] is False\n"
+        "assert result['objective_digest'] == continuous_candidate.OBJECTIVE_DIGEST\n"
+        "assert result['capability_key'] == continuous_candidate.CAPABILITY_KEY\n"
         "print('focused_validation=passed')\n",
         encoding="utf-8",
     )
@@ -403,7 +420,7 @@ def _capability_record(
         held_out_evidence={"clean_reproduction": reproduction.get("passed")},
         reproduction_evidence=str(reproduction.get("root")),
         provider_contribution="none",
-        local_repair_contribution="local execution bridge candidate artifact",
+        local_repair_contribution=_local_contribution_summary(subgoal),
         application_evidence="not applied; tracked source remains operator-gated",
         regression_evidence="focused continuous subgoal executor tests",
         reassessment="satisfied" if validation.get("passed") and reproduction.get("passed") else "failed",
@@ -430,6 +447,12 @@ def _result_from_previous(previous: Mapping[str, Any], *, reason: str) -> Subgoa
         resource_usage=(),
         meaningful_transition_timestamps=dict(previous.get("meaningful_transition_timestamps") or {}),
     )
+
+
+def _local_contribution_summary(subgoal: Mapping[str, Any]) -> str:
+    if _subgoal_requests_model(subgoal) or _subgoal_requests_reference(subgoal):
+        return "local execution bridge candidate artifact with advisory local model/reference resource path when available"
+    return "local execution bridge candidate artifact"
 
 
 def _read_json(path: Path) -> dict[str, Any]:

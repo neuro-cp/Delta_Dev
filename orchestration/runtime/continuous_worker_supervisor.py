@@ -21,11 +21,16 @@ from typing import Any, Mapping
 
 from orchestration.runtime.continuous_mission_foundation import CapabilityKnowledgeRecord
 from orchestration.runtime.continuous_runtime_controller import (
+    assess_continuous_mission_runtime,
     continue_continuous_mission_after_reassessment,
     consume_continuous_capability_reassessment,
+    consume_continuous_mission_application_decision,
     controller_snapshot,
     export_continuous_mission_restart_state,
+    queue_continuous_mission_sandbox_work,
+    refresh_continuous_mission_frontier,
     restore_continuous_mission_restart_state,
+    select_continuous_mission_subgoal,
     start_continuous_runtime_controller,
 )
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal
@@ -39,6 +44,9 @@ INTENTIONAL_STOP = "intentional_stop.json"
 WORKER_BOOTSTRAP = "continuous_worker_bootstrap.py"
 TRANSITION_MARKER = "transition_completed.json"
 SUBGOAL_EXECUTION_LEDGER = "subgoal_execution_ledger.json"
+OBSERVATION_EVIDENCE_LEDGER = "observation_evidence_ledger.json"
+OPERATOR_APPLICATION_DECISION = "operator_application_decision.json"
+OPERATOR_APPLICATION_DECISION_LEDGER = "operator_application_decision_ledger.json"
 
 
 @dataclass
@@ -64,7 +72,7 @@ def _atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 
 def _read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+    return json.loads(path.read_text(encoding="utf-8-sig"))
 
 
 def _now_monotonic() -> float:
@@ -290,8 +298,12 @@ def worker_main(argv: list[str] | None = None) -> int:
             if (root / INTENTIONAL_STOP).exists():
                 _write_worker_status(root, controller, "stopped_intentionally")
                 return 0
-            if args.execute_active_subgoal and controller.continuous_active_subgoal:
+            if args.execute_active_subgoal and controller.continuous_mission_state == "awaiting_operator_application":
+                controller = _consume_operator_application_decision_if_present(root, controller)
+            elif args.execute_active_subgoal and controller.continuous_active_subgoal:
                 controller = _execute_next_worker_subgoal(root, controller)
+            elif args.execute_active_subgoal and controller.continuous_mission_state == "observing_for_new_weaknesses":
+                controller = _observe_runtime_and_requeue(root, controller)
             _write_worker_status(root, controller, "running")
             time.sleep(max(0.05, args.heartbeat_interval))
     except Exception as exc:  # noqa: BLE001 - worker must fail closed and preserve error evidence.
@@ -332,6 +344,7 @@ def _execute_next_worker_subgoal(root: Path, controller: Any) -> Any:
         artifact_root=root / "development",
         repository_root=repository_root,
         python_executable=sys.executable,
+        create_application_request=_subgoal_requires_application_boundary(subgoal),
     )
     event = {
         "timestamp": utc_now(),
@@ -348,6 +361,184 @@ def _execute_next_worker_subgoal(root: Path, controller: Any) -> Any:
     _atomic_write_json(root / f"subgoal_execution_{subgoal_id}.json", execution.as_dict())
     _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(updated))
     return updated
+
+
+def _subgoal_requires_application_boundary(subgoal: Mapping[str, Any]) -> bool:
+    text = json.dumps(subgoal, sort_keys=True).lower()
+    return "application_gate" in text or "operator application path" in text or "application boundary" in text
+
+
+def _consume_operator_application_decision_if_present(root: Path, controller: Any) -> Any:
+    decision_path = root / OPERATOR_APPLICATION_DECISION
+    if not decision_path.exists():
+        return controller
+    payload = _read_json(decision_path)
+    decision_id = str(payload.get("decision_id") or "")
+    action = str(payload.get("action") or "")
+    if decision_id != controller.pending_application_decision_id:
+        _atomic_write_json(
+            root / "operator_application_decision_rejected.json",
+            {
+                "timestamp": utc_now(),
+                "reason": "decision_id_does_not_match_pending_application_boundary",
+                "received_decision_id": decision_id,
+                "pending_decision_id": controller.pending_application_decision_id,
+            },
+        )
+        return controller
+    consumed = consume_continuous_mission_application_decision(controller, decision_id=decision_id, action=action)
+    record = _operator_application_reassessment_record(controller, action, decision_id)
+    reassessed = consume_continuous_capability_reassessment(consumed, record)
+    continued = continue_continuous_mission_after_reassessment(reassessed)
+    ledger_path = root / OPERATOR_APPLICATION_DECISION_LEDGER
+    ledger = _read_json(ledger_path) if ledger_path.exists() else {"decisions": []}
+    ledger["decisions"] = list(ledger.get("decisions", [])) + [
+        {
+            "timestamp": utc_now(),
+            "decision_id": decision_id,
+            "action": action,
+            "capability_id": record.capability_id,
+            "next_state": continued.continuous_mission_state,
+            "next_subgoal_id": (continued.continuous_active_subgoal or {}).get("subgoal_id", ""),
+            "tracked_source_mutated": False,
+        }
+    ]
+    _atomic_write_json(ledger_path, ledger)
+    processed_path = root / f"operator_application_decision_consumed_{decision_id}.json"
+    _atomic_write_json(processed_path, {**payload, "consumed_at": utc_now(), "tracked_source_mutated": False})
+    try:
+        decision_path.unlink()
+    except FileNotFoundError:
+        pass
+    _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(continued))
+    return continued
+
+
+def _operator_application_reassessment_record(controller: Any, action: str, decision_id: str) -> CapabilityKnowledgeRecord:
+    subgoal = dict(controller.continuous_active_subgoal or {})
+    capability_id = str(subgoal.get("weakness_id") or subgoal.get("subgoal_id") or "operator-application-decision")
+    objective = str(subgoal.get("measurable_objective") or "operator application decision")
+    satisfied = action == "APPLY_VALIDATED_CANDIDATE"
+    return CapabilityKnowledgeRecord(
+        capability_id=capability_id,
+        original_weakness=objective,
+        evidence=(f"operator_application_decision:{decision_id}:{action}",),
+        first_incorrect_transition=str(subgoal.get("first_incorrect_transition") or "application boundary -> no running operator response bridge"),
+        strategies_attempted=("existing_live45_application_boundary", "worker_operator_response_bridge"),
+        failed_approaches=() if satisfied else (f"operator_action:{action}",),
+        successful_mechanism="operator application decision consumed through existing controller boundary",
+        exact_candidate="operator_application_decision.json",
+        tests_added=("tests/runtime_gsr/test_continuous_worker_supervisor.py",),
+        metrics_before_after={"operator_decision_consumed": True, "tracked_source_mutated": False},
+        controls=("tracked_source_remains_operator_controlled",),
+        adversarial_evidence=("mismatched decision id rejected",),
+        held_out_evidence={"decision_consumed_once": True},
+        reproduction_evidence=str(decision_id),
+        provider_contribution="none",
+        local_repair_contribution="file-bound operator response bridge",
+        application_evidence="tracked application not performed by worker",
+        regression_evidence="focused continuous worker supervisor tests",
+        reassessment="satisfied" if satisfied else "rejected",
+        residual_uncertainty="tracked-source apply remains outside worker authority",
+        reusable_process_rules=("operator responses must be one-use and decision-id bound",),
+    )
+
+
+def _observe_runtime_and_requeue(root: Path, controller: Any) -> Any:
+    supervisor_status = _read_json(root / SUPERVISOR_STATUS)
+    repository_root = Path(str(supervisor_status.get("repository_root") or ".")).resolve()
+    evidence = _discover_observation_evidence(root, repository_root)
+    if not evidence:
+        return controller
+    assessed = assess_continuous_mission_runtime(controller, evidence)
+    selected = select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assessed))
+    queued = queue_continuous_mission_sandbox_work(selected) if selected.continuous_active_subgoal else selected
+    _atomic_write_json(
+        root / "observation_requeue.json",
+        {
+            "timestamp": utc_now(),
+            "evidence_count": len(evidence),
+            "next_state": queued.continuous_mission_state,
+            "active_subgoal": queued.continuous_active_subgoal or None,
+        },
+    )
+    _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(queued))
+    return queued
+
+
+def _discover_observation_evidence(root: Path, repository_root: Path) -> tuple[dict[str, Any], ...]:
+    ledger_path = root / OBSERVATION_EVIDENCE_LEDGER
+    ledger = _read_json(ledger_path) if ledger_path.exists() else {"consumed_signatures": []}
+    consumed = {str(item) for item in ledger.get("consumed_signatures", [])}
+    probes = (
+        {
+            "probe_id": "subgoal_specific_candidate_behavior",
+            "path": "orchestration/runtime/continuous_subgoal_executor.py",
+            "marker": "return {'target_metric': 1.0",
+            "observed_behavior": "sandbox candidate artifact can pass validation without encoding the selected subgoal identity",
+            "first_incorrect_transition": "active subgoal -> generic candidate artifact -> validation cannot prove subgoal-specific behavior",
+            "baseline_metric": "subgoal_specific_candidate_behavior=0.0",
+            "confidence": 0.91,
+            "operator_value": 0.94,
+            "severity": 0.86,
+        },
+        {
+            "probe_id": "resource_usage_result_granularity",
+            "path": "orchestration/runtime/continuous_subgoal_executor.py",
+            "marker": "provider_contribution=\"none\"",
+            "observed_behavior": "capability reassessment records provider contribution but not local model or reference contribution",
+            "first_incorrect_transition": "resource-bearing subgoal -> local/reference evidence recorded separately -> reassessment collapses contribution detail",
+            "baseline_metric": "resource_usage_result_granularity=0.0",
+            "confidence": 0.84,
+            "operator_value": 0.88,
+            "severity": 0.72,
+        },
+        {
+            "probe_id": "application_gate_exercise_coverage",
+            "path": "orchestration/runtime/continuous_worker_supervisor.py",
+            "marker": "execute_continuous_active_subgoal(",
+            "observed_behavior": "worker execution mode uses non-application disposition by default and may not exercise application gates during free runs",
+            "first_incorrect_transition": "validated candidate -> non-application disposition -> operator application path remains untested in free-run mode",
+            "baseline_metric": "application_gate_exercise_coverage=0.0",
+            "confidence": 0.8,
+            "operator_value": 0.86,
+            "severity": 0.7,
+        },
+    )
+    discovered: list[dict[str, Any]] = []
+    for probe in probes:
+        file_path = (repository_root / str(probe["path"])).resolve()
+        if not str(file_path).startswith(str(repository_root)) or not file_path.exists():
+            continue
+        text = file_path.read_text(encoding="utf-8")
+        if str(probe["marker"]) not in text:
+            continue
+        signature = stable_id("continuous-observation-evidence", probe["probe_id"], str(probe["path"]))
+        if signature in consumed:
+            continue
+        discovered.append(
+            {
+                "evidence_source": f"observation_probe:{probe['probe_id']}:{signature}",
+                "observed_behavior": probe["observed_behavior"],
+                "first_incorrect_transition": probe["first_incorrect_transition"],
+                "affected_capability": probe["probe_id"],
+                "baseline_metric": probe["baseline_metric"],
+                "confidence": probe["confidence"],
+                "operator_value": probe["operator_value"],
+                "severity": probe["severity"],
+                "estimated_implementation_breadth": "small",
+                "validation_method": "continuous_observation_probe",
+                "scope": "local_runtime",
+                "uncertainty": "derived from committed source marker and file inspection",
+            }
+        )
+        consumed.add(signature)
+        break
+    ledger["consumed_signatures"] = sorted(consumed)
+    if discovered:
+        ledger["last_discovery"] = {"timestamp": utc_now(), "evidence": discovered}
+        _atomic_write_json(ledger_path, ledger)
+    return tuple(discovered)
 
 
 def _validate_restart_state(restart_state: Mapping[str, Any]) -> None:
