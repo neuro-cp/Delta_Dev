@@ -5512,6 +5512,66 @@ def test_live_41_detached_launcher_binds_repo_and_denies_substitution(tmp_path):
     assert denied["accepted"] is False
 
 
+def test_live_42_frontier_expansion_generates_distinct_next_work(tmp_path):
+    result = gsr.run_live42_frontier_expansion_pilot(artifact_root=str(tmp_path), campaign_id="live42-pilot", use_external_retrieval=False, popup_mode="test")
+    first = result["derivation_passes"][0]
+
+    assert result["classification"] == "LIVE_42_FRONTIER_EXPANSION_READY_WITH_LIMITS"
+    assert result["campaign"]["provider_calls"] == 0
+    assert result["campaign"]["provider_attempts"] == 0
+    assert first["generated_next_work_count"] >= 3
+    assert len({item["mechanism"] for item in first["frontier"]}) >= 5
+    assert any(item["requires_external_evidence"] for item in first["frontier"])
+    assert any(item["eligibility_result"] == "deferred_with_unblock_condition" for item in first["frontier"])
+    assert any(item["eligibility_result"] == "rejected" for item in first["frontier"])
+    assert first["selected_work"]["frontier_id"] == "live42-source-comparison-gap"
+    assert result["review"]["lineage_explicit"] is True
+
+
+def test_live_42_consumed_frontier_is_not_regenerated(tmp_path):
+    result = gsr.run_live42_frontier_expansion_pilot(artifact_root=str(tmp_path), campaign_id="live42-consumed", use_external_retrieval=False, popup_mode="test")
+    passes = result["derivation_passes"]
+
+    assert passes[0]["selected_work"]
+    assert passes[1]["selected_work"]
+    assert passes[2]["selected_work"]
+    assert passes[3]["empty_derivation_pass"] is True
+    assert passes[3]["generated_next_work_count"] == 0
+    assert result["review"]["consumed_tasks_not_regenerated"] is True
+
+
+def test_live_42_two_body_span_sources_when_external_retrieval_available(tmp_path):
+    result = gsr.run_live42_frontier_expansion_pilot(artifact_root=str(tmp_path), campaign_id="live42-sources", use_external_retrieval=True, popup_mode="test")
+
+    assert result["campaign"]["external_retrievals"] == 2
+    assert len(result["review"]["body_span_sources"]) == 2
+    for source in result["seed_cycle"]["source_records"]:
+        assert source["substantive_span_count"] > 0
+        assert source["body_text_spans"]
+        assert "og:description" not in " ".join(source["body_text_spans"])
+
+
+def test_live_42_candidate_validation_and_popup_package(tmp_path):
+    result = gsr.run_live42_frontier_expansion_pilot(artifact_root=str(tmp_path), campaign_id="live42-package", use_external_retrieval=False, popup_mode="test")
+    root = Path(result["artifact_root"])
+
+    assert result["campaign"]["completed_cycles"] >= 1
+    assert result["campaign"]["candidate_counts"]["retained"] >= 1
+    assert result["review"]["implementation_validation_present"] is True
+    assert result["popup"]["popup_created"] is True
+    for name in ("final_status.json", "final_checkpoint.json", "frontier_ledger.json", "source_ledger.json", "work_ledger.json", "provider_lock_audit.json", "popup_status.json"):
+        assert (root / name).exists()
+
+
+def test_live_42_detached_launcher_binds_repo(tmp_path):
+    launcher = gsr.make_live42_detached_launcher(repository_root=str(Path.cwd()), artifact_root=str(tmp_path), campaign_id="live42-launch")
+    denied = gsr.make_live42_detached_launcher(repository_root=str(tmp_path), artifact_root=str(tmp_path), campaign_id="live42-denied")
+
+    assert launcher["accepted"] is True
+    assert Path(launcher["launcher_path"]).exists()
+    assert denied["accepted"] is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

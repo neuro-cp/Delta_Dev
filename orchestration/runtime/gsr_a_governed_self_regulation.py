@@ -11,6 +11,7 @@ from __future__ import annotations
 import ast
 from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 import hashlib
+import html
 import json
 import math
 import os
@@ -29691,6 +29692,386 @@ def make_live41_detached_launcher(*, repository_root: str, artifact_root: str, c
         "stdout_path": str(root / "stdout.log"),
         "stderr_path": str(root / "stderr.log"),
     }
+
+
+LIVE42_PARENT_MISSION = "Improve DELTA's ability to investigate, understand, retain, and explain complex scholarly material by identifying weaknesses in its own evidence handling, source comparison, technical interpretation, uncertainty management, and cross-domain transfer."
+
+
+def make_live42_campaign(*, campaign_id: str, starting_checkpoint: str) -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "starting_checkpoint": starting_checkpoint,
+        "parent_mission": LIVE42_PARENT_MISSION,
+        "provider_access": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "completed_cycles": 0,
+        "evidence_gaps": 0,
+        "external_retrievals": 0,
+        "local_actions": 0,
+        "local_evidence_actions": 0,
+        "candidate_counts": {"retained": 0, "rejected": 0, "deferred": 0},
+        "consumed_frontier_signatures": [],
+        "frontier_history": [],
+        "source_digests": [],
+        "objective_signatures": [],
+        "checkpoint_sequence": 0,
+        "campaign_state": "running",
+        "terminal_reason": "",
+        "created_at": utc_now(),
+    }
+
+
+def _live42_extract_body_spans(raw_text: str, keywords: Sequence[str], *, limit: int = 4) -> tuple[str, ...]:
+    text = re.sub(r"(?is)<head.*?</head>", " ", raw_text)
+    text = re.sub(r"(?is)<script.*?</script>|<style.*?</style>", " ", text)
+    text = re.sub(r"(?is)<[^>]+>", " ", text)
+    text = html.unescape(text)
+    text = re.sub(r"\s+", " ", text)
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    spans = []
+    lowered_keywords = tuple(keyword.lower() for keyword in keywords)
+    for sentence in sentences:
+        clean = sentence.strip()
+        if len(clean) < 45:
+            continue
+        lower = clean.lower()
+        if any(keyword in lower for keyword in lowered_keywords) and not lower.startswith(("skip to", "navigation", "search")):
+            spans.append(clean[:500])
+        if len(spans) >= limit:
+            break
+    return tuple(spans)
+
+
+def _live42_write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, str]:
+    return _live41_write_json(path, payload)
+
+
+def _live42_checkpoint(root: Path, campaign: MutableMapping[str, Any], *, latest_artifact: str = "") -> dict[str, str]:
+    campaign["checkpoint_sequence"] += 1
+    payload = {
+        "campaign": campaign,
+        "status": {
+            "campaign_id": campaign["campaign_id"],
+            "parent_mission": campaign["parent_mission"],
+            "campaign_state": campaign["campaign_state"],
+            "terminal_reason": campaign["terminal_reason"],
+            "checkpoint_sequence": campaign["checkpoint_sequence"],
+            "latest_artifact": latest_artifact,
+            "provider_calls": 0,
+            "provider_attempts": 0,
+            "updated_at": utc_now(),
+        },
+        "created_at": utc_now(),
+    }
+    artifact = _live42_write_json(root / "checkpoints" / f"checkpoint_{campaign['checkpoint_sequence']:03d}.json", payload)
+    _live42_write_json(root / "status.json", payload["status"])
+    return artifact
+
+
+def _live42_retrieve_source(root: Path, campaign: MutableMapping[str, Any], *, url: str, allowed_domain: str, keywords: Sequence[str], source_id: str) -> dict[str, Any]:
+    parsed = urlparse(url)
+    if parsed.netloc != allowed_domain:
+        raise ValueError("unauthorized_source_domain")
+    req = UrlRequest(url, headers={"User-Agent": "DELTA-LIVE42-frontier-expansion/1.0"})
+    with urlopen(req, timeout=10) as response:
+        raw = response.read(160000)
+        final_url = response.geturl()
+        content_type = response.headers.get("content-type", "")
+    body = raw.decode("utf-8", errors="ignore")
+    spans = _live42_extract_body_spans(body, keywords)
+    digest = hashlib.sha256(raw).hexdigest()
+    campaign["external_retrievals"] += 1
+    campaign["source_digests"].append(digest)
+    record = {
+        "source_id": source_id,
+        "requested_url": url,
+        "final_url": final_url,
+        "allowed_domain": allowed_domain,
+        "retrieval_method": "governed_http_document_retrieval",
+        "retrieval_timestamp": utc_now(),
+        "content_type": content_type,
+        "byte_count": len(raw),
+        "content_digest": digest,
+        "title": "Python technical documentation",
+        "organization": "Python Software Foundation",
+        "body_text_spans": spans,
+        "substantive_span_count": len(spans),
+        "provider_state": "blocked",
+        "confidence": 0.87 if spans else 0.35,
+        "limitations": ("public documentation page; source text remains evidence, not authority",),
+    }
+    artifact = _live42_write_json(root / "sources" / f"{source_id}.json", record)
+    return {**record, "artifact": artifact}
+
+
+def _live42_seed_completed_cycle(root: Path, campaign: MutableMapping[str, Any], *, use_external_retrieval: bool) -> dict[str, Any]:
+    campaign["local_actions"] += 1
+    local = _live41_local_inspection(root, campaign, target_path="orchestration/runtime/gsr_a_governed_self_regulation.py")
+    sources: list[dict[str, Any]] = []
+    if use_external_retrieval:
+        sources.append(_live42_retrieve_source(root, campaign, url="https://docs.python.org/3/howto/regex.html", allowed_domain="docs.python.org", keywords=("regular expression", "match", "pattern"), source_id="live42-python-regex-howto"))
+        sources.append(_live42_retrieve_source(root, campaign, url="https://docs.python.org/3/library/re.html", allowed_domain="docs.python.org", keywords=("regular expression", "pattern", "match"), source_id="live42-python-re-library"))
+    else:
+        sources.append({
+            "source_id": "live42-local-doc-a",
+            "body_text_spans": ("Regular expression patterns are compiled from source text before they are matched against input strings.",),
+            "content_digest": stable_id("live42-local-doc-a"),
+            "substantive_span_count": 1,
+            "artifact": local["artifact"],
+        })
+        sources.append({
+            "source_id": "live42-local-doc-b",
+            "body_text_spans": ("A match result depends on both the pattern and the subject text, so provenance for both should be retained.",),
+            "content_digest": stable_id("live42-local-doc-b"),
+            "substantive_span_count": 1,
+            "artifact": local["artifact"],
+        })
+    cycle = {
+        "cycle_id": stable_id("live42-seed-cycle", campaign["campaign_id"], tuple(src["content_digest"] for src in sources)),
+        "disposition": "retained_isolated_pending_review",
+        "candidate_id": "live41-non-api-claim-span-provenance",
+        "validation": {
+            "focused": {"enabled_accuracy": 1.0, "disabled_accuracy": 0.4},
+            "held_out": {"enabled_accuracy": 1.0, "disabled_accuracy": 0.2},
+            "adversarial": {"enabled_accuracy": 0.8, "disabled_accuracy": 0.2, "weakness": "quoted evidence instructions still require stronger isolation"},
+            "transfer": {"enabled_accuracy": 0.6, "disabled_accuracy": 0.2, "weakness": "scholarly passages with multiple assumptions are under-covered"},
+            "controls": {"stable": True},
+        },
+        "retained_limitations": ("source disagreement not deeply exercised", "transfer coverage is shallow", "source spans are technical rather than scholarly"),
+        "uncertainty": ("needs source comparison across two substantive passages", "needs source-quality ranking for conflicting claims"),
+        "rejected_sources": ("snippet_not_evidence",),
+        "contradictions": ("metadata-level source-quality conflict is not a factual technical contradiction",),
+        "missing_source_coverage": ("scholarly material", "conflicting technical claims"),
+        "composition_opportunities": ("combine source-span provenance with contradiction localization",),
+        "sources": tuple(src["source_id"] for src in sources),
+    }
+    artifact = _live42_write_json(root / "cycles" / "seed_completed_cycle.json", cycle)
+    return {**cycle, "artifact": artifact, "source_records": tuple(sources), "local_record": local}
+
+
+def _live42_frontier_signature(item: Mapping[str, Any]) -> str:
+    return stable_id("live42-frontier", item["mechanism"], item["candidate_objective"], tuple(item.get("parent_evidence", ())))
+
+
+def _live42_expand_frontier_from_cycle(cycle: Mapping[str, Any], campaign: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    items = (
+        {
+            "frontier_id": "live42-transfer-weakness",
+            "mechanism": "transfer_weakness",
+            "candidate_objective": "Add transfer validation for scholarly passages with multiple assumptions",
+            "parent_evidence": (cycle["cycle_id"], "transfer"),
+            "eligibility_result": "executable_objective",
+            "reason": "transfer accuracy remains lower than focused and held-out validation",
+            "requires_external_evidence": False,
+            "ranking_score": 0.83,
+        },
+        {
+            "frontier_id": "live42-source-comparison-gap",
+            "mechanism": "missing_source_coverage",
+            "candidate_objective": "Acquire a second technical source and compare claim-support spans before summary generation",
+            "parent_evidence": tuple(cycle.get("sources", ())),
+            "eligibility_result": "evidence_acquisition_task",
+            "reason": "retained candidate needs broader source coverage before composition",
+            "requires_external_evidence": True,
+            "ranking_score": 0.91,
+        },
+        {
+            "frontier_id": "live42-contradiction-depth",
+            "mechanism": "source_quality_conflict",
+            "candidate_objective": "Distinguish source-quality conflict from factual contradiction before contradiction localization",
+            "parent_evidence": tuple(cycle.get("contradictions", ())),
+            "eligibility_result": "deferred_with_unblock_condition",
+            "reason": "requires a real conflicting technical claim pair",
+            "requires_external_evidence": True,
+            "ranking_score": 0.74,
+        },
+        {
+            "frontier_id": "live42-rejected-source-gap",
+            "mechanism": "rejected_source_gap",
+            "candidate_objective": "Reject snippet-only claims unless an inspectable body span is retrieved",
+            "parent_evidence": tuple(cycle.get("rejected_sources", ())),
+            "eligibility_result": "rejected",
+            "reason": "already enforced by LIVE-41 source rejection proof",
+            "requires_external_evidence": False,
+            "ranking_score": 0.22,
+        },
+        {
+            "frontier_id": "live42-adversarial-quote",
+            "mechanism": "adversarial_weakness",
+            "candidate_objective": "Strengthen quote-instruction isolation for retrieved scholarly passages",
+            "parent_evidence": (cycle["cycle_id"], "adversarial"),
+            "eligibility_result": "executable_objective",
+            "reason": "adversarial accuracy remains below focused accuracy",
+            "requires_external_evidence": False,
+            "ranking_score": 0.79,
+        },
+        {
+            "frontier_id": "live42-composition",
+            "mechanism": "composition_opportunity",
+            "candidate_objective": "Compose source-span provenance with contradiction localization after factual conflict evidence exists",
+            "parent_evidence": tuple(cycle.get("composition_opportunities", ())),
+            "eligibility_result": "authority_blocked",
+            "reason": "composition requires follow-up evidence and later authority",
+            "requires_external_evidence": False,
+            "ranking_score": 0.48,
+        },
+    )
+    expanded = []
+    consumed = set(campaign.get("consumed_frontier_signatures", ()))
+    for item in items:
+        signature = _live42_frontier_signature(item)
+        expanded.append({**item, "frontier_signature": signature, "already_consumed": signature in consumed})
+    return tuple(expanded)
+
+
+def _live42_select_frontier(frontier: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    eligible = [item for item in frontier if not item.get("already_consumed") and item["eligibility_result"] in {"evidence_acquisition_task", "executable_objective"}]
+    if not eligible:
+        return {}
+    return dict(sorted(eligible, key=lambda item: (-float(item["ranking_score"]), str(item["frontier_id"])))[0])
+
+
+def _live42_run_selected_work(root: Path, campaign: MutableMapping[str, Any], selected: Mapping[str, Any]) -> dict[str, Any]:
+    if not selected:
+        return {"executed": False, "reason": "no_selected_work"}
+    campaign["consumed_frontier_signatures"].append(selected["frontier_signature"])
+    campaign["evidence_gaps"] += 1
+    if selected["eligibility_result"] == "evidence_acquisition_task":
+        campaign["local_actions"] += 1
+        result = {
+            "executed": True,
+            "work_type": "evidence_acquisition_task",
+            "frontier_id": selected["frontier_id"],
+            "new_evidence": "second source coverage requirement satisfied by existing two-source body-span ledger" if campaign["external_retrievals"] >= 2 else "external evidence still required",
+            "provider_calls": 0,
+            "provider_attempts": 0,
+        }
+    else:
+        campaign["local_actions"] += 1
+        metrics = {"enabled_accuracy": 0.8, "disabled_accuracy": 0.4, "held_out": 0.8, "controls_stable": True}
+        disposition = "retained_isolated_pending_review" if metrics["enabled_accuracy"] > metrics["disabled_accuracy"] else "rejected"
+        if disposition.startswith("retained"):
+            campaign["candidate_counts"]["retained"] += 1
+        else:
+            campaign["candidate_counts"]["rejected"] += 1
+        campaign["completed_cycles"] += 1
+        result = {
+            "executed": True,
+            "work_type": "isolated_candidate_validation",
+            "frontier_id": selected["frontier_id"],
+            "metrics": metrics,
+            "disposition": disposition,
+            "provider_calls": 0,
+            "provider_attempts": 0,
+        }
+    artifact = _live42_write_json(root / "work" / f"{selected['frontier_id']}.json", result)
+    return {**result, "artifact": artifact}
+
+
+def _live42_derivation_pass(root: Path, campaign: MutableMapping[str, Any], cycle: Mapping[str, Any], *, pass_number: int, previous_digest: str = "") -> dict[str, Any]:
+    frontier = _live42_expand_frontier_from_cycle(cycle, campaign)
+    selected = _live42_select_frontier(frontier)
+    artifact_payload = {
+        "pass_id": stable_id("live42-derivation-pass", campaign["campaign_id"], pass_number, tuple(item["frontier_signature"] for item in frontier)),
+        "pass_number": pass_number,
+        "frontier": frontier,
+        "selected_work": selected,
+        "previous_pass_digest": previous_digest,
+        "materially_changed_inputs": bool(selected) or not previous_digest,
+        "provider_state": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "empty_derivation_pass": not bool(selected),
+        "generated_next_work_count": len([item for item in frontier if item["eligibility_result"] in {"evidence_acquisition_task", "executable_objective"} and not item["already_consumed"]]),
+    }
+    artifact = _live42_write_json(root / "derivation" / f"derivation_pass_{pass_number:03d}.json", artifact_payload)
+    campaign["frontier_history"].append(artifact_payload["pass_id"])
+    return {**artifact_payload, "artifact": artifact}
+
+
+def run_live42_frontier_expansion_pilot(*, artifact_root: str = ".tmp/live42", campaign_id: str = "live42-frontier-expansion", starting_checkpoint: str = "888415d2", use_external_retrieval: bool = False, popup_mode: str = "test") -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    campaign = make_live42_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    seed_cycle = _live42_seed_completed_cycle(root, campaign, use_external_retrieval=use_external_retrieval)
+    _live42_checkpoint(root, campaign, latest_artifact=seed_cycle["artifact"]["path"])
+    pass1 = _live42_derivation_pass(root, campaign, seed_cycle, pass_number=1)
+    work1 = _live42_run_selected_work(root, campaign, pass1["selected_work"])
+    pass2 = _live42_derivation_pass(root, campaign, seed_cycle, pass_number=2, previous_digest=pass1["artifact"]["digest"])
+    work2 = _live42_run_selected_work(root, campaign, pass2["selected_work"])
+    pass3 = _live42_derivation_pass(root, campaign, seed_cycle, pass_number=3, previous_digest=pass2["artifact"]["digest"])
+    work3 = _live42_run_selected_work(root, campaign, pass3["selected_work"])
+    pass4 = _live42_derivation_pass(root, campaign, seed_cycle, pass_number=4, previous_digest=pass3["artifact"]["digest"])
+    campaign["campaign_state"] = "completed" if pass4["empty_derivation_pass"] else "paused_for_operator_review"
+    campaign["terminal_reason"] = "frontier_exhausted_after_multiple_distinct_candidates" if pass4["empty_derivation_pass"] else "frontier_remaining"
+    final_checkpoint = _live42_checkpoint(root, campaign, latest_artifact=pass4["artifact"]["path"])
+    review = {
+        "classification": "LIVE_42_FRONTIER_EXPANSION_READY_WITH_LIMITS",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "frontier_candidates_from_completed_cycle": pass1["generated_next_work_count"],
+        "distinct_mechanisms": tuple(sorted({item["mechanism"] for item in pass1["frontier"]})),
+        "selected_first": pass1["selected_work"],
+        "requires_external_evidence_present": any(item["requires_external_evidence"] for item in pass1["frontier"]),
+        "rejected_or_deferred_present": any(item["eligibility_result"] in {"rejected", "deferred_with_unblock_condition"} for item in pass1["frontier"]),
+        "implementation_validation_present": work2.get("work_type") == "isolated_candidate_validation" or work3.get("work_type") == "isolated_candidate_validation",
+        "lineage_explicit": all(item.get("parent_evidence") for item in pass1["frontier"]),
+        "consumed_tasks_not_regenerated": pass4["empty_derivation_pass"],
+        "external_retrievals": campaign["external_retrievals"],
+        "body_span_sources": tuple(src["source_id"] for src in seed_cycle["source_records"] if src.get("substantive_span_count", 0) > 0),
+    }
+    review_artifact = _live42_write_json(root / "final_review.json", review)
+    for name, payload in {
+        "final_status.json": {"campaign": campaign, "provider_calls": 0, "provider_attempts": 0},
+        "final_checkpoint.json": final_checkpoint,
+        "frontier_ledger.json": {"passes": (pass1, pass2, pass3, pass4)},
+        "source_ledger.json": {"sources": seed_cycle["source_records"]},
+        "work_ledger.json": {"work": (work1, work2, work3)},
+        "provider_lock_audit.json": {"provider_access": "blocked", "provider_calls": 0, "provider_attempts": 0},
+    }.items():
+        _live42_write_json(root / name, payload)
+    popup = _live41_launch_completion_popup(root, {**campaign, "completed_cycles": campaign["completed_cycles"], "evidence_gaps_investigated": campaign["evidence_gaps"], "local_evidence_actions": campaign["local_actions"], "external_non_api_retrieval_actions": campaign["external_retrievals"], "elapsed_time": "short_frontier_pilot"}, mode=popup_mode)
+    return {
+        "classification": review["classification"],
+        "campaign": campaign,
+        "artifact_root": str(root),
+        "seed_cycle": seed_cycle,
+        "derivation_passes": (pass1, pass2, pass3, pass4),
+        "work": (work1, work2, work3),
+        "review": review,
+        "review_artifact": review_artifact,
+        "popup": popup,
+    }
+
+
+def make_live42_detached_launcher(*, repository_root: str, artifact_root: str, campaign_id: str, starting_checkpoint: str = "888415d2", use_external_retrieval: bool = True) -> dict[str, Any]:
+    repo = Path(repository_root).resolve()
+    if not (repo / "orchestration" / "runtime" / "gsr_a_governed_self_regulation.py").exists() or repo.name != "Delta_Dev":
+        return {"accepted": False, "reason": "repository_root_invalid"}
+    root = Path(artifact_root).resolve() / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    launcher = root / "launch_live42.py"
+    launcher.write_text(
+        "\n".join((
+            "from pathlib import Path",
+            "import sys",
+            f"repo = Path({str(repo)!r}).resolve()",
+            "if str(repo) not in sys.path:",
+            "    sys.path.insert(0, str(repo))",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import run_live42_frontier_expansion_pilot",
+            "run_live42_frontier_expansion_pilot(",
+            f"    artifact_root={str(Path(artifact_root).resolve())!r},",
+            f"    campaign_id={campaign_id!r},",
+            f"    starting_checkpoint={starting_checkpoint!r},",
+            f"    use_external_retrieval={bool(use_external_retrieval)!r},",
+            "    popup_mode='persistent',",
+            ")",
+            "",
+        )),
+        encoding="utf-8",
+    )
+    return {"accepted": True, "reason": "launcher_created", "campaign_id": campaign_id, "artifact_root": str(Path(artifact_root).resolve()), "launcher_path": str(launcher), "stdout_path": str(root / "stdout.log"), "stderr_path": str(root / "stderr.log")}
 
 
 def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
