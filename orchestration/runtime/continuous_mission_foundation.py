@@ -611,6 +611,70 @@ def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGo
         objective = compile_long_horizon_objective(contract.original_operator_goal)
         plan = derive_developmental_capability_plan(objective, capability_inventory_from_knowledge(knowledge_ledger))
         return main_goal_from_developmental_plan(contract, plan)
+    if completed_goal.normalized_objective == "developmental_self_direction_evidence" and _is_developmental_direction(contract.original_operator_goal):
+        objective = "Develop resource-backed insight seeking for uncertain next-goal formation"
+        normalized = "resource_backed_developmental_insight"
+        criteria = (
+            "uncertainty_detection_for_goal_selection",
+            "resource_question_formulation",
+            "evidence_changed_plan_recording",
+        )
+        return MainGoalContract(
+            main_goal_id=stable_id("continuous-main-goal", contract.mission_id, normalized, gained),
+            parent_mission_id=contract.mission_id,
+            original_objective=objective,
+            normalized_objective=normalized,
+            success_criteria=criteria,
+            evidence_requirements=("uncertainty_record", "resource_question", "evidence_delta", "updated_plan_rationale"),
+            prerequisite_graph={
+                "uncertainty_detection_for_goal_selection": (),
+                "resource_question_formulation": ("uncertainty_detection_for_goal_selection",),
+                "evidence_changed_plan_recording": ("resource_question_formulation",),
+            },
+            known_subgoals=(),
+            active_subgoal="",
+            completed_subgoals=(),
+            blocked_subgoals=(),
+            rejected_strategies=(),
+            newly_discovered_prerequisites=("resource_question_formulation",),
+            residual_uncertainty="broad self-development still needs proof that uncertainty can trigger appropriate evidence seeking",
+            capability_changes=gained,
+            disposition="active",
+            completion_rationale=f"derived after {completed_goal.main_goal_id} proved developmental self-direction evidence",
+            next_main_goal_candidates=(),
+        )
+    if completed_goal.normalized_objective == "resource_backed_developmental_insight" and "articulate" in contract.original_operator_goal.lower():
+        objective = "Develop grounded operator communication from authoritative runtime state"
+        normalized = "grounded_operator_communication"
+        criteria = (
+            "state_grounded_progress_summary",
+            "verified_vs_assumed_explanation",
+            "authority_boundary_explanation",
+        )
+        return MainGoalContract(
+            main_goal_id=stable_id("continuous-main-goal", contract.mission_id, normalized, gained),
+            parent_mission_id=contract.mission_id,
+            original_objective=objective,
+            normalized_objective=normalized,
+            success_criteria=criteria,
+            evidence_requirements=("controller_snapshot", "capability_inventory", "operator_explanation", "authority_boundary_state"),
+            prerequisite_graph={
+                "state_grounded_progress_summary": (),
+                "verified_vs_assumed_explanation": ("state_grounded_progress_summary",),
+                "authority_boundary_explanation": ("state_grounded_progress_summary",),
+            },
+            known_subgoals=(),
+            active_subgoal="",
+            completed_subgoals=(),
+            blocked_subgoals=(),
+            rejected_strategies=(),
+            newly_discovered_prerequisites=("operator_explanation",),
+            residual_uncertainty="articulate self-development requires explanations that match authoritative runtime state",
+            capability_changes=gained,
+            disposition="active",
+            completion_rationale=f"derived after {completed_goal.main_goal_id} because the broad objective explicitly requires articulate self-direction",
+            next_main_goal_candidates=(),
+        )
     if completed_goal.normalized_objective == "real_continuous_mission_execution":
         objective = "Improve autonomous evidence discovery and weakness formulation"
         normalized = "autonomous_evidence_discovery"

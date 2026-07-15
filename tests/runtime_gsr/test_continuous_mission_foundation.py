@@ -278,6 +278,110 @@ def test_no_generic_next_main_goal_is_fabricated_for_runtime_mission():
     assert derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), completed_second, ()) is None
 
 
+def test_completed_developmental_self_direction_evidence_derives_resource_insight_goal():
+    controller = start_continuous_runtime_controller(session_id="self-direction-followup")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    first = MainGoalContract(**controller.continuous_main_goal)
+    records = tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in first.success_criteria
+    )
+    assessed = assess_main_goal_completion(first, records, eligible_frontier_exists=False)
+    second = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+    assert second is not None
+    completed_second = MainGoalContract(**{**second.as_dict(), "disposition": "satisfied"})
+    records += tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in second.success_criteria
+    )
+    third = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), completed_second, records)
+
+    assert second.normalized_objective == "developmental_self_direction_evidence"
+    assert third is not None
+    assert third.normalized_objective == "resource_backed_developmental_insight"
+    first_resource_subgoal = derive_subgoal_evidence_for_main_goal(third, records, max_items=1)
+    assert first_resource_subgoal[0]["affected_capability"] == "uncertainty_detection_for_goal_selection"
+
+
+def test_articulate_development_goal_derives_grounded_communication_after_resource_insight():
+    controller = start_continuous_runtime_controller(session_id="articulate-followup")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    first = MainGoalContract(**controller.continuous_main_goal)
+    first_records = tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in first.success_criteria
+    )
+    second = derive_next_main_goal(
+        type("Contract", (), controller.continuous_mission_contract),
+        assess_main_goal_completion(first, first_records, eligible_frontier_exists=False),
+        first_records,
+    )
+    second_records = first_records + tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in second.success_criteria
+    )
+    third = derive_next_main_goal(
+        type("Contract", (), controller.continuous_mission_contract),
+        MainGoalContract(**{**second.as_dict(), "disposition": "satisfied"}),
+        second_records,
+    )
+    third_records = second_records + tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in third.success_criteria
+    )
+    fourth = derive_next_main_goal(
+        type("Contract", (), controller.continuous_mission_contract),
+        MainGoalContract(**{**third.as_dict(), "disposition": "satisfied"}),
+        third_records,
+    )
+
+    assert third.normalized_objective == "resource_backed_developmental_insight"
+    assert fourth is not None
+    assert fourth.normalized_objective == "grounded_operator_communication"
+    communication_subgoal = derive_subgoal_evidence_for_main_goal(fourth, third_records, max_items=1)
+    assert communication_subgoal[0]["affected_capability"] == "state_grounded_progress_summary"
+
+
 def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():
     objective = compile_long_horizon_objective("Become capable of mastering the sciences")
     knowledge = (
