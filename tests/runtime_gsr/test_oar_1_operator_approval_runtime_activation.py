@@ -6053,12 +6053,58 @@ def test_live_44_deny_consumes_signature_and_creates_later_popup(tmp_path, monke
     assert denial["provider_calls_added"] == 0
     assert denial["proposal_signature"] in consumed["signatures"]
     assert result["wait_result"]["events"][0]["state"] == "denied_consumed_and_followup_popup_created"
-    assert result["wait_result"]["events"][1]["state"] == "denied_consumed_and_followup_popup_created"
-    assert result["wait_result"]["state"] == "emergency_stop"
-    assert status["campaign"]["completed_episodes"] >= 5
+    assert result["wait_result"]["state"] == "global_frontier_exhausted"
+    assert result["wait_result"]["reason"] == "denied_duplicate_consumed_signature"
+    assert (root / "duplicate_denial_blocked.json").exists()
+    assert status["campaign"]["completed_episodes"] >= 4
     assert status["campaign"]["provider_calls"] == 1
-    assert status["campaign"]["pending_decision_id"]
-    assert status["campaign"]["campaign_state"] == "operator_requested_stop"
+    assert status["campaign"]["pending_decision_id"] == ""
+    assert status["campaign"]["campaign_state"] == "global_frontier_exhausted"
+
+
+def test_live_44_semantic_duplicate_with_new_evidence_id_does_not_popup_or_increment_local_actions(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4501
+
+    popups = []
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: popups.append(args) or DummyProcess())
+    root = tmp_path / "live44-semantic-duplicate"
+    campaign = gsr.make_live44_campaign(campaign_id="live44-semantic-duplicate", starting_checkpoint="d06ef6f2")
+    campaign["local_actions"] = 0
+    objective = "evaluate alternate local-only transfer evidence path after denial"
+    consumed_probe = {
+        "requested_action": "execute isolated local-only candidate after exact evidence compilation",
+        "exact_provider_selected_objective": objective,
+        "provider_response_excerpt": {
+            "candidate_objectives": (objective,),
+            "rationale": "existing provider ranking pointed to transfer weakness; local episode supplied exact failing evidence",
+            "response_id": "local-reuse-of-existing-provider-evidence",
+        },
+        "specific_validation_weakness": {"metric": "transfer_dependency_identity_preservation=0.0", "case_ids": ("live44-local-deny-followup-evidence-old",)},
+        "local_evidence_records": ("live44-local-deny-followup-evidence-old: dependency identity dropped before transfer validation",),
+        "proposed_isolated_candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
+        "rollback_condition": "reject candidate and preserve prior state if transfer dependency metric does not improve",
+        "duplicate_overlap_check": {"overlap": "none_exact; existing capabilities do not preserve transfer dependency identity before classification"},
+        "expected_information_gain": 0.83,
+    }
+    signature = gsr.live44_semantic_proposal_signature(consumed_probe)
+    gsr._live44_write_json(root / "consumed_proposal_signatures.json", {"signatures": (signature,)})
+
+    result = gsr.live44_create_complete_local_decision(
+        root,
+        campaign,
+        cycle_id="live44-cycle-6289392d90927141",
+        objective=objective,
+        evidence_record_id="live44-local-deny-followup-evidence-new",
+        popup_mode="persistent",
+    )
+
+    assert result["accepted"] is False
+    assert result["reason"] == "denied_duplicate_consumed_signature"
+    assert result["signature_check"]["signature"] == signature
+    assert result["popup"]["popup_created"] is False
+    assert campaign["local_actions"] == 0
+    assert popups == []
 
 
 def test_live_44_accept_deny_revision_transitions(tmp_path):

@@ -31020,12 +31020,7 @@ def live44_deny_incomplete_revision(campaign_root: str, *, decision_id: str, rea
     completeness = live44_decision_package_completeness(decision)
     if completeness["complete"]:
         return {"accepted": False, "reason": "decision_package_complete", "decision_id": decision_id}
-    signature = stable_id(
-        "live44-consumed-proposal",
-        decision.get("exact_provider_selected_objective", decision.get("requested_action", "")),
-        decision.get("provider_response_excerpt", {}),
-        decision.get("local_evidence_records", ()),
-    )
+    signature = live44_semantic_proposal_signature(decision)
     denial = {
         "decision_id": decision_id,
         "new_state": "denied",
@@ -31048,14 +31043,35 @@ def live44_deny_incomplete_revision(campaign_root: str, *, decision_id: str, rea
     return denial
 
 
+def _live44_normalized_semantic_text(value: Any) -> Any:
+    if isinstance(value, str):
+        value = re.sub(r"live44-local-[a-z0-9-]+", "live44-local-evidence-id", value)
+        value = re.sub(r"checkpoint_\d+\.json", "checkpoint.json", value)
+        value = re.sub(r"\d{4}-\d{2}-\d{2}T[\d:.+-]+", "timestamp", value)
+        return value.strip().lower()
+    if isinstance(value, Mapping):
+        return {str(k): _live44_normalized_semantic_text(v) for k, v in sorted(value.items()) if k not in {"case_ids", "transfer", "held_out"}}
+    if isinstance(value, (tuple, list)):
+        return tuple(_live44_normalized_semantic_text(v) for v in value)
+    return value
+
+
+def live44_semantic_proposal_signature(proposal: Mapping[str, Any]) -> str:
+    semantic_payload = {
+        "objective": proposal.get("exact_provider_selected_objective", ""),
+        "provider_response": proposal.get("provider_response_excerpt", {}),
+        "candidate_behavior": proposal.get("proposed_isolated_candidate_behavior", ""),
+        "metric": proposal.get("specific_validation_weakness", {}).get("metric", ""),
+        "rollback_condition": proposal.get("rollback_condition", ""),
+        "overlap": proposal.get("duplicate_overlap_check", {}).get("overlap", ""),
+        "expected_information_gain": proposal.get("expected_information_gain", ""),
+    }
+    return stable_id("live44-consumed-proposal", _live44_normalized_semantic_text(semantic_payload))
+
+
 def live44_proposal_signature_available(campaign_root: str, proposal: Mapping[str, Any]) -> dict[str, Any]:
     root = Path(campaign_root)
-    signature = stable_id(
-        "live44-consumed-proposal",
-        proposal.get("exact_provider_selected_objective", proposal.get("requested_action", "")),
-        proposal.get("provider_response_excerpt", {}),
-        proposal.get("local_evidence_records", ()),
-    )
+    signature = live44_semantic_proposal_signature(proposal)
     consumed_path = root / "consumed_proposal_signatures.json"
     consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
     available = signature not in set(consumed.get("signatures", ()))
@@ -31195,6 +31211,11 @@ def live44_create_complete_local_decision(campaign_root: str, campaign: MutableM
         campaign["campaign_state"] = "local_enrichment_required"
         campaign["pending_decision_id"] = ""
         return {"accepted": False, "reason": "complete_local_decision_failed_completeness_gate", "decision": decision, "completeness": completeness}
+    availability = live44_proposal_signature_available(str(root), decision)
+    _live44_write_json(package_root / "proposal_signature_check.json", availability)
+    if not availability["available"]:
+        _live44_write_json(package_root / "decision_state.json", {"decision_id": decision["decision_id"], "state": "denied_duplicate_consumed_signature"})
+        return {"accepted": False, "reason": "denied_duplicate_consumed_signature", "decision": decision, "completeness": completeness, "signature_check": availability, "popup": {"popup_created": False, "reason": "semantic_proposal_already_consumed"}}
     popup = _live44_launch_decision_popup({**decision, "review_summary": summary}, mode=popup_mode)
     campaign["campaign_state"] = "paused_pending_operator_review"
     campaign["pending_decision_id"] = decision["decision_id"]
@@ -31300,12 +31321,7 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                 if current.get("state") == "denied":
                     denied_decision_id = campaign["pending_decision_id"]
                     denied_decision = json.loads((decision_root / "decision_request.json").read_text(encoding="utf-8"))
-                    signature = stable_id(
-                        "live44-consumed-proposal",
-                        denied_decision.get("exact_provider_selected_objective", denied_decision.get("requested_action", "")),
-                        denied_decision.get("provider_response_excerpt", {}),
-                        denied_decision.get("local_evidence_records", ()),
-                    )
+                    signature = live44_semantic_proposal_signature(denied_decision)
                     consumed_path = root / "consumed_proposal_signatures.json"
                     consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
                     consumed["signatures"] = tuple(dict.fromkeys(tuple(consumed.get("signatures", ())) + (signature,)))
@@ -31321,6 +31337,39 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                     _live44_write_json(root / "denied_decision_evidence.json", denial_evidence)
                     campaign["pending_decision_id"] = ""
                     followup_episode = int(campaign.get("completed_episodes", 0)) + 1
+                    followup_objective = "evaluate alternate local-only transfer evidence path after denial"
+                    followup_evidence_id = stable_id("live44-local-deny-followup-evidence", campaign["campaign_id"], followup_episode)
+                    followup_probe = {
+                        "requested_action": "execute isolated local-only candidate after exact evidence compilation",
+                        "exact_provider_selected_objective": followup_objective,
+                        "provider_response_excerpt": {
+                            "candidate_objectives": (followup_objective,),
+                            "rationale": "existing provider ranking pointed to transfer weakness; local episode supplied exact failing evidence",
+                            "response_id": "local-reuse-of-existing-provider-evidence",
+                        },
+                        "specific_validation_weakness": {"metric": "transfer_dependency_identity_preservation=0.0", "case_ids": (followup_evidence_id,)},
+                        "local_evidence_records": (f"{followup_evidence_id}: dependency identity dropped before transfer validation",),
+                        "proposed_isolated_candidate_behavior": "preserve dependency identifiers before transfer and contradiction classification",
+                        "rollback_condition": "reject candidate and preserve prior state if transfer dependency metric does not improve",
+                        "duplicate_overlap_check": {"overlap": "none_exact; existing capabilities do not preserve transfer dependency identity before classification"},
+                        "expected_information_gain": 0.83,
+                    }
+                    followup_availability = live44_proposal_signature_available(str(root), followup_probe)
+                    if not followup_availability["available"]:
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        campaign["pending_decision_id"] = ""
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": "denied_duplicate_consumed_signature",
+                            "denied_decision_id": denied_decision_id,
+                            "blocked_signature": followup_availability["signature"],
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                        }
+                        _live44_write_json(root / "duplicate_denial_blocked.json", wait_result)
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "denied_duplicate_consumed_signature_blocked"})
+                        break
                     campaign["completed_episodes"] = followup_episode
                     campaign["local_actions"] += 1
                     campaign["exploration_history"].append({"episode": followup_episode, "strategy": "denied-proposal-materially-different-local-exploration", "productive_cycles": 0, "terminal_reason": "denied_signature_consumed_and_new_episode_started", "blocked_signature": signature})
@@ -31328,10 +31377,25 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                         root,
                         campaign,
                         cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-deny-followup"),
-                        objective="evaluate alternate local-only transfer evidence path after denial",
-                        evidence_record_id=stable_id("live44-local-deny-followup-evidence", campaign["campaign_id"], followup_episode),
+                        objective=followup_objective,
+                        evidence_record_id=followup_evidence_id,
                         popup_mode=popup_mode,
                     )
+                    if not followup.get("accepted") and followup.get("reason") == "denied_duplicate_consumed_signature":
+                        campaign["campaign_state"] = "global_frontier_exhausted"
+                        campaign["pending_decision_id"] = ""
+                        wait_result = {
+                            "state": "global_frontier_exhausted",
+                            "reason": "denied_duplicate_consumed_signature",
+                            "denied_decision_id": denied_decision_id,
+                            "blocked_signature": followup.get("signature_check", {}).get("signature"),
+                            "iterations": wait_iterations,
+                            "events": wait_events,
+                        }
+                        _live44_write_json(root / "duplicate_denial_blocked.json", wait_result)
+                        _live44_write_json(root / "operator_wait_result.json", wait_result)
+                        _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "denied_duplicate_consumed_signature_blocked"})
+                        break
                     decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
                     state_path = decision_root / "decision_state.json"
                     wait_events.append({"state": "denied_consumed_and_followup_popup_created", "denied_decision_id": denied_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
