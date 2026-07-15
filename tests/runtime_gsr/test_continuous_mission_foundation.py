@@ -12,6 +12,7 @@ from orchestration.runtime.continuous_mission_foundation import (
     compile_initial_main_goal,
     compile_long_horizon_objective,
     derive_developmental_capability_plan,
+    derive_developmental_next_goal_candidates,
     derive_next_main_goal,
     derive_subgoal_evidence_for_main_goal,
     assess_developmental_capability_state,
@@ -454,8 +455,62 @@ def test_meaningful_progress_derives_autonomous_evidence_acquisition():
 
     assert next_goal is not None
     assert next_goal.normalized_objective == "autonomous_evidence_acquisition"
+    assert next_goal.next_main_goal_candidates[0] == "autonomous_evidence_acquisition"
+    assert "operator_goal_reinterpretation_check" in next_goal.next_main_goal_candidates
+    assert "idle_resource_efficiency" in next_goal.next_main_goal_candidates
+    assert "selected from ranked developmental next-goal candidates" in next_goal.completion_rationale
+    assert "resource_need=local_artifact_mining_first" in next_goal.completion_rationale
     evidence = derive_subgoal_evidence_for_main_goal(next_goal, records, max_items=1)
     assert evidence[0]["affected_capability"] == "frontier_uncertainty_scan"
+
+
+def test_meaningful_progress_next_goal_candidates_are_ranked_from_evidence():
+    controller = start_continuous_runtime_controller(session_id="ranked-next-goal-candidates")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    records = ()
+    for _ in range(4):
+        records += tuple(
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed",
+                    "successful_mechanism": criterion,
+                    "reassessment": "satisfied",
+                }
+            )
+            for criterion in current.success_criteria
+        )
+        assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+        next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+        if next_goal is None:
+            break
+        current = next_goal
+
+    assert current.normalized_objective == "meaningful_progress_stall_detection"
+    records += tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in current.success_criteria
+    )
+    assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+    candidates = derive_developmental_next_goal_candidates(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+    assert tuple(candidate.normalized_objective for candidate in candidates) == (
+        "autonomous_evidence_acquisition",
+        "operator_goal_reinterpretation_check",
+        "idle_resource_efficiency",
+    )
+    assert candidates[0].score > candidates[1].score > candidates[2].score
+    assert candidates[0].evidence_basis == current.success_criteria
+    assert candidates[0].resource_need == "local_artifact_mining_first"
 
 
 def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():

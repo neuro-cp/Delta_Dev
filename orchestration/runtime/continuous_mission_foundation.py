@@ -283,6 +283,32 @@ class MainGoalContract:
         return asdict(self)
 
 
+@dataclass(frozen=True)
+class DevelopmentalNextGoalCandidate:
+    candidate_id: str
+    normalized_objective: str
+    objective: str
+    evidence_basis: tuple[str, ...]
+    missing_evidence: tuple[str, ...]
+    confidence_before: float
+    expected_value: float
+    risk: float
+    resource_need: str
+    rationale: str
+    success_criteria: tuple[str, ...]
+    evidence_requirements: tuple[str, ...]
+    prerequisite_graph: Mapping[str, tuple[str, ...]]
+
+    @property
+    def score(self) -> float:
+        return round((self.confidence_before * 0.25) + (self.expected_value * 0.55) - (self.risk * 0.2), 4)
+
+    def as_dict(self) -> dict[str, Any]:
+        data = asdict(self)
+        data["score"] = self.score
+        return data
+
+
 def compile_broad_mission_contract(
     operator_goal: str,
     *,
@@ -605,6 +631,134 @@ def assess_main_goal_completion(
     )
 
 
+def derive_developmental_next_goal_candidates(
+    contract: BroadMissionContract,
+    completed_goal: MainGoalContract,
+    knowledge_ledger: Sequence[CapabilityKnowledgeRecord],
+) -> tuple[DevelopmentalNextGoalCandidate, ...]:
+    if completed_goal.normalized_objective != "meaningful_progress_stall_detection":
+        return ()
+    if not _is_developmental_direction(contract.original_operator_goal):
+        return ()
+
+    satisfied = {record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"}
+    evidence_basis = tuple(
+        record.capability_id
+        for record in knowledge_ledger
+        if record.reassessment == "satisfied" and record.capability_id in completed_goal.success_criteria
+    )
+    candidates: list[DevelopmentalNextGoalCandidate] = []
+    if "frontier_uncertainty_scan" not in satisfied:
+        candidates.append(
+            DevelopmentalNextGoalCandidate(
+                candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "autonomous_evidence_acquisition"),
+                normalized_objective="autonomous_evidence_acquisition",
+                objective="Develop autonomous evidence acquisition for the next unknown developmental frontier",
+                evidence_basis=evidence_basis,
+                missing_evidence=("frontier uncertainty record", "local artifact evidence", "candidate gap record"),
+                confidence_before=0.35,
+                expected_value=0.92,
+                risk=0.18,
+                resource_need="local_artifact_mining_first",
+                rationale=(
+                    "meaningful progress tracking is verified, but the capability inventory still lacks proof that an empty or stalled "
+                    "frontier triggers new evidence acquisition before another developmental goal is selected"
+                ),
+                success_criteria=(
+                    "frontier_uncertainty_scan",
+                    "local_artifact_evidence_acquisition",
+                    "next_gap_candidate_generation",
+                ),
+                evidence_requirements=("frontier_scan_record", "local_artifact_evidence", "candidate_gap_record"),
+                prerequisite_graph={
+                    "frontier_uncertainty_scan": (),
+                    "local_artifact_evidence_acquisition": ("frontier_uncertainty_scan",),
+                    "next_gap_candidate_generation": ("local_artifact_evidence_acquisition",),
+                },
+            )
+        )
+    if "state_grounded_progress_summary" in satisfied and "operator_goal_reinterpretation_check" not in satisfied:
+        candidates.append(
+            DevelopmentalNextGoalCandidate(
+                candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "operator_goal_reinterpretation_check"),
+                normalized_objective="operator_goal_reinterpretation_check",
+                objective="Develop a check that prevents broad operator goals from being reinterpreted after evidence changes",
+                evidence_basis=evidence_basis,
+                missing_evidence=("goal-drift comparison record", "operator-goal preservation evidence"),
+                confidence_before=0.5,
+                expected_value=0.62,
+                risk=0.22,
+                resource_need="controller_state_comparison",
+                rationale="grounded communication exists, but broad-goal preservation is a lower-value risk than missing frontier evidence",
+                success_criteria=("goal_drift_comparison", "operator_goal_preservation_record"),
+                evidence_requirements=("original_goal_digest", "current_goal_digest", "drift_disposition"),
+                prerequisite_graph={"goal_drift_comparison": (), "operator_goal_preservation_record": ("goal_drift_comparison",)},
+            )
+        )
+    if "stalled_execution_detection" in satisfied and "idle_resource_efficiency" not in satisfied:
+        candidates.append(
+            DevelopmentalNextGoalCandidate(
+                candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "idle_resource_efficiency"),
+                normalized_objective="idle_resource_efficiency",
+                objective="Develop bounded idle-resource efficiency checks for observation mode",
+                evidence_basis=evidence_basis,
+                missing_evidence=("idle heartbeat sample", "bounded-resource comparison"),
+                confidence_before=0.7,
+                expected_value=0.45,
+                risk=0.12,
+                resource_need="runtime_status_sampling",
+                rationale="idle efficiency is useful, but it does not decide what DELTA should learn next",
+                success_criteria=("idle_heartbeat_truthfulness", "bounded_idle_resource_record"),
+                evidence_requirements=("heartbeat_record", "resource_snapshot"),
+                prerequisite_graph={"idle_heartbeat_truthfulness": (), "bounded_idle_resource_record": ("idle_heartbeat_truthfulness",)},
+            )
+        )
+    return tuple(sorted(candidates, key=lambda item: (-item.score, item.normalized_objective)))
+
+
+def select_developmental_next_goal_candidate(
+    candidates: Sequence[DevelopmentalNextGoalCandidate],
+) -> DevelopmentalNextGoalCandidate | None:
+    if not candidates:
+        return None
+    return tuple(candidates)[0]
+
+
+def main_goal_from_developmental_next_goal_candidate(
+    contract: BroadMissionContract,
+    completed_goal: MainGoalContract,
+    candidate: DevelopmentalNextGoalCandidate,
+    knowledge_ledger: Sequence[CapabilityKnowledgeRecord],
+    candidates: Sequence[DevelopmentalNextGoalCandidate],
+) -> MainGoalContract:
+    gained = tuple(dict.fromkeys(record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"))
+    alternatives = tuple(item.normalized_objective for item in candidates)
+    ranking = ", ".join(f"{item.normalized_objective}:{item.score}" for item in candidates)
+    return MainGoalContract(
+        main_goal_id=stable_id("continuous-main-goal", contract.mission_id, candidate.normalized_objective, gained),
+        parent_mission_id=contract.mission_id,
+        original_objective=candidate.objective,
+        normalized_objective=candidate.normalized_objective,
+        success_criteria=candidate.success_criteria,
+        evidence_requirements=candidate.evidence_requirements,
+        prerequisite_graph=candidate.prerequisite_graph,
+        known_subgoals=(),
+        active_subgoal="",
+        completed_subgoals=(),
+        blocked_subgoals=(),
+        rejected_strategies=(),
+        newly_discovered_prerequisites=candidate.missing_evidence,
+        residual_uncertainty="; ".join(candidate.missing_evidence),
+        capability_changes=gained,
+        disposition="active",
+        completion_rationale=(
+            f"selected from ranked developmental next-goal candidates after {completed_goal.main_goal_id}; "
+            f"ranking={ranking}; selected_rationale={candidate.rationale}; resource_need={candidate.resource_need}"
+        ),
+        next_main_goal_candidates=alternatives,
+    )
+
+
 def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGoalContract, knowledge_ledger: Sequence[CapabilityKnowledgeRecord]) -> MainGoalContract | None:
     gained = tuple(dict.fromkeys(record.capability_id for record in knowledge_ledger if record.reassessment == "satisfied"))
     if completed_goal.normalized_objective == "developmental_self_assessment":
@@ -708,37 +862,11 @@ def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGo
             next_main_goal_candidates=(),
         )
     if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and _is_developmental_direction(contract.original_operator_goal):
-        objective = "Develop autonomous evidence acquisition for the next unknown developmental frontier"
-        normalized = "autonomous_evidence_acquisition"
-        criteria = (
-            "frontier_uncertainty_scan",
-            "local_artifact_evidence_acquisition",
-            "next_gap_candidate_generation",
-        )
-        return MainGoalContract(
-            main_goal_id=stable_id("continuous-main-goal", contract.mission_id, normalized, gained),
-            parent_mission_id=contract.mission_id,
-            original_objective=objective,
-            normalized_objective=normalized,
-            success_criteria=criteria,
-            evidence_requirements=("frontier_scan_record", "local_artifact_evidence", "candidate_gap_record"),
-            prerequisite_graph={
-                "frontier_uncertainty_scan": (),
-                "local_artifact_evidence_acquisition": ("frontier_uncertainty_scan",),
-                "next_gap_candidate_generation": ("local_artifact_evidence_acquisition",),
-            },
-            known_subgoals=(),
-            active_subgoal="",
-            completed_subgoals=(),
-            blocked_subgoals=(),
-            rejected_strategies=(),
-            newly_discovered_prerequisites=("local_artifact_evidence_acquisition",),
-            residual_uncertainty="after stall detection is verified, unattended development must acquire new evidence rather than passively observe",
-            capability_changes=gained,
-            disposition="active",
-            completion_rationale=f"derived after {completed_goal.main_goal_id} because the broad mission requires continued evidence-backed development",
-            next_main_goal_candidates=(),
-        )
+        candidates = derive_developmental_next_goal_candidates(contract, completed_goal, knowledge_ledger)
+        selected = select_developmental_next_goal_candidate(candidates)
+        if selected is None:
+            return None
+        return main_goal_from_developmental_next_goal_candidate(contract, completed_goal, selected, knowledge_ledger, candidates)
     if completed_goal.normalized_objective == "real_continuous_mission_execution":
         objective = "Improve autonomous evidence discovery and weakness formulation"
         normalized = "autonomous_evidence_discovery"
