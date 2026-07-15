@@ -707,6 +707,38 @@ def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGo
             completion_rationale=f"derived after {completed_goal.main_goal_id} because observation without meaningful work must be diagnosed instead of silently idling",
             next_main_goal_candidates=(),
         )
+    if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and _is_developmental_direction(contract.original_operator_goal):
+        objective = "Develop autonomous evidence acquisition for the next unknown developmental frontier"
+        normalized = "autonomous_evidence_acquisition"
+        criteria = (
+            "frontier_uncertainty_scan",
+            "local_artifact_evidence_acquisition",
+            "next_gap_candidate_generation",
+        )
+        return MainGoalContract(
+            main_goal_id=stable_id("continuous-main-goal", contract.mission_id, normalized, gained),
+            parent_mission_id=contract.mission_id,
+            original_objective=objective,
+            normalized_objective=normalized,
+            success_criteria=criteria,
+            evidence_requirements=("frontier_scan_record", "local_artifact_evidence", "candidate_gap_record"),
+            prerequisite_graph={
+                "frontier_uncertainty_scan": (),
+                "local_artifact_evidence_acquisition": ("frontier_uncertainty_scan",),
+                "next_gap_candidate_generation": ("local_artifact_evidence_acquisition",),
+            },
+            known_subgoals=(),
+            active_subgoal="",
+            completed_subgoals=(),
+            blocked_subgoals=(),
+            rejected_strategies=(),
+            newly_discovered_prerequisites=("local_artifact_evidence_acquisition",),
+            residual_uncertainty="after stall detection is verified, unattended development must acquire new evidence rather than passively observe",
+            capability_changes=gained,
+            disposition="active",
+            completion_rationale=f"derived after {completed_goal.main_goal_id} because the broad mission requires continued evidence-backed development",
+            next_main_goal_candidates=(),
+        )
     if completed_goal.normalized_objective == "real_continuous_mission_execution":
         objective = "Improve autonomous evidence discovery and weakness formulation"
         normalized = "autonomous_evidence_discovery"
