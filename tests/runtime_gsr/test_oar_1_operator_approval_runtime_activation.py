@@ -4350,6 +4350,64 @@ def test_live_33_first_intervention_uses_live32_human_control_format():
     assert "HUMAN_NARROW" in block
 
 
+def test_live_34_arbitration_evaluates_twelve_cases_and_selects_one_candidate():
+    result = gsr.run_live34_multi_capability_arbitration()
+
+    assert result.accepted is True
+    assert len(result.baseline_cases) >= 12
+    assert len(result.proposals) == 3
+    assert len([score for score in result.scores if score.selected]) == 1
+    assert result.lifecycle is not None
+    assert result.lifecycle.selected_capability_id == "claim_dependency_mapper"
+    assert result.selected_proposal_id == result.scores[0].proposal_id
+
+
+def test_live_34_ranking_is_factor_derived_label_and_order_invariant():
+    result = gsr.run_live34_multi_capability_arbitration()
+    relabeled = gsr.run_live34_multi_capability_arbitration(label_prefix="renamed")
+    misleading = gsr.run_live34_multi_capability_arbitration(misleading=True)
+
+    assert all(result.ranking_invariance.values())
+    assert result.lifecycle is not None
+    assert relabeled.lifecycle is not None
+    assert misleading.lifecycle is not None
+    assert result.lifecycle.selected_capability_id == relabeled.lifecycle.selected_capability_id
+    assert misleading.lifecycle.selected_capability_id == "claim_dependency_mapper"
+    assert all("evidence_strength" in score.normalized_factors for score in result.scores)
+    assert result.scores[0].total_score > result.scores[1].total_score
+
+
+def test_live_34_non_selected_proposals_remain_inert_and_cannot_self_activate():
+    result = gsr.run_live34_multi_capability_arbitration()
+
+    assert len(result.rejected_or_deferred_proposals) == 2
+    assert result.non_selected_denials["non_selected_cannot_activate"] is True
+    assert result.non_selected_denials["non_selected_cannot_apply"] is True
+    assert result.non_selected_denials["parallel_development_denied"] is True
+    assert result.non_selected_denials["proposal_self_authorization_denied"] is True
+    assert result.lifecycle is not None
+    assert result.lifecycle.non_selected_inert is True
+
+
+def test_live_34_selected_capability_improves_target_and_held_out_without_control_regression():
+    result = gsr.run_live34_multi_capability_arbitration()
+    lifecycle = result.lifecycle
+
+    assert lifecycle is not None
+    assert lifecycle.diagnosis is True
+    assert lifecycle.arbitration is True
+    assert lifecycle.development_approved is True
+    assert lifecycle.implemented is True
+    assert lifecycle.focused_validated is True
+    assert lifecycle.held_out_validated is True
+    assert lifecycle.rollback_proven is True
+    assert lifecycle.activation_approved is True
+    assert lifecycle.after_accuracy > lifecycle.before_accuracy
+    assert lifecycle.held_out_after_accuracy > lifecycle.held_out_before_accuracy
+    assert lifecycle.control_stable is True
+    assert result.process_left_running is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

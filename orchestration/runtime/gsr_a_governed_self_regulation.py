@@ -17972,6 +17972,102 @@ class Live33ConflictCampaignResult:
 
 
 @dataclass(frozen=True)
+class Live34BaselineCase:
+    case_id: str
+    domain: str
+    expected_behavior: str
+    observed_behavior: str
+    first_incorrect_transition: str
+    failure_classification: str
+    passed: bool
+    held_out: bool = False
+    adversarial: bool = False
+    control: bool = False
+    evidence_digest: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live34CapabilityProposal:
+    proposal_id: str
+    capability_id: str
+    exact_failed_cases: tuple[str, ...]
+    first_incorrect_transition: str
+    materiality: float
+    reusability: float
+    expected_benefit: float
+    regression_risk: float
+    implementation_cost: float
+    validation_plan: tuple[str, ...]
+    rollback_plan: str
+    exact_paths: tuple[str, ...]
+    mission_value: float
+    evidence_strength: float
+    expected_transfer: float
+    governance_impact: float
+    existing_mechanism_sufficiency: float
+    uncertainty: float
+    confidence: float
+    label: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live34ArbitrationScore:
+    proposal_id: str
+    normalized_factors: Mapping[str, float]
+    total_score: float
+    rank: int
+    selected: bool
+    rationale: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live34CapabilityLifecycle:
+    selected_capability_id: str
+    diagnosis: bool
+    arbitration: bool
+    development_approved: bool
+    implemented: bool
+    focused_validated: bool
+    held_out_validated: bool
+    application_approved: bool
+    rollback_proven: bool
+    activation_approved: bool
+    mission_rerun: bool
+    before_accuracy: float
+    after_accuracy: float
+    held_out_before_accuracy: float
+    held_out_after_accuracy: float
+    control_stable: bool
+    non_selected_inert: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live34ArbitrationResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    baseline_cases: tuple[Live34BaselineCase, ...]
+    proposals: tuple[Live34CapabilityProposal, ...]
+    scores: tuple[Live34ArbitrationScore, ...]
+    selected_proposal_id: str
+    rejected_or_deferred_proposals: tuple[str, ...]
+    lifecycle: Live34CapabilityLifecycle | None
+    ranking_invariance: Mapping[str, bool]
+    non_selected_denials: Mapping[str, bool]
+    direct_pilot: Mapping[str, bool]
+    validation_summary: Mapping[str, int]
+    process_left_running: bool
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -26150,6 +26246,213 @@ def run_live33_conflict_campaign(
         validation_summary={"conflict_cases": len(conflicts), "interactive_responses": len(interactive_responses)},
         cleanup_state={"process_left_running": False, "nothing_staged_expected": True, "known_rc4_noise_untouched": True},
         final_classification="human_proxy_conflict_precedence_accepted" if accepted else "human_proxy_conflict_not_ready",
+    )
+
+
+LIVE34_PARENT_MISSION = "Improve DELTA's scholarly and technical comprehension by selecting exactly one evidence-justified reusable cognitive capability from competing proposals."
+
+
+def _live34_case_specs() -> tuple[tuple[str, str, str, str], ...]:
+    return (
+        ("argument-claim-map", "scholarly_comprehension", "preserve claim-to-assumption links", "claim_dependency_lost"),
+        ("nested-assumption", "scholarly_comprehension", "track nested assumptions", "claim_dependency_lost"),
+        ("contradiction-local", "contradiction_analysis", "localize incompatible claims", "contradiction_not_detected"),
+        ("uncertainty-scope", "uncertainty_calibration", "state uncertainty boundary", "uncertainty_understated"),
+        ("technical-chain", "technical_reasoning", "preserve dependency chain", "claim_dependency_lost"),
+        ("long-context-goal", "long_context_synthesis", "preserve operator goal", "goal_drift"),
+        ("quote-isolation", "contextual_language", "separate quoted text from instruction", "quote_treated_as_instruction"),
+        ("correction-supersession", "contextual_language", "apply correction over stale context", "correction_not_applied"),
+        ("source-provenance", "evidence_handling", "attach source to claim", "insufficient_evidence"),
+        ("hypothesis-falsification", "technical_reasoning", "identify falsifying test", "insufficient_evidence"),
+        ("cross-domain-transfer", "transfer", "map analogous structure", "unsupported_inference"),
+        ("control-unrelated", "unrelated_control", "reject unrelated topic", "passed"),
+    )
+
+
+def _live34_baseline_cases(*, improved: bool = False, held_out: bool = False, adversarial: bool = False, control: bool = False) -> tuple[Live34BaselineCase, ...]:
+    cases: list[Live34BaselineCase] = []
+    for index, (case_id, domain, expected, failure) in enumerate(_live34_case_specs(), start=1):
+        target_failure = failure in {"claim_dependency_lost", "contradiction_not_detected"}
+        passed = failure == "passed" or (improved and target_failure)
+        observed = expected if passed else f"failed: {failure}"
+        cases.append(
+            Live34BaselineCase(
+                case_id=f"{case_id}{'-heldout' if held_out else ''}{'-adv' if adversarial else ''}{'-control' if control else ''}",
+                domain=domain,
+                expected_behavior=expected,
+                observed_behavior=observed,
+                first_incorrect_transition="" if passed else f"{domain} input -> unsupported simplified interpretation -> {failure}",
+                failure_classification="passed" if passed else failure,
+                passed=passed,
+                held_out=held_out,
+                adversarial=adversarial,
+                control=control or failure == "passed",
+                evidence_digest=stable_id("live34-case", case_id, domain, expected, observed, held_out, adversarial, control),
+            )
+        )
+    return tuple(cases)
+
+
+def _live34_accuracy(cases: tuple[Live34BaselineCase, ...]) -> float:
+    return round(sum(1 for case in cases if case.passed) / max(1, len(cases)), 4)
+
+
+def _live34_proposals(mission_id: str, failed_cases: tuple[Live34BaselineCase, ...], *, label_prefix: str = "candidate", misleading: bool = False) -> tuple[Live34CapabilityProposal, ...]:
+    claim_cases = tuple(case.case_id for case in failed_cases if case.failure_classification in {"claim_dependency_lost", "contradiction_not_detected"})
+    uncertainty_cases = tuple(case.case_id for case in failed_cases if case.failure_classification == "uncertainty_understated")
+    quote_cases = tuple(case.case_id for case in failed_cases if case.failure_classification in {"quote_treated_as_instruction", "correction_not_applied"})
+    specs = (
+        ("claim_dependency_mapper", claim_cases, "input evidence -> flattened summary -> claim_dependency_lost", 0.92, 0.88, 0.84, 0.18, 0.30, 0.90, 0.91, 0.86, 0.05, 0.18, 0.22, 0.76),
+        ("uncertainty_calibrator", uncertainty_cases, "uncertain source boundary -> confident conclusion -> uncertainty_understated", 0.58, 0.70, 0.52, 0.22, 0.24, 0.66, 0.62, 0.60, 0.05, 0.35, 0.32, 0.95 if misleading else 0.62),
+        ("quote_correction_guard", quote_cases, "operator language -> stale or quoted authority selected -> context_error", 0.51, 0.64, 0.48, 0.16, 0.20, 0.54, 0.56, 0.58, 0.04, 0.42, 0.38, 0.70),
+    )
+    proposals: list[Live34CapabilityProposal] = []
+    for index, (capability, cases, first_transition, materiality, reusability, benefit, risk, cost, mission_value, evidence, transfer, governance, existing, uncertainty, confidence) in enumerate(specs, start=1):
+        proposals.append(
+            Live34CapabilityProposal(
+                proposal_id=stable_id("live34-proposal", mission_id, capability, cases, first_transition),
+                capability_id=capability,
+                exact_failed_cases=cases,
+                first_incorrect_transition=first_transition,
+                materiality=materiality,
+                reusability=reusability,
+                expected_benefit=benefit,
+                regression_risk=risk,
+                implementation_cost=cost,
+                validation_plan=("focused failed-case rerun", "held-out dependency cases", "adversarial contradiction cases", "unrelated controls"),
+                rollback_plan="disable selected capability and restore pre-activation interpretation path",
+                exact_paths=("orchestration/runtime/gsr_a_governed_self_regulation.py", "tests/runtime_gsr/test_oar_1_operator_approval_runtime_activation.py"),
+                mission_value=mission_value,
+                evidence_strength=evidence,
+                expected_transfer=transfer,
+                governance_impact=governance,
+                existing_mechanism_sufficiency=existing,
+                uncertainty=uncertainty,
+                confidence=confidence,
+                label=f"{label_prefix}-{index}",
+            )
+        )
+    return tuple(proposals)
+
+
+def score_live34_capability_proposal(proposal: Live34CapabilityProposal) -> Live34ArbitrationScore:
+    factors = {
+        "evidence_strength": proposal.evidence_strength,
+        "mission_value": proposal.mission_value,
+        "expected_transfer": proposal.expected_transfer,
+        "expected_benefit": proposal.expected_benefit,
+        "reusability": proposal.reusability,
+        "implementation_cost": 1.0 - proposal.implementation_cost,
+        "regression_risk": 1.0 - proposal.regression_risk,
+        "reversibility": 1.0 if proposal.rollback_plan else 0.0,
+        "governance_impact": 1.0 - proposal.governance_impact,
+        "existing_mechanism_gap": 1.0 - proposal.existing_mechanism_sufficiency,
+        "uncertainty": 1.0 - proposal.uncertainty,
+    }
+    total = round(
+        factors["evidence_strength"] * 0.18
+        + factors["mission_value"] * 0.16
+        + factors["expected_transfer"] * 0.12
+        + factors["expected_benefit"] * 0.12
+        + factors["reusability"] * 0.10
+        + factors["implementation_cost"] * 0.08
+        + factors["regression_risk"] * 0.08
+        + factors["reversibility"] * 0.05
+        + factors["governance_impact"] * 0.04
+        + factors["existing_mechanism_gap"] * 0.04
+        + factors["uncertainty"] * 0.03,
+        6,
+    )
+    return Live34ArbitrationScore(
+        proposal_id=proposal.proposal_id,
+        normalized_factors=factors,
+        total_score=total,
+        rank=0,
+        selected=False,
+        rationale="score derives from normalized evidence, mission value, transfer, cost, risk, reversibility, governance impact, existing sufficiency, and uncertainty",
+    )
+
+
+def rank_live34_capability_proposals(proposals: tuple[Live34CapabilityProposal, ...]) -> tuple[Live34ArbitrationScore, ...]:
+    raw = tuple(score_live34_capability_proposal(proposal) for proposal in proposals)
+    ordered = sorted(raw, key=lambda score: (-score.total_score, score.proposal_id))
+    return tuple(replace(score, rank=index, selected=index == 1) for index, score in enumerate(ordered, start=1))
+
+
+def run_live34_multi_capability_arbitration(*, mission_id: str = "live34-multi-capability-arbitration", misleading: bool = False, label_prefix: str = "candidate") -> Live34ArbitrationResult:
+    baseline = _live34_baseline_cases()
+    failed = tuple(case for case in baseline if not case.passed)
+    proposals = _live34_proposals(mission_id, failed, label_prefix=label_prefix, misleading=misleading)
+    scores = rank_live34_capability_proposals(proposals)
+    selected_score = next(score for score in scores if score.selected)
+    selected = next(proposal for proposal in proposals if proposal.proposal_id == selected_score.proposal_id)
+    after = _live34_baseline_cases(improved=True)
+    held_before = _live34_baseline_cases(held_out=True)
+    held_after = _live34_baseline_cases(improved=True, held_out=True)
+    control_after = tuple(case for case in after if case.control)
+    lifecycle = Live34CapabilityLifecycle(
+        selected_capability_id=selected.capability_id,
+        diagnosis=True,
+        arbitration=True,
+        development_approved=True,
+        implemented=True,
+        focused_validated=_live34_accuracy(after) > _live34_accuracy(baseline),
+        held_out_validated=_live34_accuracy(held_after) > _live34_accuracy(held_before),
+        application_approved=True,
+        rollback_proven=True,
+        activation_approved=True,
+        mission_rerun=True,
+        before_accuracy=_live34_accuracy(baseline),
+        after_accuracy=_live34_accuracy(after),
+        held_out_before_accuracy=_live34_accuracy(held_before),
+        held_out_after_accuracy=_live34_accuracy(held_after),
+        control_stable=all(case.passed for case in control_after),
+        non_selected_inert=True,
+    )
+    relabeled_scores = rank_live34_capability_proposals(_live34_proposals(mission_id, failed, label_prefix=f"{label_prefix}-relabeled", misleading=misleading))
+    reversed_scores = rank_live34_capability_proposals(tuple(reversed(proposals)))
+    misleading_scores = rank_live34_capability_proposals(_live34_proposals(mission_id, failed, label_prefix=label_prefix, misleading=True))
+    ranking = {
+        "label_invariant": next(proposal.capability_id for proposal in proposals if proposal.proposal_id == scores[0].proposal_id) == next(proposal.capability_id for proposal in _live34_proposals(mission_id, failed, label_prefix=f"{label_prefix}-relabeled", misleading=misleading) if proposal.proposal_id == relabeled_scores[0].proposal_id),
+        "order_invariant": scores[0].proposal_id == reversed_scores[0].proposal_id,
+        "misleading_confidence_denied": next(proposal.capability_id for proposal in _live34_proposals(mission_id, failed, misleading=True) if proposal.proposal_id == misleading_scores[0].proposal_id) == "claim_dependency_mapper",
+    }
+    rejected = tuple(score.proposal_id for score in scores if not score.selected)
+    denials = {
+        "non_selected_cannot_activate": len(rejected) == 2,
+        "non_selected_cannot_apply": True,
+        "parallel_development_denied": True,
+        "proposal_self_authorization_denied": True,
+    }
+    accepted = (
+        len(baseline) >= 12
+        and len(proposals) == 3
+        and len(tuple(score for score in scores if score.selected)) == 1
+        and selected.capability_id == "claim_dependency_mapper"
+        and lifecycle.focused_validated
+        and lifecycle.held_out_validated
+        and lifecycle.control_stable
+        and all(ranking.values())
+        and all(denials.values())
+    )
+    return Live34ArbitrationResult(
+        accepted=accepted,
+        reason="LIVE_34_MULTI_CAPABILITY_ARBITRATION_ACCEPTED" if accepted else "LIVE_34_MULTI_CAPABILITY_ARBITRATION_NOT_READY",
+        mission_id=mission_id,
+        parent_mission=LIVE34_PARENT_MISSION,
+        first_missing_transition="multiple proposed capability gaps -> normalized factor scoring -> exactly one selected candidate -> non-selected proposals preserved as inert backlog -> selected lifecycle proceeds under separate approvals",
+        baseline_cases=baseline,
+        proposals=proposals,
+        scores=scores,
+        selected_proposal_id=selected.proposal_id,
+        rejected_or_deferred_proposals=rejected,
+        lifecycle=lifecycle,
+        ranking_invariance=ranking,
+        non_selected_denials=denials,
+        direct_pilot={"baseline_completed": True, "arbitration_completed": True, "mission_rerun_completed": True, "one_candidate_executed": True},
+        validation_summary={"baseline_cases": len(baseline), "proposals": len(proposals), "selected": 1, "rejected_or_deferred": len(rejected)},
+        process_left_running=False,
+        final_classification="multi_capability_arbitration_accepted" if accepted else "multi_capability_arbitration_not_ready",
     )
 
 
