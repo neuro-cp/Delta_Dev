@@ -5206,6 +5206,97 @@ def test_live_38_full_judgment_loop_with_injected_model_outputs(tmp_path):
     assert result["no_promotion"] is True
 
 
+def test_live_39_campaign_contract_and_cycle_state(tmp_path):
+    result = gsr.run_live39_repeated_governed_judgment_pilot(artifact_root=str(tmp_path), campaign_id="live39-fake", use_real_provider=False)
+    campaign = result["campaign"]
+
+    assert result["accepted"] is True
+    assert result["classification"] == "LIVE_39_REPEATED_GOVERNED_JUDGMENT_VERIFIED_WITH_CANDIDATE_FAILURES"
+    assert campaign["maximum_cycles"] == 3
+    assert campaign["current_cycle_number"] == 3
+    assert campaign["active_cycle_id"] == ""
+    assert campaign["campaign_state"] == "completed"
+    assert len(result["cycles"]) == 3
+    assert [cycle["cycle_number"] for cycle in result["cycles"]] == [1, 2, 3]
+    assert len(campaign["completed_cycle_ids"]) == 3
+    assert campaign["cumulative_provider_actions"] <= 15
+    assert campaign["cumulative_source_actions"] == 0
+    assert result["no_automatic_promotion"] is True
+    assert result["no_live_attachment"] is True
+
+
+def test_live_39_evidence_progression_and_outcome_diversity(tmp_path):
+    result = gsr.run_live39_repeated_governed_judgment_pilot(artifact_root=str(tmp_path), campaign_id="live39-progression", use_real_provider=False)
+    cycles = result["cycles"]
+
+    assert cycles[0]["packet"]["exact_evidence_ids"] == ("live39-cycle1-contradiction-dependency-failure",)
+    assert cycles[1]["packet"]["exact_evidence_ids"] == ("live39-cycle1-keyword-shortcut-risk",)
+    assert cycles[2]["packet"]["exact_evidence_ids"] == ("live39-cycle2-rejected-candidate-evidence",)
+    assert cycles[1]["packet"]["raw_evidence_records"][0]["parent_cycle"] == cycles[0]["cycle_id"]
+    assert cycles[2]["packet"]["raw_evidence_records"][0]["parent_cycle"] == cycles[1]["cycle_id"]
+    assert len({cycle["evidence_packet_id"] for cycle in cycles}) == 3
+    assert result["diversity"]["accepted_or_narrowed"] is True
+    assert result["diversity"]["nonaccepted_outcome"] is True
+    assert result["diversity"]["retained_candidate"] is True
+    assert result["diversity"]["rejected_candidate"] is True
+    assert result["diversity"]["follow_up_from_result"] is True
+    assert result["diversity"]["critique_material_effect"] is True
+    assert cycles[0]["admissibility"]["outcome"] == "accepted"
+    assert cycles[1]["admissibility"]["outcome"] == "narrowed"
+    assert cycles[2]["admissibility"]["outcome"] == "more_evidence_required"
+
+
+def test_live_39_provider_governance_restart_and_duplicate_prevention(tmp_path):
+    result = gsr.run_live39_repeated_governed_judgment_pilot(artifact_root=str(tmp_path), campaign_id="live39-provider", use_real_provider=False)
+    campaign = result["campaign"]
+    task_ids = campaign["prior_provider_task_ids"]
+
+    assert len(task_ids) == len(set(task_ids))
+    assert result["provider_call_count"] == len(task_ids)
+    assert result["provider_attempt_count"] == len(task_ids)
+    assert all(record["provider_tasks_not_repeated"] for record in result["restart_records"])
+    assert all(record["budget_totals_preserved"] for record in result["restart_records"])
+    assert result["restart_records"][0]["recovered_completed_cycles"] == tuple(cycle["cycle_id"] for cycle in result["cycles"][:2])
+    assert result["cost"] == "unavailable_from_provider_response"
+    assert result["estimated_cost"]["state"] == "estimated_not_provider_reported"
+    assert result["estimated_cost"]["estimated_usd"] >= 0
+    assert Path(result["campaign_artifact"]["path"]).exists()
+    assert Path(result["cycles_artifact"]["path"]).exists()
+    assert Path(result["graph_artifact"]["path"]).exists()
+
+
+def test_live_39_candidate_validation_causality_and_rollback(tmp_path):
+    result = gsr.run_live39_repeated_governed_judgment_pilot(artifact_root=str(tmp_path), campaign_id="live39-validation", use_real_provider=False)
+    retained = result["cycles"][0]["validation"]
+    rejected = result["cycles"][1]["validation"]
+
+    assert retained["disposition"] == "validated_isolated_pending_promotion_review"
+    assert retained["metrics"]["held_out"]["enabled_accuracy"] > retained["metrics"]["held_out"]["disabled_accuracy"]
+    assert retained["rollback"]["before_equals_rolled_back"] is True
+    assert rejected["disposition"] == "rejected"
+    assert rejected["metrics"]["held_out"]["enabled_accuracy"] == 0.0
+    assert rejected["metrics"]["transfer"]["enabled_accuracy"] == 0.0
+    assert rejected["rollback"]["before_equals_rolled_back"] is True
+    assert result["cycles"][2]["implementation_state"] == "not_implemented"
+    assert result["cycles"][2]["candidate_disposition"] == "not_implemented"
+
+
+def test_live_39_contract_denies_duplicate_and_fourth_cycle(tmp_path):
+    campaign = gsr.make_live39_campaign(tmp_path, campaign_id="live39-contract", starting_checkpoint="98269f95")
+    graph = {"nodes": {}, "edges": [], "frontier": ("seed",), "digest": "graph-0"}
+    packet = gsr._live39_cycle_evidence_packet(tmp_path, campaign=campaign, cycle_number=1, graph=graph)
+    diagnosis = gsr._live39_default_fake("diagnosis", packet, 1)
+    proposal = gsr._live39_default_fake("objective_proposal", packet, 1)
+    first = gsr.validate_live39_objective_proposal(proposal, diagnosis, packet)
+    duplicate = gsr.validate_live39_objective_proposal(proposal, diagnosis, packet, prior_signatures=(first["signature"],))
+
+    assert first["outcome"] == "accepted"
+    assert duplicate["outcome"] == "rejected"
+    assert duplicate["objective_preexisted"] is True
+    assert campaign["maximum_cycles"] == 3
+    assert gsr.LIVE39_MAX_CYCLES == 3
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

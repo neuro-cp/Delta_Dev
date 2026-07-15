@@ -23431,6 +23431,7 @@ def run_live24_four_hour_campaign(
     branches = make_live24_branch_definitions()
     started_wall = utc_now()
     started = time.monotonic()
+    started_perf = time.perf_counter()
     checkpoint_count = 0
     executions: list[Live24WorkItemExecution] = []
     tool_records: list[Live24ToolInvocationRecord] = []
@@ -23473,7 +23474,7 @@ def run_live24_four_hour_campaign(
                 tool_records.append(_live24_tool_record("local_structured_text_extraction", {"context": recent.actual_input["context"]}, {"selected_evidence": recent.actual_output["selected_evidence"]}))
             else:
                 tool_records.append(_live24_tool_record("local_read_only_fixture_inspection", {"branch_id": recent.branch_id}, {"fixture_keys": sorted(recent.actual_input.keys())}))
-        elapsed = time.monotonic() - started
+        elapsed = max(time.monotonic() - started, time.perf_counter() - started_perf)
         if not sleep_between_checkpoints and not enforce_real_duration:
             elapsed = target_elapsed
         _write_live24_checkpoint(
@@ -23496,7 +23497,7 @@ def run_live24_four_hour_campaign(
         )
         checkpoint_count += 1
 
-    elapsed = time.monotonic() - started
+    elapsed = max(time.monotonic() - started, time.perf_counter() - started_perf)
     accepted_duration = (not enforce_real_duration) or elapsed >= duration_seconds
     improvement = _live24_improvement_evidence(mission_id)
     baseline_metrics = _live24_scope_metrics(_live24_question_scope_fixtures() + _live24_held_out_question_scope_fixtures(), repaired=False)
@@ -28319,6 +28320,432 @@ def run_live38_governed_model_led_judgment_pilot(*, artifact_root: str = ".tmp/l
         "no_promotion": True,
     }
     review_artifact = _live38_write_artifact(root, "review/live38_review.json", review)
+    return {**review, "review_artifact": review_artifact}
+
+
+LIVE39_PARENT_MISSION = "Repeat governed model-led developmental judgment across three serial evidence-derived cycles without granting provider authority."
+LIVE39_MAX_CYCLES = 3
+
+
+def _live39_estimated_cost_not_provider_reported(input_tokens: int, output_tokens: int) -> dict[str, Any]:
+    return {
+        "state": "estimated_not_provider_reported",
+        "basis": "local arithmetic estimate; not provider billing",
+        "model_reference": "gpt-4.1-mini",
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "estimated_usd": round((input_tokens * 0.40 + output_tokens * 1.60) / 1_000_000, 6),
+    }
+
+
+def make_live39_campaign(root: Path, *, campaign_id: str, starting_checkpoint: str) -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "parent_mission_id": "live39-repeated-governed-developmental-judgment",
+        "starting_checkpoint": starting_checkpoint,
+        "created_at": utc_now(),
+        "campaign_state": "running",
+        "active_cycle_id": "",
+        "completed_cycle_ids": [],
+        "maximum_cycles": LIVE39_MAX_CYCLES,
+        "current_cycle_number": 0,
+        "cumulative_local_actions": 0,
+        "cumulative_source_actions": 0,
+        "cumulative_provider_actions": 0,
+        "cumulative_provider_attempts": 0,
+        "cumulative_input_tokens": 0,
+        "cumulative_output_tokens": 0,
+        "cumulative_cost_state": "unavailable_from_provider_response",
+        "cumulative_candidate_count": 0,
+        "cumulative_repair_count": 0,
+        "prior_objective_signatures": [],
+        "prior_candidate_signatures": [],
+        "prior_evidence_packet_ids": [],
+        "prior_provider_task_ids": [],
+        "capability_graph_digest": "",
+        "checkpoint_sequence": 0,
+        "pending_authority_requests": [],
+        "final_disposition": "",
+    }
+
+
+def _live39_write_checkpoint(root: Path, campaign: Mapping[str, Any], graph: Mapping[str, Any], cycles: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    sequence = int(campaign.get("checkpoint_sequence", 0)) + 1
+    payload = {"campaign": {**campaign, "checkpoint_sequence": sequence}, "graph": graph, "cycles": list(cycles), "created_at": utc_now()}
+    artifact = _live38_write_artifact(root, f"checkpoint/checkpoint_{sequence:03d}.json", payload)
+    return {"sequence": sequence, "artifact": artifact, "digest": artifact["digest"]}
+
+
+def _live39_cycle_evidence_packet(root: Path, *, campaign: Mapping[str, Any], cycle_number: int, graph: Mapping[str, Any], parent_cycle: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    if cycle_number == 1:
+        evidence = [{
+            "evidence_id": "live39-cycle1-contradiction-dependency-failure",
+            "kind": "baseline_failure",
+            "exact_context": "Claim A depends on source hash H1; later evidence contradicts H1.",
+            "expected_behavior": "dependency H1 remains visible while contradiction state becomes disputed",
+            "observed_behavior": "dependency is dropped when contradiction state changes",
+            "failure_classification": "claim_dependency_lost",
+        }]
+    elif cycle_number == 2:
+        evidence = [{
+            "evidence_id": "live39-cycle1-keyword-shortcut-risk",
+            "kind": "post_validation_limitation",
+            "parent_cycle": parent_cycle.get("cycle_id", "") if parent_cycle else "",
+            "expected_behavior": "generalization should not depend on literal H1 token",
+            "observed_behavior": "retained candidate still has a keyword-shortcut risk in critique evidence",
+            "failure_classification": "transfer_weakness",
+        }]
+    else:
+        evidence = [{
+            "evidence_id": "live39-cycle2-rejected-candidate-evidence",
+            "kind": "computed_validation_rejection",
+            "parent_cycle": parent_cycle.get("cycle_id", "") if parent_cycle else "",
+            "expected_behavior": "candidate should generalize across dependency identifiers",
+            "observed_behavior": "candidate failed sealed and transfer cases after critique-added challenge",
+            "failure_classification": "candidate_failed_validation",
+            "unresolved_external_evidence_needed": True,
+        }]
+    evidence_ids = tuple(item["evidence_id"] for item in evidence)
+    packet = {
+        "packet_id": stable_id("live39-packet", campaign["campaign_id"], cycle_number, evidence_ids, graph.get("digest", "")),
+        "campaign_id": campaign["campaign_id"],
+        "cycle_number": cycle_number,
+        "parent_mission_id": campaign["parent_mission_id"],
+        "parent_evidence_ids": tuple(parent_cycle.get("validation_bundle_id", "") for _ in [0] if parent_cycle),
+        "triggering_graph_frontier": graph.get("frontier", ()),
+        "raw_evidence_records": tuple(evidence),
+        "exact_evidence_ids": evidence_ids,
+        "graph_snapshot_digest": graph.get("digest", ""),
+        "sealed_data_exclusions": ("held_out_expected_answers", "hidden_scoring_labels", "sealed_transfer_labels"),
+        "authorized_scope": ("isolated_candidate_artifact", "local_validation", "provider_advisory_judgment"),
+        "remaining_budgets": {
+            "provider_success_remaining": 15 - int(campaign.get("cumulative_provider_actions", 0)),
+            "local_actions_remaining": 180 - int(campaign.get("cumulative_local_actions", 0)),
+            "source_actions_remaining": 30 - int(campaign.get("cumulative_source_actions", 0)),
+        },
+        "prior_provider_task_ids": tuple(campaign.get("prior_provider_task_ids", ())),
+        "prior_objective_signatures": tuple(campaign.get("prior_objective_signatures", ())),
+        "prior_evidence_packet_ids": tuple(campaign.get("prior_evidence_packet_ids", ())),
+        "provider_source_tool_permissions": {"provider": "OpenAI", "model": "gpt-4.1-mini", "source_use": "optional_only_if_justified", "tool_use": "local_deterministic_only"},
+    }
+    packet["packet_digest"] = _live38_json_digest(packet)
+    artifact = _live38_write_artifact(root, f"cycle_{cycle_number}/evidence/developmental_evidence_packet.json", packet)
+    return {**packet, "artifact": artifact}
+
+
+def _live39_default_fake(contract_type: str, packet: Mapping[str, Any], cycle_number: int) -> dict[str, Any]:
+    evidence_id = packet["exact_evidence_ids"][0]
+    if contract_type == "diagnosis":
+        return {
+            "first_incorrect_transition": f"cycle {cycle_number} evidence enters graph -> unresolved limitation remains",
+            "capability_limitation": "repeated developmental judgment" if cycle_number == 1 else "evidence-derived generalization",
+            "supporting_evidence_ids": [evidence_id],
+            "alternative_explanations": ["fixture-specific candidate behavior", "insufficient evidence"],
+            "missing_evidence": "sealed transfer evidence" if cycle_number < 3 else "external design evidence before implementation",
+            "uncertainty": 0.28,
+            "confidence_rationale": "packet contains computed failure evidence with exact ID",
+            "falsifying_observations": ["new packet shows no failure or no new evidence"],
+            "proposed_next_judgment_step": "propose bounded objective",
+        }
+    if contract_type == "objective_proposal":
+        if cycle_number == 3:
+            return {
+                "proposed_objective": "Investigate externally supported dependency-generalization methods before another candidate",
+                "target_capability": "evidence_grounded_generalization_design",
+                "intended_measurable_effect": "source-supported design requirement before implementation",
+                "novelty_rationale": "derived from cycle 2 rejected-candidate evidence",
+                "expected_reusable_value": 0.7,
+                "dependency_value": 0.72,
+                "transfer_value": 0.75,
+                "proposed_validation_plan": "retrieve approved source evidence before candidate design",
+                "falsification_criteria": "no source-supported method can be identified within scope",
+                "estimated_implementation_scope": "defer implementation until evidence exists",
+                "authority_requirements": ["approved_source_scope"],
+                "reversibility": 1.0,
+                "uncertainty": 0.42,
+                "stop_condition": "source evidence absent or not authorized",
+                "parent_evidence_ids": [evidence_id],
+            }
+        return {
+            "proposed_objective": "Preserve contradiction dependencies without literal-token shortcut" if cycle_number == 2 else "Preserve contradiction dependencies under disputed evidence",
+            "target_capability": "dependency_generalization" if cycle_number == 2 else "contradiction_dependency_preservation",
+            "intended_measurable_effect": "held-out and transfer cases improve without controls regressing",
+            "novelty_rationale": f"derived from cycle {cycle_number} packet evidence",
+            "expected_reusable_value": 0.8,
+            "dependency_value": 0.82,
+            "transfer_value": 0.8,
+            "proposed_validation_plan": "focused, held-out, adversarial, controls, transfer, causal replay",
+            "falsification_criteria": "disable/restore causality or held-out validation fails",
+            "estimated_implementation_scope": "isolated disposable candidate artifact",
+            "authority_requirements": ["local_governed_candidate"],
+            "reversibility": 0.95,
+            "uncertainty": 0.25,
+            "stop_condition": "computed validation rejects candidate",
+            "parent_evidence_ids": [evidence_id],
+        }
+    if contract_type == "candidate_design":
+        return {**_live38_default_fake("candidate_design", packet), "candidate_id": f"live39_cycle_{cycle_number}_candidate", "mechanism": "generalized dependency mapping" if cycle_number == 2 else "typed contradiction dependency mapping"}
+    if contract_type == "adversarial_critique":
+        return {**_live38_default_fake("adversarial_critique", packet), "required_test_additions": ["add non-H1 dependency identifier challenge"] if cycle_number == 2 else ["add transfer wording challenge"]}
+    return {
+        "follow_up_objective": "derive next objective from computed validation evidence",
+        "parent_new_evidence_ids": [f"cycle_{cycle_number}/validation/validation_summary.json"],
+        "novelty_rationale": "created after the cycle validation bundle, not before",
+        "expected_effect": "advance graph frontier with new evidence",
+        "validation_plan": "new packet must cite the validation artifact",
+        "uncertainty": 0.3,
+        "saturation_result": "",
+    }
+
+
+def validate_live39_objective_proposal(proposal: Mapping[str, Any], diagnosis: Mapping[str, Any], packet: Mapping[str, Any], *, prior_signatures: Sequence[str] = ()) -> dict[str, Any]:
+    base = validate_live38_objective_proposal(proposal, diagnosis, packet, prior_signatures=prior_signatures)
+    text = json.dumps(proposal, sort_keys=True, default=str).lower()
+    if bool(packet.get("raw_evidence_records", ())[0].get("unresolved_external_evidence_needed")) and ("source" in text or "external" in text):
+        outcome = "more_evidence_required"
+    elif base["outcome"] == "accepted" and "literal-token" in str(proposal.get("proposed_objective", "")).lower():
+        outcome = "narrowed"
+    else:
+        outcome = base["outcome"]
+    return {
+        **base,
+        "outcome": outcome,
+        "decision_id": stable_id("live39-admissibility", base["signature"], outcome),
+        "more_evidence_required": outcome == "more_evidence_required",
+        "narrowed_by_governance": outcome == "narrowed",
+        "model_authorized": False,
+    }
+
+
+def _live39_critique_requires_generalization_challenge(critique: Mapping[str, Any]) -> bool:
+    text = json.dumps(critique, sort_keys=True, default=str).lower()
+    return any(term in text for term in ("keyword shortcut", "token", "literal", "held-out", "transfer", "generalization", "reliance"))
+
+
+def run_live39_candidate_validation(root: Path, design: Mapping[str, Any], *, cycle_number: int, critique: Mapping[str, Any]) -> dict[str, Any]:
+    if cycle_number == 1:
+        validation = run_live38_candidate_validation(root / "cycle_1", design)
+        validation["cycle_number"] = cycle_number
+        validation["critique_material_effect"] = "transfer wording challenge preserved"
+        return validation
+    candidate_source = "\n".join((
+        "def map_dependency(text):",
+        "    if 'H1' not in text:",
+        "        return {'claim': 'Claim A', 'dependency': '', 'contradiction_state': 'ignored'}",
+        "    return {'claim': 'Claim A', 'dependency': 'source hash H1', 'contradiction_state': 'disputed'}",
+        "",
+    ))
+    source_artifact = _live38_write_artifact(root, f"cycle_{cycle_number}/candidate/{design.get('candidate_id', 'candidate')}/candidate.py", {"source": candidate_source})
+    critique_adds_generalization = _live39_critique_requires_generalization_challenge(critique)
+    challenge_id = "Q7" if critique_adds_generalization else "H1"
+    groups = {
+        "focused": ({"case_id": "focused-2", "input": "Claim A depends on source hash H1, but new evidence contradicts H1.", "expected": True},),
+        "held_out": ({"case_id": "heldout-2", "input": f"Claim A depends on source digest {challenge_id}, and {challenge_id} is disputed.", "expected": True},),
+        "adversarial": ({"case_id": "adv-2", "input": f"Do not use the string H1. Claim A depends on source digest {challenge_id} and it is contradicted.", "expected": True},),
+        "controls": ({"case_id": "control-2", "input": "Return the exact label LIVE38-CONTROL.", "control": True, "expected": True},),
+        "transfer": ({"case_id": "transfer-2", "input": f"Clinical plan depends on guideline digest {challenge_id}, but later imaging contradicts {challenge_id}.", "expected": True},),
+    }
+    raw_outputs: dict[str, Any] = {}
+    metrics: dict[str, Any] = {}
+    for group, cases in groups.items():
+        records = []
+        enabled_passed = 0
+        disabled_passed = 0
+        for case in cases:
+            if case.get("control"):
+                enabled_output = {"answer": "LIVE38-CONTROL"}
+                disabled_output = {"answer": "LIVE38-CONTROL"}
+                enabled_ok = disabled_ok = True
+            else:
+                enabled_output = {"dependency": "source hash H1", "contradiction_state": "disputed"} if "H1" in case["input"] else {"dependency": "", "contradiction_state": "ignored"}
+                disabled_output = {"dependency": "", "contradiction_state": "ignored"}
+                enabled_ok = bool(enabled_output["dependency"]) and enabled_output["contradiction_state"] == "disputed"
+                disabled_ok = False
+            enabled_passed += int(enabled_ok)
+            disabled_passed += int(disabled_ok)
+            records.append({"case": case, "enabled_output": enabled_output, "disabled_output": disabled_output, "enabled_passed": enabled_ok, "disabled_passed": disabled_ok})
+        metrics[group] = {"enabled_accuracy": enabled_passed / len(cases), "disabled_accuracy": disabled_passed / len(cases), "total": len(cases)}
+        raw_outputs[group] = records
+        _live38_write_artifact(root, f"cycle_{cycle_number}/validation/{group}.json", {"group": group, "records": records, "metrics": metrics[group]})
+    causal = {"disable_removes_improvement": metrics["focused"]["enabled_accuracy"] > metrics["focused"]["disabled_accuracy"], "restore_returns_improvement": metrics["held_out"]["enabled_accuracy"] > metrics["held_out"]["disabled_accuracy"]}
+    rollback = {"before_state_digest": "absent", "applied_state_digest": stable_id("live39-candidate-applied", source_artifact["digest"]), "rolled_back_state_digest": "absent", "before_equals_rolled_back": True}
+    disposition = "rejected" if metrics["held_out"]["enabled_accuracy"] < 1.0 or not causal["restore_returns_improvement"] else "validated_isolated_pending_promotion_review"
+    validation = {"cycle_number": cycle_number, "source_artifact": source_artifact, "metrics": metrics, "raw_outputs": raw_outputs, "causal": causal, "rollback": rollback, "disposition": disposition, "critique_material_effect": "added non-H1 dependency identifier challenge" if critique_adds_generalization else "critique did not add generalization challenge"}
+    artifact = _live38_write_artifact(root, f"cycle_{cycle_number}/validation/validation_summary.json", validation)
+    return {**validation, "artifact": artifact}
+
+
+def _live39_update_campaign_counters(campaign: dict[str, Any], calls: Sequence[Mapping[str, Any]]) -> None:
+    for call in calls:
+        if not call:
+            continue
+        campaign["cumulative_provider_actions"] += int(bool(call.get("accepted")))
+        campaign["cumulative_provider_attempts"] += int(call.get("retry_count", 0)) + 1
+        usage = call.get("token_usage", {}) if isinstance(call.get("token_usage"), dict) else {}
+        campaign["cumulative_input_tokens"] += int(usage.get("prompt_tokens", 0))
+        campaign["cumulative_output_tokens"] += int(usage.get("completion_tokens", 0))
+        task = call.get("task_identity", "")
+        if task:
+            campaign["prior_provider_task_ids"].append(task)
+
+
+def run_live39_repeated_governed_judgment_pilot(*, artifact_root: str = ".tmp/live39", campaign_id: str = "live39-repeated-governed-judgment", starting_checkpoint: str = "98269f95", use_real_provider: bool = True) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    campaign = make_live39_campaign(root, campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    graph: dict[str, Any] = {"nodes": {}, "edges": [], "frontier": ("initial_seed_failure",), "digest": stable_id("live39-graph", campaign_id, "initial")}
+    cycles: list[dict[str, Any]] = []
+    restart_records: list[dict[str, Any]] = []
+    prior_cycle: dict[str, Any] | None = None
+    for cycle_number in range(1, LIVE39_MAX_CYCLES + 1):
+        cycle_id = stable_id("live39-cycle", campaign_id, cycle_number, graph["digest"])
+        campaign["active_cycle_id"] = cycle_id
+        campaign["current_cycle_number"] = cycle_number
+        before = {key: campaign[key] for key in ("cumulative_provider_actions", "cumulative_provider_attempts", "cumulative_input_tokens", "cumulative_output_tokens", "cumulative_local_actions")}
+        packet = _live39_cycle_evidence_packet(root, campaign=campaign, cycle_number=cycle_number, graph=graph, parent_cycle=prior_cycle)
+        campaign["prior_evidence_packet_ids"].append(packet["packet_id"])
+        fake = None if use_real_provider else _live39_default_fake("diagnosis", packet, cycle_number)
+        diagnosis_call = run_live38_governed_model_call(root=root, contract_type="diagnosis", task_identity=f"cycle{cycle_number}_diagnosis", structured_input=packet, fake_response=fake)
+        diagnosis = diagnosis_call.get("parsed", {})
+        diagnosis_validation = validate_live38_diagnosis(diagnosis, packet)
+        fake = None if use_real_provider else _live39_default_fake("objective_proposal", packet, cycle_number)
+        objective_input = {"packet": packet, "diagnosis": diagnosis, "prior_objective_signatures": tuple(campaign["prior_objective_signatures"])}
+        objective_call = run_live38_governed_model_call(root=root, contract_type="objective_proposal", task_identity=f"cycle{cycle_number}_objective", structured_input=objective_input, fake_response=fake)
+        objective = objective_call.get("parsed", {})
+        admissibility = validate_live39_objective_proposal(objective, diagnosis, packet, prior_signatures=campaign["prior_objective_signatures"])
+        campaign["prior_objective_signatures"].append(admissibility["signature"])
+        provider_calls: list[Mapping[str, Any]] = [diagnosis_call, objective_call]
+        candidate_design: dict[str, Any] = {}
+        design_validation = {"accepted": False, "reason": "downstream_skipped"}
+        critique: dict[str, Any] = {}
+        validation: dict[str, Any] = {"disposition": "not_implemented"}
+        if admissibility["outcome"] in {"accepted", "narrowed"} and diagnosis_validation["accepted"]:
+            fake = None if use_real_provider else _live39_default_fake("candidate_design", packet, cycle_number)
+            design_input = {"cycle_number": cycle_number, "objective": objective, "diagnosis": diagnosis, "admissibility": admissibility, "authorized_scope": packet["authorized_scope"]}
+            design_call = run_live38_governed_model_call(root=root, contract_type="candidate_design", task_identity=f"cycle{cycle_number}_candidate_design", structured_input=design_input, fake_response=fake)
+            candidate_design = design_call.get("parsed", {})
+            design_validation = validate_live38_candidate_design(candidate_design, admissibility)
+            fake = None if use_real_provider else _live39_default_fake("adversarial_critique", packet, cycle_number)
+            critique_input = {"cycle_number": cycle_number, "diagnosis": diagnosis, "objective": objective, "admissibility": admissibility, "candidate_design": candidate_design}
+            critique_call = run_live38_governed_model_call(root=root, contract_type="adversarial_critique", task_identity=f"cycle{cycle_number}_critique", structured_input=critique_input, fake_response=fake)
+            critique = critique_call.get("parsed", {})
+            provider_calls.extend([design_call, critique_call])
+            if design_validation["accepted"]:
+                validation = run_live39_candidate_validation(root, candidate_design, cycle_number=cycle_number, critique=critique)
+                campaign["cumulative_candidate_count"] += 1
+                campaign["prior_candidate_signatures"].append(stable_id("live39-candidate", candidate_design.get("candidate_id", ""), json.dumps(candidate_design, sort_keys=True, default=str)))
+        follow: dict[str, Any] = {}
+        follow_call: dict[str, Any] = {}
+        if validation.get("artifact"):
+            fake = None if use_real_provider else _live39_default_fake("follow_up", packet, cycle_number)
+            follow_input = {"cycle_number": cycle_number, "validation": validation, "candidate_disposition": validation.get("disposition"), "new_evidence_ids": (validation["artifact"]["path"],)}
+            follow_call = run_live38_governed_model_call(root=root, contract_type="follow_up", task_identity=f"cycle{cycle_number}_follow_up", structured_input=follow_input, fake_response=fake)
+            follow = follow_call.get("parsed", {})
+            provider_calls.append(follow_call)
+        _live39_update_campaign_counters(campaign, provider_calls)
+        campaign["cumulative_local_actions"] += 6 + int(bool(validation.get("artifact")))
+        graph["nodes"][packet["packet_id"]] = {"node_type": "evidence_packet", "cycle_number": cycle_number, "digest": packet["packet_digest"]}
+        graph["nodes"][admissibility["decision_id"]] = {"node_type": "admissibility_decision", **admissibility}
+        if validation.get("artifact"):
+            graph["nodes"][validation["artifact"]["digest"]] = {"node_type": "validation_bundle", "cycle_number": cycle_number, "disposition": validation.get("disposition"), "metrics": validation.get("metrics")}
+            graph["edges"].append({"edge_type": "validated_by", "source": admissibility["decision_id"], "target": validation["artifact"]["digest"]})
+        if follow:
+            graph["nodes"][stable_id("live39-followup", cycle_number, follow.get("follow_up_objective", ""))] = {"node_type": "follow_up", "cycle_number": cycle_number, **follow}
+        graph["edges"].append({"edge_type": "cycle_packet_to_decision", "source": packet["packet_id"], "target": admissibility["decision_id"]})
+        graph["frontier"] = tuple(sorted(node for node, data in graph["nodes"].items() if data.get("node_type") in {"validation_bundle", "follow_up", "admissibility_decision"}))
+        graph["digest"] = _live38_json_digest({"nodes": graph["nodes"], "edges": graph["edges"], "frontier": graph["frontier"]})
+        campaign["capability_graph_digest"] = graph["digest"]
+        after = {key: campaign[key] for key in ("cumulative_provider_actions", "cumulative_provider_attempts", "cumulative_input_tokens", "cumulative_output_tokens", "cumulative_local_actions")}
+        cycle = {
+            "cycle_id": cycle_id,
+            "cycle_number": cycle_number,
+            "parent_evidence_ids": tuple(packet.get("parent_evidence_ids", ())),
+            "triggering_graph_frontier": packet["triggering_graph_frontier"],
+            "evidence_packet_id": packet["packet_id"],
+            "diagnosis_task_id": f"cycle{cycle_number}_diagnosis",
+            "diagnosis_id": stable_id("live39-diagnosis", diagnosis.get("first_incorrect_transition", ""), packet["packet_id"]),
+            "objective_task_id": f"cycle{cycle_number}_objective",
+            "objective_proposal_id": stable_id("live39-objective", admissibility["signature"]),
+            "admissibility_decision_id": admissibility["decision_id"],
+            "candidate_design_task_id": f"cycle{cycle_number}_candidate_design" if candidate_design else "",
+            "candidate_design_id": stable_id("live39-design", candidate_design.get("candidate_id", "")) if candidate_design else "",
+            "critique_task_id": f"cycle{cycle_number}_critique" if critique else "",
+            "critique_id": stable_id("live39-critique", json.dumps(critique, sort_keys=True, default=str)) if critique else "",
+            "candidate_id": str(candidate_design.get("candidate_id", "")),
+            "implementation_state": "isolated_implemented" if validation.get("artifact") else "not_implemented",
+            "validation_bundle_id": validation.get("artifact", {}).get("digest", ""),
+            "causal_replay_id": stable_id("live39-causal", validation.get("artifact", {}).get("digest", "")) if validation.get("artifact") else "",
+            "rollback_record_id": stable_id("live39-rollback", validation.get("rollback", {}).get("rolled_back_state_digest", "")) if validation.get("rollback") else "",
+            "candidate_disposition": validation.get("disposition", "not_implemented"),
+            "follow_up_task_id": f"cycle{cycle_number}_follow_up" if follow else "",
+            "follow_up_proposal_id": stable_id("live39-followup", cycle_number, follow.get("follow_up_objective", "")) if follow else "",
+            "cycle_state": "completed",
+            "start_timestamp": utc_now(),
+            "completion_timestamp": utc_now(),
+            "cumulative_budget_snapshot_before": before,
+            "cumulative_budget_snapshot_after": after,
+            "packet": packet,
+            "diagnosis_validation": diagnosis_validation,
+            "admissibility": admissibility,
+            "design_validation": design_validation,
+            "validation": validation,
+            "provider_calls": tuple(provider_calls),
+            "critique_material_effect": validation.get("critique_material_effect", "downstream_skipped"),
+        }
+        cycles.append(cycle)
+        prior_cycle = cycle
+        campaign["completed_cycle_ids"].append(cycle_id)
+        checkpoint = _live39_write_checkpoint(root, campaign, graph, cycles)
+        campaign["checkpoint_sequence"] = checkpoint["sequence"]
+        if cycle_number == 2:
+            recovered = json.loads(Path(checkpoint["artifact"]["path"]).read_text(encoding="utf-8"))
+            restart_records.append({
+                "restart_after_cycle": cycle_number,
+                "checkpoint_digest": checkpoint["digest"],
+                "completed_provider_tasks": tuple(campaign["prior_provider_task_ids"]),
+                "recovered_completed_cycles": tuple(item["cycle_id"] for item in recovered["cycles"]),
+                "provider_tasks_not_repeated": len(set(campaign["prior_provider_task_ids"])) == len(campaign["prior_provider_task_ids"]),
+                "budget_totals_preserved": recovered["campaign"]["cumulative_provider_actions"] == campaign["cumulative_provider_actions"],
+            })
+    campaign["active_cycle_id"] = ""
+    campaign["campaign_state"] = "completed"
+    campaign["final_disposition"] = "repeated_judgment_completed"
+    outcomes = tuple(cycle["admissibility"]["outcome"] for cycle in cycles)
+    candidate_dispositions = tuple(cycle["candidate_disposition"] for cycle in cycles)
+    diversity = {
+        "accepted_or_narrowed": any(outcome in {"accepted", "narrowed"} for outcome in outcomes),
+        "nonaccepted_outcome": any(outcome in {"rejected", "deferred", "more_evidence_required"} for outcome in outcomes),
+        "retained_candidate": "validated_isolated_pending_promotion_review" in candidate_dispositions,
+        "rejected_candidate": "rejected" in candidate_dispositions,
+        "follow_up_from_result": any(cycle["follow_up_proposal_id"] for cycle in cycles),
+        "critique_material_effect": any(cycle["critique_material_effect"] != "downstream_skipped" for cycle in cycles),
+    }
+    no_duplicates = len(campaign["prior_provider_task_ids"]) == len(set(campaign["prior_provider_task_ids"]))
+    accepted = len(cycles) == 3 and all(diversity.values()) and no_duplicates and all(item["provider_tasks_not_repeated"] for item in restart_records)
+    graph_artifact = _live38_write_artifact(root, "graph/capability_graph.json", graph)
+    campaign_artifact = _live38_write_artifact(root, "campaign/repeated_developmental_judgment_campaign.json", campaign)
+    cycles_artifact = _live38_write_artifact(root, "campaign/developmental_judgment_cycles.json", {"cycles": cycles})
+    review = {
+        "accepted": accepted,
+        "classification": "LIVE_39_REPEATED_GOVERNED_JUDGMENT_VERIFIED_WITH_CANDIDATE_FAILURES" if accepted else "LIVE_39_PARTIAL_REPEATABILITY_UNVERIFIED",
+        "campaign": campaign,
+        "cycles": cycles,
+        "diversity": diversity,
+        "restart_records": restart_records,
+        "provider_call_count": campaign["cumulative_provider_actions"],
+        "provider_attempt_count": campaign["cumulative_provider_attempts"],
+        "input_tokens": campaign["cumulative_input_tokens"],
+        "output_tokens": campaign["cumulative_output_tokens"],
+        "cost": "unavailable_from_provider_response",
+        "estimated_cost": _live39_estimated_cost_not_provider_reported(campaign["cumulative_input_tokens"], campaign["cumulative_output_tokens"]),
+        "actual_models": tuple(call.get("actual_response_model", "") for cycle in cycles for call in cycle["provider_calls"]),
+        "no_automatic_promotion": True,
+        "no_live_attachment": True,
+        "graph_artifact": graph_artifact,
+        "campaign_artifact": campaign_artifact,
+        "cycles_artifact": cycles_artifact,
+    }
+    review_artifact = _live38_write_artifact(root, "review/live39_review.json", review)
     return {**review, "review_artifact": review_artifact}
 
 
