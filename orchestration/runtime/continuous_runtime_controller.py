@@ -22,13 +22,25 @@ from typing import Any, Iterable
 from orchestration.runtime.delta_1_0_common import safety_metadata, stable_id, utc_now, write_json, write_markdown
 from orchestration.runtime.continuous_mission_foundation import (
     ApiAuthorityState,
+    BroadMissionContract,
     CapabilityKnowledgeRecord,
+    MainGoalContract,
     OBSERVATION_STATE,
     WeaknessCandidate,
+    assess_main_goal_completion,
+    assess_developmental_capability_state,
     api_unavailable_update,
+    capability_inventory_from_knowledge,
+    compile_developmental_insight_requests,
+    compile_developmental_operator_explanation,
     compile_active_subgoal,
     compile_broad_mission_contract,
+    compile_initial_main_goal,
+    compile_long_horizon_objective,
     consumed_signatures_after_reassessment,
+    derive_developmental_capability_plan,
+    derive_next_main_goal,
+    derive_subgoal_evidence_for_main_goal,
     evidence_to_findings,
     rank_weakness_frontier,
 )
@@ -282,9 +294,15 @@ class ContinuousRuntimeController:
     continuous_mission_contract: dict[str, Any] = field(default_factory=dict)
     continuous_mission_findings: tuple[dict[str, Any], ...] = ()
     continuous_mission_frontier: tuple[dict[str, Any], ...] = ()
+    continuous_main_goal: dict[str, Any] = field(default_factory=dict)
+    continuous_completed_main_goals: tuple[dict[str, Any], ...] = ()
     continuous_active_subgoal: dict[str, Any] = field(default_factory=dict)
     continuous_consumed_weakness_signatures: tuple[str, ...] = ()
     continuous_knowledge_ledger: tuple[dict[str, Any], ...] = ()
+    continuous_capability_inventory: tuple[dict[str, Any], ...] = ()
+    continuous_developmental_self_assessment: dict[str, Any] = field(default_factory=dict)
+    continuous_developmental_insight_requests: tuple[dict[str, Any], ...] = ()
+    continuous_operator_explanation: dict[str, Any] = field(default_factory=dict)
     continuous_api_authority: dict[str, Any] = field(default_factory=dict)
     pending_application_decision_id: str = ""
     cancellation_requested: bool = False
@@ -557,11 +575,17 @@ def controller_snapshot(controller: ContinuousRuntimeController) -> dict[str, An
         "continuous_mission": {
             "state": controller.continuous_mission_state,
             "contract": controller.continuous_mission_contract,
+            "main_goal": controller.continuous_main_goal or None,
+            "completed_main_goal_count": len(controller.continuous_completed_main_goals),
             "frontier_count": len(controller.continuous_mission_frontier),
             "active_subgoal": controller.continuous_active_subgoal or None,
             "pending_application_decision_id": controller.pending_application_decision_id,
             "api_authority": controller.continuous_api_authority,
             "knowledge_record_count": len(controller.continuous_knowledge_ledger),
+            "capability_inventory": controller.continuous_capability_inventory,
+            "developmental_self_assessment": controller.continuous_developmental_self_assessment or None,
+            "developmental_insight_requests": controller.continuous_developmental_insight_requests,
+            "operator_explanation": controller.continuous_operator_explanation or None,
         },
         "safety": safety_metadata(),
     }
@@ -574,6 +598,7 @@ def attach_continuous_mission(
     api_authority: ApiAuthorityState | None = None,
 ) -> ContinuousRuntimeController:
     contract = compile_broad_mission_contract(operator_goal, api_authority=api_authority)
+    main_goal = compile_initial_main_goal(contract)
     event = make_continuous_event(
         "OBJECTIVE_CREATED",
         source="continuous_mission",
@@ -591,15 +616,17 @@ def attach_continuous_mission(
         created_at=contract.accepted_at,
         updated_at=utc_now(),
     )
-    return replace(
+    updated = replace(
         enqueue_continuous_event(controller, event),
         continuous_mission_state="mission_accepted",
         continuous_mission_contract=contract.as_dict(),
+        continuous_main_goal=main_goal.as_dict(),
         continuous_api_authority=contract.api_authority.__dict__,
         active_objective=objective,
         objectives=_merge_objectives(controller.objectives, (objective,)),
         journal=controller.journal + (_journal_entry("continuous_mission", "broad_goal_compiled_to_persistent_mission", (contract.mission_id,)),),
     )
+    return refresh_developmental_self_direction(updated)
 
 
 def assess_continuous_mission_runtime(
@@ -640,13 +667,7 @@ def select_continuous_mission_subgoal(controller: ContinuousRuntimeController) -
     frontier = [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier]
     subgoal = compile_active_subgoal(contract, frontier)
     if subgoal is None:
-        return replace(
-            controller,
-            continuous_mission_state="observing_for_new_weaknesses",
-            continuous_active_subgoal={},
-            active_work_item=OBSERVATION_STATE,
-            journal=controller.journal + (_journal_entry("continuous_mission", "empty_current_frontier_enters_observation_not_completion", ()),),
-        )
+        return assess_and_advance_continuous_main_goal(controller)
     objective = ContinuousObjective(
         objective_id=subgoal.subgoal_id,
         title=subgoal.measurable_objective[:240],
@@ -730,7 +751,7 @@ def consume_continuous_capability_reassessment(
         controller.continuous_active_subgoal or None,
         controller.continuous_consumed_weakness_signatures,
     )
-    return replace(
+    updated = replace(
         controller,
         continuous_mission_state="capability_reassessment",
         continuous_knowledge_ledger=controller.continuous_knowledge_ledger + (record.as_dict(),),
@@ -740,10 +761,136 @@ def consume_continuous_capability_reassessment(
         journal=controller.journal
         + (_journal_entry("continuous_mission", "capability_reassessment_consumed_once_and_knowledge_recorded", (record.capability_id,)),),
     )
+    return refresh_developmental_self_direction(updated)
 
 
 def continue_continuous_mission_after_reassessment(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
     return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(replace(controller, continuous_mission_state="selecting_next_weakness")))
+
+
+def refresh_developmental_self_direction(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    if not controller.continuous_mission_contract:
+        return controller
+    contract = _broad_contract_from_state(controller)
+    objective = compile_long_horizon_objective(contract.original_operator_goal)
+    knowledge = tuple(CapabilityKnowledgeRecord(**item) for item in controller.continuous_knowledge_ledger)
+    inventory = capability_inventory_from_knowledge(knowledge)
+    assessment = assess_developmental_capability_state(objective, inventory)
+    insight_requests = compile_developmental_insight_requests(assessment)
+    plan = derive_developmental_capability_plan(objective, inventory)
+    explanation = compile_developmental_operator_explanation(objective, assessment, plan)
+    return replace(
+        controller,
+        continuous_capability_inventory=tuple(item.as_dict() for item in inventory),
+        continuous_developmental_self_assessment=assessment.as_dict(),
+        continuous_developmental_insight_requests=tuple(item.as_dict() for item in insight_requests),
+        continuous_operator_explanation=explanation.as_dict(),
+        journal=controller.journal
+        + (
+            _journal_entry(
+                "continuous_mission",
+                "developmental_self_direction_refreshed_from_authoritative_state",
+                (assessment.assessment_id, plan.plan_id, explanation.explanation_id),
+            ),
+        ),
+    )
+
+
+def _broad_contract_from_state(controller: ContinuousRuntimeController) -> BroadMissionContract:
+    state = controller.continuous_mission_contract
+    return BroadMissionContract(
+        mission_id=str(state["mission_id"]),
+        original_operator_goal=str(state["original_operator_goal"]),
+        normalized_goal=str(state["normalized_goal"]),
+        accepted_at=str(state["accepted_at"]),
+        local_authority=state["local_authority"],
+        api_authority=state["api_authority"],
+        tracked_source_application_operator_controlled=bool(state.get("tracked_source_application_operator_controlled", True)),
+        commit_push_operator_controlled=bool(state.get("commit_push_operator_controlled", True)),
+        protected_paths=tuple(state.get("protected_paths") or ()),
+        completion_policy=str(state.get("completion_policy") or "continuous_runtime_currently_stable_is_observation_not_completion"),
+    )
+
+
+def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    if not controller.continuous_mission_contract or not controller.continuous_main_goal:
+        return replace(
+            controller,
+            continuous_mission_state="observing_for_new_weaknesses",
+            continuous_active_subgoal={},
+            active_work_item=OBSERVATION_STATE,
+            journal=controller.journal + (_journal_entry("continuous_mission", "observation_without_main_goal_contract", ()),),
+        )
+    main_goal = MainGoalContract(**controller.continuous_main_goal)
+    knowledge = tuple(CapabilityKnowledgeRecord(**item) for item in controller.continuous_knowledge_ledger)
+    eligible_frontier_exists = any(item.get("status") == "eligible" for item in controller.continuous_mission_frontier)
+    assessed = assess_main_goal_completion(main_goal, knowledge, eligible_frontier_exists=eligible_frontier_exists)
+    if assessed.disposition == "satisfied":
+        contract = _broad_contract_from_state(controller)
+        next_goal = derive_next_main_goal(contract, assessed, knowledge)
+        if next_goal is None:
+            completed_goals = controller.continuous_completed_main_goals
+            if not any(item.get("main_goal_id") == assessed.main_goal_id for item in completed_goals):
+                completed_goals = completed_goals + (assessed.as_dict(),)
+            return replace(
+                controller,
+                continuous_main_goal=assessed.as_dict(),
+                continuous_completed_main_goals=completed_goals,
+                continuous_mission_findings=(),
+                continuous_mission_frontier=(),
+                continuous_active_subgoal={},
+                continuous_consumed_weakness_signatures=(),
+                continuous_mission_state="observing_for_new_weaknesses",
+                active_work_item=OBSERVATION_STATE,
+                journal=controller.journal
+                + (
+                    _journal_entry(
+                        "continuous_mission",
+                        "main_goal_satisfied_no_legitimate_next_goal_enters_observation",
+                        (assessed.main_goal_id,),
+                    ),
+                ),
+            )
+        advanced = replace(
+            controller,
+            continuous_main_goal=next_goal.as_dict(),
+            continuous_completed_main_goals=controller.continuous_completed_main_goals + (assessed.as_dict(),),
+            continuous_mission_findings=(),
+            continuous_mission_frontier=(),
+            continuous_active_subgoal={},
+            continuous_consumed_weakness_signatures=(),
+            continuous_mission_state="main_goal_derived",
+            active_work_item=f"main_goal:{next_goal.normalized_objective}",
+            journal=controller.journal
+            + (_journal_entry("continuous_mission", "main_goal_satisfied_and_next_main_goal_derived", (assessed.main_goal_id, next_goal.main_goal_id)),),
+        )
+        evidence = derive_subgoal_evidence_for_main_goal(next_goal, knowledge, max_items=1)
+        if evidence:
+            return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(advanced, evidence)))
+        return replace(
+            advanced,
+            continuous_mission_state="observing_for_new_weaknesses",
+            active_work_item=OBSERVATION_STATE,
+            journal=advanced.journal + (_journal_entry("continuous_mission", "next_main_goal_has_no_immediate_subgoal_evidence", (next_goal.main_goal_id,)),),
+        )
+    if assessed.disposition == "partially_satisfied":
+        evidence = derive_subgoal_evidence_for_main_goal(assessed, knowledge, max_items=1)
+        if evidence:
+            updated = replace(
+                controller,
+                continuous_main_goal=assessed.as_dict(),
+                continuous_mission_state="main_goal_partial_generating_subgoal",
+                journal=controller.journal + (_journal_entry("continuous_mission", "main_goal_partial_completion_generated_subgoal_evidence", (assessed.main_goal_id,)),),
+            )
+            return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assess_continuous_mission_runtime(updated, evidence)))
+    return replace(
+        controller,
+        continuous_main_goal=assessed.as_dict(),
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        active_work_item=OBSERVATION_STATE,
+        journal=controller.journal + (_journal_entry("continuous_mission", "main_goal_assessed_without_immediate_eligible_subgoal", (assessed.main_goal_id, assessed.disposition)),),
+    )
 
 
 def mark_continuous_api_unavailable(
@@ -771,9 +918,15 @@ def export_continuous_mission_restart_state(controller: ContinuousRuntimeControl
         "continuous_mission_contract": controller.continuous_mission_contract,
         "continuous_mission_findings": controller.continuous_mission_findings,
         "continuous_mission_frontier": controller.continuous_mission_frontier,
+        "continuous_main_goal": controller.continuous_main_goal,
+        "continuous_completed_main_goals": controller.continuous_completed_main_goals,
         "continuous_active_subgoal": controller.continuous_active_subgoal,
         "continuous_consumed_weakness_signatures": controller.continuous_consumed_weakness_signatures,
         "continuous_knowledge_ledger": controller.continuous_knowledge_ledger,
+        "continuous_capability_inventory": controller.continuous_capability_inventory,
+        "continuous_developmental_self_assessment": controller.continuous_developmental_self_assessment,
+        "continuous_developmental_insight_requests": controller.continuous_developmental_insight_requests,
+        "continuous_operator_explanation": controller.continuous_operator_explanation,
         "continuous_api_authority": controller.continuous_api_authority,
         "pending_application_decision_id": controller.pending_application_decision_id,
         "active_work_item": controller.active_work_item,
@@ -792,13 +945,19 @@ def restore_continuous_mission_restart_state(
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
         continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
         continuous_mission_frontier=tuple(restart_state.get("continuous_mission_frontier") or ()),
+        continuous_main_goal=dict(restart_state.get("continuous_main_goal") or {}),
+        continuous_completed_main_goals=tuple(restart_state.get("continuous_completed_main_goals") or ()),
         continuous_active_subgoal=dict(restart_state.get("continuous_active_subgoal") or {}),
         continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
         continuous_knowledge_ledger=tuple(restart_state.get("continuous_knowledge_ledger") or ()),
+        continuous_capability_inventory=tuple(restart_state.get("continuous_capability_inventory") or ()),
+        continuous_developmental_self_assessment=dict(restart_state.get("continuous_developmental_self_assessment") or {}),
+        continuous_developmental_insight_requests=tuple(restart_state.get("continuous_developmental_insight_requests") or ()),
+        continuous_operator_explanation=dict(restart_state.get("continuous_operator_explanation") or {}),
         continuous_api_authority=dict(restart_state.get("continuous_api_authority") or {}),
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
         active_work_item=str(restart_state.get("active_work_item") or ""),
-        journal=controller.journal + (_journal_entry("continuous_mission", "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
+        journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
     )
 
 

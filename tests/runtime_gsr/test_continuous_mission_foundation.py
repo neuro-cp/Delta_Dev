@@ -4,7 +4,19 @@ import pytest
 
 from orchestration.runtime.continuous_mission_foundation import (
     OBSERVATION_STATE,
+    MainGoalContract,
+    assess_main_goal_completion,
+    capability_inventory_from_knowledge,
+    compile_developmental_insight_requests,
+    compile_developmental_operator_explanation,
+    compile_initial_main_goal,
+    compile_long_horizon_objective,
+    derive_developmental_capability_plan,
+    derive_next_main_goal,
+    derive_subgoal_evidence_for_main_goal,
+    assess_developmental_capability_state,
     dirty_worktree_policy,
+    main_goal_from_developmental_plan,
     evidence_to_findings,
     make_satisfied_transfer_record,
     rank_weakness_frontier,
@@ -22,6 +34,8 @@ from orchestration.runtime.continuous_runtime_controller import (
     queue_continuous_mission_sandbox_work,
     refresh_continuous_mission_frontier,
     restore_continuous_mission_restart_state,
+    assess_and_advance_continuous_main_goal,
+    refresh_developmental_self_direction,
     select_continuous_mission_subgoal,
     start_continuous_runtime_controller,
 )
@@ -157,8 +171,8 @@ def test_capability_reassessment_consumes_active_signature_and_continues_without
 
     assert reassessed.continuous_consumed_weakness_signatures
     assert reassessed.continuous_active_subgoal == {}
-    assert continued.continuous_mission_state == "observing_for_new_weaknesses"
-    assert continued.active_work_item == OBSERVATION_STATE
+    assert continued.continuous_mission_state == "subgoal_active"
+    assert continued.continuous_active_subgoal
 
 
 def test_api_exhaustion_preserves_provider_task_and_does_not_complete_mission():
@@ -198,12 +212,339 @@ def test_empty_frontier_enters_observation_and_later_evidence_reactivates():
     controller = refresh_continuous_mission_frontier(controller)
     observed = select_continuous_mission_subgoal(controller)
 
-    assert observed.continuous_mission_state == "observing_for_new_weaknesses"
-    assert observed.active_work_item == OBSERVATION_STATE
+    assert observed.continuous_mission_state == "subgoal_active"
+    assert observed.continuous_active_subgoal
     reactivated = select_continuous_mission_subgoal(
         refresh_continuous_mission_frontier(assess_continuous_mission_runtime(observed, _evidence()))
     )
     assert reactivated.continuous_active_subgoal
+
+
+def test_empty_frontier_runs_main_goal_assessment_not_completion_claim():
+    controller = start_continuous_runtime_controller(session_id="main-goal-empty-frontier")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    advanced = assess_and_advance_continuous_main_goal(controller)
+
+    assert advanced.continuous_mission_state == "subgoal_active"
+    assert advanced.continuous_active_subgoal["measurable_objective"]
+    assert advanced.continuous_main_goal["disposition"] == "partially_satisfied"
+    assert advanced.continuous_completed_main_goals == ()
+
+
+def test_main_goal_has_no_fixed_subgoal_count_policy():
+    controller = start_continuous_runtime_controller(session_id="main-goal-variable-count")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    contract = compile_initial_main_goal(type("Contract", (), controller.continuous_mission_contract))
+    two_goal = MainGoalContract(**{**contract.as_dict(), "success_criteria": ("a", "b"), "prerequisite_graph": {"a": (), "b": ()}})
+    fifteen = tuple(f"c{index}" for index in range(15))
+    fifteen_goal = MainGoalContract(**{**contract.as_dict(), "success_criteria": fifteen, "prerequisite_graph": {item: () for item in fifteen}})
+
+    assert len(derive_subgoal_evidence_for_main_goal(two_goal, (), max_items=20)) == 2
+    assert len(derive_subgoal_evidence_for_main_goal(fifteen_goal, (), max_items=20)) == 15
+
+
+def test_satisfied_main_goal_derives_next_main_goal_from_capability_inventory():
+    controller = start_continuous_runtime_controller(session_id="main-goal-satisfied")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    records = tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in current.success_criteria
+    )
+    assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+    next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+
+    assert assessed.disposition == "satisfied"
+    assert next_goal.normalized_objective == "autonomous_evidence_discovery"
+    assert next_goal.main_goal_id != assessed.main_goal_id
+
+
+def test_no_generic_next_main_goal_is_fabricated_for_runtime_mission():
+    controller = start_continuous_runtime_controller(session_id="main-goal-no-generic-loop")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    first = MainGoalContract(**controller.continuous_main_goal)
+    second = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), first, ())
+    assert second is not None
+    completed_second = MainGoalContract(**{**second.as_dict(), "disposition": "satisfied"})
+
+    assert derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), completed_second, ()) is None
+
+
+def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():
+    objective = compile_long_horizon_objective("Become capable of mastering the sciences")
+    knowledge = (
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": "governed_sandbox_execution",
+                "original_weakness": "sandbox execution functional",
+                "successful_mechanism": "sandbox execution",
+                "reassessment": "satisfied",
+            }
+        ),
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": "source_provenance_retention",
+                "original_weakness": "evidence provenance functional",
+                "successful_mechanism": "governed evidence handling",
+                "reassessment": "satisfied",
+            }
+        ),
+    )
+    inventory = capability_inventory_from_knowledge(knowledge)
+    plan = derive_developmental_capability_plan(objective, inventory)
+
+    assert objective.normalized_objective == "master_sciences"
+    assert plan.derived_gap == "no_validated_scientific_learning_environment"
+    assert plan.next_main_goal_normalized == "governed_math_science_sandbox"
+    assert "symbolic_math_environment" in plan.prerequisite_graph
+    assert "no fixed next-goal sequence" in plan.hardcoded_rule_denied
+    assert any("SymPy" in item for item in plan.recommended_resources)
+
+
+def test_developmental_plan_becomes_next_main_goal_contract():
+    controller = start_continuous_runtime_controller(session_id="developmental-main-goal")
+    controller = attach_continuous_mission(controller, "Become capable of mastering the sciences")
+    objective = compile_long_horizon_objective("Become capable of mastering the sciences")
+    plan = derive_developmental_capability_plan(objective, ())
+    main_goal = main_goal_from_developmental_plan(type("Contract", (), controller.continuous_mission_contract), plan)
+
+    assert main_goal.normalized_objective == "governed_math_science_sandbox"
+    assert "symbolic_math_environment" in main_goal.success_criteria
+    assert main_goal.disposition == "active"
+
+
+def test_science_objective_starts_with_self_assessment_not_science_mastery():
+    controller = start_continuous_runtime_controller(session_id="developmental-starts-with-self-assessment")
+    controller = attach_continuous_mission(controller, "Become capable of mastering the sciences")
+    main_goal = MainGoalContract(**controller.continuous_main_goal)
+
+    assert main_goal.normalized_objective == "developmental_self_assessment"
+    assert main_goal.original_objective != "Become capable of mastering the sciences"
+    assert "capability_inventory_generation" in main_goal.success_criteria
+    assert "long_horizon_gap_analysis" in main_goal.success_criteria
+    assert "next_developmental_goal_derivation" in main_goal.success_criteria
+    assert "operator_progress_explanation" in main_goal.success_criteria
+    assert main_goal.next_main_goal_candidates == ("evidence_derived_next_developmental_goal",)
+
+
+def test_completed_developmental_self_assessment_derives_math_science_sandbox():
+    controller = start_continuous_runtime_controller(session_id="developmental-self-assessment-complete")
+    controller = attach_continuous_mission(controller, "Become capable of mastering the sciences")
+    main_goal = MainGoalContract(**controller.continuous_main_goal)
+    records = tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} missing for long-horizon planning",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in main_goal.success_criteria
+    )
+    assessed = assess_main_goal_completion(main_goal, records, eligible_frontier_exists=False)
+    next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+
+    assert assessed.disposition == "satisfied"
+    assert next_goal is not None
+    assert next_goal.normalized_objective == "governed_math_science_sandbox"
+    assert "sandbox_execution" in next_goal.success_criteria
+    assert "symbolic_math_environment" in next_goal.success_criteria
+    assert "scientific_evidence_governance" in next_goal.success_criteria
+
+
+def test_main_goal_subgoal_derivation_respects_prerequisite_dependencies():
+    controller = start_continuous_runtime_controller(session_id="main-goal-prerequisite-order")
+    controller = attach_continuous_mission(controller, "Become capable of mastering the sciences")
+    objective = compile_long_horizon_objective("Become capable of mastering the sciences")
+    plan = derive_developmental_capability_plan(objective, ())
+    main_goal = main_goal_from_developmental_plan(type("Contract", (), controller.continuous_mission_contract), plan)
+
+    first = derive_subgoal_evidence_for_main_goal(main_goal, (), max_items=3)
+    assert tuple(item["affected_capability"] for item in first) == (
+        "capability_inventory_generation",
+        "sandbox_execution",
+    )
+
+    sandbox_record = make_satisfied_transfer_record().__class__(
+        **{
+            **make_satisfied_transfer_record().as_dict(),
+            "capability_id": "sandbox_execution",
+            "original_weakness": "sandbox execution required for math/science sandbox",
+            "successful_mechanism": "sandbox execution",
+            "reassessment": "satisfied",
+        }
+    )
+    after_sandbox = derive_subgoal_evidence_for_main_goal(main_goal, (sandbox_record,), max_items=3)
+    assert "symbolic_math_environment" in tuple(item["affected_capability"] for item in after_sandbox)
+
+
+def test_terminal_satisfied_main_goal_observation_is_idempotent():
+    controller = start_continuous_runtime_controller(session_id="terminal-main-goal-idempotent")
+    controller = attach_continuous_mission(controller, "Optimize your runtime.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    terminal = MainGoalContract(
+        **{
+            **current.as_dict(),
+            "normalized_objective": "terminal_validated_learning_step",
+            "disposition": "satisfied",
+        }
+    )
+    records = tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed",
+                "successful_mechanism": criterion,
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in terminal.success_criteria
+    )
+    controller = replace(controller, continuous_main_goal=terminal.as_dict(), continuous_knowledge_ledger=tuple(record.as_dict() for record in records))
+
+    first = assess_and_advance_continuous_main_goal(controller)
+    second = assess_and_advance_continuous_main_goal(first)
+
+    assert first.continuous_mission_state == "observing_for_new_weaknesses"
+    assert len(first.continuous_completed_main_goals) == 1
+    assert len(second.continuous_completed_main_goals) == 1
+    assert second.continuous_completed_main_goals[0]["main_goal_id"] == terminal.main_goal_id
+
+
+def test_developmental_self_assessment_separates_verified_from_assumed_capabilities():
+    objective = compile_long_horizon_objective("Become increasingly capable of understanding and eventually mastering the sciences")
+    knowledge = (
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": "governed_sandbox_execution",
+                "original_weakness": "sandbox execution functional",
+                "successful_mechanism": "sandbox execution",
+                "reassessment": "satisfied",
+            }
+        ),
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": "unvalidated_science_reasoning",
+                "original_weakness": "science reasoning assumed but not transfer validated",
+                "successful_mechanism": "",
+                "reassessment": "",
+            }
+        ),
+    )
+    inventory = capability_inventory_from_knowledge(knowledge)
+    assessment = assess_developmental_capability_state(objective, inventory)
+
+    assert "governed_sandbox_execution" in assessment.verified_capabilities
+    assert "unvalidated_science_reasoning" in assessment.assumed_capabilities
+    assert "domain mastery" in assessment.unsupported_claims
+    assert "symbolic_math_environment" in assessment.developmental_gaps
+    assert assessment.needs_additional_insight is True
+
+
+def test_developmental_insight_requests_select_resources_without_granting_authority():
+    objective = compile_long_horizon_objective("Become increasingly capable of understanding and eventually mastering the sciences")
+    assessment = assess_developmental_capability_state(objective, ())
+    requests = compile_developmental_insight_requests(assessment)
+
+    assert requests
+    assert any("symbolic" in request.question for request in requests)
+    assert all("cannot authorize" in request.authority_boundary for request in requests)
+    assert any(request.selected_resource == "retained capability evidence" for request in requests)
+
+
+def test_developmental_operator_explanation_is_grounded_and_not_mastery_claim():
+    objective = compile_long_horizon_objective("Become increasingly capable of understanding and eventually mastering the sciences")
+    inventory = capability_inventory_from_knowledge(
+        (
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": "governed_sandbox_execution",
+                    "original_weakness": "sandbox execution functional",
+                    "successful_mechanism": "sandbox execution",
+                    "reassessment": "satisfied",
+                }
+            ),
+        )
+    )
+    assessment = assess_developmental_capability_state(objective, inventory)
+    plan = derive_developmental_capability_plan(objective, inventory)
+    explanation = compile_developmental_operator_explanation(objective, assessment, plan)
+
+    assert "governed_sandbox_execution" in explanation.current_understanding
+    assert explanation.next_goal == "Build and validate a governed mathematics and science sandbox"
+    assert "before attempting broader claims" in explanation.why_next_goal_matters
+    assert "domain mastery" in explanation.assumed_or_unverified_abilities
+    assert "planner may propose" in explanation.authority_boundary
+
+
+def test_controller_refreshes_developmental_self_direction_from_authoritative_state():
+    controller = start_continuous_runtime_controller(session_id="controller-self-direction")
+    controller = attach_continuous_mission(controller, "Become increasingly capable of understanding and eventually mastering the sciences")
+
+    assert controller.continuous_developmental_self_assessment
+    assert controller.continuous_operator_explanation
+    assert controller.continuous_developmental_insight_requests
+    assert controller.continuous_developmental_self_assessment["verified_capabilities"] == ()
+    assert "domain mastery" in controller.continuous_operator_explanation["assumed_or_unverified_abilities"]
+    assert controller.continuous_api_authority["enabled"] is False
+
+
+def test_capability_reassessment_updates_inventory_and_grounded_operator_explanation():
+    controller = start_continuous_runtime_controller(session_id="controller-self-direction-after-reassessment")
+    controller = attach_continuous_mission(controller, "Become increasingly capable of understanding and eventually mastering the sciences")
+    record = make_satisfied_transfer_record().__class__(
+        **{
+            **make_satisfied_transfer_record().as_dict(),
+            "capability_id": "governed_sandbox_execution",
+            "original_weakness": "sandbox execution functional",
+            "successful_mechanism": "sandbox execution",
+            "reassessment": "satisfied",
+        }
+    )
+
+    updated = consume_continuous_capability_reassessment(controller, record)
+
+    assert updated.continuous_capability_inventory[0]["capability_id"] == "governed_sandbox_execution"
+    assert "governed_sandbox_execution" in updated.continuous_developmental_self_assessment["verified_capabilities"]
+    assert "governed_sandbox_execution" in updated.continuous_operator_explanation["current_understanding"]
+    assert updated.continuous_operator_explanation["next_goal"] == "Build and validate a governed mathematics and science sandbox"
+
+
+def test_developmental_self_direction_restart_restores_explanation_and_insight_requests():
+    controller = start_continuous_runtime_controller(session_id="controller-self-direction-restart")
+    controller = attach_continuous_mission(controller, "Become increasingly capable of understanding and eventually mastering the sciences")
+    state = export_continuous_mission_restart_state(controller)
+    restored = restore_continuous_mission_restart_state(start_continuous_runtime_controller(session_id="controller-self-direction-restart"), state)
+
+    assert restored.continuous_developmental_self_assessment == controller.continuous_developmental_self_assessment
+    assert restored.continuous_developmental_insight_requests == controller.continuous_developmental_insight_requests
+    assert restored.continuous_operator_explanation == controller.continuous_operator_explanation
+
+
+def test_refresh_developmental_self_direction_does_not_authorize_mutation_or_api_expansion():
+    controller = start_continuous_runtime_controller(session_id="controller-self-direction-authority")
+    controller = attach_continuous_mission(controller, "Become increasingly capable of understanding and eventually mastering the sciences")
+    refreshed = refresh_developmental_self_direction(controller)
+
+    assert refreshed.continuous_api_authority["enabled"] is False
+    assert "tracked-source mutation" not in refreshed.continuous_operator_explanation["authority_boundary"]
+    assert all("cannot authorize" in request["authority_boundary"] for request in refreshed.continuous_developmental_insight_requests)
 
 
 def test_knowledge_retention_preserves_solved_failed_and_evidence_quality():

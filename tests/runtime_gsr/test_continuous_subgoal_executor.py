@@ -60,6 +60,8 @@ def test_active_subgoal_is_consumed_once_and_creates_real_sandbox_work(tmp_path:
     assert result.candidate["tracked_source_mutated"] is False
     assert result.candidate["objective_digest"]
     assert result.candidate["capability_key"] == "continuous_subgoal_execution_bridge"
+    assert result.reassessment["capability_id"] == "continuous_subgoal_execution_bridge"
+    assert "weakness-" not in result.reassessment["capability_id"]
     assert result.validation["passed"] is True
     assert result.clean_reproduction["passed"] is True
     assert "source_inspection_completed" in result.meaningful_transition_timestamps

@@ -405,7 +405,7 @@ def _capability_record(
     source_inspection: Mapping[str, Any],
 ) -> CapabilityKnowledgeRecord:
     return CapabilityKnowledgeRecord(
-        capability_id=str(subgoal.get("weakness_id") or candidate.get("candidate_id")),
+        capability_id=_capability_id_from_subgoal(subgoal, candidate),
         original_weakness=str(subgoal.get("measurable_objective") or ""),
         evidence=(str(source_inspection.get("inspection_id")), str(validation.get("digest"))),
         first_incorrect_transition="controller-owned active_subgoal -> sandbox_development_active -> no executor consumed it",
@@ -453,6 +453,18 @@ def _local_contribution_summary(subgoal: Mapping[str, Any]) -> str:
     if _subgoal_requests_model(subgoal) or _subgoal_requests_reference(subgoal):
         return "local execution bridge candidate artifact with advisory local model/reference resource path when available"
     return "local execution bridge candidate artifact"
+
+
+def _capability_id_from_subgoal(subgoal: Mapping[str, Any], candidate: Mapping[str, Any] | None = None) -> str:
+    objective = str(subgoal.get("measurable_objective") or "")
+    if " improves beyond " in objective:
+        capability = objective.split(" improves beyond ", 1)[0].strip()
+        if capability:
+            return capability
+    if objective:
+        return stable_id("capability", objective)
+    candidate = candidate or {}
+    return str(subgoal.get("weakness_id") or candidate.get("candidate_id") or subgoal.get("subgoal_id") or "continuous-subgoal")
 
 
 def _read_json(path: Path) -> dict[str, Any]:

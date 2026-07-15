@@ -21,16 +21,13 @@ from typing import Any, Mapping
 
 from orchestration.runtime.continuous_mission_foundation import CapabilityKnowledgeRecord
 from orchestration.runtime.continuous_runtime_controller import (
-    assess_continuous_mission_runtime,
+    assess_and_advance_continuous_main_goal,
     continue_continuous_mission_after_reassessment,
     consume_continuous_capability_reassessment,
     consume_continuous_mission_application_decision,
     controller_snapshot,
     export_continuous_mission_restart_state,
-    queue_continuous_mission_sandbox_work,
-    refresh_continuous_mission_frontier,
     restore_continuous_mission_restart_state,
-    select_continuous_mission_subgoal,
     start_continuous_runtime_controller,
 )
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal
@@ -428,8 +425,8 @@ def _consume_operator_application_decision_if_present(root: Path, controller: An
 
 def _operator_application_reassessment_record(controller: Any, action: str, decision_id: str) -> CapabilityKnowledgeRecord:
     subgoal = dict(controller.continuous_active_subgoal or {})
-    capability_id = str(subgoal.get("weakness_id") or subgoal.get("subgoal_id") or "operator-application-decision")
     objective = str(subgoal.get("measurable_objective") or "operator application decision")
+    capability_id = _capability_id_from_subgoal(subgoal)
     satisfied = action == "APPLY_VALIDATED_CANDIDATE"
     return CapabilityKnowledgeRecord(
         capability_id=capability_id,
@@ -457,100 +454,19 @@ def _operator_application_reassessment_record(controller: Any, action: str, deci
 
 
 def _observe_runtime_and_requeue(root: Path, controller: Any) -> Any:
-    supervisor_status = _read_json(root / SUPERVISOR_STATUS)
-    repository_root = Path(str(supervisor_status.get("repository_root") or ".")).resolve()
-    evidence = _discover_observation_evidence(root, repository_root)
-    if not evidence:
-        return controller
-    assessed = assess_continuous_mission_runtime(controller, evidence)
-    selected = select_continuous_mission_subgoal(refresh_continuous_mission_frontier(assessed))
-    queued = queue_continuous_mission_sandbox_work(selected) if selected.continuous_active_subgoal else selected
+    queued = assess_and_advance_continuous_main_goal(controller)
     _atomic_write_json(
         root / "observation_requeue.json",
         {
             "timestamp": utc_now(),
-            "evidence_count": len(evidence),
             "next_state": queued.continuous_mission_state,
+            "main_goal": queued.continuous_main_goal or None,
+            "completed_main_goal_count": len(queued.continuous_completed_main_goals),
             "active_subgoal": queued.continuous_active_subgoal or None,
         },
     )
     _atomic_write_json(root / RESTART_STATE, export_continuous_mission_restart_state(queued))
     return queued
-
-
-def _discover_observation_evidence(root: Path, repository_root: Path) -> tuple[dict[str, Any], ...]:
-    ledger_path = root / OBSERVATION_EVIDENCE_LEDGER
-    ledger = _read_json(ledger_path) if ledger_path.exists() else {"consumed_signatures": []}
-    consumed = {str(item) for item in ledger.get("consumed_signatures", [])}
-    probes = (
-        {
-            "probe_id": "subgoal_specific_candidate_behavior",
-            "path": "orchestration/runtime/continuous_subgoal_executor.py",
-            "marker": "return {'target_metric': 1.0",
-            "observed_behavior": "sandbox candidate artifact can pass validation without encoding the selected subgoal identity",
-            "first_incorrect_transition": "active subgoal -> generic candidate artifact -> validation cannot prove subgoal-specific behavior",
-            "baseline_metric": "subgoal_specific_candidate_behavior=0.0",
-            "confidence": 0.91,
-            "operator_value": 0.94,
-            "severity": 0.86,
-        },
-        {
-            "probe_id": "resource_usage_result_granularity",
-            "path": "orchestration/runtime/continuous_subgoal_executor.py",
-            "marker": "provider_contribution=\"none\"",
-            "observed_behavior": "capability reassessment records provider contribution but not local model or reference contribution",
-            "first_incorrect_transition": "resource-bearing subgoal -> local/reference evidence recorded separately -> reassessment collapses contribution detail",
-            "baseline_metric": "resource_usage_result_granularity=0.0",
-            "confidence": 0.84,
-            "operator_value": 0.88,
-            "severity": 0.72,
-        },
-        {
-            "probe_id": "application_gate_exercise_coverage",
-            "path": "orchestration/runtime/continuous_worker_supervisor.py",
-            "marker": "execute_continuous_active_subgoal(",
-            "observed_behavior": "worker execution mode uses non-application disposition by default and may not exercise application gates during free runs",
-            "first_incorrect_transition": "validated candidate -> non-application disposition -> operator application path remains untested in free-run mode",
-            "baseline_metric": "application_gate_exercise_coverage=0.0",
-            "confidence": 0.8,
-            "operator_value": 0.86,
-            "severity": 0.7,
-        },
-    )
-    discovered: list[dict[str, Any]] = []
-    for probe in probes:
-        file_path = (repository_root / str(probe["path"])).resolve()
-        if not str(file_path).startswith(str(repository_root)) or not file_path.exists():
-            continue
-        text = file_path.read_text(encoding="utf-8")
-        if str(probe["marker"]) not in text:
-            continue
-        signature = stable_id("continuous-observation-evidence", probe["probe_id"], str(probe["path"]))
-        if signature in consumed:
-            continue
-        discovered.append(
-            {
-                "evidence_source": f"observation_probe:{probe['probe_id']}:{signature}",
-                "observed_behavior": probe["observed_behavior"],
-                "first_incorrect_transition": probe["first_incorrect_transition"],
-                "affected_capability": probe["probe_id"],
-                "baseline_metric": probe["baseline_metric"],
-                "confidence": probe["confidence"],
-                "operator_value": probe["operator_value"],
-                "severity": probe["severity"],
-                "estimated_implementation_breadth": "small",
-                "validation_method": "continuous_observation_probe",
-                "scope": "local_runtime",
-                "uncertainty": "derived from committed source marker and file inspection",
-            }
-        )
-        consumed.add(signature)
-        break
-    ledger["consumed_signatures"] = sorted(consumed)
-    if discovered:
-        ledger["last_discovery"] = {"timestamp": utc_now(), "evidence": discovered}
-        _atomic_write_json(ledger_path, ledger)
-    return tuple(discovered)
 
 
 def _validate_restart_state(restart_state: Mapping[str, Any]) -> None:
@@ -601,8 +517,8 @@ def _write_worker_status(root: Path, controller: Any, worker_state: str) -> None
 
 def _worker_reassessment_record(controller: Any) -> CapabilityKnowledgeRecord:
     subgoal = controller.continuous_active_subgoal
-    capability_id = str(subgoal.get("weakness_id") or subgoal.get("subgoal_id") or "continuous-supervised-transition")
     objective = str(subgoal.get("measurable_objective") or "supervised recovery transition")
+    capability_id = _capability_id_from_subgoal(subgoal)
     return CapabilityKnowledgeRecord(
         capability_id=capability_id,
         original_weakness=objective,
@@ -626,6 +542,17 @@ def _worker_reassessment_record(controller: Any) -> CapabilityKnowledgeRecord:
         residual_uncertainty="external OS service manager installation remains outside this gate",
         reusable_process_rules=("process supervision must not own mission-cycle semantics",),
     )
+
+
+def _capability_id_from_subgoal(subgoal: Mapping[str, Any]) -> str:
+    objective = str(subgoal.get("measurable_objective") or "")
+    if " improves beyond " in objective:
+        capability = objective.split(" improves beyond ", 1)[0].strip()
+        if capability:
+            return capability
+    if objective:
+        return stable_id("capability", objective)
+    return str(subgoal.get("weakness_id") or subgoal.get("subgoal_id") or "continuous-supervised-transition")
 
 
 __all__ = [

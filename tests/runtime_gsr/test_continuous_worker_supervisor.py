@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import sys
@@ -22,6 +23,7 @@ from orchestration.runtime.continuous_runtime_controller import (
     start_continuous_runtime_controller,
 )
 from orchestration.runtime.continuous_worker_supervisor import (
+    _capability_id_from_subgoal,
     initialize_supervisor_state,
     poll_supervisor_once,
     request_intentional_worker_stop,
@@ -232,6 +234,19 @@ def test_worker_can_complete_one_controller_owned_transition_after_relaunch(tmp_
         _cleanup(supervisor)
 
 
+def test_worker_reassessment_uses_measurable_capability_name_not_opaque_weakness_id():
+    assert (
+        _capability_id_from_subgoal(
+            {
+                "weakness_id": "weakness-opaque",
+                "subgoal_id": "subgoal-opaque",
+                "measurable_objective": "operator_progress_explanation improves beyond operator_progress_explanation=0.0",
+            }
+        )
+        == "operator_progress_explanation"
+    )
+
+
 def test_invalid_restart_state_fails_closed_without_fresh_mission(tmp_path: Path):
     supervisor = initialize_supervisor_state(
         supervisor_root=tmp_path,
@@ -265,7 +280,8 @@ def test_reassessment_record_uses_current_subgoal_not_duplicate_lifecycle(tmp_pa
         marker = (tmp_path / "transition_completed.json").read_text(encoding="utf-8")
 
         assert transition["lifecycle_owner"] == "continuous_runtime_controller"
-        assert controller.continuous_active_subgoal["weakness_id"] in marker
+        assert "external_worker_relaunch_recovery" in marker
+        assert controller.continuous_active_subgoal["weakness_id"] not in marker
     finally:
         _cleanup(supervisor)
 
@@ -304,9 +320,10 @@ def test_observation_mode_discovers_evidence_and_executes_new_subgoal(tmp_path: 
             time.sleep(0.05)
 
         assert ledger["executions"]
-        assert (tmp_path / "observation_evidence_ledger.json").exists()
         assert (tmp_path / "observation_requeue.json").exists()
         assert ledger["executions"][0]["accepted"] is True
+        requeue = json.loads((tmp_path / "observation_requeue.json").read_text(encoding="utf-8"))
+        assert requeue["main_goal"]
     finally:
         _cleanup(supervisor)
 
