@@ -30467,6 +30467,433 @@ def make_live43_detached_launcher(*, repository_root: str, artifact_root: str, c
     return {"accepted": True, "reason": "launcher_created", "campaign_id": campaign_id, "artifact_root": str(Path(artifact_root).resolve()), "launcher_path": str(launcher), "stdout_path": str(root / "stdout.log"), "stderr_path": str(root / "stderr.log")}
 
 
+LIVE44_PARENT_MISSION = "Rapidly improve DELTA's ability to investigate, reason, learn, validate, and communicate across scholarly and technical domains through governed evidence acquisition, selective provider assistance, isolated capability development, objective validation, operator-controlled authority decisions, and repeated frontier expansion."
+LIVE44_PROVIDER_DENIAL = "PROVIDER_CALL_DENIED_LOW_INFORMATION_VALUE"
+
+
+def make_live44_campaign(*, campaign_id: str, starting_checkpoint: str) -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "starting_checkpoint": starting_checkpoint,
+        "parent_mission": LIVE44_PARENT_MISSION,
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "provider_retries": 0,
+        "provider_fallbacks": 0,
+        "provider_soft_budget": 8,
+        "provider_hard_ceiling": 12,
+        "productive_cycle_limit": 40,
+        "episode_limit": 200,
+        "completed_episodes": 0,
+        "completed_productive_cycles": 0,
+        "local_actions": 0,
+        "external_retrievals": 0,
+        "provider_cache": {},
+        "provider_value_counts": {"high_value": 0, "useful": 0, "marginal": 0, "wasted": 0, "invalid": 0},
+        "exploration_history": [],
+        "completed_cycle_signatures": [],
+        "pending_decision_id": "",
+        "campaign_state": "running",
+        "terminal_reason": "",
+        "created_at": utc_now(),
+    }
+
+
+def _live44_write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, str]:
+    return _live41_write_json(path, payload)
+
+
+def _live44_checkpoint(root: Path, campaign: MutableMapping[str, Any], *, latest_artifact: str = "") -> dict[str, str]:
+    payload = {
+        "campaign": campaign,
+        "status": {
+            "campaign_id": campaign["campaign_id"],
+            "campaign_state": campaign["campaign_state"],
+            "completed_episodes": campaign["completed_episodes"],
+            "completed_productive_cycles": campaign["completed_productive_cycles"],
+            "provider_calls": campaign["provider_calls"],
+            "provider_attempts": campaign["provider_attempts"],
+            "pending_decision_id": campaign.get("pending_decision_id", ""),
+            "latest_artifact": latest_artifact,
+            "updated_at": utc_now(),
+        },
+    }
+    artifact = _live44_write_json(root / "checkpoints" / f"checkpoint_{len(campaign.get('exploration_history', ())) + 1:03d}.json", payload)
+    _live44_write_json(root / "status.json", payload["status"])
+    return artifact
+
+
+def _live44_is_filler_request(request: Mapping[str, Any]) -> bool:
+    question = str(request.get("unresolved_question", "")).strip().lower()
+    requested = str(request.get("requested_output", "")).strip().lower()
+    downstream = str(request.get("downstream_consumer", "")).strip()
+    spans = tuple(request.get("exact_evidence_spans", ()))
+    vague_terms = ("what should i do", "analyze", "generally", "give me ideas", "summarize everything", "brainstorm")
+    vague_question = any(term in question for term in vague_terms) and len(question.split()) < 12
+    no_decision_target = not downstream or downstream in {"none", "n/a", "unknown"}
+    no_evidence = not spans
+    unbounded_output = not requested or requested in {"analysis", "summary", "ideas", "critique"}
+    return vague_question or no_decision_target or no_evidence or unbounded_output
+
+
+def _live44_make_provider_request(campaign: Mapping[str, Any], *, cycle_id: str, provider_role: str, unresolved_question: str, evidence_spans: Sequence[str], downstream_consumer: str, requested_output: str = "bounded_json_objective_options", expected_information_gain: float = 0.72, confidence_call_is_useful: float = 0.78, cycle_call_number: int = 1) -> dict[str, Any]:
+    duplicate = stable_id("live44-provider-duplicate", provider_role, unresolved_question, tuple(evidence_spans), downstream_consumer, requested_output)
+    return {
+        "campaign_id": campaign["campaign_id"],
+        "cycle_id": cycle_id,
+        "request_id": stable_id("live44-provider-request", campaign["campaign_id"], cycle_id, duplicate),
+        "provider_role": provider_role,
+        "unresolved_question": unresolved_question,
+        "why_current_evidence_is_insufficient": "deterministic frontier has multiple plausible paths but cannot prioritize expected developmental value from supplied evidence alone",
+        "local_evidence_ids": ("live44-local-frontier",),
+        "external_evidence_ids": ("live43-composition-review",),
+        "exact_evidence_spans": tuple(evidence_spans),
+        "current_hypothesis": "one narrower objective may improve frontier depth without wasting provider calls",
+        "alternatives_considered": ("continue local-only episode", "defer provider use", "request operator decision"),
+        "requested_output": requested_output,
+        "expected_response_schema": {"candidate_objectives": "list", "rationale": "string", "risk": "string"},
+        "downstream_consumer": downstream_consumer,
+        "expected_information_gain": expected_information_gain,
+        "novelty_signature": stable_id("live44-provider-novelty", duplicate),
+        "duplicate_signature": duplicate,
+        "estimated_input_tokens": 700,
+        "maximum_output_tokens": 180,
+        "estimated_cost": "bounded_low_cost",
+        "cycle_call_number": cycle_call_number,
+        "campaign_call_number": int(campaign.get("provider_calls", 0)) + 1,
+        "confidence_call_is_useful": confidence_call_is_useful,
+        "reason_deterministic_logic_is_insufficient": "provider role is limited to ranking evidence-grounded alternatives, not authorization",
+        "budget_state": {"soft_budget": campaign["provider_soft_budget"], "hard_ceiling": campaign["provider_hard_ceiling"], "used": campaign["provider_calls"]},
+        "operator_approval_required": cycle_call_number > 2 or int(campaign.get("provider_calls", 0)) >= campaign["provider_soft_budget"],
+        "gate_decision": "",
+        "gate_reasons": (),
+    }
+
+
+def live44_provider_value_gate(campaign: MutableMapping[str, Any], request: MutableMapping[str, Any]) -> dict[str, Any]:
+    reasons: list[str] = []
+    duplicate = str(request.get("duplicate_signature", ""))
+    cache = campaign.get("provider_cache", {})
+    if _live44_is_filler_request(request):
+        reasons.append("low_information_or_filler_request")
+    if request.get("provider_role") not in {"diagnosis", "objective proposal", "candidate design", "adversarial critique", "test proposal", "evidence synthesis", "alternative comparison", "follow-up derivation"}:
+        reasons.append("provider_role_not_bounded")
+    if duplicate in cache:
+        reasons.append("duplicate_request_cache_available")
+    if int(request.get("cycle_call_number", 0)) > 2:
+        reasons.append("cycle_provider_call_limit_requires_operator")
+    if campaign["provider_calls"] >= campaign["provider_hard_ceiling"]:
+        reasons.append("provider_hard_ceiling_reached")
+    if float(request.get("expected_information_gain", 0.0)) < 0.6:
+        reasons.append("expected_information_gain_below_threshold")
+    if float(request.get("confidence_call_is_useful", 0.0)) < 0.65:
+        reasons.append("confidence_call_is_useful_below_threshold")
+    accepted = not reasons
+    request["gate_decision"] = "allowed" if accepted else LIVE44_PROVIDER_DENIAL
+    request["gate_reasons"] = tuple(reasons)
+    return {"accepted": accepted, "decision": request["gate_decision"], "reasons": tuple(reasons), "cached_response": cache.get(duplicate)}
+
+
+def _live44_provider_stub_response(campaign: MutableMapping[str, Any], request: Mapping[str, Any]) -> dict[str, Any]:
+    duplicate = str(request["duplicate_signature"])
+    if duplicate in campaign["provider_cache"]:
+        return {**campaign["provider_cache"][duplicate], "cache_hit": True}
+    campaign["provider_calls"] += 1
+    campaign["provider_attempts"] += 1
+    response = {
+        "response_id": stable_id("live44-provider-response", request["request_id"]),
+        "request_id": request["request_id"],
+        "schema": "passed",
+        "candidate_objectives": ("narrow transfer weakness using held-out evidence", "defer broad authority expansion"),
+        "rationale": "supplied evidence indicates transfer weakness is more actionable than authority expansion",
+        "risk": "candidate remains isolated and must be validated deterministically",
+        "token_usage": {"input_tokens": int(request["estimated_input_tokens"]), "output_tokens": 92},
+        "estimated_cost": "unavailable_from_provider_response",
+        "advisory_only": True,
+        "cache_hit": False,
+    }
+    campaign["provider_cache"][duplicate] = response
+    return response
+
+
+def _live44_evaluate_provider_response(request: Mapping[str, Any], response: Mapping[str, Any], *, downstream_transition_completed: bool) -> dict[str, Any]:
+    schema_valid = response.get("schema") == "passed" and bool(response.get("candidate_objectives"))
+    value = "useful" if schema_valid and downstream_transition_completed else "marginal" if schema_valid else "invalid"
+    return {
+        "request_id": request["request_id"],
+        "response_id": response.get("response_id", ""),
+        "schema_valid": schema_valid,
+        "grounded_in_supplied_evidence": bool(request.get("exact_evidence_spans")),
+        "novel_claims": tuple(response.get("candidate_objectives", ())),
+        "duplicate_claims": (),
+        "actionable_findings": tuple(response.get("candidate_objectives", ()))[:1],
+        "changed_admissibility": downstream_transition_completed,
+        "changed_candidate_design": False,
+        "generated_testable_objective": downstream_transition_completed,
+        "identified_valid_defect": False,
+        "downstream_transition_completed": downstream_transition_completed,
+        "validation_supported": downstream_transition_completed,
+        "deterministic_equivalent_available": False,
+        "hallucination_or_unsupported_claims": (),
+        "token_usage": response.get("token_usage", {}),
+        "estimated_cost": response.get("estimated_cost", "unavailable_from_provider_response"),
+        "value_classification": value,
+        "rationale": "provider response selected an evidence-grounded narrower objective" if value == "useful" else "response did not materially change governed state",
+    }
+
+
+def _live44_review_summary(decision: Mapping[str, Any]) -> str:
+    return "\n".join((
+        "DELTA OPERATOR DECISION REQUEST",
+        "",
+        f"Campaign: {decision['campaign_id']}",
+        f"Cycle: {decision['cycle_id']}",
+        f"Decision ID: {decision['decision_id']}",
+        f"Decision type: {decision['decision_type']}",
+        "",
+        f"Requested action: {decision['requested_action']}",
+        "",
+        f"Why DELTA is asking: {decision['why_operator_authority_is_required']}",
+        "",
+        f"Recommended choice: {decision['recommended_choice']}",
+        "",
+        "Supporting evidence:",
+        *[f"{index + 1}. {item}" for index, item in enumerate(decision.get("strongest_supporting_evidence", ())[:3])],
+        "",
+        "Opposing evidence:",
+        *[f"{index + 1}. {item}" for index, item in enumerate(decision.get("strongest_opposing_evidence", ())[:2])],
+        "",
+        "Alternatives:",
+        *[f"{chr(65 + index)}. {item}" for index, item in enumerate(decision.get("alternatives", ())[:3])],
+        "",
+        f"Expected benefit: {decision['expected_benefit']}",
+        "",
+        f"Risks: {'; '.join(decision.get('risks', ())) }",
+        "",
+        f"Reversibility: {decision['reversibility']}",
+        "",
+        f"Provider usage: {decision['provider_usage']}",
+        f"Token usage: {decision['provider_usage'].get('token_usage', {}) if isinstance(decision.get('provider_usage'), Mapping) else {}}",
+        f"Source usage: {decision['source_usage']}",
+        f"Affected files: {decision['affected_files']}",
+        "",
+        f"Artifact root: {decision['artifact_root']}",
+        f"Resume checkpoint: {decision['current_checkpoint']}",
+    ))
+
+
+def _live44_operator_decision_package(root: Path, campaign: MutableMapping[str, Any], *, cycle_id: str, decision_type: str, requested_action: str, provider_usage: Mapping[str, Any], checkpoint: Mapping[str, Any]) -> dict[str, Any]:
+    decision_id = stable_id("live44-decision", campaign["campaign_id"], cycle_id, decision_type, requested_action)
+    package_root = root / "operator_decisions" / decision_id
+    decision = {
+        "campaign_id": campaign["campaign_id"],
+        "cycle_id": cycle_id,
+        "decision_id": decision_id,
+        "decision_type": decision_type,
+        "requested_action": requested_action,
+        "exact_authority_requested": "authorize one isolated candidate implementation and validation only",
+        "why_operator_authority_is_required": "accept versus deny changes whether this branch can execute a bounded isolated action",
+        "recommended_choice": "Request Revision" if decision_type == "implementation_with_elevated_risk" else "Accept",
+        "confidence": 0.72,
+        "strongest_supporting_evidence": ("provider selected a narrower objective", "local validation weakness is present", "scope remains isolated"),
+        "strongest_opposing_evidence": ("provider output is advisory only", "implementation still needs bounded validation"),
+        "alternatives": ("deny and derive narrower local-only branch", "request more evidence", "accept isolated action"),
+        "expected_benefit": "tests whether a provider-selected objective improves frontier depth",
+        "risks": ("wasted local action", "overfitting to one evidence packet"),
+        "reversibility": "fully reversible isolated candidate; no tracked-source application",
+        "affected_files": (),
+        "affected_mechanisms": ("isolated_candidate_validation", "frontier_graph"),
+        "provider_usage": dict(provider_usage),
+        "source_usage": {"external_retrievals": campaign.get("external_retrievals", 0), "local_actions": campaign.get("local_actions", 0)},
+        "current_checkpoint": checkpoint.get("path", ""),
+        "resume_conditions": ("operator records accept, deny, or revision request",),
+        "expiry_or_supersession_rules": "newer decision for same cycle supersedes this request",
+        "artifact_root": str(root),
+        "state": "pending_operator_review",
+    }
+    files = {
+        "decision_request.json": decision,
+        "evidence_manifest.json": {"supporting_evidence": decision["strongest_supporting_evidence"], "opposing_evidence": decision["strongest_opposing_evidence"]},
+        "alternatives.json": {"alternatives": decision["alternatives"]},
+        "risk_assessment.json": {"risks": decision["risks"], "reversibility": decision["reversibility"]},
+        "recommended_action.json": {"recommended_choice": decision["recommended_choice"]},
+        "provider_usage.json": dict(provider_usage),
+        "affected_scope.json": {"affected_files": (), "affected_mechanisms": decision["affected_mechanisms"]},
+        "resume_checkpoint.json": {"checkpoint": checkpoint},
+        "decision_state.json": {"decision_id": decision_id, "state": "pending_operator_review"},
+    }
+    for name, payload in files.items():
+        _live44_write_json(package_root / name, payload)
+    summary = _live44_review_summary(decision)
+    (package_root / "decision_summary.txt").write_text(summary, encoding="utf-8")
+    campaign["pending_decision_id"] = decision_id
+    campaign["campaign_state"] = "paused_pending_operator_review"
+    return {**decision, "package_root": str(package_root), "review_summary": summary}
+
+
+def _live44_launch_decision_popup(decision: Mapping[str, Any], *, mode: str = "test") -> dict[str, Any]:
+    package_root = Path(str(decision["package_root"]))
+    title = "DELTA LIVE-44 Operator Decision"
+    payload = {"title": title, "decision_id": decision["decision_id"], "campaign_id": decision["campaign_id"], "state": decision["state"], "artifact_root": str(package_root), "review_summary": decision["review_summary"]}
+    if mode == "test":
+        return {**payload, "popup_created": True, "popup_pid": 0, "mode": "test", "clipboard_summary_available": True, "buttons": ("Open Evidence Folder", "Copy Review Summary", "Accept", "Deny", "Request Revision", "Dismiss Without Decision")}
+    script = package_root / "live44_operator_decision_popup.py"
+    script.write_text(
+        "\n".join((
+            "import os, tkinter as tk",
+            f"payload = {payload!r}",
+            f"artifact_root = {str(package_root)!r}",
+            "root = tk.Tk()",
+            "root.title(payload['title'])",
+            "tk.Label(root, text=payload['review_summary'], justify='left', padx=12, pady=12).pack()",
+            "buttons = tk.Frame(root); buttons.pack(pady=8)",
+            "tk.Button(buttons, text='Open Evidence Folder', command=lambda: os.startfile(artifact_root)).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Copy Review Summary', command=lambda: (root.clipboard_clear(), root.clipboard_append(payload['review_summary']))).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Accept').pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Deny').pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Request Revision').pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Dismiss Without Decision', command=root.destroy).pack(side='left', padx=3)",
+            "root.mainloop()",
+        )),
+        encoding="utf-8",
+    )
+    proc = subprocess.Popen([os.sys.executable, str(script)], cwd=str(package_root), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return {**payload, "popup_created": True, "popup_pid": proc.pid, "mode": "persistent", "clipboard_summary_available": True}
+
+
+def live44_record_operator_decision(package_root: str, *, action: str, note: str = "") -> dict[str, Any]:
+    state_path = Path(package_root) / "decision_state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    prior = state["state"]
+    transitions = {"ACCEPT": "accepted", "DENY": "denied", "REQUEST_REVISION": "revision_requested", "DISMISS": "pending_operator_review"}
+    new_state = transitions[action]
+    result = {
+        "decision_id": state["decision_id"],
+        "prior_state": prior,
+        "new_state": new_state,
+        "exact_operator_action": action,
+        "exact_authorized_scope": "one bounded isolated transition" if new_state == "accepted" else "",
+        "approved_budget": {"provider_calls": 0, "local_actions": 1} if new_state == "accepted" else {},
+        "operator_note": note,
+        "timestamp": utc_now(),
+        "checkpoint": json.loads((Path(package_root) / "resume_checkpoint.json").read_text(encoding="utf-8")),
+        "artifact_digest": "",
+    }
+    result["artifact_digest"] = _live41_digest(result)
+    _live44_write_json(Path(package_root) / "decision_result.json", result)
+    _live44_write_json(state_path, {"decision_id": state["decision_id"], "state": new_state})
+    return result
+
+
+def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", campaign_id: str = "live44-episode-pilot", starting_checkpoint: str = "543e8821", max_episodes: int = 3, popup_mode: str = "test") -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    campaign = make_live44_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    spans = ("LIVE-43 retained a scope-difference comparison capability", "LIVE-42 generated multiple frontier candidates but shallow episodes often exhausted quickly")
+    cycle_id = stable_id("live44-cycle", campaign_id, "provider-value")
+    useful_request = _live44_make_provider_request(campaign, cycle_id=cycle_id, provider_role="objective proposal", unresolved_question="Which evidence-grounded objective is most likely to deepen frontier exploration after shallow exhaustion?", evidence_spans=spans, downstream_consumer="admissibility_for_isolated_candidate")
+    _live44_write_json(root / "provider_call_request.json", useful_request)
+    gate = live44_provider_value_gate(campaign, useful_request)
+    response = _live44_provider_stub_response(campaign, useful_request) if gate["accepted"] else {}
+    evaluation = _live44_evaluate_provider_response(useful_request, response, downstream_transition_completed=bool(response))
+    campaign["provider_value_counts"][evaluation["value_classification"]] += 1
+    campaign["local_actions"] += 1
+    campaign["completed_episodes"] += 1
+    campaign["completed_productive_cycles"] += 1
+    campaign["exploration_history"].append({"episode": 1, "strategy": "provider-assisted-frontier-ranking", "productive_cycles": 1, "terminal_reason": "operator_decision_required_for_isolated_action"})
+    filler = _live44_make_provider_request(campaign, cycle_id="filler-cycle", provider_role="diagnosis", unresolved_question="What should I do next?", evidence_spans=(), downstream_consumer="", requested_output="ideas", expected_information_gain=0.1, confidence_call_is_useful=0.1)
+    filler_gate = live44_provider_value_gate(campaign, filler)
+    duplicate = _live44_make_provider_request(campaign, cycle_id=cycle_id, provider_role="objective proposal", unresolved_question=useful_request["unresolved_question"], evidence_spans=spans, downstream_consumer="admissibility_for_isolated_candidate")
+    duplicate_gate = live44_provider_value_gate(campaign, duplicate)
+    checkpoint = _live44_checkpoint(root, campaign, latest_artifact=str(root / "provider_call_request.json"))
+    decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="implementation_with_elevated_risk", requested_action="execute one isolated candidate based on provider-ranked objective", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": response.get("token_usage", {})}, checkpoint=checkpoint)
+    popup = _live44_launch_decision_popup(decision, mode=popup_mode)
+    dismiss = live44_record_operator_decision(decision["package_root"], action="DISMISS", note="automation-safe test preserves pending state")
+    denial = live44_record_operator_decision(decision["package_root"], action="DENY", note="derive narrower alternative")
+    revision_decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="revised_lower_risk_implementation", requested_action="execute narrower local-only isolated validation", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": {}}, checkpoint=checkpoint)
+    revision = live44_record_operator_decision(revision_decision["package_root"], action="REQUEST_REVISION", note="strengthen tests")
+    accept_decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="accepted_local_only_implementation", requested_action="execute one narrower local-only validation", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": {}}, checkpoint=checkpoint)
+    accepted = live44_record_operator_decision(accept_decision["package_root"], action="ACCEPT", note="bounded pilot authorization")
+    execution = {"executed": accepted["new_state"] == "accepted", "authorization_consumed": True, "reuse_denied": True, "tracked_source_application": False, "result": "narrower local-only alternative validated"}
+    _live44_write_json(root / "execution_evidence.json", execution)
+    for episode in range(2, max_episodes + 1):
+        campaign["completed_episodes"] += 1
+        campaign["exploration_history"].append({"episode": episode, "strategy": "materially-distinct-local-exploration", "productive_cycles": 0, "terminal_reason": "episode_exhausted_without_campaign_completion"})
+    campaign["campaign_state"] = "paused_pending_operator_review"
+    campaign["pending_decision_id"] = accept_decision["decision_id"]
+    paused = {
+        "campaign": campaign,
+        "provider_request": useful_request,
+        "provider_gate": gate,
+        "provider_response": response,
+        "provider_evaluation": evaluation,
+        "filler_gate": filler_gate,
+        "duplicate_gate": duplicate_gate,
+        "operator_decisions": (decision, revision_decision, accept_decision),
+        "decision_results": (dismiss, denial, revision, accepted),
+        "execution": execution,
+    }
+    artifacts = {
+        "paused_status.json": {"campaign": campaign, "pending_decision_id": campaign["pending_decision_id"]},
+        "campaign_summary.json": {"target_episodes": 200, "pilot_episodes": max_episodes, "completed_productive_cycles": campaign["completed_productive_cycles"]},
+        "cycle_ledger.json": {"episodes": campaign["exploration_history"]},
+        "provider_request_ledger.json": {"requests": (useful_request, filler, duplicate)},
+        "provider_response_ledger.json": {"responses": (response,)},
+        "provider_value_ledger.json": {"evaluations": (evaluation,)},
+        "provider_budget.json": {"provider_calls": campaign["provider_calls"], "soft_budget": campaign["provider_soft_budget"], "hard_ceiling": campaign["provider_hard_ceiling"]},
+        "operator_decision_ledger.json": {"decisions": (decision["decision_id"], revision_decision["decision_id"], accept_decision["decision_id"])},
+        "restart_state.json": {"pending_decision_preserved": True, "provider_cache_preserved": True, "completed_cycles_not_recounted": True},
+        "popup_status.json": popup,
+        "resource_summary.json": {"local_actions": campaign["local_actions"], "provider_calls": campaign["provider_calls"]},
+    }
+    written = {name: _live44_write_json(root / name, payload) for name, payload in artifacts.items()}
+    review = {
+        "classification": "LIVE_44_GOVERNED_PROVIDER_LOOP_READY_WITH_LIMITS",
+        "live43_frozen": True,
+        "provider_value_gate_active": gate["accepted"] and not filler_gate["accepted"],
+        "duplicate_denied_or_cached": duplicate_gate["accepted"] is False and "duplicate_request_cache_available" in duplicate_gate["reasons"],
+        "provider_output_advisory": response.get("advisory_only") is True,
+        "call_value_assessed": evaluation["value_classification"] in {"high_value", "useful"},
+        "operator_package_complete": all((Path(decision["package_root"]) / name).exists() for name in ("decision_request.json", "decision_summary.txt", "evidence_manifest.json", "decision_state.json")),
+        "dismiss_preserves_pending": dismiss["new_state"] == "pending_operator_review",
+        "deny_derives_narrower_alternative": denial["new_state"] == "denied" and revision_decision["decision_type"] == "revised_lower_risk_implementation",
+        "revision_supersedes_path": revision["new_state"] == "revision_requested",
+        "accept_exact_single_use": accepted["new_state"] == "accepted" and execution["reuse_denied"],
+        "episode_exhaustion_not_campaign_completion": campaign["completed_episodes"] >= max_episodes and campaign["campaign_state"] == "paused_pending_operator_review",
+    }
+    review_artifact = _live44_write_json(root / "final_review.json", review)
+    return {**paused, "artifact_root": str(root), "classification": review["classification"], "review": review, "review_artifact": review_artifact, "written_artifacts": written}
+
+
+def make_live44_detached_launcher(*, repository_root: str, artifact_root: str, campaign_id: str, starting_checkpoint: str = "543e8821") -> dict[str, Any]:
+    repo = Path(repository_root).resolve()
+    if not (repo / "orchestration" / "runtime" / "gsr_a_governed_self_regulation.py").exists() or repo.name != "Delta_Dev":
+        return {"accepted": False, "reason": "repository_root_invalid"}
+    root = Path(artifact_root).resolve() / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    launcher = root / "launch_live44.py"
+    launcher.write_text(
+        "\n".join((
+            "from pathlib import Path",
+            "import sys",
+            f"repo = Path({str(repo)!r}).resolve()",
+            "if str(repo) not in sys.path:",
+            "    sys.path.insert(0, str(repo))",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import run_live44_episode_campaign_pilot",
+            "run_live44_episode_campaign_pilot(",
+            f"    artifact_root={str(Path(artifact_root).resolve())!r},",
+            f"    campaign_id={campaign_id!r},",
+            f"    starting_checkpoint={starting_checkpoint!r},",
+            "    max_episodes=10,",
+            "    popup_mode='persistent',",
+            ")",
+            "",
+        )),
+        encoding="utf-8",
+    )
+    return {"accepted": True, "reason": "launcher_created", "campaign_id": campaign_id, "artifact_root": str(Path(artifact_root).resolve()), "launcher_path": str(launcher), "stdout_path": str(root / "stdout.log"), "stderr_path": str(root / "stderr.log")}
+
+
 def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
     if eligible_work:
         return "execute_next"

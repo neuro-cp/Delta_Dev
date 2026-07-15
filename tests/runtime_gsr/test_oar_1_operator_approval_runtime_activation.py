@@ -5674,6 +5674,130 @@ def test_live_43_detached_launcher_binds_repo(tmp_path):
     assert denied["accepted"] is False
 
 
+def test_live_44_provider_value_gate_allows_useful_and_denies_filler():
+    campaign = gsr.make_live44_campaign(campaign_id="live44-gate", starting_checkpoint="543e8821")
+    useful = gsr._live44_make_provider_request(
+        campaign,
+        cycle_id="cycle-1",
+        provider_role="objective proposal",
+        unresolved_question="Which bounded objective best addresses the transfer weakness shown by preserved evidence?",
+        evidence_spans=("transfer validation failed on scholarly source comparison",),
+        downstream_consumer="admissibility_decision",
+    )
+    filler = gsr._live44_make_provider_request(
+        campaign,
+        cycle_id="cycle-2",
+        provider_role="diagnosis",
+        unresolved_question="Give me ideas.",
+        evidence_spans=(),
+        downstream_consumer="",
+        requested_output="ideas",
+        expected_information_gain=0.1,
+        confidence_call_is_useful=0.1,
+    )
+
+    assert gsr.live44_provider_value_gate(campaign, useful)["accepted"] is True
+    denied = gsr.live44_provider_value_gate(campaign, filler)
+    assert denied["accepted"] is False
+    assert denied["decision"] == "PROVIDER_CALL_DENIED_LOW_INFORMATION_VALUE"
+    assert "low_information_or_filler_request" in denied["reasons"]
+
+
+def test_live_44_provider_cache_and_value_assessment():
+    campaign = gsr.make_live44_campaign(campaign_id="live44-cache", starting_checkpoint="543e8821")
+    request = gsr._live44_make_provider_request(
+        campaign,
+        cycle_id="cycle-cache",
+        provider_role="objective proposal",
+        unresolved_question="Which narrow objective follows from the retained limitation?",
+        evidence_spans=("retained candidate limitation remains unresolved",),
+        downstream_consumer="objective_admissibility",
+    )
+    assert gsr.live44_provider_value_gate(campaign, request)["accepted"] is True
+    response = gsr._live44_provider_stub_response(campaign, request)
+    duplicate = gsr._live44_make_provider_request(
+        campaign,
+        cycle_id="cycle-cache",
+        provider_role="objective proposal",
+        unresolved_question=request["unresolved_question"],
+        evidence_spans=request["exact_evidence_spans"],
+        downstream_consumer="objective_admissibility",
+    )
+    duplicate_gate = gsr.live44_provider_value_gate(campaign, duplicate)
+    evaluation = gsr._live44_evaluate_provider_response(request, response, downstream_transition_completed=True)
+
+    assert campaign["provider_calls"] == 1
+    assert duplicate_gate["accepted"] is False
+    assert "duplicate_request_cache_available" in duplicate_gate["reasons"]
+    assert evaluation["value_classification"] == "useful"
+    assert evaluation["downstream_transition_completed"] is True
+
+
+def test_live_44_operator_decision_package_and_artifacts(tmp_path):
+    campaign = gsr.make_live44_campaign(campaign_id="live44-decision", starting_checkpoint="543e8821")
+    checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
+    decision = gsr._live44_operator_decision_package(
+        tmp_path,
+        campaign,
+        cycle_id="cycle-1",
+        decision_type="implementation_with_elevated_risk",
+        requested_action="execute isolated candidate",
+        provider_usage={"provider_calls": 1, "token_usage": {"input_tokens": 10}},
+        checkpoint=checkpoint,
+    )
+    popup = gsr._live44_launch_decision_popup(decision, mode="test")
+
+    for name in ("decision_request.json", "decision_summary.txt", "evidence_manifest.json", "alternatives.json", "risk_assessment.json", "recommended_action.json", "provider_usage.json", "affected_scope.json", "resume_checkpoint.json", "decision_state.json"):
+        assert (Path(decision["package_root"]) / name).exists()
+    assert campaign["campaign_state"] == "paused_pending_operator_review"
+    assert popup["title"] == "DELTA LIVE-44 Operator Decision"
+    assert popup["clipboard_summary_available"] is True
+    assert "DELTA OPERATOR DECISION REQUEST" in decision["review_summary"]
+
+
+def test_live_44_accept_deny_revision_transitions(tmp_path):
+    campaign = gsr.make_live44_campaign(campaign_id="live44-transitions", starting_checkpoint="543e8821")
+    checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
+    decision = gsr._live44_operator_decision_package(tmp_path, campaign, cycle_id="cycle-1", decision_type="implementation", requested_action="execute isolated candidate", provider_usage={}, checkpoint=checkpoint)
+    dismiss = gsr.live44_record_operator_decision(decision["package_root"], action="DISMISS")
+    deny = gsr.live44_record_operator_decision(decision["package_root"], action="DENY")
+    revised = gsr._live44_operator_decision_package(tmp_path, campaign, cycle_id="cycle-1", decision_type="revised", requested_action="execute narrower candidate", provider_usage={}, checkpoint=checkpoint)
+    revision = gsr.live44_record_operator_decision(revised["package_root"], action="REQUEST_REVISION")
+    accepted = gsr.live44_record_operator_decision(revised["package_root"], action="ACCEPT")
+
+    assert dismiss["new_state"] == "pending_operator_review"
+    assert deny["new_state"] == "denied"
+    assert revision["new_state"] == "revision_requested"
+    assert accepted["new_state"] == "accepted"
+    assert accepted["exact_authorized_scope"] == "one bounded isolated transition"
+
+
+def test_live_44_episode_pilot_pauses_after_decision_and_does_not_treat_episode_exhaustion_as_completion(tmp_path):
+    result = gsr.run_live44_episode_campaign_pilot(artifact_root=str(tmp_path), campaign_id="live44-pilot", max_episodes=3, popup_mode="test")
+    root = Path(result["artifact_root"])
+
+    assert result["classification"] == "LIVE_44_GOVERNED_PROVIDER_LOOP_READY_WITH_LIMITS"
+    assert result["provider_gate"]["accepted"] is True
+    assert result["filler_gate"]["accepted"] is False
+    assert result["duplicate_gate"]["accepted"] is False
+    assert result["provider_evaluation"]["value_classification"] == "useful"
+    assert result["campaign"]["campaign_state"] == "paused_pending_operator_review"
+    assert result["campaign"]["completed_episodes"] == 3
+    assert result["campaign"]["completed_productive_cycles"] == 1
+    assert result["review"]["episode_exhaustion_not_campaign_completion"] is True
+    for name in ("paused_status.json", "campaign_summary.json", "cycle_ledger.json", "provider_request_ledger.json", "provider_response_ledger.json", "provider_value_ledger.json", "provider_budget.json", "operator_decision_ledger.json", "restart_state.json", "popup_status.json", "resource_summary.json", "final_review.json"):
+        assert (root / name).exists()
+
+
+def test_live_44_detached_launcher_binds_repo(tmp_path):
+    launcher = gsr.make_live44_detached_launcher(repository_root=str(Path.cwd()), artifact_root=str(tmp_path), campaign_id="live44-launch")
+    denied = gsr.make_live44_detached_launcher(repository_root=str(tmp_path), artifact_root=str(tmp_path), campaign_id="live44-denied")
+
+    assert launcher["accepted"] is True
+    assert Path(launcher["launcher_path"]).exists()
+    assert denied["accepted"] is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
