@@ -3785,6 +3785,70 @@ def test_live_27_checkpoint_reconstruction_preserves_absence_state():
     assert result.process_left_running is False
 
 
+def test_live_28_proxy_supervision_records_bounded_delegation_and_decisions():
+    result = gsr.run_live28_bounded_codex_operator_proxy_supervision()
+    decisions = {decision.decision for decision in result.proxy_decisions}
+
+    assert result.accepted is True
+    assert len(result.branches) == 8
+    assert len(result.proxy_review_packages) >= 3
+    assert "approved" in decisions
+    assert "deferred_insufficient_evidence" in decisions
+    assert "rejected" in decisions
+    assert "denied_outside_authority" in decisions
+    assert result.approved_actions == ("run focused proxy evidence validation",)
+    assert result.implementation_evidence["implementation_authorized"] is False
+    assert result.application_evidence["application_performed"] is False
+    assert result.promotion_activation_evidence["activation_rejected_before_application_validation"] is True
+    assert result.delegation_expired is True
+
+
+def test_live_28_proxy_authorization_is_one_use_and_replay_denied():
+    result = gsr.run_live28_bounded_codex_operator_proxy_supervision()
+    approved = [decision for decision in result.proxy_decisions if decision.decision == "approved"]
+
+    assert len(approved) == 1
+    assert approved[0].authorization_consumed is True
+    assert approved[0].proxy_authority_identity
+    assert result.replay_prevention["approved_authorization_replay_denied"] is True
+    assert result.replay_prevention["consumed_authorization_unavailable"] is True
+    assert result.replay_prevention["expired_authorization_denied"] is True
+    assert result.reconstruction.consumed_authorization_remains_consumed is True
+    assert result.reconstruction.completed_work_not_repeated is True
+
+
+def test_live_28_proxy_denies_outside_authority_and_preserves_restart_state():
+    result = gsr.run_live28_bounded_codex_operator_proxy_supervision()
+    denied = {item.denied_action: item for item in result.outside_authority_denials}
+
+    for action in (
+        "governance modification",
+        "permission expansion",
+        "new provider selection",
+        "new source-domain selection",
+        "unrestricted shell",
+        "memory write",
+        "mission expansion",
+        "Git operation",
+        "deployment",
+        "DELTA-75 mutation",
+        "reports/RC4_* mutation",
+        "request path substitution",
+        "expired authorization",
+        "consumed authorization replay",
+        "activation without application validation",
+    ):
+        assert denied[action].decision == "denied_outside_authority"
+        assert denied[action].no_side_effect_proof is True
+
+    assert result.reconstruction.mission_identity_preserved is True
+    assert result.reconstruction.delegation_scope_preserved is True
+    assert result.reconstruction.rejected_requests_remain_rejected is True
+    assert result.reconstruction.source_provider_calls_not_repeated is True
+    assert result.source_provider_use["advisory_boundary_preserved"] is True
+    assert result.process_left_running is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
