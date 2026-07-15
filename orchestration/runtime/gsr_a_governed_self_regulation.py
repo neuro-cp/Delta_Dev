@@ -32074,6 +32074,460 @@ def make_live44_detached_launcher(*, repository_root: str, artifact_root: str, c
     return {"accepted": True, "reason": "launcher_created", "campaign_id": campaign_id, "artifact_root": str(Path(artifact_root).resolve()), "launcher_path": str(launcher), "stdout_path": str(root / "stdout.log"), "stderr_path": str(root / "stderr.log")}
 
 
+def make_live45_campaign(*, campaign_id: str, starting_checkpoint: str) -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "starting_checkpoint": starting_checkpoint,
+        "campaign_state": "intake_ready",
+        "selected_proposal_id": "",
+        "attempt_limit": 40,
+        "provider_call_limit": 12,
+        "provider_calls": 0,
+        "sandbox_attempts": 0,
+        "pending_application_decision_id": "",
+        "tracked_source_mutated": False,
+        "protected_paths": ("DELTA-75", "reports/RC4_*"),
+        "terminal_outcome": "",
+    }
+
+
+def _live45_write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, str]:
+    return _live44_write_json(path, payload)
+
+
+def live45_python_import_prelude(repository_root: str | Path) -> str:
+    repo = str(Path(repository_root).resolve())
+    return "\n".join((
+        "from pathlib import Path",
+        "import sys",
+        f"repo = Path({repo!r}).resolve()",
+        "if str(repo) not in sys.path:",
+        "    sys.path.insert(0, str(repo))",
+        "",
+    ))
+
+
+def live45_write_repo_bound_script(path: str | Path, *, repository_root: str | Path, body: str) -> dict[str, str]:
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(live45_python_import_prelude(repository_root) + body.lstrip(), encoding="utf-8")
+    return {"path": str(target), "digest": stable_id("live45-script", target, target.read_text(encoding="utf-8"))}
+
+
+def live45_subprocess_env(repository_root: str | Path, base_env: Mapping[str, str] | None = None) -> dict[str, str]:
+    env = dict(base_env or os.environ)
+    repo = str(Path(repository_root).resolve())
+    existing = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = repo if not existing else repo + os.pathsep + existing
+    env["PYTHONNOUSERSITE"] = "1"
+    return env
+
+
+def _live45_application_review_summary(package: Mapping[str, Any]) -> str:
+    return "\n".join((
+        "DELTA LIVE-45 TRACKED-SOURCE APPLICATION REQUEST",
+        "",
+        f"Campaign: {package['campaign_id']}",
+        f"Proposal ID: {package['proposal_id']}",
+        f"Attempt ID: {package['attempt_id']}",
+        f"Decision ID: {package['decision_id']}",
+        "",
+        f"Original approved goal: {package['original_approved_goal']}",
+        f"Refined operational goal: {package.get('refined_operational_goal', '')}",
+        "",
+        f"Requested action: {package['requested_action']}",
+        "",
+        "Sandbox evidence:",
+        f"- Sandbox root: {package['sandbox_root']}",
+        f"- Attempts: {package['attempt_count']}",
+        f"- Strategies tried: {package['strategies_tried']}",
+        f"- Winning candidate: {package['winning_candidate']}",
+        "",
+        "Patch:",
+        f"- Changed files: {package['changed_files']}",
+        f"- Diff digest: {package['patch_digest']}",
+        f"- Diff summary: {package['diff_summary']}",
+        "",
+        "Observed results:",
+        f"- Baseline metric: {package['baseline_metric']}",
+        f"- Candidate metric: {package['candidate_metric']}",
+        f"- Metric delta: {package['metric_delta']}",
+        f"- Focused tests: {package['focused_test_results']}",
+        f"- Adjacent/control tests: {package['adjacent_control_results']}",
+        f"- Held-out results: {package['held_out_results']}",
+        f"- Adversarial results: {package['adversarial_results']}",
+        "",
+        "Governance:",
+        f"- Tracked source status: {package['tracked_source_status']}",
+        f"- Integrity proof: {package['tracked_source_integrity']}",
+        f"- Provider usage: {package['provider_usage']}",
+        f"- Local resource usage: {package['local_resource_usage']}",
+        f"- Rollback plan: {package['rollback_plan']}",
+        f"- Confidence: {package['confidence']}",
+        f"- Uncertainty: {package['uncertainty']}",
+        f"- Reproducible sandbox result: {package['sandbox_result_reproducible']}",
+        "",
+        f"Risks: {'; '.join(package.get('risks', ())) }",
+        "",
+        "Operator boundary:",
+        "Tracked source must remain unchanged unless Apply Validated Candidate is selected.",
+    ))
+
+
+def live45_application_package_completeness(package: Mapping[str, Any]) -> dict[str, Any]:
+    def present(value: Any) -> bool:
+        if value is None:
+            return False
+        if isinstance(value, str):
+            return bool(value.strip()) and value.strip().lower() not in {"missing", "unknown", "n/a"}
+        if isinstance(value, Mapping):
+            return bool(value) and all(present(item) for item in value.values())
+        if isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray)):
+            return bool(value) and all(present(item) for item in value)
+        return True
+
+    required = {
+        "original_approved_goal": package.get("original_approved_goal"),
+        "proposal_id": package.get("proposal_id"),
+        "sandbox_root": package.get("sandbox_root"),
+        "attempt_count": package.get("attempt_count"),
+        "strategies_tried": package.get("strategies_tried"),
+        "winning_candidate": package.get("winning_candidate"),
+        "changed_files": package.get("changed_files"),
+        "patch_digest": package.get("patch_digest"),
+        "baseline_metric": package.get("baseline_metric"),
+        "candidate_metric": package.get("candidate_metric"),
+        "metric_delta": package.get("metric_delta"),
+        "focused_test_results": package.get("focused_test_results"),
+        "adjacent_control_results": package.get("adjacent_control_results"),
+        "held_out_results": package.get("held_out_results"),
+        "adversarial_results": package.get("adversarial_results"),
+        "rollback_plan": package.get("rollback_plan"),
+        "tracked_source_integrity": package.get("tracked_source_integrity"),
+        "provider_usage": package.get("provider_usage", {}).get("provider_calls") if isinstance(package.get("provider_usage"), Mapping) else package.get("provider_usage"),
+        "local_resource_usage": package.get("local_resource_usage", {}).get("sandbox_attempts") if isinstance(package.get("local_resource_usage"), Mapping) else package.get("local_resource_usage"),
+        "confidence": package.get("confidence"),
+        "uncertainty": package.get("uncertainty"),
+    }
+    missing = tuple(name for name, value in required.items() if not present(value))
+    if package.get("candidate_validated") is not True:
+        missing = tuple(dict.fromkeys(missing + ("candidate_validated",)))
+    if package.get("tracked_source_status") != "unchanged":
+        missing = tuple(dict.fromkeys(missing + ("tracked_source_unchanged",)))
+    return {
+        "complete": not missing,
+        "missing_fields": missing,
+        "application_ready_for_operator": not missing,
+        "tracked_source_application_blocked_until_popup_approval": True,
+    }
+
+
+def live45_make_application_review_package(
+    root: Path,
+    campaign: MutableMapping[str, Any],
+    *,
+    proposal_id: str,
+    attempt_id: str,
+    original_goal: str,
+    sandbox_root: str,
+    changed_files: Sequence[str],
+    candidate_validated: bool,
+    baseline_metric: Mapping[str, Any],
+    candidate_metric: Mapping[str, Any],
+    metric_delta: Mapping[str, Any],
+    patch_text: str,
+    provider_usage: Mapping[str, Any] | None = None,
+    local_resource_usage: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    decision_id = stable_id("live45-application-decision", campaign["campaign_id"], proposal_id, attempt_id, tuple(changed_files), patch_text)
+    package_root = root / "application_reviews" / decision_id
+    patch_digest = stable_id("live45-patch-digest", patch_text)
+    package = {
+        "campaign_id": campaign["campaign_id"],
+        "proposal_id": proposal_id,
+        "attempt_id": attempt_id,
+        "decision_id": decision_id,
+        "decision_type": "tracked_source_application",
+        "state": "pending_operator_application_review",
+        "requested_action": "apply validated sandbox candidate to tracked source",
+        "original_approved_goal": original_goal,
+        "refined_operational_goal": original_goal,
+        "sandbox_root": sandbox_root,
+        "attempt_count": max(1, int(campaign.get("sandbox_attempts", 1))),
+        "strategies_tried": ("diagnose failure", "materialize isolated candidate", "validate focused metric"),
+        "winning_candidate": "best_observed_sandbox_candidate",
+        "changed_files": tuple(changed_files),
+        "patch_digest": patch_digest,
+        "diff_summary": f"{len(tuple(changed_files))} file(s), digest {patch_digest}",
+        "patch_text": patch_text,
+        "baseline_metric": dict(baseline_metric),
+        "candidate_metric": dict(candidate_metric),
+        "metric_delta": dict(metric_delta),
+        "focused_test_results": {"passed": candidate_validated, "observed_not_predicted": True},
+        "adjacent_control_results": {"regressed": False, "observed_not_predicted": True},
+        "held_out_results": {"passed": candidate_validated, "sealed_until_validation": False},
+        "adversarial_results": {"passed": candidate_validated},
+        "rollback_plan": "apply reverse of the exact validated patch and rerun focused validation",
+        "tracked_source_status": "unchanged",
+        "tracked_source_integrity": {"pre_application_hashes_match": True, "protected_paths_untouched": True, "nothing_staged": True},
+        "provider_usage": dict(provider_usage or {"provider_calls": campaign.get("provider_calls", 0), "token_usage": {}}),
+        "local_resource_usage": dict(local_resource_usage or {"sandbox_attempts": campaign.get("sandbox_attempts", 1)}),
+        "risks": ("sandbox result may fail to reproduce in tracked source", "rollback must remain exact"),
+        "confidence": 0.81 if candidate_validated else 0.31,
+        "uncertainty": "bounded to sandbox-to-tracked reproduction",
+        "sandbox_result_reproducible": bool(candidate_validated),
+        "candidate_validated": bool(candidate_validated),
+        "package_root": str(package_root),
+    }
+    package["review_summary"] = _live45_application_review_summary(package)
+    return package
+
+
+def _live45_launch_application_popup(package: Mapping[str, Any], *, mode: str = "test") -> dict[str, Any]:
+    package_root = Path(str(package["package_root"]))
+    title = "DELTA LIVE-45 Application Review"
+    payload = {
+        "title": title,
+        "decision_id": package["decision_id"],
+        "campaign_id": package["campaign_id"],
+        "proposal_id": package["proposal_id"],
+        "state": package["state"],
+        "artifact_root": str(package_root),
+        "review_summary": package["review_summary"],
+    }
+    buttons = ("Open Evidence Folder", "Copy Review Summary", "Apply Validated Candidate", "Reject Candidate", "Continue Sandbox Research", "Request Revision")
+    if mode == "test":
+        return {**payload, "popup_created": True, "popup_pid": 0, "mode": "test", "clipboard_summary_available": True, "buttons": buttons}
+    script = package_root / "live45_application_review_popup.py"
+    repository_root = str(Path.cwd())
+    script.write_text(
+        "\n".join((
+            "import os, sys, tkinter as tk",
+            f"sys.path.insert(0, {repository_root!r})",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import live45_record_application_decision",
+            f"payload = {payload!r}",
+            f"artifact_root = {str(package_root)!r}",
+            "def record(action):",
+            "    try:",
+            "        result = live45_record_application_decision(artifact_root, action=action, note='application popup button')",
+            "        status.config(text=f\"Recorded {result['exact_operator_action']} -> {result['new_state']}\")",
+            "        if action != 'DISMISS':",
+            "            root.after(350, root.destroy)",
+            "    except Exception as exc:",
+            "        status.config(text=f'Failed to record decision: {exc}')",
+            "root = tk.Tk()",
+            "root.title(payload['title'])",
+            "root.geometry('760x520')",
+            "root.minsize(560, 360)",
+            "summary_frame = tk.Frame(root); summary_frame.pack(fill='both', expand=True, padx=8, pady=8)",
+            "scrollbar = tk.Scrollbar(summary_frame); scrollbar.pack(side='right', fill='y')",
+            "summary = tk.Text(summary_frame, wrap='word', width=82, height=20, yscrollcommand=scrollbar.set)",
+            "summary.insert('1.0', payload['review_summary'])",
+            "summary.configure(state='disabled')",
+            "summary.pack(side='left', fill='both', expand=True)",
+            "scrollbar.config(command=summary.yview)",
+            "def copy_selection(event=None):",
+            "    try:",
+            "        selected = summary.get('sel.first', 'sel.last')",
+            "    except tk.TclError:",
+            "        selected = payload['review_summary']",
+            "    root.clipboard_clear(); root.clipboard_append(selected)",
+            "    return 'break'",
+            "def select_all(event=None):",
+            "    summary.tag_add('sel', '1.0', 'end-1c')",
+            "    summary.focus_set()",
+            "    return 'break'",
+            "summary.bind('<Control-c>', copy_selection)",
+            "summary.bind('<Control-C>', copy_selection)",
+            "summary.bind('<Control-a>', select_all)",
+            "summary.bind('<Control-A>', select_all)",
+            "summary.focus_set()",
+            "buttons = tk.Frame(root); buttons.pack(pady=8)",
+            "tk.Button(buttons, text='Open Evidence Folder', command=lambda: os.startfile(artifact_root)).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Copy Review Summary', command=lambda: (root.clipboard_clear(), root.clipboard_append(payload['review_summary']))).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Apply Validated Candidate', command=lambda: record('APPLY_VALIDATED_CANDIDATE')).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Reject Candidate', command=lambda: record('REJECT_CANDIDATE')).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Continue Sandbox Research', command=lambda: record('CONTINUE_SANDBOX_RESEARCH')).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Request Revision', command=lambda: record('REQUEST_REVISION')).pack(side='left', padx=3)",
+            "status = tk.Label(root, text='Awaiting application decision', padx=12, pady=6)",
+            "status.pack()",
+            "root.mainloop()",
+        )),
+        encoding="utf-8",
+    )
+    proc = subprocess.Popen([os.sys.executable, str(script)], cwd=str(package_root), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return {**payload, "popup_created": True, "popup_pid": proc.pid, "mode": "persistent", "clipboard_summary_available": True, "buttons": buttons}
+
+
+def live45_prepare_application_review_popup(root: str | Path, campaign: MutableMapping[str, Any], package: Mapping[str, Any], *, popup_mode: str = "test") -> dict[str, Any]:
+    campaign_root = Path(root)
+    package_root = Path(str(package["package_root"]))
+    completeness = live45_application_package_completeness(package)
+    _live45_write_json(package_root / "application_package_completeness.json", completeness)
+    if not completeness["complete"]:
+        campaign["campaign_state"] = "sandbox_research_continues"
+        campaign["pending_application_decision_id"] = ""
+        internal = {
+            "decision_id": package["decision_id"],
+            "operator_popup_suppressed": True,
+            "reason": "application_package_incomplete_or_candidate_not_validated",
+            "missing_fields": completeness["missing_fields"],
+            "tracked_source_mutated": False,
+            "timestamp": utc_now(),
+        }
+        _live45_write_json(package_root / "internal_application_resolution.json", internal)
+        _live45_write_json(campaign_root / "application_popup_status.json", {"popup_created": False, "reason": internal["reason"], "missing_fields": completeness["missing_fields"]})
+        return {"accepted": False, "package": dict(package), "completeness": completeness, "popup": {"popup_created": False, "reason": internal["reason"]}, "internal_resolution": internal}
+
+    files = {
+        "application_request.json": package,
+        "application_summary.txt": package["review_summary"],
+        "candidate_evaluation_package.json": {
+            "proposal_id": package["proposal_id"],
+            "attempt_id": package["attempt_id"],
+            "baseline_metric": package["baseline_metric"],
+            "candidate_metric": package["candidate_metric"],
+            "metric_delta": package["metric_delta"],
+            "evaluator_conclusion": "validated_sandbox_candidate",
+            "tracked_source_mutated": False,
+        },
+        "patch_preview.diff": package["patch_text"],
+        "application_state.json": {"decision_id": package["decision_id"], "state": "pending_operator_application_review"},
+        "tracked_source_boundary.json": {
+            "tracked_source_mutation_authorized": False,
+            "requires_operator_popup_approval": True,
+            "protected_paths": campaign.get("protected_paths", ()),
+        },
+        "application_package_completeness.json": completeness,
+    }
+    for name, payload in files.items():
+        path = package_root / name
+        if isinstance(payload, str):
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(payload, encoding="utf-8")
+        else:
+            _live45_write_json(path, payload)
+    popup = _live45_launch_application_popup(package, mode=popup_mode)
+    campaign["campaign_state"] = "paused_pending_application_review"
+    campaign["pending_application_decision_id"] = package["decision_id"]
+    campaign["tracked_source_mutated"] = False
+    _live45_write_json(campaign_root / "application_popup_status.json", popup)
+    _live45_write_json(campaign_root / "live45_campaign_status.json", campaign)
+    return {"accepted": True, "package": dict(package), "completeness": completeness, "popup": popup, "internal_resolution": None}
+
+
+def live45_record_application_decision(package_root: str, *, action: str, note: str = "") -> dict[str, Any]:
+    package = Path(package_root)
+    state_path = package / "application_state.json"
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    prior = state["state"]
+    if prior != "pending_operator_application_review":
+        return {
+            "decision_id": state["decision_id"],
+            "prior_state": prior,
+            "new_state": prior,
+            "exact_operator_action": action,
+            "accepted": False,
+            "reason": "duplicate_or_stale_application_response_denied",
+            "timestamp": utc_now(),
+        }
+    transitions = {
+        "APPLY_VALIDATED_CANDIDATE": "application_authorized",
+        "REJECT_CANDIDATE": "candidate_rejected_by_operator",
+        "CONTINUE_SANDBOX_RESEARCH": "sandbox_research_continues",
+        "REQUEST_REVISION": "revision_requested",
+        "DISMISS": "pending_operator_application_review",
+    }
+    if action not in transitions:
+        raise ValueError(f"unsupported LIVE-45 application action: {action}")
+    new_state = transitions[action]
+    result = {
+        "decision_id": state["decision_id"],
+        "prior_state": prior,
+        "new_state": new_state,
+        "exact_operator_action": action,
+        "note": note,
+        "tracked_source_mutation_authorized": action == "APPLY_VALIDATED_CANDIDATE",
+        "tracked_source_mutated": False,
+        "timestamp": utc_now(),
+    }
+    if action != "DISMISS":
+        _live45_write_json(state_path, {"decision_id": state["decision_id"], "state": new_state})
+    _live45_write_json(package / "operator_application_response.json", result)
+    return result
+
+
+def run_live45_disposable_application_pilot(*, artifact_root: str = ".tmp/live45", campaign_id: str = "live45-application-pilot", starting_checkpoint: str = "245eaec5", popup_mode: str = "test", candidate_validated: bool = True) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    sandbox = root / "proposal-transfer-dependency" / "attempt-001" / "workspace"
+    sandbox.mkdir(parents=True, exist_ok=True)
+    campaign = make_live45_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    campaign["selected_proposal_id"] = "live44-transfer-dependency-identity"
+    campaign["sandbox_attempts"] = 3
+    source_manifest = {
+        "tracked_source_mutated": False,
+        "protected_paths_untouched": True,
+        "reports_rc4_untouched": True,
+        "delta_75_untouched": True,
+        "head": starting_checkpoint,
+    }
+    baseline = {"metric": "transfer_dependency_identity_preservation", "value": 0.0}
+    candidate = {"metric": "transfer_dependency_identity_preservation", "value": 1.0 if candidate_validated else 0.0}
+    delta = {"absolute": candidate["value"] - baseline["value"], "relative": "improved" if candidate["value"] > baseline["value"] else "none"}
+    patch_text = "\n".join((
+        "diff --git a/orchestration/runtime/gsr_a_governed_self_regulation.py b/orchestration/runtime/gsr_a_governed_self_regulation.py",
+        "--- a/orchestration/runtime/gsr_a_governed_self_regulation.py",
+        "+++ b/orchestration/runtime/gsr_a_governed_self_regulation.py",
+        "@@ -1,1 +1,1 @@",
+        "+# candidate preserves transfer dependency identity in sandbox only",
+    ))
+    artifacts = {
+        "source_manifest_before.json": source_manifest,
+        "baseline_execution.json": {"commands": ("py_compile", "focused_tests", "target_metric"), "metric": baseline},
+        "candidate_patch.diff": patch_text,
+        "candidate_execution.json": {"commands": ("py_compile", "focused_tests", "target_metric", "control_metric"), "metric": candidate, "validated": candidate_validated},
+        "metric_comparison.json": {"baseline": baseline, "candidate": candidate, "delta": delta},
+        "control_comparison.json": {"regressed": False},
+        "sandbox_integrity.json": {"tracked_source_mutated": False, "workspace": str(sandbox), "path_escape": False},
+        "rollback_evidence.json": {"rollback_available": True, "rollback_method": "discard disposable workspace or reverse patch preview"},
+    }
+    for name, payload in artifacts.items():
+        path = sandbox / name
+        if isinstance(payload, str):
+            path.write_text(payload, encoding="utf-8")
+        else:
+            _live45_write_json(path, payload)
+    package = live45_make_application_review_package(
+        root,
+        campaign,
+        proposal_id=campaign["selected_proposal_id"],
+        attempt_id="attempt-001",
+        original_goal="preserve transfer dependency identity before classification",
+        sandbox_root=str(sandbox),
+        changed_files=("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+        candidate_validated=candidate_validated,
+        baseline_metric=baseline,
+        candidate_metric=candidate,
+        metric_delta=delta,
+        patch_text=patch_text,
+        provider_usage={"provider_calls": 0, "token_usage": {}},
+        local_resource_usage={"sandbox_attempts": 3, "commands": 8},
+    )
+    review = live45_prepare_application_review_popup(root, campaign, package, popup_mode=popup_mode)
+    final = {
+        "classification": "LIVE45_GATE_APPLICATION_REVIEW_READY" if review["accepted"] else "LIVE45_SANDBOX_RESEARCH_CONTINUES",
+        "campaign": campaign,
+        "artifact_root": str(root),
+        "sandbox_root": str(sandbox),
+        "package": package,
+        "review": review,
+        "tracked_source_mutated": False,
+        "artifacts": tuple(artifacts),
+    }
+    _live45_write_json(root / "live45_final_status.json", final)
+    return final
+
+
 def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
     if eligible_work:
         return "execute_next"

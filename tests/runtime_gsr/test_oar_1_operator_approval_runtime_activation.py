@@ -6329,6 +6329,168 @@ def test_live_44_detached_launcher_binds_repo(tmp_path):
     assert denied["accepted"] is False
 
 
+def test_live_45_validated_sandbox_candidate_launches_application_popup(tmp_path):
+    result = gsr.run_live45_disposable_application_pilot(
+        artifact_root=str(tmp_path),
+        campaign_id="live45-application",
+        popup_mode="test",
+        candidate_validated=True,
+    )
+    root = Path(result["artifact_root"])
+    package_root = Path(result["package"]["package_root"])
+
+    assert result["classification"] == "LIVE45_GATE_APPLICATION_REVIEW_READY"
+    assert result["campaign"]["campaign_state"] == "paused_pending_application_review"
+    assert result["campaign"]["tracked_source_mutated"] is False
+    assert result["review"]["popup"]["popup_created"] is True
+    assert result["review"]["popup"]["title"] == "DELTA LIVE-45 Application Review"
+    assert "Apply Validated Candidate" in result["review"]["popup"]["buttons"]
+    assert "Continue Sandbox Research" in result["review"]["popup"]["buttons"]
+    assert "DELTA LIVE-45 TRACKED-SOURCE APPLICATION REQUEST" in result["package"]["review_summary"]
+    assert "Tracked source must remain unchanged unless Apply Validated Candidate is selected." in result["package"]["review_summary"]
+    for name in (
+        "source_manifest_before.json",
+        "baseline_execution.json",
+        "candidate_patch.diff",
+        "candidate_execution.json",
+        "metric_comparison.json",
+        "control_comparison.json",
+        "sandbox_integrity.json",
+        "rollback_evidence.json",
+    ):
+        assert (Path(result["sandbox_root"]) / name).exists()
+    for name in (
+        "application_request.json",
+        "application_summary.txt",
+        "candidate_evaluation_package.json",
+        "patch_preview.diff",
+        "application_state.json",
+        "tracked_source_boundary.json",
+    ):
+        assert (package_root / name).exists()
+    boundary = json.loads((package_root / "tracked_source_boundary.json").read_text(encoding="utf-8"))
+    assert boundary["tracked_source_mutation_authorized"] is False
+    assert boundary["requires_operator_popup_approval"] is True
+    assert (root / "application_popup_status.json").exists()
+
+
+def test_live_45_unvalidated_candidate_cannot_launch_application_popup(tmp_path):
+    result = gsr.run_live45_disposable_application_pilot(
+        artifact_root=str(tmp_path),
+        campaign_id="live45-invalid",
+        popup_mode="test",
+        candidate_validated=False,
+    )
+
+    assert result["classification"] == "LIVE45_SANDBOX_RESEARCH_CONTINUES"
+    assert result["review"]["accepted"] is False
+    assert result["review"]["popup"]["popup_created"] is False
+    assert "candidate_validated" in result["review"]["completeness"]["missing_fields"]
+    assert result["campaign"]["campaign_state"] == "sandbox_research_continues"
+    assert result["tracked_source_mutated"] is False
+
+
+def test_live_45_persistent_application_popup_buttons_and_selectable_text(tmp_path, monkeypatch):
+    campaign = gsr.make_live45_campaign(campaign_id="live45-popup", starting_checkpoint="245eaec5")
+    campaign["sandbox_attempts"] = 2
+    package = gsr.live45_make_application_review_package(
+        tmp_path,
+        campaign,
+        proposal_id="proposal-1",
+        attempt_id="attempt-1",
+        original_goal="preserve dependency identity",
+        sandbox_root=str(tmp_path / "sandbox"),
+        changed_files=("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+        candidate_validated=True,
+        baseline_metric={"metric": "identity", "value": 0.0},
+        candidate_metric={"metric": "identity", "value": 1.0},
+        metric_delta={"absolute": 1.0},
+        patch_text="diff --git a/file b/file\n",
+    )
+
+    class DummyProcess:
+        pid = 4545
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    prepared = gsr.live45_prepare_application_review_popup(tmp_path, campaign, package, popup_mode="persistent")
+    script = (Path(package["package_root"]) / "live45_application_review_popup.py").read_text(encoding="utf-8")
+
+    assert prepared["popup"]["popup_pid"] == 4545
+    assert "tk.Text" in script
+    assert "summary.bind('<Control-c>', copy_selection)" in script
+    assert "summary.bind('<Control-a>', select_all)" in script
+    assert "root.geometry('760x520')" in script
+    assert "Apply Validated Candidate" in script
+    assert "Reject Candidate" in script
+    assert "Continue Sandbox Research" in script
+    assert "Request Revision" in script
+
+
+def test_live_45_application_decision_records_authority_without_mutating_source(tmp_path):
+    result = gsr.run_live45_disposable_application_pilot(
+        artifact_root=str(tmp_path),
+        campaign_id="live45-decision",
+        popup_mode="test",
+        candidate_validated=True,
+    )
+    package_root = result["package"]["package_root"]
+    applied = gsr.live45_record_application_decision(package_root, action="APPLY_VALIDATED_CANDIDATE", note="test approval")
+    replay = gsr.live45_record_application_decision(package_root, action="REJECT_CANDIDATE", note="stale")
+
+    assert applied["new_state"] == "application_authorized"
+    assert applied["tracked_source_mutation_authorized"] is True
+    assert applied["tracked_source_mutated"] is False
+    assert replay["accepted"] is False
+    assert replay["reason"] == "duplicate_or_stale_application_response_denied"
+
+
+def test_live_45_repo_bound_script_imports_orchestration_from_tmp(tmp_path):
+    script = tmp_path / "nested" / "metric.py"
+    gsr.live45_write_repo_bound_script(
+        script,
+        repository_root=Path.cwd(),
+        body="""
+import json
+from orchestration.runtime.live45_transfer_dependency_candidate import preserve_transfer_dependency_identity
+
+result = preserve_transfer_dependency_identity("Claim cites DEP-117 before classification.")
+print(json.dumps({"value": 1.0 if result["dependency_id"] == "DEP-117" else 0.0, "result": result}))
+""",
+    )
+    completed = subprocess.run(
+        [sys.executable, str(script)],
+        cwd=str(tmp_path),
+        text=True,
+        capture_output=True,
+        timeout=30,
+        env={"PYTHONNOUSERSITE": "1"},
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    payload = json.loads(completed.stdout)
+    assert payload["value"] == 1.0
+
+
+def test_live_45_subprocess_env_binds_repo_root_for_tmp_scripts(tmp_path):
+    script = tmp_path / "plain_metric.py"
+    script.write_text(
+        "from orchestration.runtime.live45_transfer_dependency_candidate import preserve_transfer_dependency_identity\n"
+        "print(preserve_transfer_dependency_identity('DEP-117')['dependency_id'])\n",
+        encoding="utf-8",
+    )
+    completed = subprocess.run(
+        [sys.executable, str(script)],
+        cwd=str(tmp_path),
+        text=True,
+        capture_output=True,
+        timeout=30,
+        env=gsr.live45_subprocess_env(Path.cwd(), {"PYTHONNOUSERSITE": "1"}),
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout.strip() == "DEP-117"
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
