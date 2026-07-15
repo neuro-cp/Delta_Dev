@@ -461,7 +461,8 @@ def test_meaningful_progress_derives_autonomous_evidence_acquisition():
     assert "selected from ranked developmental next-goal candidates" in next_goal.completion_rationale
     assert "resource_need=local_artifact_mining_first" in next_goal.completion_rationale
     partially_satisfied_next_goal = assess_main_goal_completion(next_goal, records, eligible_frontier_exists=False)
-    assert "prior_active_rationale=selected from ranked developmental next-goal candidates" in partially_satisfied_next_goal.completion_rationale
+    assert "prior_rationale_id=" in partially_satisfied_next_goal.completion_rationale
+    assert "prior_rationale_summary=selected from ranked developmental next-goal candidates" in partially_satisfied_next_goal.completion_rationale
     completion_records = records + tuple(
         make_satisfied_transfer_record().__class__(
             **{
@@ -475,7 +476,8 @@ def test_meaningful_progress_derives_autonomous_evidence_acquisition():
         for criterion in next_goal.success_criteria
     )
     completed_next_goal = assess_main_goal_completion(partially_satisfied_next_goal, completion_records, eligible_frontier_exists=False)
-    assert "prior_active_rationale=selected from ranked developmental next-goal candidates" in completed_next_goal.completion_rationale
+    assert "prior_rationale_id=" in completed_next_goal.completion_rationale
+    assert "prior_rationale_summary=selected from ranked developmental next-goal candidates" in completed_next_goal.completion_rationale
     evidence = derive_subgoal_evidence_for_main_goal(next_goal, records, max_items=1)
     assert evidence[0]["affected_capability"] == "frontier_uncertainty_scan"
 
@@ -527,6 +529,105 @@ def test_meaningful_progress_next_goal_candidates_are_ranked_from_evidence():
     assert candidates[0].score > candidates[1].score > candidates[2].score
     assert candidates[0].evidence_basis == current.success_criteria
     assert candidates[0].resource_need == "local_artifact_mining_first"
+
+
+def test_repeated_observation_does_not_nest_rationale_text():
+    controller = start_continuous_runtime_controller(session_id="bounded-rationale")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    records = ()
+    for _ in range(5):
+        records += tuple(
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed",
+                    "successful_mechanism": criterion,
+                    "reassessment": "satisfied",
+                }
+            )
+            for criterion in current.success_criteria
+        )
+        assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+        next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+        if next_goal is not None:
+            current = next_goal
+
+    assert current.normalized_objective == "autonomous_evidence_acquisition"
+    once = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+    twice = assess_main_goal_completion(once, records, eligible_frontier_exists=False)
+    assert once.completion_rationale == twice.completion_rationale
+    assert once.completion_rationale.count("selected from ranked developmental next-goal candidates") == 1
+    assert "prior_active_rationale" not in once.completion_rationale
+
+
+def test_legacy_nested_rationale_is_normalized_without_losing_selection_provenance():
+    controller = start_continuous_runtime_controller(session_id="legacy-rationale-normalization")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    goal = MainGoalContract(
+        **{
+            **MainGoalContract(**controller.continuous_main_goal).as_dict(),
+            "normalized_objective": "autonomous_evidence_acquisition",
+            "success_criteria": ("frontier_uncertainty_scan",),
+            "next_main_goal_candidates": ("autonomous_evidence_acquisition", "operator_goal_reinterpretation_check"),
+            "completion_rationale": (
+                "all required criteria have satisfied evidence; prior_active_rationale=empty frontier is not completion; "
+                "prior_active_rationale=selected from ranked developmental next-goal candidates after legacy; ranking=x; selected_rationale=y"
+            ),
+        }
+    )
+    records = (
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": "frontier_uncertainty_scan",
+                "original_weakness": "frontier scan completed",
+                "successful_mechanism": "frontier scan",
+                "reassessment": "satisfied",
+            }
+        ),
+    )
+    assessed = assess_main_goal_completion(goal, records, eligible_frontier_exists=False)
+    assert "prior_active_rationale" not in assessed.completion_rationale
+    assert assessed.completion_rationale.count("selected from ranked developmental next-goal candidates") == 1
+    assert "prior_rationale_id=" in assessed.completion_rationale
+
+
+def test_autonomous_evidence_acquisition_derives_next_goal_from_candidate_comparison():
+    controller = start_continuous_runtime_controller(session_id="post-evidence-next-goal")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    records = ()
+    for _ in range(6):
+        records += tuple(
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed",
+                    "successful_mechanism": criterion,
+                    "reassessment": "satisfied",
+                }
+            )
+            for criterion in current.success_criteria
+        )
+        assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+        next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+        if next_goal is None:
+            break
+        current = next_goal
+
+    assert current.normalized_objective == "capability_transfer_validation"
+    assert current.next_main_goal_candidates == (
+        "capability_transfer_validation",
+        "evidence_source_diversity",
+        "developmental_communication_calibration",
+    )
+    assert "selected from ranked developmental next-goal candidates" in current.completion_rationale
+    assert "local_held_out_and_transfer_artifact_mining" in current.completion_rationale
+    evidence = derive_subgoal_evidence_for_main_goal(current, records, max_items=1)
+    assert evidence[0]["affected_capability"] == "cross_context_transfer_case_generation"
 
 
 def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():

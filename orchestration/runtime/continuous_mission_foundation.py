@@ -309,6 +309,26 @@ class DevelopmentalNextGoalCandidate:
         return data
 
 
+def _canonical_rationale_text(rationale: str) -> str:
+    text = str(rationale or "").strip()
+    marker = "selected from ranked developmental next-goal candidates"
+    if marker in text:
+        return marker + text.rsplit(marker, 1)[1]
+    if "; prior_active_rationale=" in text:
+        text = text.split("; prior_active_rationale=", 1)[0]
+    if "; prior_rationale_summary=" in text:
+        text = text.split("; prior_rationale_summary=", 1)[0]
+    return text
+
+
+def _completion_rationale_with_reference(event: str, main_goal: MainGoalContract) -> str:
+    if not main_goal.next_main_goal_candidates or not main_goal.completion_rationale:
+        return event
+    canonical = _canonical_rationale_text(main_goal.completion_rationale)
+    rationale_id = stable_id("main-goal-rationale", main_goal.main_goal_id, canonical)
+    return f"{event}; prior_rationale_id={rationale_id}; prior_rationale_summary={canonical}"
+
+
 def compile_broad_mission_contract(
     operator_goal: str,
     *,
@@ -597,9 +617,7 @@ def assess_main_goal_completion(
     satisfied = satisfied_main_goal_criteria(main_goal, knowledge_ledger)
     missing = tuple(item for item in main_goal.success_criteria if item not in set(satisfied))
     if not missing:
-        completion_rationale = "all required criteria have satisfied evidence"
-        if main_goal.next_main_goal_candidates and main_goal.completion_rationale:
-            completion_rationale = f"{completion_rationale}; prior_active_rationale={main_goal.completion_rationale}"
+        completion_rationale = _completion_rationale_with_reference("all required criteria have satisfied evidence", main_goal)
         return MainGoalContract(
             **{
                 **main_goal.as_dict(),
@@ -629,13 +647,9 @@ def assess_main_goal_completion(
             "newly_discovered_prerequisites": tuple(dict.fromkeys(newly_discovered + missing)),
             "disposition": "partially_satisfied",
             "residual_uncertainty": f"frontier empty but required criteria remain: {', '.join(missing)}",
-            "completion_rationale": (
-                "empty frontier is not completion; remaining criteria must produce new subgoals or a block"
-                if not main_goal.next_main_goal_candidates or not main_goal.completion_rationale
-                else (
-                    "empty frontier is not completion; remaining criteria must produce new subgoals or a block; "
-                    f"prior_active_rationale={main_goal.completion_rationale}"
-                )
+            "completion_rationale": _completion_rationale_with_reference(
+                "empty frontier is not completion; remaining criteria must produce new subgoals or a block",
+                main_goal,
             ),
         }
     )
@@ -646,8 +660,6 @@ def derive_developmental_next_goal_candidates(
     completed_goal: MainGoalContract,
     knowledge_ledger: Sequence[CapabilityKnowledgeRecord],
 ) -> tuple[DevelopmentalNextGoalCandidate, ...]:
-    if completed_goal.normalized_objective != "meaningful_progress_stall_detection":
-        return ()
     if not _is_developmental_direction(contract.original_operator_goal):
         return ()
 
@@ -658,7 +670,7 @@ def derive_developmental_next_goal_candidates(
         if record.reassessment == "satisfied" and record.capability_id in completed_goal.success_criteria
     )
     candidates: list[DevelopmentalNextGoalCandidate] = []
-    if "frontier_uncertainty_scan" not in satisfied:
+    if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and "frontier_uncertainty_scan" not in satisfied:
         candidates.append(
             DevelopmentalNextGoalCandidate(
                 candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "autonomous_evidence_acquisition"),
@@ -687,7 +699,7 @@ def derive_developmental_next_goal_candidates(
                 },
             )
         )
-    if "state_grounded_progress_summary" in satisfied and "operator_goal_reinterpretation_check" not in satisfied:
+    if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and "state_grounded_progress_summary" in satisfied and "operator_goal_reinterpretation_check" not in satisfied:
         candidates.append(
             DevelopmentalNextGoalCandidate(
                 candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "operator_goal_reinterpretation_check"),
@@ -705,7 +717,7 @@ def derive_developmental_next_goal_candidates(
                 prerequisite_graph={"goal_drift_comparison": (), "operator_goal_preservation_record": ("goal_drift_comparison",)},
             )
         )
-    if "stalled_execution_detection" in satisfied and "idle_resource_efficiency" not in satisfied:
+    if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and "stalled_execution_detection" in satisfied and "idle_resource_efficiency" not in satisfied:
         candidates.append(
             DevelopmentalNextGoalCandidate(
                 candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "idle_resource_efficiency"),
@@ -723,6 +735,72 @@ def derive_developmental_next_goal_candidates(
                 prerequisite_graph={"idle_heartbeat_truthfulness": (), "bounded_idle_resource_record": ("idle_heartbeat_truthfulness",)},
             )
         )
+    if completed_goal.normalized_objective == "autonomous_evidence_acquisition":
+        if "capability_transfer_validation" not in satisfied:
+            candidates.append(
+                DevelopmentalNextGoalCandidate(
+                    candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "capability_transfer_validation"),
+                    normalized_objective="capability_transfer_validation",
+                    objective="Develop cross-context transfer validation for newly acquired developmental capabilities",
+                    evidence_basis=evidence_basis,
+                    missing_evidence=("cross-context transfer record", "domain-shift validation result", "transfer regression control"),
+                    confidence_before=0.42,
+                    expected_value=0.88,
+                    risk=0.2,
+                    resource_need="local_held_out_and_transfer_artifact_mining",
+                    rationale=(
+                        "autonomous evidence acquisition produced candidate gaps, but current capability claims are still mostly certified by narrow local "
+                        "criteria; transfer validation is the highest-value next check before trusting broader self-directed development"
+                    ),
+                    success_criteria=(
+                        "cross_context_transfer_case_generation",
+                        "transfer_metric_validation",
+                        "transfer_regression_control",
+                    ),
+                    evidence_requirements=("transfer_case_record", "held_out_metric", "control_regression_record"),
+                    prerequisite_graph={
+                        "cross_context_transfer_case_generation": (),
+                        "transfer_metric_validation": ("cross_context_transfer_case_generation",),
+                        "transfer_regression_control": ("transfer_metric_validation",),
+                    },
+                )
+            )
+        if "evidence_source_diversity" not in satisfied:
+            candidates.append(
+                DevelopmentalNextGoalCandidate(
+                    candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "evidence_source_diversity"),
+                    normalized_objective="evidence_source_diversity",
+                    objective="Develop evidence-source diversity checks for developmental decisions",
+                    evidence_basis=evidence_basis,
+                    missing_evidence=("source diversity record", "local-versus-reference evidence comparison"),
+                    confidence_before=0.38,
+                    expected_value=0.67,
+                    risk=0.24,
+                    resource_need="local_first_reference_optional",
+                    rationale="evidence acquisition used local artifacts successfully, but source diversity remains less urgent than transfer validation",
+                    success_criteria=("source_diversity_inventory", "reference_evidence_comparison"),
+                    evidence_requirements=("source_classification_record", "comparison_digest"),
+                    prerequisite_graph={"source_diversity_inventory": (), "reference_evidence_comparison": ("source_diversity_inventory",)},
+                )
+            )
+        if "developmental_communication_calibration" not in satisfied:
+            candidates.append(
+                DevelopmentalNextGoalCandidate(
+                    candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "developmental_communication_calibration"),
+                    normalized_objective="developmental_communication_calibration",
+                    objective="Develop calibration checks for communicating developmental uncertainty to the operator",
+                    evidence_basis=evidence_basis,
+                    missing_evidence=("uncertainty wording calibration record", "operator-facing state comparison"),
+                    confidence_before=0.52,
+                    expected_value=0.52,
+                    risk=0.16,
+                    resource_need="runtime_state_and_message_comparison",
+                    rationale="communication calibration matters, but current evidence shows transfer validity is the more material developmental risk",
+                    success_criteria=("uncertainty_wording_check", "operator_state_alignment_check"),
+                    evidence_requirements=("message_state_comparison", "calibration_disposition"),
+                    prerequisite_graph={"uncertainty_wording_check": (), "operator_state_alignment_check": ("uncertainty_wording_check",)},
+                )
+            )
     return tuple(sorted(candidates, key=lambda item: (-item.score, item.normalized_objective)))
 
 
@@ -871,7 +949,7 @@ def derive_next_main_goal(contract: BroadMissionContract, completed_goal: MainGo
             completion_rationale=f"derived after {completed_goal.main_goal_id} because observation without meaningful work must be diagnosed instead of silently idling",
             next_main_goal_candidates=(),
         )
-    if completed_goal.normalized_objective == "meaningful_progress_stall_detection" and _is_developmental_direction(contract.original_operator_goal):
+    if completed_goal.normalized_objective in {"meaningful_progress_stall_detection", "autonomous_evidence_acquisition"} and _is_developmental_direction(contract.original_operator_goal):
         candidates = derive_developmental_next_goal_candidates(contract, completed_goal, knowledge_ledger)
         selected = select_developmental_next_goal_candidate(candidates)
         if selected is None:
