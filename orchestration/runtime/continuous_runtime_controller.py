@@ -20,6 +20,18 @@ import threading
 from typing import Any, Iterable
 
 from orchestration.runtime.delta_1_0_common import safety_metadata, stable_id, utc_now, write_json, write_markdown
+from orchestration.runtime.continuous_mission_foundation import (
+    ApiAuthorityState,
+    CapabilityKnowledgeRecord,
+    OBSERVATION_STATE,
+    WeaknessCandidate,
+    api_unavailable_update,
+    compile_active_subgoal,
+    compile_broad_mission_contract,
+    consumed_signatures_after_reassessment,
+    evidence_to_findings,
+    rank_weakness_frontier,
+)
 from orchestration.runtime.delta_1_6_operational_autonomy import (
     AuthorityRequest,
     Initiative,
@@ -266,6 +278,15 @@ class ContinuousRuntimeController:
     cycles: tuple[RuntimeCycleRecord, ...] = ()
     journal: tuple[dict[str, Any], ...] = ()
     active_work_item: str = ""
+    continuous_mission_state: str = ""
+    continuous_mission_contract: dict[str, Any] = field(default_factory=dict)
+    continuous_mission_findings: tuple[dict[str, Any], ...] = ()
+    continuous_mission_frontier: tuple[dict[str, Any], ...] = ()
+    continuous_active_subgoal: dict[str, Any] = field(default_factory=dict)
+    continuous_consumed_weakness_signatures: tuple[str, ...] = ()
+    continuous_knowledge_ledger: tuple[dict[str, Any], ...] = ()
+    continuous_api_authority: dict[str, Any] = field(default_factory=dict)
+    pending_application_decision_id: str = ""
     cancellation_requested: bool = False
     last_idle_reflection_at: float = 0.0
     safety: dict[str, bool] = field(default_factory=safety_metadata)
@@ -533,8 +554,252 @@ def controller_snapshot(controller: ContinuousRuntimeController) -> dict[str, An
         "initiative_count": len(controller.initiatives),
         "recent_initiative": asdict(controller.initiatives[-1]) if controller.initiatives else None,
         "wikipedia_available": controller.wikipedia_available,
+        "continuous_mission": {
+            "state": controller.continuous_mission_state,
+            "contract": controller.continuous_mission_contract,
+            "frontier_count": len(controller.continuous_mission_frontier),
+            "active_subgoal": controller.continuous_active_subgoal or None,
+            "pending_application_decision_id": controller.pending_application_decision_id,
+            "api_authority": controller.continuous_api_authority,
+            "knowledge_record_count": len(controller.continuous_knowledge_ledger),
+        },
         "safety": safety_metadata(),
     }
+
+
+def attach_continuous_mission(
+    controller: ContinuousRuntimeController,
+    operator_goal: str,
+    *,
+    api_authority: ApiAuthorityState | None = None,
+) -> ContinuousRuntimeController:
+    contract = compile_broad_mission_contract(operator_goal, api_authority=api_authority)
+    event = make_continuous_event(
+        "OBJECTIVE_CREATED",
+        source="continuous_mission",
+        session_id=controller.session_id,
+        payload={"title": contract.normalized_goal, "summary": operator_goal, "mission_id": contract.mission_id},
+        priority=85,
+        objective_id=contract.mission_id,
+    )
+    objective = ContinuousObjective(
+        objective_id=contract.mission_id,
+        title=contract.normalized_goal,
+        state="ACTIVE",
+        source="CONTINUOUS_MISSION",
+        authority_class="OPERATOR_APPROVED_BROAD_MISSION",
+        created_at=contract.accepted_at,
+        updated_at=utc_now(),
+    )
+    return replace(
+        enqueue_continuous_event(controller, event),
+        continuous_mission_state="mission_accepted",
+        continuous_mission_contract=contract.as_dict(),
+        continuous_api_authority=contract.api_authority.__dict__,
+        active_objective=objective,
+        objectives=_merge_objectives(controller.objectives, (objective,)),
+        journal=controller.journal + (_journal_entry("continuous_mission", "broad_goal_compiled_to_persistent_mission", (contract.mission_id,)),),
+    )
+
+
+def assess_continuous_mission_runtime(
+    controller: ContinuousRuntimeController,
+    evidence_records: Sequence[Mapping[str, Any]],
+) -> ContinuousRuntimeController:
+    findings = evidence_to_findings(evidence_records)
+    return replace(
+        controller,
+        continuous_mission_state="assessing_runtime",
+        continuous_mission_findings=tuple(item.as_dict() for item in findings),
+        journal=controller.journal
+        + (_journal_entry("continuous_mission", "evidence_records_compiled_to_runtime_findings", tuple(item.finding_id for item in findings)),),
+    )
+
+
+def refresh_continuous_mission_frontier(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    findings = [evidence_to_findings((item,))[0] for item in controller.continuous_mission_findings]
+    knowledge = [CapabilityKnowledgeRecord(**item) for item in controller.continuous_knowledge_ledger]
+    frontier = rank_weakness_frontier(
+        findings,
+        consumed_signatures=controller.continuous_consumed_weakness_signatures,
+        knowledge_ledger=knowledge,
+    )
+    return replace(
+        controller,
+        continuous_mission_state="selecting_weakness",
+        continuous_mission_frontier=tuple(item.as_dict() for item in frontier),
+        journal=controller.journal
+        + (_journal_entry("continuous_mission", "runtime_findings_ranked_into_weakness_frontier", tuple(item.semantic_signature for item in frontier)),),
+    )
+
+
+def select_continuous_mission_subgoal(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    if not controller.continuous_mission_contract:
+        return controller
+    contract = compile_broad_mission_contract(controller.continuous_mission_contract["original_operator_goal"])
+    frontier = [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier]
+    subgoal = compile_active_subgoal(contract, frontier)
+    if subgoal is None:
+        return replace(
+            controller,
+            continuous_mission_state="observing_for_new_weaknesses",
+            continuous_active_subgoal={},
+            active_work_item=OBSERVATION_STATE,
+            journal=controller.journal + (_journal_entry("continuous_mission", "empty_current_frontier_enters_observation_not_completion", ()),),
+        )
+    objective = ContinuousObjective(
+        objective_id=subgoal.subgoal_id,
+        title=subgoal.measurable_objective[:240],
+        state="ACTIVE",
+        source="CONTINUOUS_SUBGOAL",
+        authority_class="AUTONOMOUS_SAFE_LOCAL_SANDBOX_UNTIL_APPLICATION",
+        created_at=utc_now(),
+        updated_at=utc_now(),
+    )
+    return replace(
+        controller,
+        continuous_mission_state="subgoal_active",
+        continuous_active_subgoal=subgoal.as_dict(),
+        active_work_item=subgoal.measurable_objective,
+        active_objective=objective,
+        objectives=_merge_objectives(controller.objectives, (objective,)),
+        journal=controller.journal + (_journal_entry("continuous_mission", "highest_ranked_eligible_weakness_compiled_to_active_subgoal", (subgoal.subgoal_id,)),),
+    )
+
+
+def queue_continuous_mission_sandbox_work(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    if not controller.continuous_active_subgoal:
+        return controller
+    return replace(
+        controller,
+        continuous_mission_state="sandbox_development_active",
+        active_work_item=controller.continuous_active_subgoal["measurable_objective"],
+        journal=controller.journal
+        + (_journal_entry("continuous_mission", "active_subgoal_queued_for_autonomous_local_sandbox_development", (controller.continuous_active_subgoal["subgoal_id"],)),),
+    )
+
+
+def pause_continuous_mission_for_application(
+    controller: ContinuousRuntimeController,
+    *,
+    candidate_id: str,
+    decision_id: str,
+) -> ContinuousRuntimeController:
+    if not controller.continuous_active_subgoal:
+        raise ValueError("continuous application pause requires an active subgoal")
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_application",
+        pending_application_decision_id=decision_id,
+        active_work_item="awaiting_operator_application",
+        journal=controller.journal
+        + (_journal_entry("continuous_mission", "validated_candidate_created_exactly_one_application_boundary", (candidate_id, decision_id)),),
+    )
+
+
+def consume_continuous_mission_application_decision(
+    controller: ContinuousRuntimeController,
+    *,
+    decision_id: str,
+    action: str,
+) -> ContinuousRuntimeController:
+    if decision_id != controller.pending_application_decision_id:
+        raise ValueError("application decision does not match pending boundary")
+    transitions = {
+        "APPLY_VALIDATED_CANDIDATE": "post_application_validation",
+        "REJECT_CANDIDATE": "selecting_next_weakness",
+        "CONTINUE_SANDBOX_RESEARCH": "sandbox_development_active",
+        "REQUEST_REVISION": "sandbox_development_active",
+    }
+    if action not in transitions:
+        raise ValueError(f"unsupported application decision: {action}")
+    return replace(
+        controller,
+        continuous_mission_state=transitions[action],
+        pending_application_decision_id="",
+        journal=controller.journal + (_journal_entry("continuous_mission", f"terminal_application_decision_consumed_once:{action}", (decision_id,)),),
+    )
+
+
+def consume_continuous_capability_reassessment(
+    controller: ContinuousRuntimeController,
+    record: CapabilityKnowledgeRecord,
+) -> ContinuousRuntimeController:
+    consumed = consumed_signatures_after_reassessment(
+        [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier],
+        controller.continuous_active_subgoal or None,
+        controller.continuous_consumed_weakness_signatures,
+    )
+    return replace(
+        controller,
+        continuous_mission_state="capability_reassessment",
+        continuous_knowledge_ledger=controller.continuous_knowledge_ledger + (record.as_dict(),),
+        continuous_consumed_weakness_signatures=consumed,
+        continuous_active_subgoal={},
+        active_work_item="capability_reassessment",
+        journal=controller.journal
+        + (_journal_entry("continuous_mission", "capability_reassessment_consumed_once_and_knowledge_recorded", (record.capability_id,)),),
+    )
+
+
+def continue_continuous_mission_after_reassessment(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
+    return select_continuous_mission_subgoal(refresh_continuous_mission_frontier(replace(controller, continuous_mission_state="selecting_next_weakness")))
+
+
+def mark_continuous_api_unavailable(
+    controller: ContinuousRuntimeController,
+    *,
+    pending_task: str,
+    reason: str,
+) -> ContinuousRuntimeController:
+    current = ApiAuthorityState(**controller.continuous_api_authority) if controller.continuous_api_authority else ApiAuthorityState(enabled=False)
+    updated = api_unavailable_update(current, pending_task=pending_task, reason=reason)
+    local_work_available = bool(controller.continuous_active_subgoal or any(item.get("status") == "eligible" for item in controller.continuous_mission_frontier))
+    return replace(
+        controller,
+        continuous_api_authority=updated.__dict__,
+        continuous_mission_state=controller.continuous_mission_state if local_work_available else "external_api_temporarily_unavailable",
+        journal=controller.journal + (_journal_entry("continuous_mission", "provider_task_preserved_without_terminating_mission", (pending_task, reason)),),
+    )
+
+
+def export_continuous_mission_restart_state(controller: ContinuousRuntimeController) -> dict[str, Any]:
+    return {
+        "controller_id": controller.controller_id,
+        "session_id": controller.session_id,
+        "continuous_mission_state": controller.continuous_mission_state,
+        "continuous_mission_contract": controller.continuous_mission_contract,
+        "continuous_mission_findings": controller.continuous_mission_findings,
+        "continuous_mission_frontier": controller.continuous_mission_frontier,
+        "continuous_active_subgoal": controller.continuous_active_subgoal,
+        "continuous_consumed_weakness_signatures": controller.continuous_consumed_weakness_signatures,
+        "continuous_knowledge_ledger": controller.continuous_knowledge_ledger,
+        "continuous_api_authority": controller.continuous_api_authority,
+        "pending_application_decision_id": controller.pending_application_decision_id,
+        "active_work_item": controller.active_work_item,
+    }
+
+
+def restore_continuous_mission_restart_state(
+    controller: ContinuousRuntimeController,
+    restart_state: Mapping[str, Any],
+) -> ContinuousRuntimeController:
+    if restart_state.get("session_id") != controller.session_id:
+        raise ValueError("continuous mission restart state belongs to another session")
+    return replace(
+        controller,
+        continuous_mission_state=str(restart_state.get("continuous_mission_state") or ""),
+        continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
+        continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
+        continuous_mission_frontier=tuple(restart_state.get("continuous_mission_frontier") or ()),
+        continuous_active_subgoal=dict(restart_state.get("continuous_active_subgoal") or {}),
+        continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
+        continuous_knowledge_ledger=tuple(restart_state.get("continuous_knowledge_ledger") or ()),
+        continuous_api_authority=dict(restart_state.get("continuous_api_authority") or {}),
+        pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
+        active_work_item=str(restart_state.get("active_work_item") or ""),
+        journal=controller.journal + (_journal_entry("continuous_mission", "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),
+    )
 
 
 def run_bounded_long_run(controller: ContinuousRuntimeController, *, cycles: int = 30) -> tuple[ContinuousRuntimeController, dict[str, Any]]:
