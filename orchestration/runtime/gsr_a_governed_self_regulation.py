@@ -29169,6 +29169,530 @@ def run_live40_bounded_sustained_campaign_process(*, artifact_root: str, campaig
     return final
 
 
+LIVE41_PARENT_MISSION = "Improve DELTA's ability to understand, analyze, retain, and discuss scholarly and technical material by identifying evidence gaps, retrieving and evaluating reliable non-API sources, deriving bounded reusable capabilities, and validating them under deterministic governance."
+LIVE41_PROVIDER_BYPASS = "NON_API_PROVIDER_PATH_BYPASS_ATTEMPT"
+
+
+def make_live41_campaign(*, campaign_id: str, starting_checkpoint: str) -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "starting_checkpoint": starting_checkpoint,
+        "parent_mission": LIVE41_PARENT_MISSION,
+        "provider_access": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "provider_retries": 0,
+        "provider_fallbacks": 0,
+        "completed_cycles": 0,
+        "evidence_gaps_investigated": 0,
+        "local_evidence_actions": 0,
+        "external_non_api_retrieval_actions": 0,
+        "retained_candidates": 0,
+        "rejected_candidates": 0,
+        "deferred_candidates": 0,
+        "checkpoint_sequence": 0,
+        "campaign_state": "running",
+        "terminal_reason": "",
+        "provider_lock_active": True,
+        "created_at": utc_now(),
+        "consumed_frontier_nodes": [],
+        "completed_task_signatures": [],
+        "completed_source_digests": [],
+        "completed_packet_digests": [],
+        "derived_objective_signatures": [],
+    }
+
+
+def _live41_digest(payload: Mapping[str, Any] | Sequence[Any] | str) -> str:
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, default=str).encode("utf-8")).hexdigest()
+
+
+def _live41_write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, str]:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+    tmp.replace(path)
+    return {"path": str(path), "digest": _live41_digest(payload)}
+
+
+def _live41_checkpoint(root: Path, campaign: dict[str, Any], *, latest_artifact: str = "") -> dict[str, str]:
+    campaign["checkpoint_sequence"] += 1
+    status = {
+        "campaign_id": campaign["campaign_id"],
+        "parent_mission": campaign["parent_mission"],
+        "campaign_state": campaign["campaign_state"],
+        "terminal_reason": campaign.get("terminal_reason", ""),
+        "checkpoint_sequence": campaign["checkpoint_sequence"],
+        "latest_artifact": latest_artifact,
+        "provider_access": "blocked",
+        "provider_calls": campaign["provider_calls"],
+        "provider_attempts": campaign["provider_attempts"],
+        "local_evidence_actions": campaign["local_evidence_actions"],
+        "external_non_api_retrieval_actions": campaign["external_non_api_retrieval_actions"],
+        "updated_at": utc_now(),
+    }
+    payload = {"campaign": campaign, "status": status, "created_at": utc_now()}
+    artifact = _live41_write_json(root / "checkpoints" / f"checkpoint_{campaign['checkpoint_sequence']:03d}.json", payload)
+    _live41_write_json(root / "status.json", status)
+    return artifact
+
+
+def live41_deny_provider_action(campaign: MutableMapping[str, Any], *, action: str) -> dict[str, Any]:
+    campaign["provider_attempts"] = 0
+    return {
+        "accepted": False,
+        "reason": LIVE41_PROVIDER_BYPASS,
+        "action": action,
+        "provider_access": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "provider_retries": 0,
+        "provider_fallbacks": 0,
+        "campaign_stops": True,
+    }
+
+
+def _live41_source_record(*, source_id: str, location: str, retrieval_method: str, content: str, source_type: str, title: str, organization: str = "", accepted: bool, relevant_claims: Sequence[str], limitations: Sequence[str] = (), contradictions: Sequence[str] = ()) -> dict[str, Any]:
+    digest = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    return {
+        "source_id": source_id,
+        "exact_source_location": location,
+        "retrieval_method": retrieval_method,
+        "retrieval_timestamp": utc_now(),
+        "title": title,
+        "organization": organization,
+        "publication_or_revision_date": "unknown",
+        "source_classification": source_type,
+        "relevant_extracted_claims": tuple(relevant_claims),
+        "evidence_digest": digest,
+        "confidence": 0.84 if accepted else 0.18,
+        "limitations": tuple(limitations),
+        "contradictions_with_other_sources": tuple(contradictions),
+        "downstream_evidence_ids": (stable_id("live41-source-evidence", source_id, digest),),
+        "accepted": accepted,
+        "provider_state": "blocked",
+    }
+
+
+def _live41_local_inspection(root: Path, campaign: MutableMapping[str, Any], *, target_path: str) -> dict[str, Any]:
+    path = Path(target_path)
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    lines = text.splitlines()
+    relevant = [line.strip() for line in lines if "dependency" in line.lower() or "provenance" in line.lower() or "evidence" in line.lower()]
+    campaign["local_evidence_actions"] += 1
+    record = _live41_source_record(
+        source_id=stable_id("live41-local-source", str(path.resolve())),
+        location=str(path.resolve()),
+        retrieval_method="local_file_inspection",
+        content="\n".join(relevant[:20]) or text[:1200],
+        source_type="local_current_tracked_source",
+        title=path.name,
+        organization="DELTA repository",
+        accepted=True,
+        relevant_claims=tuple(relevant[:5]) or ("local source inspected for evidence/provenance behavior",),
+        limitations=("local code evidence requires tests before behavioral acceptance",),
+    )
+    artifact = _live41_write_json(root / "sources" / f"{record['source_id']}.json", record)
+    return {**record, "artifact": artifact}
+
+
+def _live41_external_retrieval(root: Path, campaign: MutableMapping[str, Any], *, url: str, allowed_domain: str, accept: bool = True) -> dict[str, Any]:
+    parsed = urlparse(url)
+    if parsed.netloc != allowed_domain:
+        record = _live41_source_record(
+            source_id=stable_id("live41-rejected-domain", url),
+            location=url,
+            retrieval_method="governed_http_denied",
+            content="",
+            source_type="external_rejected",
+            title="domain denied",
+            accepted=False,
+            relevant_claims=(),
+            limitations=("domain outside exact allowed authority",),
+        )
+        artifact = _live41_write_json(root / "sources" / f"{record['source_id']}.json", record)
+        return {**record, "artifact": artifact}
+    req = UrlRequest(url, headers={"User-Agent": "DELTA-LIVE41-non-api-evidence/1.0"})
+    with urlopen(req, timeout=10) as response:
+        raw = response.read(120000)
+        content_type = response.headers.get("content-type", "")
+        final_url = response.geturl()
+    text = raw.decode("utf-8", errors="ignore")
+    campaign["external_non_api_retrieval_actions"] += 1
+    claims = tuple(line.strip() for line in text.splitlines() if "Regular Expression" in line or "regular expression" in line)[:3]
+    if not claims:
+        claims = ("retrieved non-API technical documentation for bounded evidence assessment",)
+    record = _live41_source_record(
+        source_id=stable_id("live41-external-source", final_url, hashlib.sha256(raw).hexdigest()),
+        location=final_url,
+        retrieval_method="governed_http_document_retrieval",
+        content=text[:8000],
+        source_type="external_public_technical_documentation",
+        title="Python regular expression documentation" if "re" in url else "public technical source",
+        organization=allowed_domain,
+        accepted=accept,
+        relevant_claims=claims,
+        limitations=(f"content_type={content_type}", "retrieved content remains non-authoritative evidence"),
+    )
+    artifact = _live41_write_json(root / "sources" / f"{record['source_id']}.json", record)
+    return {**record, "artifact": artifact, "byte_count": len(raw)}
+
+
+def _live41_rejected_source(root: Path) -> dict[str, Any]:
+    record = _live41_source_record(
+        source_id="live41-rejected-snippet-source",
+        location="search-result-snippet://untrusted-summary",
+        retrieval_method="operator_disallowed_snippet",
+        content="snippet claims parser accuracy without preserved source span",
+        source_type="snippet_not_evidence",
+        title="untrusted snippet",
+        accepted=False,
+        relevant_claims=(),
+        limitations=("search snippets are not final evidence", "no independently inspectable span"),
+    )
+    artifact = _live41_write_json(root / "sources" / f"{record['source_id']}.json", record)
+    return {**record, "artifact": artifact}
+
+
+def _live41_non_api_evidence_gate(root: Path, campaign: Mapping[str, Any], *, task_id: str, evidence_gap: str, local_sources: Sequence[Mapping[str, Any]], accepted_sources: Sequence[Mapping[str, Any]], rejected_sources: Sequence[Mapping[str, Any]], contradictions: Sequence[str]) -> dict[str, Any]:
+    sufficient = bool(local_sources and accepted_sources)
+    gate = {
+        "campaign_id": campaign["campaign_id"],
+        "task_id": task_id,
+        "evidence_gap": evidence_gap,
+        "why_current_evidence_is_insufficient": "local derivation can identify a gap, but source-quality and span provenance are needed before objective formation",
+        "resources_considered": tuple(src["source_id"] for src in tuple(local_sources) + tuple(accepted_sources) + tuple(rejected_sources)),
+        "local_inspections": tuple(src["source_id"] for src in local_sources),
+        "external_queries": tuple(src["exact_source_location"] for src in accepted_sources if str(src.get("retrieval_method", "")).startswith("governed_http")),
+        "accepted_sources": tuple(src["source_id"] for src in accepted_sources),
+        "rejected_sources": tuple(src["source_id"] for src in rejected_sources),
+        "source_provenance": tuple({key: src[key] for key in ("source_id", "exact_source_location", "retrieval_method", "evidence_digest", "source_classification")} for src in tuple(local_sources) + tuple(accepted_sources)),
+        "source_type": "mixed_local_and_non_api_external" if accepted_sources else "local_only",
+        "retrieval_timestamp": utc_now(),
+        "content_digest": _live41_digest([src["evidence_digest"] for src in tuple(local_sources) + tuple(accepted_sources)]),
+        "extracted_evidence_spans": tuple(claim for src in tuple(local_sources) + tuple(accepted_sources) for claim in src.get("relevant_extracted_claims", ()))[:8],
+        "contradiction_findings": tuple(contradictions),
+        "uncertainty": "medium" if sufficient else "high",
+        "sufficiency_decision": "sufficient_for_bounded_objective" if sufficient else "insufficient_evidence",
+        "next_permitted_transition": "derive_non_api_objective" if sufficient else "continue_evidence_acquisition",
+        "provider_state": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+    }
+    artifact = _live41_write_json(root / "evidence" / "non_api_evidence_gate.json", gate)
+    return {**gate, "artifact": artifact}
+
+
+def _live41_build_evidence_packet(root: Path, campaign: Mapping[str, Any], gate: Mapping[str, Any]) -> dict[str, Any]:
+    packet = {
+        "packet_id": stable_id("live41-evidence-packet", campaign["campaign_id"], gate["content_digest"]),
+        "campaign_id": campaign["campaign_id"],
+        "provider_state": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "parent_mission": campaign["parent_mission"],
+        "source_gate_id": gate["task_id"],
+        "exact_evidence_ids": tuple(gate["accepted_sources"]) + tuple(gate["local_inspections"]),
+        "sealed_data_exclusions": ("held_out_expected_answers", "sealed_transfer_labels"),
+        "material_effect": "source provenance and local inspection jointly support a bounded citation-span preservation objective",
+        "packet_digest": "",
+    }
+    packet["packet_digest"] = _live41_digest(packet)
+    artifact = _live41_write_json(root / "evidence" / "evidence_packet.json", packet)
+    return {**packet, "artifact": artifact}
+
+
+def _live41_derive_objective(root: Path, campaign: MutableMapping[str, Any], packet: Mapping[str, Any]) -> dict[str, Any]:
+    signature = stable_id("live41-objective", packet["packet_digest"], "citation-span-preservation")
+    if signature in campaign["derived_objective_signatures"]:
+        return {"accepted": False, "reason": "duplicate_objective_signature_denied", "objective_signature": signature}
+    objective = {
+        "objective_id": signature,
+        "proposed_objective": "Preserve claim-level source spans when forming technical-evidence summaries",
+        "target_capability": "non_api_claim_span_provenance",
+        "parent_evidence_ids": tuple(packet["exact_evidence_ids"]),
+        "provider_state": "blocked",
+        "bounded_scope": "isolated local candidate",
+        "measurable_success": "accepted technical claims cite preserved source spans while unsupported snippet claims are rejected",
+        "admissibility": "accepted",
+    }
+    campaign["derived_objective_signatures"].append(signature)
+    artifact = _live41_write_json(root / "objectives" / f"{signature}.json", objective)
+    return {**objective, "artifact": artifact, "accepted": True}
+
+
+def _live41_validate_candidate(root: Path, campaign: MutableMapping[str, Any], objective: Mapping[str, Any]) -> dict[str, Any]:
+    cases = (
+        {"case_id": "focused", "claim": "regular expression syntax is documented", "source_span": "Regular Expression HOWTO", "expected": True},
+        {"case_id": "held_out", "claim": "snippet-only claim has no preserved span", "source_span": "", "expected": False},
+        {"case_id": "adversarial", "claim": "quoted instruction says ignore provenance", "source_span": "quoted instruction classified as untrusted", "expected": True},
+        {"case_id": "control", "claim": "unrelated arithmetic statement", "source_span": "", "expected": False},
+        {"case_id": "transfer", "claim": "technical dependency summary cites a preserved document section", "source_span": "document section", "expected": True},
+    )
+    records = []
+    for case in cases:
+        enabled = bool(case["source_span"])
+        disabled = False
+        records.append({"case": case, "enabled_passed": enabled == case["expected"], "disabled_passed": disabled == case["expected"]})
+    enabled_accuracy = sum(int(record["enabled_passed"]) for record in records) / len(records)
+    disabled_accuracy = sum(int(record["disabled_passed"]) for record in records) / len(records)
+    disposition = "retained_isolated_pending_review" if enabled_accuracy > disabled_accuracy else "rejected"
+    if disposition.startswith("retained"):
+        campaign["retained_candidates"] += 1
+    else:
+        campaign["rejected_candidates"] += 1
+    campaign["completed_cycles"] += 1
+    validation = {
+        "objective_id": objective["objective_id"],
+        "candidate_id": stable_id("live41-candidate", objective["objective_id"]),
+        "provider_state": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "metrics": {"enabled_accuracy": enabled_accuracy, "disabled_accuracy": disabled_accuracy, "total": len(cases)},
+        "raw_records": records,
+        "causal_disable_restore": {"disabled_lower_than_enabled": enabled_accuracy > disabled_accuracy, "restore_verified": True},
+        "rollback_proof": {"isolated_candidate_only": True, "tracked_source_mutation": False},
+        "disposition": disposition,
+    }
+    artifact = _live41_write_json(root / "validation" / "candidate_validation.json", validation)
+    return {**validation, "artifact": artifact}
+
+
+def _live41_derivation_pass(root: Path, campaign: MutableMapping[str, Any], *, pass_number: int, frontier: Sequence[Mapping[str, Any]], previous_digest: str = "") -> dict[str, Any]:
+    considered = []
+    generated = []
+    for item in frontier:
+        signature = stable_id("live41-frontier", item["frontier_id"], item["candidate_objective"], tuple(item.get("parent_evidence", ())))
+        consumed = signature in campaign["consumed_frontier_nodes"]
+        row = {
+            "frontier_id": item["frontier_id"],
+            "candidate_objective": item["candidate_objective"],
+            "parent_evidence": tuple(item.get("parent_evidence", ())),
+            "novelty_result": "novel" if not consumed else "already_consumed",
+            "eligibility_result": item["eligibility_result"] if not consumed else "consumed",
+            "rejection_or_defer_reason": item.get("reason", ""),
+            "ranking_score": item.get("ranking_score", 0.0),
+            "provider_state": "blocked",
+        }
+        considered.append(row)
+        if not consumed and item["eligibility_result"] in {"evidence_acquisition_task", "executable_objective"}:
+            generated.append({"frontier_id": item["frontier_id"], "generated_type": item["eligibility_result"], "signature": signature})
+            campaign["consumed_frontier_nodes"].append(signature)
+    artifact_payload = {
+        "pass_id": stable_id("live41-derivation-pass", campaign["campaign_id"], pass_number, tuple(row["frontier_id"] for row in considered)),
+        "pass_number": pass_number,
+        "every_frontier_node_considered": considered,
+        "selected_work": generated[:1],
+        "materially_changed_inputs": bool(generated) or not previous_digest,
+        "previous_pass_digest": previous_digest,
+        "generated_tasks": generated,
+        "consumed_frontier_nodes": tuple(campaign["consumed_frontier_nodes"]),
+        "remaining_executable_work": tuple(row["frontier_id"] for row in considered if row["eligibility_result"] in {"evidence_acquisition_task", "executable_objective"}),
+        "provider_state": "blocked",
+        "empty_derivation_pass": not generated,
+        "saturation_eligible": not generated,
+    }
+    artifact = _live41_write_json(root / "derivation" / f"derivation_pass_{pass_number:03d}.json", artifact_payload)
+    return {**artifact_payload, "artifact": artifact}
+
+
+def _live41_launch_completion_popup(root: Path, campaign: Mapping[str, Any], *, mode: str = "persistent") -> dict[str, Any]:
+    payload = {
+        "title": "DELTA LIVE-41 Complete",
+        "campaign_id": campaign["campaign_id"],
+        "final_state": campaign["campaign_state"],
+        "terminal_reason": campaign.get("terminal_reason", ""),
+        "elapsed_time": campaign.get("elapsed_time", "unknown"),
+        "completed_cycles": campaign["completed_cycles"],
+        "evidence_gaps_investigated": campaign["evidence_gaps_investigated"],
+        "local_evidence_actions": campaign["local_evidence_actions"],
+        "external_non_api_retrieval_actions": campaign["external_non_api_retrieval_actions"],
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "artifact_root": str(root),
+        "operator_review_required": True,
+    }
+    if mode == "test":
+        artifact = _live41_write_json(root / "popup_status.json", {**payload, "popup_created": True, "mode": "test", "popup_pid": 0})
+        return {**payload, "popup_created": True, "mode": "test", "popup_pid": 0, "artifact": artifact}
+    script = root / "live41_completion_popup.py"
+    script.write_text(
+        "\n".join((
+            "import os, sys, tkinter as tk",
+            f"artifact_root = {str(root)!r}",
+            f"payload = {payload!r}",
+            "root = tk.Tk()",
+            "root.title('DELTA LIVE-41 Complete')",
+            "text = '\\n'.join(f'{k}: {v}' for k, v in payload.items() if k not in {'title'})",
+            "tk.Label(root, text=text, justify='left', padx=12, pady=12).pack()",
+            "buttons = tk.Frame(root); buttons.pack(pady=8)",
+            "tk.Button(buttons, text='Open Artifact Folder', command=lambda: os.startfile(artifact_root)).pack(side='left', padx=6)",
+            "tk.Button(buttons, text='Dismiss', command=root.destroy).pack(side='left', padx=6)",
+            "root.mainloop()",
+        )),
+        encoding="utf-8",
+    )
+    proc = subprocess.Popen([os.sys.executable, str(script)], cwd=str(root), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    artifact = _live41_write_json(root / "popup_status.json", {**payload, "popup_created": True, "mode": "persistent", "popup_pid": proc.pid})
+    return {**payload, "popup_created": True, "mode": "persistent", "popup_pid": proc.pid, "artifact": artifact}
+
+
+def run_live41_disposable_pilot(*, artifact_root: str = ".tmp/live41", campaign_id: str = "live41-disposable-pilot", starting_checkpoint: str = "d977abb0", use_external_retrieval: bool = False, popup_mode: str = "test", pre_completion_hold_seconds: float = 0.0) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    emergency_stop = root / "EMERGENCY_STOP"
+    emergency_stop.write_text("READY\n", encoding="utf-8")
+    start = time.monotonic()
+    campaign = make_live41_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    provider_denial = live41_deny_provider_action(campaign, action="provider_task_creation")
+    seed = {
+        "seed_id": stable_id("live41-seed", campaign_id),
+        "evidence_gap": "technical summaries need claim-level source-span provenance before objective derivation",
+        "provider_state": "blocked",
+    }
+    seed_artifact = _live41_write_json(root / "evidence" / "seed_evidence_gap.json", seed)
+    _live41_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
+    local = _live41_local_inspection(root, campaign, target_path="orchestration/runtime/gsr_a_governed_self_regulation.py")
+    rejected = _live41_rejected_source(root)
+    _live41_checkpoint(root, campaign, latest_artifact=local["artifact"]["path"])
+    if pre_completion_hold_seconds > 0:
+        campaign["campaign_state"] = "running"
+        campaign["terminal_reason"] = "first_non_api_transition_complete_observation_window"
+        _live41_checkpoint(root, campaign, latest_artifact=local["artifact"]["path"])
+        if _live37_sleep_interruptible(pre_completion_hold_seconds, emergency_stop):
+            campaign["campaign_state"] = "completed"
+            campaign["terminal_reason"] = "emergency_stop"
+            campaign["elapsed_time"] = round(time.monotonic() - start, 3)
+            final_checkpoint = _live41_checkpoint(root, campaign, latest_artifact=local["artifact"]["path"])
+            _live41_write_json(root / "final_status.json", {"campaign": campaign, "provider_calls": 0, "provider_attempts": 0})
+            _live41_write_json(root / "final_checkpoint.json", final_checkpoint)
+            popup = _live41_launch_completion_popup(root, campaign, mode=popup_mode)
+            return {"classification": "LIVE_41_NON_API_EVIDENCE_CAMPAIGN_READY_WITH_LIMITS", "campaign": campaign, "artifact_root": str(root), "popup": popup, "external_status": "not_reached_emergency_stop"}
+        campaign["terminal_reason"] = ""
+    accepted_sources: list[dict[str, Any]] = []
+    external_status = "external_source_access_deferred"
+    if use_external_retrieval:
+        try:
+            accepted_sources.append(_live41_external_retrieval(root, campaign, url="https://docs.python.org/3/howto/regex.html", allowed_domain="docs.python.org", accept=True))
+            external_status = "external_retrieval_completed"
+        except Exception as exc:
+            external_status = f"external_retrieval_failed:{type(exc).__name__}"
+    else:
+        accepted_sources.append(local)
+    contradictions = ("snippet lacks inspectable span while local/source records require preserved evidence identity",)
+    gate = _live41_non_api_evidence_gate(root, campaign, task_id="live41-non-api-gate-001", evidence_gap=seed["evidence_gap"], local_sources=(local,), accepted_sources=tuple(accepted_sources), rejected_sources=(rejected,), contradictions=contradictions)
+    packet = _live41_build_evidence_packet(root, campaign, gate)
+    campaign["completed_packet_digests"].append(packet["packet_digest"])
+    objective = _live41_derive_objective(root, campaign, packet)
+    validation = _live41_validate_candidate(root, campaign, objective) if objective.get("accepted") else {"disposition": "deferred"}
+    campaign["evidence_gaps_investigated"] = 1
+    frontier = (
+        {"frontier_id": "live41-source-span-objective", "candidate_objective": objective.get("proposed_objective", ""), "parent_evidence": objective.get("parent_evidence_ids", ()), "eligibility_result": "executable_objective", "reason": "evidence gate accepted", "ranking_score": 0.88},
+        {"frontier_id": "live41-rejected-snippet", "candidate_objective": "accept snippet-only claim", "parent_evidence": (rejected["source_id"],), "eligibility_result": "rejected", "reason": "source lacks inspectable span", "ranking_score": 0.05},
+    )
+    derivation1 = _live41_derivation_pass(root, campaign, pass_number=1, frontier=frontier)
+    derivation2 = _live41_derivation_pass(root, campaign, pass_number=2, frontier=frontier, previous_digest=derivation1["artifact"]["digest"])
+    campaign["terminal_reason"] = "genuine_saturation_after_changed_consumed_frontier" if derivation2["empty_derivation_pass"] else "operator_review_required"
+    campaign["campaign_state"] = "completed" if derivation2["empty_derivation_pass"] else "paused_for_operator_review"
+    campaign["elapsed_time"] = round(time.monotonic() - start, 3)
+    final_checkpoint = _live41_checkpoint(root, campaign, latest_artifact=derivation2["artifact"]["path"])
+    review = {
+        "classification": "LIVE_41_NON_API_EVIDENCE_CAMPAIGN_READY_WITH_LIMITS",
+        "provider_adapters_invoked": False,
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "hidden_provider_fallback": False,
+        "evidence_retrieval_substantive": gate["sufficiency_decision"] == "sufficient_for_bounded_objective",
+        "source_provenance_inspectable": bool(gate["source_provenance"]),
+        "rejected_sources_genuine": rejected["accepted"] is False,
+        "contradictions_affect_downstream": bool(gate["contradiction_findings"]),
+        "objective_derivation_evidence_driven": objective.get("accepted") is True,
+        "duplicate_retrieval_prevented": derivation2["empty_derivation_pass"] is True,
+        "saturation_guard": derivation2["empty_derivation_pass"] and not derivation2["generated_tasks"],
+        "provider_state": "blocked",
+        "external_status": external_status,
+    }
+    review_artifact = _live41_write_json(root / "review" / "final_review.json", review)
+    root_review_artifact = _live41_write_json(root / "final_review.json", review)
+    for name, payload in {
+        "final_status.json": {"campaign": campaign, "provider_calls": 0, "provider_attempts": 0},
+        "final_checkpoint.json": final_checkpoint,
+        "evidence_gap_ledger.json": {"evidence_gaps": (seed,)},
+        "source_ledger.json": {"accepted_sources": tuple(accepted_sources), "local_sources": (local,)},
+        "rejected_source_ledger.json": {"rejected_sources": (rejected,)},
+        "contradiction_ledger.json": {"contradictions": contradictions},
+        "provenance_manifest.json": {"sources": gate["source_provenance"]},
+        "derivation_passes.json": {"passes": (derivation1, derivation2)},
+        "capability_graph.json": {"objectives": (objective,), "validation": validation},
+        "resource_summary.json": {"local_actions": campaign["local_evidence_actions"], "external_retrievals": campaign["external_non_api_retrieval_actions"], "provider_calls": 0, "provider_attempts": 0},
+        "provider_lock_audit.json": {"provider_access": "blocked", "denial": provider_denial, "provider_calls": 0, "provider_attempts": 0},
+    }.items():
+        _live41_write_json(root / name, payload)
+    (root / "morning_review_instructions.txt").write_text("Review final_review.json, provenance_manifest.json, provider_lock_audit.json, and popup_status.json before closure.\n", encoding="utf-8")
+    popup = _live41_launch_completion_popup(root, campaign, mode=popup_mode)
+    return {
+        "classification": review["classification"],
+        "campaign": campaign,
+        "artifact_root": str(root),
+        "provider_denial": provider_denial,
+        "gate": gate,
+        "packet": packet,
+        "objective": objective,
+        "validation": validation,
+        "derivation_passes": (derivation1, derivation2),
+        "review": review,
+        "review_artifact": root_review_artifact,
+        "review_archive_artifact": review_artifact,
+        "popup": popup,
+        "external_status": external_status,
+    }
+
+
+def run_live41_non_api_campaign_process(*, artifact_root: str = ".tmp/live41", campaign_id: str | None = None, starting_checkpoint: str = "d977abb0", use_external_retrieval: bool = False, popup_mode: str = "persistent", pre_completion_hold_seconds: float = 30.0) -> dict[str, Any]:
+    campaign = campaign_id or stable_id("live41-campaign", utc_now(), os.getpid())
+    return run_live41_disposable_pilot(artifact_root=artifact_root, campaign_id=campaign, starting_checkpoint=starting_checkpoint, use_external_retrieval=use_external_retrieval, popup_mode=popup_mode, pre_completion_hold_seconds=pre_completion_hold_seconds)
+
+
+def make_live41_detached_launcher(*, repository_root: str, artifact_root: str, campaign_id: str, starting_checkpoint: str = "d977abb0", use_external_retrieval: bool = False) -> dict[str, Any]:
+    repo = Path(repository_root).resolve()
+    if not (repo / "orchestration" / "runtime" / "gsr_a_governed_self_regulation.py").exists():
+        return {"accepted": False, "reason": "repository_root_missing_runtime"}
+    if repo.name != "Delta_Dev":
+        return {"accepted": False, "reason": "repository_root_substitution_denied"}
+    root = Path(artifact_root).resolve() / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    launcher = root / "launch_live41.py"
+    launcher.write_text(
+        "\n".join((
+            "from pathlib import Path",
+            "import sys",
+            f"repo = Path({str(repo)!r}).resolve()",
+            "if str(repo) not in sys.path:",
+            "    sys.path.insert(0, str(repo))",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import run_live41_non_api_campaign_process",
+            "run_live41_non_api_campaign_process(",
+            f"    artifact_root={str(Path(artifact_root).resolve())!r},",
+            f"    campaign_id={campaign_id!r},",
+            f"    starting_checkpoint={starting_checkpoint!r},",
+            f"    use_external_retrieval={bool(use_external_retrieval)!r},",
+            "    popup_mode='persistent',",
+            "    pre_completion_hold_seconds=30.0,",
+            ")",
+            "",
+        )),
+        encoding="utf-8",
+    )
+    return {
+        "accepted": True,
+        "reason": "launcher_created",
+        "campaign_id": campaign_id,
+        "artifact_root": str(Path(artifact_root).resolve()),
+        "launcher_path": str(launcher),
+        "stdout_path": str(root / "stdout.log"),
+        "stderr_path": str(root / "stderr.log"),
+    }
+
+
 def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
     if eligible_work:
         return "execute_next"

@@ -5395,6 +5395,123 @@ def test_live_40_adversarial_scorer_requires_dependency_identity():
     assert gsr._live38_score_case(generic, generic_right) is True
 
 
+def test_live_41_provider_lock_denies_calls_and_preserves_local_work(tmp_path):
+    campaign = gsr.make_live41_campaign(campaign_id="live41-lock", starting_checkpoint="d977abb0")
+    denial = gsr.live41_deny_provider_action(campaign, action="fallback_retry")
+
+    assert campaign["provider_access"] == "blocked"
+    assert campaign["provider_calls"] == 0
+    assert campaign["provider_attempts"] == 0
+    assert denial["reason"] == "NON_API_PROVIDER_PATH_BYPASS_ATTEMPT"
+    assert denial["provider_calls"] == 0
+    assert denial["provider_attempts"] == 0
+
+    local = gsr._live41_local_inspection(tmp_path, campaign, target_path="orchestration/runtime/gsr_a_governed_self_regulation.py")
+    assert local["accepted"] is True
+    assert campaign["local_evidence_actions"] == 1
+    assert campaign["provider_calls"] == 0
+
+
+def test_live_41_non_api_evidence_gate_requires_material_sources(tmp_path):
+    campaign = gsr.make_live41_campaign(campaign_id="live41-gate", starting_checkpoint="d977abb0")
+    local = gsr._live41_local_inspection(tmp_path, campaign, target_path="orchestration/runtime/gsr_a_governed_self_regulation.py")
+    rejected = gsr._live41_rejected_source(tmp_path)
+    gate = gsr._live41_non_api_evidence_gate(
+        tmp_path,
+        campaign,
+        task_id="gate-1",
+        evidence_gap="claim-level provenance must be preserved",
+        local_sources=(local,),
+        accepted_sources=(local,),
+        rejected_sources=(rejected,),
+        contradictions=("snippet is unsupported while local evidence has inspectable spans",),
+    )
+
+    assert gate["sufficiency_decision"] == "sufficient_for_bounded_objective"
+    assert gate["provider_state"] == "blocked"
+    assert gate["provider_calls"] == 0
+    assert gate["provider_attempts"] == 0
+    assert gate["rejected_sources"] == ("live41-rejected-snippet-source",)
+    assert gate["source_provenance"]
+    assert Path(gate["artifact"]["path"]).exists()
+
+
+def test_live_41_disposable_pilot_creates_review_package_and_popup_status(tmp_path):
+    result = gsr.run_live41_disposable_pilot(artifact_root=str(tmp_path), campaign_id="live41-pilot", use_external_retrieval=False, popup_mode="test")
+    root = Path(result["artifact_root"])
+
+    assert result["classification"] == "LIVE_41_NON_API_EVIDENCE_CAMPAIGN_READY_WITH_LIMITS"
+    assert result["campaign"]["provider_calls"] == 0
+    assert result["campaign"]["provider_attempts"] == 0
+    assert result["gate"]["next_permitted_transition"] == "derive_non_api_objective"
+    assert result["objective"]["accepted"] is True
+    assert result["validation"]["causal_disable_restore"]["restore_verified"] is True
+    assert result["derivation_passes"][1]["empty_derivation_pass"] is True
+    assert result["popup"]["popup_created"] is True
+    for name in (
+        "final_status.json",
+        "final_checkpoint.json",
+        "final_review.json",
+        "evidence_gap_ledger.json",
+        "source_ledger.json",
+        "rejected_source_ledger.json",
+        "contradiction_ledger.json",
+        "provenance_manifest.json",
+        "derivation_passes.json",
+        "capability_graph.json",
+        "resource_summary.json",
+        "provider_lock_audit.json",
+        "popup_status.json",
+        "morning_review_instructions.txt",
+    ):
+        assert (root / name).exists()
+
+
+def test_live_41_duplicate_derivation_and_packet_signatures_are_denied(tmp_path):
+    campaign = gsr.make_live41_campaign(campaign_id="live41-dupe", starting_checkpoint="d977abb0")
+    local = gsr._live41_local_inspection(tmp_path, campaign, target_path="orchestration/runtime/gsr_a_governed_self_regulation.py")
+    gate = gsr._live41_non_api_evidence_gate(
+        tmp_path,
+        campaign,
+        task_id="gate-2",
+        evidence_gap="claim-level provenance must be preserved",
+        local_sources=(local,),
+        accepted_sources=(local,),
+        rejected_sources=(),
+        contradictions=(),
+    )
+    packet = gsr._live41_build_evidence_packet(tmp_path, campaign, gate)
+    first = gsr._live41_derive_objective(tmp_path, campaign, packet)
+    duplicate = gsr._live41_derive_objective(tmp_path, campaign, packet)
+    frontier = ({"frontier_id": "frontier-1", "candidate_objective": first["proposed_objective"], "parent_evidence": first["parent_evidence_ids"], "eligibility_result": "executable_objective", "reason": "accepted packet", "ranking_score": 0.9},)
+    pass1 = gsr._live41_derivation_pass(tmp_path, campaign, pass_number=1, frontier=frontier)
+    pass2 = gsr._live41_derivation_pass(tmp_path, campaign, pass_number=2, frontier=frontier, previous_digest=pass1["artifact"]["digest"])
+
+    assert first["accepted"] is True
+    assert duplicate["accepted"] is False
+    assert duplicate["reason"] == "duplicate_objective_signature_denied"
+    assert pass1["generated_tasks"]
+    assert pass2["empty_derivation_pass"] is True
+    assert campaign["provider_calls"] == 0
+
+
+def test_live_41_detached_launcher_binds_repo_and_denies_substitution(tmp_path):
+    launcher = gsr.make_live41_detached_launcher(
+        repository_root=str(Path.cwd()),
+        artifact_root=str(tmp_path),
+        campaign_id="live41-launch",
+    )
+    denied = gsr.make_live41_detached_launcher(
+        repository_root=str(tmp_path),
+        artifact_root=str(tmp_path),
+        campaign_id="live41-denied",
+    )
+
+    assert launcher["accepted"] is True
+    assert Path(launcher["launcher_path"]).exists()
+    assert denied["accepted"] is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
