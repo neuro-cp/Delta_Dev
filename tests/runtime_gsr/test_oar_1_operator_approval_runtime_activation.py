@@ -3721,6 +3721,70 @@ def test_live_26_no_gap_control_when_baseline_failure_absent():
     assert all(gsr.validate_live26_claim_against_approved_source(claim, live25.sources) for claim in live25.source_claims)
 
 
+def test_live_27_absence_rehearsal_records_required_branches_and_question():
+    result = gsr.run_live27_bounded_operator_absence_rehearsal(
+        absence_duration_seconds=60,
+        checkpoint_interval_seconds=10,
+        enforce_real_duration=False,
+        sleep_between_checkpoints=False,
+    )
+
+    assert result.accepted is True
+    assert len(result.branches) == 8
+    assert result.operator_questions[0].created_during_absence is True
+    assert result.operator_questions[0].pending_during_absence is True
+    assert result.operator_questions[0].response_consumed_once is True
+    assert result.work_blocked_during_absence == ("live27-operator-decision",)
+    assert "live27-valid-approved" in result.work_completed_while_questions_pending
+
+
+def test_live_27_absence_denies_authority_requiring_actions():
+    result = gsr.run_live27_bounded_operator_absence_rehearsal(
+        absence_duration_seconds=60,
+        checkpoint_interval_seconds=10,
+        enforce_real_duration=False,
+        sleep_between_checkpoints=False,
+    )
+    denied = {item.denied_action: item for item in result.denied_actions}
+
+    for action in (
+        "tracked-source mutation",
+        "capability application",
+        "activation",
+        "new provider selection",
+        "new source selection",
+        "permission expansion",
+        "Git operation",
+        "deployment",
+        "memory write",
+        "mission expansion",
+        "unanswered question action",
+    ):
+        assert denied[action].operator_absence_state == "active"
+        assert denied[action].no_side_effect is True
+
+
+def test_live_27_checkpoint_reconstruction_preserves_absence_state():
+    result = gsr.run_live27_bounded_operator_absence_rehearsal(
+        absence_duration_seconds=60,
+        checkpoint_interval_seconds=10,
+        enforce_real_duration=False,
+        sleep_between_checkpoints=False,
+    )
+    reconstruction = result.reconstruction
+
+    assert len(result.checkpoints) >= 8
+    assert reconstruction.absence_state_preserved is True
+    assert reconstruction.mission_wording_unchanged is True
+    assert reconstruction.completed_work_not_repeated is True
+    assert reconstruction.source_retrievals_not_repeated is True
+    assert reconstruction.provider_calls_not_repeated is True
+    assert reconstruction.denied_actions_remain_denied is True
+    assert reconstruction.elapsed_time_not_reset is True
+    assert result.authority_expired is True
+    assert result.process_left_running is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
