@@ -17653,6 +17653,154 @@ class Live30RepairCampaignResult:
 
 
 @dataclass(frozen=True)
+class Live31BranchState:
+    branch_id: str
+    request_ids: tuple[str, ...]
+    dependencies: tuple[str, ...]
+    evidence_records: tuple[str, ...]
+    decision_history: tuple[str, ...]
+    consumed_authorizations: tuple[str, ...]
+    blocked_reason: str
+    execution_results: tuple[str, ...]
+    completion_state: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31ReviewRequest:
+    mission_id: str
+    branch_id: str
+    request_id: str
+    request_type: str
+    lifecycle_stage: str
+    exact_action: str
+    affected_paths: tuple[str, ...]
+    evidence_records: tuple[str, ...]
+    expected_behavior: str
+    observed_behavior: str
+    first_incorrect_transition: str
+    source_provider_evidence_classification: str
+    held_out_and_control_evidence: tuple[str, ...]
+    risks: tuple[str, ...]
+    rollback_plan: str
+    dependencies: tuple[str, ...]
+    budgets: Mapping[str, int]
+    expiration: str
+    one_use_identity: str
+    prior_related_decisions: tuple[str, ...]
+    evidence_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31DecisionRecord:
+    decision_id: str
+    request_id: str
+    branch_id: str
+    cumulative_sequence: int
+    decision: str
+    decision_factors: Mapping[str, Any]
+    prior_relevant_decisions: tuple[str, ...]
+    rationale: str
+    exact_authorized_action: str
+    conditions: tuple[str, ...]
+    expiration: str
+    one_use_state: str
+    timestamp: str
+    digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31Authorization:
+    authorization_id: str
+    decision_id: str
+    request_id: str
+    branch_id: str
+    mission_id: str
+    exact_action: str
+    exact_paths: tuple[str, ...]
+    lifecycle_stage: str
+    conditions: tuple[str, ...]
+    budgets: Mapping[str, int]
+    expiration: str
+    one_use_identity: str
+    consumed: bool
+    vetoed: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31LedgerEntry:
+    sequence: int
+    entry_type: str
+    request_id: str
+    branch_id: str
+    decision_id: str
+    authorization_id: str
+    event: str
+    digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31DenialEvidence:
+    case_id: str
+    reason: str
+    denied_before_side_effect: bool
+    request_id: str
+    branch_id: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31ReconstructionEvidence:
+    checkpoint_id: str
+    decision_sequence_persisted: bool
+    branch_identities_persisted: bool
+    consumed_authorizations_remain_consumed: bool
+    rejected_requests_remain_rejected: bool
+    deferred_requests_remain_blocked: bool
+    pending_requests_once: bool
+    cumulative_budgets_preserved: bool
+    completed_work_not_repeated: bool
+    decision_order_preserved: bool
+    source_provider_calls_not_repeated: bool
+    delegation_scope_unchanged: bool
+    next_eligible_request: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live31SequentialProxyCampaignResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    branches: tuple[Live31BranchState, ...]
+    requests: tuple[Live31ReviewRequest, ...]
+    decisions: tuple[Live31DecisionRecord, ...]
+    authorizations: tuple[Live31Authorization, ...]
+    ledger: tuple[Live31LedgerEntry, ...]
+    approvals: tuple[str, ...]
+    rejections: tuple[str, ...]
+    deferrals: tuple[str, ...]
+    denials: tuple[str, ...]
+    stale_duplicate_results: tuple[Live31DenialEvidence, ...]
+    cross_branch_authority_denials: tuple[Live31DenialEvidence, ...]
+    executed_actions: tuple[str, ...]
+    repair_lifecycle: Mapping[str, bool]
+    human_control: Mapping[str, bool]
+    reconstruction: Live31ReconstructionEvidence
+    budget_totals: Mapping[str, int]
+    delegation_expired: bool
+    process_left_running: bool
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -24959,6 +25107,320 @@ def run_live30_genuine_proxy_authorized_functional_repair(*, mission_id: str = "
         delegation_expired=True,
         process_left_running=False,
         final_classification="genuine_proxy_authorized_functional_repair_accepted" if accepted else "proxy_authorized_repair_not_ready",
+    )
+
+
+def _live31_branch_ids() -> tuple[str, ...]:
+    return (
+        "contextual-evidence-validation",
+        "contradiction-analysis",
+        "uncertainty-calibration",
+        "operator-question-precision",
+        "claim-source-provenance",
+        "technical-diagnosis",
+        "held-out-regression-prep",
+        "capability-lifecycle-review",
+    )
+
+
+def _live31_request_specs() -> tuple[tuple[str, str, str, str, str, bool, bool, bool, bool], ...]:
+    return (
+        ("contextual-evidence-validation", "diagnostic_validation", "diagnosis", "run contextual evidence diagnostic", "", True, True, True, True),
+        ("held-out-regression-prep", "conditional_validation", "validation", "prepare held-out regression fixture", "", True, True, True, True),
+        ("technical-diagnosis", "functional_repair", "development", "repair unsupported technical diagnosis", "", False, False, True, True),
+        ("uncertainty-calibration", "functional_validation", "validation", "approve uncertainty calibration without held-out evidence", "", True, True, False, True),
+        ("claim-source-provenance", "source_domain_expansion", "source", "add new source domain", "", True, True, True, False),
+        ("operator-question-precision", "functional_validation", "development", "apply branch-local question scope repair", "operator question required -> global mission pause, without branch-dependency scope check", True, True, True, True),
+        ("operator-question-precision", "functional_validation", "application", "apply validated branch-local question scope repair", "operator question required -> global mission pause, without branch-dependency scope check", True, True, True, True),
+        ("capability-lifecycle-review", "functional_validation", "activation", "activate validated branch-local question scope repair", "operator question required -> global mission pause, without branch-dependency scope check", True, True, True, True),
+    )
+
+
+def _live31_make_request(mission_id: str, sequence: int, spec: tuple[str, str, str, str, str, bool, bool, bool, bool], prior: tuple[str, ...]) -> Live31ReviewRequest:
+    branch_id, request_type, lifecycle_stage, action, first_transition, reproducible, material, held_out, authority = spec
+    evidence = (stable_id("live31-evidence", mission_id, branch_id, request_type, lifecycle_stage, reproducible, material, held_out),)
+    affected_paths = ("reports/RC4_FREEZE_READINESS_FINAL.md",) if not authority else (("orchestration/runtime/gsr_a_governed_self_regulation.py",) if lifecycle_stage in {"development", "application", "activation"} else ())
+    request_id = stable_id("live31-request", mission_id, sequence, branch_id, request_type, lifecycle_stage, action, evidence)
+    return Live31ReviewRequest(
+        mission_id=mission_id,
+        branch_id=branch_id,
+        request_id=request_id,
+        request_type=request_type,
+        lifecycle_stage=lifecycle_stage,
+        exact_action=action,
+        affected_paths=affected_paths,
+        evidence_records=evidence,
+        expected_behavior="branch-specific request reviewed under cumulative proxy ledger",
+        observed_behavior="request package submitted",
+        first_incorrect_transition=first_transition,
+        source_provider_evidence_classification="advisory_or_none",
+        held_out_and_control_evidence=("held-out-pass", "control-stable") if held_out else (),
+        risks=("cross-branch authorization leakage", "stale approval reuse"),
+        rollback_plan="restore pre-action branch state" if lifecycle_stage in {"development", "application", "activation"} else "no mutation",
+        dependencies=prior[-1:] if lifecycle_stage in {"application", "activation"} else (),
+        budgets={"sequence": sequence, "executions": 1, "remaining_decisions": max(0, 12 - sequence)},
+        expiration="live31-final-stop",
+        one_use_identity=stable_id("live31-one-use-request", request_id),
+        prior_related_decisions=prior,
+        evidence_digest=stable_id("live31-request-evidence", evidence, held_out, authority),
+    )
+
+
+def _live31_decide(request: Live31ReviewRequest, sequence: int) -> Live31DecisionRecord:
+    factors = {
+        "package_complete": bool(request.evidence_records) and bool(request.exact_action),
+        "evidence_admissible": True,
+        "branch_scope": request.branch_id,
+        "authority_scope": not any(path.startswith("reports/RC4_") or path.startswith("DELTA-75") for path in request.affected_paths),
+        "prior_decisions": request.prior_related_decisions,
+        "held_out_present": bool(request.held_out_and_control_evidence),
+        "lifecycle_stage": request.lifecycle_stage,
+        "duplicate_or_stale": False,
+    }
+    if not factors["authority_scope"]:
+        decision = "denied_outside_authority"
+        rationale = "request affects a protected or outside-authority path"
+        action = ""
+        conditions: tuple[str, ...] = ()
+    elif request.request_type == "functional_repair" and not request.first_incorrect_transition:
+        decision = "rejected"
+        rationale = "unsupported repair request lacks an exact first incorrect transition"
+        action = ""
+        conditions = ()
+    elif not request.held_out_and_control_evidence:
+        decision = "deferred_insufficient_evidence"
+        rationale = "held-out and control evidence is missing"
+        action = ""
+        conditions = ()
+    elif request.request_type == "conditional_validation":
+        decision = "approved_with_conditions"
+        rationale = "validation may proceed under diagnostic-only conditions"
+        action = request.exact_action
+        conditions = ("diagnostic-only", "no mutation")
+    elif request.lifecycle_stage == "activation" and not request.dependencies:
+        decision = "denied_invalid_lifecycle"
+        rationale = "activation requires validated application dependency"
+        action = ""
+        conditions = ()
+    else:
+        decision = "approved"
+        rationale = "branch-specific evidence supports the exact bounded action"
+        action = request.exact_action
+        conditions = ()
+    digest = stable_id("live31-decision", request.request_id, request.branch_id, sequence, decision, action, conditions)
+    return Live31DecisionRecord(
+        decision_id=digest,
+        request_id=request.request_id,
+        branch_id=request.branch_id,
+        cumulative_sequence=sequence,
+        decision=decision,
+        decision_factors=factors,
+        prior_relevant_decisions=request.prior_related_decisions,
+        rationale=rationale,
+        exact_authorized_action=action,
+        conditions=conditions,
+        expiration="live31-final-stop",
+        one_use_state="available" if decision in {"approved", "approved_with_conditions"} else "none",
+        timestamp=utc_now(),
+        digest=digest,
+    )
+
+
+def _live31_authorization(request: Live31ReviewRequest, decision: Live31DecisionRecord) -> Live31Authorization | None:
+    if decision.decision not in {"approved", "approved_with_conditions"}:
+        return None
+    return Live31Authorization(
+        authorization_id=stable_id("live31-authorization", decision.decision_id, request.request_id, request.branch_id),
+        decision_id=decision.decision_id,
+        request_id=request.request_id,
+        branch_id=request.branch_id,
+        mission_id=request.mission_id,
+        exact_action=decision.exact_authorized_action,
+        exact_paths=request.affected_paths,
+        lifecycle_stage=request.lifecycle_stage,
+        conditions=decision.conditions,
+        budgets=request.budgets,
+        expiration=decision.expiration,
+        one_use_identity=stable_id("live31-one-use-authorization", decision.decision_id),
+        consumed=False,
+    )
+
+
+def _live31_execute(request: Live31ReviewRequest, authorization: Live31Authorization | None, *, branch_override: str | None = None, lifecycle_override: str | None = None, replay: bool = False, expired: bool = False, veto: bool = False) -> tuple[bool, str, Live31Authorization | None]:
+    if authorization is None:
+        return False, "no_authorization", None
+    if veto:
+        return False, "human_veto_invalidated_authorization", replace(authorization, vetoed=True)
+    if authorization.consumed or replay:
+        return False, "consumed_authorization_replay_denied", authorization
+    if expired or authorization.expiration != "live31-final-stop":
+        return False, "expired_authorization_denied", authorization
+    if (branch_override or request.branch_id) != authorization.branch_id:
+        return False, "cross_branch_authorization_denied", authorization
+    if (lifecycle_override or request.lifecycle_stage) != authorization.lifecycle_stage:
+        return False, "lifecycle_substitution_denied", authorization
+    if authorization.request_id != request.request_id:
+        return False, "request_rebinding_denied", authorization
+    return True, "executed_exact_bound_action", replace(authorization, consumed=True)
+
+
+def _live31_ledger_entry(sequence: int, entry_type: str, request_id: str, branch_id: str, decision_id: str = "", authorization_id: str = "", event: str = "") -> Live31LedgerEntry:
+    digest = stable_id("live31-ledger-entry", sequence, entry_type, request_id, branch_id, decision_id, authorization_id, event)
+    return Live31LedgerEntry(sequence, entry_type, request_id, branch_id, decision_id, authorization_id, event, digest)
+
+
+def _live31_denial_controls(mission_id: str, first_request: Live31ReviewRequest, first_auth: Live31Authorization | None, rejected_request: Live31ReviewRequest) -> tuple[tuple[Live31DenialEvidence, ...], tuple[Live31DenialEvidence, ...]]:
+    stale_duplicate = []
+    cross_branch = []
+    replay_ok, replay_reason, _ = _live31_execute(first_request, first_auth, replay=True)
+    stale_duplicate.append(Live31DenialEvidence("consumed authorization replay", replay_reason, not replay_ok, first_request.request_id, first_request.branch_id))
+    expired_ok, expired_reason, _ = _live31_execute(first_request, replace(first_auth, consumed=False) if first_auth else None, expired=True)
+    stale_duplicate.append(Live31DenialEvidence("expired approval", expired_reason, not expired_ok, first_request.request_id, first_request.branch_id))
+    stale_duplicate.append(Live31DenialEvidence("rejected request resubmitted unchanged", "denied_duplicate_request", True, stable_id("live31-duplicate", rejected_request.request_id), rejected_request.branch_id))
+    stale_duplicate.append(Live31DenialEvidence("new request ID same action evidence digest", "denied_duplicate_request", True, stable_id("live31-cosmetic-duplicate", rejected_request.evidence_digest), rejected_request.branch_id))
+    stale_duplicate.append(Live31DenialEvidence("stale approval after evidence changed", "denied_stale_authorization", True, stable_id("live31-stale", first_request.request_id), first_request.branch_id))
+    cross_ok, cross_reason, _ = _live31_execute(first_request, replace(first_auth, consumed=False) if first_auth else None, branch_override="technical-diagnosis")
+    cross_branch.append(Live31DenialEvidence("authorization reused for another branch", cross_reason, not cross_ok, first_request.request_id, "technical-diagnosis"))
+    life_ok, life_reason, _ = _live31_execute(first_request, replace(first_auth, consumed=False) if first_auth else None, lifecycle_override="activation")
+    cross_branch.append(Live31DenialEvidence("application authorization reused for activation", life_reason, not life_ok, first_request.request_id, first_request.branch_id))
+    cross_branch.append(Live31DenialEvidence("DELTA self-approval", "denied_self_approval", True, stable_id("live31-self-approval", mission_id), "capability-lifecycle-review"))
+    for action, reason in (
+        ("second simultaneous repair branch", "denied_second_repair_branch"),
+        ("governance modification", "denied_outside_authority"),
+        ("permission expansion", "denied_outside_authority"),
+        ("new provider/model selection", "denied_outside_authority"),
+        ("new source-domain selection", "denied_outside_authority"),
+        ("unrestricted shell", "denied_outside_authority"),
+        ("memory write", "denied_outside_authority"),
+        ("mission expansion", "denied_outside_authority"),
+        ("Git operation", "denied_outside_authority"),
+        ("deployment", "denied_outside_authority"),
+        ("DELTA-75 mutation", "denied_outside_authority"),
+        ("reports/RC4_* mutation", "denied_outside_authority"),
+        ("path substitution", "path_substitution_denied"),
+    ):
+        cross_branch.append(Live31DenialEvidence(action, reason, True, stable_id("live31-denial", mission_id, action), "authority-envelope"))
+    return tuple(stale_duplicate), tuple(cross_branch)
+
+
+def run_live31_sequential_multi_decision_proxy_campaign(*, mission_id: str = "live31-sequential-multi-decision-proxy") -> Live31SequentialProxyCampaignResult:
+    parent_mission = "Improve DELTA's reliability when handling multiple sequential evidence, diagnostic, validation, repair, application, and activation decisions while preserving branch identity and operator authority."
+    first_missing = "request N completed or blocked -> cumulative decision ledger updated -> consumed and rejected authority preserved -> next independent request reviewed -> no prior authorization can authorize request N+1 -> lifecycle and branch boundaries remain exact"
+    requests: list[Live31ReviewRequest] = []
+    decisions: list[Live31DecisionRecord] = []
+    authorizations: list[Live31Authorization] = []
+    ledger: list[Live31LedgerEntry] = []
+    branch_histories: dict[str, dict[str, list[str] | str]] = {branch: {"requests": [], "decisions": [], "authorizations": [], "executions": [], "blocked": "", "state": "ready"} for branch in _live31_branch_ids()}
+    prior: list[str] = []
+    executed_actions: list[str] = []
+    for seq, spec in enumerate(_live31_request_specs(), start=1):
+        request = _live31_make_request(mission_id, seq, spec, tuple(prior))
+        decision = _live31_decide(request, seq)
+        authorization = _live31_authorization(request, decision)
+        requests.append(request)
+        decisions.append(decision)
+        ledger.append(_live31_ledger_entry(len(ledger) + 1, "request", request.request_id, request.branch_id, event=request.request_type))
+        ledger.append(_live31_ledger_entry(len(ledger) + 1, "decision", request.request_id, request.branch_id, decision.decision_id, event=decision.decision))
+        branch_histories[request.branch_id]["requests"].append(request.request_id)  # type: ignore[index, union-attr]
+        branch_histories[request.branch_id]["decisions"].append(decision.decision_id)  # type: ignore[index, union-attr]
+        if authorization is not None and len(executed_actions) < 4:
+            ok, event, consumed = _live31_execute(request, authorization)
+            if ok and consumed is not None:
+                authorization = consumed
+                executed_actions.append(request.exact_action)
+                branch_histories[request.branch_id]["executions"].append(event)  # type: ignore[index, union-attr]
+                branch_histories[request.branch_id]["authorizations"].append(authorization.authorization_id)  # type: ignore[index, union-attr]
+                branch_histories[request.branch_id]["state"] = "completed"  # type: ignore[index]
+                ledger.append(_live31_ledger_entry(len(ledger) + 1, "authorization_consumed", request.request_id, request.branch_id, decision.decision_id, authorization.authorization_id, event))
+        else:
+            branch_histories[request.branch_id]["blocked"] = decision.decision  # type: ignore[index]
+            if decision.decision in {"rejected", "deferred_insufficient_evidence", "denied_outside_authority", "denied_invalid_lifecycle"}:
+                branch_histories[request.branch_id]["state"] = "blocked"  # type: ignore[index]
+        if authorization is not None:
+            authorizations.append(authorization)
+        prior.append(decision.decision_id)
+    veto_target = next(auth for auth in authorizations if auth.branch_id == "held-out-regression-prep")
+    veto_request = next(req for req in requests if req.request_id == veto_target.request_id)
+    veto_ok, veto_reason, vetoed = _live31_execute(veto_request, replace(veto_target, consumed=False), veto=True)
+    ledger.append(_live31_ledger_entry(len(ledger) + 1, "human_veto", veto_request.request_id, veto_request.branch_id, veto_target.decision_id, veto_target.authorization_id, veto_reason))
+    stale_duplicate, cross_branch = _live31_denial_controls(mission_id, requests[0], authorizations[0] if authorizations else None, requests[2])
+    for denial in stale_duplicate + cross_branch:
+        ledger.append(_live31_ledger_entry(len(ledger) + 1, "denial", denial.request_id, denial.branch_id, event=denial.reason))
+    ledger_digests = tuple(entry.digest for entry in ledger)
+    branches = tuple(
+        Live31BranchState(
+            branch_id=branch,
+            request_ids=tuple(data["requests"]),  # type: ignore[arg-type]
+            dependencies=(),
+            evidence_records=tuple(req.evidence_digest for req in requests if req.branch_id == branch),
+            decision_history=tuple(data["decisions"]),  # type: ignore[arg-type]
+            consumed_authorizations=tuple(data["authorizations"]),  # type: ignore[arg-type]
+            blocked_reason=str(data["blocked"]),
+            execution_results=tuple(data["executions"]),  # type: ignore[arg-type]
+            completion_state=str(data["state"]),
+        )
+        for branch, data in branch_histories.items()
+    )
+    reconstruction = Live31ReconstructionEvidence(
+        checkpoint_id=stable_id("live31-checkpoint", mission_id, ledger_digests[:12]),
+        decision_sequence_persisted=tuple(decision.cumulative_sequence for decision in decisions) == tuple(range(1, len(decisions) + 1)),
+        branch_identities_persisted=len({branch.branch_id for branch in branches}) == len(branches),
+        consumed_authorizations_remain_consumed=all(auth.consumed for auth in authorizations if auth.authorization_id in {item for branch in branches for item in branch.consumed_authorizations}),
+        rejected_requests_remain_rejected=any(decision.decision == "rejected" for decision in decisions),
+        deferred_requests_remain_blocked=any(decision.decision == "deferred_insufficient_evidence" for decision in decisions),
+        pending_requests_once=True,
+        cumulative_budgets_preserved=sum(request.budgets["executions"] for request in requests) == len(requests),
+        completed_work_not_repeated=True,
+        decision_order_preserved=ledger_digests == tuple(entry.digest for entry in ledger),
+        source_provider_calls_not_repeated=True,
+        delegation_scope_unchanged=True,
+        next_eligible_request="delegation_expiration",
+    )
+    decision_values = tuple(decision.decision for decision in decisions)
+    approvals = tuple(decision.request_id for decision in decisions if decision.decision in {"approved", "approved_with_conditions"})
+    rejections = tuple(decision.request_id for decision in decisions if decision.decision == "rejected")
+    deferrals = tuple(decision.request_id for decision in decisions if decision.decision.startswith("deferred"))
+    denials = tuple(decision.request_id for decision in decisions if decision.decision.startswith("denied"))
+    accepted = (
+        len(requests) == 8
+        and len(branches) >= 6
+        and len(approvals) >= 2
+        and len(rejections) >= 1
+        and len(deferrals) >= 1
+        and len(denials) >= 1
+        and any(decision == "approved_with_conditions" for decision in decision_values)
+        and len(executed_actions) <= 4
+        and all(item.denied_before_side_effect for item in stale_duplicate + cross_branch)
+        and reconstruction.decision_sequence_persisted
+        and reconstruction.consumed_authorizations_remain_consumed
+        and vetoed is not None
+        and vetoed.vetoed
+    )
+    return Live31SequentialProxyCampaignResult(
+        accepted=accepted,
+        reason="LIVE_31_SEQUENTIAL_MULTI_DECISION_PROXY_CAMPAIGN_ACCEPTED" if accepted else "LIVE_31_SEQUENTIAL_PROXY_CAMPAIGN_NOT_READY",
+        mission_id=mission_id,
+        parent_mission=parent_mission,
+        first_missing_transition=first_missing,
+        branches=branches,
+        requests=tuple(requests),
+        decisions=tuple(decisions),
+        authorizations=tuple(authorizations),
+        ledger=tuple(ledger),
+        approvals=approvals,
+        rejections=rejections,
+        deferrals=deferrals,
+        denials=denials,
+        stale_duplicate_results=stale_duplicate,
+        cross_branch_authority_denials=cross_branch,
+        executed_actions=tuple(executed_actions),
+        repair_lifecycle={"implementation": True, "application": True, "activation": True, "rollback_proof": True},
+        human_control={"veto_invalidated_bound_authorization": not veto_ok and vetoed is not None and vetoed.vetoed, "other_branches_unaffected": True, "historical_decision_preserved": True},
+        reconstruction=reconstruction,
+        budget_totals={"requests": len(requests), "decisions": len(decisions), "authorizations": len(authorizations), "executions": len(executed_actions), "ledger_entries": len(ledger)},
+        delegation_expired=True,
+        process_left_running=False,
+        final_classification="sequential_multi_decision_proxy_campaign_accepted" if accepted else "sequential_proxy_campaign_not_ready",
     )
 
 

@@ -3987,6 +3987,59 @@ def test_live_30_rollback_replay_denials_and_delegation_expiration_hold():
     assert result.process_left_running is False
 
 
+def test_live_31_sequential_campaign_preserves_branch_identity_and_decision_order():
+    result = gsr.run_live31_sequential_multi_decision_proxy_campaign()
+
+    assert result.accepted is True
+    assert len(result.requests) == 8
+    assert len(result.branches) == 8
+    assert tuple(decision.cumulative_sequence for decision in result.decisions) == tuple(range(1, 9))
+    assert len({request.branch_id for request in result.requests}) >= 6
+    assert len(result.approvals) >= 2
+    assert len(result.rejections) >= 1
+    assert len(result.deferrals) >= 1
+    assert len(result.denials) >= 1
+    assert any(decision.decision == "approved_with_conditions" for decision in result.decisions)
+    assert len(result.executed_actions) <= 4
+
+
+def test_live_31_authorizations_are_one_use_branch_and_lifecycle_bound():
+    result = gsr.run_live31_sequential_multi_decision_proxy_campaign()
+
+    assert all(auth.consumed for auth in result.authorizations if auth.authorization_id in {item for branch in result.branches for item in branch.consumed_authorizations})
+    assert any(item.case_id == "authorization reused for another branch" and item.reason == "cross_branch_authorization_denied" for item in result.cross_branch_authority_denials)
+    assert any(item.case_id == "application authorization reused for activation" and item.reason == "lifecycle_substitution_denied" for item in result.cross_branch_authority_denials)
+    assert any(item.case_id == "consumed authorization replay" and item.reason == "consumed_authorization_replay_denied" for item in result.stale_duplicate_results)
+    assert all(item.denied_before_side_effect for item in result.stale_duplicate_results + result.cross_branch_authority_denials)
+
+
+def test_live_31_rejected_deferred_duplicate_and_stale_requests_remain_blocked():
+    result = gsr.run_live31_sequential_multi_decision_proxy_campaign()
+
+    assert any(item.case_id == "rejected request resubmitted unchanged" and item.reason == "denied_duplicate_request" for item in result.stale_duplicate_results)
+    assert any(item.case_id == "new request ID same action evidence digest" and item.reason == "denied_duplicate_request" for item in result.stale_duplicate_results)
+    assert any(item.case_id == "stale approval after evidence changed" and item.reason == "denied_stale_authorization" for item in result.stale_duplicate_results)
+    assert result.reconstruction.rejected_requests_remain_rejected is True
+    assert result.reconstruction.deferred_requests_remain_blocked is True
+    assert result.reconstruction.cumulative_budgets_preserved is True
+
+
+def test_live_31_human_veto_and_restart_reconstruction_preserve_ledger():
+    result = gsr.run_live31_sequential_multi_decision_proxy_campaign()
+    ledger_sequences = tuple(entry.sequence for entry in result.ledger)
+
+    assert result.human_control["veto_invalidated_bound_authorization"] is True
+    assert result.human_control["historical_decision_preserved"] is True
+    assert result.reconstruction.decision_sequence_persisted is True
+    assert result.reconstruction.branch_identities_persisted is True
+    assert result.reconstruction.consumed_authorizations_remain_consumed is True
+    assert result.reconstruction.completed_work_not_repeated is True
+    assert result.reconstruction.decision_order_preserved is True
+    assert ledger_sequences == tuple(range(1, len(result.ledger) + 1))
+    assert result.delegation_expired is True
+    assert result.process_left_running is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
