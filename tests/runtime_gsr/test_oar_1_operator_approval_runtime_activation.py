@@ -5971,7 +5971,9 @@ def test_live_44_accept_executes_once_and_creates_later_popup(tmp_path, monkeypa
         if decision_actions["count"] == 1:
             gsr.live44_record_operator_decision(str(package), action="ACCEPT", note="test accepts first complete popup")
         elif decision_actions["count"] == 2:
-            gsr.live44_record_operator_decision(str(package), action="DENY", note="test denies follow-up popup to end smoke")
+            gsr.live44_record_operator_decision(str(package), action="DENY", note="test denies follow-up popup")
+        elif decision_actions["count"] == 3:
+            (root / "EMERGENCY_STOP").write_text("test stops after third pending popup", encoding="utf-8")
 
     monkeypatch.setattr(gsr.time, "sleep", operator_sleep)
     result = gsr.run_live44_exploration_campaign(
@@ -5992,10 +5994,71 @@ def test_live_44_accept_executes_once_and_creates_later_popup(tmp_path, monkeypa
     assert execution["authorization_consumed"] is True
     assert execution["provider_calls_added"] == 0
     assert result["wait_result"]["events"][0]["state"] == "accepted_executed_and_followup_popup_created"
+    assert result["wait_result"]["events"][1]["state"] == "denied_consumed_and_followup_popup_created"
+    assert result["wait_result"]["state"] == "emergency_stop"
     assert len(ledger["decisions"]) >= 3
     assert status["campaign"]["completed_episodes"] >= 5
     assert status["campaign"]["provider_calls"] == 1
-    assert status["campaign"]["campaign_state"] == "recoverable_paused_after_operator_response"
+    assert status["campaign"]["pending_decision_id"]
+    assert status["campaign"]["campaign_state"] == "operator_requested_stop"
+
+
+def test_live_44_deny_consumes_signature_and_creates_later_popup(tmp_path, monkeypatch):
+    class DummyProcess:
+        next_pid = 4400
+
+        def __init__(self):
+            type(self).next_pid += 1
+            self.pid = type(self).next_pid
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    decision_actions = {"count": 0}
+
+    def operator_sleep(_seconds):
+        root = tmp_path / "live44-deny-resume"
+        paused_path = root / "paused_status.json"
+        if not paused_path.exists():
+            return
+        pending = json.loads(paused_path.read_text(encoding="utf-8")).get("pending_decision_id")
+        if not pending:
+            return
+        package = root / "operator_decisions" / pending
+        state = json.loads((package / "decision_state.json").read_text(encoding="utf-8"))["state"]
+        if state != "pending_operator_review":
+            return
+        decision_actions["count"] += 1
+        if decision_actions["count"] == 1:
+            gsr.live44_record_operator_decision(str(package), action="DENY", note="test denies first complete popup")
+        elif decision_actions["count"] == 2:
+            gsr.live44_record_operator_decision(str(package), action="DENY", note="test denies follow-up popup")
+        elif decision_actions["count"] == 3:
+            (root / "EMERGENCY_STOP").write_text("test stops after third pending popup", encoding="utf-8")
+
+    monkeypatch.setattr(gsr.time, "sleep", operator_sleep)
+    result = gsr.run_live44_exploration_campaign(
+        artifact_root=str(tmp_path),
+        campaign_id="live44-deny-resume",
+        starting_checkpoint="d06ef6f2",
+        episode_limit=200,
+        popup_mode="persistent",
+        idle_seconds=0.1,
+        operator_wait_seconds=5,
+    )
+    root = Path(result["artifact_root"])
+    denial = json.loads((root / "denied_decision_evidence.json").read_text(encoding="utf-8"))
+    consumed = json.loads((root / "consumed_proposal_signatures.json").read_text(encoding="utf-8"))
+    status = json.loads((root / "exploration_campaign_status.json").read_text(encoding="utf-8"))
+
+    assert denial["proposal_signature_consumed"] is True
+    assert denial["provider_calls_added"] == 0
+    assert denial["proposal_signature"] in consumed["signatures"]
+    assert result["wait_result"]["events"][0]["state"] == "denied_consumed_and_followup_popup_created"
+    assert result["wait_result"]["events"][1]["state"] == "denied_consumed_and_followup_popup_created"
+    assert result["wait_result"]["state"] == "emergency_stop"
+    assert status["campaign"]["completed_episodes"] >= 5
+    assert status["campaign"]["provider_calls"] == 1
+    assert status["campaign"]["pending_decision_id"]
+    assert status["campaign"]["campaign_state"] == "operator_requested_stop"
 
 
 def test_live_44_accept_deny_revision_transitions(tmp_path):

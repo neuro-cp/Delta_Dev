@@ -31248,7 +31248,6 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
         wait_started = utc_now()
         wait_iterations = 0
         wait_events = []
-        followup_popup_created = False
         _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "process_active": True})
         _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "operator_wait_started"})
         while time.monotonic() < deadline:
@@ -31262,12 +31261,12 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                         subprocess.run(["taskkill", "/PID", str(popup_pid), "/T", "/F"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
                 except Exception:
                     pass
-                wait_result = {"state": "emergency_stop", "decision_id": campaign["pending_decision_id"], "iterations": wait_iterations}
+                wait_result = {"state": "emergency_stop", "decision_id": campaign["pending_decision_id"], "iterations": wait_iterations, "events": wait_events}
                 _live44_write_json(root / "heartbeat.json", {"timestamp": utc_now(), "process_id": os.getpid(), "campaign_state": campaign["campaign_state"], "current_episode": campaign["completed_episodes"], "completed_episodes": campaign["completed_episodes"], "productive_cycles": campaign["completed_productive_cycles"], "provider_calls": campaign["provider_calls"], "pending_decision_id": campaign["pending_decision_id"], "last_meaningful_transition": "emergency_stop"})
                 break
             current = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {"state": "missing"}
             if current.get("state") not in {"pending_operator_review", "local_enrichment_required"}:
-                if current.get("state") == "accepted" and not followup_popup_created:
+                if current.get("state") == "accepted":
                     accepted_decision_id = campaign["pending_decision_id"]
                     execution = {
                         "decision_id": accepted_decision_id,
@@ -31285,7 +31284,6 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                     campaign["completed_productive_cycles"] += 1
                     campaign["local_actions"] += 1
                     campaign["exploration_history"].append({"episode": followup_episode, "strategy": "accepted-candidate-validation-and-followup", "productive_cycles": 1, "terminal_reason": "accepted_authorization_executed_once"})
-                    followup_popup_created = True
                     followup = live44_create_complete_local_decision(
                         root,
                         campaign,
@@ -31297,6 +31295,46 @@ def run_live44_exploration_campaign(*, artifact_root: str = ".tmp/live44", campa
                     decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
                     state_path = decision_root / "decision_state.json"
                     wait_events.append({"state": "accepted_executed_and_followup_popup_created", "accepted_decision_id": accepted_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
+                    _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "iterations": wait_iterations, "process_active": True, "events": wait_events})
+                    continue
+                if current.get("state") == "denied":
+                    denied_decision_id = campaign["pending_decision_id"]
+                    denied_decision = json.loads((decision_root / "decision_request.json").read_text(encoding="utf-8"))
+                    signature = stable_id(
+                        "live44-consumed-proposal",
+                        denied_decision.get("exact_provider_selected_objective", denied_decision.get("requested_action", "")),
+                        denied_decision.get("provider_response_excerpt", {}),
+                        denied_decision.get("local_evidence_records", ()),
+                    )
+                    consumed_path = root / "consumed_proposal_signatures.json"
+                    consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
+                    consumed["signatures"] = tuple(dict.fromkeys(tuple(consumed.get("signatures", ())) + (signature,)))
+                    _live44_write_json(consumed_path, consumed)
+                    denial_evidence = {
+                        "decision_id": denied_decision_id,
+                        "proposal_signature": signature,
+                        "proposal_signature_consumed": True,
+                        "provider_calls_added": 0,
+                        "popup_retired": True,
+                        "timestamp": utc_now(),
+                    }
+                    _live44_write_json(root / "denied_decision_evidence.json", denial_evidence)
+                    campaign["pending_decision_id"] = ""
+                    followup_episode = int(campaign.get("completed_episodes", 0)) + 1
+                    campaign["completed_episodes"] = followup_episode
+                    campaign["local_actions"] += 1
+                    campaign["exploration_history"].append({"episode": followup_episode, "strategy": "denied-proposal-materially-different-local-exploration", "productive_cycles": 0, "terminal_reason": "denied_signature_consumed_and_new_episode_started", "blocked_signature": signature})
+                    followup = live44_create_complete_local_decision(
+                        root,
+                        campaign,
+                        cycle_id=stable_id("live44-cycle", campaign["campaign_id"], "post-deny-followup"),
+                        objective="evaluate alternate local-only transfer evidence path after denial",
+                        evidence_record_id=stable_id("live44-local-deny-followup-evidence", campaign["campaign_id"], followup_episode),
+                        popup_mode=popup_mode,
+                    )
+                    decision_root = root / "operator_decisions" / str(campaign["pending_decision_id"])
+                    state_path = decision_root / "decision_state.json"
+                    wait_events.append({"state": "denied_consumed_and_followup_popup_created", "denied_decision_id": denied_decision_id, "followup_decision_id": campaign["pending_decision_id"], "followup": followup})
                     _live44_write_json(root / "operator_wait_status.json", {"state": "waiting", "decision_id": campaign["pending_decision_id"], "started_at": wait_started, "iterations": wait_iterations, "process_active": True, "events": wait_events})
                     continue
                 campaign["pending_decision_id"] = ""
