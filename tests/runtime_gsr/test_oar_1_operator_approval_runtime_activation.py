@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from dataclasses import replace
 import hashlib
+import json
 from pathlib import Path
+import subprocess
+import sys
 
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr
 
@@ -4494,6 +4497,559 @@ def test_live_36_autonomous_development_envelope_preserves_trusted_runtime_bound
     assert result.autonomous_development_envelope["no_git_during_active_campaign"] is True
     assert result.autonomous_development_envelope["reports_rc4_and_delta75_protected"] is True
     assert result.validation_summary["corrupt_checkpoints"] == 1
+
+
+def test_live_37_detached_launcher_binds_exact_repository_root(tmp_path):
+    launcher = gsr.make_live37_detached_launcher(
+        repository_root=str(Path.cwd()),
+        artifact_root=str(tmp_path),
+        campaign_id="live37-launch-test",
+        target_duration_seconds=0.1,
+        minimum_duration_seconds=0.1,
+        hard_duration_seconds=1.0,
+    )
+
+    assert launcher["accepted"] is True
+    assert launcher["repository_root"] == str(Path.cwd().resolve())
+    assert launcher["import_path_method"] == "temporary_launcher_sys_path_repo_root"
+    text = Path(launcher["launcher_path"]).read_text(encoding="utf-8")
+    assert str(Path.cwd().resolve()) in text
+    assert "run_live37_twelve_hour_campaign_process" in text
+
+
+def test_live_37_detached_launcher_denies_missing_or_substituted_repo_root(tmp_path):
+    missing = gsr.make_live37_detached_launcher(
+        repository_root=str(tmp_path / "missing"),
+        artifact_root=str(tmp_path),
+        campaign_id="missing-root",
+    )
+    sibling = tmp_path / "SiblingRepo"
+    (sibling / "orchestration" / "runtime").mkdir(parents=True)
+    (sibling / "orchestration" / "runtime" / "gsr_a_governed_self_regulation.py").write_text("# sibling\n", encoding="utf-8")
+    substituted = gsr.make_live37_detached_launcher(
+        repository_root=str(sibling),
+        artifact_root=str(tmp_path),
+        campaign_id="substituted-root",
+    )
+
+    assert missing["accepted"] is False
+    assert missing["reason"] == "repository_root_missing_runtime"
+    assert substituted["accepted"] is False
+    assert substituted["reason"] == "repository_root_substitution_denied"
+
+
+def test_live_37_detached_launcher_creates_status_and_first_checkpoint(tmp_path):
+    launcher = gsr.make_live37_detached_launcher(
+        repository_root=str(Path.cwd()),
+        artifact_root=str(tmp_path),
+        campaign_id="live37-short-run",
+        target_duration_seconds=0.1,
+        minimum_duration_seconds=0.1,
+        hard_duration_seconds=1.0,
+    )
+    assert launcher["accepted"] is True
+    completed = subprocess.run(
+        [sys.executable, launcher["launcher_path"]],
+        cwd=str(Path.cwd()),
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    validation = gsr.validate_live37_first_checkpoint(artifact_root=str(tmp_path), campaign_id="live37-short-run")
+    status = gsr.read_live37_campaign_status(str(tmp_path), "live37-short-run")
+
+    assert completed.returncode == 0, completed.stderr
+    assert validation["accepted"] is True
+    assert validation["checkpoint_digest_present"] is True
+    assert validation["parent_mission_exact"] is True
+    assert status["accepted"] is True
+    assert status["target_deadline_seconds"] == 0.1
+    assert status["hard_deadline_seconds"] == 1.0
+
+
+def test_live_37_scheduler_executes_eligible_work_without_poll_sleep(tmp_path):
+    result = gsr.run_live37_twelve_hour_campaign_process(
+        artifact_root=str(tmp_path),
+        campaign_id="live37-scheduler-fast",
+        target_duration_seconds=0.2,
+        minimum_duration_seconds=0.2,
+        hard_duration_seconds=1.0,
+        checkpoint_interval_seconds=10.0,
+    )
+
+    assert result["final_disposition"] in {"target_deadline", "hard_deadline"}
+    assert result["budgets"]["tool_calls"] >= 8
+    assert result["monotonic_elapsed_seconds"] < 2.0
+    assert result["completed_evidence"][0]["raw_output_count"] >= 30
+    assert result["completed_evidence"][0]["classification"] == "SUBSTANTIVE_WORK_VERIFIED"
+
+
+def test_live_37_scheduler_distinguishes_idle_blocked_waiting_and_checkpoint():
+    assert gsr._live37_scheduler_decision(eligible_work=True, blocked=False, waiting_external=False, retry_backoff=False, checkpoint_due=False) == "execute_next"
+    assert gsr._live37_scheduler_decision(eligible_work=False, blocked=False, waiting_external=False, retry_backoff=False, checkpoint_due=True) == "checkpoint"
+    assert gsr._live37_scheduler_decision(eligible_work=False, blocked=True, waiting_external=False, retry_backoff=False, checkpoint_due=False) == "sleep_blocked"
+    assert gsr._live37_scheduler_decision(eligible_work=False, blocked=False, waiting_external=True, retry_backoff=False, checkpoint_due=False) == "sleep_waiting_external"
+    assert gsr._live37_scheduler_decision(eligible_work=False, blocked=False, waiting_external=False, retry_backoff=True, checkpoint_due=False) == "sleep_retry_backoff"
+    assert gsr._live37_scheduler_decision(eligible_work=False, blocked=False, waiting_external=False, retry_backoff=False, checkpoint_due=False) == "sleep_idle"
+
+
+def test_live_37_emergency_stop_interrupts_idle_sleep(tmp_path):
+    stop = tmp_path / "EMERGENCY_STOP"
+    stop.write_text("STOP\n", encoding="utf-8")
+
+    assert gsr._live37_sleep_interruptible(5.0, stop) is True
+
+
+def test_live_37_short_validation_campaign_preserves_no_duplicate_work(tmp_path):
+    result = gsr.run_live37_twelve_hour_campaign_process(
+        artifact_root=str(tmp_path),
+        campaign_id="live37-no-duplicate",
+        target_duration_seconds=0.2,
+        minimum_duration_seconds=0.2,
+        hard_duration_seconds=1.0,
+        checkpoint_interval_seconds=0.2,
+    )
+    action_ids = [item["task_id"] for item in result["resource_action_ledger"]]
+
+    assert len(action_ids) == len(set(action_ids))
+    assert result["budgets"]["tool_calls"] == len(action_ids)
+    assert result["completed_candidates"][0]["disposition"] == "retained_isolated_substantive"
+
+
+def test_live_37_adaptive_resource_envelope_bands_and_objective_limits():
+    state = gsr.make_live37_resource_state(campaign_id="live37-resource-bands")
+    objective = "objective-a"
+
+    for index in range(1, 21):
+        accepted = gsr.record_live37_resource_action(
+            state,
+            objective_id=objective,
+            task_id=f"local-{index}",
+            resource_class="local",
+            identity="local-tool",
+            exact_request=f"local request {index}",
+            purpose=f"normal action {index}",
+            missing_evidence=f"gap {index}",
+        )
+        assert accepted["accepted"] is True
+
+    extended_denied = gsr.record_live37_resource_action(
+        state,
+        objective_id=objective,
+        task_id="local-21",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="local request 21",
+        purpose="extended action",
+        missing_evidence="extended gap",
+    )
+    assert extended_denied["reason"] == "extended_investigation_evidence_required"
+
+    for index in range(21, 51):
+        accepted = gsr.record_live37_resource_action(
+            state,
+            objective_id=objective,
+            task_id=f"local-{index}",
+            resource_class="local",
+            identity="local-tool",
+            exact_request=f"local request {index}",
+            purpose=f"extended action {index}",
+            missing_evidence=f"gap {index}",
+            extended_evidence=True,
+        )
+        assert accepted["accepted"] is True
+
+    deep_denied = gsr.record_live37_resource_action(
+        state,
+        objective_id=objective,
+        task_id="local-51",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="local request 51",
+        purpose="deep action",
+        missing_evidence="deep gap",
+        extended_evidence=True,
+    )
+    assert deep_denied["reason"] == "deep_investigation_continuation_required"
+
+    for index in range(51, 61):
+        accepted = gsr.record_live37_resource_action(
+            state,
+            objective_id=objective,
+            task_id=f"local-{index}",
+            resource_class="local",
+            identity="local-tool",
+            exact_request=f"local request {index}",
+            purpose=f"deep action {index}",
+            missing_evidence=f"gap {index}",
+            extended_evidence=True,
+            deep_continuation_decision="codex_proxy_band3_continue",
+        )
+        assert accepted["accepted"] is True
+
+    local_over = gsr.record_live37_resource_action(
+        state,
+        objective_id=objective,
+        task_id="local-61",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="local request 61",
+        purpose="local overage",
+        missing_evidence="overage",
+        extended_evidence=True,
+        deep_continuation_decision="codex_proxy_band3_continue",
+    )
+    assert local_over["reason"] == "per_objective_local_limit_exceeded"
+
+
+def test_live_37_action_101_source_domain_and_global_limits_are_denied():
+    state = gsr.make_live37_resource_state(campaign_id="live37-limit-cases")
+    objective = "objective-total"
+
+    for index in range(1, 61):
+        assert gsr.record_live37_resource_action(
+            state,
+            objective_id=objective,
+            task_id=f"local-{index}",
+            resource_class="local",
+            identity="local-tool",
+            exact_request=f"local total request {index}",
+            purpose=f"local total purpose {index}",
+            missing_evidence=f"gap {index}",
+            extended_evidence=index > 20,
+            deep_continuation_decision="continue" if index >= 51 else "",
+        )["accepted"] is True
+    for index in range(1, 31):
+        assert gsr.record_live37_resource_action(
+            state,
+            objective_id=objective,
+            task_id=f"source-{index}",
+            resource_class="source",
+            identity="approved-doc-source",
+            exact_request=f"source total request {index}",
+            purpose=f"source purpose {index}",
+            missing_evidence=f"source gap {index}",
+            provenance=f"https://example.invalid/source#{index}",
+            extended_evidence=True,
+            deep_continuation_decision="continue",
+        )["accepted"] is True
+    for index in range(1, 6):
+        assert gsr.record_live37_resource_action(
+            state,
+            objective_id=objective,
+            task_id=f"provider-{index}",
+            resource_class="provider",
+            identity="accepted-gpt-tunnel",
+            exact_request=f"provider total request {index}",
+            purpose=f"provider purpose {index}",
+            missing_evidence=f"provider gap {index}",
+            extended_evidence=True,
+            deep_continuation_decision="continue",
+        )["accepted"] is True
+
+    action_96 = gsr.record_live37_resource_action(
+        state,
+        objective_id=objective,
+        task_id="source-31",
+        resource_class="source",
+        identity="approved-doc-source",
+        exact_request="source total request 31",
+        purpose="source overage",
+        missing_evidence="overage",
+        provenance="https://example.invalid/source#31",
+        extended_evidence=True,
+        deep_continuation_decision="continue",
+    )
+    assert action_96["reason"] == "per_objective_total_limit_exceeded"
+
+    bad_source = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-source-denial",
+        task_id="source-bad",
+        resource_class="source",
+        identity="unapproved-domain",
+        exact_request="retrieve arbitrary domain",
+        purpose="domain denial",
+        missing_evidence="source gap",
+        source_domain_authorized=False,
+        provenance="https://unapproved.invalid/#x",
+    )
+    assert bad_source["reason"] == "unauthorized_source_domain_denied"
+
+
+def test_live_37_gpt_tunnel_limit_retry_and_artificial_split_are_preserved():
+    state = gsr.make_live37_resource_state(campaign_id="live37-provider-limit")
+
+    first = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-provider",
+        task_id="provider-task",
+        resource_class="provider",
+        identity="accepted-gpt-tunnel",
+        exact_request="critique evidence first",
+        purpose="provider critique",
+        missing_evidence="advisory critique",
+    )
+    retry = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-provider",
+        task_id="provider-task",
+        resource_class="provider",
+        identity="accepted-gpt-tunnel",
+        exact_request="critique evidence retry",
+        purpose="provider critique retry",
+        missing_evidence="advisory critique",
+        retry_ceiling=1,
+    )
+    over = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-provider",
+        task_id="provider-task",
+        resource_class="provider",
+        identity="accepted-gpt-tunnel",
+        exact_request="critique evidence third",
+        purpose="provider critique third",
+        missing_evidence="advisory critique",
+    )
+    split = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-provider",
+        task_id="provider-split-1",
+        resource_class="provider",
+        identity="accepted-gpt-tunnel",
+        exact_request="critique evidence artificial split",
+        purpose="provider critique split",
+        missing_evidence="advisory critique",
+    )
+    distinct = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-provider",
+        task_id="provider-distinct",
+        resource_class="provider",
+        identity="accepted-gpt-tunnel",
+        exact_request="critique distinct evidence",
+        purpose="provider critique distinct evidence",
+        missing_evidence="different advisory critique",
+    )
+
+    assert first["accepted"] is True
+    assert retry["accepted"] is True
+    assert over["reason"] == "provider_task_tunnel_limit_exceeded"
+    assert split["reason"] == "artificial_task_splitting_denied"
+    assert distinct["accepted"] is True
+
+
+def test_live_37_duplicate_saturation_unused_allowance_and_rename_persistence():
+    state = gsr.make_live37_resource_state(campaign_id="live37-duplicate-saturation")
+
+    first = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-rename",
+        task_id="local-1",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="inspect alpha",
+        purpose="alpha inspection",
+        missing_evidence="alpha gap",
+    )
+    duplicate = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-rename",
+        task_id="local-dup",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="inspect alpha",
+        purpose="duplicate alpha",
+        missing_evidence="alpha gap",
+    )
+    alias = gsr.register_live37_objective_alias(state, old_objective_id="objective-rename", new_objective_id="objective-renamed")
+    renamed = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-renamed",
+        task_id="local-2",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="inspect beta",
+        purpose="beta inspection",
+        missing_evidence="beta gap",
+    )
+    for index in range(1, 6):
+        gsr.record_live37_resource_action(
+            state,
+            objective_id="objective-saturate",
+            task_id=f"sat-{index}",
+            resource_class="local",
+            identity="local-tool",
+            exact_request=f"saturation request {index}",
+            purpose=f"saturation purpose {index}",
+            missing_evidence="stagnation probe",
+            material_new_evidence=False,
+        )
+    saturated = gsr.record_live37_resource_action(
+        state,
+        objective_id="objective-saturate",
+        task_id="sat-6",
+        resource_class="local",
+        identity="local-tool",
+        exact_request="saturation request 6",
+        purpose="saturation after stop",
+        missing_evidence="stagnation probe",
+    )
+
+    assert first["accepted"] is True
+    assert duplicate["reason"] == "equivalent_resource_action_denied"
+    assert alias["canonical_objective_id"] == "objective-rename"
+    assert renamed["objective"]["counts"]["total"] == 2
+    assert saturated["reason"] == "resource_saturation_reached"
+    assert state["campaign_resource_counts"]["total"] < gsr.LIVE37_GLOBAL_LIMITS["total"]
+
+
+def test_live_37_adaptive_resource_pilot_and_runtime_counters(tmp_path):
+    pilot = gsr.run_live37_adaptive_resource_pilot()
+    result = gsr.run_live37_twelve_hour_campaign_process(
+        artifact_root=str(tmp_path),
+        campaign_id="live37-resource-runtime",
+        target_duration_seconds=0.2,
+        minimum_duration_seconds=0.2,
+        hard_duration_seconds=1.0,
+        checkpoint_interval_seconds=10.0,
+    )
+
+    assert pilot["local_actions_accepted"] > 20
+    assert pilot["saturation_triggered"] is True
+    assert pilot["source_provenance_preserved"] is True
+    assert pilot["duplicate_source_denied"] is True
+    assert pilot["provider_task_limit_preserved"] is True
+    assert pilot["second_distinct_provider_task_accepted"] is True
+    assert result["adaptive_resource_envelope"]["per_objective_limits"]["total"] == 95
+    assert result["adaptive_resource_envelope"]["per_objective_limits"]["provider"] == 5
+    assert result["adaptive_resource_envelope"]["global_limits"]["total"] == 380
+    assert result["adaptive_resource_envelope"]["global_limits"]["provider"] == 20
+    assert result["adaptive_resource_envelope"]["provider_task_limit"] == gsr.LIVE37_PROVIDER_TASK_LIMIT
+    assert result["campaign_resource_counts"]["local"] == result["budgets"]["tool_calls"]
+    assert result["campaign_resource_counts"]["local"] >= 8
+
+
+def test_live_37_substantive_pilot_persists_raw_distinct_fixture_sets(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-fixtures")
+
+    assert report["classification"] in {"SUBSTANTIVE_WORK_VERIFIED", "SUBSTANTIVE_WORK_VERIFIED_CANDIDATE_REJECTED"}
+    fixture_paths = {group: Path(path) for group, path in report["fixture_paths"].items()}
+    assert {"development", "focused", "held_out", "adversarial", "unrelated_controls", "transfer"}.issubset(fixture_paths)
+    all_case_ids = []
+    all_inputs = []
+    for path in fixture_paths.values():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        assert payload["cases"]
+        for case in payload["cases"]:
+            all_case_ids.append(case["case_id"])
+            all_inputs.append(case["exact_input"])
+            assert case["digest"]
+            assert case["scoring_rubric"]
+            assert case["provenance"].startswith("local://live37/substantive/")
+    assert len(all_case_ids) == len(set(all_case_ids))
+    assert len(all_inputs) == len(set(all_inputs))
+
+
+def test_live_37_substantive_pilot_seals_held_out_before_candidate_and_preserves_digest(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-heldout")
+    seal = json.loads(Path(report["held_out_seal_path"]).read_text(encoding="utf-8"))
+    candidate_manifest = json.loads(Path(report["candidate_manifest_path"]).read_text(encoding="utf-8"))
+
+    assert seal["held_out_digest"] == report["held_out_pre_digest"]
+    assert seal["candidate_generation_access"] == "case_identity_and_schema_only"
+    assert report["held_out_digest_unchanged"] is True
+    assert report["held_out_pre_digest"] == report["held_out_post_digest"]
+    assert candidate_manifest["created_at"] >= seal["sealed_at"]
+    assert "heldout-scholar-method" not in " ".join(candidate_manifest["exact_failed_cases"])
+
+
+def test_live_37_substantive_candidate_contains_functional_behavior_and_is_consumed(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-candidate")
+    candidate_path = Path(report["candidate_implementation_path"])
+    source = candidate_path.read_text(encoding="utf-8")
+    focused_output_dir = Path(report["raw_output_root"]) / "candidate_enabled" / "focused"
+    focused_records = [json.loads(path.read_text(encoding="utf-8")) for path in focused_output_dir.glob("*.json")]
+
+    assert "def analyze(text):" in source
+    assert "because" in source
+    assert report["candidate_implementation_digest"]
+    assert focused_records
+    assert all(record["handler_identity"] == "argument_dependency_tracker" for record in focused_records)
+    assert any(record["raw_output"].get("dependency") for record in focused_records)
+
+
+def test_live_37_substantive_raw_outputs_and_digests_recompute(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-raw-output")
+    raw_root = Path(report["raw_output_root"])
+    records = list(raw_root.rglob("*.json"))
+    assert records
+    sample = json.loads(records[0].read_text(encoding="utf-8"))
+    recomputed = gsr.stable_id("live37-raw-output", sample["raw_output"])
+
+    assert sample["raw_output_path"] == str(records[0])
+    assert sample["raw_output_digest"] == recomputed
+    assert sample["runtime_ms"] >= 0
+    assert sample["scoring_explanation"]
+    assert sample["handler_identity"] in {"baseline_handler", "argument_dependency_tracker"}
+
+
+def test_live_37_substantive_metrics_are_independent_and_not_name_driven(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-metrics")
+
+    assert report["candidate_metrics"]["focused"]["passed"] > report["baseline_metrics"]["focused"]["passed"]
+    assert report["candidate_metrics"]["held_out"]["passed"] > report["baseline_metrics"]["held_out"]["passed"]
+    assert report["candidate_metrics"]["unrelated_controls"]["passed"] >= report["baseline_metrics"]["unrelated_controls"]["passed"]
+
+    case = {
+        "case_id": "name-should-not-pass",
+        "exact_input": "No dependency marker exists here.",
+        "expected_behavior": "do not pass from candidate name",
+        "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["nonexistent dependency"]},
+    }
+    output = {"kind": "argument_dependency_tracker", "claim": "No dependency marker exists here.", "dependency": "", "raw_text": ""}
+    passed, reason = gsr._live37_score_substantive_output(case, output)
+    assert passed is False
+    assert "missing" in reason
+
+
+def test_live_37_substantive_causal_replay_and_rollback_prove_candidate_effect(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-causal")
+    causal = json.loads(Path(report["causal_replay_path"]).read_text(encoding="utf-8"))
+    rollback = json.loads(Path(report["rollback_proof_path"]).read_text(encoding="utf-8"))
+
+    assert causal["enabled_focused"]["passed"] > causal["disabled_focused"]["passed"]
+    assert causal["enabled_held_out"]["passed"] > causal["disabled_held_out"]["passed"]
+    assert causal["improvement_removed_when_disabled"] is True
+    assert causal["improvement_returns_when_restored"] is True
+    assert rollback["before_equals_rolled_back"] is True
+    assert rollback["restore_equals_applied"] is True
+    assert rollback["unrelated_artifacts_unchanged"] is True
+
+
+def test_live_37_substantive_independent_challenge_is_separate_and_scored(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-challenge")
+    challenge = json.loads(Path(report["independent_challenge_fixture_path"]).read_text(encoding="utf-8"))
+    original_inputs = set()
+    for fixture_path in report["fixture_paths"].values():
+        payload = json.loads(Path(fixture_path).read_text(encoding="utf-8"))
+        original_inputs.update(case["exact_input"] for case in payload["cases"])
+
+    assert challenge["created_after_candidate_digest"] == report["causal"]["candidate_enabled_state_digest"]
+    assert all(case["exact_input"] not in original_inputs for case in challenge["cases"])
+    assert report["independent_challenge_metrics"]["candidate"]["passed"] > report["independent_challenge_metrics"]["baseline"]["passed"]
+
+
+def test_live_37_substantive_metadata_or_lifecycle_only_cannot_be_retained(tmp_path):
+    report = gsr.run_live37_substantive_work_pilot(artifact_root=str(tmp_path), pilot_id="substantive-retention")
+    metadata_only = {"candidate_id": "argument_dependency_tracker", "scope": "isolated_candidate_runtime"}
+    no_causal = {**report["causal"], "improvement_removed_when_disabled": False}
+
+    assert "implementation_file_paths" in json.loads(Path(report["candidate_manifest_path"]).read_text(encoding="utf-8"))
+    assert "implementation_file_paths" not in metadata_only
+    assert no_causal["improvement_removed_when_disabled"] is False
+    assert report["lifecycle_labels_sufficient"] is False
+    assert report["candidate_disposition"] == "retained_isolated_substantive"
 
 
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():

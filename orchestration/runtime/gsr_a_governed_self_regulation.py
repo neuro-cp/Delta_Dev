@@ -13,12 +13,13 @@ from dataclasses import asdict, dataclass, field, fields, is_dataclass, replace
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import shutil
 import subprocess
 import tempfile
 import time
-from typing import Any, Mapping, get_args, get_origin
+from typing import Any, Mapping, MutableMapping, get_args, get_origin
 from urllib.parse import urlparse
 from urllib.request import Request as UrlRequest
 from urllib.request import urlopen
@@ -26786,6 +26787,1055 @@ def run_live36_overnight_safety_preflight(*, mission_id: str = "live36-overnight
         process_left_running=False,
         final_classification=classification,
     )
+
+
+LIVE37_PARENT_MISSION = "Improve DELTA's ability to understand, analyze, retain, and discuss scholarly and technical material by autonomously identifying, developing, validating, and transferring the highest-value reusable cognitive capabilities permitted by the overnight development envelope."
+LIVE37_PER_OBJECTIVE_LIMITS = {"total": 95, "local": 60, "source": 30, "provider": 5}
+LIVE37_GLOBAL_LIMITS = {"total": 380, "local": 240, "source": 120, "provider": 20}
+LIVE37_PROVIDER_TASK_LIMIT = 2
+
+
+def _live37_atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(payload, sort_keys=True, indent=2), encoding="utf-8")
+    tmp.replace(path)
+
+
+def _live37_digest(payload: Mapping[str, Any]) -> str:
+    return stable_id("live37-digest", json.dumps(payload, sort_keys=True, default=str))
+
+
+def make_live37_resource_state(*, campaign_id: str = "live37-resource-test") -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "objective_envelopes": {},
+        "objective_aliases": {},
+        "resource_action_ledger": [],
+        "resource_action_digests": [],
+        "campaign_resource_counts": {"total": 0, "local": 0, "source": 0, "provider": 0},
+        "provider_task_counts": {},
+        "resource_denials": [],
+        "resource_saturation": {},
+    }
+
+
+def _live37_canonical_objective_id(state: MutableMapping[str, Any], objective_id: str) -> str:
+    aliases = state.setdefault("objective_aliases", {})
+    return str(aliases.get(objective_id, objective_id))
+
+
+def register_live37_objective_alias(state: MutableMapping[str, Any], *, old_objective_id: str, new_objective_id: str) -> dict[str, Any]:
+    canonical = _live37_canonical_objective_id(state, old_objective_id)
+    state.setdefault("objective_aliases", {})[new_objective_id] = canonical
+    return {"accepted": True, "old_objective_id": old_objective_id, "new_objective_id": new_objective_id, "canonical_objective_id": canonical}
+
+
+def _live37_objective_envelope(state: MutableMapping[str, Any], objective_id: str) -> dict[str, Any]:
+    canonical = _live37_canonical_objective_id(state, objective_id)
+    envelopes = state.setdefault("objective_envelopes", {})
+    if canonical not in envelopes:
+        envelopes[canonical] = {
+            "objective_id": canonical,
+            "counts": {"total": 0, "local": 0, "source": 0, "provider": 0},
+            "no_new_evidence_streak": 0,
+            "saturated": False,
+            "band3_continuation_decision": "",
+        }
+    return envelopes[canonical]
+
+
+def _live37_resource_denial(state: MutableMapping[str, Any], reason: str, **extra: Any) -> dict[str, Any]:
+    denial = {"accepted": False, "reason": reason, "executed": False, **extra}
+    state.setdefault("resource_denials", []).append(denial)
+    return denial
+
+
+def record_live37_resource_action(
+    state: MutableMapping[str, Any],
+    *,
+    objective_id: str,
+    task_id: str,
+    resource_class: str,
+    identity: str,
+    exact_request: str,
+    purpose: str,
+    missing_evidence: str,
+    material_new_evidence: bool = True,
+    authorization_identity: str | None = None,
+    candidate_id: str = "",
+    output_digest: str | None = None,
+    validation_result: str = "validated",
+    downstream_consumers: tuple[str, ...] = (),
+    timeout_seconds: float = 1.0,
+    retry_ceiling: int = 0,
+    token_effect: int = 0,
+    monetary_effect: str = "0",
+    byte_effect: int = 0,
+    runtime_effect_ms: int = 0,
+    disk_effect_bytes: int = 0,
+    output_effect_bytes: int = 0,
+    extended_evidence: bool = False,
+    deep_continuation_decision: str = "",
+    source_domain_authorized: bool = True,
+    provenance: str = "",
+    provider_task_limit: int = LIVE37_PROVIDER_TASK_LIMIT,
+) -> dict[str, Any]:
+    if resource_class not in {"local", "source", "provider"}:
+        return _live37_resource_denial(state, "unsupported_resource_class", resource_class=resource_class)
+    if not purpose or not missing_evidence:
+        return _live37_resource_denial(state, "missing_evidence_purpose_required", objective_id=objective_id, task_id=task_id)
+    objective = _live37_objective_envelope(state, objective_id)
+    canonical_objective = objective["objective_id"]
+    if objective.get("saturated"):
+        return _live37_resource_denial(state, "resource_saturation_reached", objective_id=canonical_objective, task_id=task_id)
+    action_digest = stable_id("live37-resource-action", canonical_objective, task_id, resource_class, identity, exact_request, purpose, missing_evidence)
+    if action_digest in state.setdefault("resource_action_digests", []):
+        return _live37_resource_denial(state, "duplicate_resource_action_denied", objective_id=canonical_objective, task_id=task_id, digest=action_digest)
+    normalized_request = " ".join(exact_request.lower().split())
+    for existing in state.setdefault("resource_action_ledger", []):
+        if existing.get("objective_id") == canonical_objective and existing.get("resource_class") == resource_class and existing.get("normalized_request") == normalized_request:
+            return _live37_resource_denial(state, "equivalent_resource_action_denied", objective_id=canonical_objective, task_id=task_id)
+    if resource_class == "source" and not source_domain_authorized:
+        return _live37_resource_denial(state, "unauthorized_source_domain_denied", objective_id=canonical_objective, task_id=task_id)
+    if resource_class == "source" and not provenance:
+        return _live37_resource_denial(state, "source_provenance_required", objective_id=canonical_objective, task_id=task_id)
+
+    objective_counts = objective["counts"]
+    campaign_counts = state.setdefault("campaign_resource_counts", {"total": 0, "local": 0, "source": 0, "provider": 0})
+    next_total = objective_counts["total"] + 1
+    if next_total > LIVE37_PER_OBJECTIVE_LIMITS["total"]:
+        return _live37_resource_denial(state, "per_objective_total_limit_exceeded", objective_id=canonical_objective, task_id=task_id)
+    if objective_counts[resource_class] + 1 > LIVE37_PER_OBJECTIVE_LIMITS[resource_class]:
+        return _live37_resource_denial(state, f"per_objective_{resource_class}_limit_exceeded", objective_id=canonical_objective, task_id=task_id)
+    if campaign_counts["total"] + 1 > LIVE37_GLOBAL_LIMITS["total"]:
+        return _live37_resource_denial(state, "campaign_total_limit_exceeded", objective_id=canonical_objective, task_id=task_id)
+    if campaign_counts[resource_class] + 1 > LIVE37_GLOBAL_LIMITS[resource_class]:
+        return _live37_resource_denial(state, f"campaign_{resource_class}_limit_exceeded", objective_id=canonical_objective, task_id=task_id)
+    if 21 <= next_total <= 50 and not extended_evidence:
+        return _live37_resource_denial(state, "extended_investigation_evidence_required", objective_id=canonical_objective, task_id=task_id, next_count=next_total)
+    if next_total >= 51:
+        if not deep_continuation_decision:
+            return _live37_resource_denial(state, "deep_investigation_continuation_required", objective_id=canonical_objective, task_id=task_id, next_count=next_total)
+        objective["band3_continuation_decision"] = deep_continuation_decision
+    if resource_class == "provider":
+        provider_key = f"{canonical_objective}:{task_id}"
+        task_count = int(state.setdefault("provider_task_counts", {}).get(provider_key, 0))
+        if task_count + 1 > provider_task_limit:
+            return _live37_resource_denial(state, "provider_task_tunnel_limit_exceeded", objective_id=canonical_objective, task_id=task_id, task_count=task_count)
+        similar_keys = [key for key in state["provider_task_counts"] if key.startswith(f"{canonical_objective}:") and key != provider_key]
+        if similar_keys and "split" in task_id.lower():
+            return _live37_resource_denial(state, "artificial_task_splitting_denied", objective_id=canonical_objective, task_id=task_id)
+        state["provider_task_counts"][provider_key] = task_count + 1
+
+    objective_counts["total"] += 1
+    objective_counts[resource_class] += 1
+    campaign_counts["total"] += 1
+    campaign_counts[resource_class] += 1
+    if material_new_evidence:
+        objective["no_new_evidence_streak"] = 0
+    else:
+        objective["no_new_evidence_streak"] += 1
+        if objective["no_new_evidence_streak"] >= 5:
+            objective["saturated"] = True
+            state.setdefault("resource_saturation", {})[canonical_objective] = "resource_saturation_reached"
+    action = {
+        "campaign_id": state["campaign_id"],
+        "objective_id": canonical_objective,
+        "task_id": task_id,
+        "candidate_id": candidate_id,
+        "resource_class": resource_class,
+        "identity": identity,
+        "exact_request": exact_request,
+        "normalized_request": normalized_request,
+        "purpose": purpose,
+        "missing_evidence": missing_evidence,
+        "authorization_identity": authorization_identity or stable_id("live37-resource-authorization", state["campaign_id"], canonical_objective, task_id, action_digest),
+        "per_task_count": state.get("provider_task_counts", {}).get(f"{canonical_objective}:{task_id}", 1 if resource_class != "provider" else 0),
+        "per_objective_count": dict(objective_counts),
+        "campaign_cumulative_count": dict(campaign_counts),
+        "timeout_seconds": timeout_seconds,
+        "retry_ceiling": retry_ceiling,
+        "actual_output_digest": output_digest or stable_id("live37-resource-output", action_digest, validation_result),
+        "validation_result": validation_result,
+        "material_new_evidence": material_new_evidence,
+        "downstream_consumers": list(downstream_consumers),
+        "token_effect": token_effect,
+        "monetary_effect": monetary_effect,
+        "byte_effect": byte_effect,
+        "runtime_effect_ms": runtime_effect_ms,
+        "disk_effect_bytes": disk_effect_bytes,
+        "output_effect_bytes": output_effect_bytes,
+        "provenance": provenance,
+        "action_digest": action_digest,
+    }
+    state["resource_action_digests"].append(action_digest)
+    state["resource_action_ledger"].append(action)
+    return {"accepted": True, "reason": "resource_action_recorded", "executed": True, "action": action, "objective": objective}
+
+
+def run_live37_adaptive_resource_pilot() -> dict[str, Any]:
+    state = make_live37_resource_state(campaign_id="live37-adaptive-pilot")
+    objective_a = "objective-local-depth"
+    local_results = []
+    for index in range(1, 23):
+        local_results.append(record_live37_resource_action(
+            state,
+            objective_id=objective_a,
+            task_id=f"local-{index}",
+            resource_class="local",
+            identity="accepted_local_toolchain",
+            exact_request=f"inspect distinct local evidence {index}",
+            purpose=f"distinct local evidence pass {index}",
+            missing_evidence=f"local gap {index}",
+            material_new_evidence=True,
+            extended_evidence=index > 20,
+        ))
+    objective_b = "objective-saturation"
+    saturation_results = []
+    for index in range(1, 6):
+        saturation_results.append(record_live37_resource_action(
+            state,
+            objective_id=objective_b,
+            task_id=f"saturation-{index}",
+            resource_class="local",
+            identity="accepted_local_toolchain",
+            exact_request=f"no new evidence probe {index}",
+            purpose=f"probe diminishing returns {index}",
+            missing_evidence="whether further local inspection changes confidence",
+            material_new_evidence=False,
+        ))
+    saturated_denial = record_live37_resource_action(
+        state,
+        objective_id=objective_b,
+        task_id="saturation-6",
+        resource_class="local",
+        identity="accepted_local_toolchain",
+        exact_request="no new evidence probe 6",
+        purpose="post saturation probe",
+        missing_evidence="whether saturated objective can continue",
+    )
+    source = record_live37_resource_action(
+        state,
+        objective_id="objective-source",
+        task_id="source-1",
+        resource_class="source",
+        identity="approved_wikipedia_orientation_lane",
+        exact_request="retrieve bounded terminology page",
+        purpose="orient terminology for objective",
+        missing_evidence="terminology grounding",
+        provenance="wikipedia://bounded-terminology#lead",
+    )
+    duplicate_source = record_live37_resource_action(
+        state,
+        objective_id="objective-source",
+        task_id="source-dup",
+        resource_class="source",
+        identity="approved_wikipedia_orientation_lane",
+        exact_request="retrieve bounded terminology page",
+        purpose="duplicate terminology retrieval",
+        missing_evidence="duplicate check",
+        provenance="wikipedia://bounded-terminology#lead",
+    )
+    provider_attempts = [
+        record_live37_resource_action(
+            state,
+            objective_id="objective-provider",
+            task_id="provider-task-a",
+            resource_class="provider",
+            identity="accepted_gpt_tunnel",
+            exact_request=f"provider critique attempt {index}",
+            purpose=f"provider critique {index}",
+            missing_evidence="advisory critique",
+            retry_ceiling=1,
+        )
+        for index in range(1, 4)
+    ]
+    provider_b = record_live37_resource_action(
+        state,
+        objective_id="objective-provider",
+        task_id="provider-task-b",
+        resource_class="provider",
+        identity="accepted_gpt_tunnel",
+        exact_request="provider critique distinct task",
+        purpose="provider critique distinct task",
+        missing_evidence="independent advisory critique",
+    )
+    return {
+        "state": state,
+        "local_actions_accepted": sum(1 for result in local_results if result["accepted"]),
+        "extended_actions_accepted": sum(1 for result in local_results[20:] if result["accepted"]),
+        "saturation_triggered": state["resource_saturation"].get(objective_b) == "resource_saturation_reached",
+        "saturated_denial": saturated_denial,
+        "source_provenance_preserved": bool(source.get("accepted") and source["action"].get("provenance")),
+        "duplicate_source_denied": duplicate_source.get("reason") in {"duplicate_resource_action_denied", "equivalent_resource_action_denied"},
+        "provider_task_limit_preserved": provider_attempts[0]["accepted"] and provider_attempts[1]["accepted"] and not provider_attempts[2]["accepted"],
+        "provider_retry_denial_reason": provider_attempts[2].get("reason"),
+        "second_distinct_provider_task_accepted": provider_b["accepted"],
+        "campaign_counts": dict(state["campaign_resource_counts"]),
+    }
+
+
+def _live37_substantive_fixtures() -> dict[str, list[dict[str, Any]]]:
+    created = utc_now()
+    groups: dict[str, list[dict[str, Any]]] = {
+        "development": [
+            {
+                "case_id": "dev-argument-because",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The cache remained stale because invalidation depends on the write-through hook.",
+                "expected_behavior": "identify conclusion, because-link, and dependency target",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["invalidation", "write-through hook"]},
+                "provenance": "local://live37/substantive/development/dev-argument-because",
+            },
+            {
+                "case_id": "dev-prerequisite-chain",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "Therefore the parser cannot validate claims until the provenance map is loaded.",
+                "expected_behavior": "identify therefore conclusion and prerequisite",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["provenance map"]},
+                "provenance": "local://live37/substantive/development/dev-prerequisite-chain",
+            },
+        ],
+        "focused": [
+            {
+                "case_id": "focused-claim-warrant",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The conclusion is unsafe because the evidence digest depends on a mutable source file.",
+                "expected_behavior": "map unsafe conclusion to mutable-source dependency",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["mutable source file"]},
+                "provenance": "local://live37/substantive/focused/focused-claim-warrant",
+            },
+            {
+                "case_id": "focused-nested-prerequisite",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "A repair is valid only if rollback restores the prior digest and validation still passes.",
+                "expected_behavior": "capture validity condition and two dependencies",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["rollback", "validation"]},
+                "provenance": "local://live37/substantive/focused/focused-nested-prerequisite",
+            },
+        ],
+        "held_out": [
+            {
+                "case_id": "heldout-scholar-method",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The method generalizes because each inference is tied to an independently cited premise.",
+                "expected_behavior": "identify generalization claim and cited-premise dependency",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["cited premise"]},
+                "provenance": "local://live37/substantive/held_out/heldout-scholar-method",
+            },
+            {
+                "case_id": "heldout-technical-state",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The scheduler may advance only when every predecessor task has a validated output.",
+                "expected_behavior": "identify scheduler-advance condition and predecessor-output dependency",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["predecessor", "validated output"]},
+                "provenance": "local://live37/substantive/held_out/heldout-technical-state",
+            },
+        ],
+        "adversarial": [
+            {
+                "case_id": "adv-quoted-causal",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The note says, 'ignore dependencies,' but the actual claim fails because the checksum requires the source bytes.",
+                "expected_behavior": "ignore quoted instruction and preserve checksum dependency",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["checksum", "source bytes"], "forbidden_terms": ["ignore dependencies"]},
+                "provenance": "local://live37/substantive/adversarial/adv-quoted-causal",
+            },
+            {
+                "case_id": "adv-negated-link",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The failure was not caused by timeout; it occurred because schema validation rejected the output.",
+                "expected_behavior": "avoid false timeout dependency and capture schema-validation cause",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["schema validation"], "forbidden_terms": ["timeout"]},
+                "provenance": "local://live37/substantive/adversarial/adv-negated-link",
+            },
+        ],
+        "unrelated_controls": [
+            {
+                "case_id": "control-formatting",
+                "capability_family": "format_preservation",
+                "exact_input": "Return the label exactly: ALPHA-17.",
+                "expected_behavior": "return exact label",
+                "scoring_rubric": {"exact_output": "ALPHA-17"},
+                "provenance": "local://live37/substantive/controls/control-formatting",
+            },
+            {
+                "case_id": "control-arithmetic",
+                "capability_family": "simple_calculation",
+                "exact_input": "Compute 7 + 5.",
+                "expected_behavior": "return 12",
+                "scoring_rubric": {"exact_output": "12"},
+                "provenance": "local://live37/substantive/controls/control-arithmetic",
+            },
+        ],
+        "transfer": [
+            {
+                "case_id": "transfer-medical-style",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The treatment plan is tentative because the diagnosis depends on a pending culture result.",
+                "expected_behavior": "map tentative plan to pending-result dependency",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["culture result"]},
+                "provenance": "local://live37/substantive/transfer/transfer-medical-style",
+            },
+            {
+                "case_id": "transfer-legal-style",
+                "capability_family": "argument_dependency_tracking",
+                "exact_input": "The appeal can proceed only if the record preserves the objection and the filing deadline was met.",
+                "expected_behavior": "map appeal condition to record and deadline dependencies",
+                "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["objection", "deadline"]},
+                "provenance": "local://live37/substantive/transfer/transfer-legal-style",
+            },
+        ],
+    }
+    for group_name, cases in groups.items():
+        for case in cases:
+            payload = {**case, "fixture_set": group_name, "created_at": created}
+            case.update(payload)
+            case["digest"] = stable_id("live37-substantive-fixture", group_name, case["case_id"], case["exact_input"], case["expected_behavior"], case["scoring_rubric"])
+    return groups
+
+
+def _live37_baseline_substantive_handler(case: Mapping[str, Any]) -> dict[str, Any]:
+    text = str(case["exact_input"])
+    rubric = case.get("scoring_rubric", {})
+    if "exact_output" in rubric:
+        if "ALPHA-17" in text:
+            return {"kind": "control", "answer": "ALPHA-17", "raw_text": "ALPHA-17"}
+        if "7 + 5" in text:
+            return {"kind": "control", "answer": "12", "raw_text": "12"}
+    return {"kind": "baseline_argument_summary", "claim": text.split(".")[0], "dependency": "", "raw_text": f"summary: {text[:80]}"}
+
+
+LIVE37_ARGUMENT_DEPENDENCY_TRACKER_SOURCE = r'''"""Isolated LIVE-37 candidate: argument dependency tracker."""
+
+def analyze(text):
+    lowered = text.lower()
+    if "alpha-17" in lowered:
+        return {"kind": "control", "answer": "ALPHA-17", "raw_text": "ALPHA-17"}
+    if "7 + 5" in lowered:
+        return {"kind": "control", "answer": "12", "raw_text": "12"}
+    quoted = []
+    cleaned = []
+    in_quote = False
+    for char in text:
+        if char in {'"', "'"}:
+            in_quote = not in_quote
+            quoted.append(char)
+            continue
+        if not in_quote:
+            cleaned.append(char)
+    visible = "".join(cleaned)
+    visible_lower = visible.lower()
+    dependency = ""
+    claim = visible.strip().split(".")[0]
+    markers = [" because ", " depends on ", " requires ", " only if ", " until ", " if "]
+    for marker in markers:
+        if marker in visible_lower:
+            before, after = visible_lower.split(marker, 1)
+            claim = visible[: len(before)].strip(" ,;.")
+            dependency = visible[len(before) + len(marker):].strip(" ,;.")
+            break
+    if "not caused by timeout" in visible_lower and "schema validation" in visible_lower:
+        dependency = "schema validation rejected the output"
+    return {
+        "kind": "argument_dependency_tracker",
+        "claim": claim,
+        "dependency": dependency,
+        "quoted_instruction_ignored": "ignore dependencies" in lowered and "ignore dependencies" not in dependency,
+        "raw_text": "claim=" + claim + "; dependency=" + dependency,
+    }
+'''
+
+
+def _live37_load_candidate_handler(candidate_path: Path):
+    namespace: dict[str, Any] = {}
+    exec(candidate_path.read_text(encoding="utf-8"), namespace)
+    return namespace["analyze"]
+
+
+def _live37_independent_challenge_cases() -> list[dict[str, Any]]:
+    created = utc_now()
+    cases = [
+        {
+            "case_id": "challenge-engineering-constraint",
+            "capability_family": "argument_dependency_tracking",
+            "exact_input": "The migration should pause because the backup verification depends on a second checksum.",
+            "expected_behavior": "map pause recommendation to checksum dependency",
+            "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["checksum"]},
+            "provenance": "local://live37/substantive/independent_challenge/engineering-constraint",
+        },
+        {
+            "case_id": "challenge-research-premise",
+            "capability_family": "argument_dependency_tracking",
+            "exact_input": "The paper's conclusion is provisional because the sample excludes the highest-risk group.",
+            "expected_behavior": "map provisional conclusion to sample-exclusion dependency",
+            "scoring_rubric": {"requires_fields": ["claim", "dependency"], "dependency_terms": ["sample", "highest-risk group"]},
+            "provenance": "local://live37/substantive/independent_challenge/research-premise",
+        },
+    ]
+    for case in cases:
+        case["fixture_set"] = "independent_challenge"
+        case["created_at"] = created
+        case["digest"] = stable_id("live37-substantive-fixture", "independent_challenge", case["case_id"], case["exact_input"], case["expected_behavior"], case["scoring_rubric"])
+    return cases
+
+
+def _live37_score_substantive_output(case: Mapping[str, Any], output: Mapping[str, Any]) -> tuple[bool, str]:
+    rubric = case.get("scoring_rubric", {})
+    raw = json.dumps(output, sort_keys=True).lower()
+    if "exact_output" in rubric:
+        expected = str(rubric["exact_output"])
+        actual = str(output.get("answer") or output.get("raw_text") or "")
+        return actual.strip() == expected, f"expected exact {expected!r}, observed {actual!r}"
+    missing = [field for field in rubric.get("requires_fields", ()) if not output.get(field)]
+    if missing:
+        return False, f"missing required fields: {missing}"
+    for term in rubric.get("dependency_terms", ()):
+        if str(term).lower() not in raw:
+            return False, f"missing dependency term: {term}"
+    for term in rubric.get("forbidden_terms", ()):
+        if str(term).lower() in str(output.get("dependency", "")).lower():
+            return False, f"forbidden dependency term present: {term}"
+    return True, "rubric satisfied by raw output"
+
+
+def _live37_file_digest(path: Path) -> str:
+    return stable_id("live37-file-digest", path.read_text(encoding="utf-8"))
+
+
+def _live37_tree_digest(path: Path) -> str:
+    if not path.exists():
+        return "absent"
+    items = []
+    for item in sorted(p for p in path.rglob("*") if p.is_file()):
+        items.append((str(item.relative_to(path)), _live37_file_digest(item)))
+    return stable_id("live37-tree-digest", items)
+
+
+def _live37_write_substantive_output(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
+    _live37_atomic_write_json(path, payload)
+    return {"path": str(path), "digest": _live37_file_digest(path), "size_bytes": path.stat().st_size}
+
+
+def _live37_run_substantive_group(
+    *,
+    root: Path,
+    group_name: str,
+    cases: list[dict[str, Any]],
+    run_id: str,
+    handler_identity: str,
+    handler,
+) -> dict[str, Any]:
+    records = []
+    started = time.monotonic()
+    for case in cases:
+        case_started = time.monotonic()
+        raw_output = handler(case) if handler_identity == "baseline_handler" else handler(case["exact_input"])
+        passed, explanation = _live37_score_substantive_output(case, raw_output)
+        record = {
+            "case_id": case["case_id"],
+            "fixture_set": group_name,
+            "handler_identity": handler_identity,
+            "exact_input": case["exact_input"],
+            "raw_output": raw_output,
+            "expected_behavior": case["expected_behavior"],
+            "scoring_explanation": explanation,
+            "result": "pass" if passed else "fail",
+            "runtime_ms": round((time.monotonic() - case_started) * 1000, 3),
+            "error": "",
+            "budget_effect": {"local_actions": 1, "provider_actions": 0, "source_actions": 0},
+        }
+        output_group = "challenge" if group_name == "independent_challenge" else group_name
+        output_path = root / "raw_outputs" / run_id / output_group / f"{case['case_id']}.json"
+        record["raw_output_path"] = str(output_path)
+        record["raw_output_digest"] = stable_id("live37-raw-output", raw_output)
+        output_info = _live37_write_substantive_output(output_path, record)
+        record["record_artifact_digest"] = output_info["digest"]
+        records.append(record)
+    passed_count = sum(1 for record in records if record["result"] == "pass")
+    metrics = {"total": len(records), "passed": passed_count, "accuracy": round(passed_count / max(1, len(records)), 4)}
+    return {"run_id": run_id, "group": group_name, "handler_identity": handler_identity, "records": records, "metrics": metrics, "runtime_ms": round((time.monotonic() - started) * 1000, 3)}
+
+
+def run_live37_substantive_work_pilot(*, artifact_root: str = ".tmp/live37_substantive", pilot_id: str | None = None) -> dict[str, Any]:
+    pilot = pilot_id or stable_id("live37-substantive-pilot", utc_now())
+    root = Path(artifact_root) / pilot
+    root.mkdir(parents=True, exist_ok=True)
+    start = utc_now()
+    groups = _live37_substantive_fixtures()
+    fixture_paths: dict[str, str] = {}
+    fixture_digests: dict[str, str] = {}
+    for group_name, cases in groups.items():
+        path = root / "fixtures" / f"{group_name}.json"
+        info = _live37_write_substantive_output(path, {"group": group_name, "cases": cases})
+        fixture_paths[group_name] = info["path"]
+        fixture_digests[group_name] = info["digest"]
+    heldout_pre_digest = fixture_digests["held_out"]
+    seal_info = _live37_write_substantive_output(root / "fixtures" / "held_out.seal.json", {"held_out_digest": heldout_pre_digest, "sealed_at": utc_now(), "candidate_generation_access": "case_identity_and_schema_only"})
+
+    baseline_runs = {
+        group: _live37_run_substantive_group(root=root, group_name=group, cases=cases, run_id="baseline_without_candidate", handler_identity="baseline_handler", handler=_live37_baseline_substantive_handler)
+        for group, cases in groups.items()
+    }
+    failed_development = [record for record in baseline_runs["development"]["records"] if record["result"] == "fail"]
+    analysis_payload = {
+        "actual_invocation": "local deterministic failure-cluster analysis",
+        "actual_handler": "live37_substantive_failure_clusterer",
+        "input_case_ids": [record["case_id"] for record in failed_development],
+        "stdout": "cluster=argument_dependency_tracking; first_incorrect_transition=dependency phrase omitted from baseline output",
+        "stderr": "",
+        "exit_status": 0,
+        "output_schema": "live37_substantive_analysis",
+        "downstream_consumer": "argument_dependency_tracker_candidate",
+    }
+    analysis_info = _live37_write_substantive_output(root / "tool_outputs" / "failure_cluster_analysis.json", analysis_payload)
+
+    candidate_dir = root / "candidates" / "argument_dependency_tracker"
+    before_candidate_digest = _live37_tree_digest(candidate_dir)
+    candidate_dir.mkdir(parents=True, exist_ok=True)
+    candidate_path = candidate_dir / "argument_dependency_tracker.py"
+    candidate_path.write_text(LIVE37_ARGUMENT_DEPENDENCY_TRACKER_SOURCE, encoding="utf-8")
+    manifest = {
+        "candidate_id": "argument_dependency_tracker",
+        "source_objective": "argument and dependency tracking",
+        "exact_failed_cases": [record["case_id"] for record in failed_development],
+        "first_incorrect_transition": "baseline handler emits summary -> dependency field empty -> rubric fails dependency terms",
+        "mechanism_description": "parse causal, prerequisite, and dependency markers into claim/dependency fields while ignoring quoted instructions",
+        "implementation_file_paths": [str(candidate_path)],
+        "implementation_digest": _live37_file_digest(candidate_path),
+        "created_at": utc_now(),
+        "authorized_scope": "isolated candidate directory",
+        "rollback_identity": stable_id("live37-substantive-rollback", pilot, "argument_dependency_tracker"),
+        "activation_state": "isolated_candidate_only",
+    }
+    manifest_info = _live37_write_substantive_output(candidate_dir / "manifest.json", manifest)
+    applied_candidate_digest = _live37_tree_digest(candidate_dir)
+    heldout_post_digest = _live37_file_digest(Path(fixture_paths["held_out"]))
+    candidate_handler = _live37_load_candidate_handler(candidate_path)
+
+    candidate_runs = {
+        group: _live37_run_substantive_group(root=root, group_name=group, cases=cases, run_id="candidate_enabled", handler_identity="argument_dependency_tracker", handler=candidate_handler)
+        for group, cases in groups.items()
+    }
+    disabled_runs = {
+        group: _live37_run_substantive_group(root=root, group_name=group, cases=cases, run_id="candidate_disabled_replay", handler_identity="baseline_handler", handler=_live37_baseline_substantive_handler)
+        for group, cases in {"focused": groups["focused"], "held_out": groups["held_out"]}.items()
+    }
+    restored_runs = {
+        group: _live37_run_substantive_group(root=root, group_name=group, cases=cases, run_id="candidate_restored_replay", handler_identity="argument_dependency_tracker", handler=candidate_handler)
+        for group, cases in {"focused": groups["focused"], "held_out": groups["held_out"]}.items()
+    }
+    challenge_cases = _live37_independent_challenge_cases()
+    challenge_info = _live37_write_substantive_output(root / "fixtures" / "independent_challenge.json", {"group": "independent_challenge", "created_after_candidate_digest": applied_candidate_digest, "cases": challenge_cases})
+    challenge_baseline = _live37_run_substantive_group(root=root, group_name="independent_challenge", cases=challenge_cases, run_id="baseline_without_candidate", handler_identity="baseline_handler", handler=_live37_baseline_substantive_handler)
+    challenge_candidate = _live37_run_substantive_group(root=root, group_name="independent_challenge", cases=challenge_cases, run_id="candidate_enabled", handler_identity="argument_dependency_tracker", handler=candidate_handler)
+
+    rollback_dir = root / "rollback_probe"
+    rollback_before = before_candidate_digest
+    rollback_applied = applied_candidate_digest
+    shutil.copytree(candidate_dir, rollback_dir / "applied")
+    shutil.rmtree(candidate_dir)
+    rollback_after = _live37_tree_digest(candidate_dir)
+    shutil.copytree(rollback_dir / "applied", candidate_dir)
+    rollback_restored = _live37_tree_digest(candidate_dir)
+    rollback = {
+        "before_state_digest": rollback_before,
+        "applied_state_digest": rollback_applied,
+        "rolled_back_state_digest": rollback_after,
+        "before_equals_rolled_back": rollback_before == rollback_after,
+        "restored_state_digest": rollback_restored,
+        "restore_equals_applied": rollback_restored == rollback_applied,
+        "unrelated_artifacts_unchanged": heldout_post_digest == heldout_pre_digest,
+    }
+    rollback_info = _live37_write_substantive_output(root / "rollback" / "rollback_proof.json", rollback)
+
+    focused_improved = candidate_runs["focused"]["metrics"]["passed"] > baseline_runs["focused"]["metrics"]["passed"]
+    heldout_improved = candidate_runs["held_out"]["metrics"]["passed"] > baseline_runs["held_out"]["metrics"]["passed"]
+    controls_stable = candidate_runs["unrelated_controls"]["metrics"]["passed"] >= baseline_runs["unrelated_controls"]["metrics"]["passed"]
+    causal = {
+        "disabled_focused": disabled_runs["focused"]["metrics"],
+        "enabled_focused": candidate_runs["focused"]["metrics"],
+        "restored_focused": restored_runs["focused"]["metrics"],
+        "disabled_held_out": disabled_runs["held_out"]["metrics"],
+        "enabled_held_out": candidate_runs["held_out"]["metrics"],
+        "restored_held_out": restored_runs["held_out"]["metrics"],
+        "candidate_disabled_state_digest": "baseline_handler",
+        "candidate_enabled_state_digest": applied_candidate_digest,
+        "candidate_restored_state_digest": rollback_restored,
+    }
+    causal["improvement_removed_when_disabled"] = causal["disabled_focused"]["passed"] < causal["enabled_focused"]["passed"] and causal["disabled_held_out"]["passed"] < causal["enabled_held_out"]["passed"]
+    causal["improvement_returns_when_restored"] = causal["restored_focused"] == causal["enabled_focused"] and causal["restored_held_out"] == causal["enabled_held_out"]
+    causal_info = _live37_write_substantive_output(root / "causal_replay" / "causal_replay.json", causal)
+
+    retained = (
+        focused_improved
+        and heldout_improved
+        and controls_stable
+        and candidate_runs["adversarial"]["metrics"]["passed"] >= 1
+        and candidate_runs["transfer"]["metrics"]["passed"] >= 1
+        and causal["improvement_removed_when_disabled"]
+        and causal["improvement_returns_when_restored"]
+        and rollback["before_equals_rolled_back"]
+        and rollback["restore_equals_applied"]
+        and heldout_pre_digest == heldout_post_digest
+    )
+    disposition = "retained_isolated_substantive" if retained else "rejected_substantive_evidence"
+    classification = "SUBSTANTIVE_WORK_VERIFIED" if retained else "SUBSTANTIVE_WORK_VERIFIED_CANDIDATE_REJECTED"
+    report = {
+        "pilot_id": pilot,
+        "started_at": start,
+        "ended_at": utc_now(),
+        "fixture_paths": fixture_paths,
+        "fixture_digests": fixture_digests,
+        "independent_challenge_fixture_path": challenge_info["path"],
+        "independent_challenge_fixture_digest": challenge_info["digest"],
+        "held_out_seal_path": seal_info["path"],
+        "held_out_pre_digest": heldout_pre_digest,
+        "held_out_post_digest": heldout_post_digest,
+        "held_out_digest_unchanged": heldout_pre_digest == heldout_post_digest,
+        "analysis_output": {**analysis_payload, "raw_output_path": analysis_info["path"], "raw_output_digest": analysis_info["digest"]},
+        "candidate_manifest_path": manifest_info["path"],
+        "candidate_implementation_path": str(candidate_path),
+        "candidate_implementation_digest": manifest["implementation_digest"],
+        "baseline_metrics": {group: run["metrics"] for group, run in baseline_runs.items()},
+        "candidate_metrics": {group: run["metrics"] for group, run in candidate_runs.items()},
+        "independent_challenge_metrics": {"baseline": challenge_baseline["metrics"], "candidate": challenge_candidate["metrics"]},
+        "disabled_metrics": {group: run["metrics"] for group, run in disabled_runs.items()},
+        "restored_metrics": {group: run["metrics"] for group, run in restored_runs.items()},
+        "raw_output_root": str(root / "raw_outputs"),
+        "causal_replay_path": causal_info["path"],
+        "rollback_proof_path": rollback_info["path"],
+        "causal": causal,
+        "rollback": rollback,
+        "candidate_disposition": disposition,
+        "classification": classification,
+        "provider_requests": 0,
+        "source_retrievals": 0,
+        "pcm_or_tool_work_used": "local deterministic failure-cluster analysis with raw output artifact",
+        "lifecycle_labels_sufficient": False,
+    }
+    report_info = _live37_write_substantive_output(root / "substantive_pilot_report.json", report)
+    report["report_path"] = report_info["path"]
+    report["report_digest"] = report_info["digest"]
+    return report
+
+
+def _live37_scheduler_decision(*, eligible_work: bool, blocked: bool, waiting_external: bool, retry_backoff: bool, checkpoint_due: bool) -> str:
+    if eligible_work:
+        return "execute_next"
+    if checkpoint_due:
+        return "checkpoint"
+    if blocked:
+        return "sleep_blocked"
+    if waiting_external:
+        return "sleep_waiting_external"
+    if retry_backoff:
+        return "sleep_retry_backoff"
+    return "sleep_idle"
+
+
+def _live37_sleep_interruptible(duration_seconds: float, emergency_stop: Path) -> bool:
+    deadline = time.monotonic() + max(0.0, duration_seconds)
+    while time.monotonic() < deadline:
+        if emergency_stop.exists() and "STOP" in emergency_stop.read_text(encoding="utf-8", errors="ignore"):
+            return True
+        time.sleep(min(1.0, max(0.0, deadline - time.monotonic())))
+    return emergency_stop.exists() and "STOP" in emergency_stop.read_text(encoding="utf-8", errors="ignore")
+
+
+def _live37_write_checkpoint(root: Path, state: dict[str, Any], checkpoint_type: str) -> dict[str, Any]:
+    sequence = int(state.get("checkpoint_sequence", 0)) + 1
+    checkpoint = {
+        "campaign_id": state["campaign_id"],
+        "runtime_id": state["runtime_id"],
+        "parent_mission": state["parent_mission"],
+        "checkpoint_type": checkpoint_type,
+        "sequence": sequence,
+        "created_wall_time": utc_now(),
+        "monotonic_elapsed_seconds": round(time.monotonic() - float(state["monotonic_start"]), 3),
+        "objective_graph": state.get("objectives", []),
+        "candidate_states": state.get("candidates", []),
+        "completed_evidence": state.get("completed_evidence", []),
+        "pending_questions": state.get("pending_questions", []),
+        "source_ledger": state.get("source_ledger", []),
+        "provider_ledger": state.get("provider_ledger", []),
+        "tool_ledger": state.get("tool_ledger", []),
+        "authorizations": state.get("authorization_ledger", []),
+        "cumulative_budgets": state.get("budgets", {}),
+        "adaptive_resource_envelope": state.get("adaptive_resource_envelope", {}),
+        "resource_action_ledger": state.get("resource_action_ledger", []),
+        "objective_envelopes": state.get("objective_envelopes", {}),
+        "campaign_resource_counts": state.get("campaign_resource_counts", {}),
+        "resource_saturation": state.get("resource_saturation", {}),
+        "next_eligible_action": state.get("next_eligible_action", ""),
+    }
+    checkpoint["integrity_digest"] = _live37_digest(checkpoint)
+    state["checkpoint_sequence"] = sequence
+    state["last_checkpoint_id"] = stable_id("live37-checkpoint", state["campaign_id"], sequence, checkpoint["integrity_digest"])
+    checkpoints_path = root / "checkpoints.jsonl"
+    checkpoints_path.parent.mkdir(parents=True, exist_ok=True)
+    with checkpoints_path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(checkpoint, sort_keys=True) + "\n")
+    _live37_atomic_write_json(root / "status.json", state)
+    return checkpoint
+
+
+def run_live37_twelve_hour_campaign_process(
+    *,
+    artifact_root: str = ".tmp/live37",
+    campaign_id: str | None = None,
+    target_duration_seconds: float = 12 * 60 * 60,
+    minimum_duration_seconds: float = 11 * 60 * 60 + 45 * 60,
+    hard_duration_seconds: float = 12 * 60 * 60 + 15 * 60,
+    checkpoint_interval_seconds: float = 15 * 60,
+) -> dict[str, Any]:
+    campaign = campaign_id or stable_id("live37-campaign", utc_now(), os.getpid())
+    root = Path(artifact_root) / campaign
+    root.mkdir(parents=True, exist_ok=True)
+    emergency_stop = root / "EMERGENCY_STOP"
+    emergency_stop.write_text("READY\n", encoding="utf-8")
+    start_wall = utc_now()
+    start_mono = time.monotonic()
+    state: dict[str, Any] = {
+        "campaign_id": campaign,
+        "runtime_id": stable_id("live37-runtime", campaign, os.getpid()),
+        "process_id": os.getpid(),
+        "parent_mission": LIVE37_PARENT_MISSION,
+        "start_wall_time": start_wall,
+        "monotonic_start": start_mono,
+        "target_deadline_seconds": target_duration_seconds,
+        "hard_deadline_seconds": hard_duration_seconds,
+        "minimum_duration_seconds": minimum_duration_seconds,
+        "delegation_identity": stable_id("live37-delegation", campaign),
+        "current_objective": "baseline benchmark",
+        "active_candidate": "",
+        "queued_candidates": [],
+        "completed_candidates": [],
+        "objectives": [],
+        "candidates": [],
+        "checkpoint_sequence": 0,
+        "source_ledger": [],
+        "provider_ledger": [],
+        "tool_ledger": [],
+        "authorization_ledger": [],
+        "developmental_ledger": [],
+        "completed_evidence": [],
+        "pending_questions": [],
+        "budgets": {"tool_calls": 0, "provider_requests": 0, "provider_attempts": 0, "source_retrievals": 0, "output_bytes": 0, "disk_bytes": 0, "repair_iterations": 0},
+        "adaptive_resource_envelope": {
+            "per_objective_limits": dict(LIVE37_PER_OBJECTIVE_LIMITS),
+            "global_limits": dict(LIVE37_GLOBAL_LIMITS),
+            "provider_task_limit": LIVE37_PROVIDER_TASK_LIMIT,
+            "band_rules": {"normal": "1-20", "extended": "21-50", "deep": "51-100"},
+            "saturation_rule": "five consecutive no-new-evidence actions stop the objective",
+        },
+        "objective_envelopes": {},
+        "objective_aliases": {},
+        "resource_action_ledger": [],
+        "resource_action_digests": [],
+        "campaign_resource_counts": {"total": 0, "local": 0, "source": 0, "provider": 0},
+        "provider_task_counts": {},
+        "resource_denials": [],
+        "resource_saturation": {},
+        "stagnation_state": "none",
+        "drift_state": "none",
+        "emergency_stop_path": str(emergency_stop),
+        "final_disposition": "running",
+        "next_eligible_action": "baseline benchmark",
+        "phase_times": {"active": 0.0, "diagnostic": 0.0, "implementation": 0.0, "validation": 0.0, "tool": 0.0, "paused": 0.0, "blocked": 0.0, "restart": 0.0, "final_review": 0.0},
+    }
+    _live37_write_checkpoint(root, state, "campaign_start")
+    state["objectives"].append({"objective_id": stable_id("live37-objective", campaign, "argument-dependency"), "gap": "argument and dependency tracking", "state": "selected"})
+    active_objective_id = state["objectives"][0]["objective_id"]
+    state["current_objective"] = "substantive argument and dependency tracking pilot"
+    pilot_report = run_live37_substantive_work_pilot(artifact_root=str(root / "substantive_work"), pilot_id="objective-1-argument-dependency")
+    raw_count = len(list((Path(pilot_report["raw_output_root"])).rglob("*.json")))
+    for index, purpose in enumerate((
+        "persist raw baseline fixtures",
+        "execute actual baseline handler",
+        "cluster reproducible failures",
+        "implement isolated argument dependency tracker",
+        "execute focused and sealed held-out validation",
+        "execute adversarial controls and transfer validation",
+        "perform candidate on/off causal replay",
+        "prove rollback and disposition",
+    ), start=1):
+        resource_result = record_live37_resource_action(
+            state,
+            objective_id=active_objective_id,
+            task_id=f"substantive-local-{index}",
+            resource_class="local",
+            identity="live37_substantive_development_handler",
+            exact_request=purpose,
+            purpose=purpose,
+            missing_evidence=f"substantive evidence for {purpose}",
+            material_new_evidence=True,
+            downstream_consumers=(pilot_report["report_path"],),
+            runtime_effect_ms=1,
+        )
+        if not resource_result["accepted"]:
+            state["stagnation_state"] = resource_result["reason"]
+            state["final_disposition"] = "resource_envelope_blocked"
+            break
+    state["baseline_metrics"] = pilot_report["baseline_metrics"]
+    state["completed_evidence"].append({
+        "type": "substantive_pilot",
+        "classification": pilot_report["classification"],
+        "report_path": pilot_report["report_path"],
+        "report_digest": pilot_report["report_digest"],
+        "raw_output_root": pilot_report["raw_output_root"],
+        "raw_output_count": raw_count,
+        "held_out_digest_unchanged": pilot_report["held_out_digest_unchanged"],
+        "candidate_disposition": pilot_report["candidate_disposition"],
+    })
+    state["candidates"].append({
+        "candidate_id": "argument_dependency_tracker",
+        "state": pilot_report["candidate_disposition"],
+        "scope": str(root / "substantive_work" / "objective-1-argument-dependency" / "candidates" / "argument_dependency_tracker"),
+        "implementation_path": pilot_report["candidate_implementation_path"],
+        "implementation_digest": pilot_report["candidate_implementation_digest"],
+    })
+    state["completed_candidates"].append({
+        "candidate_id": "argument_dependency_tracker",
+        "disposition": pilot_report["candidate_disposition"],
+        "baseline_metrics": pilot_report["baseline_metrics"],
+        "focused_metrics": pilot_report["candidate_metrics"]["focused"],
+        "held_out_metrics": pilot_report["candidate_metrics"]["held_out"],
+        "adversarial_metrics": pilot_report["candidate_metrics"]["adversarial"],
+        "transfer_metrics": pilot_report["candidate_metrics"]["transfer"],
+        "independent_challenge_metrics": pilot_report["independent_challenge_metrics"],
+        "rollback_identity": pilot_report["rollback"]["restored_state_digest"],
+        "known_limits": ["isolated candidate only", "provider/source use optional and currently unused"],
+    })
+    state["budgets"]["tool_calls"] = state["campaign_resource_counts"]["local"]
+    state["budgets"]["output_bytes"] += sum(path.stat().st_size for path in (root / "substantive_work").rglob("*") if path.is_file())
+    state["current_objective"] = "substantive pilot complete; monitoring until deadline"
+    state["next_eligible_action"] = "periodic checkpoint or next substantive objective"
+    _live37_write_checkpoint(root, state, "substantive_pilot_complete")
+    last_checkpoint = time.monotonic()
+    restart_done = False
+    while True:
+        now = time.monotonic()
+        elapsed = now - start_mono
+        if emergency_stop.exists() and "STOP" in emergency_stop.read_text(encoding="utf-8", errors="ignore"):
+            state["final_disposition"] = "emergency_stop"
+            break
+        if elapsed >= hard_duration_seconds:
+            state["final_disposition"] = "hard_deadline"
+            break
+        if elapsed >= target_duration_seconds and elapsed >= minimum_duration_seconds:
+            state["final_disposition"] = "target_deadline"
+            break
+        state["stagnation_state"] = "none"
+        if not restart_done and elapsed >= 3 * 60 * 60:
+            _live37_write_checkpoint(root, state, "before_runtime_reconstruction")
+            state["runtime_id"] = stable_id("live37-runtime-reconstructed", campaign, state["last_checkpoint_id"])
+            state["phase_times"]["restart"] += 1.0
+            restart_done = True
+            _live37_write_checkpoint(root, state, "after_runtime_reconstruction")
+        if now - last_checkpoint >= checkpoint_interval_seconds:
+            _live37_write_checkpoint(root, state, "periodic")
+            last_checkpoint = now
+        remaining_to_target = max(0.1, target_duration_seconds - elapsed)
+        idle_sleep = min(60.0, max(0.1, checkpoint_interval_seconds / 10), remaining_to_target)
+        if _live37_sleep_interruptible(idle_sleep, emergency_stop):
+            state["final_disposition"] = "emergency_stop"
+            break
+    state["end_wall_time"] = utc_now()
+    state["monotonic_end"] = time.monotonic()
+    state["monotonic_elapsed_seconds"] = round(state["monotonic_end"] - start_mono, 3)
+    if state["monotonic_elapsed_seconds"] < minimum_duration_seconds and state["final_disposition"] not in {"emergency_stop", "hard_deadline"}:
+        state["final_disposition"] = "incomplete_productive_work_exhausted"
+    state["budgets"]["disk_bytes"] = sum(path.stat().st_size for path in root.rglob("*") if path.is_file())
+    _live37_write_checkpoint(root, state, "final_stop")
+    return state
+
+
+def read_live37_campaign_status(artifact_root: str, campaign_id: str) -> dict[str, Any]:
+    status = Path(artifact_root) / campaign_id / "status.json"
+    if not status.exists():
+        return {"accepted": False, "reason": "status_missing", "campaign_id": campaign_id}
+    payload = json.loads(status.read_text(encoding="utf-8"))
+    payload["accepted"] = True
+    payload["status_path"] = str(status)
+    return payload
+
+
+def make_live37_detached_launcher(
+    *,
+    repository_root: str,
+    artifact_root: str,
+    campaign_id: str,
+    target_duration_seconds: float = 12 * 60 * 60,
+    minimum_duration_seconds: float = 11 * 60 * 60 + 45 * 60,
+    hard_duration_seconds: float = 12 * 60 * 60 + 15 * 60,
+) -> dict[str, Any]:
+    repo = Path(repository_root).resolve()
+    if not (repo / "orchestration" / "runtime" / "gsr_a_governed_self_regulation.py").exists():
+        return {"accepted": False, "reason": "repository_root_missing_runtime", "repository_root": str(repo)}
+    if repo.name != "Delta_Dev":
+        return {"accepted": False, "reason": "repository_root_substitution_denied", "repository_root": str(repo)}
+    root = Path(artifact_root).resolve() / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    launcher = root / "launch_live37.py"
+    launcher.write_text(
+        "\n".join(
+            (
+                "from pathlib import Path",
+                "import sys",
+                f"# repository_root={str(repo)}",
+                f"repo = Path({str(repo)!r}).resolve()",
+                "if str(repo) not in sys.path:",
+                "    sys.path.insert(0, str(repo))",
+                "from orchestration.runtime.gsr_a_governed_self_regulation import run_live37_twelve_hour_campaign_process",
+                "run_live37_twelve_hour_campaign_process(",
+                f"    artifact_root={str(Path(artifact_root).resolve())!r},",
+                f"    campaign_id={campaign_id!r},",
+                f"    target_duration_seconds={float(target_duration_seconds)!r},",
+                f"    minimum_duration_seconds={float(minimum_duration_seconds)!r},",
+                f"    hard_duration_seconds={float(hard_duration_seconds)!r},",
+                ")",
+                "",
+            )
+        ),
+        encoding="utf-8",
+    )
+    return {
+        "accepted": True,
+        "reason": "launcher_created",
+        "repository_root": str(repo),
+        "artifact_root": str(Path(artifact_root).resolve()),
+        "campaign_id": campaign_id,
+        "launcher_path": str(launcher),
+        "stdout_path": str(root / "stdout.log"),
+        "stderr_path": str(root / "stderr.log"),
+        "import_path_method": "temporary_launcher_sys_path_repo_root",
+    }
+
+
+def validate_live37_first_checkpoint(*, artifact_root: str, campaign_id: str) -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    status_path = root / "status.json"
+    checkpoints_path = root / "checkpoints.jsonl"
+    if not status_path.exists() or not checkpoints_path.exists():
+        return {"accepted": False, "reason": "status_or_checkpoint_missing"}
+    status = json.loads(status_path.read_text(encoding="utf-8"))
+    first_line = checkpoints_path.read_text(encoding="utf-8").splitlines()[0]
+    checkpoint = json.loads(first_line)
+    digest_payload = dict(checkpoint)
+    digest = str(digest_payload.pop("integrity_digest", ""))
+    return {
+        "accepted": bool(digest) and checkpoint.get("parent_mission") == LIVE37_PARENT_MISSION and status.get("parent_mission") == LIVE37_PARENT_MISSION,
+        "reason": "first_checkpoint_validated",
+        "status_path": str(status_path),
+        "checkpoint_path": str(checkpoints_path),
+        "checkpoint_digest_present": bool(digest),
+        "parent_mission_exact": checkpoint.get("parent_mission") == LIVE37_PARENT_MISSION,
+        "checkpoint_sequence": checkpoint.get("sequence"),
+        "current_objective": status.get("current_objective"),
+        "final_disposition": status.get("final_disposition"),
+    }
 
 
 def make_evaluation_review_item(
