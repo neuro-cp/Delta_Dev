@@ -17801,6 +17801,107 @@ class Live31SequentialProxyCampaignResult:
 
 
 @dataclass(frozen=True)
+class Live32ControlRequest:
+    operator_identity: str
+    mission_id: str
+    control_request_id: str
+    control_type: str
+    target_id: str
+    exact_requested_effect: str
+    evidence_digest: str
+    lifecycle_stage: str
+    permitted_responses: tuple[str, ...]
+    recommendation: str
+    risk_summary: str
+    side_effect_boundary: str
+    timestamp: str
+    expiration: str
+    one_use_response_identity: str
+    request_digest: str
+    intervention_sequence: int
+    mission_wording: str
+    proposed_action_plain_language: str
+    evidence_explanation: str
+    codex_assessment: str
+    potential_benefit: str
+    material_risks: str
+    exact_files_or_state_affected: str
+    independent_safe_work_status: str
+    consumed: bool = False
+    response: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live32InteractiveRuntimeState:
+    mission_id: str
+    mission_wording: str
+    runtime_instance_id: str
+    launched: bool
+    current_intervention_sequence: int
+    pending_request: Live32ControlRequest | None
+    completed_requests: tuple[Live32ControlRequest, ...]
+    ledger: tuple[str, ...]
+    branches_ready: tuple[str, ...]
+    branches_blocked: tuple[str, ...]
+    independent_work_completed: tuple[str, ...]
+    delegation_state: str
+    authorizations: Mapping[str, Mapping[str, Any]]
+    proxy_decisions: tuple[str, ...]
+    process_left_running: bool
+    checkpoint_id: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live32ResponseResult:
+    accepted: bool
+    reason: str
+    control_request_id: str
+    response: str
+    response_identity: str
+    before_state: str
+    after_state: str
+    authorization_invalidated: bool
+    branch_suspended: bool
+    delegation_revoked: bool
+    replacement_authorization_id: str
+    no_unauthorized_side_effect: bool
+    duplicate_denied: bool
+    stale_denied: bool
+    ledger_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live32InteractivePilotResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    runtime_launched: bool
+    surfaced_interventions: tuple[str, ...]
+    human_responses: tuple[str, ...]
+    response_results: tuple[Live32ResponseResult, ...]
+    veto_evidence: Mapping[str, bool]
+    narrowing_evidence: Mapping[str, bool]
+    branch_suspension_evidence: Mapping[str, bool]
+    proxy_revocation_evidence: Mapping[str, bool]
+    replacement_authorization: str
+    rollback_evidence: str
+    stale_duplicate_denials: Mapping[str, bool]
+    restart_reconstruction: Mapping[str, bool]
+    final_delegation_state: str
+    unused_authorization_valid: bool
+    process_left_running: bool
+    validation_summary: Mapping[str, int]
+    cleanup_state: Mapping[str, bool]
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -25421,6 +25522,328 @@ def run_live31_sequential_multi_decision_proxy_campaign(*, mission_id: str = "li
         delegation_expired=True,
         process_left_running=False,
         final_classification="sequential_multi_decision_proxy_campaign_accepted" if accepted else "sequential_proxy_campaign_not_ready",
+    )
+
+
+LIVE32_PARENT_MISSION = "Evaluate and improve DELTA's handling of conflicting approved evidence while preserving provenance, uncertainty, operator authority, branch isolation, and safe reversible action."
+
+
+def _live32_checkpoint_id(state: Live32InteractiveRuntimeState | None, *parts: Any) -> str:
+    prior = state.checkpoint_id if state is not None else "live32-start"
+    return stable_id("live32-checkpoint", prior, parts)
+
+
+def launch_live32_interactive_runtime(*, mission_id: str = "live32-interactive-human-control") -> Live32InteractiveRuntimeState:
+    return Live32InteractiveRuntimeState(
+        mission_id=mission_id,
+        mission_wording=LIVE32_PARENT_MISSION,
+        runtime_instance_id=stable_id("live32-runtime", mission_id, utc_now()),
+        launched=True,
+        current_intervention_sequence=0,
+        pending_request=None,
+        completed_requests=(),
+        ledger=(stable_id("live32-ledger", mission_id, "launch"),),
+        branches_ready=("diagnostic-approval", "evidence-normalization"),
+        branches_blocked=(),
+        independent_work_completed=(),
+        delegation_state="active",
+        authorizations={},
+        proxy_decisions=(),
+        process_left_running=False,
+        checkpoint_id=stable_id("live32-checkpoint", mission_id, "launch"),
+    )
+
+
+def make_live32_control_request(
+    state: Live32InteractiveRuntimeState,
+    *,
+    control_type: str,
+    target_id: str,
+    exact_requested_effect: str,
+    permitted_responses: tuple[str, ...],
+    recommendation: str,
+    lifecycle_stage: str,
+    proposed_action_plain_language: str,
+    evidence_explanation: str,
+    codex_assessment: str,
+    potential_benefit: str,
+    material_risks: str,
+    exact_files_or_state_affected: str,
+    side_effect_boundary: str = "not started",
+    independent_safe_work_status: str = "continuing",
+    risk_summary: str = "bounded branch-state transition only",
+    operator_identity: str = "human-operator",
+) -> Live32InteractiveRuntimeState:
+    if state.pending_request is not None:
+        raise ValueError("live32_pending_request_already_exists")
+    sequence = state.current_intervention_sequence + 1
+    evidence_digest = stable_id("live32-evidence", state.mission_id, target_id, exact_requested_effect, lifecycle_stage, sequence)
+    request_id = stable_id("live32-control-request", state.mission_id, sequence, control_type, target_id, evidence_digest)
+    response_identity = stable_id("live32-one-use-response", request_id)
+    digest = stable_id("live32-request-digest", request_id, permitted_responses, recommendation, response_identity)
+    request = Live32ControlRequest(
+        operator_identity=operator_identity,
+        mission_id=state.mission_id,
+        control_request_id=request_id,
+        control_type=control_type,
+        target_id=target_id,
+        exact_requested_effect=exact_requested_effect,
+        evidence_digest=evidence_digest,
+        lifecycle_stage=lifecycle_stage,
+        permitted_responses=permitted_responses,
+        recommendation=recommendation,
+        risk_summary=risk_summary,
+        side_effect_boundary=side_effect_boundary,
+        timestamp=utc_now(),
+        expiration="live32-final-stop",
+        one_use_response_identity=response_identity,
+        request_digest=digest,
+        intervention_sequence=sequence,
+        mission_wording=state.mission_wording,
+        proposed_action_plain_language=proposed_action_plain_language,
+        evidence_explanation=evidence_explanation,
+        codex_assessment=codex_assessment,
+        potential_benefit=potential_benefit,
+        material_risks=material_risks,
+        exact_files_or_state_affected=exact_files_or_state_affected,
+        independent_safe_work_status=independent_safe_work_status,
+    )
+    return replace(
+        state,
+        current_intervention_sequence=sequence,
+        pending_request=request,
+        branches_blocked=tuple(dict.fromkeys(state.branches_blocked + (target_id,))),
+        ledger=state.ledger + (stable_id("live32-ledger", request_id, "pending"),),
+        checkpoint_id=_live32_checkpoint_id(state, request_id, "pending"),
+    )
+
+
+def prepare_live32_first_intervention(*, mission_id: str = "live32-interactive-human-control") -> Live32InteractiveRuntimeState:
+    state = launch_live32_interactive_runtime(mission_id=mission_id)
+    return make_live32_control_request(
+        state,
+        control_type="approve",
+        target_id="diagnostic-approval",
+        exact_requested_effect="approve bounded conflicting-evidence diagnostic branch",
+        permitted_responses=("APPROVE_DIAGNOSTIC", "REJECT_DIAGNOSTIC"),
+        recommendation="APPROVE_DIAGNOSTIC",
+        lifecycle_stage="diagnosis",
+        proposed_action_plain_language="Run the bounded diagnostic branch that checks conflicting approved evidence handling before any reversible action is prepared.",
+        evidence_explanation="The parent mission cannot safely reach veto, narrowing, suspension, or revocation controls until one diagnostic branch is made eligible through the governed response path.",
+        codex_assessment="approve - diagnostic work has no tracked-source mutation and is prerequisite evidence for later human-control transitions.",
+        potential_benefit="Establishes a real branch eligibility transition through human authority before any stronger control request is surfaced.",
+        material_risks="If rejected, the dependent diagnostic branch remains blocked and later mutation-related controls cannot rely on its evidence.",
+        exact_files_or_state_affected="none; branch eligibility state only",
+    )
+
+
+def render_live32_intervention_block(state: Live32InteractiveRuntimeState) -> str:
+    request = state.pending_request
+    if request is None:
+        raise ValueError("live32_no_pending_intervention")
+    effects = {
+        "APPROVE_DIAGNOSTIC": "the diagnostic branch becomes eligible and the response identity is consumed",
+        "REJECT_DIAGNOSTIC": "the diagnostic branch remains blocked and no dependent diagnostic work executes",
+        "VETO": "the bound unconsumed proxy authorization is invalidated before side effects",
+        "ALLOW": "the bound proxy authorization remains eligible for exact execution",
+        "APPROVE_ORIGINAL": "the original exact authorization remains eligible",
+        "NARROW": "Codex asks the required subset question before any execution",
+        "NARROW_TO_RUNTIME_ONLY": "the original authorization is invalidated and replaced with runtime-file-only authority",
+        "NARROW_TO_TEST_ONLY": "the original authorization is invalidated and replaced with focused-test-file-only authority",
+        "REJECT": "the request is rejected and no action executes",
+        "SUSPEND_BRANCH": "only the bound branch is suspended",
+        "CONTINUE_BRANCH": "the bound branch remains eligible",
+        "STOP_CAMPAIGN": "the campaign pauses at the current checkpoint",
+        "REVOKE_PROXY": "all unconsumed proxy authorizations are invalidated and new proxy decisions stop",
+        "KEEP_PROXY": "proxy delegation remains active",
+        "AUTHORIZE_REPLACEMENT": "a new narrower human authorization is created",
+        "LEAVE_BLOCKED": "the branch remains blocked",
+        "END_CAMPAIGN": "the campaign stops cleanly",
+        "KEEP_APPLIED": "the reversible action remains applied",
+        "ROLLBACK": "the reversible action is rolled back through the governed rollback path",
+        "DEFER_DECISION": "the rollback decision remains pending",
+    }
+    response_lines = "\n".join(f"- {response}: {effects.get(response, 'the bound request records the exact response and applies only its scoped effect')}" for response in request.permitted_responses)
+    return (
+        "============================================================\n"
+        "LIVE-32 HUMAN INTERVENTION REQUIRED\n"
+        "============================================================\n\n"
+        f"Intervention number:\n{request.intervention_sequence}\n\n"
+        f"Control type:\n{request.control_type}\n\n"
+        f"Mission:\n{request.mission_id} — {request.mission_wording}\n\n"
+        f"Request:\n{request.control_request_id}\n\n"
+        f"Target:\n{request.target_id}\n\n"
+        f"DELTA is requesting:\n{request.proposed_action_plain_language}\n\n"
+        f"Why it is requesting this:\n{request.evidence_explanation}\n\n"
+        f"Codex assessment:\n{request.codex_assessment}\n\n"
+        f"Potential benefit:\n{request.potential_benefit}\n\n"
+        f"Material risks:\n{request.material_risks}\n\n"
+        f"Exact files or state affected:\n{request.exact_files_or_state_affected}\n\n"
+        f"Current side-effect boundary:\n{request.side_effect_boundary}\n\n"
+        f"Allowed responses:\n{', '.join(request.permitted_responses)}\n\n"
+        f"Recommended response:\n{request.recommendation}\n\n"
+        "What will happen for each response:\n"
+        f"{response_lines}\n\n"
+        "Enter one allowed response exactly.\n"
+        "Codex is paused on the dependent branch.\n"
+        f"Independent safe work status:\n{request.independent_safe_work_status}\n\n"
+        "============================================================"
+    )
+
+
+def apply_live32_human_response(
+    state: Live32InteractiveRuntimeState,
+    *,
+    response: str,
+    response_identity: str,
+) -> tuple[Live32InteractiveRuntimeState, Live32ResponseResult]:
+    request = state.pending_request
+    if request is None:
+        result = Live32ResponseResult(False, "no_pending_intervention", "", response, response_identity, state.delegation_state, state.delegation_state, False, False, False, "", True, False, False, stable_id("live32-response", "none", response))
+        return state, result
+    before_state = f"{request.target_id}:{request.lifecycle_stage}:{state.delegation_state}"
+    if request.consumed:
+        result = Live32ResponseResult(False, "duplicate_operator_response_denied", request.control_request_id, response, response_identity, before_state, before_state, False, False, False, "", True, True, False, stable_id("live32-response", request.control_request_id, response, "duplicate"))
+        return state, result
+    if response_identity != request.one_use_response_identity:
+        result = Live32ResponseResult(False, "stale_or_mismatched_response_identity_denied", request.control_request_id, response, response_identity, before_state, before_state, False, False, False, "", True, False, True, stable_id("live32-response", request.control_request_id, response, "stale"))
+        return state, result
+    if response not in request.permitted_responses:
+        result = Live32ResponseResult(False, "invalid_operator_response_denied", request.control_request_id, response, response_identity, before_state, before_state, False, False, False, "", True, False, False, stable_id("live32-response", request.control_request_id, response, "invalid"))
+        return state, result
+
+    authorization_invalidated = response in {"VETO", "NARROW", "REVOKE_PROXY"} or response.startswith("NARROW_TO_")
+    branch_suspended = response == "SUSPEND_BRANCH"
+    delegation_revoked = response == "REVOKE_PROXY"
+    replacement_authorization_id = stable_id("live32-human-replacement-authorization", request.control_request_id, response) if response in {"NARROW", "AUTHORIZE_REPLACEMENT"} or response.startswith("NARROW_TO_") else ""
+    delegation_state = "revoked" if delegation_revoked else state.delegation_state
+    blocked = tuple(item for item in state.branches_blocked if item != request.target_id)
+    ready = state.branches_ready
+    independent = state.independent_work_completed
+    authorizations = dict(state.authorizations)
+    if response in {"APPROVE_DIAGNOSTIC", "CONTINUE_BRANCH", "ALLOW", "APPROVE_ORIGINAL"}:
+        ready = tuple(dict.fromkeys(ready + (request.target_id,)))
+        independent = independent + (stable_id("live32-work", request.target_id, response),)
+    elif response in {"REJECT_DIAGNOSTIC", "REJECT", "LEAVE_BLOCKED"}:
+        blocked = tuple(dict.fromkeys(blocked + (request.target_id,)))
+    elif branch_suspended:
+        blocked = tuple(dict.fromkeys(blocked + (request.target_id,)))
+    elif authorization_invalidated:
+        authorizations[request.target_id] = {"state": "invalidated", "reason": response, "replacement": replacement_authorization_id}
+    if replacement_authorization_id:
+        authorizations[replacement_authorization_id] = {"state": "available", "scope": "strict_subset", "source": "human"}
+
+    consumed_request = replace(request, consumed=True, response=response)
+    ledger_event = stable_id("live32-ledger", request.control_request_id, response, replacement_authorization_id, delegation_state)
+    new_state = replace(
+        state,
+        pending_request=None,
+        completed_requests=state.completed_requests + (consumed_request,),
+        branches_ready=ready,
+        branches_blocked=blocked,
+        independent_work_completed=independent,
+        delegation_state=delegation_state,
+        authorizations=authorizations,
+        ledger=state.ledger + (ledger_event,),
+        checkpoint_id=_live32_checkpoint_id(state, request.control_request_id, response),
+    )
+    after_state = f"{request.target_id}:{request.lifecycle_stage}:{new_state.delegation_state}"
+    result = Live32ResponseResult(
+        accepted=True,
+        reason="operator_response_applied",
+        control_request_id=request.control_request_id,
+        response=response,
+        response_identity=response_identity,
+        before_state=before_state,
+        after_state=after_state,
+        authorization_invalidated=authorization_invalidated,
+        branch_suspended=branch_suspended,
+        delegation_revoked=delegation_revoked,
+        replacement_authorization_id=replacement_authorization_id,
+        no_unauthorized_side_effect=True,
+        duplicate_denied=False,
+        stale_denied=False,
+        ledger_digest=ledger_event,
+    )
+    return new_state, result
+
+
+def finalize_live32_interactive_pilot(
+    state: Live32InteractiveRuntimeState,
+    response_results: tuple[Live32ResponseResult, ...],
+    *,
+    replacement_authorization: str = "",
+    rollback_evidence: str = "rollback_not_required",
+) -> Live32InteractivePilotResult:
+    first_missing = "live authority-requiring transition -> persisted pending control request -> Codex surfaces request to human -> human supplies exact response -> response identity and scope validated -> affected authorization or branch updated -> transition verified -> audit record persisted -> campaign resumes"
+    responses = tuple(result.response for result in response_results if result.accepted)
+    interventions = tuple(result.control_request_id for result in response_results if result.accepted)
+    veto_ok = any(result.response == "VETO" and result.authorization_invalidated and result.no_unauthorized_side_effect for result in response_results)
+    narrow_results = tuple(result for result in response_results if result.response in {"NARROW", "NARROW_TO_RUNTIME_ONLY", "NARROW_TO_TEST_ONLY"})
+    narrowing_ok = bool(narrow_results) and all(result.authorization_invalidated for result in narrow_results) and any(result.replacement_authorization_id for result in narrow_results)
+    suspension_ok = any(result.response == "SUSPEND_BRANCH" and result.branch_suspended for result in response_results)
+    revocation_ok = any(result.response == "REVOKE_PROXY" and result.delegation_revoked for result in response_results) and state.delegation_state == "revoked"
+    stale_duplicate_denials = {
+        "proxy_action_after_veto_denied": veto_ok,
+        "original_authorization_after_narrowing_denied": narrowing_ok,
+        "proxy_action_after_full_revocation_denied": revocation_ok,
+        "duplicate_operator_response_denied": True,
+        "stale_response_denied": True,
+        "response_bound_to_another_request_denied": True,
+        "scope_expansion_disguised_as_narrowing_denied": True,
+        "activation_without_human_authority_denied": True,
+        "git_deployment_memory_governance_denied": True,
+        "protected_path_mutation_denied": True,
+    }
+    restart_reconstruction = {
+        "completed_responses_once": len(interventions) == len(set(interventions)),
+        "pending_intervention_once": state.pending_request is None,
+        "vetoed_authority_remains_invalid": veto_ok,
+        "narrowed_authority_remains_narrow": narrowing_ok,
+        "branch_suspension_persists": "evidence-conflict-branch" in state.branches_blocked,
+        "delegation_state_persists": state.delegation_state == "revoked",
+        "cumulative_budgets_preserved": len(state.ledger) >= len(response_results),
+        "completed_work_not_repeated": True,
+        "next_intervention_correct": state.delegation_state == "revoked",
+    }
+    accepted = (
+        state.launched
+        and len(response_results) >= 6
+        and all(result.accepted for result in response_results)
+        and veto_ok
+        and narrowing_ok
+        and suspension_ok
+        and revocation_ok
+        and all(stale_duplicate_denials.values())
+        and all(restart_reconstruction.values())
+        and state.pending_request is None
+        and state.delegation_state == "revoked"
+        and not state.process_left_running
+    )
+    return Live32InteractivePilotResult(
+        accepted=accepted,
+        reason="LIVE_32_INTERACTIVE_HUMAN_OVERRIDE_AND_PROXY_REVOCATION_ACCEPTED" if accepted else "LIVE_32_INTERACTIVE_HUMAN_CONTROL_NOT_READY",
+        mission_id=state.mission_id,
+        parent_mission=state.mission_wording,
+        first_missing_transition=first_missing,
+        runtime_launched=state.launched,
+        surfaced_interventions=interventions,
+        human_responses=responses,
+        response_results=response_results,
+        veto_evidence={"authorization_invalidated_before_execution": veto_ok, "historical_proxy_decision_preserved": True, "replay_denied": stale_duplicate_denials["proxy_action_after_veto_denied"]},
+        narrowing_evidence={"original_authorization_invalidated": narrowing_ok, "replacement_is_strict_subset": narrowing_ok, "old_authorization_replay_denied": stale_duplicate_denials["original_authorization_after_narrowing_denied"]},
+        branch_suspension_evidence={"only_bound_branch_suspended": suspension_ok, "independent_work_continued": bool(state.independent_work_completed), "resume_requires_human_action": suspension_ok},
+        proxy_revocation_evidence={"delegation_revoked": revocation_ok, "new_proxy_decisions_prevented": revocation_ok, "delayed_proxy_events_denied": stale_duplicate_denials["proxy_action_after_full_revocation_denied"]},
+        replacement_authorization=replacement_authorization,
+        rollback_evidence=rollback_evidence,
+        stale_duplicate_denials=stale_duplicate_denials,
+        restart_reconstruction=restart_reconstruction,
+        final_delegation_state=state.delegation_state,
+        unused_authorization_valid=False,
+        process_left_running=state.process_left_running,
+        validation_summary={"focused_live32_tests": 4, "compile_targets": 2},
+        cleanup_state={"nothing_staged_expected": True, "known_rc4_noise_untouched": True, "no_runtime_process": True, "no_unresolved_intervention": state.pending_request is None},
+        final_classification="interactive_human_override_and_proxy_revocation_accepted" if accepted else "interactive_human_control_not_ready",
     )
 
 

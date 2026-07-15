@@ -4040,6 +4040,241 @@ def test_live_31_human_veto_and_restart_reconstruction_preserve_ledger():
     assert result.process_left_running is False
 
 
+def test_live_32_pending_intervention_persists_and_renders_exact_operator_choices():
+    state = gsr.prepare_live32_first_intervention()
+    block = gsr.render_live32_intervention_block(state)
+
+    assert state.launched is True
+    assert state.pending_request is not None
+    assert state.pending_request.consumed is False
+    assert state.pending_request.permitted_responses == ("APPROVE_DIAGNOSTIC", "REJECT_DIAGNOSTIC")
+    assert "LIVE-32 HUMAN INTERVENTION REQUIRED" in block
+    assert state.pending_request.control_request_id in block
+    assert "APPROVE_DIAGNOSTIC" in block
+    assert "REJECT_DIAGNOSTIC" in block
+    assert "Codex is paused on the dependent branch." in block
+    assert state.pending_request.target_id in state.branches_blocked
+
+
+def test_live_32_valid_response_consumes_one_use_identity_and_updates_branch_state():
+    state = gsr.prepare_live32_first_intervention()
+    request = state.pending_request
+    assert request is not None
+
+    updated, result = gsr.apply_live32_human_response(
+        state,
+        response="APPROVE_DIAGNOSTIC",
+        response_identity=request.one_use_response_identity,
+    )
+
+    assert result.accepted is True
+    assert result.reason == "operator_response_applied"
+    assert result.no_unauthorized_side_effect is True
+    assert updated.pending_request is None
+    assert updated.completed_requests[-1].consumed is True
+    assert updated.completed_requests[-1].response == "APPROVE_DIAGNOSTIC"
+    assert "diagnostic-approval" in updated.branches_ready
+    assert "diagnostic-approval" not in updated.branches_blocked
+    assert len(updated.independent_work_completed) == 1
+
+
+def test_live_32_duplicate_stale_and_invalid_responses_fail_closed():
+    state = gsr.prepare_live32_first_intervention()
+    request = state.pending_request
+    assert request is not None
+
+    _, stale = gsr.apply_live32_human_response(
+        state,
+        response="APPROVE_DIAGNOSTIC",
+        response_identity="wrong-response-identity",
+    )
+    _, invalid = gsr.apply_live32_human_response(
+        state,
+        response="APPROVE",
+        response_identity=request.one_use_response_identity,
+    )
+    updated, accepted = gsr.apply_live32_human_response(
+        state,
+        response="APPROVE_DIAGNOSTIC",
+        response_identity=request.one_use_response_identity,
+    )
+    duplicate_state = replace(updated, pending_request=updated.completed_requests[-1])
+    _, duplicate = gsr.apply_live32_human_response(
+        duplicate_state,
+        response="APPROVE_DIAGNOSTIC",
+        response_identity=request.one_use_response_identity,
+    )
+
+    assert stale.accepted is False
+    assert stale.reason == "stale_or_mismatched_response_identity_denied"
+    assert stale.stale_denied is True
+    assert invalid.accepted is False
+    assert invalid.reason == "invalid_operator_response_denied"
+    assert accepted.accepted is True
+    assert duplicate.accepted is False
+    assert duplicate.reason == "duplicate_operator_response_denied"
+    assert duplicate.duplicate_denied is True
+
+
+def test_live_32_veto_narrow_suspend_and_revoke_controls_remain_scoped():
+    base = gsr.launch_live32_interactive_runtime()
+
+    veto_state = gsr.make_live32_control_request(
+        base,
+        control_type="veto",
+        target_id="auth-veto-target",
+        exact_requested_effect="veto unconsumed proxy authorization",
+        permitted_responses=("VETO", "ALLOW"),
+        recommendation="VETO",
+        lifecycle_stage="authorization",
+        proposed_action_plain_language="Veto the unconsumed proxy authorization.",
+        evidence_explanation="The proxy decision has not executed.",
+        codex_assessment="veto recommended - exercises human precedence.",
+        potential_benefit="Prevents stale proxy authority.",
+        material_risks="The branch remains blocked.",
+        exact_files_or_state_affected="authorization state only",
+    )
+    veto_request = veto_state.pending_request
+    assert veto_request is not None
+    vetoed, veto_result = gsr.apply_live32_human_response(veto_state, response="VETO", response_identity=veto_request.one_use_response_identity)
+    assert veto_result.authorization_invalidated is True
+    assert vetoed.authorizations["auth-veto-target"]["state"] == "invalidated"
+
+    narrow_state = gsr.make_live32_control_request(
+        vetoed,
+        control_type="narrow",
+        target_id="two-path-authorization",
+        exact_requested_effect="narrow two-path authorization",
+        permitted_responses=("APPROVE_ORIGINAL", "NARROW", "REJECT"),
+        recommendation="NARROW",
+        lifecycle_stage="authorization",
+        proposed_action_plain_language="Narrow the authorization to a strict subset.",
+        evidence_explanation="Only one path is needed for the next branch.",
+        codex_assessment="narrow recommended - smaller exact scope.",
+        potential_benefit="Reduces mutation scope.",
+        material_risks="Original authority must be invalidated.",
+        exact_files_or_state_affected="authorization state only",
+    )
+    narrow_request = narrow_state.pending_request
+    assert narrow_request is not None
+    narrowed, narrow_result = gsr.apply_live32_human_response(narrow_state, response="NARROW", response_identity=narrow_request.one_use_response_identity)
+    assert narrow_result.authorization_invalidated is True
+    assert narrow_result.replacement_authorization_id
+    assert narrowed.authorizations[narrow_result.replacement_authorization_id]["scope"] == "strict_subset"
+
+    subset_state = gsr.make_live32_control_request(
+        narrowed,
+        control_type="narrow",
+        target_id="two-path-subset-authorization",
+        exact_requested_effect="select strict subset for narrowed authorization",
+        permitted_responses=("NARROW_TO_RUNTIME_ONLY", "NARROW_TO_TEST_ONLY"),
+        recommendation="NARROW_TO_RUNTIME_ONLY",
+        lifecycle_stage="authorization",
+        proposed_action_plain_language="Select the exact replacement authorization subset.",
+        evidence_explanation="The original two-path authorization has been invalidated.",
+        codex_assessment="runtime-only subset recommended.",
+        potential_benefit="Proves replacement authority is narrower than the original.",
+        material_risks="The unselected path remains unauthorized.",
+        exact_files_or_state_affected="authorization state only",
+    )
+    subset_request = subset_state.pending_request
+    assert subset_request is not None
+    subsetted, subset_result = gsr.apply_live32_human_response(subset_state, response="NARROW_TO_RUNTIME_ONLY", response_identity=subset_request.one_use_response_identity)
+    assert subset_result.authorization_invalidated is True
+    assert subset_result.replacement_authorization_id
+    assert subsetted.authorizations[subset_result.replacement_authorization_id]["scope"] == "strict_subset"
+
+    suspend_state = gsr.make_live32_control_request(
+        subsetted,
+        control_type="suspend",
+        target_id="evidence-branch",
+        exact_requested_effect="suspend unresolved evidence branch",
+        permitted_responses=("SUSPEND_BRANCH", "CONTINUE_BRANCH", "STOP_CAMPAIGN"),
+        recommendation="SUSPEND_BRANCH",
+        lifecycle_stage="branch_control",
+        proposed_action_plain_language="Suspend only the unresolved evidence branch.",
+        evidence_explanation="Independent work remains available.",
+        codex_assessment="suspend recommended - uncertainty is branch-local.",
+        potential_benefit="Keeps independent work moving.",
+        material_risks="Suspended branch requires later explicit resume.",
+        exact_files_or_state_affected="branch state only",
+    )
+    suspend_request = suspend_state.pending_request
+    assert suspend_request is not None
+    suspended, suspend_result = gsr.apply_live32_human_response(suspend_state, response="SUSPEND_BRANCH", response_identity=suspend_request.one_use_response_identity)
+    assert suspend_result.branch_suspended is True
+    assert "evidence-branch" in suspended.branches_blocked
+
+    revoke_state = gsr.make_live32_control_request(
+        suspended,
+        control_type="revoke",
+        target_id="live32-proxy-delegation",
+        exact_requested_effect="revoke full proxy delegation",
+        permitted_responses=("REVOKE_PROXY", "KEEP_PROXY", "STOP_CAMPAIGN"),
+        recommendation="REVOKE_PROXY",
+        lifecycle_stage="delegation",
+        proposed_action_plain_language="Revoke the full Codex proxy delegation.",
+        evidence_explanation="Earlier human controls have been verified.",
+        codex_assessment="revoke recommended - proves delayed proxy events cannot execute.",
+        potential_benefit="Preserves human authority precedence.",
+        material_risks="Authority-dependent work pauses.",
+        exact_files_or_state_affected="delegation and unconsumed authorization state",
+    )
+    revoke_request = revoke_state.pending_request
+    assert revoke_request is not None
+    revoked, revoke_result = gsr.apply_live32_human_response(revoke_state, response="REVOKE_PROXY", response_identity=revoke_request.one_use_response_identity)
+    assert revoke_result.delegation_revoked is True
+    assert revoked.delegation_state == "revoked"
+
+
+def test_live_32_finalized_interactive_pilot_preserves_human_precedence():
+    state = gsr.prepare_live32_first_intervention()
+    results = []
+    request = state.pending_request
+    assert request is not None
+    state, result = gsr.apply_live32_human_response(state, response="APPROVE_DIAGNOSTIC", response_identity=request.one_use_response_identity)
+    results.append(result)
+
+    for control_type, target_id, responses, response in (
+        ("veto", "auth-veto-target", ("VETO", "ALLOW"), "VETO"),
+        ("narrow", "two-path-authorization", ("APPROVE_ORIGINAL", "NARROW", "REJECT"), "NARROW"),
+        ("narrow", "two-path-subset-authorization", ("NARROW_TO_RUNTIME_ONLY", "NARROW_TO_TEST_ONLY"), "NARROW_TO_RUNTIME_ONLY"),
+        ("suspend", "evidence-conflict-branch", ("SUSPEND_BRANCH", "CONTINUE_BRANCH", "STOP_CAMPAIGN"), "SUSPEND_BRANCH"),
+        ("revoke", "live32-proxy-delegation", ("REVOKE_PROXY", "KEEP_PROXY", "STOP_CAMPAIGN"), "REVOKE_PROXY"),
+    ):
+        state = gsr.make_live32_control_request(
+            state,
+            control_type=control_type,
+            target_id=target_id,
+            exact_requested_effect=f"{control_type} {target_id}",
+            permitted_responses=responses,
+            recommendation=response,
+            lifecycle_stage="delegation" if control_type == "revoke" else "authorization",
+            proposed_action_plain_language=f"{control_type} {target_id}",
+            evidence_explanation="focused test evidence",
+            codex_assessment="bounded control accepted",
+            potential_benefit="preserves human authority",
+            material_risks="branch may remain blocked",
+            exact_files_or_state_affected="state only",
+        )
+        request = state.pending_request
+        assert request is not None
+        state, result = gsr.apply_live32_human_response(state, response=response, response_identity=request.one_use_response_identity)
+        results.append(result)
+
+    pilot = gsr.finalize_live32_interactive_pilot(state, tuple(results))
+
+    assert pilot.accepted is True
+    assert pilot.reason == "LIVE_32_INTERACTIVE_HUMAN_OVERRIDE_AND_PROXY_REVOCATION_ACCEPTED"
+    assert pilot.final_delegation_state == "revoked"
+    assert pilot.rollback_evidence == "rollback_not_required"
+    assert pilot.proxy_revocation_evidence["delegation_revoked"] is True
+    assert all(pilot.stale_duplicate_denials.values())
+    assert all(pilot.restart_reconstruction.values())
+    assert pilot.unused_authorization_valid is False
+    assert pilot.process_left_running is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
