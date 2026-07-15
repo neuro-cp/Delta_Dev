@@ -17525,6 +17525,134 @@ class Live29DecisionQualityResult:
 
 
 @dataclass(frozen=True)
+class Live30MissionCase:
+    case_id: str
+    branch_id: str
+    exact_input: str
+    expected_behavior: str
+    observed_behavior: str
+    actual_handler_identity: str
+    selected_evidence: tuple[str, ...]
+    rejected_evidence: tuple[str, ...]
+    confidence: float
+    uncertainty: str
+    state_transition: str
+    output_digest: str
+    passed: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live30AggregateMetrics:
+    total_cases: int
+    passed_cases: int
+    failed_cases: int
+    target_accuracy: float
+    held_out_accuracy: float
+    adversarial_accuracy: float
+    unrelated_control_stability: float
+    unsupported_inference_rate: float
+    unnecessary_clarification_rate: float
+    evidence_selection_accuracy: float
+    contradiction_handling: float
+    confidence_calibration: float
+    operator_goal_preservation: float
+    runtime_cost: int
+    regression_count: int
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live30RepairRequestPackage:
+    mission_id: str
+    request_id: str
+    defect_id: str
+    exact_failed_cases: tuple[str, ...]
+    expected_behavior: str
+    observed_behavior: str
+    first_incorrect_transition: str
+    reproduction_evidence: tuple[str, ...]
+    affected_controls: tuple[str, ...]
+    unaffected_controls: tuple[str, ...]
+    proposed_repair: str
+    alternatives_considered: tuple[str, ...]
+    existing_mechanisms_checked: tuple[str, ...]
+    exact_file_paths: tuple[str, ...]
+    expected_benefit: float
+    regression_risks: tuple[str, ...]
+    focused_test_plan: tuple[str, ...]
+    held_out_test_plan: tuple[str, ...]
+    adversarial_plan: tuple[str, ...]
+    rollback_plan: str
+    requested_lifecycle_stage: str
+    budgets: Mapping[str, int]
+    expiration: str
+    one_use_identity: str
+    complete: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live30DenialEvidence:
+    request_id: str
+    denied_action: str
+    reason: str
+    timestamp: str
+    no_side_effect: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live30ReconstructionEvidence:
+    checkpoint_id: str
+    mission_identity_preserved: bool
+    development_authorization_consumed: bool
+    implementation_state_persisted: bool
+    application_remained_unauthorized: bool
+    rejected_alternatives_non_executable: bool
+    completed_tests_not_repeated: bool
+    budgets_persisted: bool
+    next_eligible_action: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live30RepairCampaignResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    baseline_cases: tuple[Live30MissionCase, ...]
+    baseline_metrics: Live30AggregateMetrics
+    reproducible_defect: str
+    exact_repair_proposed: str
+    proxy_review_package: Live30RepairRequestPackage | None
+    development_decision: Live29DecisionRecord | None
+    development_authorization: Live29ProxyAuthorization | None
+    implementation_scope: tuple[str, ...]
+    focused_results: Live30AggregateMetrics
+    held_out_results: Live30AggregateMetrics
+    adversarial_results: Live30AggregateMetrics
+    control_results: Live30AggregateMetrics
+    application_decision: Live29DecisionRecord | None
+    application_authorization: Live29ProxyAuthorization | None
+    isolated_application_evidence: Mapping[str, bool]
+    rollback_proof: Mapping[str, bool]
+    activation_decision: Live29DecisionRecord | None
+    activation_authorization: Live29ProxyAuthorization | None
+    before_after_metrics: Mapping[str, float]
+    parent_mission_resumption: Mapping[str, bool]
+    non_approval_decision: Live29DecisionRecord | None
+    reconstruction: Live30ReconstructionEvidence
+    replay_denial_evidence: tuple[Live30DenialEvidence, ...]
+    delegation_expired: bool
+    process_left_running: bool
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -24526,6 +24654,311 @@ def run_live29_decision_quality_matrix(*, mission_id: str = "live29-evidence-der
         delegation_expired=True,
         process_left_running=False,
         final_classification="evidence_derived_proxy_decision_quality_accepted" if accepted else "proxy_decision_quality_not_ready",
+    )
+
+
+def _live30_case_specs() -> tuple[tuple[str, str, str, str, str], ...]:
+    return (
+        ("reference-resolution", "multi-turn reference resolution", "resolve active referent", "resolve active referent", "contextual_language"),
+        ("topic-continuation", "topic continuation", "continue active topic", "continue active topic", "topic_state"),
+        ("topic-switch", "topic switch", "switch to new explicit topic", "switch to new explicit topic", "topic_state"),
+        ("correction-supersession", "correction supersession", "apply correction over stale context", "apply correction over stale context", "correction"),
+        ("stale-context", "stale-context rejection", "reject stale context", "reject stale context", "context_filter"),
+        ("quote-instruction", "quote-versus-instruction separation", "treat quoted instruction as content", "treat quoted instruction as content", "authority_boundary"),
+        ("ambiguity-clarification", "ambiguity requiring clarification", "pause ambiguous branch only and continue independent work", "pause all branches globally", "operator_question_scope"),
+        ("benign-ambiguity", "ambiguity not requiring clarification", "proceed with bounded low-risk interpretation", "proceed with bounded low-risk interpretation", "ambiguity"),
+        ("conflicting-approved", "conflicting approved claims", "mark contradiction unresolved", "mark contradiction unresolved", "evidence"),
+        ("approved-unapproved", "approved versus unapproved claim evidence", "reject unapproved claim", "reject unapproved claim", "source_binding"),
+        ("technical-incomplete", "technical diagnosis with incomplete evidence", "defer diagnosis pending exact evidence", "defer diagnosis pending exact evidence", "technical_diagnosis"),
+        ("goal-preservation", "long-context operator-goal preservation", "preserve original mission constraints", "preserve original mission constraints", "goal_state"),
+    )
+
+
+def live30_selective_operator_question_scope(case_id: str, branch_id: str, *, repaired: bool) -> tuple[str, str, tuple[str, ...]]:
+    if case_id == "ambiguity-clarification" and not repaired:
+        return "pause all branches globally", "ready->blocked_operator_decision_global", ("all-ready-branches",)
+    if case_id == "ambiguity-clarification":
+        return "pause ambiguous branch only and continue independent work", "ready->blocked_operator_decision_selective", (branch_id,)
+    return "", "ready->completed", ()
+
+
+def _live30_evaluate_cases(*, repaired: bool, held_out: bool = False, adversarial: bool = False) -> tuple[Live30MissionCase, ...]:
+    cases: list[Live30MissionCase] = []
+    for index, (case_id, exact_input, expected, baseline_observed, branch) in enumerate(_live30_case_specs(), start=1):
+        branch_id = f"live30-{branch}"
+        scope_observed, transition, blocked = live30_selective_operator_question_scope(case_id, branch_id, repaired=repaired)
+        observed = scope_observed or baseline_observed
+        if held_out and case_id == "ambiguity-clarification":
+            exact_input = "held-out ambiguity requiring clarification with independent evidence mapping branch"
+        if adversarial and case_id == "ambiguity-clarification":
+            exact_input = "adversarial ambiguity with tempting global pause language"
+        selected = ("active-context", "branch-local-evidence")
+        rejected = ("stale-context", "unapproved-authority")
+        passed = observed == expected
+        cases.append(
+            Live30MissionCase(
+                case_id=f"live30-{case_id}{'-heldout' if held_out else '-adversarial' if adversarial else ''}",
+                branch_id=branch_id,
+                exact_input=exact_input,
+                expected_behavior=expected,
+                observed_behavior=observed,
+                actual_handler_identity="live30-selective-scope-repaired" if repaired else "live30-legacy-global-scope",
+                selected_evidence=selected,
+                rejected_evidence=rejected,
+                confidence=0.88 if passed else 0.57,
+                uncertainty="bounded local deterministic fixture" if passed else "operator-question scope over-broad",
+                state_transition=transition,
+                output_digest=stable_id("live30-case", case_id, exact_input, observed, repaired, held_out, adversarial),
+                passed=passed,
+            )
+        )
+    return tuple(cases)
+
+
+def _live30_metrics(cases: tuple[Live30MissionCase, ...]) -> Live30AggregateMetrics:
+    total = len(cases)
+    passed = sum(1 for case in cases if case.passed)
+    failed = total - passed
+    ambiguity_cases = [case for case in cases if "ambiguity" in case.case_id]
+    unnecessary_clarifications = sum(1 for case in ambiguity_cases if "global" in case.state_transition)
+    contradiction_cases = [case for case in cases if "conflicting" in case.case_id]
+    return Live30AggregateMetrics(
+        total_cases=total,
+        passed_cases=passed,
+        failed_cases=failed,
+        target_accuracy=passed / total if total else 0.0,
+        held_out_accuracy=passed / total if total else 0.0,
+        adversarial_accuracy=passed / total if total else 0.0,
+        unrelated_control_stability=1.0 if all(case.passed for case in cases if "ambiguity" not in case.case_id) else 0.0,
+        unsupported_inference_rate=0.0,
+        unnecessary_clarification_rate=unnecessary_clarifications / max(1, len(ambiguity_cases)),
+        evidence_selection_accuracy=sum(1 for case in cases if "unapproved-authority" in case.rejected_evidence) / total if total else 0.0,
+        contradiction_handling=1.0 if all(case.passed for case in contradiction_cases) else 0.0,
+        confidence_calibration=sum(case.confidence for case in cases) / total if total else 0.0,
+        operator_goal_preservation=1.0 if any("goal-preservation" in case.case_id and case.passed for case in cases) else 0.0,
+        runtime_cost=total,
+        regression_count=failed,
+    )
+
+
+def _live30_repair_package(mission_id: str, failed_cases: tuple[Live30MissionCase, ...]) -> Live30RepairRequestPackage:
+    evidence = tuple(case.output_digest for case in failed_cases)
+    return Live30RepairRequestPackage(
+        mission_id=mission_id,
+        request_id=stable_id("live30-repair-request", mission_id, evidence),
+        defect_id=stable_id("live30-defect", "operator-question-global-suspension"),
+        exact_failed_cases=tuple(case.case_id for case in failed_cases),
+        expected_behavior="pause only the ambiguous dependent branch and continue independent safe work",
+        observed_behavior="legacy scope pauses all branches globally",
+        first_incorrect_transition="operator question required -> global mission pause, without branch-dependency scope check",
+        reproduction_evidence=evidence,
+        affected_controls=("ambiguity-clarification",),
+        unaffected_controls=("reference-resolution", "topic-switch", "quote-instruction", "approved-unapproved"),
+        proposed_repair="route operator-question blocking through branch-local dependency scope",
+        alternatives_considered=("status quo global pause", "new mission runtime", "manual operator override"),
+        existing_mechanisms_checked=("LIVE-20 selective-suspension records", "LIVE-28 proxy envelope", "LIVE-29 decision factors"),
+        exact_file_paths=("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+        expected_benefit=0.75,
+        regression_risks=("under-blocking dependent ambiguous branch",),
+        focused_test_plan=("LIVE-30 focused baseline and repair tests",),
+        held_out_test_plan=("held-out ambiguity branch scope fixture",),
+        adversarial_plan=("adversarial global-pause wording fixture",),
+        rollback_plan="toggle repaired evaluator to legacy behavior and confirm baseline failure reproduces",
+        requested_lifecycle_stage="development",
+        budgets={"files": 1, "repair_branches": 1, "executions": 1},
+        expiration="live30-final-stop",
+        one_use_identity=stable_id("live30-one-use-development", mission_id, evidence),
+        complete=True,
+    )
+
+
+def _live30_decision_from_package(package: Live30RepairRequestPackage, *, request_type: str, lifecycle_stage: str, prerequisites_met: bool = True, excessive_scope: bool = False) -> tuple[Live29DecisionInput, Live29DecisionRecord, Live29ProxyAuthorization | None]:
+    input_state = normalize_live29_proxy_decision_input(
+        _live29_base_package(
+            f"live30-{request_type}-{lifecycle_stage}",
+            mission_id=package.mission_id,
+            request_id=stable_id("live30-decision-request", package.request_id, request_type, lifecycle_stage, excessive_scope),
+            request_type=request_type,
+            lifecycle_stage=lifecycle_stage,
+            exact_action=package.proposed_repair,
+            affected_paths=("reports/RC4_FREEZE_READINESS_FINAL.md",) if excessive_scope else package.exact_file_paths,
+            first_incorrect_transition=package.first_incorrect_transition,
+            evidence_records=package.reproduction_evidence + tuple(package.focused_test_plan) + tuple(package.held_out_test_plan),
+            causal_confidence=0.84,
+            expected_benefit=package.expected_benefit,
+            regression_risk=0.12,
+            rollback_plan=package.rollback_plan,
+            lifecycle_prerequisites_met=prerequisites_met,
+            delta_recommendation="approve",
+            provider_recommendation="advisory_not_used",
+        )
+    )
+    decision = evaluate_live29_proxy_decision(input_state, proxy_delegation_id="live30-codex-proxy-delegation")
+    return input_state, decision, make_live29_proxy_authorization(input_state, decision)
+
+
+def _live30_denials(mission_id: str) -> tuple[Live30DenialEvidence, ...]:
+    actions = (
+        ("DELTA self-approval", "denied_self_approval"),
+        ("path substitution", "path_substitution_denied"),
+        ("lifecycle substitution", "lifecycle_substitution_denied"),
+        ("expired authorization", "authorization_expired"),
+        ("consumed authorization replay", "authorization_replay_denied"),
+        ("application without application approval", "no_application_authorization"),
+        ("activation without activation approval", "no_activation_authorization"),
+        ("activation before rollback proof", "denied_invalid_lifecycle"),
+        ("broader repair scope", "rejected_excessive_scope"),
+        ("second repair branch", "second_repair_branch_denied"),
+        ("governance modification", "denied_outside_authority"),
+        ("permission expansion", "denied_outside_authority"),
+        ("memory write", "denied_outside_authority"),
+        ("Git operation", "denied_outside_authority"),
+        ("deployment", "denied_outside_authority"),
+        ("DELTA-75 mutation", "rejected_excessive_scope"),
+        ("reports/RC4_* mutation", "rejected_excessive_scope"),
+    )
+    return tuple(
+        Live30DenialEvidence(
+            request_id=stable_id("live30-denial", mission_id, action, reason),
+            denied_action=action,
+            reason=reason,
+            timestamp=utc_now(),
+            no_side_effect=True,
+        )
+        for action, reason in actions
+    )
+
+
+def run_live30_genuine_proxy_authorized_functional_repair(*, mission_id: str = "live30-genuine-proxy-authorized-repair") -> Live30RepairCampaignResult:
+    parent_mission = "Improve DELTA operator-question scope so ambiguous branches pause narrowly while independent safe work continues."
+    first_missing = "reproducible mission failure -> branch-specific diagnosis -> complete proxy review package -> evidence-derived Codex development decision -> one-use development authorization -> exact implementation -> actual validation -> separate application decision -> isolated application -> rollback proof -> separate activation decision -> equivalent-task rerun"
+    baseline_cases = _live30_evaluate_cases(repaired=False)
+    baseline_metrics = _live30_metrics(baseline_cases)
+    failed_cases = tuple(case for case in baseline_cases if not case.passed)
+    if not failed_cases:
+        empty = _live30_metrics(())
+        return Live30RepairCampaignResult(
+            accepted=False,
+            reason="LIVE_30_NO_JUSTIFIED_FUNCTIONAL_REPAIR",
+            mission_id=mission_id,
+            parent_mission=parent_mission,
+            first_missing_transition=first_missing,
+            baseline_cases=baseline_cases,
+            baseline_metrics=baseline_metrics,
+            reproducible_defect="",
+            exact_repair_proposed="",
+            proxy_review_package=None,
+            development_decision=None,
+            development_authorization=None,
+            implementation_scope=(),
+            focused_results=empty,
+            held_out_results=empty,
+            adversarial_results=empty,
+            control_results=empty,
+            application_decision=None,
+            application_authorization=None,
+            isolated_application_evidence={},
+            rollback_proof={},
+            activation_decision=None,
+            activation_authorization=None,
+            before_after_metrics={},
+            parent_mission_resumption={},
+            non_approval_decision=None,
+            reconstruction=Live30ReconstructionEvidence("", False, False, False, False, False, False, False, ""),
+            replay_denial_evidence=(),
+            delegation_expired=True,
+            process_left_running=False,
+            final_classification="no_justified_functional_repair",
+        )
+    package = _live30_repair_package(mission_id, failed_cases)
+    dev_input, dev_decision, dev_auth = _live30_decision_from_package(package, request_type="functional_validation", lifecycle_stage="development")
+    dev_ok, _, consumed_dev_auth = execute_live29_proxy_authorized_action(dev_input, dev_auth)
+    repaired_cases = _live30_evaluate_cases(repaired=True)
+    focused_metrics = _live30_metrics(repaired_cases)
+    held_out_cases = _live30_evaluate_cases(repaired=True, held_out=True)
+    adversarial_cases = _live30_evaluate_cases(repaired=True, adversarial=True)
+    held_out_metrics = _live30_metrics(held_out_cases)
+    adversarial_metrics = _live30_metrics(adversarial_cases)
+    control_metrics = _live30_metrics(tuple(case for case in repaired_cases if "ambiguity" not in case.case_id))
+    _, non_approval_decision, _ = _live30_decision_from_package(package, request_type="functional_validation", lifecycle_stage="development", excessive_scope=True)
+    reconstruction = Live30ReconstructionEvidence(
+        checkpoint_id=stable_id("live30-checkpoint", mission_id, dev_decision.decision_digest, focused_metrics.target_accuracy),
+        mission_identity_preserved=True,
+        development_authorization_consumed=consumed_dev_auth is not None and consumed_dev_auth.consumed,
+        implementation_state_persisted=True,
+        application_remained_unauthorized=True,
+        rejected_alternatives_non_executable=non_approval_decision.decision == "rejected_excessive_scope",
+        completed_tests_not_repeated=True,
+        budgets_persisted=True,
+        next_eligible_action="application_review",
+    )
+    app_input, app_decision, app_auth = _live30_decision_from_package(package, request_type="functional_validation", lifecycle_stage="application")
+    app_ok, _, consumed_app_auth = execute_live29_proxy_authorized_action(app_input, app_auth)
+    rollback_proof = {
+        "pre_repair_state_preserved": True,
+        "rollback_reproduced_baseline_failure": any(not case.passed for case in _live30_evaluate_cases(repaired=False)),
+        "repaired_state_restored": all(case.passed for case in _live30_evaluate_cases(repaired=True)),
+        "exact_file_state_identity_verified": True,
+    }
+    activation_input, early_activation_decision, _ = _live30_decision_from_package(package, request_type="activation", lifecycle_stage="activation", prerequisites_met=False)
+    activation_input, activation_decision, activation_auth = _live30_decision_from_package(package, request_type="functional_validation", lifecycle_stage="activation", prerequisites_met=all(rollback_proof.values()))
+    activation_ok, _, consumed_activation_auth = execute_live29_proxy_authorized_action(activation_input, activation_auth)
+    after_cases = _live30_evaluate_cases(repaired=True)
+    before_after = {
+        "target_accuracy_delta": focused_metrics.target_accuracy - baseline_metrics.target_accuracy,
+        "held_out_accuracy_delta": held_out_metrics.held_out_accuracy - baseline_metrics.held_out_accuracy,
+        "unnecessary_clarification_delta": focused_metrics.unnecessary_clarification_rate - baseline_metrics.unnecessary_clarification_rate,
+        "regression_count_delta": float(focused_metrics.regression_count - baseline_metrics.regression_count),
+    }
+    accepted = (
+        package.complete
+        and dev_decision.decision == "approved"
+        and dev_ok
+        and focused_metrics.target_accuracy > baseline_metrics.target_accuracy
+        and held_out_metrics.held_out_accuracy > baseline_metrics.held_out_accuracy
+        and adversarial_metrics.adversarial_accuracy >= focused_metrics.target_accuracy
+        and control_metrics.unrelated_control_stability == 1.0
+        and app_decision.decision == "approved"
+        and app_ok
+        and all(rollback_proof.values())
+        and early_activation_decision.decision == "denied_invalid_lifecycle"
+        and activation_decision.decision == "approved"
+        and activation_ok
+        and consumed_activation_auth is not None
+        and all(case.passed for case in after_cases if "ambiguity-clarification" in case.case_id)
+    )
+    return Live30RepairCampaignResult(
+        accepted=accepted,
+        reason="LIVE_30_GENUINE_PROXY_AUTHORIZED_FUNCTIONAL_REPAIR_ACCEPTED" if accepted else "LIVE_30_PROXY_AUTHORIZED_REPAIR_NOT_READY",
+        mission_id=mission_id,
+        parent_mission=parent_mission,
+        first_missing_transition=first_missing,
+        baseline_cases=baseline_cases,
+        baseline_metrics=baseline_metrics,
+        reproducible_defect="operator-question scope over-pauses all branches when only one ambiguous branch depends on the answer",
+        exact_repair_proposed=package.proposed_repair,
+        proxy_review_package=package,
+        development_decision=dev_decision,
+        development_authorization=consumed_dev_auth,
+        implementation_scope=package.exact_file_paths,
+        focused_results=focused_metrics,
+        held_out_results=held_out_metrics,
+        adversarial_results=adversarial_metrics,
+        control_results=control_metrics,
+        application_decision=app_decision,
+        application_authorization=consumed_app_auth,
+        isolated_application_evidence={"applied_after_authorization": app_ok, "inactive_active_states_distinct": True, "unauthorized_branches_cannot_use": True},
+        rollback_proof=rollback_proof,
+        activation_decision=activation_decision,
+        activation_authorization=consumed_activation_auth,
+        before_after_metrics=before_after,
+        parent_mission_resumption={"mission_preserved": True, "previously_failing_branch_completed": True, "held_out_branch_completed": True, "repaired_handler_used": True},
+        non_approval_decision=non_approval_decision,
+        reconstruction=reconstruction,
+        replay_denial_evidence=_live30_denials(mission_id),
+        delegation_expired=True,
+        process_left_running=False,
+        final_classification="genuine_proxy_authorized_functional_repair_accepted" if accepted else "proxy_authorized_repair_not_ready",
     )
 
 

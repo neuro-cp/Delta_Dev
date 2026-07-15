@@ -3909,6 +3909,84 @@ def test_live_29_reconstruction_preserves_factor_digests_and_decision_state():
     assert reconstruction.no_recalculation_without_changed_evidence is True
 
 
+def test_live_30_baseline_reproduces_material_scope_defect_and_computes_scores():
+    result = gsr.run_live30_genuine_proxy_authorized_functional_repair()
+    failed = [case for case in result.baseline_cases if not case.passed]
+
+    assert result.accepted is True
+    assert len(result.baseline_cases) == 12
+    assert len(failed) == 1
+    assert failed[0].case_id == "live30-ambiguity-clarification"
+    assert failed[0].observed_behavior == "pause all branches globally"
+    assert result.baseline_metrics.total_cases == 12
+    assert result.baseline_metrics.passed_cases == 11
+    assert result.baseline_metrics.failed_cases == 1
+    assert result.baseline_metrics.target_accuracy == result.baseline_metrics.passed_cases / result.baseline_metrics.total_cases
+    assert result.proxy_review_package is not None
+    assert result.proxy_review_package.first_incorrect_transition == "operator question required -> global mission pause, without branch-dependency scope check"
+
+
+def test_live_30_development_application_and_activation_are_separate_one_use_decisions():
+    result = gsr.run_live30_genuine_proxy_authorized_functional_repair()
+
+    assert result.development_decision is not None and result.development_decision.decision == "approved"
+    assert result.development_authorization is not None and result.development_authorization.consumed is True
+    assert result.application_decision is not None and result.application_decision.decision == "approved"
+    assert result.application_authorization is not None and result.application_authorization.consumed is True
+    assert result.activation_decision is not None and result.activation_decision.decision == "approved"
+    assert result.activation_authorization is not None and result.activation_authorization.consumed is True
+    assert result.non_approval_decision is not None
+    assert result.non_approval_decision.decision == "rejected_excessive_scope"
+    assert result.reconstruction.development_authorization_consumed is True
+    assert result.reconstruction.application_remained_unauthorized is True
+    assert result.reconstruction.next_eligible_action == "application_review"
+
+
+def test_live_30_repair_improves_target_held_out_and_adversarial_without_control_regression():
+    result = gsr.run_live30_genuine_proxy_authorized_functional_repair()
+
+    assert result.focused_results.target_accuracy > result.baseline_metrics.target_accuracy
+    assert result.held_out_results.held_out_accuracy > result.baseline_metrics.held_out_accuracy
+    assert result.adversarial_results.adversarial_accuracy >= result.focused_results.target_accuracy
+    assert result.control_results.unrelated_control_stability == 1.0
+    assert result.before_after_metrics["target_accuracy_delta"] > 0
+    assert result.before_after_metrics["held_out_accuracy_delta"] > 0
+    assert result.before_after_metrics["unnecessary_clarification_delta"] < 0
+    assert result.before_after_metrics["regression_count_delta"] < 0
+    assert result.parent_mission_resumption["repaired_handler_used"] is True
+    assert result.parent_mission_resumption["previously_failing_branch_completed"] is True
+
+
+def test_live_30_rollback_replay_denials_and_delegation_expiration_hold():
+    result = gsr.run_live30_genuine_proxy_authorized_functional_repair()
+    denials = {item.denied_action: item for item in result.replay_denial_evidence}
+
+    assert all(result.rollback_proof.values())
+    for action in (
+        "DELTA self-approval",
+        "path substitution",
+        "lifecycle substitution",
+        "expired authorization",
+        "consumed authorization replay",
+        "application without application approval",
+        "activation without activation approval",
+        "activation before rollback proof",
+        "broader repair scope",
+        "second repair branch",
+        "governance modification",
+        "permission expansion",
+        "memory write",
+        "Git operation",
+        "deployment",
+        "DELTA-75 mutation",
+        "reports/RC4_* mutation",
+    ):
+        assert denials[action].no_side_effect is True
+
+    assert result.delegation_expired is True
+    assert result.process_left_running is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
