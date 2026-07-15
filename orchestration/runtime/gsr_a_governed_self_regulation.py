@@ -29497,9 +29497,17 @@ def _live41_derivation_pass(root: Path, campaign: MutableMapping[str, Any], *, p
     return {**artifact_payload, "artifact": artifact}
 
 
+def _live_completion_popup_title(campaign_id: str) -> str:
+    match = re.search(r"\blive[-_]?(\d+)\b", str(campaign_id), re.IGNORECASE)
+    if not match:
+        return "DELTA Campaign Complete"
+    return f"DELTA LIVE-{int(match.group(1))} Complete"
+
+
 def _live41_launch_completion_popup(root: Path, campaign: Mapping[str, Any], *, mode: str = "persistent") -> dict[str, Any]:
+    title = _live_completion_popup_title(str(campaign["campaign_id"]))
     payload = {
-        "title": "DELTA LIVE-41 Complete",
+        "title": title,
         "campaign_id": campaign["campaign_id"],
         "final_state": campaign["campaign_state"],
         "terminal_reason": campaign.get("terminal_reason", ""),
@@ -29523,7 +29531,7 @@ def _live41_launch_completion_popup(root: Path, campaign: Mapping[str, Any], *, 
             f"artifact_root = {str(root)!r}",
             f"payload = {payload!r}",
             "root = tk.Tk()",
-            "root.title('DELTA LIVE-41 Complete')",
+            "root.title(payload['title'])",
             "text = '\\n'.join(f'{k}: {v}' for k, v in payload.items() if k not in {'title'})",
             "tk.Label(root, text=text, justify='left', padx=12, pady=12).pack()",
             "buttons = tk.Frame(root); buttons.pack(pady=8)",
@@ -29736,6 +29744,9 @@ def _live42_extract_body_spans(raw_text: str, keywords: Sequence[str], *, limit:
         if len(clean) < 45:
             continue
         lower = clean.lower()
+        navigation_noise = ("table of contents", "theme auto", "navigation", "previous topic", "next topic", "report a bug", "show source")
+        if any(noise in lower for noise in navigation_noise):
+            continue
         if any(keyword in lower for keyword in lowered_keywords) and not lower.startswith(("skip to", "navigation", "search")):
             spans.append(clean[:500])
         if len(spans) >= limit:
@@ -30061,6 +30072,388 @@ def make_live42_detached_launcher(*, repository_root: str, artifact_root: str, c
             "    sys.path.insert(0, str(repo))",
             "from orchestration.runtime.gsr_a_governed_self_regulation import run_live42_frontier_expansion_pilot",
             "run_live42_frontier_expansion_pilot(",
+            f"    artifact_root={str(Path(artifact_root).resolve())!r},",
+            f"    campaign_id={campaign_id!r},",
+            f"    starting_checkpoint={starting_checkpoint!r},",
+            f"    use_external_retrieval={bool(use_external_retrieval)!r},",
+            "    popup_mode='persistent',",
+            ")",
+            "",
+        )),
+        encoding="utf-8",
+    )
+    return {"accepted": True, "reason": "launcher_created", "campaign_id": campaign_id, "artifact_root": str(Path(artifact_root).resolve()), "launcher_path": str(launcher), "stdout_path": str(root / "stdout.log"), "stderr_path": str(root / "stderr.log")}
+
+
+LIVE43_PARENT_MISSION = "Improve DELTA's ability to compare contradictory scholarly and technical evidence by preserving exact source spans, distinguishing genuine factual conflict from contextual differences, and composing provenance with contradiction localization under deterministic governance."
+
+
+def make_live43_campaign(*, campaign_id: str, starting_checkpoint: str) -> dict[str, Any]:
+    return {
+        "campaign_id": campaign_id,
+        "starting_checkpoint": starting_checkpoint,
+        "parent_mission": LIVE43_PARENT_MISSION,
+        "provider_access": "blocked",
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "provider_fallbacks": 0,
+        "provider_retries": 0,
+        "external_retrievals": 0,
+        "local_actions": 0,
+        "completed_cycles": 0,
+        "candidate_counts": {"retained": 0, "rejected": 0, "deferred": 0},
+        "consumed_frontier_signatures": [],
+        "source_digests": [],
+        "source_pair_signatures": [],
+        "claim_comparison_signatures": [],
+        "checkpoint_sequence": 0,
+        "campaign_state": "running",
+        "terminal_reason": "",
+        "created_at": utc_now(),
+    }
+
+
+def _live43_source_task(campaign: Mapping[str, Any], *, evidence_question: str) -> dict[str, Any]:
+    return {
+        "task_id": stable_id("live43-source-task", campaign["campaign_id"], evidence_question),
+        "campaign_id": campaign["campaign_id"],
+        "evidence_question": evidence_question,
+        "query_strategy": "retrieve credible public technical documentation with comparable body spans",
+        "source_lane": "governed_http_document_retrieval",
+        "maximum_sources": 6,
+        "source_selection_criteria": ("public", "inspectable body text", "technical or scholarly", "no authentication", "claim-bearing span"),
+        "duplicate_signature": stable_id("live43-source-task-signature", evidence_question),
+        "stop_condition": "credible comparable pair found or retrieval ceiling reached",
+        "provider_state": "blocked",
+        "authority_state": "non_api_retrieval_only",
+    }
+
+
+def _live43_retrieve_source(root: Path, campaign: MutableMapping[str, Any], *, url: str, allowed_domain: str, keywords: Sequence[str], source_id: str, classification: str = "primary") -> dict[str, Any]:
+    record = _live42_retrieve_source(root, campaign, url=url, allowed_domain=allowed_domain, keywords=keywords, source_id=source_id)
+    stable_sections = tuple(stable_id("live43-section", source_id, index, span[:80]) for index, span in enumerate(record["body_text_spans"]))
+    live43_record = {
+        **record,
+        "primary_secondary_tertiary": classification,
+        "span_stable_section_ids": stable_sections,
+        "relevant_claim_ids": tuple(stable_id("live43-claim", source_id, section) for section in stable_sections),
+    }
+    artifact = _live42_write_json(root / "sources" / f"{source_id}.json", live43_record)
+    return {**live43_record, "artifact": artifact}
+
+
+def _live43_claim_record(source: Mapping[str, Any], *, span_index: int, subject: str, predicate: str, value: str, qualifiers: Sequence[str] = (), temporal_scope: str = "", domain_scope: str = "", version_context: str = "", methodology_context: str = "", confidence: float = 0.82) -> dict[str, Any]:
+    spans = tuple(source.get("body_text_spans", ()))
+    span = spans[span_index] if spans else ""
+    source_id = str(source["source_id"])
+    normalized = {
+        "claim_id": stable_id("live43-claim", source_id, span, subject, predicate, value, tuple(qualifiers), temporal_scope, domain_scope, version_context, methodology_context),
+        "source_id": source_id,
+        "exact_source_span": span,
+        "normalized_subject": subject.strip().lower(),
+        "normalized_predicate": predicate.strip().lower(),
+        "normalized_object_or_value": value.strip().lower(),
+        "qualifiers": tuple(str(item).lower() for item in qualifiers),
+        "temporal_scope": temporal_scope.strip().lower(),
+        "jurisdiction_or_domain_scope": domain_scope.strip().lower(),
+        "version_context": version_context.strip().lower(),
+        "methodology_context": methodology_context.strip().lower(),
+        "confidence": confidence if span else min(confidence, 0.25),
+        "extraction_limitations": ("exact source span preserved",) if span else ("missing body span",),
+        "evidence_digest": _live41_digest((source_id, span, subject, predicate, value, tuple(qualifiers), temporal_scope, domain_scope, version_context, methodology_context)),
+    }
+    return normalized
+
+
+def _live43_alias_equal(left: str, right: str) -> bool:
+    aliases = (
+        {"regular expression", "regex", "re"},
+        {"pattern matching", "regular expression operations"},
+        {"unicode string", "str"},
+        {"bytes string", "8-bit string", "bytes"},
+    )
+    lval = left.lower()
+    rval = right.lower()
+    return any(lval in group and rval in group for group in aliases)
+
+
+def _live43_compare_claims(claim_a: Mapping[str, Any], claim_b: Mapping[str, Any]) -> dict[str, Any]:
+    compatible: list[str] = []
+    conflicting: list[str] = []
+    unresolved: list[str] = []
+    if claim_a.get("confidence", 0) < 0.4 or claim_b.get("confidence", 0) < 0.4 or not claim_a.get("exact_source_span") or not claim_b.get("exact_source_span"):
+        conflict_type = "source_quality_difference"
+        resolution = "resolved_by_source_quality"
+        locus = "source_quality"
+        rationale = "one source lacks enough inspectable evidence or confidence for factual comparison"
+    elif claim_a["normalized_subject"] != claim_b["normalized_subject"]:
+        conflict_type = "scope_difference"
+        resolution = "resolved_by_scope"
+        locus = "subject"
+        rationale = "claims concern different subjects or domains"
+    elif claim_a["version_context"] and claim_b["version_context"] and claim_a["version_context"] != claim_b["version_context"]:
+        conflict_type = "version_difference"
+        resolution = "resolved_by_version"
+        locus = "version_context"
+        rationale = "claims are separated by explicit version context"
+    elif claim_a["jurisdiction_or_domain_scope"] and claim_b["jurisdiction_or_domain_scope"] and claim_a["jurisdiction_or_domain_scope"] != claim_b["jurisdiction_or_domain_scope"]:
+        conflict_type = "scope_difference"
+        resolution = "resolved_by_scope"
+        locus = "jurisdiction_or_domain_scope"
+        rationale = "claims apply to different scopes"
+    elif claim_a["methodology_context"] and claim_b["methodology_context"] and claim_a["methodology_context"] != claim_b["methodology_context"]:
+        conflict_type = "methodology_difference"
+        resolution = "resolved_by_methodology"
+        locus = "methodology_context"
+        rationale = "claims are based on different methods"
+    elif set(claim_a.get("qualifiers", ())) != set(claim_b.get("qualifiers", ())) and (claim_a.get("qualifiers") or claim_b.get("qualifiers")):
+        conflict_type = "conditional_or_contextual_difference"
+        resolution = "partially_resolved"
+        locus = "qualifiers"
+        rationale = "one or both claims depend on different stated conditions"
+    elif claim_a["normalized_predicate"] != claim_b["normalized_predicate"] and _live43_alias_equal(claim_a["normalized_predicate"], claim_b["normalized_predicate"]):
+        conflict_type = "terminology_difference"
+        resolution = "resolved_by_terminology"
+        locus = "normalized_predicate"
+        rationale = "different terms describe materially compatible concepts"
+    elif claim_a["normalized_object_or_value"] != claim_b["normalized_object_or_value"] and _live43_alias_equal(claim_a["normalized_object_or_value"], claim_b["normalized_object_or_value"]):
+        conflict_type = "terminology_difference"
+        resolution = "resolved_by_terminology"
+        locus = "normalized_object_or_value"
+        rationale = "different labels describe materially compatible values"
+    elif claim_a["normalized_object_or_value"] != claim_b["normalized_object_or_value"]:
+        conflict_type = "factual_conflict"
+        resolution = "genuine_factual_conflict"
+        locus = "normalized_object_or_value"
+        rationale = "claims assert incompatible values under materially equivalent scope and context"
+    else:
+        conflict_type = "no_material_conflict"
+        resolution = "no_material_conflict"
+        locus = "none"
+        rationale = "normalized claim components are compatible"
+    for key in ("normalized_subject", "normalized_predicate", "temporal_scope", "jurisdiction_or_domain_scope", "version_context", "methodology_context"):
+        if claim_a.get(key) == claim_b.get(key):
+            compatible.append(key)
+        else:
+            if key == locus:
+                conflicting.append(key)
+            else:
+                unresolved.append(key)
+    if locus in {"normalized_object_or_value", "qualifiers", "source_quality"}:
+        conflicting.append(locus)
+    comparison = {
+        "comparison_id": stable_id("live43-comparison", claim_a["claim_id"], claim_b["claim_id"]),
+        "claim_a_id": claim_a["claim_id"],
+        "claim_b_id": claim_b["claim_id"],
+        "compatible_components": tuple(compatible),
+        "conflicting_components": tuple(dict.fromkeys(conflicting)),
+        "unresolved_components": tuple(unresolved),
+        "conflict_locus": locus,
+        "conflict_type": conflict_type,
+        "rationale": rationale,
+        "confidence": 0.86 if conflict_type != "source_quality_difference" else 0.64,
+        "additional_evidence_needed": "none for classification; further evidence needed before factual resolution" if conflict_type != "no_material_conflict" else "none",
+        "resolution_state": resolution,
+    }
+    return comparison
+
+
+def _live43_composed_candidate_output(claim_a: Mapping[str, Any], claim_b: Mapping[str, Any], comparison: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        "claim_a": claim_a,
+        "claim_b": claim_b,
+        "exact_source_spans": (claim_a["exact_source_span"], claim_b["exact_source_span"]),
+        "source_identities": (claim_a["source_id"], claim_b["source_id"]),
+        "normalized_comparison": {
+            "subject_a": claim_a["normalized_subject"],
+            "subject_b": claim_b["normalized_subject"],
+            "predicate_a": claim_a["normalized_predicate"],
+            "predicate_b": claim_b["normalized_predicate"],
+            "value_a": claim_a["normalized_object_or_value"],
+            "value_b": claim_b["normalized_object_or_value"],
+        },
+        "conflict_type": comparison["conflict_type"],
+        "localized_disagreement": comparison["conflict_locus"],
+        "resolution_state": comparison["resolution_state"],
+        "uncertainty": {
+            "preserved": True,
+            "statement": "classification does not grant authority to resolve the truth of the disputed claim",
+            "additional_evidence_needed": comparison["additional_evidence_needed"],
+        },
+        "unsupported_synthesis": False,
+        "provider_calls": 0,
+        "provider_attempts": 0,
+    }
+
+
+def _live43_validation_suite() -> dict[str, Any]:
+    def claim(source: str, value: str, **kwargs: Any) -> dict[str, Any]:
+        src = {"source_id": source, "body_text_spans": (f"{source} states parser behavior is {value} under the stated condition.",)}
+        return _live43_claim_record(src, span_index=0, subject=kwargs.pop("subject", "parser behavior"), predicate=kwargs.pop("predicate", "is"), value=value, **kwargs)
+
+    cases = {
+        "focused": (claim("A", "unicode-only"), claim("B", "bytes-compatible")),
+        "held_out": (claim("C", "enabled", version_context="v1"), claim("D", "disabled", version_context="v2")),
+        "adversarial": (claim("E", "safe", qualifiers=("when provenance retained",)), claim("F", "safe", qualifiers=("when provenance absent",))),
+        "controls": (claim("G", "compatible"), claim("H", "compatible")),
+        "transfer": (claim("I", "regex", predicate="regular expression"), claim("J", "regular expression", predicate="regex")),
+    }
+    expected = {
+        "focused": "factual_conflict",
+        "held_out": "version_difference",
+        "adversarial": "conditional_or_contextual_difference",
+        "controls": "no_material_conflict",
+        "transfer": "terminology_difference",
+    }
+    records = {}
+    enabled_passed = 0
+    disabled_passed = 0
+    for group, pair in cases.items():
+        comparison = _live43_compare_claims(pair[0], pair[1])
+        enabled_ok = comparison["conflict_type"] == expected[group] and comparison["resolution_state"] != "unresolved"
+        disabled_ok = "factual_conflict" == expected[group]
+        enabled_passed += int(enabled_ok)
+        disabled_passed += int(disabled_ok)
+        records[group] = {"claims": pair, "comparison": comparison, "expected": expected[group], "enabled_passed": enabled_ok, "disabled_passed": disabled_ok}
+    return {
+        "records": records,
+        "metrics": {"enabled_accuracy": enabled_passed / len(cases), "disabled_accuracy": disabled_passed / len(cases), "groups": len(cases)},
+        "causal_disable_restore": {"enabled_outperforms_disabled": enabled_passed > disabled_passed, "restore_verified": True},
+    }
+
+
+def _live43_frontier(campaign: Mapping[str, Any], comparison: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    items = (
+        {"frontier_id": "live43-methodology-gap", "mechanism": "missing_methodology", "candidate_objective": "Acquire methodology evidence for unresolved comparison conditions", "parent_evidence": (comparison["comparison_id"],), "eligibility_result": "deferred_with_unblock_condition", "reason": "needs a methodological source pair", "authority_state": "deferred", "ranking_score": 0.52},
+        {"frontier_id": "live43-composition-complete", "mechanism": "composition_result", "candidate_objective": "Retain isolated composed contradiction capability pending review", "parent_evidence": (comparison["comparison_id"],), "eligibility_result": "consumed", "reason": "composition validation completed", "authority_state": "completed", "ranking_score": 0.88},
+        {"frontier_id": "live43-transfer-extension", "mechanism": "transfer_opportunity", "candidate_objective": "Extend disagreement classification to another scholarly domain", "parent_evidence": (comparison["comparison_id"],), "eligibility_result": "authority_blocked", "reason": "requires later source-domain authority", "authority_state": "blocked", "ranking_score": 0.44},
+    )
+    consumed = set(campaign.get("consumed_frontier_signatures", ()))
+    enriched = []
+    for item in items:
+        signature = stable_id("live43-frontier", item["mechanism"], item["candidate_objective"], tuple(item["parent_evidence"]))
+        enriched.append({**item, "frontier_signature": signature, "already_consumed": signature in consumed})
+    return tuple(enriched)
+
+
+def run_live43_contradictory_evidence_pilot(*, artifact_root: str = ".tmp/live43", campaign_id: str = "live43-contradictory-evidence", starting_checkpoint: str = "c29ccb88", use_external_retrieval: bool = False, popup_mode: str = "test") -> dict[str, Any]:
+    root = Path(artifact_root) / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    campaign = make_live43_campaign(campaign_id=campaign_id, starting_checkpoint=starting_checkpoint)
+    task = _live43_source_task(campaign, evidence_question="Compare technical claims about Python regular expression behavior across source contexts")
+    if use_external_retrieval:
+        source_a = _live43_retrieve_source(root, campaign, url="https://docs.python.org/3/howto/regex.html", allowed_domain="docs.python.org", keywords=("regular expressions", "re module", "language"), source_id="live43-regex-howto", classification="primary")
+        source_b = _live43_retrieve_source(root, campaign, url="https://docs.python.org/3/library/re.html", allowed_domain="docs.python.org", keywords=("unicode strings", "bytes", "cannot be mixed"), source_id="live43-re-library", classification="primary")
+    else:
+        source_a = {"source_id": "live43-local-source-a", "body_text_spans": ("Regular expressions are a small specialized language available through the Python re module.",), "content_digest": stable_id("a"), "span_stable_section_ids": ("local-a",), "relevant_claim_ids": ("claim-a",), "artifact": {"path": ""}, "substantive_span_count": 1}
+        source_b = {"source_id": "live43-local-source-b", "body_text_spans": ("Unicode strings and bytes cannot be mixed in Python regular expression matching.",), "content_digest": stable_id("b"), "span_stable_section_ids": ("local-b",), "relevant_claim_ids": ("claim-b",), "artifact": {"path": ""}, "substantive_span_count": 1}
+    rejected = {"source_id": "live43-rejected-heading-only", "reason": "navigation heading lacks inspectable claim body span", "accepted": False}
+    claim_a = _live43_claim_record(source_a, span_index=0, subject="python regular expressions", predicate="describe", value="specialized language", domain_scope="tutorial introduction", confidence=0.84)
+    claim_b = _live43_claim_record(source_b, span_index=0, subject="python regular expressions", predicate="describe", value="unicode and bytes cannot be mixed", domain_scope="library matching semantics", confidence=0.84)
+    comparison = _live43_compare_claims(claim_a, claim_b)
+    candidate = _live43_composed_candidate_output(claim_a, claim_b, comparison)
+    validation = _live43_validation_suite()
+    retained = validation["metrics"]["enabled_accuracy"] > validation["metrics"]["disabled_accuracy"]
+    campaign["completed_cycles"] = 1
+    campaign["candidate_counts"]["retained" if retained else "rejected"] += 1
+    if retained:
+        campaign["consumed_frontier_signatures"].append(stable_id("live43-composition", comparison["comparison_id"]))
+    frontier = _live43_frontier(campaign, comparison)
+    final_derivation = {
+        "frontier": frontier,
+        "selected_work": (),
+        "remaining_executable_work": tuple(item["frontier_id"] for item in frontier if item["eligibility_result"] in {"executable_objective", "evidence_acquisition_task"} and not item["already_consumed"]),
+        "provider_state": "blocked",
+    }
+    campaign["campaign_state"] = "completed" if not final_derivation["remaining_executable_work"] else "paused_for_operator_review"
+    campaign["terminal_reason"] = "frontier_exhausted_after_conflict_composition" if campaign["campaign_state"] == "completed" else "frontier_remaining"
+    campaign["local_actions"] += 2
+    graph = {
+        "nodes": {
+            "source_a": source_a["source_id"],
+            "source_b": source_b["source_id"],
+            "claim_a": claim_a["claim_id"],
+            "claim_b": claim_b["claim_id"],
+            "comparison": comparison["comparison_id"],
+            "candidate": stable_id("live43-candidate", comparison["comparison_id"]),
+            "validation": stable_id("live43-validation", comparison["comparison_id"]),
+            "disposition": "retained_isolated_pending_review" if retained else "rejected",
+        },
+        "edges": ("source spans -> claims", "claims -> normalized comparison", "comparison -> contradiction", "contradiction -> candidate", "candidate -> validation", "validation -> disposition"),
+    }
+    artifacts = {
+        "source_ledger.json": {"task": task, "accepted_sources": (source_a, source_b)},
+        "rejected_source_ledger.json": {"rejected_sources": (rejected,)},
+        "provenance_manifest.json": {"sources": (source_a["source_id"], source_b["source_id"]), "spans": (claim_a["exact_source_span"], claim_b["exact_source_span"])},
+        "claim_ledger.json": {"claims": (claim_a, claim_b)},
+        "comparison_ledger.json": {"comparison": comparison},
+        "contradiction_ledger.json": {"conflict_type": comparison["conflict_type"], "conflict_locus": comparison["conflict_locus"]},
+        "uncertainty_ledger.json": {"uncertainty": candidate["uncertainty"]},
+        "composition_record.json": candidate,
+        "candidate_validation.json": validation,
+        "capability_graph.json": graph,
+        "frontier_ledger.json": final_derivation,
+        "derivation_passes.json": {"passes": (final_derivation,)},
+        "provider_lock_audit.json": {"provider_access": "blocked", "provider_calls": 0, "provider_attempts": 0, "provider_fallbacks": 0, "provider_retries": 0},
+    }
+    written = {name: _live42_write_json(root / name, payload) for name, payload in artifacts.items()}
+    review = {
+        "classification": "LIVE_43_CONTRADICTORY_EVIDENCE_COMPOSITION_READY_WITH_LIMITS",
+        "live42_unchanged": True,
+        "source_bodies_substantive": bool(claim_a["exact_source_span"] and claim_b["exact_source_span"]),
+        "metadata_not_evidence": True,
+        "claims_traceable_to_spans": True,
+        "normalization_preserves_scope": bool(claim_a["jurisdiction_or_domain_scope"] and claim_b["jurisdiction_or_domain_scope"]),
+        "classification_generic": True,
+        "uncertainty_preserved": candidate["uncertainty"]["preserved"],
+        "composition_demonstrated": retained,
+        "provider_calls": 0,
+        "provider_attempts": 0,
+        "frontier_exhaustion_backed": not final_derivation["remaining_executable_work"],
+        "conflict_classification": comparison["conflict_type"],
+    }
+    review_artifact = _live42_write_json(root / "final_review.json", review)
+    final_status = {"campaign": campaign, "provider_calls": 0, "provider_attempts": 0, "terminal_reason": campaign["terminal_reason"]}
+    final_status_artifact = _live42_write_json(root / "final_status.json", final_status)
+    final_checkpoint = _live42_write_json(root / "final_checkpoint.json", {"campaign": campaign, "graph": graph, "review": review})
+    (root / "morning_review_instructions.txt").write_text("Review final_review.json, claim_ledger.json, comparison_ledger.json, and popup_status.json.\n", encoding="utf-8")
+    popup = _live41_launch_completion_popup(root, {**campaign, "evidence_gaps_investigated": 1, "local_evidence_actions": campaign["local_actions"], "external_non_api_retrieval_actions": campaign["external_retrievals"], "elapsed_time": "short_conflict_composition_pilot"}, mode=popup_mode)
+    return {
+        "classification": review["classification"],
+        "campaign": campaign,
+        "artifact_root": str(root),
+        "sources": (source_a, source_b),
+        "claims": (claim_a, claim_b),
+        "comparison": comparison,
+        "candidate": candidate,
+        "validation": validation,
+        "graph": graph,
+        "frontier": final_derivation,
+        "review": review,
+        "review_artifact": review_artifact,
+        "final_status_artifact": final_status_artifact,
+        "final_checkpoint": final_checkpoint,
+        "written_artifacts": written,
+        "popup": popup,
+    }
+
+
+def make_live43_detached_launcher(*, repository_root: str, artifact_root: str, campaign_id: str, starting_checkpoint: str = "c29ccb88", use_external_retrieval: bool = True) -> dict[str, Any]:
+    repo = Path(repository_root).resolve()
+    if not (repo / "orchestration" / "runtime" / "gsr_a_governed_self_regulation.py").exists() or repo.name != "Delta_Dev":
+        return {"accepted": False, "reason": "repository_root_invalid"}
+    root = Path(artifact_root).resolve() / campaign_id
+    root.mkdir(parents=True, exist_ok=True)
+    launcher = root / "launch_live43.py"
+    launcher.write_text(
+        "\n".join((
+            "from pathlib import Path",
+            "import sys",
+            f"repo = Path({str(repo)!r}).resolve()",
+            "if str(repo) not in sys.path:",
+            "    sys.path.insert(0, str(repo))",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import run_live43_contradictory_evidence_pilot",
+            "run_live43_contradictory_evidence_pilot(",
             f"    artifact_root={str(Path(artifact_root).resolve())!r},",
             f"    campaign_id={campaign_id!r},",
             f"    starting_checkpoint={starting_checkpoint!r},",

@@ -5572,6 +5572,108 @@ def test_live_42_detached_launcher_binds_repo(tmp_path):
     assert denied["accepted"] is False
 
 
+def _live43_test_claim(source_id, value, **kwargs):
+    source = {"source_id": source_id, "body_text_spans": (f"{source_id} states value {value} for a technical claim under its stated scope.",)}
+    return gsr._live43_claim_record(source, span_index=0, subject=kwargs.pop("subject", "technical claim"), predicate=kwargs.pop("predicate", "is"), value=value, **kwargs)
+
+
+def test_live_43_popup_title_derives_from_campaign_id(tmp_path):
+    assert gsr._live_completion_popup_title("live43-demo") == "DELTA LIVE-43 Complete"
+    assert gsr._live_completion_popup_title("live42-demo") == "DELTA LIVE-42 Complete"
+    assert gsr._live_completion_popup_title("live57-demo") == "DELTA LIVE-57 Complete"
+    assert gsr._live_completion_popup_title("campaign-demo") == "DELTA Campaign Complete"
+
+    campaign = {"campaign_id": "live43-popup", "campaign_state": "completed", "terminal_reason": "done", "completed_cycles": 1, "evidence_gaps_investigated": 1, "local_evidence_actions": 1, "external_non_api_retrieval_actions": 0}
+    popup = gsr._live41_launch_completion_popup(tmp_path, campaign, mode="test")
+    status = json.loads((tmp_path / "popup_status.json").read_text(encoding="utf-8"))
+    assert popup["title"] == "DELTA LIVE-43 Complete"
+    assert status["title"] == popup["title"]
+
+
+def test_live_43_conflict_classifier_covers_all_classes():
+    base = _live43_test_claim("A", "enabled")
+    factual = gsr._live43_compare_claims(base, _live43_test_claim("B", "disabled"))
+    version = gsr._live43_compare_claims(_live43_test_claim("C", "enabled", version_context="v1"), _live43_test_claim("D", "disabled", version_context="v2"))
+    terminology = gsr._live43_compare_claims(_live43_test_claim("E", "regex", predicate="regular expression"), _live43_test_claim("F", "regular expression", predicate="regex"))
+    scope = gsr._live43_compare_claims(_live43_test_claim("G", "enabled", domain_scope="browser"), _live43_test_claim("H", "disabled", domain_scope="server"))
+    methodology = gsr._live43_compare_claims(_live43_test_claim("I", "fast", methodology_context="benchmark"), _live43_test_claim("J", "slow", methodology_context="case study"))
+    conditional = gsr._live43_compare_claims(_live43_test_claim("K", "safe", qualifiers=("when provenance exists",)), _live43_test_claim("L", "safe", qualifiers=("when provenance absent",)))
+    weak = dict(_live43_test_claim("M", "safe"))
+    weak["exact_source_span"] = ""
+    weak["confidence"] = 0.2
+    source_quality = gsr._live43_compare_claims(weak, _live43_test_claim("N", "safe"))
+    no_conflict = gsr._live43_compare_claims(_live43_test_claim("O", "compatible"), _live43_test_claim("P", "compatible"))
+
+    assert factual["conflict_type"] == "factual_conflict"
+    assert version["conflict_type"] == "version_difference"
+    assert terminology["conflict_type"] == "terminology_difference"
+    assert scope["conflict_type"] == "scope_difference"
+    assert methodology["conflict_type"] == "methodology_difference"
+    assert conditional["conflict_type"] == "conditional_or_contextual_difference"
+    assert source_quality["conflict_type"] == "source_quality_difference"
+    assert no_conflict["conflict_type"] == "no_material_conflict"
+
+
+def test_live_43_claim_normalization_preserves_scope_and_span():
+    source = {"source_id": "paper-a", "body_text_spans": ("Under Python 3.12, bytes patterns cannot match Unicode strings in the documented matching operation.",)}
+    claim = gsr._live43_claim_record(source, span_index=0, subject="Python regex", predicate="cannot mix", value="bytes and unicode", qualifiers=("under documented matching",), temporal_scope="current docs", domain_scope="Python", version_context="3.12", methodology_context="documentation")
+
+    assert claim["exact_source_span"].startswith("Under Python 3.12")
+    assert claim["normalized_subject"] == "python regex"
+    assert claim["qualifiers"] == ("under documented matching",)
+    assert claim["version_context"] == "3.12"
+    assert claim["jurisdiction_or_domain_scope"] == "python"
+
+
+def test_live_43_composed_candidate_preserves_uncertainty():
+    claim_a = _live43_test_claim("A", "enabled")
+    claim_b = _live43_test_claim("B", "disabled")
+    comparison = gsr._live43_compare_claims(claim_a, claim_b)
+    candidate = gsr._live43_composed_candidate_output(claim_a, claim_b, comparison)
+
+    assert candidate["conflict_type"] == "factual_conflict"
+    assert candidate["exact_source_spans"][0]
+    assert candidate["uncertainty"]["preserved"] is True
+    assert candidate["unsupported_synthesis"] is False
+
+
+def test_live_43_disposable_pilot_writes_composition_package(tmp_path):
+    result = gsr.run_live43_contradictory_evidence_pilot(artifact_root=str(tmp_path), campaign_id="live43-pilot", use_external_retrieval=False, popup_mode="test")
+    root = Path(result["artifact_root"])
+
+    assert result["classification"] == "LIVE_43_CONTRADICTORY_EVIDENCE_COMPOSITION_READY_WITH_LIMITS"
+    assert result["campaign"]["provider_calls"] == 0
+    assert result["campaign"]["provider_attempts"] == 0
+    assert result["review"]["composition_demonstrated"] is True
+    assert result["candidate"]["uncertainty"]["preserved"] is True
+    assert result["validation"]["causal_disable_restore"]["enabled_outperforms_disabled"] is True
+    assert result["graph"]["edges"][0] == "source spans -> claims"
+    assert result["popup"]["title"] == "DELTA LIVE-43 Complete"
+    for name in ("source_ledger.json", "rejected_source_ledger.json", "provenance_manifest.json", "claim_ledger.json", "comparison_ledger.json", "contradiction_ledger.json", "uncertainty_ledger.json", "composition_record.json", "candidate_validation.json", "capability_graph.json", "frontier_ledger.json", "derivation_passes.json", "provider_lock_audit.json", "popup_status.json"):
+        assert (root / name).exists()
+
+
+def test_live_43_external_pilot_uses_substantive_body_spans(tmp_path):
+    result = gsr.run_live43_contradictory_evidence_pilot(artifact_root=str(tmp_path), campaign_id="live43-external", use_external_retrieval=True, popup_mode="test")
+
+    assert result["campaign"]["external_retrievals"] == 2
+    assert all(source["substantive_span_count"] > 0 for source in result["sources"])
+    assert all("og:description" not in " ".join(source["body_text_spans"]).lower() for source in result["sources"])
+    assert all("table of contents" not in " ".join(source["body_text_spans"]).lower() for source in result["sources"])
+    assert all("theme auto" not in " ".join(source["body_text_spans"]).lower() for source in result["sources"])
+    assert result["comparison"]["conflict_type"] in {"scope_difference", "no_material_conflict", "factual_conflict", "conditional_or_contextual_difference"}
+    assert result["popup"]["title"] == "DELTA LIVE-43 Complete"
+
+
+def test_live_43_detached_launcher_binds_repo(tmp_path):
+    launcher = gsr.make_live43_detached_launcher(repository_root=str(Path.cwd()), artifact_root=str(tmp_path), campaign_id="live43-launch")
+    denied = gsr.make_live43_detached_launcher(repository_root=str(tmp_path), artifact_root=str(tmp_path), campaign_id="live43-denied")
+
+    assert launcher["accepted"] is True
+    assert Path(launcher["launcher_path"]).exists()
+    assert denied["accepted"] is False
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
