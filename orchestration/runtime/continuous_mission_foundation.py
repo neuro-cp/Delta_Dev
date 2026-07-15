@@ -629,7 +629,14 @@ def assess_main_goal_completion(
             "newly_discovered_prerequisites": tuple(dict.fromkeys(newly_discovered + missing)),
             "disposition": "partially_satisfied",
             "residual_uncertainty": f"frontier empty but required criteria remain: {', '.join(missing)}",
-            "completion_rationale": "empty frontier is not completion; remaining criteria must produce new subgoals or a block",
+            "completion_rationale": (
+                "empty frontier is not completion; remaining criteria must produce new subgoals or a block"
+                if not main_goal.next_main_goal_candidates or not main_goal.completion_rationale
+                else (
+                    "empty frontier is not completion; remaining criteria must produce new subgoals or a block; "
+                    f"prior_active_rationale={main_goal.completion_rationale}"
+                )
+            ),
         }
     )
 
