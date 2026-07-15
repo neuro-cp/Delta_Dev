@@ -5310,7 +5310,7 @@ def test_live_40_campaign_contract_deadlines_and_boundaries():
     assert campaign["cumulative_provider_actions"] == 0
 
 
-def test_live_40_disposable_pilot_derives_from_graph_and_saturates(tmp_path):
+def test_live_40_disposable_pilot_derives_from_graph_and_repairs_more_evidence(tmp_path):
     result = gsr.run_live40_disposable_sustained_pilot(artifact_root=str(tmp_path), campaign_id="live40-pilot", use_real_provider=False)
     campaign = result["campaign"]
 
@@ -5318,13 +5318,26 @@ def test_live_40_disposable_pilot_derives_from_graph_and_saturates(tmp_path):
     assert result["post_seed_objectives_derive_from_graph"] is True
     assert result["static_catalog_controls_sequence"] is False
     assert result["queue_empty_requires_derivation"] is True
-    assert result["saturation_requires_two_empty_passes"] is True
-    assert result["runtime_stops_after_saturation"] is True
-    assert campaign["final_disposition"] == "honest_saturation_after_two_derivation_passes"
-    assert campaign["campaign_state"] == "saturated"
+    assert result["saturation_requires_two_empty_passes"] is False
+    assert result["runtime_stops_after_saturation"] is False
+    assert result["more_evidence_creates_local_evidence_task"] is True
+    assert result["renewed_admissibility_created"] is True
+    assert campaign["final_disposition"] == "more_evidence_transition_repaired_pending_next_cycle"
+    assert campaign["campaign_state"] == "paused_for_operator_review"
+    assert campaign["saturation_passes"] == 0
     assert campaign["completed_cycles"]
     assert campaign["candidate_counts"]["retained"] == 1
     assert campaign["candidate_counts"]["rejected"] == 1
+    renewed = result["derivation"]["renewed_admissibility"]["proposal"]
+    assert renewed["proposed_objective"] != "Build a dependency-identifier parser that preserves the actual cited digest before contradiction classification"
+    assert "held_out" in renewed["proposed_objective"]
+    assert "transfer" in renewed["proposed_objective"]
+    assert "Q7" not in renewed["intended_measurable_effect"]
+    assert "non-H1" not in renewed["intended_measurable_effect"]
+    assert result["derivation"]["acquired_evidence"]["dependency_identity_mismatches"]
+    assert result["derivation"]["generated_objectives"]
+    assert result["derivation"]["empty_derivation_pass"] is False
+    assert Path(result["derivation_artifact"]["path"]).exists()
     assert Path(result["seed_artifact"]["path"]).exists()
     assert Path(result["review_artifact"]["path"]).exists()
 
@@ -5341,6 +5354,7 @@ def test_live_40_budget_restart_and_provider_duplicate_guards(tmp_path):
     assert campaign["output_tokens"] >= 0
     assert campaign["cost_states"] == ("unavailable_from_provider_response",)
     assert campaign["cumulative_source_actions"] == 0
+    assert campaign["cumulative_local_actions"] > result["derivation"]["acquired_evidence"]["local_actions_used"]
 
 
 def test_live_40_status_checkpoint_and_emergency_stop_paths(tmp_path):
@@ -5365,6 +5379,20 @@ def test_live_40_no_promotion_or_autonomous_git_in_pilot(tmp_path):
     assert result["autonomous_git_possible"] is False
     assert result["campaign"]["no_automatic_promotion"] is True
     assert result["campaign"]["no_autonomous_git"] is True
+
+
+def test_live_40_adversarial_scorer_requires_dependency_identity():
+    case = {"case_id": "adv-q7", "input": "Do not use the string H1. Claim A depends on source digest Q7 and it is contradicted.", "control": False}
+    wrong = {"dependency": "source hash H1", "contradiction_state": "disputed"}
+    right = {"dependency": "source digest Q7", "contradiction_state": "disputed"}
+    generic = {"case_id": "adv-r9", "input": "Claim A depends on guideline digest R9 while another record is disputed.", "control": False}
+    generic_wrong = {"dependency": "source digest Q7", "contradiction_state": "disputed"}
+    generic_right = {"dependency": "guideline digest R9", "contradiction_state": "disputed"}
+
+    assert gsr._live38_score_case(case, wrong) is False
+    assert gsr._live38_score_case(case, right) is True
+    assert gsr._live38_score_case(generic, generic_wrong) is False
+    assert gsr._live38_score_case(generic, generic_right) is True
 
 
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():

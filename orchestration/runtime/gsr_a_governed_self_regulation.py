@@ -15,6 +15,7 @@ import json
 import math
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -28080,10 +28081,25 @@ def _live38_candidate_handler(case: Mapping[str, Any], *, enabled: bool = True) 
     return {"claim": "Claim A", "dependency": dependency, "contradiction_state": contradiction}
 
 
+def _live38_expected_dependency_marker(text: str) -> str:
+    match = re.search(r"\b(?:depends\s+on|(?:remains\s+)?tied\s+to)\b(?P<segment>[^.;:,]+)", text, re.IGNORECASE)
+    if not match:
+        return ""
+    segment = re.split(r"\b(?:and|but|while|although|though|later|even)\b", match.group("segment"), maxsplit=1, flags=re.IGNORECASE)[0]
+    tokens = re.findall(r"\b[A-Za-z][A-Za-z0-9_-]*\b", segment)
+    stopwords = {"source", "hash", "digest", "guideline", "evidence", "claim", "premise", "record", "identifier"}
+    candidates = [token for token in tokens if token.lower() not in stopwords]
+    return candidates[-1] if candidates else ""
+
+
 def _live38_score_case(case: Mapping[str, Any], output: Mapping[str, Any]) -> bool:
     if case.get("control"):
         return output.get("answer") == "LIVE38-CONTROL"
-    return bool(output.get("dependency")) and output.get("contradiction_state") == "disputed"
+    text = str(case.get("input", ""))
+    expected_dependency = _live38_expected_dependency_marker(text)
+    dependency = str(output.get("dependency", ""))
+    dependency_matches = bool(dependency) and (not expected_dependency or expected_dependency in dependency)
+    return dependency_matches and output.get("contradiction_state") == "disputed"
 
 
 def run_live38_candidate_validation(root: Path, design: Mapping[str, Any]) -> dict[str, Any]:
@@ -28837,6 +28853,186 @@ def _live40_checkpoint(root: Path, campaign: dict[str, Any], *, latest_artifact:
     return artifact
 
 
+def _live40_extract_frontier_items(live39: Mapping[str, Any]) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    for cycle in live39.get("cycles", ()):
+        validation = cycle.get("validation", {}) if isinstance(cycle.get("validation"), Mapping) else {}
+        if cycle.get("candidate_disposition") == "validated_isolated_pending_promotion_review":
+            metrics = validation.get("metrics", {}) if isinstance(validation.get("metrics"), Mapping) else {}
+            items.append({
+                "frontier_id": stable_id("live40-frontier-retained", cycle.get("cycle_id", "")),
+                "frontier_type": "retained_candidate_limitation",
+                "parent_evidence": cycle.get("validation_bundle_id", ""),
+                "candidate_objective": "expand retained candidate beyond narrow identifier coverage",
+                "novelty_result": "requires expanded transfer evidence before promotion",
+                "eligibility_result": "deferred_with_unblock_condition",
+                "reason": "pending promotion limitations remain isolated; live promotion is outside LIVE-40 authority",
+                "ranking_score": 0.43,
+            })
+        if cycle.get("candidate_disposition") == "rejected":
+            items.append({
+                "frontier_id": stable_id("live40-frontier-rejected", cycle.get("cycle_id", "")),
+                "frontier_type": "rejected_candidate_follow_up",
+                "parent_evidence": cycle.get("validation_bundle_id", ""),
+                "candidate_objective": "derive narrower dependency-identity mechanism from rejected candidate evidence",
+                "novelty_result": "novel failure evidence from held-out and transfer groups",
+                "eligibility_result": "executable_objective",
+                "reason": "rejection created a narrower local diagnostic opportunity",
+                "ranking_score": 0.78,
+            })
+        if cycle.get("admissibility", {}).get("outcome") == "more_evidence_required":
+            items.append({
+                "frontier_id": stable_id("live40-frontier-more-evidence", cycle.get("cycle_id", "")),
+                "frontier_type": "more_evidence_required",
+                "parent_evidence": tuple(cycle.get("packet", {}).get("exact_evidence_ids", ())),
+                "candidate_objective": "perform local error analysis for dependency identifier generalization before redesign",
+                "novelty_result": "missing evidence explicitly requested by admissibility",
+                "eligibility_result": "evidence_acquisition_task",
+                "reason": "local evidence can inspect held-out and transfer failure records without source expansion",
+                "ranking_score": 0.91,
+            })
+        if cycle.get("follow_up_proposal_id"):
+            items.append({
+                "frontier_id": stable_id("live40-frontier-followup", cycle.get("follow_up_proposal_id", "")),
+                "frontier_type": "follow_up_proposal",
+                "parent_evidence": cycle.get("validation_bundle_id", ""),
+                "candidate_objective": cycle.get("follow_up_proposal_id", ""),
+                "novelty_result": "provider follow-up generated after validation",
+                "eligibility_result": "candidate_objective_available",
+                "reason": "follow-up remains eligible unless superseded by stronger evidence-acquisition task",
+                "ranking_score": 0.66,
+            })
+    deduped: dict[str, dict[str, Any]] = {}
+    for item in items:
+        deduped[item["frontier_id"]] = item
+    return list(deduped.values())
+
+
+def _live40_run_local_evidence_acquisition(root: Path, live39: Mapping[str, Any], frontier_item: Mapping[str, Any]) -> dict[str, Any]:
+    rejected = next((cycle for cycle in live39.get("cycles", ()) if cycle.get("candidate_disposition") == "rejected"), {})
+    validation = rejected.get("validation", {}) if isinstance(rejected.get("validation"), Mapping) else {}
+    metrics = validation.get("metrics", {}) if isinstance(validation.get("metrics"), Mapping) else {}
+    raw_outputs = validation.get("raw_outputs", {}) if isinstance(validation.get("raw_outputs"), Mapping) else {}
+    failed_groups = tuple(group for group, metric in metrics.items() if metric.get("enabled_accuracy", 0.0) < 1.0 and group != "controls")
+    mismatches = []
+    for group in failed_groups:
+        for record in raw_outputs.get(group, ()):
+            if not isinstance(record, Mapping):
+                continue
+            case = record.get("case", {}) if isinstance(record.get("case"), Mapping) else {}
+            enabled_output = record.get("enabled_output", {}) if isinstance(record.get("enabled_output"), Mapping) else {}
+            expected = _live38_expected_dependency_marker(str(case.get("input", "")))
+            actual = str(enabled_output.get("dependency", ""))
+            if expected and expected not in actual:
+                mismatches.append({"group": group, "case_id": case.get("case_id", ""), "expected_dependency_marker": expected, "actual_dependency": actual})
+            elif expected and not actual:
+                mismatches.append({"group": group, "case_id": case.get("case_id", ""), "expected_dependency_marker": expected, "actual_dependency": ""})
+    finding = "enabled output does not preserve the dependency identity requested by failed held-out or transfer records" if mismatches else "failed records require local dependency-identity analysis before renewed admissibility"
+    acquired = {
+        "task_id": stable_id("live40-local-evidence", frontier_item.get("frontier_id", "")),
+        "frontier_id": frontier_item.get("frontier_id", ""),
+        "evidence_type": "local_error_analysis",
+        "parent_evidence": frontier_item.get("parent_evidence", ()),
+        "failed_groups": failed_groups,
+        "raw_output_excerpt": {group: raw_outputs.get(group, ()) for group in failed_groups},
+        "dependency_identity_mismatches": tuple(mismatches),
+        "finding": finding,
+        "next_transition": "rebuild evidence packet for renewed admissibility",
+        "source_actions_used": 0,
+        "provider_actions_used": 0,
+        "local_actions_used": 1,
+    }
+    artifact = _live40_write_json(root / "derivation" / f"{acquired['task_id']}.json", acquired)
+    return {**acquired, "artifact": artifact}
+
+
+def _live40_make_revised_evidence_packet(root: Path, campaign: Mapping[str, Any], acquired: Mapping[str, Any]) -> dict[str, Any]:
+    packet = {
+        "packet_id": stable_id("live40-revised-packet", campaign["campaign_id"], acquired.get("task_id", "")),
+        "campaign_id": campaign["campaign_id"],
+        "parent_mission": campaign["parent_mission"],
+        "exact_evidence_ids": (str(acquired.get("task_id", "")),),
+        "raw_evidence_records": (dict(acquired),),
+        "sealed_data_exclusions": ("held_out_expected_answers", "hidden_scoring_labels", "sealed_transfer_labels"),
+        "authorized_scope": ("local_evidence_analysis", "provider_advisory_judgment"),
+        "unblock_condition_satisfied": bool(acquired.get("failed_groups")),
+        "packet_digest": "",
+    }
+    packet["packet_digest"] = _live38_json_digest(packet)
+    artifact = _live40_write_json(root / "derivation" / "revised_evidence_packet.json", packet)
+    return {**packet, "artifact": artifact}
+
+
+def _live40_renewed_admissibility_from_acquired_evidence(root: Path, packet: Mapping[str, Any]) -> dict[str, Any]:
+    evidence_id = packet["exact_evidence_ids"][0]
+    evidence_record = packet.get("raw_evidence_records", ({},))[0] if packet.get("raw_evidence_records") else {}
+    failed_groups = tuple(evidence_record.get("failed_groups", ())) if isinstance(evidence_record, Mapping) else ()
+    group_label = ", ".join(str(group) for group in failed_groups) if failed_groups else "failed validation"
+    proposal = {
+        "proposed_objective": f"Preserve cited dependency identifiers in {group_label} records before contradiction classification",
+        "target_capability": "identifier_preserving_dependency_generalization",
+        "intended_measurable_effect": f"{group_label} cases preserve the cited dependency identity through contradiction classification",
+        "novelty_rationale": "derived from local error analysis after more_evidence_required",
+        "expected_reusable_value": 0.82,
+        "dependency_value": 0.88,
+        "transfer_value": 0.84,
+        "proposed_validation_plan": "focused, held-out, transfer, adversarial, and control cases with varied dependency identifiers",
+        "falsification_criteria": "output substitutes a different identifier or drops dependency identity",
+        "estimated_implementation_scope": "isolated disposable candidate artifact",
+        "authority_requirements": ["local_governed_candidate"],
+        "reversibility": 0.95,
+        "uncertainty": 0.24,
+        "stop_condition": "identifier preservation fails or controls regress",
+        "parent_evidence_ids": [evidence_id],
+    }
+    diagnosis = {
+        "first_incorrect_transition": "local evidence record enters candidate -> dependency identity collapses before contradiction classification",
+        "supporting_evidence_ids": [evidence_id],
+        "falsifying_observations": ["varied cited dependency identifiers preserved through contradiction classification"],
+    }
+    decision = validate_live39_objective_proposal(proposal, diagnosis, packet)
+    artifact = _live40_write_json(root / "derivation" / "renewed_admissibility_decision.json", {"proposal": proposal, "decision": decision})
+    return {"proposal": proposal, "decision": decision, "artifact": artifact}
+
+
+def _live40_derivation_pass(root: Path, campaign: dict[str, Any], live39: Mapping[str, Any], *, pass_number: int, previous_artifact: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    frontier = _live40_extract_frontier_items(live39)
+    considered = []
+    generated: list[dict[str, Any]] = []
+    acquired: dict[str, Any] = {}
+    revised_packet: dict[str, Any] = {}
+    renewed: dict[str, Any] = {}
+    for item in frontier:
+        row = {
+            "candidate_objective": item["candidate_objective"],
+            "parent_evidence": item["parent_evidence"],
+            "novelty_result": item["novelty_result"],
+            "eligibility_result": item["eligibility_result"],
+            "rejection_or_defer_reason": item["reason"],
+            "ranking_score": item["ranking_score"],
+        }
+        considered.append(row)
+        if item["eligibility_result"] == "evidence_acquisition_task" and not acquired:
+            acquired = _live40_run_local_evidence_acquisition(root, live39, item)
+            revised_packet = _live40_make_revised_evidence_packet(root, campaign, acquired)
+            renewed = _live40_renewed_admissibility_from_acquired_evidence(root, revised_packet)
+            generated.append({"generated_type": "local_evidence_acquisition", "artifact": acquired["artifact"], "renewed_admissibility": renewed["decision"]})
+    complete = {
+        "pass_id": stable_id("live40-derivation-pass", campaign["campaign_id"], pass_number, tuple(item["frontier_id"] for item in frontier)),
+        "pass_number": pass_number,
+        "created_at": utc_now(),
+        "frontier_count": len(frontier),
+        "candidate_table": considered,
+        "generated_objectives": generated,
+        "previous_pass_digest": previous_artifact.get("digest", "") if previous_artifact else "",
+        "materially_changed_inputs": bool(generated) or (previous_artifact is None),
+        "empty_derivation_pass": len(generated) == 0,
+        "saturation_eligible": len(generated) == 0 and all(item["eligibility_result"] not in {"evidence_acquisition_task", "executable_objective", "candidate_objective_available"} for item in frontier),
+    }
+    artifact = _live40_write_json(root / "derivation" / f"derivation_pass_{pass_number:03d}.json", complete)
+    return {**complete, "artifact": artifact, "acquired_evidence": acquired, "revised_packet": revised_packet, "renewed_admissibility": renewed}
+
+
 def run_live40_disposable_sustained_pilot(*, artifact_root: str = ".tmp/live40", campaign_id: str = "live40-disposable-pilot", starting_checkpoint: str = "b66833c7", use_real_provider: bool = False) -> dict[str, Any]:
     root = Path(artifact_root) / campaign_id
     root.mkdir(parents=True, exist_ok=True)
@@ -28850,24 +29046,25 @@ def run_live40_disposable_sustained_pilot(*, artifact_root: str = ".tmp/live40",
     seed_artifact = _live40_write_json(root / "evidence" / "seed_baseline.json", seed)
     _live40_checkpoint(root, campaign, latest_artifact=seed_artifact["path"])
     live39 = run_live39_repeated_governed_judgment_pilot(artifact_root=str(root / "judgment"), campaign_id="live40-judgment-pilot", starting_checkpoint=starting_checkpoint, use_real_provider=use_real_provider)
-    campaign["completed_cycles"] = tuple(cycle["cycle_id"] for cycle in live39["cycles"][:2])
-    campaign["graph_frontier"] = tuple(sorted(live39["cycles"][1]["triggering_graph_frontier"]))
-    campaign["productive_derivation_passes"] = 2
-    campaign["saturation_passes"] = 2
+    campaign["completed_cycles"] = tuple(cycle["cycle_id"] for cycle in live39["cycles"])
+    campaign["graph_frontier"] = tuple(sorted(live39["cycles"][-1]["triggering_graph_frontier"]))
+    derivation = _live40_derivation_pass(root, campaign, live39, pass_number=1)
+    campaign["productive_derivation_passes"] = 1
+    campaign["saturation_passes"] = 0
     campaign["cumulative_provider_actions"] = live39["provider_call_count"]
     campaign["provider_attempts"] = live39["provider_attempt_count"]
     campaign["input_tokens"] = live39["input_tokens"]
     campaign["output_tokens"] = live39["output_tokens"]
-    campaign["cumulative_local_actions"] = live39["campaign"]["cumulative_local_actions"]
+    campaign["cumulative_local_actions"] = live39["campaign"]["cumulative_local_actions"] + int(bool(derivation.get("acquired_evidence")))
     campaign["candidate_counts"] = {
         "implemented": 2,
         "retained": int(any(c["candidate_disposition"] == "validated_isolated_pending_promotion_review" for c in live39["cycles"])),
         "rejected": int(any(c["candidate_disposition"] == "rejected" for c in live39["cycles"])),
         "deferred": int(any(c["admissibility"]["outcome"] == "more_evidence_required" for c in live39["cycles"])),
     }
-    campaign["campaign_state"] = "saturated"
-    campaign["final_disposition"] = "honest_saturation_after_two_derivation_passes"
-    final_checkpoint = _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+    campaign["campaign_state"] = "paused_for_operator_review"
+    campaign["final_disposition"] = "more_evidence_transition_repaired_pending_next_cycle"
+    final_checkpoint = _live40_checkpoint(root, campaign, latest_artifact=derivation["artifact"]["path"])
     emergency_stop_path = str(root / "EMERGENCY_STOP")
     review = {
         "accepted": bool(live39["accepted"]),
@@ -28876,12 +29073,16 @@ def run_live40_disposable_sustained_pilot(*, artifact_root: str = ".tmp/live40",
         "seed_artifact": seed_artifact,
         "live39_review_artifact": live39["review_artifact"],
         "checkpoint_artifact": final_checkpoint,
+        "derivation_artifact": derivation["artifact"],
+        "derivation": derivation,
         "emergency_stop_path": emergency_stop_path,
         "post_seed_objectives_derive_from_graph": True,
         "static_catalog_controls_sequence": False,
         "queue_empty_requires_derivation": True,
-        "saturation_requires_two_empty_passes": campaign["saturation_passes"] == 2,
-        "runtime_stops_after_saturation": True,
+        "saturation_requires_two_empty_passes": False,
+        "runtime_stops_after_saturation": False,
+        "more_evidence_creates_local_evidence_task": bool(derivation.get("acquired_evidence")),
+        "renewed_admissibility_created": bool(derivation.get("renewed_admissibility", {}).get("decision")),
         "provider_task_duplication_denied": len(live39["campaign"]["prior_provider_task_ids"]) == len(set(live39["campaign"]["prior_provider_task_ids"])),
         "restart_preserves_completed_provider_tasks": all(item["provider_tasks_not_repeated"] for item in live39["restart_records"]),
         "automatic_promotion_possible": False,
@@ -28927,17 +29128,31 @@ def run_live40_bounded_sustained_campaign_process(*, artifact_root: str, campaig
         campaign["campaign_state"] = "running" if time.monotonic() - campaign["monotonic_start"] < hard_seconds else "hard_deadline"
         final_checkpoint = _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
         final = {"campaign": campaign, "live39": live39, "final_checkpoint": final_checkpoint}
+        derivation = _live40_derivation_pass(root, campaign, live39, pass_number=1)
+        campaign["productive_derivation_passes"] += 1
+        campaign["cumulative_local_actions"] += int(bool(derivation.get("acquired_evidence")))
+        final["derivation"] = derivation
+        _live40_checkpoint(root, campaign, latest_artifact=derivation["artifact"]["path"])
+        if derivation.get("generated_objectives"):
+            campaign["campaign_state"] = "paused_for_operator_review"
+            campaign["final_disposition"] = "more_evidence_transition_repaired_pending_next_cycle"
+            _live40_checkpoint(root, campaign, latest_artifact=derivation["artifact"]["path"])
+            return final
         while time.monotonic() - campaign["monotonic_start"] < hard_seconds:
             if emergency_stop.exists():
                 campaign["campaign_state"] = "stopped"
                 campaign["final_disposition"] = "emergency_stop"
                 _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
                 break
-            campaign["saturation_passes"] += 1
+            derivation = _live40_derivation_pass(root, campaign, live39, pass_number=campaign["saturation_passes"] + 2, previous_artifact=derivation["artifact"])
+            if derivation["saturation_eligible"]:
+                campaign["saturation_passes"] += 1
+            else:
+                campaign["saturation_passes"] = 0
             if campaign["saturation_passes"] >= 2:
                 campaign["campaign_state"] = "saturated"
                 campaign["final_disposition"] = "honest_saturation_after_two_derivation_passes"
-                _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
+                _live40_checkpoint(root, campaign, latest_artifact=derivation["artifact"]["path"])
                 break
             time.sleep(5)
             _live40_checkpoint(root, campaign, latest_artifact=live39["review_artifact"]["path"])
