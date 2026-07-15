@@ -68,7 +68,19 @@ def _atomic_write_json(path: Path, payload: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    os.replace(tmp, path)
+    last_error: OSError | None = None
+    for _ in range(10):
+        try:
+            os.replace(tmp, path)
+            return
+        except OSError as exc:
+            last_error = exc
+            time.sleep(0.05)
+    try:
+        tmp.unlink(missing_ok=True)
+    finally:
+        if last_error is not None:
+            raise last_error
 
 
 def _read_json(path: Path) -> dict[str, Any]:
