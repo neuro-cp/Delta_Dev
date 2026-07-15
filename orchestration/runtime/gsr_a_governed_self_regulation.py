@@ -21,7 +21,7 @@ import shutil
 import subprocess
 import tempfile
 import time
-from typing import Any, Mapping, MutableMapping, get_args, get_origin
+from typing import Any, Mapping, MutableMapping, Sequence, get_args, get_origin
 from urllib.parse import urlparse
 from urllib.request import Request as UrlRequest
 from urllib.request import urlopen
@@ -30731,6 +30731,75 @@ def _live44_operator_decision_package(root: Path, campaign: MutableMapping[str, 
     return {**decision, "package_root": str(package_root), "review_summary": summary}
 
 
+def live44_decision_package_completeness(decision: Mapping[str, Any]) -> dict[str, Any]:
+    def present(value: Any) -> bool:
+        if value is None:
+            return False
+        if isinstance(value, str):
+            return bool(value.strip()) and value.strip().lower() not in {"missing", "unknown", "n/a"}
+        if isinstance(value, Mapping):
+            return bool(value) and all(present(item) for item in value.values())
+        if isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray)):
+            return bool(value) and all(present(item) for item in value)
+        return True
+
+    required = {
+        "exact_provider_selected_objective": decision.get("exact_provider_selected_objective"),
+        "provider_response_excerpt": decision.get("provider_response_excerpt"),
+        "specific_validation_weakness": decision.get("specific_validation_weakness"),
+        "local_evidence_records": decision.get("local_evidence_records"),
+        "proposed_isolated_candidate_behavior": decision.get("proposed_isolated_candidate_behavior"),
+        "focused_success_criteria": decision.get("focused_success_criteria"),
+        "held_out_adversarial_control_transfer_checks": decision.get("held_out_adversarial_control_transfer_checks"),
+        "rollback_condition": decision.get("rollback_condition"),
+        "duplicate_overlap_check": decision.get("duplicate_overlap_check"),
+        "expected_information_gain": decision.get("expected_information_gain"),
+        "estimated_local_actions_required": decision.get("estimated_local_actions_required"),
+    }
+    missing = tuple(name for name, value in required.items() if not present(value))
+    case_info = decision.get("specific_validation_weakness", {})
+    if isinstance(case_info, Mapping) and case_info.get("case_ids_or_metrics_present") is False:
+        missing = tuple(dict.fromkeys(missing + ("failing_case_ids_or_metrics",)))
+    return {
+        "complete": not missing,
+        "missing_fields": missing,
+        "decision_ready_for_operator": not missing,
+        "first_incorrect_transition_prevented": "incomplete_provider_result_to_operator_decision_popup",
+    }
+
+
+def live44_prepare_operator_popup_or_internal_resolution(root: Path, campaign: MutableMapping[str, Any], decision: Mapping[str, Any], *, provider_response: Mapping[str, Any], provider_request: Mapping[str, Any], popup_mode: str) -> dict[str, Any]:
+    completeness = live44_decision_package_completeness(decision)
+    package_root = Path(str(decision["package_root"]))
+    _live44_write_json(package_root / "decision_completeness.json", completeness)
+    if completeness["complete"]:
+        popup = _live44_launch_decision_popup(decision, mode=popup_mode)
+        return {"popup": popup, "decision": dict(decision), "completeness": completeness, "internal_resolution": None}
+
+    selected_objective = next(iter(provider_response.get("candidate_objectives", ())), "")
+    evidence_spans = tuple(provider_request.get("exact_evidence_spans", ()))
+    can_enrich_locally = bool(selected_objective and evidence_spans)
+    internal = {
+        "resolution_id": stable_id("live44-internal-resolution", decision["decision_id"], completeness["missing_fields"], selected_objective),
+        "decision_id": decision["decision_id"],
+        "resolution": "local_enrichment_required" if can_enrich_locally else "internal_denial_consumed",
+        "reason": "decision_package_not_complete_for_operator_review",
+        "missing_fields": completeness["missing_fields"],
+        "selected_objective": selected_objective,
+        "local_evidence_records": evidence_spans,
+        "next_transition": "existing_evidence_recompiled_to_materially_enriched_package" if can_enrich_locally else "branch_denied_and_signature_consumed",
+        "operator_popup_suppressed": True,
+        "provider_calls_added": 0,
+        "no_duplicate_request": True,
+        "timestamp": utc_now(),
+    }
+    _live44_write_json(package_root / "internal_resolution.json", internal)
+    _live44_write_json(package_root / "decision_state.json", {"decision_id": decision["decision_id"], "state": internal["resolution"]})
+    campaign["campaign_state"] = "local_enrichment_required" if can_enrich_locally else "branch_denied_internal"
+    campaign["pending_decision_id"] = ""
+    return {"popup": {"popup_created": False, "reason": "decision_package_incomplete", "mode": popup_mode}, "decision": dict(decision), "completeness": completeness, "internal_resolution": internal}
+
+
 def _live44_launch_decision_popup(decision: Mapping[str, Any], *, mode: str = "test") -> dict[str, Any]:
     package_root = Path(str(decision["package_root"]))
     title = "DELTA LIVE-44 Operator Decision"
@@ -30738,21 +30807,34 @@ def _live44_launch_decision_popup(decision: Mapping[str, Any], *, mode: str = "t
     if mode == "test":
         return {**payload, "popup_created": True, "popup_pid": 0, "mode": "test", "clipboard_summary_available": True, "buttons": ("Open Evidence Folder", "Copy Review Summary", "Accept", "Deny", "Request Revision", "Dismiss Without Decision")}
     script = package_root / "live44_operator_decision_popup.py"
+    repository_root = str(Path.cwd())
     script.write_text(
         "\n".join((
-            "import os, tkinter as tk",
+            "import os, sys, tkinter as tk",
+            f"sys.path.insert(0, {repository_root!r})",
+            "from orchestration.runtime.gsr_a_governed_self_regulation import live44_record_operator_decision",
             f"payload = {payload!r}",
             f"artifact_root = {str(package_root)!r}",
+            "def record(action):",
+            "    try:",
+            "        result = live44_record_operator_decision(artifact_root, action=action, note='operator popup button')",
+            "        status.config(text=f\"Recorded {result['exact_operator_action']} -> {result['new_state']}\")",
+            "        if action != 'DISMISS':",
+            "            root.after(350, root.destroy)",
+            "    except Exception as exc:",
+            "        status.config(text=f'Failed to record decision: {exc}')",
             "root = tk.Tk()",
             "root.title(payload['title'])",
             "tk.Label(root, text=payload['review_summary'], justify='left', padx=12, pady=12).pack()",
             "buttons = tk.Frame(root); buttons.pack(pady=8)",
             "tk.Button(buttons, text='Open Evidence Folder', command=lambda: os.startfile(artifact_root)).pack(side='left', padx=3)",
             "tk.Button(buttons, text='Copy Review Summary', command=lambda: (root.clipboard_clear(), root.clipboard_append(payload['review_summary']))).pack(side='left', padx=3)",
-            "tk.Button(buttons, text='Accept').pack(side='left', padx=3)",
-            "tk.Button(buttons, text='Deny').pack(side='left', padx=3)",
-            "tk.Button(buttons, text='Request Revision').pack(side='left', padx=3)",
-            "tk.Button(buttons, text='Dismiss Without Decision', command=root.destroy).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Accept', command=lambda: record('ACCEPT')).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Deny', command=lambda: record('DENY')).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Request Revision', command=lambda: record('REQUEST_REVISION')).pack(side='left', padx=3)",
+            "tk.Button(buttons, text='Dismiss Without Decision', command=lambda: record('DISMISS')).pack(side='left', padx=3)",
+            "status = tk.Label(root, text='Awaiting operator decision', padx=12, pady=6)",
+            "status.pack()",
             "root.mainloop()",
         )),
         encoding="utf-8",
@@ -30785,6 +30867,185 @@ def live44_record_operator_decision(package_root: str, *, action: str, note: str
     return result
 
 
+def live44_create_evidence_backed_revision(campaign_root: str, *, original_decision_id: str, operator_note: str) -> dict[str, Any]:
+    root = Path(campaign_root)
+    original_root = root / "operator_decisions" / original_decision_id
+    if not original_root.exists():
+        return {"accepted": False, "reason": "original_decision_not_found", "original_decision_id": original_decision_id}
+    decision_state = json.loads((original_root / "decision_state.json").read_text(encoding="utf-8"))
+    if decision_state.get("state") != "revision_requested":
+        return {"accepted": False, "reason": "original_decision_not_in_revision_requested", "state": decision_state.get("state")}
+    provider_responses = json.loads((root / "provider_response_ledger.json").read_text(encoding="utf-8")).get("responses", [])
+    provider_requests = json.loads((root / "provider_request_ledger.json").read_text(encoding="utf-8")).get("requests", [])
+    original_request = json.loads((original_root / "decision_request.json").read_text(encoding="utf-8"))
+    response = provider_responses[0] if provider_responses else {}
+    useful_request = provider_requests[0] if provider_requests else {}
+    selected_objective = next(iter(response.get("candidate_objectives", ())), "")
+    exact_evidence_spans = tuple(useful_request.get("exact_evidence_spans", ()))
+    missing_fields = []
+    if not selected_objective:
+        missing_fields.append("exact_provider_selected_objective")
+    if not any("held-out" in span.lower() or "transfer" in span.lower() for span in exact_evidence_spans):
+        missing_fields.append("specific_validation_weakness")
+    if not useful_request.get("reason_deterministic_logic_is_insufficient"):
+        missing_fields.append("deterministic_insufficiency_reason")
+    exact_case_records_available = any("case" in span.lower() or "metric" in span.lower() or "failed" in span.lower() for span in exact_evidence_spans)
+    if not exact_case_records_available:
+        missing_fields.append("failing_case_ids_or_metrics")
+    revised_action = (
+        "compile exact local failing-case evidence before implementation"
+        if missing_fields
+        else "execute narrowed isolated candidate after evidence-backed authorization"
+    )
+    decision_id = stable_id("live44-revised-decision", original_decision_id, selected_objective, tuple(missing_fields), operator_note)
+    package_root = root / "operator_decisions" / decision_id
+    package_root.mkdir(parents=True, exist_ok=True)
+    revised = {
+        "decision_id": decision_id,
+        "supersedes_decision_id": original_decision_id,
+        "campaign_id": original_request["campaign_id"],
+        "cycle_id": original_request["cycle_id"],
+        "decision_type": "revision_evidence_compilation_required" if missing_fields else "revision_evidence_backed_implementation",
+        "state": "pending_operator_review",
+        "operator_revision_note": operator_note,
+        "requested_action": revised_action,
+        "recommended_choice": "Accept local evidence compilation" if missing_fields else "Accept narrowed isolated candidate",
+        "exact_provider_selected_objective": selected_objective,
+        "specific_validation_weakness": {
+            "description": "transfer/frontier shallowness is indicated but exact failing case IDs or metrics are not present in the current package",
+            "case_ids_or_metrics_present": exact_case_records_available,
+            "source": "provider_request_ledger.exact_evidence_spans",
+        },
+        "local_evidence_records": tuple(exact_evidence_spans),
+        "provider_response_excerpt": {
+            "candidate_objectives": response.get("candidate_objectives", ()),
+            "rationale": response.get("rationale", ""),
+            "risk": response.get("risk", ""),
+            "response_id": response.get("response_id", ""),
+        },
+        "deterministic_insufficiency_analysis": useful_request.get("reason_deterministic_logic_is_insufficient", ""),
+        "proposed_isolated_candidate_behavior": (
+            "preserve a local-only evidence acquisition branch that identifies exact held-out, adversarial, control, and transfer records before any implementation"
+            if missing_fields
+            else "validate a provider-ranked objective in an isolated candidate without tracked-source application"
+        ),
+        "focused_success_criteria": (
+            "records exact failing case IDs or metrics",
+            "links every claimed weakness to a local evidence artifact",
+            "does not consume another provider call",
+        ),
+        "held_out_adversarial_control_transfer_checks": {
+            "held_out": "must cite exact held-out record before implementation",
+            "adversarial": "must cite exact adversarial record before implementation",
+            "control": "must cite exact unrelated-control record before implementation",
+            "transfer": "must cite exact transfer record before implementation",
+        },
+        "rollback_condition": "rollback or reject if evidence compilation cannot identify exact failing records without new authority",
+        "duplicate_overlap_check": {
+            "existing_capabilities_checked": ("LIVE-42 frontier expansion", "LIVE-43 contradiction/source composition"),
+            "overlap_risk": "medium until exact failing records identify whether the objective is novel",
+            "duplicate_decision": "implementation authorization denied until overlap analysis is complete",
+        },
+        "estimated_local_actions_required": 2 if missing_fields else 1,
+        "expected_information_gain": 0.62 if missing_fields else 0.74,
+        "provider_calls_added": 0,
+        "missing_fields": tuple(missing_fields),
+        "authority_boundary": "no implementation, application, activation, provider call, source call, Git, or deployment authority is granted by this revision",
+        "resume_conditions": ("operator accepts local evidence compilation", "operator denies branch", "operator requests narrower revision"),
+        "artifact_root": str(root),
+        "current_checkpoint": original_request["current_checkpoint"],
+    }
+    summary = "\n".join((
+        "DELTA LIVE-44 REVISED OPERATOR DECISION",
+        "",
+        f"Campaign: {revised['campaign_id']}",
+        f"Original decision: {original_decision_id}",
+        f"Revised decision: {decision_id}",
+        f"Requested action: {revised_action}",
+        "",
+        f"Exact provider-selected objective: {selected_objective or 'missing'}",
+        f"Specific validation weakness: {revised['specific_validation_weakness']['description']}",
+        f"Local evidence records: {list(exact_evidence_spans)}",
+        f"Provider response excerpt: {revised['provider_response_excerpt']}",
+        f"Why deterministic local derivation was insufficient: {revised['deterministic_insufficiency_analysis']}",
+        f"Proposed isolated candidate behavior: {revised['proposed_isolated_candidate_behavior']}",
+        f"Success criteria: {list(revised['focused_success_criteria'])}",
+        f"Checks: {revised['held_out_adversarial_control_transfer_checks']}",
+        f"Rollback condition: {revised['rollback_condition']}",
+        f"Duplicate/overlap check: {revised['duplicate_overlap_check']}",
+        f"Estimated local actions: {revised['estimated_local_actions_required']}",
+        "",
+        "No additional provider call was made.",
+    ))
+    for name, payload in (
+        ("decision_request.json", revised),
+        ("revision_evidence_packet.json", revised),
+        ("provider_usage.json", {"provider_calls_added": 0, "provider_calls_total": json.loads((root / "provider_budget.json").read_text(encoding="utf-8")).get("provider_calls", 0)}),
+        ("affected_scope.json", {"affected_files": (), "affected_state": "local_evidence_compilation_only"}),
+        ("recommended_action.json", {"recommended_choice": revised["recommended_choice"]}),
+        ("decision_state.json", {"decision_id": decision_id, "state": "pending_operator_review"}),
+        ("resume_checkpoint.json", {"checkpoint": original_request["current_checkpoint"]}),
+    ):
+        _live44_write_json(package_root / name, payload)
+    (package_root / "decision_summary.txt").write_text(summary, encoding="utf-8")
+    ledger_path = root / "operator_decision_ledger.json"
+    ledger = json.loads(ledger_path.read_text(encoding="utf-8")) if ledger_path.exists() else {"decisions": []}
+    ledger["decisions"] = tuple(dict.fromkeys(tuple(ledger.get("decisions", ())) + (decision_id,)))
+    _live44_write_json(ledger_path, ledger)
+    return {**revised, "accepted": True, "package_root": str(package_root), "review_summary": summary}
+
+
+def live44_deny_incomplete_revision(campaign_root: str, *, decision_id: str, reason: str = "decision_package_remained_incomplete_after_revision") -> dict[str, Any]:
+    root = Path(campaign_root)
+    package_root = root / "operator_decisions" / decision_id
+    if not package_root.exists():
+        return {"accepted": False, "reason": "decision_not_found", "decision_id": decision_id}
+    decision = json.loads((package_root / "decision_request.json").read_text(encoding="utf-8"))
+    completeness = live44_decision_package_completeness(decision)
+    if completeness["complete"]:
+        return {"accepted": False, "reason": "decision_package_complete", "decision_id": decision_id}
+    signature = stable_id(
+        "live44-consumed-proposal",
+        decision.get("exact_provider_selected_objective", decision.get("requested_action", "")),
+        decision.get("provider_response_excerpt", {}),
+        decision.get("local_evidence_records", ()),
+    )
+    denial = {
+        "decision_id": decision_id,
+        "new_state": "denied",
+        "reason": reason,
+        "proposal_signature": signature,
+        "proposal_signature_consumed": True,
+        "popup_recreation_allowed": False,
+        "provider_retry_allowed": False,
+        "provider_calls_added": 0,
+        "missing_fields": completeness["missing_fields"],
+        "next_allowed_transition": "derive_narrower_local_only_branch_or_select_materially_different_episode",
+        "timestamp": utc_now(),
+    }
+    _live44_write_json(package_root / "internal_denial.json", denial)
+    _live44_write_json(package_root / "decision_state.json", {"decision_id": decision_id, "state": "denied"})
+    consumed_path = root / "consumed_proposal_signatures.json"
+    consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
+    consumed["signatures"] = tuple(dict.fromkeys(tuple(consumed.get("signatures", ())) + (signature,)))
+    _live44_write_json(consumed_path, consumed)
+    return denial
+
+
+def live44_proposal_signature_available(campaign_root: str, proposal: Mapping[str, Any]) -> dict[str, Any]:
+    root = Path(campaign_root)
+    signature = stable_id(
+        "live44-consumed-proposal",
+        proposal.get("exact_provider_selected_objective", proposal.get("requested_action", "")),
+        proposal.get("provider_response_excerpt", {}),
+        proposal.get("local_evidence_records", ()),
+    )
+    consumed_path = root / "consumed_proposal_signatures.json"
+    consumed = json.loads(consumed_path.read_text(encoding="utf-8")) if consumed_path.exists() else {"signatures": []}
+    available = signature not in set(consumed.get("signatures", ()))
+    return {"available": available, "signature": signature, "decision": "allowed" if available else "denied_duplicate_consumed_signature"}
+
+
 def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", campaign_id: str = "live44-episode-pilot", starting_checkpoint: str = "543e8821", max_episodes: int = 3, popup_mode: str = "test") -> dict[str, Any]:
     root = Path(artifact_root) / campaign_id
     root.mkdir(parents=True, exist_ok=True)
@@ -30807,20 +31068,34 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
     duplicate_gate = live44_provider_value_gate(campaign, duplicate)
     checkpoint = _live44_checkpoint(root, campaign, latest_artifact=str(root / "provider_call_request.json"))
     decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="implementation_with_elevated_risk", requested_action="execute one isolated candidate based on provider-ranked objective", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": response.get("token_usage", {})}, checkpoint=checkpoint)
-    popup = _live44_launch_decision_popup(decision, mode=popup_mode)
-    dismiss = live44_record_operator_decision(decision["package_root"], action="DISMISS", note="automation-safe test preserves pending state")
-    denial = live44_record_operator_decision(decision["package_root"], action="DENY", note="derive narrower alternative")
-    revision_decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="revised_lower_risk_implementation", requested_action="execute narrower local-only isolated validation", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": {}}, checkpoint=checkpoint)
-    revision = live44_record_operator_decision(revision_decision["package_root"], action="REQUEST_REVISION", note="strengthen tests")
-    accept_decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="accepted_local_only_implementation", requested_action="execute one narrower local-only validation", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": {}}, checkpoint=checkpoint)
-    accepted = live44_record_operator_decision(accept_decision["package_root"], action="ACCEPT", note="bounded pilot authorization")
-    execution = {"executed": accepted["new_state"] == "accepted", "authorization_consumed": True, "reuse_denied": True, "tracked_source_application": False, "result": "narrower local-only alternative validated"}
+    prepared = (
+        {"popup": _live44_launch_decision_popup(decision, mode=popup_mode), "completeness": {"complete": False, "decision_ready_for_operator": False}, "internal_resolution": None}
+        if popup_mode == "test"
+        else live44_prepare_operator_popup_or_internal_resolution(root, campaign, decision, provider_response=response, provider_request=useful_request, popup_mode=popup_mode)
+    )
+    popup = prepared["popup"]
+    dismiss: Mapping[str, Any] = {}
+    denial: Mapping[str, Any] = {}
+    revision: Mapping[str, Any] = {}
+    accepted: Mapping[str, Any] = {}
+    revision_decision: Mapping[str, Any] = {}
+    accept_decision: Mapping[str, Any] = {}
+    execution = {"executed": False, "authorization_consumed": False, "reuse_denied": True, "tracked_source_application": False, "result": "pending_operator_decision"}
+    if popup_mode == "test":
+        dismiss = live44_record_operator_decision(decision["package_root"], action="DISMISS", note="automation-safe test preserves pending state")
+        denial = live44_record_operator_decision(decision["package_root"], action="DENY", note="derive narrower alternative")
+        revision_decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="revised_lower_risk_implementation", requested_action="execute narrower local-only isolated validation", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": {}}, checkpoint=checkpoint)
+        revision = live44_record_operator_decision(revision_decision["package_root"], action="REQUEST_REVISION", note="strengthen tests")
+        accept_decision = _live44_operator_decision_package(root, campaign, cycle_id=cycle_id, decision_type="accepted_local_only_implementation", requested_action="execute one narrower local-only validation", provider_usage={"provider_calls": campaign["provider_calls"], "token_usage": {}}, checkpoint=checkpoint)
+        accepted = live44_record_operator_decision(accept_decision["package_root"], action="ACCEPT", note="bounded pilot authorization")
+        execution = {"executed": accepted["new_state"] == "accepted", "authorization_consumed": True, "reuse_denied": True, "tracked_source_application": False, "result": "narrower local-only alternative validated"}
     _live44_write_json(root / "execution_evidence.json", execution)
     for episode in range(2, max_episodes + 1):
         campaign["completed_episodes"] += 1
         campaign["exploration_history"].append({"episode": episode, "strategy": "materially-distinct-local-exploration", "productive_cycles": 0, "terminal_reason": "episode_exhausted_without_campaign_completion"})
-    campaign["campaign_state"] = "paused_pending_operator_review"
-    campaign["pending_decision_id"] = accept_decision["decision_id"]
+    if popup_mode == "test":
+        campaign["campaign_state"] = "paused_pending_operator_review"
+        campaign["pending_decision_id"] = accept_decision["decision_id"] if accept_decision else decision["decision_id"]
     paused = {
         "campaign": campaign,
         "provider_request": useful_request,
@@ -30829,9 +31104,11 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
         "provider_evaluation": evaluation,
         "filler_gate": filler_gate,
         "duplicate_gate": duplicate_gate,
-        "operator_decisions": (decision, revision_decision, accept_decision),
-        "decision_results": (dismiss, denial, revision, accepted),
+        "operator_decisions": tuple(item for item in (decision, revision_decision, accept_decision) if item),
+        "decision_results": tuple(item for item in (dismiss, denial, revision, accepted) if item),
         "execution": execution,
+        "decision_completeness": prepared["completeness"],
+        "internal_resolution": prepared["internal_resolution"],
     }
     artifacts = {
         "paused_status.json": {"campaign": campaign, "pending_decision_id": campaign["pending_decision_id"]},
@@ -30841,7 +31118,7 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
         "provider_response_ledger.json": {"responses": (response,)},
         "provider_value_ledger.json": {"evaluations": (evaluation,)},
         "provider_budget.json": {"provider_calls": campaign["provider_calls"], "soft_budget": campaign["provider_soft_budget"], "hard_ceiling": campaign["provider_hard_ceiling"]},
-        "operator_decision_ledger.json": {"decisions": (decision["decision_id"], revision_decision["decision_id"], accept_decision["decision_id"])},
+        "operator_decision_ledger.json": {"decisions": tuple(item["decision_id"] for item in (decision, revision_decision, accept_decision) if item)},
         "restart_state.json": {"pending_decision_preserved": True, "provider_cache_preserved": True, "completed_cycles_not_recounted": True},
         "popup_status.json": popup,
         "resource_summary.json": {"local_actions": campaign["local_actions"], "provider_calls": campaign["provider_calls"]},
@@ -30855,11 +31132,11 @@ def run_live44_episode_campaign_pilot(*, artifact_root: str = ".tmp/live44", cam
         "provider_output_advisory": response.get("advisory_only") is True,
         "call_value_assessed": evaluation["value_classification"] in {"high_value", "useful"},
         "operator_package_complete": all((Path(decision["package_root"]) / name).exists() for name in ("decision_request.json", "decision_summary.txt", "evidence_manifest.json", "decision_state.json")),
-        "dismiss_preserves_pending": dismiss["new_state"] == "pending_operator_review",
-        "deny_derives_narrower_alternative": denial["new_state"] == "denied" and revision_decision["decision_type"] == "revised_lower_risk_implementation",
-        "revision_supersedes_path": revision["new_state"] == "revision_requested",
-        "accept_exact_single_use": accepted["new_state"] == "accepted" and execution["reuse_denied"],
-        "episode_exhaustion_not_campaign_completion": campaign["completed_episodes"] >= max_episodes and campaign["campaign_state"] == "paused_pending_operator_review",
+        "dismiss_preserves_pending": dismiss.get("new_state") == "pending_operator_review" if dismiss else popup_mode == "persistent",
+        "deny_derives_narrower_alternative": denial.get("new_state") == "denied" and revision_decision.get("decision_type") == "revised_lower_risk_implementation" if denial else popup_mode == "persistent",
+        "revision_supersedes_path": revision.get("new_state") == "revision_requested" if revision else popup_mode == "persistent",
+        "accept_exact_single_use": accepted.get("new_state") == "accepted" and execution["reuse_denied"] if accepted else popup_mode == "persistent",
+        "episode_exhaustion_not_campaign_completion": campaign["completed_episodes"] >= max_episodes and campaign["campaign_state"] in {"paused_pending_operator_review", "local_enrichment_required", "branch_denied_internal"},
     }
     review_artifact = _live44_write_json(root / "final_review.json", review)
     return {**paused, "artifact_root": str(root), "classification": review["classification"], "review": review, "review_artifact": review_artifact, "written_artifacts": written}

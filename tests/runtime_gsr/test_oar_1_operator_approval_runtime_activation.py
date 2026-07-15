@@ -5755,6 +5755,142 @@ def test_live_44_operator_decision_package_and_artifacts(tmp_path):
     assert "DELTA OPERATOR DECISION REQUEST" in decision["review_summary"]
 
 
+def test_live_44_persistent_popup_buttons_record_governed_decisions(tmp_path, monkeypatch):
+    campaign = gsr.make_live44_campaign(campaign_id="live44-popup", starting_checkpoint="543e8821")
+    checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
+    decision = gsr._live44_operator_decision_package(
+        tmp_path,
+        campaign,
+        cycle_id="cycle-1",
+        decision_type="implementation_with_elevated_risk",
+        requested_action="execute isolated candidate",
+        provider_usage={"provider_calls": 1},
+        checkpoint=checkpoint,
+    )
+
+    class DummyProcess:
+        pid = 4242
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    popup = gsr._live44_launch_decision_popup(decision, mode="persistent")
+    script = (Path(decision["package_root"]) / "live44_operator_decision_popup.py").read_text(encoding="utf-8")
+
+    assert popup["popup_pid"] == 4242
+    assert "live44_record_operator_decision" in script
+    assert "command=lambda: record('ACCEPT')" in script
+    assert "command=lambda: record('DENY')" in script
+    assert "command=lambda: record('REQUEST_REVISION')" in script
+    assert "command=lambda: record('DISMISS')" in script
+
+
+def test_live_44_revision_creates_evidence_backed_package_without_new_provider_call(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4243
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    result = gsr.run_live44_episode_campaign_pilot(artifact_root=str(tmp_path), campaign_id="live44-revision", max_episodes=2, popup_mode="persistent")
+    root = Path(result["artifact_root"])
+    original_decision = json.loads((root / "operator_decision_ledger.json").read_text(encoding="utf-8"))["decisions"][0]
+    gsr.live44_record_operator_decision(
+        str(root / "operator_decisions" / original_decision),
+        action="REQUEST_REVISION",
+        note="Request a narrower evidence-backed revision before implementation.",
+    )
+
+    revised = gsr.live44_create_evidence_backed_revision(
+        str(root),
+        original_decision_id=original_decision,
+        operator_note="Request a narrower evidence-backed revision before implementation.",
+    )
+    package_root = Path(revised["package_root"])
+    provider_budget = json.loads((root / "provider_budget.json").read_text(encoding="utf-8"))
+
+    assert revised["accepted"] is True
+    assert revised["exact_provider_selected_objective"] == "narrow transfer weakness using held-out evidence"
+    assert revised["provider_calls_added"] == 0
+    assert provider_budget["provider_calls"] == 1
+    assert "failing_case_ids_or_metrics" in revised["missing_fields"]
+    assert revised["requested_action"] == "compile exact local failing-case evidence before implementation"
+    assert (package_root / "revision_evidence_packet.json").exists()
+    assert (package_root / "decision_summary.txt").read_text(encoding="utf-8").count("No additional provider call was made.") == 1
+
+
+def test_live_44_incomplete_package_is_not_surfaced_to_operator(tmp_path, monkeypatch):
+    class FailingProcess:
+        def __init__(self, *args, **kwargs):
+            raise AssertionError("popup should not launch for incomplete package")
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", FailingProcess)
+    result = gsr.run_live44_episode_campaign_pilot(artifact_root=str(tmp_path), campaign_id="live44-gated", max_episodes=2, popup_mode="persistent")
+    root = Path(result["artifact_root"])
+    original_decision = json.loads((root / "operator_decision_ledger.json").read_text(encoding="utf-8"))["decisions"][0]
+    completeness = json.loads((root / "operator_decisions" / original_decision / "decision_completeness.json").read_text(encoding="utf-8"))
+    internal = json.loads((root / "operator_decisions" / original_decision / "internal_resolution.json").read_text(encoding="utf-8"))
+
+    assert completeness["decision_ready_for_operator"] is False
+    assert "exact_provider_selected_objective" in completeness["missing_fields"]
+    assert internal["operator_popup_suppressed"] is True
+    assert internal["resolution"] == "local_enrichment_required"
+    assert json.loads((root / "popup_status.json").read_text(encoding="utf-8"))["popup_created"] is False
+    assert result["campaign"]["campaign_state"] == "local_enrichment_required"
+
+
+def test_live_44_incomplete_revision_is_denied_and_signature_consumed(tmp_path, monkeypatch):
+    class DummyProcess:
+        pid = 4244
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    result = gsr.run_live44_episode_campaign_pilot(artifact_root=str(tmp_path), campaign_id="live44-consume", max_episodes=2, popup_mode="persistent")
+    root = Path(result["artifact_root"])
+    original_decision = json.loads((root / "operator_decision_ledger.json").read_text(encoding="utf-8"))["decisions"][0]
+    gsr.live44_record_operator_decision(str(root / "operator_decisions" / original_decision), action="REQUEST_REVISION")
+    revised = gsr.live44_create_evidence_backed_revision(str(root), original_decision_id=original_decision, operator_note="narrow with existing evidence")
+    denial = gsr.live44_deny_incomplete_revision(str(root), decision_id=revised["decision_id"])
+    replay = gsr.live44_proposal_signature_available(str(root), revised)
+    cosmetic = dict(revised)
+    cosmetic["requested_action"] = revised["requested_action"] + " please"
+    cosmetic_replay = gsr.live44_proposal_signature_available(str(root), cosmetic)
+
+    assert denial["new_state"] == "denied"
+    assert denial["proposal_signature_consumed"] is True
+    assert denial["popup_recreation_allowed"] is False
+    assert denial["provider_retry_allowed"] is False
+    assert denial["provider_calls_added"] == 0
+    assert replay["available"] is False
+    assert cosmetic_replay["available"] is False
+
+
+def test_live_44_complete_package_can_launch_operator_popup(tmp_path, monkeypatch):
+    campaign = gsr.make_live44_campaign(campaign_id="live44-complete", starting_checkpoint="543e8821")
+    checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
+    decision = gsr._live44_operator_decision_package(tmp_path, campaign, cycle_id="cycle-1", decision_type="implementation_with_elevated_risk", requested_action="execute isolated candidate", provider_usage={}, checkpoint=checkpoint)
+    decision.update(
+        {
+            "exact_provider_selected_objective": "preserve transfer case dependency identity",
+            "provider_response_excerpt": {"candidate_objectives": ["preserve transfer case dependency identity"], "rationale": "transfer metric failed"},
+            "specific_validation_weakness": {"case_ids_or_metrics_present": True, "case_ids": ["transfer-case-17"], "metric": "dependency_identity_preservation=0.0"},
+            "local_evidence_records": ("transfer-case-17 failed dependency identity preservation",),
+            "proposed_isolated_candidate_behavior": "parse dependency identifiers before contradiction classification",
+            "focused_success_criteria": ("transfer-case-17 passes",),
+            "held_out_adversarial_control_transfer_checks": {"held_out": "case-h1", "adversarial": "case-a1", "control": "case-c1", "transfer": "transfer-case-17"},
+            "rollback_condition": "restore isolated candidate disabled state if transfer score fails",
+            "duplicate_overlap_check": {"overlap": "none", "checked": ("LIVE-42", "LIVE-43")},
+            "expected_information_gain": 0.81,
+            "estimated_local_actions_required": 1,
+        }
+    )
+
+    class DummyProcess:
+        pid = 4245
+
+    monkeypatch.setattr(gsr.subprocess, "Popen", lambda *args, **kwargs: DummyProcess())
+    prepared = gsr.live44_prepare_operator_popup_or_internal_resolution(tmp_path, campaign, decision, provider_response=decision["provider_response_excerpt"], provider_request={"exact_evidence_spans": decision["local_evidence_records"]}, popup_mode="persistent")
+
+    assert prepared["completeness"]["decision_ready_for_operator"] is True
+    assert prepared["popup"]["popup_created"] is True
+    assert prepared["internal_resolution"] is None
+
+
 def test_live_44_accept_deny_revision_transitions(tmp_path):
     campaign = gsr.make_live44_campaign(campaign_id="live44-transitions", starting_checkpoint="543e8821")
     checkpoint = gsr._live44_checkpoint(tmp_path, campaign, latest_artifact="seed")
