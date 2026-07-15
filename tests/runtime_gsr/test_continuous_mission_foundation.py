@@ -630,6 +630,42 @@ def test_autonomous_evidence_acquisition_derives_next_goal_from_candidate_compar
     assert evidence[0]["affected_capability"] == "cross_context_transfer_case_generation"
 
 
+def test_completed_transfer_validation_derives_next_goal_from_remaining_candidates():
+    controller = start_continuous_runtime_controller(session_id="post-transfer-next-goal")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    records = ()
+    for _ in range(7):
+        records += tuple(
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed",
+                    "successful_mechanism": criterion,
+                    "reassessment": "satisfied",
+                }
+            )
+            for criterion in current.success_criteria
+        )
+        assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+        next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+        if next_goal is None:
+            break
+        current = next_goal
+
+    assert current.normalized_objective == "evidence_source_diversity"
+    assert current.next_main_goal_candidates == (
+        "evidence_source_diversity",
+        "developmental_communication_calibration",
+    )
+    assert "capability_transfer_validation" not in current.next_main_goal_candidates
+    assert "selected from ranked developmental next-goal candidates" in current.completion_rationale
+    assert "source diversity remains less urgent than transfer validation" in current.completion_rationale
+    evidence = derive_subgoal_evidence_for_main_goal(current, records, max_items=1)
+    assert evidence[0]["affected_capability"] == "source_diversity_inventory"
+
+
 def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():
     objective = compile_long_horizon_objective("Become capable of mastering the sciences")
     knowledge = (
