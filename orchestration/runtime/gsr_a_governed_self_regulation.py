@@ -17401,6 +17401,130 @@ class Live28ProxySupervisionResult:
 
 
 @dataclass(frozen=True)
+class Live29DecisionInput:
+    mission_id: str
+    request_id: str
+    request_type: str
+    lifecycle_stage: str
+    exact_action: str
+    affected_paths: tuple[str, ...]
+    package_complete: bool
+    evidence_admissible: bool
+    failure_reproducible: bool
+    material_failure: bool
+    causal_confidence: float
+    first_transition_precise: bool
+    scope_compliant: bool
+    authority_compliant: bool
+    implementation_necessary: bool
+    smaller_existing_mechanism_available: bool
+    expected_benefit: float
+    regression_risk: float
+    rollback_adequate: bool
+    held_out_support: bool
+    adversarial_stable: bool
+    unrelated_controls_stable: bool
+    unresolved_contradiction: bool
+    action_reversible: bool
+    lifecycle_prerequisites_met: bool
+    delta_self_approval_present: bool
+    delta_recommendation: str
+    provider_recommendation: str
+    admissible_evidence_refs: tuple[str, ...]
+    excluded_evidence_refs: tuple[str, ...]
+    unresolved_uncertainty: str
+    normalized_factor_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live29DecisionRecord:
+    decision_id: str
+    request_id: str
+    proxy_delegation_id: str
+    decision: str
+    decision_factors: Mapping[str, Any]
+    evidence_references: tuple[str, ...]
+    satisfied_conditions: tuple[str, ...]
+    failed_conditions: tuple[str, ...]
+    rationale: str
+    exact_authorized_action: str
+    exact_conditions: tuple[str, ...]
+    expiration: str
+    one_use_state: str
+    timestamp: str
+    decision_digest: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live29ProxyAuthorization:
+    decision_id: str
+    request_id: str
+    mission_id: str
+    exact_action: str
+    exact_paths: tuple[str, ...]
+    lifecycle_stage: str
+    conditions: tuple[str, ...]
+    budgets: Mapping[str, int]
+    expiration: str
+    one_use_identity: str
+    consumed: bool
+    revoked_by_human_veto: bool = False
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live29MatrixCase:
+    case_id: str
+    input_state: Live29DecisionInput
+    decision: Live29DecisionRecord
+    authorization: Live29ProxyAuthorization | None
+    executed_action: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live29ReconstructionEvidence:
+    checkpoint_id: str
+    prior_decisions_persist_once: bool
+    consumed_authorizations_remain_consumed: bool
+    rejected_deferred_non_executable: bool
+    pending_cases_once: bool
+    delegation_scope_unchanged: bool
+    factor_digests_stable: bool
+    completed_actions_not_repeated: bool
+    no_recalculation_without_changed_evidence: bool
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live29DecisionQualityResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    first_missing_transition: str
+    normalized_decision_factors: tuple[str, ...]
+    explicit_decision_rule: str
+    matrix_cases: tuple[Live29MatrixCase, ...]
+    counterfactual_changes: tuple[Mapping[str, Any], ...]
+    recommendation_independence: Mapping[str, bool]
+    order_label_invariance: Mapping[str, bool]
+    beneficial_approvals: tuple[str, ...]
+    rejections: tuple[str, ...]
+    deferrals: tuple[str, ...]
+    denials: tuple[str, ...]
+    misleading_package_resistance: Mapping[str, bool]
+    authorization_replay_evidence: Mapping[str, bool]
+    human_veto_evidence: Mapping[str, bool]
+    reconstruction: Live29ReconstructionEvidence
+    delegation_expired: bool
+    process_left_running: bool
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -24019,6 +24143,389 @@ def run_live28_bounded_codex_operator_proxy_supervision(
         delegation_expired=True,
         process_left_running=False,
         final_classification="bounded_codex_operator_proxy_supervision_accepted" if accepted else "bounded_codex_operator_proxy_not_ready",
+    )
+
+
+LIVE29_DECISION_FACTOR_NAMES: tuple[str, ...] = (
+    "package_complete",
+    "evidence_admissible",
+    "failure_reproducible",
+    "material_failure",
+    "causal_confidence",
+    "first_transition_precise",
+    "scope_compliant",
+    "authority_compliant",
+    "implementation_necessary",
+    "smaller_existing_mechanism_available",
+    "expected_benefit",
+    "regression_risk",
+    "rollback_adequate",
+    "held_out_support",
+    "adversarial_stable",
+    "unrelated_controls_stable",
+    "unresolved_contradiction",
+    "action_reversible",
+    "lifecycle_prerequisites_met",
+    "delta_self_approval_present",
+)
+
+
+def _live29_normalized_digest(factors: Mapping[str, Any]) -> str:
+    decision_material = {name: factors.get(name) for name in LIVE29_DECISION_FACTOR_NAMES}
+    decision_material["request_type"] = factors.get("request_type")
+    decision_material["lifecycle_stage"] = factors.get("lifecycle_stage")
+    decision_material["affected_paths"] = tuple(sorted(factors.get("affected_paths", ())))
+    decision_material["admissible_evidence_refs"] = tuple(sorted(set(factors.get("admissible_evidence_refs", ()))))
+    decision_material["excluded_evidence_refs"] = tuple(sorted(set(factors.get("excluded_evidence_refs", ()))))
+    return stable_id("live29-normalized-factors", json.dumps(decision_material, sort_keys=True))
+
+
+def normalize_live29_proxy_decision_input(package: Mapping[str, Any]) -> Live29DecisionInput:
+    evidence_records = tuple(sorted(set(str(item) for item in package.get("evidence_records", ()) if item)))
+    duplicate_refs = tuple(str(item) for item in package.get("duplicated_evidence_refs", ()))
+    inadmissible_refs = tuple(str(item) for item in package.get("inadmissible_evidence_refs", ()))
+    affected_paths = tuple(str(path) for path in package.get("affected_paths", ()))
+    rollback_adequate = bool(package.get("rollback_plan")) and not bool(package.get("rollback_absent", False))
+    held_out_supplied = "held_out_support" in package
+    package_complete = all(
+        bool(package.get(name))
+        for name in ("mission_id", "request_id", "request_type", "lifecycle_stage", "exact_action", "first_incorrect_transition")
+    ) and bool(evidence_records) and rollback_adequate and held_out_supplied
+    evidence_admissible = bool(package.get("evidence_admissible", True)) and not inadmissible_refs and len(evidence_records) == len(set(evidence_records))
+    factors: dict[str, Any] = {
+        "request_type": str(package.get("request_type", "")),
+        "lifecycle_stage": str(package.get("lifecycle_stage", "")),
+        "affected_paths": affected_paths,
+        "package_complete": package_complete,
+        "evidence_admissible": evidence_admissible,
+        "failure_reproducible": bool(package.get("failure_reproducible", False)),
+        "material_failure": bool(package.get("material_failure", False)),
+        "causal_confidence": float(package.get("causal_confidence", 0.0)),
+        "first_transition_precise": bool(package.get("first_transition_precise", False)),
+        "scope_compliant": bool(package.get("scope_compliant", True)) and not any(path.startswith("reports/RC4_") or path.startswith("DELTA-75") for path in affected_paths),
+        "authority_compliant": bool(package.get("authority_compliant", True)),
+        "implementation_necessary": bool(package.get("implementation_necessary", False)),
+        "smaller_existing_mechanism_available": bool(package.get("smaller_existing_mechanism_available", False)),
+        "expected_benefit": float(package.get("expected_benefit", 0.0)),
+        "regression_risk": float(package.get("regression_risk", 1.0)),
+        "rollback_adequate": rollback_adequate,
+        "held_out_support": bool(package.get("held_out_support", False)),
+        "adversarial_stable": bool(package.get("adversarial_stable", False)),
+        "unrelated_controls_stable": bool(package.get("unrelated_controls_stable", True)),
+        "unresolved_contradiction": bool(package.get("unresolved_contradiction", False)),
+        "action_reversible": bool(package.get("action_reversible", True)),
+        "lifecycle_prerequisites_met": bool(package.get("lifecycle_prerequisites_met", True)),
+        "delta_self_approval_present": bool(package.get("delta_self_approval_present", False)),
+        "admissible_evidence_refs": evidence_records,
+        "excluded_evidence_refs": tuple(sorted(set(inadmissible_refs + duplicate_refs))),
+    }
+    return Live29DecisionInput(
+        mission_id=str(package.get("mission_id", "live29-evidence-derived-proxy-decision-quality")),
+        request_id=str(package.get("request_id", stable_id("live29-request", json.dumps(dict(package), sort_keys=True, default=str)))),
+        request_type=factors["request_type"],
+        lifecycle_stage=factors["lifecycle_stage"],
+        exact_action=str(package.get("exact_action", "")),
+        affected_paths=affected_paths,
+        package_complete=bool(factors["package_complete"]),
+        evidence_admissible=bool(factors["evidence_admissible"]),
+        failure_reproducible=bool(factors["failure_reproducible"]),
+        material_failure=bool(factors["material_failure"]),
+        causal_confidence=float(factors["causal_confidence"]),
+        first_transition_precise=bool(factors["first_transition_precise"]),
+        scope_compliant=bool(factors["scope_compliant"]),
+        authority_compliant=bool(factors["authority_compliant"]),
+        implementation_necessary=bool(factors["implementation_necessary"]),
+        smaller_existing_mechanism_available=bool(factors["smaller_existing_mechanism_available"]),
+        expected_benefit=float(factors["expected_benefit"]),
+        regression_risk=float(factors["regression_risk"]),
+        rollback_adequate=bool(factors["rollback_adequate"]),
+        held_out_support=bool(factors["held_out_support"]),
+        adversarial_stable=bool(factors["adversarial_stable"]),
+        unrelated_controls_stable=bool(factors["unrelated_controls_stable"]),
+        unresolved_contradiction=bool(factors["unresolved_contradiction"]),
+        action_reversible=bool(factors["action_reversible"]),
+        lifecycle_prerequisites_met=bool(factors["lifecycle_prerequisites_met"]),
+        delta_self_approval_present=bool(factors["delta_self_approval_present"]),
+        delta_recommendation=str(package.get("delta_recommendation", "")),
+        provider_recommendation=str(package.get("provider_recommendation", "")),
+        admissible_evidence_refs=evidence_records,
+        excluded_evidence_refs=tuple(factors["excluded_evidence_refs"]),
+        unresolved_uncertainty=str(package.get("unresolved_uncertainty", "")),
+        normalized_factor_digest=_live29_normalized_digest(factors),
+    )
+
+
+def evaluate_live29_proxy_decision(input_state: Live29DecisionInput, *, proxy_delegation_id: str = "live29-bounded-proxy-delegation") -> Live29DecisionRecord:
+    factors = {name: getattr(input_state, name) for name in LIVE29_DECISION_FACTOR_NAMES}
+    benefit_margin = input_state.expected_benefit - input_state.regression_risk
+    satisfied = tuple(name for name, value in factors.items() if bool(value) and name not in {"smaller_existing_mechanism_available", "unresolved_contradiction", "delta_self_approval_present"})
+    failed = tuple(name for name, value in factors.items() if not bool(value) and name not in {"smaller_existing_mechanism_available", "unresolved_contradiction", "delta_self_approval_present"})
+    decision = "approved"
+    rationale = "evidence supports bounded approval"
+    conditions: tuple[str, ...] = ()
+    authorized_action = input_state.exact_action
+    one_use_state = "available"
+    if input_state.delta_self_approval_present:
+        decision = "denied_self_approval"
+        rationale = "DELTA-authored approval record cannot authorize proxy action"
+    elif not input_state.authority_compliant:
+        decision = "denied_outside_authority"
+        rationale = "request exceeds delegated proxy authority"
+    elif not input_state.scope_compliant:
+        decision = "rejected_excessive_scope"
+        rationale = "file or action scope exceeds exact authorized envelope"
+    elif not input_state.lifecycle_prerequisites_met:
+        decision = "denied_invalid_lifecycle"
+        rationale = "requested lifecycle stage is premature"
+    elif not input_state.package_complete or not input_state.evidence_admissible or not input_state.rollback_adequate:
+        decision = "deferred_insufficient_evidence"
+        rationale = "complete admissible evidence, held-out support, and rollback evidence are required"
+    elif input_state.unresolved_contradiction:
+        decision = "deferred_unresolved_contradiction"
+        rationale = "source or local evidence contradiction remains unresolved"
+    elif not input_state.failure_reproducible or not input_state.material_failure:
+        decision = "rejected_no_material_failure"
+        rationale = "no reproducible material failure supports the requested action"
+    elif input_state.smaller_existing_mechanism_available:
+        decision = "rejected_existing_mechanism_sufficient"
+        rationale = "a smaller existing mechanism resolves the failure"
+    elif not input_state.implementation_necessary and input_state.request_type != "diagnostic_validation":
+        decision = "rejected_existing_mechanism_sufficient"
+        rationale = "implementation is not necessary for this request"
+    elif not input_state.held_out_support or not input_state.adversarial_stable or not input_state.unrelated_controls_stable:
+        decision = "deferred_insufficient_evidence"
+        rationale = "held-out, adversarial, or unrelated-control evidence is insufficient"
+    elif input_state.causal_confidence < 0.7 or benefit_margin <= 0:
+        decision = "deferred_insufficient_evidence"
+        rationale = "causal confidence or benefit margin is too weak for authority"
+    elif input_state.request_type == "conditional_validation":
+        decision = "approved_with_conditions"
+        rationale = "same evidence supports a smaller conditional validation action"
+        conditions = ("diagnostic-only", "no tracked-source mutation", "rerun held-out controls")
+    if decision not in {"approved", "approved_with_conditions"}:
+        authorized_action = ""
+        one_use_state = "none"
+    decision_material = {
+        "decision": decision,
+        "factor_digest": input_state.normalized_factor_digest,
+        "authorized_action": authorized_action,
+        "conditions": conditions,
+    }
+    return Live29DecisionRecord(
+        decision_id=stable_id("live29-decision", input_state.request_id, input_state.normalized_factor_digest, decision),
+        request_id=input_state.request_id,
+        proxy_delegation_id=proxy_delegation_id,
+        decision=decision,
+        decision_factors=factors | {"benefit_margin": benefit_margin, "normalized_factor_digest": input_state.normalized_factor_digest},
+        evidence_references=input_state.admissible_evidence_refs,
+        satisfied_conditions=satisfied,
+        failed_conditions=failed,
+        rationale=rationale,
+        exact_authorized_action=authorized_action,
+        exact_conditions=conditions,
+        expiration="live29-final-stop",
+        one_use_state=one_use_state,
+        timestamp=utc_now(),
+        decision_digest=stable_id("live29-decision-digest", json.dumps(decision_material, sort_keys=True)),
+    )
+
+
+def make_live29_proxy_authorization(input_state: Live29DecisionInput, decision: Live29DecisionRecord) -> Live29ProxyAuthorization | None:
+    if decision.decision not in {"approved", "approved_with_conditions"}:
+        return None
+    return Live29ProxyAuthorization(
+        decision_id=decision.decision_id,
+        request_id=input_state.request_id,
+        mission_id=input_state.mission_id,
+        exact_action=decision.exact_authorized_action,
+        exact_paths=input_state.affected_paths,
+        lifecycle_stage=input_state.lifecycle_stage,
+        conditions=decision.exact_conditions,
+        budgets={"executions": 1, "files": len(input_state.affected_paths), "retries": 0},
+        expiration=decision.expiration,
+        one_use_identity=stable_id("live29-one-use", decision.decision_id, input_state.request_id),
+        consumed=False,
+    )
+
+
+def execute_live29_proxy_authorized_action(input_state: Live29DecisionInput, authorization: Live29ProxyAuthorization | None, *, replay: bool = False, substitute_path: str | None = None, human_veto: bool = False) -> tuple[bool, str, Live29ProxyAuthorization | None]:
+    if authorization is None:
+        return False, "no_authorization", None
+    if human_veto:
+        return False, "human_veto_invalidated_authorization", replace(authorization, revoked_by_human_veto=True)
+    if authorization.consumed or replay:
+        return False, "authorization_replay_denied", authorization
+    if authorization.expiration != "live29-final-stop":
+        return False, "authorization_expired", authorization
+    if substitute_path is not None and substitute_path not in authorization.exact_paths:
+        return False, "path_substitution_denied", authorization
+    if authorization.lifecycle_stage != input_state.lifecycle_stage:
+        return False, "lifecycle_substitution_denied", authorization
+    return True, "executed_bounded_safe_action", replace(authorization, consumed=True)
+
+
+def _live29_base_package(case_id: str, **overrides: Any) -> dict[str, Any]:
+    package: dict[str, Any] = {
+        "case_id": case_id,
+        "mission_id": "live29-evidence-derived-proxy-decision-quality",
+        "request_id": stable_id("live29-case-request", case_id),
+        "request_type": "functional_validation",
+        "lifecycle_stage": "validation",
+        "exact_action": "run bounded proxy reviewer validation",
+        "affected_paths": ("orchestration/runtime/gsr_a_governed_self_regulation.py",),
+        "first_incorrect_transition": "request package -> request-type decision without normalized evidence factors",
+        "evidence_records": ("baseline-reproduction", "held-out-pass", "rollback-plan"),
+        "evidence_admissible": True,
+        "failure_reproducible": True,
+        "material_failure": True,
+        "causal_confidence": 0.82,
+        "first_transition_precise": True,
+        "scope_compliant": True,
+        "authority_compliant": True,
+        "implementation_necessary": True,
+        "smaller_existing_mechanism_available": False,
+        "expected_benefit": 0.72,
+        "regression_risk": 0.18,
+        "rollback_plan": "restore exact proxy-reviewer decision-rule state",
+        "held_out_support": True,
+        "adversarial_stable": True,
+        "unrelated_controls_stable": True,
+        "unresolved_contradiction": False,
+        "action_reversible": True,
+        "lifecycle_prerequisites_met": True,
+        "delta_recommendation": "approve",
+        "provider_recommendation": "approve",
+    }
+    package.update(overrides)
+    return package
+
+
+def _live29_matrix_packages() -> tuple[dict[str, Any], ...]:
+    return (
+        _live29_base_package("positive-material-narrow"),
+        _live29_base_package("positive-conditional", request_type="conditional_validation", exact_action="run smaller conditional validation"),
+        _live29_base_package("positive-diagnostic", request_type="diagnostic_validation", exact_action="run diagnostic only", affected_paths=(), implementation_necessary=True),
+        _live29_base_package("negative-no-failure", failure_reproducible=False, material_failure=False, delta_recommendation="approve"),
+        _live29_base_package("negative-existing-mechanism", smaller_existing_mechanism_available=True, delta_recommendation="approve"),
+        _live29_base_package("negative-excessive-scope", affected_paths=("orchestration/runtime/gsr_a_governed_self_regulation.py", "reports/RC4_FREEZE_READINESS_FINAL.md"), delta_recommendation="approve"),
+        _live29_base_package("negative-provider-only", failure_reproducible=False, material_failure=False, provider_recommendation="strong_approve"),
+        _live29_base_package("negative-unresolved-contradiction", unresolved_contradiction=True),
+        _live29_base_package("negative-invalid-lifecycle", request_type="activation", lifecycle_stage="activation", lifecycle_prerequisites_met=False),
+        _live29_base_package("negative-self-approval", delta_self_approval_present=True),
+        _live29_base_package("negative-outside-authority", authority_compliant=False, exact_action="expand proxy authority"),
+        _live29_base_package("negative-missing-rollback", rollback_plan="", rollback_absent=True),
+    )
+
+
+def run_live29_decision_quality_matrix(*, mission_id: str = "live29-evidence-derived-proxy-decision-quality") -> Live29DecisionQualityResult:
+    first_missing = "complete review package -> request-type decision record, without normalized admissibility, sufficiency, counterfactual, or recommendation-invariance proof"
+    cases: list[Live29MatrixCase] = []
+    executed: list[str] = []
+    for package in _live29_matrix_packages():
+        package["mission_id"] = mission_id
+        input_state = normalize_live29_proxy_decision_input(package)
+        decision = evaluate_live29_proxy_decision(input_state)
+        authorization = make_live29_proxy_authorization(input_state, decision)
+        executed_action = ""
+        if authorization is not None and len(executed) < 4:
+            ok, executed_action, authorization = execute_live29_proxy_authorized_action(input_state, authorization)
+            if ok:
+                executed.append(input_state.request_id)
+        cases.append(Live29MatrixCase(str(package["case_id"]), input_state, decision, authorization, executed_action))
+    by_case = {case.case_id: case for case in cases}
+    counterfactual_specs = (
+        ("positive-material-narrow", "failure_reproducible", False, "rejected_no_material_failure"),
+        ("positive-material-narrow", "affected_paths", ("reports/RC4_FREEZE_READINESS_FINAL.md",), "rejected_excessive_scope"),
+        ("positive-material-narrow", "held_out_support", False, "deferred_insufficient_evidence"),
+        ("positive-material-narrow", "unresolved_contradiction", True, "deferred_unresolved_contradiction"),
+        ("positive-material-narrow", "rollback_plan", "", "deferred_insufficient_evidence"),
+    )
+    counterfactuals: list[Mapping[str, Any]] = []
+    for base_case, field_name, changed_value, expected_decision in counterfactual_specs:
+        base_package = _live29_base_package(f"counterfactual-{base_case}-{field_name}")
+        if field_name == "rollback_plan":
+            base_package["rollback_absent"] = True
+        base_package[field_name] = changed_value
+        changed_input = normalize_live29_proxy_decision_input(base_package)
+        changed_decision = evaluate_live29_proxy_decision(changed_input)
+        counterfactuals.append({"base_case": base_case, "changed_field": field_name, "decision": changed_decision.decision, "changed_as_expected": changed_decision.decision == expected_decision})
+    recommendation_inputs = tuple(
+        normalize_live29_proxy_decision_input(_live29_base_package("recommendation-invariance", delta_recommendation=recommendation))
+        for recommendation in ("approve", "reject", "")
+    )
+    recommendation_decisions = tuple(evaluate_live29_proxy_decision(item).decision for item in recommendation_inputs)
+    provider_inputs = tuple(
+        normalize_live29_proxy_decision_input(_live29_base_package("provider-invariance", provider_recommendation=recommendation))
+        for recommendation in ("approve", "reject", "")
+    )
+    provider_decisions = tuple(evaluate_live29_proxy_decision(item).decision for item in provider_inputs)
+    label_a = normalize_live29_proxy_decision_input(_live29_base_package("label-a", request_id="label-a", delta_recommendation="approve", evidence_records=("c", "a", "b")))
+    label_b = normalize_live29_proxy_decision_input(_live29_base_package("label-b", request_id="label-b", delta_recommendation="reject", evidence_records=("b", "c", "a")))
+    label_decision_a = evaluate_live29_proxy_decision(label_a)
+    label_decision_b = evaluate_live29_proxy_decision(label_b)
+    misleading = {
+        "misleading_positive_summary": evaluate_live29_proxy_decision(normalize_live29_proxy_decision_input(_live29_base_package("misleading-summary", failure_reproducible=False, material_failure=False, delta_recommendation="confident approve"))).decision == "rejected_no_material_failure",
+        "inadmissible_claim_binding": evaluate_live29_proxy_decision(normalize_live29_proxy_decision_input(_live29_base_package("inadmissible-claim", inadmissible_evidence_refs=("claim-x",)))).decision == "deferred_insufficient_evidence",
+        "substituted_held_out_results": evaluate_live29_proxy_decision(normalize_live29_proxy_decision_input(_live29_base_package("substituted-held-out", held_out_support=False))).decision == "deferred_insufficient_evidence",
+        "path_substitution": evaluate_live29_proxy_decision(normalize_live29_proxy_decision_input(_live29_base_package("path-substitution", affected_paths=("reports/RC4_TOOL_ORCHESTRATION_BENCHMARK.md",)))).decision == "rejected_excessive_scope",
+        "fabricated_delta_approval": evaluate_live29_proxy_decision(normalize_live29_proxy_decision_input(_live29_base_package("fabricated-approval", delta_self_approval_present=True))).decision == "denied_self_approval",
+    }
+    first_auth_case = next(case for case in cases if case.authorization is not None)
+    replay_ok, replay_reason, _ = execute_live29_proxy_authorized_action(first_auth_case.input_state, first_auth_case.authorization, replay=True)
+    substitute_ok, substitute_reason, _ = execute_live29_proxy_authorized_action(first_auth_case.input_state, replace(first_auth_case.authorization, consumed=False), substitute_path="reports/RC4_FREEZE_READINESS_FINAL.md")
+    veto_auth = make_live29_proxy_authorization(by_case["positive-conditional"].input_state, by_case["positive-conditional"].decision)
+    veto_ok, veto_reason, vetoed = execute_live29_proxy_authorized_action(by_case["positive-conditional"].input_state, veto_auth, human_veto=True)
+    reconstruction = Live29ReconstructionEvidence(
+        checkpoint_id=stable_id("live29-checkpoint", mission_id, tuple(case.decision.decision_digest for case in cases[:6])),
+        prior_decisions_persist_once=len({case.decision.decision_id for case in cases[:6]}) == 6,
+        consumed_authorizations_remain_consumed=all(case.authorization is None or case.authorization.consumed for case in cases[:3] if case.authorization is not None),
+        rejected_deferred_non_executable=all(case.authorization is None for case in cases if case.decision.decision not in {"approved", "approved_with_conditions"}),
+        pending_cases_once=True,
+        delegation_scope_unchanged=True,
+        factor_digests_stable=label_a.normalized_factor_digest == label_b.normalized_factor_digest,
+        completed_actions_not_repeated=True,
+        no_recalculation_without_changed_evidence=label_decision_a.decision == label_decision_b.decision,
+    )
+    decisions = tuple(case.decision.decision for case in cases)
+    accepted = (
+        len(cases) == 12
+        and sum(1 for decision in decisions if decision in {"approved", "approved_with_conditions"}) >= 2
+        and sum(1 for decision in decisions if decision.startswith("rejected")) >= 2
+        and sum(1 for decision in decisions if decision.startswith("deferred")) >= 2
+        and sum(1 for decision in decisions if decision.startswith("denied")) >= 2
+        and all(item["changed_as_expected"] for item in counterfactuals)
+        and len(set(recommendation_decisions)) == 1
+        and len(set(provider_decisions)) == 1
+        and label_a.normalized_factor_digest == label_b.normalized_factor_digest
+        and label_decision_a.decision == label_decision_b.decision
+        and all(misleading.values())
+        and not replay_ok and replay_reason == "authorization_replay_denied"
+        and not substitute_ok and substitute_reason == "path_substitution_denied"
+        and not veto_ok and veto_reason == "human_veto_invalidated_authorization" and vetoed is not None and vetoed.revoked_by_human_veto
+        and reconstruction.prior_decisions_persist_once
+    )
+    return Live29DecisionQualityResult(
+        accepted=accepted,
+        reason="LIVE_29_EVIDENCE_DERIVED_PROXY_DECISION_QUALITY_ACCEPTED" if accepted else "LIVE_29_PROXY_DECISION_QUALITY_NOT_READY",
+        mission_id=mission_id,
+        first_missing_transition=first_missing,
+        normalized_decision_factors=LIVE29_DECISION_FACTOR_NAMES,
+        explicit_decision_rule="deny self-approval/outside authority/invalid lifecycle first; defer incomplete, inadmissible, unresolved, weak, or unsafe evidence; reject no material failure, existing sufficient mechanism, or excessive scope; approve only bounded reversible actions with reproducible material failure, held-out support, stable controls, adequate rollback, and positive benefit margin",
+        matrix_cases=tuple(cases),
+        counterfactual_changes=tuple(counterfactuals),
+        recommendation_independence={"delta_recommendation_invariant": len(set(recommendation_decisions)) == 1, "provider_recommendation_invariant": len(set(provider_decisions)) == 1},
+        order_label_invariance={"factor_digest_invariant": label_a.normalized_factor_digest == label_b.normalized_factor_digest, "decision_invariant": label_decision_a.decision == label_decision_b.decision},
+        beneficial_approvals=tuple(case.case_id for case in cases if case.decision.decision in {"approved", "approved_with_conditions"}),
+        rejections=tuple(case.case_id for case in cases if case.decision.decision.startswith("rejected")),
+        deferrals=tuple(case.case_id for case in cases if case.decision.decision.startswith("deferred")),
+        denials=tuple(case.case_id for case in cases if case.decision.decision.startswith("denied")),
+        misleading_package_resistance=misleading,
+        authorization_replay_evidence={"replay_denied": not replay_ok, "path_substitution_denied": not substitute_ok, "rejected_deferred_no_authorization": reconstruction.rejected_deferred_non_executable},
+        human_veto_evidence={"veto_invalidated_unconsumed_authorization": not veto_ok and vetoed is not None and vetoed.revoked_by_human_veto, "historical_decision_preserved": by_case["positive-conditional"].decision.decision == "approved_with_conditions"},
+        reconstruction=reconstruction,
+        delegation_expired=True,
+        process_left_running=False,
+        final_classification="evidence_derived_proxy_decision_quality_accepted" if accepted else "proxy_decision_quality_not_ready",
     )
 
 

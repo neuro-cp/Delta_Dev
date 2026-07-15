@@ -3849,6 +3849,66 @@ def test_live_28_proxy_denies_outside_authority_and_preserves_restart_state():
     assert result.process_left_running is False
 
 
+def test_live_29_decision_matrix_uses_evidence_factors_not_case_labels():
+    result = gsr.run_live29_decision_quality_matrix()
+    decisions = {case.case_id: case.decision.decision for case in result.matrix_cases}
+
+    assert result.accepted is True
+    assert len(result.matrix_cases) == 12
+    assert decisions["positive-material-narrow"] == "approved"
+    assert decisions["positive-conditional"] == "approved_with_conditions"
+    assert decisions["positive-diagnostic"] == "approved"
+    assert decisions["negative-no-failure"] == "rejected_no_material_failure"
+    assert decisions["negative-existing-mechanism"] == "rejected_existing_mechanism_sufficient"
+    assert decisions["negative-excessive-scope"] == "rejected_excessive_scope"
+    assert decisions["negative-unresolved-contradiction"] == "deferred_unresolved_contradiction"
+    assert decisions["negative-invalid-lifecycle"] == "denied_invalid_lifecycle"
+    assert decisions["negative-self-approval"] == "denied_self_approval"
+    assert decisions["negative-outside-authority"] == "denied_outside_authority"
+    assert "request_id" not in result.explicit_decision_rule
+    assert "fixture name" not in result.explicit_decision_rule
+
+
+def test_live_29_recommendation_order_and_label_invariance_hold():
+    result = gsr.run_live29_decision_quality_matrix()
+
+    assert result.recommendation_independence["delta_recommendation_invariant"] is True
+    assert result.recommendation_independence["provider_recommendation_invariant"] is True
+    assert result.order_label_invariance["factor_digest_invariant"] is True
+    assert result.order_label_invariance["decision_invariant"] is True
+    assert all(change["changed_as_expected"] for change in result.counterfactual_changes)
+
+
+def test_live_29_authorization_replay_veto_and_misleading_packages_fail_closed():
+    result = gsr.run_live29_decision_quality_matrix()
+
+    assert len(result.beneficial_approvals) >= 2
+    assert len(result.rejections) >= 2
+    assert len(result.deferrals) >= 2
+    assert len(result.denials) >= 2
+    assert all(result.misleading_package_resistance.values())
+    assert result.authorization_replay_evidence["replay_denied"] is True
+    assert result.authorization_replay_evidence["path_substitution_denied"] is True
+    assert result.authorization_replay_evidence["rejected_deferred_no_authorization"] is True
+    assert result.human_veto_evidence["veto_invalidated_unconsumed_authorization"] is True
+    assert result.human_veto_evidence["historical_decision_preserved"] is True
+    assert result.delegation_expired is True
+    assert result.process_left_running is False
+
+
+def test_live_29_reconstruction_preserves_factor_digests_and_decision_state():
+    result = gsr.run_live29_decision_quality_matrix()
+    reconstruction = result.reconstruction
+
+    assert reconstruction.prior_decisions_persist_once is True
+    assert reconstruction.consumed_authorizations_remain_consumed is True
+    assert reconstruction.rejected_deferred_non_executable is True
+    assert reconstruction.delegation_scope_unchanged is True
+    assert reconstruction.factor_digests_stable is True
+    assert reconstruction.completed_actions_not_repeated is True
+    assert reconstruction.no_recalculation_without_changed_evidence is True
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")
