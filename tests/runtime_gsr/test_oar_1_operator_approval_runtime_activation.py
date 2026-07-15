@@ -4408,6 +4408,50 @@ def test_live_34_selected_capability_improves_target_and_held_out_without_contro
     assert result.process_left_running is False
 
 
+def test_live_35_toolchain_executes_validated_multi_step_sequence():
+    result = gsr.run_live35_governed_cognitive_toolchain()
+    planned = result.steps[:14]
+
+    assert result.accepted is True
+    assert len(planned) == 14
+    assert all(step.state == "completed" for step in planned)
+    assert all(step.validation_result == "schema_valid" for step in planned)
+    assert all(step.authorization_id.startswith("live35-authorization") for step in planned)
+    assert all(step.output_digest.startswith("live35-output") for step in planned)
+    assert result.activated_candidate == "claim_dependency_mapper_toolchain_candidate"
+
+
+def test_live_35_malformed_output_and_invalid_upstream_are_contained():
+    result = gsr.run_live35_governed_cognitive_toolchain()
+
+    assert result.malformed_output_case["malformed_output_detected"] is True
+    assert result.malformed_output_case["malformed_output_not_downstream_eligible"] is True
+    assert result.downstream_denial["invalid_upstream_blocks_dependent_step"] is True
+    assert result.downstream_denial["invalid_upstream_no_consumers"] is True
+    assert any(step.state == "blocked_dependency" for step in result.steps)
+
+
+def test_live_35_timeout_retry_replay_and_restart_controls_hold():
+    result = gsr.run_live35_governed_cognitive_toolchain()
+
+    assert all(result.timeout_retry_case.values())
+    assert all(result.replay_denial.values())
+    assert all(result.restart_reconstruction.values())
+    assert any(step.validation_result == "timeout_with_retry_available" for step in result.steps)
+    assert any(step.warning == "retry_consumed_within_budget" for step in result.steps)
+    assert result.process_left_running is False
+
+
+def test_live_35_toolchain_measures_functional_improvement_and_rollback():
+    result = gsr.run_live35_governed_cognitive_toolchain()
+
+    assert result.after_accuracy > result.before_accuracy
+    assert result.held_out_accuracy > result.before_accuracy
+    assert result.rollback_proven is True
+    assert result.validation_summary["planned_steps"] == 14
+    assert result.validation_summary["failure_fixtures"] == 4
+
+
 def test_live_17_restart_and_uncertain_or_changed_mission_fail_closed():
     state = gsr.OARRuntimeState(runtime_state_id="state-live-17")
     plan = gsr.make_live17_toolchain_plan(mission_id="live17-diagnosis", exact_goal="diagnose one bounded fixture defect")

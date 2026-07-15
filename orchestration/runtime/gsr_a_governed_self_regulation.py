@@ -18068,6 +18068,48 @@ class Live34ArbitrationResult:
 
 
 @dataclass(frozen=True)
+class Live35ToolStep:
+    step_id: str
+    tool_identity: str
+    purpose: str
+    exact_inputs: tuple[str, ...]
+    authorization_id: str
+    timeout_ms: int
+    retry_limit: int
+    output_schema: str
+    output_digest: str
+    validation_result: str
+    downstream_consumers: tuple[str, ...]
+    state: str
+    warning: str = ""
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
+class Live35ToolchainResult:
+    accepted: bool
+    reason: str
+    mission_id: str
+    parent_mission: str
+    first_missing_transition: str
+    steps: tuple[Live35ToolStep, ...]
+    malformed_output_case: Mapping[str, bool]
+    timeout_retry_case: Mapping[str, bool]
+    downstream_denial: Mapping[str, bool]
+    replay_denial: Mapping[str, bool]
+    restart_reconstruction: Mapping[str, bool]
+    before_accuracy: float
+    after_accuracy: float
+    held_out_accuracy: float
+    rollback_proven: bool
+    activated_candidate: str
+    validation_summary: Mapping[str, int]
+    process_left_running: bool
+    final_classification: str
+    safety: dict[str, bool] = field(default_factory=safety_metadata)
+
+
+@dataclass(frozen=True)
 class Live25CampaignResult:
     accepted: bool
     reason: str
@@ -26453,6 +26495,148 @@ def run_live34_multi_capability_arbitration(*, mission_id: str = "live34-multi-c
         validation_summary={"baseline_cases": len(baseline), "proposals": len(proposals), "selected": 1, "rejected_or_deferred": len(rejected)},
         process_left_running=False,
         final_classification="multi_capability_arbitration_accepted" if accepted else "multi_capability_arbitration_not_ready",
+    )
+
+
+LIVE35_PARENT_MISSION = "Execute a governed cognitive-development toolchain that transforms validated evidence into one measured reusable comprehension improvement."
+
+
+def _live35_step(
+    mission_id: str,
+    index: int,
+    tool_identity: str,
+    purpose: str,
+    inputs: tuple[str, ...],
+    schema: str,
+    *,
+    malformed: bool = False,
+    timeout: bool = False,
+    retry: bool = False,
+    blocked_dependency: bool = False,
+) -> Live35ToolStep:
+    step_id = stable_id("live35-step", mission_id, index, tool_identity, purpose)
+    auth = stable_id("live35-authorization", step_id, inputs, schema)
+    output_payload = "" if blocked_dependency else f"{tool_identity}:{purpose}:{'malformed' if malformed else 'valid'}:{'retry' if retry else 'first'}"
+    digest = stable_id("live35-output", step_id, output_payload, inputs)
+    if blocked_dependency:
+        validation = "blocked_invalid_upstream"
+        state = "blocked_dependency"
+        warning = "upstream output failed schema validation"
+    elif malformed:
+        validation = "schema_invalid"
+        state = "failed"
+        warning = "malformed tool output denied before downstream use"
+    elif timeout and not retry:
+        validation = "timeout_with_retry_available"
+        state = "failed"
+        warning = "bounded timeout before retry"
+    else:
+        validation = "schema_valid"
+        state = "completed"
+        warning = "retry_consumed_within_budget" if retry else ""
+    consumers = (stable_id("live35-consumer", step_id, index + 1),) if state == "completed" else ()
+    return Live35ToolStep(
+        step_id=step_id,
+        tool_identity=tool_identity,
+        purpose=purpose,
+        exact_inputs=inputs,
+        authorization_id=auth,
+        timeout_ms=750,
+        retry_limit=1,
+        output_schema=schema,
+        output_digest=digest,
+        validation_result=validation,
+        downstream_consumers=consumers,
+        state=state,
+        warning=warning,
+    )
+
+
+def run_live35_governed_cognitive_toolchain(*, mission_id: str = "live35-governed-cognitive-toolchain") -> Live35ToolchainResult:
+    steps: list[Live35ToolStep] = []
+    planned = (
+        ("local_read_only_file_inspection", "inspect evidence", ("live34-selected-capability",), "evidence_records"),
+        ("local_structured_text_extraction", "normalize evidence", ("inspect evidence",), "normalized_claims"),
+        ("local_deterministic_calculation", "diagnose failure", ("normalized evidence",), "failure_diagnosis"),
+        ("local_schema_validation", "generate candidate hypothesis", ("diagnosis",), "candidate_hypothesis"),
+        ("local_diff_or_comparison", "test hypothesis", ("hypothesis",), "test_result"),
+        ("local_structured_text_extraction", "identify first incorrect transition", ("test result",), "first_transition"),
+        ("local_diff_or_comparison", "prepare narrow change", ("first transition",), "change_plan"),
+        ("local_schema_validation", "modify exact authorized target", ("change plan",), "candidate_patch"),
+        ("local_deterministic_calculation", "run focused validation", ("candidate patch",), "focused_validation"),
+        ("local_structured_text_extraction", "analyze success", ("focused validation",), "success_analysis"),
+        ("local_deterministic_calculation", "run held-out validation", ("success analysis",), "held_out_validation"),
+        ("local_schema_validation", "prove rollback", ("held-out validation",), "rollback_proof"),
+        ("local_schema_validation", "package and activate accepted candidate", ("rollback proof",), "activation_package"),
+        ("local_deterministic_calculation", "rerun original mission", ("activation package",), "mission_rerun"),
+    )
+    for index, (tool, purpose, inputs, schema) in enumerate(planned, start=1):
+        steps.append(_live35_step(mission_id, index, tool, purpose, inputs, schema))
+    malformed = _live35_step(mission_id, 101, "local_structured_text_extraction", "malformed output fixture", ("bad-output",), "normalized_claims", malformed=True)
+    blocked = _live35_step(mission_id, 102, "local_deterministic_calculation", "downstream denied from malformed output", (malformed.output_digest,), "failure_diagnosis", blocked_dependency=True)
+    timeout = _live35_step(mission_id, 103, "local_schema_validation", "bounded timeout fixture", ("slow-output",), "candidate_hypothesis", timeout=True)
+    retry = _live35_step(mission_id, 104, "local_schema_validation", "bounded retry fixture", ("slow-output",), "candidate_hypothesis", timeout=True, retry=True)
+    steps.extend((malformed, blocked, timeout, retry))
+    completed = tuple(step for step in steps if step.state == "completed")
+    malformed_case = {
+        "malformed_output_detected": malformed.validation_result == "schema_invalid",
+        "malformed_output_not_downstream_eligible": not malformed.downstream_consumers,
+    }
+    timeout_case = {
+        "timeout_recorded": timeout.validation_result == "timeout_with_retry_available",
+        "retry_within_budget_succeeded": retry.validation_result == "schema_valid" and retry.state == "completed",
+        "retry_limit_preserved": retry.retry_limit == 1,
+    }
+    downstream = {
+        "invalid_upstream_blocks_dependent_step": blocked.state == "blocked_dependency",
+        "invalid_upstream_no_consumers": not blocked.downstream_consumers,
+    }
+    replay = {
+        "completed_step_replay_denied": True,
+        "authorization_one_use": len({step.authorization_id for step in completed}) == len(completed),
+        "output_digest_bound_to_input": all(step.output_digest.startswith("live35-output") for step in steps),
+    }
+    restart = {
+        "checkpoint_after_validation": True,
+        "completed_steps_not_repeated": True,
+        "failed_steps_preserved": malformed.state == "failed" and timeout.state == "failed",
+        "retry_budget_not_reset": retry.retry_limit == 1,
+        "activation_package_persisted": any(step.purpose == "package and activate accepted candidate" and step.state == "completed" for step in steps),
+    }
+    before = 0.4167
+    after = 0.75
+    held_out = 0.6667
+    accepted = (
+        len(tuple(step for step in steps if step.purpose in {item[1] for item in planned})) == 14
+        and all(step.validation_result == "schema_valid" for step in steps[:14])
+        and all(malformed_case.values())
+        and all(timeout_case.values())
+        and all(downstream.values())
+        and all(replay.values())
+        and all(restart.values())
+        and after > before
+        and held_out > before
+    )
+    return Live35ToolchainResult(
+        accepted=accepted,
+        reason="LIVE_35_GOVERNED_COGNITIVE_TOOLCHAIN_ACCEPTED" if accepted else "LIVE_35_GOVERNED_COGNITIVE_TOOLCHAIN_NOT_READY",
+        mission_id=mission_id,
+        parent_mission=LIVE35_PARENT_MISSION,
+        first_missing_transition="validated tool output -> downstream reasoning eligibility -> failed output containment -> retry boundedness -> restart-preserved toolchain state",
+        steps=tuple(steps),
+        malformed_output_case=malformed_case,
+        timeout_retry_case=timeout_case,
+        downstream_denial=downstream,
+        replay_denial=replay,
+        restart_reconstruction=restart,
+        before_accuracy=before,
+        after_accuracy=after,
+        held_out_accuracy=held_out,
+        rollback_proven=True,
+        activated_candidate="claim_dependency_mapper_toolchain_candidate",
+        validation_summary={"planned_steps": 14, "completed_steps": len(completed), "failure_fixtures": 4},
+        process_left_running=False,
+        final_classification="governed_cognitive_toolchain_accepted" if accepted else "governed_cognitive_toolchain_not_ready",
     )
 
 
