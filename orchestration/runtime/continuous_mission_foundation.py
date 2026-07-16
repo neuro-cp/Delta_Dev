@@ -397,6 +397,80 @@ def capability_inventory_from_knowledge(knowledge_ledger: Sequence[CapabilityKno
     return tuple(inventory)
 
 
+def _limitation_gap_evidence(inventory: Sequence[VerifiedCapability]) -> tuple[Mapping[str, Any], ...]:
+    gap_records: dict[str, dict[str, Any]] = {}
+
+    def add_gap(gap_id: str, capability: VerifiedCapability, reason: str, question: str, resource: str, materiality: float) -> None:
+        record = gap_records.setdefault(
+            gap_id,
+            {
+                "gap_id": gap_id,
+                "capabilities": [],
+                "reasons": [],
+                "confidence_question": question,
+                "recommended_resource": resource,
+                "materiality": materiality,
+            },
+        )
+        if capability.capability_id not in record["capabilities"]:
+            record["capabilities"].append(capability.capability_id)
+        if reason not in record["reasons"]:
+            record["reasons"].append(reason)
+        record["materiality"] = max(float(record["materiality"]), materiality)
+
+    for item in inventory:
+        limitation_text = " ".join(item.limitations).lower()
+        evidence_text = " ".join(item.evidence).lower()
+        transfer_text = " ".join(item.transfer_evidence).lower()
+        if "local diagnostic" in limitation_text or "local sandbox" in limitation_text:
+            add_gap(
+                "local_diagnostic_only_validation",
+                item,
+                "capability evidence is explicitly limited to local diagnostic or sandbox validation",
+                "Which local diagnostic capabilities need non-fixture or tracked-path evidence before broader claims?",
+                "retained capability evidence and local replay artifacts",
+                0.82,
+            )
+        if "application review" in limitation_text or "tracked-source" in limitation_text or "tracked source" in limitation_text:
+            add_gap(
+                "missing_tracked_application_proof",
+                item,
+                "capability remains outside the governed tracked-source application path",
+                "Which validated capability should next prove the operator-gated application path without mutating protected scope?",
+                "application-boundary records and rollback evidence",
+                0.9,
+            )
+        if "focused continuous subgoal executor tests" in evidence_text or "fixture" in limitation_text:
+            add_gap(
+                "fixture_scoped_validation",
+                item,
+                "validation evidence is focused and may not represent broader behavior",
+                "Which capability needs a non-fixture or cross-context evaluation before it can be trusted more broadly?",
+                "focused, held-out, adversarial, and transfer result comparison",
+                0.74,
+            )
+        if not item.transfer_evidence or transfer_text in {"", "false", "none"}:
+            add_gap(
+                "missing_transfer_evidence",
+                item,
+                "capability lacks positive transfer evidence",
+                "What transfer case would distinguish a reusable capability from a local pass?",
+                "held-out and transfer artifact mining",
+                0.78,
+            )
+        if "provider" in limitation_text or "provider" in evidence_text:
+            add_gap(
+                "provider_dependency_without_local_fallback",
+                item,
+                "capability evidence includes provider dependence without a local fallback proof",
+                "Can the same developmental decision be supported by local evidence when provider access is unavailable?",
+                "local replay and provider-free comparison",
+                0.58,
+            )
+
+    return tuple(sorted(gap_records.values(), key=lambda record: (-float(record["materiality"]), str(record["gap_id"]))))
+
+
 def derive_developmental_capability_plan(
     objective: LongHorizonObjective,
     inventory: Sequence[VerifiedCapability],
@@ -807,6 +881,81 @@ def derive_developmental_next_goal_candidates(
                     prerequisite_graph={"uncertainty_wording_check": (), "operator_state_alignment_check": ("uncertainty_wording_check",)},
                 )
             )
+    inventory = capability_inventory_from_knowledge(knowledge_ledger)
+    limitation_gaps = {str(item["gap_id"]): item for item in _limitation_gap_evidence(inventory)}
+    if limitation_gaps:
+        tracked_criteria = ("application_path_evidence_inventory", "tracked_integration_dry_run", "operator_application_boundary_validation")
+        if "missing_tracked_application_proof" in limitation_gaps and not _candidate_already_satisfied("tracked_integration_proof", tracked_criteria):
+            gap = limitation_gaps["missing_tracked_application_proof"]
+            candidates.append(
+                DevelopmentalNextGoalCandidate(
+                    candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "tracked_integration_proof", tuple(gap["capabilities"])),
+                    normalized_objective="tracked_integration_proof",
+                    objective="Develop governed tracked-integration proof for locally validated capabilities",
+                    evidence_basis=tuple(gap["capabilities"]),
+                    missing_evidence=tuple(gap["reasons"]),
+                    confidence_before=0.46,
+                    expected_value=0.91,
+                    risk=0.28,
+                    resource_need=str(gap["recommended_resource"]),
+                    rationale="capability records repeatedly say local success remains outside the governed tracked-source application path",
+                    success_criteria=tracked_criteria,
+                    evidence_requirements=("application_boundary_inventory", "dry_run_equivalence_record", "operator_gate_validation_record"),
+                    prerequisite_graph={
+                        "application_path_evidence_inventory": (),
+                        "tracked_integration_dry_run": ("application_path_evidence_inventory",),
+                        "operator_application_boundary_validation": ("tracked_integration_dry_run",),
+                    },
+                )
+            )
+        non_fixture_criteria = ("non_fixture_case_generation", "non_fixture_validation_metric", "fixture_to_non_fixture_regression_control")
+        if "fixture_scoped_validation" in limitation_gaps and not _candidate_already_satisfied("non_fixture_evaluation", non_fixture_criteria):
+            gap = limitation_gaps["fixture_scoped_validation"]
+            candidates.append(
+                DevelopmentalNextGoalCandidate(
+                    candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "non_fixture_evaluation", tuple(gap["capabilities"])),
+                    normalized_objective="non_fixture_evaluation",
+                    objective="Develop non-fixture evaluation for locally validated developmental capabilities",
+                    evidence_basis=tuple(gap["capabilities"]),
+                    missing_evidence=tuple(gap["reasons"]),
+                    confidence_before=0.48,
+                    expected_value=0.76,
+                    risk=0.22,
+                    resource_need=str(gap["recommended_resource"]),
+                    rationale="focused tests and fixture-scoped evidence do not prove broader behavior",
+                    success_criteria=non_fixture_criteria,
+                    evidence_requirements=("non_fixture_case_record", "validation_metric", "control_regression_record"),
+                    prerequisite_graph={
+                        "non_fixture_case_generation": (),
+                        "non_fixture_validation_metric": ("non_fixture_case_generation",),
+                        "fixture_to_non_fixture_regression_control": ("non_fixture_validation_metric",),
+                    },
+                )
+            )
+        transfer_criteria = ("missing_transfer_case_inventory", "transfer_gap_validation", "transfer_gap_reassessment")
+        if "missing_transfer_evidence" in limitation_gaps and not _candidate_already_satisfied("broader_transfer_evidence", transfer_criteria):
+            gap = limitation_gaps["missing_transfer_evidence"]
+            candidates.append(
+                DevelopmentalNextGoalCandidate(
+                    candidate_id=stable_id("next-main-goal-candidate", contract.mission_id, completed_goal.main_goal_id, "broader_transfer_evidence", tuple(gap["capabilities"])),
+                    normalized_objective="broader_transfer_evidence",
+                    objective="Develop broader transfer evidence for capabilities with missing transfer proof",
+                    evidence_basis=tuple(gap["capabilities"]),
+                    missing_evidence=tuple(gap["reasons"]),
+                    confidence_before=0.44,
+                    expected_value=0.72,
+                    risk=0.2,
+                    resource_need=str(gap["recommended_resource"]),
+                    rationale="some capability records still lack positive transfer evidence",
+                    success_criteria=transfer_criteria,
+                    evidence_requirements=("transfer_gap_inventory", "transfer_validation_metric", "reassessment_record"),
+                    prerequisite_graph={
+                        "missing_transfer_case_inventory": (),
+                        "transfer_gap_validation": ("missing_transfer_case_inventory",),
+                        "transfer_gap_reassessment": ("transfer_gap_validation",),
+                    },
+                )
+            )
     return tuple(sorted(candidates, key=lambda item: (-item.score, item.normalized_objective)))
 
 
@@ -1057,7 +1206,10 @@ def assess_developmental_capability_state(
     assumed = tuple(item.capability_id for item in inventory if item.status not in {"functional", "reliable", "transferable"})
     categories = {item.category for item in inventory if item.status in {"functional", "reliable", "transferable"}}
     requirements = _objective_requirement_model(objective)
-    missing = tuple(item for item in requirements if item not in categories and item not in verified)
+    missing_requirements = tuple(item for item in requirements if item not in categories and item not in verified)
+    limitation_gap_records = _limitation_gap_evidence(inventory)
+    limitation_gaps = tuple(str(item["gap_id"]) for item in limitation_gap_records)
+    missing = tuple(dict.fromkeys(missing_requirements + limitation_gaps))
     enabled: list[str] = []
     if "sandbox_execution" in categories or any("sandbox" in item for item in verified):
         enabled.append("isolated local candidate experimentation")
@@ -1067,9 +1219,21 @@ def assess_developmental_capability_state(
         enabled.append("operator-gated application decisions")
     if not enabled and verified:
         enabled.append("limited developmental reassessment from retained capability evidence")
-    questions = _confidence_questions_for_objective(objective, missing)
-    resources = _recommended_resources_for_objective(objective, missing)
-    confidence = 0.78 if verified and missing else 0.62 if missing else 0.88
+    questions = tuple(
+        dict.fromkeys(
+            _confidence_questions_for_objective(objective, missing_requirements)
+            + tuple(str(item["confidence_question"]) for item in limitation_gap_records)
+        )
+    )
+    resources = tuple(
+        dict.fromkeys(
+            _recommended_resources_for_objective(objective, missing_requirements)
+            + tuple(str(item["recommended_resource"]) for item in limitation_gap_records)
+        )
+    )
+    confidence = 0.78 if verified and missing_requirements else 0.62 if missing_requirements else 0.88
+    if limitation_gap_records:
+        confidence = min(confidence, max(0.42, 0.82 - (0.04 * len(limitation_gap_records))))
     return DevelopmentalSelfAssessment(
         assessment_id=stable_id("developmental-self-assessment", objective.objective_id, verified, assumed, missing),
         objective_id=objective.objective_id,
@@ -1087,7 +1251,7 @@ def assess_developmental_capability_state(
         missing_confidence_questions=questions,
         recommended_resources=resources,
         confidence=confidence,
-        needs_additional_insight=confidence < 0.8 or bool(questions),
+        needs_additional_insight=confidence < 0.8 or bool(questions) or bool(limitation_gap_records),
     )
 
 

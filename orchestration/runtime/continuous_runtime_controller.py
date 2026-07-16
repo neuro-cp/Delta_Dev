@@ -821,6 +821,7 @@ def assess_and_advance_continuous_main_goal(controller: ContinuousRuntimeControl
             active_work_item=OBSERVATION_STATE,
             journal=controller.journal + (_journal_entry("continuous_mission", "observation_without_main_goal_contract", ()),),
         )
+    controller = refresh_developmental_self_direction(controller)
     main_goal = MainGoalContract(**controller.continuous_main_goal)
     knowledge = tuple(CapabilityKnowledgeRecord(**item) for item in controller.continuous_knowledge_ledger)
     eligible_frontier_exists = any(item.get("status") == "eligible" for item in controller.continuous_mission_frontier)

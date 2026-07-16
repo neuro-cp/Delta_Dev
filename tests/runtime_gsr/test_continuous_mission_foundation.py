@@ -666,6 +666,125 @@ def test_completed_transfer_validation_derives_next_goal_from_remaining_candidat
     assert evidence[0]["affected_capability"] == "source_diversity_inventory"
 
 
+def test_local_only_limitations_produce_developmental_gaps_and_lower_confidence():
+    objective = compile_long_horizon_objective("Develop yourself into an increasingly capable, articulate, self-directed system.")
+    local_only = make_satisfied_transfer_record().__class__(
+        **{
+            **make_satisfied_transfer_record().as_dict(),
+            "capability_id": "local_fixture_skill",
+            "original_weakness": "local fixture passed but broad use unproven",
+            "successful_mechanism": "local sandbox diagnostic candidate",
+            "application_evidence": "tracked application not performed",
+            "held_out_evidence": {"sealed": False, "result": 1.0},
+            "regression_evidence": "focused continuous subgoal executor tests",
+            "reproduction_evidence": "local clean reproduction only",
+            "residual_uncertainty": "candidate is local diagnostic unless application review is separately requested",
+            "reassessment": "satisfied",
+        }
+    )
+    inventory = capability_inventory_from_knowledge((local_only,))
+    assessment = assess_developmental_capability_state(objective, inventory)
+
+    assert "local_fixture_skill" in assessment.verified_capabilities
+    assert "local_diagnostic_only_validation" in assessment.developmental_gaps
+    assert "missing_tracked_application_proof" in assessment.developmental_gaps
+    assert "fixture_scoped_validation" in assessment.developmental_gaps
+    assert assessment.confidence < 0.8
+    assert assessment.needs_additional_insight is True
+    assert assessment.missing_confidence_questions
+
+
+def test_controller_refreshes_limitation_gaps_before_observation_or_advance():
+    controller = start_continuous_runtime_controller(session_id="controller-refreshes-limitation-gaps")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    local_only = make_satisfied_transfer_record().__class__(
+        **{
+            **make_satisfied_transfer_record().as_dict(),
+            "capability_id": "local_fixture_skill",
+            "original_weakness": "local fixture passed but broad use unproven",
+            "successful_mechanism": "local sandbox diagnostic candidate",
+            "application_evidence": "tracked application not performed",
+            "held_out_evidence": {"sealed": False, "result": 1.0},
+            "regression_evidence": "focused continuous subgoal executor tests",
+            "reproduction_evidence": "local clean reproduction only",
+            "residual_uncertainty": "candidate is local diagnostic unless application review is separately requested",
+            "reassessment": "satisfied",
+        }
+    )
+    updated = assess_and_advance_continuous_main_goal(replace(controller, continuous_knowledge_ledger=(local_only.as_dict(),)))
+    snapshot = controller_snapshot(updated)["continuous_mission"]
+
+    assert "local_diagnostic_only_validation" in snapshot["developmental_self_assessment"]["developmental_gaps"]
+    assert snapshot["developmental_self_assessment"]["needs_additional_insight"] is True
+
+
+def test_empty_gap_requires_limitations_to_be_resolved_or_absent():
+    objective = compile_long_horizon_objective("Develop yourself into an increasingly capable, articulate, self-directed system.")
+    applied = make_satisfied_transfer_record()
+    assessment = assess_developmental_capability_state(objective, capability_inventory_from_knowledge((applied,)))
+
+    assert "missing_tracked_application_proof" not in assessment.developmental_gaps
+    assert "local_diagnostic_only_validation" not in assessment.developmental_gaps
+
+
+def test_limitation_gaps_generate_ranked_candidate_goals_without_static_followup():
+    controller = start_continuous_runtime_controller(session_id="limitation-gap-candidates")
+    controller = attach_continuous_mission(controller, "Develop yourself into an increasingly capable, articulate, self-directed system.")
+    current = MainGoalContract(**controller.continuous_main_goal)
+    records = ()
+    for _ in range(5):
+        records += tuple(
+            make_satisfied_transfer_record().__class__(
+                **{
+                    **make_satisfied_transfer_record().as_dict(),
+                    "capability_id": criterion,
+                    "original_weakness": f"{criterion} completed locally",
+                    "successful_mechanism": "local sandbox diagnostic candidate",
+                    "application_evidence": "tracked application not performed",
+                    "held_out_evidence": {"sealed": False, "result": 1.0},
+                    "regression_evidence": "focused continuous subgoal executor tests",
+                    "residual_uncertainty": "candidate is local diagnostic unless application review is separately requested",
+                    "reassessment": "satisfied",
+                }
+            )
+            for criterion in current.success_criteria
+        )
+        assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+        next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+        if next_goal is None:
+            break
+        current = next_goal
+
+    assert current.normalized_objective == "tracked_integration_proof"
+    assert current.next_main_goal_candidates[0] == "tracked_integration_proof"
+    assert "autonomous_evidence_acquisition" in current.next_main_goal_candidates
+    assert "non_fixture_evaluation" in current.next_main_goal_candidates
+    assert "capability records repeatedly say local success remains outside" in current.completion_rationale
+    evidence = derive_subgoal_evidence_for_main_goal(current, records, max_items=1)
+    assert evidence[0]["affected_capability"] == "application_path_evidence_inventory"
+
+    records += tuple(
+        make_satisfied_transfer_record().__class__(
+            **{
+                **make_satisfied_transfer_record().as_dict(),
+                "capability_id": criterion,
+                "original_weakness": f"{criterion} completed locally",
+                "successful_mechanism": "local sandbox diagnostic candidate",
+                "application_evidence": "tracked application not performed",
+                "held_out_evidence": {"sealed": False, "result": 1.0},
+                "regression_evidence": "focused continuous subgoal executor tests",
+                "residual_uncertainty": "candidate is local diagnostic unless application review is separately requested",
+                "reassessment": "satisfied",
+            }
+        )
+        for criterion in current.success_criteria
+    )
+    assessed = assess_main_goal_completion(current, records, eligible_frontier_exists=False)
+    next_goal = derive_next_main_goal(type("Contract", (), controller.continuous_mission_contract), assessed, records)
+    assert next_goal is not None
+    assert next_goal.normalized_objective == "non_fixture_evaluation"
+
+
 def test_developmental_planner_derives_math_science_sandbox_without_physics_rule():
     objective = compile_long_horizon_objective("Become capable of mastering the sciences")
     knowledge = (
