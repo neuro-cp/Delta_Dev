@@ -29,6 +29,7 @@ from orchestration.runtime.continuous_mission_foundation import (
     CapabilityKnowledgeRecord,
     RepositoryBehaviorContract,
     capability_is_acquired,
+    compile_behavioral_failure_record,
     promote_capability_with_behavioral_evaluation,
 )
 from orchestration.runtime.continuous_runtime_controller import (
@@ -1112,13 +1113,55 @@ def _execute_legacy_repository_bound_design_block(
         },
     )
     record = _candidate_design_record(subgoal, source_inspection, design_path, design, model_result)
+    failure_compilation = compile_behavioral_failure_record(
+        _loose_behavioral_failure_evidence_packet(
+            controller,
+            subgoal,
+            source_inspection,
+            design_path,
+            design,
+            model_result,
+        ),
+        existing_records=controller.continuous_behavioral_failure_records,
+    )
+    failure_compilation_path = root / "behavioral_failure_compilation.json"
+    _write_json(
+        failure_compilation_path,
+        {
+            "accepted": failure_compilation.accepted,
+            "record": failure_compilation.record.as_dict() if failure_compilation.record is not None else None,
+            "rejection_reason": failure_compilation.rejection_reason,
+            "missing_fields": failure_compilation.missing_fields,
+            "source_classification": failure_compilation.source_classification,
+            "duplicate_of": failure_compilation.duplicate_of,
+            "version_of": failure_compilation.version_of,
+            "tracked_source_mutated": False,
+            "provider_calls_performed": False,
+        },
+    )
     reassessed = consume_continuous_capability_reassessment(controller, record)
-    next_controller = _pause_for_candidate_design_evidence(reassessed, subgoal, design_path, design)
+    next_controller = _observe_missing_behavioral_failure_contract(
+        reassessed,
+        subgoal,
+        design_path,
+        failure_compilation_path,
+        failure_compilation,
+    )
     timestamps["controller_handoff_completed"] = utc_now()
+    disposition = (
+        "legacy_loose_evidence_compiled_to_behavioral_failure"
+        if failure_compilation.accepted
+        else "missing_behavioral_failure_contract"
+    )
+    reason = (
+        "legacy loose evidence compiled into a sealed BehavioralFailureRecord"
+        if failure_compilation.accepted
+        else f"legacy loose evidence rejected before candidate creation: {failure_compilation.rejection_reason}"
+    )
     result = SubgoalExecutionResult(
         accepted=False,
-        disposition="candidate_design_requires_concrete_behavior_contract",
-        reason="no sealed BehavioralFailureRecord was available; legacy loose evidence remains blocked before candidate creation",
+        disposition=disposition,
+        reason=reason,
         subgoal_id=str(subgoal["subgoal_id"]),
         campaign_root=str(root),
         consumed_once=True,
@@ -1129,7 +1172,17 @@ def _execute_legacy_repository_bound_design_block(
         clean_reproduction={"not_run": "no concrete candidate source exists"},
         application_request={},
         behavioral_evaluation_request={},
-        reassessment={"capability_id": record.capability_id, "reassessment": record.reassessment},
+        reassessment={
+            "capability_id": record.capability_id,
+            "reassessment": record.reassessment,
+            "behavioral_failure_compilation": {
+                "accepted": failure_compilation.accepted,
+                "rejection_reason": failure_compilation.rejection_reason,
+                "missing_fields": failure_compilation.missing_fields,
+                "source_classification": failure_compilation.source_classification,
+                "path": str(failure_compilation_path),
+            },
+        },
         resource_usage=(resource,),
         meaningful_transition_timestamps=timestamps,
         stalled_execution=False,
@@ -1137,6 +1190,110 @@ def _execute_legacy_repository_bound_design_block(
     _write_json(result_path, result.as_dict())
     _write_json(root / "updated_restart_state_hint.json", {"controller_state": next_controller.continuous_mission_state})
     return next_controller, result
+
+
+def _loose_behavioral_failure_evidence_packet(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    source_inspection: Mapping[str, Any],
+    design_path: Path,
+    design: Mapping[str, Any],
+    model_result: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Normalize legacy loose runtime evidence without inventing expectations.
+
+    The packet intentionally includes only authoritative fields that exist in
+    the current runtime state. Missing expected behavior, reproduction, or
+    independent evidence must be reported by the BehavioralFailureRecord
+    compiler rather than patched over with a guessed diagnosis.
+    """
+
+    mission_id = str((controller.continuous_mission_contract or {}).get("mission_id") or controller.session_id)
+    state_material = {
+        "session_id": controller.session_id,
+        "mission_id": mission_id,
+        "main_goal_id": (controller.continuous_main_goal or {}).get("main_goal_id", ""),
+        "subgoal_id": subgoal.get("subgoal_id", ""),
+        "weakness_id": subgoal.get("weakness_id", ""),
+        "design_path": str(design_path),
+        "design_rejection_reason": design.get("rejection_reason", ""),
+    }
+    return {
+        "source_type": "runtime_transition_violation",
+        "source_reference": str(design_path),
+        "source_digest": _digest(_read_json(design_path)),
+        "observed_behavior": str(design.get("rejection_reason") or "legacy loose evidence cannot support candidate creation"),
+        "expected_behavior_authority": "concrete_mission_success_criterion",
+        "expected_vs_observed_result": "missing_behavioral_failure_contract",
+        "baseline_reproduction": str(subgoal.get("baseline") or ""),
+        "reproduction_command_or_predicate": "runtime packet inspection only; no deterministic reproduction predicate sealed",
+        "first_incorrect_transition": "legacy loose runtime evidence -> candidate creation requested before sealed BehavioralFailureRecord",
+        "affected_runtime_stage": "continuous_subgoal_execution",
+        "affected_capability_id": _capability_id_from_subgoal(subgoal),
+        "originating_mission_id": mission_id,
+        "suspected_owner_paths": ("orchestration/runtime/continuous_subgoal_executor.py",),
+        "independent_evidence_paths": (),
+        "allowed_scope": ("orchestration/runtime", "tests/runtime_gsr"),
+        "excluded_scope": ("DELTA-75", "reports/RC4_*"),
+        "materiality_reason": "candidate creation would otherwise depend on unsealed loose evidence",
+        "reproducibility_status": "reproduction_pending",
+        "occurrence_count": 1,
+        "first_seen": utc_now(),
+        "last_seen": utc_now(),
+        "environment_digest": _digest(
+            {
+                "source_inspection_id": source_inspection.get("inspection_id", ""),
+                "file_count": source_inspection.get("file_count", 0),
+            }
+        ),
+        "state_digest": _digest(state_material),
+        "reproduction_output_digest": _digest(
+            {
+                "model_result": _model_result_for_artifact(model_result),
+                "design_validation": dict(design),
+            }
+        ),
+        "authority_class": "local_execution_allowed",
+        "ambiguity_status": "missing_expected_behavior",
+        "current_disposition": "reproduction_pending",
+    }
+
+
+def _observe_missing_behavioral_failure_contract(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    design_path: Path,
+    compilation_path: Path,
+    compilation_result: Any,
+) -> ContinuousRuntimeController:
+    scope_signature = stable_id(
+        "behavioral-failure-contract-scope",
+        str(subgoal.get("subgoal_id") or ""),
+        tuple(str(item) for item in (subgoal.get("source_inspection_scope") or ())),
+        compilation_result.rejection_reason,
+        compilation_result.missing_fields,
+    )
+    return replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        active_work_item="observing_for_new_weaknesses",
+        continuous_observation_state={
+            **(controller.continuous_observation_state or {}),
+            "observation_reason": "missing_behavioral_failure_contract",
+            "expected_external_change": "authoritative behavioral failure evidence or bounded reproduction packet",
+            "behavioral_failure_compilation": {
+                "accepted": compilation_result.accepted,
+                "rejection_reason": compilation_result.rejection_reason,
+                "missing_fields": compilation_result.missing_fields,
+                "source_classification": compilation_result.source_classification,
+                "compilation_path": str(compilation_path),
+                "design_path": str(design_path),
+            },
+            "candidate_design_evidence_exhausted": True,
+            "candidate_design_evidence_scope_signature": scope_signature,
+        },
+    )
 
 
 def _repository_bound_design_prompt(

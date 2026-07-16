@@ -7,8 +7,10 @@ from orchestration.runtime.continuous_mission_foundation import (
     OBSERVATION_STATE,
     MainGoalContract,
     assess_main_goal_completion,
+    behavioral_failure_to_runtime_finding,
     capability_is_acquired,
     capability_inventory_from_knowledge,
+    compile_behavioral_failure_record,
     compile_developmental_insight_requests,
     compile_developmental_operator_explanation,
     compile_initial_main_goal,
@@ -50,6 +52,7 @@ from orchestration.runtime.continuous_runtime_controller import (
     select_continuous_mission_subgoal,
     start_continuous_runtime_controller,
 )
+from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal
 
 
 def _evidence():
@@ -80,6 +83,55 @@ def _controller_with_subgoal():
     controller = assess_continuous_mission_runtime(controller, _evidence())
     controller = refresh_continuous_mission_frontier(controller)
     return select_continuous_mission_subgoal(controller)
+
+
+def _behavioral_failure_evidence(**overrides):
+    evidence = {
+        "source_type": "runtime_transition_violation",
+        "source_reference": "tests/runtime_gsr/test_controller_transition.py::test_restart_resumes",
+        "source_digest": "source-digest-a",
+        "observed_behavior": "restart recovery raises before capability reassessment",
+        "expected_behavior": "restart recovery restores the active subgoal and then reassesses capability state",
+        "expected_behavior_identity": "restart_restores_active_subgoal_before_reassessment",
+        "expected_behavior_authority": "state_machine_transition_contract",
+        "expected_vs_observed_result": "exception_before_reassessment",
+        "baseline_reproduction": "pytest tests/runtime_gsr/test_controller_transition.py::test_restart_resumes",
+        "reproduction_command_or_predicate": "pytest tests/runtime_gsr/test_controller_transition.py::test_restart_resumes",
+        "reproduction_attempts": (
+            {
+                "command_or_predicate_identity": "pytest restart-resumes",
+                "input_or_state_reference": "restart_state_fixture_a",
+                "status": "completed",
+                "result_classification": "reproduced",
+                "result_digest": "result-digest-a",
+                "environment_digest": "env-digest-a",
+                "safety_boundary": "local_deterministic_no_mutation",
+                "authoritative_runner_identity": "pytest",
+            },
+        ),
+        "reproduction_result": "reproduced",
+        "reproduction_output_digest": "output-digest-a",
+        "first_incorrect_transition": "restart_state_loaded -> capability reassessment",
+        "affected_runtime_stage": "restart_recovery",
+        "affected_capability_id": "restart_reassessment_bridge",
+        "originating_mission_id": "continuous-mission-test",
+        "suspected_owner_paths": ("orchestration/runtime/continuous_runtime_controller.py",),
+        "independent_evidence_paths": ("tests/runtime_gsr/test_controller_transition.py",),
+        "allowed_scope": ("orchestration/runtime", "tests/runtime_gsr"),
+        "excluded_scope": ("DELTA-75", "reports/RC4_*"),
+        "materiality_reason": "restart cannot continue developmental work after worker recovery",
+        "reproducibility_status": "reproduced",
+        "occurrence_count": 1,
+        "first_seen": "2026-07-16T00:00:00+00:00",
+        "last_seen": "2026-07-16T00:00:00+00:00",
+        "environment_digest": "env-digest-a",
+        "state_digest": "state-digest-a",
+        "authority_class": "local_execution_allowed",
+        "ambiguity_status": "resolved",
+        "current_disposition": "observed",
+    }
+    evidence.update(overrides)
+    return evidence
 
 
 def test_contract_helpers_are_not_a_second_controller():
@@ -1749,3 +1801,87 @@ def test_restart_normalizes_legacy_pending_request_with_consumed_response():
 
     assert restored.continuous_developmental_insight_requests[0]["status"] == "consumed"
     assert restored.continuous_developmental_insight_requests[0]["recovery_disposition"] == "normalized_pending_request_with_consumed_response"
+
+
+def test_behavioral_failure_record_compiles_to_runtime_finding():
+    result = compile_behavioral_failure_record(_behavioral_failure_evidence())
+
+    assert result.accepted is True
+    assert result.record is not None
+    assert result.record.task_eligibility == "eligible"
+    assert result.record.expected_behavior_identity == "restart_restores_active_subgoal_before_reassessment"
+
+    finding = behavioral_failure_to_runtime_finding(result.record)
+
+    assert finding.diagnostic_only is False
+    assert finding.affected_capability == "restart_reassessment_bridge"
+    assert finding.evidence_source.startswith("behavioral_failure:")
+
+
+def test_behavioral_failure_rejects_activity_only_and_missing_expectation():
+    activity = compile_behavioral_failure_record(
+        {
+            "source_type": "activity_artifact",
+            "source_reference": "heartbeat.json",
+            "observed_behavior": "worker heartbeat repeated",
+            "expected_behavior_authority": "state_machine_transition_contract",
+        }
+    )
+
+    assert activity.accepted is False
+    assert activity.rejection_reason == "activity_liveness_only_source"
+
+    missing = compile_behavioral_failure_record(
+        _behavioral_failure_evidence(expected_behavior="", expected_behavior_identity="")
+    )
+
+    assert missing.accepted is False
+    assert missing.rejection_reason == "missing_required_behavioral_failure_fields"
+    assert "expected_behavior" in missing.missing_fields
+    assert "expected_behavior_identity" in missing.missing_fields
+
+
+def test_behavioral_failure_duplicate_is_not_task_eligible():
+    first = compile_behavioral_failure_record(_behavioral_failure_evidence())
+
+    duplicate = compile_behavioral_failure_record(
+        _behavioral_failure_evidence(),
+        existing_records=(first.record,),
+    )
+
+    assert duplicate.accepted is True
+    assert duplicate.record is not None
+    assert duplicate.record.failure_id == first.record.failure_id
+    assert duplicate.record.task_eligibility == "ineligible_duplicate"
+    assert duplicate.record.current_disposition == "closed_duplicate"
+    assert duplicate.duplicate_of == first.record.failure_id
+
+
+def test_loose_live_packet_records_missing_failure_contract_without_operator_prompt(tmp_path):
+    controller = start_continuous_runtime_controller(session_id="loose-live-packet")
+    controller = attach_continuous_mission(
+        controller,
+        "Optimize your runtime continuously. Identify evidence-backed runtime limitations.",
+    )
+    controller = assess_and_advance_continuous_main_goal(controller)
+    updated, execution = execute_continuous_active_subgoal(
+        controller,
+        artifact_root=tmp_path,
+        repository_root=".",
+        allow_local_model_execution=False,
+    )
+
+    compilation = updated.continuous_observation_state["behavioral_failure_compilation"]
+
+    assert execution.disposition == "missing_behavioral_failure_contract"
+    assert execution.accepted is False
+    assert updated.continuous_mission_state == "observing_for_new_weaknesses"
+    assert not any(
+        item.get("request_source") == "repository_bound_candidate_design"
+        for item in updated.continuous_developmental_insight_requests
+    )
+    assert compilation["accepted"] is False
+    assert compilation["rejection_reason"] == "missing_required_behavioral_failure_fields"
+    assert "expected_behavior" in compilation["missing_fields"]
+    assert "expected_behavior_identity" in compilation["missing_fields"]
+    assert "reproduction_attempts" in compilation["missing_fields"]

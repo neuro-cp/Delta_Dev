@@ -337,7 +337,7 @@ def test_observation_mode_discovers_evidence_and_executes_new_subgoal(tmp_path: 
         assert ledger["executions"]
         assert (tmp_path / "observation_requeue.json").exists()
         assert ledger["executions"][0]["accepted"] is False
-        assert ledger["executions"][0]["disposition"] == "candidate_design_requires_concrete_behavior_contract"
+        assert ledger["executions"][0]["disposition"] == "missing_behavioral_failure_contract"
         requeue = json.loads((tmp_path / "observation_requeue.json").read_text(encoding="utf-8"))
         assert requeue["main_goal"]
     finally:
@@ -536,10 +536,13 @@ def test_operator_insight_response_consumed_once_and_resumes_local_work(tmp_path
         assert ledger["responses"][0]["authority_granted"] is False
         restart = json.loads((tmp_path / "restart_state.json").read_text(encoding="utf-8"))
         assert any(
-            item["request_id"] == request_id and item.get("status") == "consumed"
+            item["request_id"] == request_id and item.get("authority_granted") is False
+            for item in restart["continuous_operator_interaction_responses"]
+        )
+        assert not any(
+            item.get("request_source") == "repository_bound_candidate_design"
             for item in restart["continuous_developmental_insight_requests"]
         )
-        assert restart["continuous_operator_interaction_responses"][-1]["authority_granted"] is False
     finally:
         _cleanup(supervisor)
 

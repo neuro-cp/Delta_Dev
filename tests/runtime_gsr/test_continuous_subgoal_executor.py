@@ -69,37 +69,30 @@ def test_abstract_subgoal_records_one_repository_bound_design_and_never_creates_
     assert result.accepted is False
     assert result.consumed_once is True
     assert result.source_inspection["file_count"] > 0
-    assert result.disposition == "candidate_design_requires_concrete_behavior_contract"
+    assert result.disposition == "missing_behavioral_failure_contract"
     assert result.candidate["state"] == "not_created"
     assert result.validation["not_run"] == "no concrete candidate source exists"
     assert result.reassessment["capability_id"] == "continuous_subgoal_execution_bridge"
     assert "weakness-" not in result.reassessment["capability_id"]
+    assert result.reassessment["behavioral_failure_compilation"]["rejection_reason"] == "missing_required_behavioral_failure_fields"
+    assert "expected_behavior" in result.reassessment["behavioral_failure_compilation"]["missing_fields"]
     assert "source_inspection_completed" in result.meaningful_transition_timestamps
-    assert updated.continuous_mission_state == "awaiting_operator_insight"
-    pending = [item for item in updated.continuous_developmental_insight_requests if item["status"] == "pending"]
-    assert len(pending) == 1
-    request = pending[0]
-    assert request["request_source"] == "repository_bound_candidate_design"
-    assert request["authority_granted"] is False
+    assert updated.continuous_mission_state == "observing_for_new_weaknesses"
+    assert not any(
+        item.get("request_source") == "repository_bound_candidate_design"
+        for item in updated.continuous_developmental_insight_requests
+    )
+    assert updated.continuous_observation_state["observation_reason"] == "missing_behavioral_failure_contract"
+    assert updated.continuous_observation_state["behavioral_failure_compilation"]["rejection_reason"] == "missing_required_behavioral_failure_fields"
     assert updated.continuous_observation_state["candidate_design_evidence_exhausted"] is True
     artifact = tmp_path / "subgoal_executions" / result.subgoal_id / "repository_bound_candidate_design.json"
     assert artifact.exists()
+    compilation_artifact = tmp_path / "subgoal_executions" / result.subgoal_id / "behavioral_failure_compilation.json"
+    assert compilation_artifact.exists()
     assert "candidate_metric" not in artifact.read_text(encoding="utf-8")
     assert duplicate.consumed_once is False
     assert duplicate.disposition == "duplicate_consumption_prevented"
     assert duplicate_controller == controller
-
-    boundary = consume_continuous_operator_interaction_response(
-        updated,
-        request_id=request["request_id"],
-        response_kind="insight",
-        operator_text="Treat this ungrounded abstract branch as an accepted boundary.",
-        selected_option="treat as accepted boundary",
-    )
-    blocked = select_continuous_mission_subgoal(boundary)
-    assert blocked.continuous_mission_state == "observing_for_new_weaknesses"
-    assert blocked.continuous_active_subgoal == {}
-    assert blocked.continuous_observation_state["observation_reason"] == "repository_bound_candidate_design_evidence_scope_exhausted"
 
 
 def test_prefilled_design_mapping_cannot_restore_the_removed_static_candidate_path(tmp_path: Path):
@@ -126,7 +119,7 @@ def test_prefilled_design_mapping_cannot_restore_the_removed_static_candidate_pa
     )
 
     assert result.accepted is False
-    assert result.disposition == "candidate_design_requires_concrete_behavior_contract"
+    assert result.disposition == "missing_behavioral_failure_contract"
     assert not (tmp_path / "candidate" / "continuous_candidate.py").exists()
 
 
@@ -216,7 +209,7 @@ def test_worker_execution_mode_persists_one_grounded_block_without_local_model_e
         assert result_path.exists()
         result = json.loads(result_path.read_text(encoding="utf-8"))
         assert result["accepted"] is False
-        assert result["disposition"] == "candidate_design_requires_concrete_behavior_contract"
+        assert result["disposition"] == "missing_behavioral_failure_contract"
         assert status["lifecycle_owner"] == "continuous_runtime_controller"
     finally:
         request_intentional_worker_stop(tmp_path, reason="test_complete")
