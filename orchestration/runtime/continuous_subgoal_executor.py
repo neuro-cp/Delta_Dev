@@ -33,9 +33,11 @@ from orchestration.runtime.continuous_runtime_controller import (
     ContinuousRuntimeController,
     continue_continuous_mission_after_reassessment,
     consume_continuous_capability_reassessment,
+    consume_continuous_pcm_bridge_result,
     pause_continuous_mission_for_application,
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
+from orchestration.runtime import gsr_a_governed_self_regulation as gsr
 from orchestration.runtime.rc2_conversational_mode_router import execute_local_model_answer, select_model_lane
 
 
@@ -49,6 +51,7 @@ LIVENESS_ONLY_METRICS = (
 )
 
 CANDIDATE_DESIGN_PROTOCOL = "repository_bound_candidate_design_v1"
+CONTINUOUS_PCM_BRIDGE_PROTOCOL = "continuous_to_pcm_closed_loop_fixture_v1"
 
 
 @dataclass(frozen=True)
@@ -121,6 +124,12 @@ def execute_continuous_active_subgoal(
             root=root,
             result_path=result_path,
         )
+    if str(subgoal.get("execution_kind") or "") == "continuous_to_pcm_closed_loop_fixture":
+        return execute_continuous_to_pcm_closed_loop_fixture(
+            controller,
+            artifact_root=artifact_root,
+            python_executable=python_executable,
+        )
 
     timestamps: dict[str, str] = {"execution_started": utc_now()}
     baseline_metric = str(subgoal.get("baseline") or "")
@@ -159,6 +168,432 @@ def execute_continuous_active_subgoal(
         result_path=result_path,
         local_model_adapter=local_model_adapter,
         allow_local_model_execution=allow_local_model_execution,
+    )
+
+
+def compile_continuous_pcm_bridge_fixture(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compile an evidence-complete, inert fixture design for the existing PCM.
+
+    This is deliberately a fixture compiler, not a general candidate generator.
+    It keeps the current gate independent of advisory-model quality while
+    binding every later PCM action to controller-owned mission provenance.
+    """
+
+    subgoal_id = str(subgoal.get("subgoal_id") or "")
+    weakness_id = str(subgoal.get("weakness_id") or "")
+    if not subgoal_id or not weakness_id:
+        raise ValueError("continuous PCM bridge fixture requires controller-owned subgoal and weakness IDs")
+    mission_id = str((controller.continuous_mission_contract or {}).get("mission_id") or controller.session_id)
+    main_goal_id = str((controller.continuous_main_goal or {}).get("main_goal_id") or "continuous-main-goal")
+    capability_id = _capability_id_from_subgoal(subgoal) or "continuous_pcm_bridge_fixture"
+    expected_symbol = "missing_guard"
+    design = {
+        "protocol": CONTINUOUS_PCM_BRIDGE_PROTOCOL,
+        "mission_id": mission_id,
+        "main_goal_id": main_goal_id,
+        "subgoal_id": subgoal_id,
+        "weakness_id": weakness_id,
+        "capability_id": capability_id,
+        "developmental_gap_id": f"{weakness_id}:behavioral_gap",
+        "preexisting_behavioral_failure_id": stable_id("continuous-pcm-baseline-failure", mission_id, subgoal_id, expected_symbol),
+        "first_incorrect_transition": "structural PCM pass -> capability acquisition without sealed behavioral evidence",
+        "affected_implementation_path": "sample.py",
+        "independent_evidence_path": "sealed_behavioral_bundle.json",
+        "source_inspection_id": stable_id("continuous-pcm-source-inspection", mission_id, subgoal_id, "sample.py"),
+        "allowed_paths": ("sample.py", "tests/test_pcm_generated_review.py"),
+        "excluded_paths": ("DELTA-75", "reports/RC4_*", "orchestration/runtime", "tests/runtime_gsr"),
+        "candidate_behavior": "provide the missing callable without changing present() behavior",
+        "validation_target": "sealed callable return behavior with an unchanged control",
+        "baseline_evidence_reference": "baseline_missing_guard_behavior",
+        "control_requirement": "present() remains 1",
+        "held_out_requirement": "missing_guard() returns True through a sealed invocation distinct from PCM symbol existence",
+        "rollback_restoration_condition": "restored baseline source again lacks missing_guard while present() remains 1",
+        "authority_state": "fixture_local_disposable_only",
+        "grounded_design_protocol": CONTINUOUS_PCM_BRIDGE_PROTOCOL,
+        "grounded_design_digest": "",
+        "model_result_marker": "deterministic_fixture_no_model_authority",
+        "expected_symbol": expected_symbol,
+    }
+    return {**design, "grounded_design_digest": _digest(design)}
+
+
+def execute_continuous_to_pcm_closed_loop_fixture(
+    controller: ContinuousRuntimeController,
+    *,
+    artifact_root: str | Path,
+    python_executable: str | None = None,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
+    """Exercise one sealed, disposable PCM lifecycle and return it once.
+
+    The existing PCM remains authoritative for attachment, inspection,
+    diagnosis, patching, disposable materialization, and structural testing.
+    The sealed bundle below is purposefully separate from PCM's generated test
+    so a structural ``proposal_passed`` cannot certify a capability.
+    """
+
+    if not controller.continuous_active_subgoal:
+        raise ValueError("continuous PCM bridge requires an active controller subgoal")
+    subgoal = dict(controller.continuous_active_subgoal)
+    design = compile_continuous_pcm_bridge_fixture(controller, subgoal)
+    bridge_id = stable_id("continuous-pcm-bridge", design["mission_id"], design["subgoal_id"], design["grounded_design_digest"])
+    idempotency_key = stable_id("continuous-pcm-bridge-idempotency", bridge_id, design["preexisting_behavioral_failure_id"])
+    for entry in controller.continuous_pcm_bridge_ledger:
+        if str(entry.get("bridge_id") or "") == bridge_id or str(entry.get("idempotency_key") or "") == idempotency_key:
+            return controller, _pcm_bridge_duplicate_result(subgoal, bridge_id, str(artifact_root))
+
+    root = Path(artifact_root) / "continuous_pcm_bridge" / bridge_id
+    root.mkdir(parents=True, exist_ok=True)
+    result_path = root / "execution_result.json"
+    if result_path.exists():
+        return _recover_or_suppress_completed_pcm_bridge_result(controller, subgoal, bridge_id, root)
+
+    timestamps = {"bridge_started": utc_now()}
+    baseline_source = "def present():\n    return 1\n"
+    fixture_root = root / "baseline_fixture"
+    fixture_root.mkdir(exist_ok=True)
+    (fixture_root / "sample.py").write_text(baseline_source, encoding="utf-8")
+    bundle = _create_sealed_pcm_behavioral_bundle(design, baseline_source)
+    bundle_path = root / "sealed_behavioral_bundle.json"
+    _write_json(bundle_path, bundle)
+    sealed_digest = _digest(_read_json(bundle_path))
+    timestamps["sealed_bundle_created_before_implementation"] = utc_now()
+
+    cycle = gsr.make_governed_objective_cycle(
+        gsr.make_development_objective("Continuous PCM closed-loop bridge fixture", sequence=1),
+        sequence=1,
+    )
+    manifest = gsr.make_python_coding_module_manifest()
+    capability = gsr.make_python_coding_capability_request(
+        cycle,
+        manifest,
+        requested_source_scope=("sample.py",),
+        request_sequence=2,
+    )
+    attachment_request = gsr.make_python_coding_module_attachment_request(manifest, capability, requested_attachment_sequence=3)
+    attachment_authorization = gsr.make_python_coding_module_attachment_authorization(attachment_request, issued_sequence=4, expiration_sequence=90)
+    attachment_eligibility = gsr.evaluate_python_coding_module_attachment_eligibility(
+        cycle, manifest, capability, attachment_request, attachment_authorization, sequence=5
+    )
+    attachment = gsr.create_python_coding_module_inert_attachment_record(
+        gsr.make_python_coding_module_attachment_state(), attachment_eligibility, sequence=6
+    )
+    if not attachment.accepted or attachment.attachment_record is None:
+        raise RuntimeError(f"PCM attachment failed: {attachment.reason}")
+    record = attachment.attachment_record
+
+    inspection_request = gsr.make_python_source_inspection_request(record, requested_relative_paths=("sample.py",), request_sequence=7)
+    inspection_authorization = gsr.make_python_source_inspection_authorization(inspection_request, issued_sequence=8, expiration_sequence=90)
+    inspection = gsr.inspect_python_source_read_only(record, inspection_request, inspection_authorization, root=fixture_root, sequence=9)
+    diagnosis_request = gsr.make_python_bounded_diagnosis_request(
+        record,
+        inspection,
+        diagnosis_question="Is missing_guard missing?",
+        expected_transition="missing_guard should appear",
+        expected_symbol=str(design["expected_symbol"]),
+        request_sequence=10,
+    )
+    diagnosis_authorization = gsr.make_python_bounded_diagnosis_authorization(diagnosis_request, issued_sequence=11, expiration_sequence=90)
+    diagnosis = gsr.perform_python_bounded_diagnosis(record, inspection, diagnosis_request, diagnosis_authorization, sequence=12)
+    test_request = gsr.make_python_focused_test_proposal_request(
+        record,
+        diagnosis,
+        expected_behavior="missing_guard exists",
+        proposed_test_target_path="tests/test_pcm_generated_review.py",
+        request_sequence=13,
+    )
+    test_authorization = gsr.make_python_focused_test_proposal_authorization(test_request, issued_sequence=14, expiration_sequence=90)
+    test_proposal = gsr.create_python_focused_test_proposal(record, diagnosis, test_request, test_authorization, sequence=15)
+    handoff_request = gsr.make_python_sandbox_handoff_request(
+        record,
+        inspection,
+        diagnosis,
+        test_proposal,
+        allowed_target_paths=tuple(design["allowed_paths"]),
+        request_sequence=16,
+    )
+    handoff_authorization = gsr.make_python_sandbox_handoff_authorization(handoff_request, issued_sequence=17, expiration_sequence=90)
+    handoff = gsr.create_python_sandbox_handoff_package(
+        record, inspection, diagnosis, test_proposal, handoff_request, handoff_authorization, sequence=18
+    )
+    patch_request = gsr.make_python_candidate_patch_request(
+        record,
+        inspection,
+        diagnosis,
+        test_proposal,
+        replacement_text=f"def {design['expected_symbol']}():\n    return True\n",
+        expected_postcondition=f"symbol_present:{design['expected_symbol']}",
+        request_sequence=19,
+    )
+    patch_authorization = gsr.make_python_candidate_patch_authorization(patch_request, issued_sequence=20, expiration_sequence=90)
+    patch = gsr.create_python_candidate_patch_proposal(record, inspection, diagnosis, test_proposal, patch_request, patch_authorization, sequence=21)
+    artifacts = (
+        ("pcm_1c_read_only_source_inspection", "inspection_evidence", inspection.evidence.__dict__),
+        ("pcm_1d_bounded_diagnosis", "diagnosis_evidence", diagnosis.evidence.__dict__),
+        ("pcm_1e_focused_test_proposal", "test_proposal_evidence", test_proposal.evidence.__dict__),
+        ("pcm_1f_sandbox_handoff", "sandbox_handoff_evidence", handoff.evidence.__dict__),
+        ("pcm_2a_candidate_patch_proposal", "candidate_patch_evidence", patch.evidence.__dict__),
+    )
+    chain = gsr.build_pcm2_artifact_chain(
+        objective_cycle_id=record.objective_cycle_id,
+        module_id=record.module_id,
+        module_version=record.module_version,
+        artifacts=artifacts,
+    )
+    materialization_request = gsr.make_python_sandbox_materialization_request(patch, test_proposal, chain, request_sequence=22)
+    materialization_authorization = gsr.make_python_sandbox_materialization_authorization(materialization_request, issued_sequence=23, expiration_sequence=90)
+    materialization = gsr.materialize_python_candidate_in_disposable_sandbox(
+        patch,
+        test_proposal,
+        chain,
+        materialization_request,
+        materialization_authorization,
+        fixture_root=fixture_root,
+        sandbox_parent=root / "sandboxes",
+        sequence=24,
+    )
+    if not materialization.accepted or materialization.manifest is None:
+        raise RuntimeError(f"PCM materialization failed: {materialization.reason}")
+    execution_request = gsr.make_python_sandbox_execution_request(
+        materialization.manifest,
+        command=(python_executable or sys.executable, "-m", "pytest", materialization.manifest.test_relative_path),
+        request_sequence=25,
+    )
+    execution_authorization = gsr.make_python_sandbox_execution_authorization(execution_request, issued_sequence=26, expiration_sequence=90)
+    execution = gsr.execute_python_sandbox_focused_test_once(materialization.manifest, execution_request, execution_authorization, sequence=27)
+    structural = gsr.evaluate_python_sandbox_result(materialization.manifest, patch, test_proposal, execution, chain, sequence=28)
+    timestamps["pcm_structural_validation_completed"] = utc_now()
+
+    baseline_outcome = _run_sealed_pcm_behavioral_cases(baseline_source, str(design["expected_symbol"]))
+    candidate_source = (Path(materialization.manifest.workspace_root) / materialization.manifest.target_relative_path).read_text(encoding="utf-8")
+    candidate_outcome = _run_sealed_pcm_behavioral_cases(candidate_source, str(design["expected_symbol"]))
+    restored_outcome = _run_sealed_pcm_behavioral_cases(baseline_source, str(design["expected_symbol"]))
+    bundle_unchanged = sealed_digest == _digest(_read_json(bundle_path))
+    causal = (
+        not baseline_outcome["target"]
+        and candidate_outcome["target"]
+        and not restored_outcome["target"]
+        and baseline_outcome["control"]
+        and candidate_outcome["control"]
+        and restored_outcome["control"]
+    )
+    behaviorally_demonstrated = bool(
+        structural.accepted
+        and structural.evaluation is not None
+        and structural.evaluation.classification == "proposal_passed"
+        and candidate_outcome["held_out"]
+        and causal
+        and bundle_unchanged
+    )
+    behavioral = BehavioralEvaluationRecord(
+        evaluation_id=stable_id("continuous-pcm-behavioral-evaluation", bridge_id, sealed_digest),
+        task_family_id="continuous_pcm_closed_loop_fixture",
+        capability_id=str(design["capability_id"]),
+        developmental_gap_id=str(design["developmental_gap_id"]),
+        baseline_attempt_id=str(design["preexisting_behavioral_failure_id"]),
+        candidate_id=str((patch.evidence.patch_proposal or {}).get("patch_proposal_id") or "") if patch.evidence is not None else "",
+        evaluation_protocol_version=CONTINUOUS_PCM_BRIDGE_PROTOCOL,
+        task_source="sealed_fixture_preimplementation",
+        training_case_ids=("pcm_generated_symbol_existence",),
+        sealed_or_preexisting_case_ids=("sealed_callable_return", "sealed_restoration"),
+        control_case_ids=("sealed_present_control",),
+        baseline_metrics={"target": float(baseline_outcome["target"])},
+        post_candidate_metrics={"target": float(candidate_outcome["target"])},
+        transfer_metrics={"target": float(candidate_outcome["held_out"]), "threshold": 1.0},
+        regression_metrics={"controls_stable": baseline_outcome["control"] and candidate_outcome["control"] and restored_outcome["control"]},
+        evidence_independence={
+            "case_source": "sealed",
+            "candidate_generated_expected_outputs": False,
+            "self_reported_success": False,
+            "artifact_existence_only": False,
+            "sealed_bundle_digest": sealed_digest,
+            "bundle_unchanged": bundle_unchanged,
+            "causal_restoration": causal,
+        },
+        disposition="behaviorally_demonstrated" if behaviorally_demonstrated else "behaviorally_failed",
+        evidence_refs=(str(bundle_path), str(root / "bridge_disposition.json")),
+    )
+    base_record = CapabilityKnowledgeRecord(
+        capability_id=str(design["capability_id"]),
+        original_weakness=str(subgoal.get("measurable_objective") or design["first_incorrect_transition"]),
+        evidence=(str(bundle_path), str(root)),
+        first_incorrect_transition=str(design["first_incorrect_transition"]),
+        strategies_attempted=("existing_pcm_disposable_patch", "sealed_behavioral_evaluation"),
+        failed_approaches=("proposal_passed_is_not_behavioral_capability",),
+        successful_mechanism="existing PCM patch followed by sealed independent behavioral and restoration checks",
+        exact_candidate=str((patch.evidence.patch_proposal or {}).get("patch_proposal_id") or "") if patch.evidence is not None else "",
+        tests_added=("pcm_generated_symbol_existence",),
+        metrics_before_after={"structural_classification": structural.evaluation.classification if structural.evaluation else "missing"},
+        controls=("present_returns_one", "tracked_source_unchanged"),
+        adversarial_evidence=("candidate_cannot_rewrite_sealed_expected_outcomes",),
+        held_out_evidence={"sealed_callable_return": candidate_outcome["held_out"]},
+        reproduction_evidence=str(bundle_path),
+        provider_contribution="none",
+        local_repair_contribution="existing_pcm_fixture_patch",
+        application_evidence="not requested; tracked source was never changed",
+        regression_evidence="sealed control and restoration outcomes recorded",
+        reassessment="candidate_structurally_validated",
+        residual_uncertainty="fixture-only bridge proof; no autonomous task formation claimed",
+        reusable_process_rules=("structural PCM success cannot acquire a capability without sealed behavioral evidence",),
+        evidence_stage="candidate_structurally_validated",
+        capability_acquired=False,
+        eligible_for_behavioral_evaluation=True,
+    )
+    promoted = promote_capability_with_behavioral_evaluation(base_record, behavioral)
+    bridge_entry = {
+        "bridge_id": bridge_id,
+        "idempotency_key": idempotency_key,
+        "protocol": CONTINUOUS_PCM_BRIDGE_PROTOCOL,
+        "mission_id": design["mission_id"],
+        "main_goal_id": design["main_goal_id"],
+        "subgoal_id": design["subgoal_id"],
+        "weakness_id": design["weakness_id"],
+        "capability_id": design["capability_id"],
+        "grounded_design_digest": design["grounded_design_digest"],
+        "sealed_evaluation_digest": sealed_digest,
+        "pcm_ids": {
+            "attachment": record.attachment_record_id,
+            "inspection": inspection.evidence.inspection_attempt_id if inspection.evidence else "",
+            "diagnosis": diagnosis.evidence.diagnosis_attempt_id if diagnosis.evidence else "",
+            "test": test_proposal.evidence.test_proposal_attempt_id if test_proposal.evidence else "",
+            "patch": patch.evidence.patch_attempt_id if patch.evidence else "",
+            "handoff": handoff.evidence.sandbox_handoff_attempt_id if handoff.evidence else "",
+            "manifest": materialization.manifest.sandbox_manifest_id,
+            "structural_evaluation": structural.evaluation.evaluation_id if structural.evaluation else "",
+        },
+        "behavioral_evaluation_id": behavioral.evaluation_id,
+        "capability_knowledge_record": promoted.as_dict(),
+        "structural_disposition": structural.evaluation.classification if structural.evaluation else "invalid_evaluation",
+        "behavioral_disposition": behavioral.disposition,
+        "authority_state": "fixture_local_disposable_only",
+        "current_stage": "behavioral_evaluation_complete",
+        "restart_state": "safe_to_consume_once",
+    }
+    _write_json(root / "bridge_disposition.json", bridge_entry)
+    timestamps["sealed_behavioral_evaluation_completed"] = utc_now()
+    reassessed_controller, consumed = consume_continuous_pcm_bridge_result(controller, bridge_entry=bridge_entry, record=promoted)
+    next_controller = continue_continuous_mission_after_reassessment(reassessed_controller) if consumed else reassessed_controller
+    updated_entry = next(item for item in next_controller.continuous_pcm_bridge_ledger if item.get("bridge_id") == bridge_id)
+    _write_json(root / "bridge_disposition.json", updated_entry)
+    cleaned, cleanup_reason = gsr.cleanup_python_disposable_sandbox(materialization.manifest)
+    timestamps["pcm_sandbox_cleanup_completed"] = utc_now()
+    result = SubgoalExecutionResult(
+        accepted=behaviorally_demonstrated,
+        disposition=behavioral.disposition,
+        reason="sealed behavioral evidence returned to continuous controller" if consumed else "duplicate PCM bridge result suppressed",
+        subgoal_id=str(design["subgoal_id"]),
+        campaign_root=str(root),
+        consumed_once=consumed,
+        source_inspection={"pcm_inspection_id": bridge_entry["pcm_ids"]["inspection"], "accepted": inspection.accepted},
+        baseline=baseline_outcome,
+        candidate={"structural_classification": bridge_entry["structural_disposition"], "behavioral_target": candidate_outcome["target"]},
+        validation={"control": candidate_outcome["control"], "held_out": candidate_outcome["held_out"], "bundle_unchanged": bundle_unchanged, "causal_restoration": causal},
+        clean_reproduction={"restored_baseline": restored_outcome, "cleanup_confirmed": cleaned, "cleanup_reason": cleanup_reason},
+        application_request={},
+        behavioral_evaluation_request={"evaluation_id": behavioral.evaluation_id, "disposition": behavioral.disposition},
+        reassessment={"capability_id": promoted.capability_id, "capability_acquired": capability_is_acquired(promoted), "bridge_id": bridge_id},
+        resource_usage=(ResourceUseRecord("local_tool", "existing_pcm", "disposable structural and sealed behavioral fixture", behavioral.disposition),),
+        meaningful_transition_timestamps=timestamps,
+        stalled_execution=False,
+    )
+    _write_json(result_path, result.as_dict())
+    return next_controller, result
+
+
+def _create_sealed_pcm_behavioral_bundle(design: Mapping[str, Any], baseline_source: str) -> dict[str, Any]:
+    bundle = {
+        "protocol": CONTINUOUS_PCM_BRIDGE_PROTOCOL,
+        "task_id": stable_id("continuous-pcm-sealed-task", design["mission_id"], design["subgoal_id"]),
+        "baseline_source_digest": _digest(baseline_source),
+        "focused_development_case": {"case_id": "pcm_generated_symbol_existence", "expected": "symbol exists after patch"},
+        "control_case": {"case_id": "sealed_present_control", "predicate": "present() == 1", "expected": True},
+        "held_out_case": {"case_id": "sealed_callable_return", "predicate": "missing_guard() is True", "expected": True},
+        "restoration_case": {"case_id": "sealed_restoration", "predicate": "baseline lacks missing_guard", "expected": True},
+        "expected_outcomes": {"baseline_target": False, "candidate_target": True, "control": True, "held_out": True},
+        "regression_scope": ("present",),
+        "created_before_implementation": True,
+    }
+    return {**bundle, "bundle_digest": _digest(bundle)}
+
+
+def _run_sealed_pcm_behavioral_cases(source: str, expected_symbol: str) -> dict[str, bool]:
+    namespace: dict[str, Any] = {}
+    try:
+        exec(compile(source, "sealed_fixture_sample.py", "exec"), {"__builtins__": {}}, namespace)
+        candidate = namespace.get(expected_symbol)
+        target = callable(candidate) and candidate() is True
+        control = callable(namespace.get("present")) and namespace["present"]() == 1
+    except Exception:  # noqa: BLE001 - failed candidate behavior is a truthful evaluation result.
+        target = False
+        control = False
+    return {"target": target, "control": control, "held_out": target and control}
+
+
+def _recover_or_suppress_completed_pcm_bridge_result(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    bridge_id: str,
+    root: Path,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
+    disposition_path = root / "bridge_disposition.json"
+    if not disposition_path.exists():
+        return controller, _pcm_bridge_duplicate_result(subgoal, bridge_id, str(root))
+    bridge_entry = _read_json(disposition_path)
+    if str(bridge_entry.get("bridge_id") or "") != bridge_id:
+        return controller, _pcm_bridge_duplicate_result(subgoal, bridge_id, str(root))
+    if any(str(item.get("bridge_id") or "") == bridge_id for item in controller.continuous_pcm_bridge_ledger):
+        return controller, _pcm_bridge_duplicate_result(subgoal, bridge_id, str(root))
+    record_payload = bridge_entry.get("capability_knowledge_record")
+    if not isinstance(record_payload, Mapping):
+        return controller, _pcm_bridge_duplicate_result(subgoal, bridge_id, str(root))
+    recovered, consumed = consume_continuous_pcm_bridge_result(
+        controller,
+        bridge_entry=bridge_entry,
+        record=CapabilityKnowledgeRecord(**dict(record_payload)),
+    )
+    next_controller = continue_continuous_mission_after_reassessment(recovered) if consumed else recovered
+    previous = _read_json(root / "execution_result.json")
+    return next_controller, SubgoalExecutionResult(
+        accepted=bool(previous.get("accepted")),
+        disposition=str(previous.get("disposition") or "completed_pcm_bridge_result_recovered"),
+        reason="completed PCM bridge result recovered from durable artifact",
+        subgoal_id=str(previous.get("subgoal_id") or subgoal.get("subgoal_id") or ""),
+        campaign_root=str(root),
+        consumed_once=consumed,
+        source_inspection=dict(previous.get("source_inspection") or {}),
+        baseline=dict(previous.get("baseline") or {}),
+        candidate=dict(previous.get("candidate") or {}),
+        validation=dict(previous.get("validation") or {}),
+        clean_reproduction=dict(previous.get("clean_reproduction") or {}),
+        application_request=dict(previous.get("application_request") or {}),
+        behavioral_evaluation_request=dict(previous.get("behavioral_evaluation_request") or {}),
+        reassessment=dict(previous.get("reassessment") or {}),
+        resource_usage=(),
+        meaningful_transition_timestamps=dict(previous.get("meaningful_transition_timestamps") or {}),
+    )
+
+
+def _pcm_bridge_duplicate_result(subgoal: Mapping[str, Any], bridge_id: str, root: str) -> SubgoalExecutionResult:
+    return SubgoalExecutionResult(
+        accepted=False,
+        disposition="duplicate_pcm_bridge_result_prevented",
+        reason="bridge idempotency key already consumed",
+        subgoal_id=str(subgoal.get("subgoal_id") or ""),
+        campaign_root=root,
+        consumed_once=False,
+        source_inspection={},
+        baseline={},
+        candidate={},
+        validation={},
+        clean_reproduction={},
+        application_request={},
+        behavioral_evaluation_request={"bridge_id": bridge_id},
+        reassessment={},
+        resource_usage=(),
+        meaningful_transition_timestamps={},
+        stalled_execution=False,
     )
 
 

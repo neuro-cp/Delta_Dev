@@ -303,6 +303,7 @@ class ContinuousRuntimeController:
     continuous_active_subgoal: dict[str, Any] = field(default_factory=dict)
     continuous_consumed_weakness_signatures: tuple[str, ...] = ()
     continuous_knowledge_ledger: tuple[dict[str, Any], ...] = ()
+    continuous_pcm_bridge_ledger: tuple[dict[str, Any], ...] = ()
     continuous_capability_inventory: tuple[dict[str, Any], ...] = ()
     continuous_developmental_self_assessment: dict[str, Any] = field(default_factory=dict)
     continuous_developmental_insight_requests: tuple[dict[str, Any], ...] = ()
@@ -1418,15 +1419,31 @@ def consume_continuous_capability_reassessment(
     record: CapabilityKnowledgeRecord,
 ) -> ContinuousRuntimeController:
     record = normalize_capability_record_for_recovery(record)
-    consumed = consumed_signatures_after_reassessment(
-        [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier],
-        controller.continuous_active_subgoal or None,
-        controller.continuous_consumed_weakness_signatures,
-    )
+    existing_records = _recover_knowledge_ledger(controller.continuous_knowledge_ledger)
+    if record.behavioral_evaluation_ref and any(
+        str(item.get("behavioral_evaluation_ref") or "") == record.behavioral_evaluation_ref
+        for item in existing_records
+    ):
+        return replace(
+            controller,
+            journal=controller.journal
+            + (_journal_entry("continuous_mission", "duplicate_behavioral_reassessment_suppressed", (record.behavioral_evaluation_ref,)),),
+        )
+
+    # Structural, failed, and blocked outcomes are evidence about a remaining
+    # limitation. Only independently demonstrated behavior may retire the
+    # originating frontier signature as solved.
+    consumed = controller.continuous_consumed_weakness_signatures
+    if capability_is_acquired(record):
+        consumed = consumed_signatures_after_reassessment(
+            [WeaknessCandidate(**item) for item in controller.continuous_mission_frontier],
+            controller.continuous_active_subgoal or None,
+            consumed,
+        )
     updated = replace(
         controller,
         continuous_mission_state="capability_reassessment",
-        continuous_knowledge_ledger=_recover_knowledge_ledger(controller.continuous_knowledge_ledger) + (record.as_dict(),),
+        continuous_knowledge_ledger=existing_records + (record.as_dict(),),
         continuous_consumed_weakness_signatures=consumed,
         continuous_active_subgoal={},
         active_work_item="capability_reassessment",
@@ -1434,6 +1451,58 @@ def consume_continuous_capability_reassessment(
         + (_journal_entry("continuous_mission", "capability_reassessment_consumed_once_and_knowledge_recorded", (record.capability_id,)),),
     )
     return refresh_developmental_self_direction(updated)
+
+
+def consume_continuous_pcm_bridge_result(
+    controller: ContinuousRuntimeController,
+    *,
+    bridge_entry: Mapping[str, Any],
+    record: CapabilityKnowledgeRecord,
+) -> tuple[ContinuousRuntimeController, bool]:
+    """Return one behaviorally evaluated PCM result to the mission exactly once."""
+
+    entry = dict(bridge_entry)
+    bridge_id = str(entry.get("bridge_id") or "")
+    idempotency_key = str(entry.get("idempotency_key") or "")
+    if not bridge_id or not idempotency_key:
+        raise ValueError("continuous PCM bridge result requires bridge_id and idempotency_key")
+    for previous in controller.continuous_pcm_bridge_ledger:
+        if str(previous.get("bridge_id") or "") == bridge_id or str(previous.get("idempotency_key") or "") == idempotency_key:
+            return (
+                replace(
+                    controller,
+                    journal=controller.journal
+                    + (_journal_entry("continuous_mission", "duplicate_pcm_bridge_result_suppressed", (bridge_id,)),),
+                ),
+                False,
+            )
+    pending = {
+        **entry,
+        "consumed_by_controller": False,
+        "consumed_at": "",
+    }
+    with_pending = replace(
+        controller,
+        continuous_pcm_bridge_ledger=controller.continuous_pcm_bridge_ledger + (pending,),
+    )
+    reassessed = consume_continuous_capability_reassessment(with_pending, record)
+    consumed = {
+        **pending,
+        "consumed_by_controller": True,
+        "consumed_at": utc_now(),
+    }
+    return (
+        replace(
+            reassessed,
+            continuous_pcm_bridge_ledger=tuple(
+                consumed if str(item.get("bridge_id") or "") == bridge_id else item
+                for item in reassessed.continuous_pcm_bridge_ledger
+            ),
+            journal=reassessed.journal
+            + (_journal_entry("continuous_mission", "pcm_bridge_result_consumed_once", (bridge_id, record.reassessment)),),
+        ),
+        True,
+    )
 
 
 def continue_continuous_mission_after_reassessment(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
@@ -1608,6 +1677,7 @@ def export_continuous_mission_restart_state(controller: ContinuousRuntimeControl
         "continuous_active_subgoal": controller.continuous_active_subgoal,
         "continuous_consumed_weakness_signatures": controller.continuous_consumed_weakness_signatures,
         "continuous_knowledge_ledger": controller.continuous_knowledge_ledger,
+        "continuous_pcm_bridge_ledger": controller.continuous_pcm_bridge_ledger,
         "continuous_capability_inventory": controller.continuous_capability_inventory,
         "continuous_developmental_self_assessment": controller.continuous_developmental_self_assessment,
         "continuous_developmental_insight_requests": controller.continuous_developmental_insight_requests,
@@ -1643,6 +1713,7 @@ def restore_continuous_mission_restart_state(
         continuous_active_subgoal=dict(restart_state.get("continuous_active_subgoal") or {}),
         continuous_consumed_weakness_signatures=tuple(restart_state.get("continuous_consumed_weakness_signatures") or ()),
         continuous_knowledge_ledger=recovered_ledger,
+        continuous_pcm_bridge_ledger=tuple(restart_state.get("continuous_pcm_bridge_ledger") or ()),
         continuous_capability_inventory=tuple(restart_state.get("continuous_capability_inventory") or ()),
         continuous_developmental_self_assessment=dict(restart_state.get("continuous_developmental_self_assessment") or {}),
         continuous_developmental_insight_requests=requests,
