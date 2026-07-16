@@ -50,6 +50,16 @@ from orchestration.runtime.continuous_mission_foundation import (
     normalize_capability_record_for_recovery,
     rank_weakness_frontier,
 )
+from orchestration.runtime.developmental_learning import (
+    DevelopmentalEvaluationRecord,
+    LearningSubgoal,
+    compile_capability_assessment,
+    compile_developmental_gaps,
+    compile_developmental_mission_contract,
+    compile_learning_subgoal,
+    compile_resource_acquisition_plan,
+    load_retained_learning_bundle,
+)
 from orchestration.runtime.delta_1_6_operational_autonomy import (
     AuthorityRequest,
     Initiative,
@@ -314,6 +324,9 @@ class ContinuousRuntimeController:
     continuous_operator_explanation: dict[str, Any] = field(default_factory=dict)
     continuous_api_authority: dict[str, Any] = field(default_factory=dict)
     continuous_observation_state: dict[str, Any] = field(default_factory=dict)
+    # Contract/evidence records for non-code learning. Lifecycle remains owned
+    # here; the developmental_learning module is deliberately pure.
+    continuous_learning_state: dict[str, Any] = field(default_factory=dict)
     pending_application_decision_id: str = ""
     cancellation_requested: bool = False
     last_idle_reflection_at: float = 0.0
@@ -596,6 +609,7 @@ def controller_snapshot(controller: ContinuousRuntimeController) -> dict[str, An
             "developmental_self_assessment": controller.continuous_developmental_self_assessment or None,
             "developmental_insight_requests": controller.continuous_developmental_insight_requests,
             "operator_explanation": controller.continuous_operator_explanation or None,
+            "learning_state": controller.continuous_learning_state or None,
         },
         "safety": safety_metadata(),
     }
@@ -637,6 +651,126 @@ def attach_continuous_mission(
         journal=controller.journal + (_journal_entry("continuous_mission", "broad_goal_compiled_to_persistent_mission", (contract.mission_id,)),),
     )
     return refresh_developmental_self_direction(updated)
+
+
+def attach_developmental_learning_mission(
+    controller: ContinuousRuntimeController,
+    operator_instruction: str,
+    retained_bundle: Mapping[str, Any],
+) -> ContinuousRuntimeController:
+    """Compile one operator learning request into the existing mission lifecycle."""
+
+    mission = compile_developmental_mission_contract(operator_instruction)
+    if mission is None:
+        return controller
+    assessment = compile_capability_assessment(mission, retained_bundle, inventory=controller.continuous_capability_inventory)
+    plan = compile_resource_acquisition_plan(mission, assessment, retained_bundle)
+    gaps = compile_developmental_gaps(mission, assessment)
+    subgoal = compile_learning_subgoal(mission, gaps, plan, retained_bundle)
+    state = {
+        "mission": mission.as_dict(),
+        "assessment": assessment.as_dict(),
+        "resource_plan": plan.as_dict(),
+        "gaps": tuple(item.as_dict() for item in gaps),
+        "retained_bundle": dict(retained_bundle),
+        "consumed_gap_ids": (),
+        "attempts": (),
+        "evaluations": (),
+        "protocol": "operator_developmental_mission_orchestration_v1",
+    }
+    if subgoal is None:
+        return replace(
+            controller,
+            continuous_mission_state="evidence_needed_for_developmental_learning",
+            continuous_learning_state=state,
+            active_work_item="developmental_learning_evidence_needed",
+            journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_compiled_without_executable_local_subgoal", (mission.mission_id,)),),
+        )
+    return replace(
+        controller,
+        continuous_mission_state="learning_subgoal_active",
+        continuous_mission_contract={**mission.as_dict(), "original_operator_goal": mission.operator_instruction},
+        continuous_learning_state=state,
+        continuous_active_subgoal={**subgoal.as_dict(), "execution_kind": "developmental_learning"},
+        active_work_item=subgoal.measurable_objective,
+        journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_compiled_to_learning_subgoal", (mission.mission_id, subgoal.subgoal_id)),),
+    )
+
+
+def compile_operator_developmental_learning_mission(
+    controller: ContinuousRuntimeController,
+    operator_instruction: str,
+) -> ContinuousRuntimeController:
+    """Resolve only a declared retained local resource; never fabricate a lesson."""
+
+    mission = compile_developmental_mission_contract(operator_instruction)
+    if mission is None:
+        return controller
+    bundle = load_retained_learning_bundle(mission.domain, mission.topic)
+    if bundle is None:
+        return replace(
+            controller,
+            continuous_mission_state="learning_resource_evidence_needed",
+            continuous_mission_contract={**mission.as_dict(), "original_operator_goal": mission.operator_instruction},
+            continuous_learning_state={
+                "mission": mission.as_dict(),
+                "protocol": "operator_developmental_mission_orchestration_v1",
+                "resource_blocker": "no_matching_retained_local_learning_resource",
+            },
+            active_work_item="learning_resource_evidence_needed",
+            journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_requires_governed_resource_plan", (mission.mission_id,)),),
+        )
+    return attach_developmental_learning_mission(controller, operator_instruction, bundle)
+
+
+def consume_developmental_learning_evaluation(
+    controller: ContinuousRuntimeController,
+    evaluation: DevelopmentalEvaluationRecord,
+    *,
+    attempt: Mapping[str, Any] | None = None,
+) -> ContinuousRuntimeController:
+    """Persist one independent learning result and select the next distinct gap."""
+
+    state = dict(controller.continuous_learning_state or {})
+    mission = dict(state.get("mission") or {})
+    if not mission or evaluation.mission_id != mission.get("mission_id"):
+        raise ValueError("learning evaluation does not belong to the active developmental mission")
+    evaluations = tuple(state.get("evaluations") or ())
+    if any(str(item.get("evaluation_id") or "") == evaluation.evaluation_id for item in evaluations):
+        return controller
+    active = dict(controller.continuous_active_subgoal or {})
+    consumed = tuple(dict.fromkeys(tuple(state.get("consumed_gap_ids") or ()) + (str(active.get("source_gap_id") or ""),)))
+    updated_state = {
+        **state,
+        "consumed_gap_ids": consumed,
+        "attempts": tuple(state.get("attempts") or ()) + ((dict(attempt),) if attempt else ()),
+        "evaluations": evaluations + (evaluation.as_dict(),),
+        "last_evaluation": evaluation.as_dict(),
+    }
+    # Rebuild typed records only at the controller boundary. This preserves one
+    # source of truth in persisted dictionaries while leaving helpers immutable.
+    from orchestration.runtime.developmental_learning import DevelopmentalGap, DevelopmentalMissionContract, ResourceAcquisitionPlan
+    typed_mission = DevelopmentalMissionContract(**mission)
+    typed_plan = ResourceAcquisitionPlan(**dict(state["resource_plan"]))
+    typed_gaps = tuple(DevelopmentalGap(**dict(item)) for item in state.get("gaps") or ())
+    next_subgoal = compile_learning_subgoal(typed_mission, typed_gaps, typed_plan, state["retained_bundle"], consumed_gap_ids=consumed)
+    if next_subgoal is None:
+        return replace(
+            controller,
+            continuous_mission_state="observing_for_new_learning_evidence",
+            continuous_learning_state=updated_state,
+            continuous_active_subgoal={},
+            active_work_item=OBSERVATION_STATE,
+            journal=controller.journal + (_journal_entry("developmental_learning", "learning_evaluation_consumed_exactly_once_frontier_exhausted", (evaluation.evaluation_id,)),),
+        )
+    return replace(
+        controller,
+        continuous_mission_state="learning_subgoal_active",
+        continuous_learning_state=updated_state,
+        continuous_active_subgoal={**next_subgoal.as_dict(), "execution_kind": "developmental_learning"},
+        active_work_item=next_subgoal.measurable_objective,
+        journal=controller.journal + (_journal_entry("developmental_learning", "learning_evaluation_consumed_exactly_once_selected_next_subgoal", (evaluation.evaluation_id, next_subgoal.subgoal_id)),),
+    )
 
 
 def assess_continuous_mission_runtime(
@@ -1733,6 +1867,7 @@ def export_continuous_mission_restart_state(controller: ContinuousRuntimeControl
         "continuous_operator_explanation": controller.continuous_operator_explanation,
         "continuous_api_authority": controller.continuous_api_authority,
         "continuous_observation_state": controller.continuous_observation_state,
+        "continuous_learning_state": controller.continuous_learning_state,
         "pending_application_decision_id": controller.pending_application_decision_id,
         "active_work_item": controller.active_work_item,
     }
@@ -1771,6 +1906,7 @@ def restore_continuous_mission_restart_state(
         continuous_operator_explanation=dict(restart_state.get("continuous_operator_explanation") or {}),
         continuous_api_authority=dict(restart_state.get("continuous_api_authority") or {}),
         continuous_observation_state=dict(restart_state.get("continuous_observation_state") or {}),
+        continuous_learning_state=dict(restart_state.get("continuous_learning_state") or {}),
         pending_application_decision_id=str(restart_state.get("pending_application_decision_id") or ""),
         active_work_item=str(restart_state.get("active_work_item") or ""),
         journal=tuple(controller.journal) + (_journal_entry("continuous_mission", "continuous_mission_restart_state_restored", (str(restart_state.get("continuous_mission_state") or ""),)),),

@@ -100,7 +100,13 @@ from orchestration.runtime.delta_1_4_live_wikipedia_runtime import (  # noqa: E4
     stop_live_wikipedia_runtime,
     suspend_live_runtime_initiative,
 )
-from orchestration.runtime.continuous_runtime_controller import controller_snapshot  # noqa: E402
+from orchestration.runtime.continuous_runtime_controller import (  # noqa: E402
+    compile_operator_developmental_learning_mission,
+    controller_snapshot,
+    start_continuous_runtime_controller,
+)
+from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal  # noqa: E402
+from orchestration.runtime.developmental_learning import classify_developmental_instruction  # noqa: E402
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr  # noqa: E402
 from integration.model_runtime.provider_manager import ProviderManager  # noqa: E402
 
@@ -2377,6 +2383,48 @@ class DeltaApp:
             return False
         return any(token in normalized for token in ("mission", "capability", "ability", "behavior", "improvement", "development"))
 
+    def _is_developmental_learning_mission(self, message: str) -> bool:
+        return classify_developmental_instruction(message) is not None
+
+    def _handle_developmental_learning_mission(self, message: str) -> str:
+        """Run one bounded local learning cycle through the continuous controller."""
+
+        controller = getattr(self, "developmental_learning_controller", None)
+        if controller is None or not controller.continuous_learning_state:
+            controller = start_continuous_runtime_controller(session_id=f"tk-learning-{uuid.uuid4().hex[:16]}")
+            controller = compile_operator_developmental_learning_mission(controller, message)
+        if not controller.continuous_active_subgoal:
+            self.developmental_learning_controller = controller
+            return (
+                "Developmental learning mission compiled, but local retained evidence was insufficient to start a bounded attempt. "
+                f"State={controller.continuous_mission_state}. No provider, web, PCM, source application, or capability promotion occurred."
+            )
+        artifact_root = ROOT / ".tmp" / "tk_developmental_learning" / controller.session_id
+        controller, result = execute_continuous_active_subgoal(
+            controller,
+            artifact_root=artifact_root,
+            repository_root=ROOT,
+            python_executable=sys.executable,
+        )
+        self.developmental_learning_controller = controller
+        next_subgoal = dict(controller.continuous_active_subgoal or {})
+        evaluation = dict(result.behavioral_evaluation_request or {})
+        completed_subgoal = str(result.subgoal_id)
+        active_resources = tuple(result.source_inspection.get("resource_ids") or ())
+        return (
+            "Developmental learning mission completed one bounded local cycle.\n\n"
+            f"Mission: {controller.continuous_learning_state['mission']['mission_type']} / "
+            f"{controller.continuous_learning_state['mission']['domain']} / {controller.continuous_learning_state['mission']['topic']}\n"
+            f"Completed subgoal: {evaluation.get('capability_dimension') or completed_subgoal}\n"
+            f"Selected local resources: {', '.join(active_resources) or 'none'}\n"
+            f"Evaluation: {result.disposition}; baseline={result.baseline}; candidate={result.candidate}; "
+            f"controls={result.validation.get('control')}; held_out={result.validation.get('held_out')}; "
+            f"adversarial={result.validation.get('adversarial')}.\n"
+            f"Next subgoal: {next_subgoal.get('capability_target') or 'honest observation'}\n"
+            f"Evidence: {evaluation.get('evaluation_id') or 'none'}\n\n"
+            "No provider, web, PCM, tracked-source application, capability attachment, commit, or push occurred."
+        )
+
     def _handle_oar_language_development_mission(self, message: str) -> str:
         sequence = len(self.session_history) + len(self.evaluation_review_items) + 1
         request = gsr.make_mission_compilation_request(
@@ -2902,6 +2950,13 @@ class DeltaApp:
         affirm_words = {"yes", "y", "yes please", "sure", "okay", "ok", "go ahead", "do it", "tell me more", "more", "go deeper"}
         discourse_frame = build_discourse_frame(message, self.last_report_inspection)
         discourse_trace = discourse_frame.as_dict()
+        if self._is_developmental_learning_mission(message):
+            self._append_session("user", message)
+            reply = self._handle_developmental_learning_mission(message)
+            self._append_chat("DELTA", reply)
+            self._append_session("assistant", reply)
+            self._refresh_state_cards()
+            return
         if self._is_oar_language_development_mission(message):
             self._append_session("user", message)
             reply = self._handle_oar_language_development_mission(message)

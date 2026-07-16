@@ -1,0 +1,86 @@
+{
+  "resource_bundle_id": "retained-mathematical-induction-v1",
+  "domain": "mathematics",
+  "topic": "mathematical_induction",
+  "assessment_dimensions": [
+    {
+      "dimension": "proof_structure",
+      "baseline_case_id": "baseline-induction-structure",
+      "baseline_components": [],
+      "required_components": ["base_case", "induction_hypothesis", "induction_step"],
+      "prerequisites": [],
+      "evidence_ref": "retained-mathematical-induction-v1"
+    },
+    {
+      "dimension": "invalid_argument_detection",
+      "baseline_case_id": "baseline-invalid-induction",
+      "baseline_components": [],
+      "required_components": ["identify_missing_induction_step"],
+      "prerequisites": ["proof_structure"],
+      "evidence_ref": "retained-mathematical-induction-v1"
+    }
+  ],
+  "study_resources": [
+    {
+      "resource_id": "retained-induction-primer",
+      "supports_dimensions": ["proof_structure"],
+      "study_components": ["base_case", "induction_hypothesis", "induction_step"]
+    },
+    {
+      "resource_id": "retained-induction-invalidity-guide",
+      "supports_dimensions": ["invalid_argument_detection"],
+      "study_components": ["identify_missing_induction_step"]
+    }
+  ],
+  "sealed_evaluation_cases": [
+    {
+      "case_id": "held-out-divisibility-proof",
+      "kind": "held_out",
+      "capability_dimension": "proof_structure",
+      "required_components": ["base_case", "induction_hypothesis", "induction_step"]
+    },
+    {
+      "case_id": "control-structure",
+      "kind": "control",
+      "capability_dimension": "proof_structure",
+      "required_components": ["base_case"]
+    },
+    {
+      "case_id": "adversarial-quote-like-claim",
+      "kind": "adversarial",
+      "capability_dimension": "proof_structure",
+      "required_components": ["base_case", "induction_hypothesis", "induction_step"],
+      "forbidden_components": ["skip_induction_step"]
+    },
+    {
+      "case_id": "transfer-recurrence",
+      "kind": "transfer",
+      "capability_dimension": "proof_structure",
+      "required_components": ["base_case", "induction_hypothesis", "induction_step"]
+    },
+    {
+      "case_id": "held-out-missing-step",
+      "kind": "held_out",
+      "capability_dimension": "invalid_argument_detection",
+      "required_components": ["identify_missing_induction_step"]
+    },
+    {
+      "case_id": "control-validity",
+      "kind": "control",
+      "capability_dimension": "invalid_argument_detection",
+      "required_components": ["identify_missing_induction_step"]
+    },
+    {
+      "case_id": "adversarial-unsupported-assumption",
+      "kind": "adversarial",
+      "capability_dimension": "invalid_argument_detection",
+      "required_components": ["identify_missing_induction_step"]
+    },
+    {
+      "case_id": "transfer-invalid-divisibility-proof",
+      "kind": "transfer",
+      "capability_dimension": "invalid_argument_detection",
+      "required_components": ["identify_missing_induction_step"]
+    }
+  ]
+}

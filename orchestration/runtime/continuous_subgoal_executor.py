@@ -38,6 +38,12 @@ from orchestration.runtime.continuous_runtime_controller import (
     consume_continuous_capability_reassessment,
     consume_continuous_pcm_bridge_result,
     pause_continuous_mission_for_application,
+    consume_developmental_learning_evaluation,
+)
+from orchestration.runtime.developmental_learning import (
+    LearningSubgoal,
+    execute_learning_attempt,
+    evaluate_learning_attempt,
 )
 from orchestration.runtime.delta_1_0_common import stable_id, utc_now
 from orchestration.runtime import gsr_a_governed_self_regulation as gsr
@@ -146,6 +152,13 @@ def execute_continuous_active_subgoal(
             artifact_root=artifact_root,
             python_executable=python_executable,
         )
+    if str(subgoal.get("execution_kind") or "") == "developmental_learning":
+        return _execute_developmental_learning_subgoal(
+            controller,
+            subgoal=subgoal,
+            root=root,
+            result_path=result_path,
+        )
 
     timestamps: dict[str, str] = {"execution_started": utc_now()}
     baseline_metric = str(subgoal.get("baseline") or "")
@@ -185,6 +198,56 @@ def execute_continuous_active_subgoal(
         local_model_adapter=local_model_adapter,
         allow_local_model_execution=allow_local_model_execution,
     )
+
+
+def _execute_developmental_learning_subgoal(
+    controller: ContinuousRuntimeController,
+    *,
+    subgoal: Mapping[str, Any],
+    root: Path,
+    result_path: Path,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
+    """Execute one non-code attempt and score it only against sealed cases."""
+
+    state = dict(controller.continuous_learning_state or {})
+    bundle = dict(state.get("retained_bundle") or {})
+    if not bundle:
+        raise ValueError("developmental learning subgoal requires retained resource and evaluation bundle")
+    typed = LearningSubgoal(**{key: value for key, value in dict(subgoal).items() if key in LearningSubgoal.__dataclass_fields__})
+    # The candidate-facing attempt receives study material only.  The sealed
+    # evaluator stays controller-owned and is passed only after the attempt is
+    # immutable on disk.
+    attempt = execute_learning_attempt(typed, {"study_resources": bundle.get("study_resources") or ()})
+    evaluation = evaluate_learning_attempt(typed, attempt, bundle)
+    root.mkdir(parents=True, exist_ok=True)
+    _write_json(root / "learning_attempt.json", attempt.as_dict())
+    _write_json(root / "developmental_evaluation.json", evaluation.as_dict())
+    next_controller = consume_developmental_learning_evaluation(controller, evaluation, attempt=attempt.as_dict())
+    timestamps = {"attempt_started": utc_now(), "sealed_evaluation_completed": utc_now(), "reassessment_completed": utc_now()}
+    result = SubgoalExecutionResult(
+        accepted=evaluation.promotion_eligible,
+        disposition=evaluation.disposition,
+        reason="candidate-independent sealed learning evaluation completed",
+        subgoal_id=typed.subgoal_id,
+        campaign_root=str(root),
+        consumed_once=True,
+        source_inspection={"resource_ids": typed.study_resource_ids, "provider_calls": 0, "web_calls": 0},
+        baseline=dict(evaluation.baseline_metrics),
+        candidate=dict(evaluation.candidate_metrics),
+        validation={"control": dict(evaluation.control_metrics), "held_out": dict(evaluation.held_out_metrics), "adversarial": dict(evaluation.adversarial_metrics), "transfer": dict(evaluation.transfer_metrics)},
+        clean_reproduction={"not_applicable": "non-code learning attempt uses retained local resources and sealed evaluator"},
+        application_request={},
+        behavioral_evaluation_request=evaluation.as_dict(),
+        reassessment={"next_state": next_controller.continuous_mission_state, "next_subgoal": dict(next_controller.continuous_active_subgoal or {})},
+        resource_usage=(ResourceUseRecord("retained_local_source", item, "bounded guided study", "used") for item in typed.study_resource_ids),
+        meaningful_transition_timestamps=timestamps,
+        stalled_execution=False,
+    )
+    # The record type is a tuple by contract; retain construction above as a
+    # generator-free value for stable serialization and restart artifacts.
+    result = replace(result, resource_usage=tuple(result.resource_usage))
+    _write_json(result_path, result.as_dict())
+    return next_controller, result
 
 
 def compile_continuous_pcm_bridge_fixture(
