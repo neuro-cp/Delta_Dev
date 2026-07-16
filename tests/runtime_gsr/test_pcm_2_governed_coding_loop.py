@@ -34,7 +34,7 @@ def _pcm_1_record() -> gsr.PythonCodingModuleAttachmentRecord:
 
 def _pcm_1_chain(tmp_path: Path, *, source: str = "def present():\n    return 1\n", expected_symbol: str = "missing_guard"):
     fixture = tmp_path / "fixture"
-    fixture.mkdir()
+    fixture.mkdir(parents=True)
     (fixture / "sample.py").write_text(source, encoding="utf-8")
     record = _pcm_1_record()
     inspection_request = gsr.make_python_source_inspection_request(record, requested_relative_paths=("sample.py",), request_sequence=907)
@@ -81,7 +81,18 @@ def _pcm_1_chain(tmp_path: Path, *, source: str = "def present():\n    return 1\
     return fixture, record, inspection_result, diagnosis_result, test_result, handoff_result
 
 
-def _patch_result(record, inspection_result, diagnosis_result, test_result, *, replacement_text: str, sequence: int = 919):
+def _patch_result(
+    record,
+    inspection_result,
+    diagnosis_result,
+    test_result,
+    *,
+    replacement_text: str,
+    sequence: int = 919,
+    operation: str = "append_text",
+    expected_old_text: str = "",
+    **overrides,
+):
     request = gsr.make_python_candidate_patch_request(
         record,
         inspection_result,
@@ -90,8 +101,11 @@ def _patch_result(record, inspection_result, diagnosis_result, test_result, *, r
         replacement_text=replacement_text,
         expected_postcondition="symbol_present:missing_guard",
         request_sequence=sequence,
+        operation=operation,
+        expected_old_text=expected_old_text,
+        **overrides,
     )
-    authorization = gsr.make_python_candidate_patch_authorization(request, issued_sequence=sequence + 1, expiration_sequence=950)
+    authorization = gsr.make_python_candidate_patch_authorization(request, issued_sequence=sequence + 1, expiration_sequence=sequence + 40)
     result = gsr.create_python_candidate_patch_proposal(record, inspection_result, diagnosis_result, test_result, request, authorization, sequence=sequence + 2)
     assert result.accepted is True
     assert result.patch_created is True
@@ -228,6 +242,61 @@ def test_pcm_2c_2d_2e_successful_disposable_sandbox_attempt(tmp_path):
     assert not Path(materialization.manifest.workspace_root).exists()
 
 
+def _exact_replace_attempt(
+    tmp_path: Path,
+    *,
+    source: str = "def present():\n    return 1\n\n# PCM_REPAIR_SLOT\n",
+    expected_old_text: str = "# PCM_REPAIR_SLOT",
+    replacement_text: str = "def missing_guard():\n    return True\n",
+    sequence: int = 919,
+):
+    fixture, record, inspection_result, diagnosis_result, test_result, handoff_result = _pcm_1_chain(
+        tmp_path,
+        source=source,
+    )
+    patch_result = _patch_result(
+        record,
+        inspection_result,
+        diagnosis_result,
+        test_result,
+        operation="exact_replace_text",
+        expected_old_text=expected_old_text,
+        replacement_text=replacement_text,
+        sequence=sequence,
+    )
+    patch = gsr.deserialize(gsr.PythonCandidatePatchProposal, patch_result.evidence.patch_proposal)
+    return fixture, record, inspection_result, diagnosis_result, test_result, handoff_result, patch_result, patch
+
+
+def test_pcm_exact_replace_text_materializes_one_bounded_replacement(tmp_path):
+    fixture, record, inspection_result, diagnosis_result, test_result, handoff_result, patch_result, patch = _exact_replace_attempt(tmp_path)
+
+    operation = gsr.deserialize(gsr.PythonCandidatePatchOperation, patch.operations[0])
+    assert operation.operation == "exact_replace_text"
+    assert operation.expected_old_text == "# PCM_REPAIR_SLOT"
+    assert operation.replacement_text == "def missing_guard():\n    return True\n"
+    assert patch.rollback_metadata["operation"] == "restore_exact_preimage"
+    assert patch.rollback_metadata["expected_old_text_digest"]
+    assert patch.rollback_metadata["replacement_text_digest"]
+
+    chain = gsr.build_pcm2_artifact_chain(
+        objective_cycle_id=record.objective_cycle_id,
+        module_id=record.module_id,
+        module_version=record.module_version,
+        artifacts=_artifacts(inspection_result, diagnosis_result, test_result, handoff_result, patch_result),
+    )
+    materialization = _materialize(fixture, test_result, patch_result, chain, tmp_path=tmp_path)
+    candidate_source = Path(materialization.manifest.workspace_root, materialization.manifest.target_relative_path).read_text(encoding="utf-8")
+    tracked_source = (fixture / "sample.py").read_text(encoding="utf-8")
+
+    assert "def missing_guard():" in candidate_source
+    assert "# PCM_REPAIR_SLOT" not in candidate_source
+    assert tracked_source == "def present():\n    return 1\n\n# PCM_REPAIR_SLOT\n"
+    execution = _execute(materialization.manifest)
+    evaluation = gsr.evaluate_python_sandbox_result(materialization.manifest, patch_result, test_result, execution, chain, sequence=940)
+    assert evaluation.evaluation.classification == "proposal_passed"
+
+
 def test_pcm_2f_failed_first_attempt_then_one_successful_repair(tmp_path):
     fixture, record, inspection_result, diagnosis_result, test_result, handoff_result = _pcm_1_chain(tmp_path)
     bad_patch_result = _patch_result(record, inspection_result, diagnosis_result, test_result, replacement_text="def wrong_guard():\n    return True\n", sequence=919)
@@ -269,6 +338,145 @@ def test_pcm_2f_failed_first_attempt_then_one_successful_repair(tmp_path):
     for manifest in (bad_materialization.manifest, good_materialization.manifest):
         cleaned, _reason = gsr.cleanup_python_disposable_sandbox(manifest)
         assert cleaned is True
+
+
+def test_pcm_exact_replace_text_rejects_invalid_preimage_requests(tmp_path):
+    fixture, record, inspection_result, diagnosis_result, test_result, _handoff_result = _pcm_1_chain(
+        tmp_path,
+        source="def present():\n    return 1\n\n# PCM_REPAIR_SLOT\n",
+    )
+    base_request = gsr.make_python_candidate_patch_request(
+        record,
+        inspection_result,
+        diagnosis_result,
+        test_result,
+        replacement_text="def missing_guard():\n    return True\n",
+        expected_postcondition="symbol_present:missing_guard",
+        request_sequence=970,
+        operation="exact_replace_text",
+        expected_old_text="# PCM_REPAIR_SLOT",
+    )
+    for request, reason in (
+        (replace(base_request, expected_old_text=""), "empty_preimage"),
+        (replace(base_request, replacement_text="# PCM_REPAIR_SLOT"), "identical_preimage_and_replacement"),
+        (replace(base_request, max_changed_bytes=4), "changed_byte_limit_exceeded"),
+        (
+            replace(
+                base_request,
+                source_path="tests/test_pcm_generated_review.py",
+                target_relative_path="tests/test_pcm_generated_review.py",
+            ),
+            "test_file_mutation_not_authorized",
+        ),
+    ):
+        authorization = gsr.make_python_candidate_patch_authorization(request, issued_sequence=971, expiration_sequence=980)
+        result = gsr.create_python_candidate_patch_proposal(
+            record,
+            inspection_result,
+            diagnosis_result,
+            test_result,
+            request,
+            authorization,
+            sequence=972,
+        )
+        assert result.accepted is False
+        assert result.reason == reason
+    assert (fixture / "sample.py").read_text(encoding="utf-8").endswith("# PCM_REPAIR_SLOT\n")
+
+
+def test_pcm_exact_replace_text_authorization_binds_operation_preimage_and_replacement(tmp_path):
+    fixture, record, inspection_result, diagnosis_result, test_result, _handoff_result = _pcm_1_chain(
+        tmp_path,
+        source="def present():\n    return 1\n\n# PCM_REPAIR_SLOT\n",
+    )
+    request = gsr.make_python_candidate_patch_request(
+        record,
+        inspection_result,
+        diagnosis_result,
+        test_result,
+        replacement_text="def missing_guard():\n    return True\n",
+        expected_postcondition="symbol_present:missing_guard",
+        request_sequence=980,
+        operation="exact_replace_text",
+        expected_old_text="# PCM_REPAIR_SLOT",
+    )
+    authorization = gsr.make_python_candidate_patch_authorization(request, issued_sequence=981, expiration_sequence=990)
+    for tampered, reason in (
+        (replace(request, operation="append_text"), "operation_mismatch"),
+        (replace(request, expected_old_text="# OTHER_SLOT"), "preimage_payload_mismatch"),
+        (replace(request, replacement_text="def missing_guard():\n    return False\n"), "patch_payload_mismatch"),
+    ):
+        result = gsr.create_python_candidate_patch_proposal(
+            record,
+            inspection_result,
+            diagnosis_result,
+            test_result,
+            tampered,
+            authorization,
+            sequence=982,
+        )
+        assert result.accepted is False
+        assert result.reason == reason
+    assert (fixture / "sample.py").read_text(encoding="utf-8").endswith("# PCM_REPAIR_SLOT\n")
+
+
+def test_pcm_exact_replace_text_materialization_rejects_absent_or_ambiguous_preimage(tmp_path):
+    for source, reason, sequence in (
+        ("def present():\n    return 1\n", "preimage_absent", 990),
+        ("# PCM_REPAIR_SLOT\n\ndef present():\n    return 1\n\n# PCM_REPAIR_SLOT\n", "preimage_not_unique", 1000),
+    ):
+        fixture, record, inspection_result, diagnosis_result, test_result, handoff_result, patch_result, _patch = _exact_replace_attempt(
+            tmp_path / reason,
+            source=source,
+            sequence=sequence,
+        )
+        chain = gsr.build_pcm2_artifact_chain(
+            objective_cycle_id=record.objective_cycle_id,
+            module_id=record.module_id,
+            module_version=record.module_version,
+            artifacts=_artifacts(inspection_result, diagnosis_result, test_result, handoff_result, patch_result),
+        )
+        request = gsr.make_python_sandbox_materialization_request(patch_result, test_result, chain, request_sequence=sequence + 4)
+        authorization = gsr.make_python_sandbox_materialization_authorization(request, issued_sequence=sequence + 5, expiration_sequence=sequence + 20)
+        result = gsr.materialize_python_candidate_in_disposable_sandbox(
+            patch_result,
+            test_result,
+            chain,
+            request,
+            authorization,
+            fixture_root=fixture,
+            sandbox_parent=tmp_path / f"sandbox_{reason}",
+            sequence=sequence + 6,
+        )
+        assert result.accepted is False
+        assert result.reason == reason
+        assert result.authorization_consumed is True
+
+
+def test_pcm_exact_replace_text_materialization_rejects_stale_source_digest(tmp_path):
+    fixture, record, inspection_result, diagnosis_result, test_result, handoff_result, patch_result, _patch = _exact_replace_attempt(tmp_path)
+    (fixture / "sample.py").write_text("def present():\n    return 2\n\n# PCM_REPAIR_SLOT\n", encoding="utf-8")
+    chain = gsr.build_pcm2_artifact_chain(
+        objective_cycle_id=record.objective_cycle_id,
+        module_id=record.module_id,
+        module_version=record.module_version,
+        artifacts=_artifacts(inspection_result, diagnosis_result, test_result, handoff_result, patch_result),
+    )
+    request = gsr.make_python_sandbox_materialization_request(patch_result, test_result, chain, request_sequence=1010)
+    authorization = gsr.make_python_sandbox_materialization_authorization(request, issued_sequence=1011, expiration_sequence=1020)
+    result = gsr.materialize_python_candidate_in_disposable_sandbox(
+        patch_result,
+        test_result,
+        chain,
+        request,
+        authorization,
+        fixture_root=fixture,
+        sandbox_parent=tmp_path / "sandbox_stale",
+        sequence=1012,
+    )
+    assert result.accepted is False
+    assert result.reason == "stale_source_digest"
+    assert result.authorization_consumed is False
 
 
 def test_pcm_2g_review_package_and_closure_are_metadata_only(tmp_path):

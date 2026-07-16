@@ -269,6 +269,41 @@ def test_pcm_unsupported_repair_shape_is_classified_honestly():
     assert contract.local_implementation_eligibility == "locally_implementable_but_pcm_operation_unsupported"
 
 
+def test_exact_behavioral_logic_replacement_shape_is_classified_as_pcm_supported():
+    controller, subgoal = _controller_and_subgoal(expected_vs_observed_result="wrong_transition_state")
+
+    contract = compile_repository_behavior_contract(
+        controller,
+        subgoal,
+        _inspection(),
+        advisory_result={
+            "failure_mechanism": "exact_behavioral_logic_replacement",
+            "candidate_behavior": "replace one inspected behavior branch without changing tests",
+            "expected_observable_change": "state order is correct",
+        },
+    )
+
+    assert contract.local_implementation_eligibility == "locally_implementable_by_existing_pcm"
+    assert contract.failure_mechanism == "exact_behavioral_logic_replacement"
+
+
+def test_static_self_report_failure_is_not_automatically_exact_replacement_eligible():
+    controller, subgoal = _controller_and_subgoal(expected_vs_observed_result="static_self_report_candidate_behavioral_metric_unchanged")
+
+    contract = compile_repository_behavior_contract(
+        controller,
+        subgoal,
+        _inspection(),
+        advisory_result={
+            "failure_mechanism": "static_self_report_candidate",
+            "candidate_behavior": "replace self-reported candidate success with behavior exercised by independent cases",
+            "expected_observable_change": "post-candidate target improves only from independent behavioral evidence",
+        },
+    )
+
+    assert contract.local_implementation_eligibility == "locally_implementable_but_pcm_operation_unsupported"
+
+
 def test_authority_boundary_creates_authority_request_not_insight(tmp_path):
     controller, subgoal = _controller_and_subgoal(authority_class="operator_authority_required")
 

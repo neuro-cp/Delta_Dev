@@ -57,7 +57,7 @@ CANDIDATE_DESIGN_PROTOCOL = "repository_bound_candidate_design_v1"
 CONTINUOUS_PCM_BRIDGE_PROTOCOL = "continuous_to_pcm_closed_loop_fixture_v1"
 REPOSITORY_BEHAVIOR_CONTRACT_PROTOCOL = "repository_behavior_contract"
 REPOSITORY_BEHAVIOR_CONTRACT_VERSION = "1"
-PCM_SUPPORTED_REPAIR_SHAPES = {"expected_symbol_missing"}
+PCM_SUPPORTED_REPAIR_SHAPES = {"expected_symbol_missing", "exact_behavioral_logic_replacement"}
 FORBIDDEN_CONTRACT_KEYS = {
     "patch",
     "patch_text",

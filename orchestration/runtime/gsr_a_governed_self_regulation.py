@@ -1924,6 +1924,7 @@ class PythonCandidatePatchRequest:
     max_file_count: int = 1
     max_changed_bytes: int = 2000
     maximum_patch_count: int = 1
+    expected_old_text: str = ""
     patch_proposal_only: bool = True
     file_write_requested: bool = False
     execution_requested: bool = False
@@ -1964,6 +1965,7 @@ class PythonCandidatePatchAuthorization:
     operator_authority: str = OPERATOR_CONTROLLED_AUTHORITY
     one_shot: bool = True
     consumed: bool = False
+    authorized_expected_old_text: str = ""
     patch_proposal_authorized: bool = True
     file_write_prohibited: bool = True
     execution_prohibited: bool = True
@@ -8066,6 +8068,8 @@ def make_python_candidate_patch_request(
     replacement_text: str,
     expected_postcondition: str,
     request_sequence: int,
+    operation: str = "append_text",
+    expected_old_text: str = "",
     **overrides: Any,
 ) -> PythonCandidatePatchRequest:
     inspection_evidence = inspection_result.evidence
@@ -8098,9 +8102,10 @@ def make_python_candidate_patch_request(
         focused_test_digest=_canonical_digest(test_evidence.proposal if test_evidence and test_evidence.proposal else {}),
         target_relative_path=source_path,
         precondition_digest=source_digest,
-        operation="append_text",
+        operation=operation,
         replacement_text=replacement_text,
         expected_postcondition=expected_postcondition,
+        expected_old_text=expected_old_text,
         **overrides,
     )
 
@@ -8132,6 +8137,7 @@ def make_python_candidate_patch_authorization(
         authorized_target_path=request.target_relative_path,
         authorized_precondition_digest=request.precondition_digest,
         authorized_operation=request.operation,
+        authorized_expected_old_text=request.expected_old_text,
         authorized_replacement_text=request.replacement_text,
         authorized_expected_postcondition=request.expected_postcondition,
         authorized_focused_test_digest=request.focused_test_digest,
@@ -8195,6 +8201,7 @@ def _python_candidate_patch_request_matches_authorization(
         (authorization.authorized_target_path, request.target_relative_path, "target_path_mismatch"),
         (authorization.authorized_precondition_digest, request.precondition_digest, "precondition_digest_mismatch"),
         (authorization.authorized_operation, request.operation, "operation_mismatch"),
+        (authorization.authorized_expected_old_text, request.expected_old_text, "preimage_payload_mismatch"),
         (authorization.authorized_replacement_text, request.replacement_text, "patch_payload_mismatch"),
         (authorization.authorized_expected_postcondition, request.expected_postcondition, "expected_postcondition_mismatch"),
         (authorization.authorized_focused_test_digest, request.focused_test_digest, "focused_test_mismatch"),
@@ -8258,7 +8265,7 @@ def create_python_candidate_patch_proposal(
         return _pcm2_denied_patch("action_permission_present", request, authorization)
     if request.provider_model_requested:
         return _pcm2_denied_patch("provider_or_model_permission_present", request, authorization)
-    if request.operation != "append_text" or len(request.replacement_text.encode("utf-8")) > request.max_changed_bytes:
+    if request.operation not in {"append_text", "exact_replace_text"}:
         return _pcm2_denied_patch("unsupported_or_oversized_operation", request, authorization)
     safe_ok, safe_reason, normalized = _python_source_relative_paths_are_safe((request.target_relative_path,), max_file_count=1)
     if not safe_ok or normalized[0] != request.source_path:
@@ -8269,6 +8276,20 @@ def create_python_candidate_patch_proposal(
     auth_ok, auth_reason = _python_candidate_patch_authorization_is_available(authorization, sequence=sequence)
     if not auth_ok:
         return _pcm2_denied_patch(auth_reason, request, authorization)
+    if request.operation == "append_text" and request.expected_old_text:
+        return _pcm2_denied_patch("preimage_not_allowed_for_append", request, authorization)
+    if request.operation == "exact_replace_text":
+        if request.target_relative_path.replace("\\", "/").startswith(("tests/", "test/", "fixtures/")):
+            return _pcm2_denied_patch("test_file_mutation_not_authorized", request, authorization)
+        if not request.expected_old_text:
+            return _pcm2_denied_patch("empty_preimage", request, authorization)
+        if request.expected_old_text == request.replacement_text:
+            return _pcm2_denied_patch("identical_preimage_and_replacement", request, authorization)
+        changed_bytes = len(request.expected_old_text.encode("utf-8")) + len(request.replacement_text.encode("utf-8"))
+        if changed_bytes > request.max_changed_bytes:
+            return _pcm2_denied_patch("changed_byte_limit_exceeded", request, authorization)
+    elif len(request.replacement_text.encode("utf-8")) > request.max_changed_bytes:
+        return _pcm2_denied_patch("unsupported_or_oversized_operation", request, authorization)
     upstream_ok, upstream_reason, finding, proposal = _candidate_patch_upstream_matches_request(request, attachment_record, inspection_result, diagnosis_result, test_proposal_result)
     if not upstream_ok or finding is None or proposal is None:
         return _pcm2_denied_patch(upstream_reason, request, authorization)
@@ -8277,12 +8298,23 @@ def create_python_candidate_patch_proposal(
         operation_id=stable_id("pcm-2a-candidate-patch-operation", request.patch_request_id, request.target_relative_path, request.operation),
         operation=request.operation,
         target_relative_path=request.target_relative_path,
-        expected_old_text="",
+        expected_old_text=request.expected_old_text,
         replacement_text=request.replacement_text,
         precondition_digest=request.precondition_digest,
         expected_postcondition=request.expected_postcondition,
         max_changed_bytes=request.max_changed_bytes,
-        rollback_text="remove appended bounded replacement text",
+        rollback_text=request.expected_old_text if request.operation == "exact_replace_text" else "remove appended bounded replacement text",
+    )
+    rollback_metadata = (
+        {
+            "operation": "restore_exact_preimage",
+            "precondition_digest": request.precondition_digest,
+            "expected_old_text_digest": _sha256_bytes(request.expected_old_text.encode("utf-8")),
+            "replacement_text_digest": _sha256_bytes(request.replacement_text.encode("utf-8")),
+            "rollback_text_digest": _sha256_bytes(operation.rollback_text.encode("utf-8")),
+        }
+        if request.operation == "exact_replace_text"
+        else {"operation": "restore_precondition_digest", "precondition_digest": request.precondition_digest}
     )
     patch = PythonCandidatePatchProposal(
         patch_proposal_id=stable_id("pcm-2a-candidate-patch", request.patch_request_id, operation.operation_id, sequence),
@@ -8301,7 +8333,7 @@ def create_python_candidate_patch_proposal(
         precondition_digest=request.precondition_digest,
         operations=(serialize(operation),),
         expected_postcondition=request.expected_postcondition,
-        rollback_metadata={"operation": "restore_precondition_digest", "precondition_digest": request.precondition_digest},
+        rollback_metadata=rollback_metadata,
         uncertainty=finding.uncertainty,
         max_file_count=request.max_file_count,
         max_changed_bytes=request.max_changed_bytes,
@@ -8499,11 +8531,25 @@ def _pcm2_apply_patch_operation(source_text: str, patch: PythonCandidatePatchPro
     if len(patch.operations) != 1:
         return False, "operation_limit_invalid", source_text
     operation = deserialize(PythonCandidatePatchOperation, patch.operations[0])
-    if operation.operation != "append_text":
+    if operation.operation == "append_text":
+        if len(operation.replacement_text.encode("utf-8")) > operation.max_changed_bytes:
+            return False, "changed_byte_limit_exceeded", source_text
+        return True, "valid", source_text.rstrip() + "\n\n" + operation.replacement_text.strip() + "\n"
+    if operation.operation != "exact_replace_text":
         return False, "unsupported_operation", source_text
-    if len(operation.replacement_text.encode("utf-8")) > operation.max_changed_bytes:
+    if not operation.expected_old_text:
+        return False, "empty_preimage", source_text
+    if operation.expected_old_text == operation.replacement_text:
+        return False, "identical_preimage_and_replacement", source_text
+    changed_bytes = len(operation.expected_old_text.encode("utf-8")) + len(operation.replacement_text.encode("utf-8"))
+    if changed_bytes > operation.max_changed_bytes:
         return False, "changed_byte_limit_exceeded", source_text
-    return True, "valid", source_text.rstrip() + "\n\n" + operation.replacement_text.strip() + "\n"
+    occurrence_count = source_text.count(operation.expected_old_text)
+    if occurrence_count == 0:
+        return False, "preimage_absent", source_text
+    if occurrence_count > 1:
+        return False, "preimage_not_unique", source_text
+    return True, "valid", source_text.replace(operation.expected_old_text, operation.replacement_text, 1)
 
 
 def _pcm2_runnable_test_body(source_path: str, responsible_symbol: str) -> str:
