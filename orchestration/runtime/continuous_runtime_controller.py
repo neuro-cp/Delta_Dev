@@ -679,18 +679,39 @@ def attach_developmental_learning_mission(
         "protocol": "operator_developmental_mission_orchestration_v1",
     }
     if subgoal is None:
+        blocked_on_external_authority = plan.plan_disposition == "external_authority_required"
         return replace(
             controller,
-            continuous_mission_state="evidence_needed_for_developmental_learning",
+            continuous_mission_state=(
+                "learning_external_authority_required"
+                if blocked_on_external_authority
+                else "evidence_needed_for_developmental_learning"
+            ),
             continuous_learning_state=state,
-            active_work_item="developmental_learning_evidence_needed",
-            journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_compiled_without_executable_local_subgoal", (mission.mission_id,)),),
+            active_work_item=(
+                "developmental_learning_external_authority_required"
+                if blocked_on_external_authority
+                else "developmental_learning_evidence_needed"
+            ),
+            journal=controller.journal + (_journal_entry(
+                "developmental_learning",
+                "operator_instruction_requires_precise_external_resource_authority"
+                if blocked_on_external_authority
+                else "operator_instruction_compiled_without_executable_local_subgoal",
+                (mission.mission_id,),
+            ),),
         )
     return replace(
         controller,
         continuous_mission_state="learning_subgoal_active",
         continuous_mission_contract={**mission.as_dict(), "original_operator_goal": mission.operator_instruction},
-        continuous_learning_state=state,
+        continuous_learning_state={**state, "selected_frontier": {
+            "frontier_id": subgoal.source_gap_id,
+            "topic": subgoal.topic,
+            "capability_dimension": subgoal.capability_target,
+            "rank": subgoal.frontier_rank,
+            "selection_reason": subgoal.selection_reason,
+        }},
         continuous_active_subgoal={**subgoal.as_dict(), "execution_kind": "developmental_learning"},
         active_work_item=subgoal.measurable_objective,
         journal=controller.journal + (_journal_entry("developmental_learning", "operator_instruction_compiled_to_learning_subgoal", (mission.mission_id, subgoal.subgoal_id)),),
@@ -766,7 +787,13 @@ def consume_developmental_learning_evaluation(
     return replace(
         controller,
         continuous_mission_state="learning_subgoal_active",
-        continuous_learning_state=updated_state,
+        continuous_learning_state={**updated_state, "selected_frontier": {
+            "frontier_id": next_subgoal.source_gap_id,
+            "topic": next_subgoal.topic,
+            "capability_dimension": next_subgoal.capability_target,
+            "rank": next_subgoal.frontier_rank,
+            "selection_reason": next_subgoal.selection_reason,
+        }},
         continuous_active_subgoal={**next_subgoal.as_dict(), "execution_kind": "developmental_learning"},
         active_work_item=next_subgoal.measurable_objective,
         journal=controller.journal + (_journal_entry("developmental_learning", "learning_evaluation_consumed_exactly_once_selected_next_subgoal", (evaluation.evaluation_id, next_subgoal.subgoal_id)),),

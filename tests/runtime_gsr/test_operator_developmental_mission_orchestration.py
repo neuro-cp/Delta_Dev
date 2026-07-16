@@ -14,7 +14,9 @@ from orchestration.runtime.continuous_runtime_controller import (
 from orchestration.runtime.continuous_subgoal_executor import execute_continuous_active_subgoal
 from orchestration.runtime.developmental_learning import (
     classify_developmental_instruction,
+    compile_capability_assessment,
     compile_developmental_mission_contract,
+    compile_resource_acquisition_plan,
     load_retained_learning_bundle,
 )
 
@@ -146,6 +148,79 @@ def test_broad_math_goal_assesses_before_claiming_a_curriculum():
     assert mission["topic"] == "exploratory"
     assert controller.continuous_learning_state["assessment"]["assessment_disposition"] == "assessment_completed"
     assert controller.continuous_active_subgoal
+
+
+def test_broad_math_goal_aggregates_retained_evidence_and_selects_ranked_non_induction_frontier(tmp_path: Path):
+    controller = compile_operator_developmental_learning_mission(
+        start_continuous_runtime_controller(session_id="broad-math-ranked"),
+        "Today your goal is to learn math.",
+    )
+
+    state = controller.continuous_learning_state
+    assessment = state["assessment"]
+    dimensions = {item["dimension"]: item for item in assessment["dimensions"]}
+    assert dimensions["arithmetic_fluency"]["baseline_score"] == 1.0
+    assert dimensions["arithmetic_fluency"]["inventory_validated"] is False
+    assert "geometry" in assessment["unassessed_dimensions"]
+    assert controller.continuous_active_subgoal["topic"] == "algebraic_reasoning"
+    assert controller.continuous_active_subgoal["capability_target"] == "equation_solving"
+    selected_gap = next(item for item in state["gaps"] if item["gap_id"] == controller.continuous_active_subgoal["source_gap_id"])
+    assert selected_gap["expected_behavior_identity"] == "mathematics:algebraic_reasoning:equation_solving"
+    assert controller.continuous_active_subgoal["control_case_ids"] == ("control-equation-inverse",)
+    assert state["selected_frontier"]["frontier_id"] == controller.continuous_active_subgoal["source_gap_id"]
+    assert "expected learning value" in state["selected_frontier"]["selection_reason"]
+
+    first, first_result = execute_continuous_active_subgoal(
+        controller, artifact_root=tmp_path / "first", repository_root=Path.cwd(), python_executable=sys.executable
+    )
+    assert first_result.disposition == "behaviorally_demonstrated"
+    assert first.continuous_active_subgoal["capability_target"] == "function_representation"
+    restart = export_continuous_mission_restart_state(first)
+    restored = restore_continuous_mission_restart_state(start_continuous_runtime_controller(session_id="broad-math-ranked"), restart)
+    second, second_result = execute_continuous_active_subgoal(
+        restored, artifact_root=tmp_path / "second", repository_root=Path.cwd(), python_executable=sys.executable
+    )
+    assert second_result.disposition == "behaviorally_demonstrated"
+    assert len(second.continuous_learning_state["evaluations"]) == 2
+    assert second.continuous_learning_state["evaluations"][0]["subgoal_id"] != second.continuous_learning_state["evaluations"][1]["subgoal_id"]
+    assert second.continuous_pcm_bridge_ledger == ()
+
+
+def test_missing_local_resource_produces_precise_external_authority_blocker():
+    mission = compile_developmental_mission_contract("Today your goal is to learn math.")
+    assert mission is not None
+    retained_bundle = {
+        "assessment_dimensions": ({"dimension": "unresolved_topic", "baseline_case_id": "baseline", "baseline_components": (), "required_components": ("known_component",), "prerequisites": (), "evidence_ref": "retained"},),
+        "study_resources": (),
+        "sealed_evaluation_cases": (),
+    }
+    assessment = compile_capability_assessment(mission, retained_bundle)
+    plan = compile_resource_acquisition_plan(mission, assessment, retained_bundle)
+
+    assert plan.plan_disposition == "external_authority_required"
+    assert plan.authority_requirements == ("existing_external_resource_authority",)
+    assert plan.resource_decisions[0]["result"] == "precise_external_authority_required"
+
+    blocked = attach_developmental_learning_mission(
+        start_continuous_runtime_controller(session_id="learning-authority-block"),
+        "Today your goal is to learn math.",
+        retained_bundle,
+    )
+    assert blocked.continuous_mission_state == "learning_external_authority_required"
+    assert blocked.continuous_learning_state["resource_plan"]["authority_requirements"] == ("existing_external_resource_authority",)
+
+
+def test_validated_inventory_can_supply_exact_dimension_evidence():
+    mission = compile_developmental_mission_contract("Learn mathematical induction today.")
+    assert mission is not None
+    assessment = compile_capability_assessment(
+        mission,
+        _induction_bundle(),
+        inventory=({"capability_id": "proof_structure", "capability_acquired": True},),
+    )
+    dimensions = {item["dimension"]: item for item in assessment.dimensions}
+    assert dimensions["proof_structure"]["baseline_score"] == 1.0
+    assert dimensions["proof_structure"]["inventory_validated"] is True
 
 
 def test_repository_repair_stays_on_existing_continuous_mission_path():

@@ -89,6 +89,7 @@ class ResourceAcquisitionPlan:
     source_quality_policy: str
     stopping_criteria: str
     authority_requirements: tuple[str, ...]
+    resource_decisions: tuple[dict[str, Any], ...]
     plan_disposition: str
     plan_digest: str
 
@@ -101,6 +102,7 @@ class DevelopmentalGap:
     gap_id: str
     mission_id: str
     capability_dimension: str
+    topic: str
     current_baseline: float
     target_behavior: str
     expected_behavior_identity: str
@@ -112,6 +114,8 @@ class DevelopmentalGap:
     measurability: float
     resource_requirements: tuple[str, ...]
     semantic_identity: str
+    frontier_rank: float
+    selection_reason: str
     status: str = "eligible"
 
     def as_dict(self) -> dict[str, Any]:
@@ -123,6 +127,9 @@ class LearningSubgoal:
     subgoal_id: str
     mission_id: str
     source_gap_id: str
+    topic: str
+    frontier_rank: float
+    selection_reason: str
     capability_target: str
     measurable_objective: str
     baseline: float
@@ -203,13 +210,13 @@ def classify_developmental_instruction(instruction: str) -> dict[str, str] | Non
     }
 
 
-def load_retained_learning_bundle(domain: str, topic: str, *, resource_root: str | Path | None = None) -> dict[str, Any] | None:
-    """Load a retained local resource by declared domain/topic, never by model output."""
+def load_retained_learning_bundles(domain: str, *, resource_root: str | Path | None = None) -> tuple[dict[str, Any], ...]:
+    """Return all declared retained bundles for a domain in stable order."""
 
     root = Path(resource_root) if resource_root else Path(__file__).resolve().parents[2] / "docs" / "learning_resources"
     if not root.exists():
-        return None
-    domain_matches: list[dict[str, Any]] = []
+        return ()
+    bundles: list[dict[str, Any]] = []
     for path in sorted(root.glob("*.json")):
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
@@ -217,11 +224,63 @@ def load_retained_learning_bundle(domain: str, topic: str, *, resource_root: str
             continue
         if _text(payload.get("domain")) != _text(domain):
             continue
-        cleaned = {key: value for key, value in payload.items() if key not in {"domain", "topic"}}
+        bundles.append(dict(payload))
+    return tuple(bundles)
+
+
+def merge_retained_learning_bundles(domain: str, bundles: Sequence[Mapping[str, Any]]) -> dict[str, Any] | None:
+    """Build a data-led exploratory view without embedding a domain curriculum."""
+
+    if not bundles:
+        return None
+    dimensions: list[dict[str, Any]] = []
+    resources: list[dict[str, Any]] = []
+    cases: list[dict[str, Any]] = []
+    catalog: list[str] = []
+    provenance: list[dict[str, str]] = []
+    for raw_bundle in bundles:
+        bundle = dict(raw_bundle)
+        topic = str(bundle.get("topic") or "unclassified")
+        bundle_id = str(bundle.get("resource_bundle_id") or topic)
+        provenance.append({"resource_bundle_id": bundle_id, "topic": topic})
+        catalog.extend(str(item) for item in (bundle.get("capability_catalog") or ()))
+        for raw in bundle.get("assessment_dimensions") or ():
+            item = dict(raw)
+            item.setdefault("topic", topic)
+            item.setdefault("resource_bundle_id", bundle_id)
+            dimensions.append(item)
+        for raw in bundle.get("study_resources") or ():
+            item = dict(raw)
+            item.setdefault("topic", topic)
+            item.setdefault("resource_bundle_id", bundle_id)
+            resources.append(item)
+        for raw in bundle.get("sealed_evaluation_cases") or ():
+            item = dict(raw)
+            item.setdefault("topic", topic)
+            item.setdefault("resource_bundle_id", bundle_id)
+            cases.append(item)
+    return {
+        "resource_bundle_id": stable_id("retained-learning-domain", domain, _digest(provenance)),
+        "domain": domain,
+        "topic": "exploratory",
+        "assessment_dimensions": tuple(dimensions),
+        "study_resources": tuple(resources),
+        "sealed_evaluation_cases": tuple(cases),
+        "capability_catalog": tuple(dict.fromkeys(catalog)),
+        "resource_provenance": tuple(provenance),
+    }
+
+
+def load_retained_learning_bundle(domain: str, topic: str, *, resource_root: str | Path | None = None) -> dict[str, Any] | None:
+    """Load a retained local resource by declared domain/topic, never by model output."""
+
+    bundles = load_retained_learning_bundles(domain, resource_root=resource_root)
+    if _text(topic) == "exploratory":
+        return merge_retained_learning_bundles(domain, bundles)
+    for payload in bundles:
         if _text(payload.get("topic")) == _text(topic):
-            return cleaned
-        domain_matches.append(cleaned)
-    return domain_matches[0] if _text(topic) == "exploratory" and domain_matches else None
+            return {key: value for key, value in payload.items() if key not in {"domain", "topic"}}
+    return None
 
 
 def compile_developmental_mission_contract(instruction: str) -> DevelopmentalMissionContract | None:
@@ -269,21 +328,43 @@ def compile_capability_assessment(
     dimensions: list[dict[str, Any]] = []
     known_strengths: list[str] = []
     limitations: list[str] = []
+    validated_inventory = {
+        str(item.get("capability_id") or "")
+        for item in inventory
+        if bool(item.get("capability_acquired"))
+        or str(item.get("evidence_stage") or "") == "behaviorally_demonstrated"
+    }
     for raw in retained_bundle.get("assessment_dimensions") or ():
         item = dict(raw)
         required = set(str(value) for value in (item.get("required_components") or ()))
         observed = set(str(value) for value in (item.get("baseline_components") or ()))
-        score = 1.0 if required and required.issubset(observed) else 0.0
         dimension = str(item.get("dimension") or "unclassified_dimension")
+        inventory_validated = dimension in validated_inventory
+        score = 1.0 if inventory_validated or (required and required.issubset(observed)) else 0.0
         dimensions.append({
             "dimension": dimension,
+            "topic": str(item.get("topic") or mission.topic),
             "baseline_score": score,
             "baseline_case_id": str(item.get("baseline_case_id") or ""),
             "required_components": tuple(sorted(required)),
             "prerequisites": tuple(str(value) for value in (item.get("prerequisites") or ())),
             "evidence_ref": str(item.get("evidence_ref") or "retained_learning_bundle"),
+            "inventory_validated": inventory_validated,
+            "expected_learning_value": float(item.get("expected_learning_value") or 0.5),
+            "information_gain": float(item.get("information_gain") or 0.5),
+            "estimated_effort": float(item.get("estimated_effort") or 1.0),
         })
         (known_strengths if score >= 1.0 else limitations).append(dimension)
+    observed_dimensions = {str(item["dimension"]) for item in dimensions}
+    for dimension in retained_bundle.get("capability_catalog") or ():
+        if str(dimension) in observed_dimensions:
+            continue
+        dimensions.append({
+            "dimension": str(dimension), "topic": "unassessed", "baseline_score": 0.0,
+            "baseline_case_id": "", "required_components": (), "prerequisites": (),
+            "evidence_ref": "declared_domain_capability_catalog", "expected_learning_value": 0.0,
+            "information_gain": 1.0, "estimated_effort": 0.0,
+        })
     if mission.topic == "exploratory" and not dimensions:
         dimensions.append({
             "dimension": "bounded_domain_assessment",
@@ -318,6 +399,11 @@ def compile_resource_acquisition_plan(
 ) -> ResourceAcquisitionPlan:
     needs = tuple(item["dimension"] for item in assessment.dimensions if float(item["baseline_score"]) < 1.0)
     selected = ("retained_local_sources",) if retained_bundle.get("study_resources") else ("validated_internal_knowledge",)
+    decisions: list[dict[str, Any]] = []
+    if retained_bundle.get("study_resources"):
+        decisions.append({"resource_class": "retained_local_sources", "authority_status": "already_authorized", "source_provenance": tuple(retained_bundle.get("resource_provenance") or ()), "result": "sufficient_for_one_bounded_attempt"})
+    else:
+        decisions.append({"resource_class": "provider_or_web", "authority_status": "not_authorized", "source_provenance": (), "result": "precise_external_authority_required"})
     payload = {"mission_id": mission.mission_id, "assessment_id": assessment.assessment_id, "needs": needs, "selected": selected}
     return ResourceAcquisitionPlan(
         plan_id=stable_id("learning-resource-plan", _digest(payload)),
@@ -330,8 +416,9 @@ def compile_resource_acquisition_plan(
         duplicate_query_digest=_digest(payload),
         source_quality_policy="retained_sources_are_planning_evidence_not_evaluation_authority",
         stopping_criteria="stop_when_one_measurable_gap_has_a_local_study_resource_and_sealed_evaluation",
-        authority_requirements=(),
-        plan_disposition="local_resources_sufficient" if retained_bundle.get("study_resources") else "resource_evidence_needed",
+        authority_requirements=() if retained_bundle.get("study_resources") else ("existing_external_resource_authority",),
+        resource_decisions=tuple(decisions),
+        plan_disposition="local_resources_sufficient" if retained_bundle.get("study_resources") else "external_authority_required",
         plan_digest=_digest(payload),
     )
 
@@ -345,14 +432,23 @@ def compile_developmental_gaps(
         baseline = float(item["baseline_score"])
         if baseline >= 1.0 or not item["baseline_case_id"]:
             continue
-        semantic = _digest((mission.domain, mission.topic, item["dimension"], tuple(item["required_components"])))
+        semantic = _digest((mission.domain, item.get("topic"), item["dimension"], tuple(item["required_components"])))
+        prerequisite_penalty = 0.08 * len(tuple(item["prerequisites"]))
+        frontier_rank = round(
+            (float(item.get("expected_learning_value") or 0.5) * 0.45)
+            + (float(item.get("information_gain") or 0.5) * 0.35)
+            + ((1.0 - baseline) * 0.20)
+            - prerequisite_penalty,
+            4,
+        )
         gaps.append(DevelopmentalGap(
             gap_id=stable_id("developmental-gap", mission.mission_id, semantic),
             mission_id=mission.mission_id,
             capability_dimension=str(item["dimension"]),
+            topic=str(item.get("topic") or mission.topic),
             current_baseline=baseline,
             target_behavior="demonstrate all predeclared components on an unseen case",
-            expected_behavior_identity=f"{mission.domain}:{mission.topic}:{item['dimension']}",
+            expected_behavior_identity=f"{mission.domain}:{item.get('topic') or mission.topic}:{item['dimension']}",
             prerequisites=tuple(item["prerequisites"]),
             evidence_refs=(str(item["evidence_ref"]), str(item["baseline_case_id"])),
             confidence=0.8,
@@ -361,8 +457,13 @@ def compile_developmental_gaps(
             measurability=1.0,
             resource_requirements=("retained_local_sources",),
             semantic_identity=semantic,
+            frontier_rank=frontier_rank,
+            selection_reason=(
+                "ranked from retained baseline evidence, expected learning value, information gain, "
+                "and prerequisite cost"
+            ),
         ))
-    return tuple(sorted(gaps, key=lambda gap: (-gap.materiality, len(gap.prerequisites), gap.capability_dimension)))
+    return tuple(sorted(gaps, key=lambda gap: (-gap.frontier_rank, len(gap.prerequisites), gap.capability_dimension)))
 
 
 def compile_learning_subgoal(
@@ -377,13 +478,16 @@ def compile_learning_subgoal(
     selected = next((gap for gap in gaps if gap.gap_id not in consumed and gap.status == "eligible"), None)
     if selected is None or plan.plan_disposition != "local_resources_sufficient":
         return None
-    resources = tuple(str(item.get("resource_id") or "") for item in retained_bundle.get("study_resources") or () if selected.capability_dimension in tuple(item.get("supports_dimensions") or ()))
+    resources = tuple(str(item.get("resource_id") or "") for item in retained_bundle.get("study_resources") or () if selected.capability_dimension in tuple(item.get("supports_dimensions") or ()) and str(item.get("topic") or selected.topic) == selected.topic)
     if not resources:
         return None
     return LearningSubgoal(
         subgoal_id=stable_id("learning-subgoal", mission.mission_id, selected.semantic_identity),
         mission_id=mission.mission_id,
         source_gap_id=selected.gap_id,
+        topic=selected.topic,
+        frontier_rank=selected.frontier_rank,
+        selection_reason=selected.selection_reason,
         capability_target=selected.capability_dimension,
         measurable_objective=selected.target_behavior,
         baseline=selected.current_baseline,
@@ -392,7 +496,12 @@ def compile_learning_subgoal(
         study_resource_ids=resources,
         attempt_type="guided_study_attempt",
         practice_specification="derive a structured response using only the selected retained study resource",
-        control_case_ids=tuple(str(item.get("case_id") or "") for item in retained_bundle.get("sealed_evaluation_cases") or () if item.get("kind") == "control"),
+        control_case_ids=tuple(
+            str(item.get("case_id") or "")
+            for item in retained_bundle.get("sealed_evaluation_cases") or ()
+            if item.get("kind") == "control"
+            and _text(item.get("capability_dimension")) == _text(selected.capability_dimension)
+        ),
         held_out_policy="sealed cases are excluded from attempt construction",
         adversarial_policy="invalid reasoning cases are scored by predeclared required and forbidden components",
         evaluation_method="candidate_independent_component_scoring",
@@ -483,5 +592,5 @@ __all__ = [
     "classify_developmental_instruction", "compile_developmental_mission_contract", "compile_capability_assessment",
     "compile_resource_acquisition_plan", "compile_developmental_gaps", "compile_learning_subgoal",
     "execute_learning_attempt", "evaluate_learning_attempt",
-    "load_retained_learning_bundle",
+    "load_retained_learning_bundle", "load_retained_learning_bundles", "merge_retained_learning_bundles",
 ]

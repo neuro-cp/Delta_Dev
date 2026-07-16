@@ -2408,6 +2408,7 @@ class DeltaApp:
         )
         self.developmental_learning_controller = controller
         next_subgoal = dict(controller.continuous_active_subgoal or {})
+        frontier = dict(controller.continuous_learning_state.get("selected_frontier") or {})
         evaluation = dict(result.behavioral_evaluation_request or {})
         completed_subgoal = str(result.subgoal_id)
         active_resources = tuple(result.source_inspection.get("resource_ids") or ())
@@ -2416,6 +2417,8 @@ class DeltaApp:
             f"Mission: {controller.continuous_learning_state['mission']['mission_type']} / "
             f"{controller.continuous_learning_state['mission']['domain']} / {controller.continuous_learning_state['mission']['topic']}\n"
             f"Completed subgoal: {evaluation.get('capability_dimension') or completed_subgoal}\n"
+            f"Selected frontier: {frontier.get('topic') or 'none'} / {frontier.get('capability_dimension') or 'none'} "
+            f"(rank={frontier.get('rank') if frontier else 'n/a'}; {frontier.get('selection_reason') or 'none'})\n"
             f"Selected local resources: {', '.join(active_resources) or 'none'}\n"
             f"Evaluation: {result.disposition}; baseline={result.baseline}; candidate={result.candidate}; "
             f"controls={result.validation.get('control')}; held_out={result.validation.get('held_out')}; "
