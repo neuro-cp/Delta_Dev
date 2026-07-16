@@ -1,25 +1,29 @@
 {
-  "resource_bundle_id": "retained-algebraic-reasoning-v1",
-  "domain": "mathematics",
-  "topic": "algebraic_reasoning",
-  "capability_catalog": ["arithmetic_fluency", "algebraic_manipulation", "equation_solving", "functions", "geometry", "probability", "proof_reasoning", "mathematical_induction", "limits_calculus_concepts"],
-  "assessment_dimensions": [
-    {"dimension": "arithmetic_fluency", "baseline_case_id": "baseline-arithmetic", "baseline_components": ["preserve_additive_inverse", "preserve_multiplicative_inverse"], "required_components": ["preserve_additive_inverse", "preserve_multiplicative_inverse"], "prerequisites": [], "evidence_ref": "retained-algebraic-reasoning-v1", "expected_learning_value": 0.25, "information_gain": 0.1, "estimated_effort": 0.2},
-    {"dimension": "equation_solving", "baseline_case_id": "baseline-equation-solving", "baseline_components": [], "required_components": ["preserve_equivalence", "isolate_variable", "verify_solution"], "prerequisites": ["arithmetic_fluency"], "evidence_ref": "retained-algebraic-reasoning-v1", "expected_learning_value": 1.0, "information_gain": 0.95, "estimated_effort": 0.6},
-    {"dimension": "function_representation", "baseline_case_id": "baseline-function-representation", "baseline_components": [], "required_components": ["identify_input_output", "preserve_function_rule"], "prerequisites": ["equation_solving"], "evidence_ref": "retained-algebraic-reasoning-v1", "expected_learning_value": 0.78, "information_gain": 0.7, "estimated_effort": 0.6}
+  "resource_bundle_id":"retained-algebraic-reasoning-v2","domain":"mathematics","topic":"algebraic_reasoning",
+  "capability_catalog":["arithmetic_fluency","algebraic_manipulation","equation_solving","function_representation","geometry","probability","proof_reasoning","mathematical_induction","limits_calculus_concepts"],
+  "assessment_dimensions":[
+    {"dimension":"arithmetic_fluency","baseline_case_id":"baseline-arithmetic","baseline_components":["preserve_additive_inverse"],"required_components":["preserve_additive_inverse"],"prerequisites":[],"evidence_ref":"retained-algebraic-reasoning-v2","expected_learning_value":0.2,"information_gain":0.1},
+    {"dimension":"equation_solving","baseline_case_id":"baseline-equation-solving","baseline_components":[],"required_components":["preserve_equivalence","isolate_variable","verify_solution"],"prerequisites":["arithmetic_fluency"],"evidence_ref":"retained-algebraic-reasoning-v2","expected_learning_value":1.0,"information_gain":0.95},
+    {"dimension":"function_representation","baseline_case_id":"baseline-function-representation","baseline_components":[],"required_components":["identify_input_output","preserve_function_rule"],"prerequisites":["equation_solving"],"evidence_ref":"retained-algebraic-reasoning-v2","expected_learning_value":0.78,"information_gain":0.7}
   ],
-  "study_resources": [
-    {"resource_id": "retained-equation-solving-primer", "supports_dimensions": ["equation_solving"], "study_components": ["preserve_equivalence", "isolate_variable", "verify_solution"]},
-    {"resource_id": "retained-function-representation-primer", "supports_dimensions": ["function_representation"], "study_components": ["identify_input_output", "preserve_function_rule"]}
+  "study_resources":[
+    {"resource_id":"retained-equation-solving-primer","supports_dimensions":["equation_solving"],"study_components":["preserve_equivalence","isolate_variable","verify_solution"]},
+    {"resource_id":"retained-function-representation-primer","supports_dimensions":["function_representation"],"study_components":["identify_input_output","preserve_function_rule"]}
   ],
-  "sealed_evaluation_cases": [
-    {"case_id": "held-out-linear-equation", "kind": "held_out", "capability_dimension": "equation_solving", "required_components": ["preserve_equivalence", "isolate_variable", "verify_solution"]},
-    {"case_id": "control-equation-inverse", "kind": "control", "capability_dimension": "equation_solving", "required_components": ["preserve_equivalence"]},
-    {"case_id": "adversarial-divide-by-zero", "kind": "adversarial", "capability_dimension": "equation_solving", "required_components": ["preserve_equivalence", "isolate_variable", "verify_solution"], "forbidden_components": ["divide_by_zero"]},
-    {"case_id": "transfer-equivalent-form", "kind": "transfer", "capability_dimension": "equation_solving", "required_components": ["preserve_equivalence", "isolate_variable", "verify_solution"]},
-    {"case_id": "held-out-function-rule", "kind": "held_out", "capability_dimension": "function_representation", "required_components": ["identify_input_output", "preserve_function_rule"]},
-    {"case_id": "control-function-domain", "kind": "control", "capability_dimension": "function_representation", "required_components": ["identify_input_output"]},
-    {"case_id": "adversarial-constant-misclassification", "kind": "adversarial", "capability_dimension": "function_representation", "required_components": ["identify_input_output", "preserve_function_rule"]},
-    {"case_id": "transfer-table-to-rule", "kind": "transfer", "capability_dimension": "function_representation", "required_components": ["identify_input_output", "preserve_function_rule"]}
+  "visible_practice_cases":[
+    {"case_id":"practice-linear","capability_dimension":"equation_solving","task_type":"solve_equation","input_data":{"left_coefficient":3,"left_constant":7,"right_coefficient":0,"right_constant":22},"candidate_visibility":"visible"},
+    {"case_id":"practice-table","capability_dimension":"function_representation","task_type":"table_to_function_rule","input_data":{"rule":"y=2x+1"},"candidate_visibility":"visible"}
+  ],
+  "sealed_evaluation_cases":[
+    {"case_id":"baseline-equation","case_kind":"baseline","capability_dimension":"equation_solving","task_type":"solve_equation","input_data":{"left_coefficient":3,"left_constant":7,"right_coefficient":0,"right_constant":22},"deterministic_answer":5,"required_reasoning_constraints":["preserve_equivalence"],"forbidden_reasoning_patterns":["divide_by_zero"]},
+    {"case_id":"control-equation","case_kind":"control","capability_dimension":"equation_solving","task_type":"verify_solution","input_data":{"left_coefficient":3,"left_constant":7,"right_coefficient":0,"right_constant":22,"proposed_solution":5},"deterministic_answer":true,"required_reasoning_constraints":["substitute_proposed_solution"]},
+    {"case_id":"heldout-distribution","case_kind":"held_out","capability_dimension":"equation_solving","task_type":"solve_equation","input_data":{"left_coefficient":2,"left_constant":-8,"right_coefficient":3,"right_constant":1},"deterministic_answer":-9,"required_reasoning_constraints":["isolate_variable","verify_solution"]},
+    {"case_id":"adversarial-zero","case_kind":"adversarial","capability_dimension":"equation_solving","task_type":"detect_invalid_algebraic_step","input_data":{"error_type":"divide_by_zero"},"deterministic_answer":"divide_by_zero","required_reasoning_constraints":["inspect_operation_domain"],"forbidden_reasoning_patterns":["valid_operation"]},
+    {"case_id":"transfer-no-solution","case_kind":"transfer","capability_dimension":"equation_solving","task_type":"solve_equation","input_data":{"left_coefficient":4,"left_constant":3,"right_coefficient":4,"right_constant":-2},"deterministic_answer":"no_solution","required_reasoning_constraints":["classify zero coefficient"]},
+    {"case_id":"baseline-function","case_kind":"baseline","capability_dimension":"function_representation","task_type":"table_to_function_rule","input_data":{"rule":"y=2x+1"},"deterministic_answer":"y=2x+1","required_reasoning_constraints":["compare_input_output_pairs"]},
+    {"case_id":"control-function","case_kind":"control","capability_dimension":"function_representation","task_type":"identify_function_relationship","input_data":{"is_function":true},"deterministic_answer":true,"required_reasoning_constraints":["check_unique_output_per_input"]},
+    {"case_id":"heldout-function","case_kind":"held_out","capability_dimension":"function_representation","task_type":"table_to_function_rule","input_data":{"rule":"y=3x-2"},"deterministic_answer":"y=3x-2","required_reasoning_constraints":["compare_input_output_pairs"]},
+    {"case_id":"adversarial-non-function","case_kind":"adversarial","capability_dimension":"function_representation","task_type":"identify_function_relationship","input_data":{"is_function":false},"deterministic_answer":false,"required_reasoning_constraints":["check_unique_output_per_input"]},
+    {"case_id":"transfer-function","case_kind":"transfer","capability_dimension":"function_representation","task_type":"table_to_function_rule","input_data":{"rule":"y=x+4"},"deterministic_answer":"y=x+4","required_reasoning_constraints":["compare_input_output_pairs"]}
   ]
 }

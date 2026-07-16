@@ -2390,7 +2390,8 @@ class DeltaApp:
         """Run one bounded local learning cycle through the continuous controller."""
 
         controller = getattr(self, "developmental_learning_controller", None)
-        if controller is None or not controller.continuous_learning_state:
+        prior_instruction = str((controller.continuous_learning_state.get("mission") or {}).get("operator_instruction") or "") if controller else ""
+        if controller is None or not controller.continuous_learning_state or prior_instruction != message.strip():
             controller = start_continuous_runtime_controller(session_id=f"tk-learning-{uuid.uuid4().hex[:16]}")
             controller = compile_operator_developmental_learning_mission(controller, message)
         if not controller.continuous_active_subgoal:

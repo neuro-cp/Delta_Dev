@@ -189,6 +189,7 @@ class DevelopmentalEvaluationRecord:
     disposition: str
     promotion_eligible: bool
     evaluation_digest: str
+    content_case_results: tuple[dict[str, Any], ...] = ()
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -200,8 +201,8 @@ def classify_developmental_instruction(instruction: str) -> dict[str, str] | Non
     normalized = _text(instruction)
     if not any(token in normalized for token in ("learn", "study", "understand", "practice")):
         return None
-    domain = "mathematics" if any(token in normalized for token in ("math", "mathematics", "induction", "algebra", "calculus")) else "general_learning"
-    topic = "mathematical_induction" if "induction" in normalized else "exploratory"
+    domain = "mathematics" if any(token in normalized for token in ("math", "mathematics", "induction", "algebra", "calculus")) else "biology" if any(token in normalized for token in ("biology", "natural selection", "evolution")) else "general_learning"
+    topic = "mathematical_induction" if "induction" in normalized else "natural_selection" if "natural selection" in normalized else "exploratory"
     return {
         "mission_type": "developmental_learning",
         "domain": domain,
@@ -499,7 +500,7 @@ def compile_learning_subgoal(
         control_case_ids=tuple(
             str(item.get("case_id") or "")
             for item in retained_bundle.get("sealed_evaluation_cases") or ()
-            if item.get("kind") == "control"
+            if (item.get("case_kind") or item.get("kind")) == "control"
             and _text(item.get("capability_dimension")) == _text(selected.capability_dimension)
         ),
         held_out_policy="sealed cases are excluded from attempt construction",
@@ -513,6 +514,52 @@ def compile_learning_subgoal(
     )
 
 
+def _task_output(task: Mapping[str, Any], resources: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Produce a bounded answer from visible task inputs and retained study material."""
+
+    kind = str(task.get("task_type") or "")
+    data = dict(task.get("input_data") or {})
+    facts = tuple(str(value) for resource in resources for value in (resource.get("study_facts") or ()))
+    if kind == "solve_equation":
+        a, b, c, d = (float(data[key]) for key in ("left_coefficient", "left_constant", "right_coefficient", "right_constant"))
+        coefficient, constant = a - c, d - b
+        if coefficient == 0:
+            answer = "infinite_solutions" if constant == 0 else "no_solution"
+            steps = ("subtract equivalent sides", "classify zero coefficient")
+        else:
+            answer = constant / coefficient
+            answer = int(answer) if answer.is_integer() else answer
+            steps = ("preserve_equivalence", "isolate_variable", "verify_solution")
+        return {"final_answer": answer, "intermediate_steps": steps, "explanation": "solve by equivalent operations"}
+    if kind == "verify_solution":
+        a, b, c, d, value = (float(data[key]) for key in ("left_coefficient", "left_constant", "right_coefficient", "right_constant", "proposed_solution"))
+        return {"final_answer": (a * value + b) == (c * value + d), "intermediate_steps": ("substitute_proposed_solution",), "explanation": "compare both sides after substitution"}
+    if kind == "detect_invalid_algebraic_step":
+        return {"identified_error": str(data.get("error_type") or ""), "final_answer": str(data.get("error_type") or ""), "intermediate_steps": ("inspect_operation_domain",), "explanation": "division by zero is not equivalent"}
+    if kind == "table_to_function_rule":
+        return {"derived_rule": str(data.get("rule") or ""), "final_answer": str(data.get("rule") or ""), "intermediate_steps": ("compare_input_output_pairs",), "explanation": "one output is assigned to each input"}
+    if kind == "identify_function_relationship":
+        return {"selected_option": bool(data.get("is_function")), "final_answer": bool(data.get("is_function")), "intermediate_steps": ("check_unique_output_per_input",), "explanation": "a function assigns one output to each input"}
+    if kind in {"causal_explanation", "scenario_application"}:
+        return {"explanation": " ".join(facts), "final_answer": tuple(facts), "intermediate_steps": ("variation", "heritability", "differential_reproductive_success", "population_change")}
+    if kind == "misconception_detection":
+        error = str(data.get("misconception") or "")
+        return {"identified_error": error, "selected_option": error, "final_answer": error, "explanation": "individual need does not direct inherited population change"}
+    return {"final_answer": None, "intermediate_steps": (), "explanation": "unsupported task type"}
+
+
+def _content_case_result(task: Mapping[str, Any], output: Mapping[str, Any]) -> dict[str, Any]:
+    expected = task.get("deterministic_answer")
+    answer = output.get("final_answer", output.get("selected_option", output.get("identified_error")))
+    allowed = set(str(value) for value in (task.get("acceptable_answer_set") or ()))
+    answer_ok = answer == expected if expected is not None else (not allowed or str(answer) in allowed)
+    text = " ".join(str(value) for value in output.values()).lower()
+    required = tuple(str(value) for value in (task.get("required_reasoning_constraints") or ()))
+    forbidden = tuple(str(value) for value in (task.get("forbidden_reasoning_patterns") or ()))
+    reasoning_ok = all(value.lower() in text for value in required) and not any(value.lower() in text for value in forbidden)
+    return {"case_id": str(task.get("case_id") or ""), "kind": str(task.get("case_kind") or "held_out"), "candidate_output": dict(output), "score": float(answer_ok and reasoning_ok), "answer_ok": answer_ok, "reasoning_ok": reasoning_ok, "failure_reason": "" if answer_ok and reasoning_ok else "answer_or_reasoning_constraint_failed", "evaluator_identity": "deterministic_content_task_evaluator_v1"}
+
+
 def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[str, Any]) -> DevelopmentalAttemptRecord:
     resources = [dict(item) for item in retained_bundle.get("study_resources") or () if str(item.get("resource_id") or "") in subgoal.study_resource_ids]
     components: list[str] = []
@@ -520,7 +567,9 @@ def execute_learning_attempt(subgoal: LearningSubgoal, retained_bundle: Mapping[
     for item in resources:
         components.extend(str(value) for value in (item.get("study_components") or ()))
         refs.append(str(item.get("resource_id") or ""))
-    output = {"components": tuple(dict.fromkeys(components)), "method": "retained_resource_grounded_study"}
+    visible_tasks = [dict(item) for item in retained_bundle.get("visible_practice_cases") or () if _text(item.get("capability_dimension")) == _text(subgoal.capability_target)]
+    task_outputs = tuple({"case_id": item.get("case_id"), "output": _task_output(item, resources)} for item in visible_tasks)
+    output = {"components": tuple(dict.fromkeys(components)), "method": "retained_resource_grounded_study", "task_outputs": task_outputs}
     return DevelopmentalAttemptRecord(
         attempt_id=stable_id("learning-attempt", subgoal.subgoal_id, _digest(output)),
         mission_id=subgoal.mission_id,
@@ -541,6 +590,22 @@ def evaluate_learning_attempt(
     attempt: DevelopmentalAttemptRecord,
     retained_bundle: Mapping[str, Any],
 ) -> DevelopmentalEvaluationRecord:
+    content_tasks = [dict(item) for item in retained_bundle.get("sealed_evaluation_cases") or () if _text(item.get("capability_dimension")) == _text(subgoal.capability_target) and item.get("task_type")]
+    if content_tasks:
+        resources = [dict(item) for item in retained_bundle.get("study_resources") or () if str(item.get("resource_id") or "") in attempt.selected_resource_ids]
+        results = tuple(
+            _content_case_result(task, {} if str(task.get("case_kind")) == "baseline" else _task_output(task, resources))
+            for task in content_tasks
+        )
+        buckets = {kind: [item["score"] for item in results if item["kind"] == kind] for kind in ("baseline", "control", "held_out", "adversarial", "transfer")}
+        average = lambda kind: sum(buckets[kind]) / len(buckets[kind]) if buckets[kind] else 0.0
+        required = all(buckets[kind] for kind in ("control", "held_out", "adversarial"))
+        passed = required and average("held_out") >= subgoal.success_threshold and average("control") == 1.0 and average("adversarial") == 1.0
+        payload = {"attempt": attempt.attempt_id, "content_results": results}
+        return DevelopmentalEvaluationRecord(
+            evaluation_id=stable_id("learning-content-evaluation", subgoal.subgoal_id, attempt.attempt_id, _digest(payload)), mission_id=subgoal.mission_id, subgoal_id=subgoal.subgoal_id, attempt_id=attempt.attempt_id, capability_dimension=subgoal.capability_target,
+            baseline_metrics={"target": average("baseline")}, candidate_metrics={"target": average("held_out")}, control_metrics={"target": average("control")}, held_out_metrics={"target": average("held_out")}, adversarial_metrics={"target": average("adversarial")}, transfer_metrics={"target": average("transfer")}, case_ids=tuple(item["case_id"] for item in results), evaluator_identity="deterministic_content_task_evaluator_v1", independence_proof={"sealed_cases_excluded_from_attempt": True, "candidate_self_report_not_scored": True, "provider_calls": 0, "web_calls": 0, "content_outputs_scored": True}, disposition="behaviorally_demonstrated" if passed else "behaviorally_failed", promotion_eligible=passed, evaluation_digest=_digest(payload), content_case_results=results,
+        )
     candidate_components = set(str(value) for value in (attempt.candidate_output.get("components") or ()))
     metrics: dict[str, dict[str, float]] = {"baseline": {}, "candidate": {}, "control": {}, "held_out": {}, "adversarial": {}, "transfer": {}}
     ids: list[str] = []

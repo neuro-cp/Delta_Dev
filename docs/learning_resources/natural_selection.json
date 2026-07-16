@@ -1,0 +1,20 @@
+{
+  "resource_bundle_id":"retained-natural-selection-v1","domain":"biology","topic":"natural_selection",
+  "capability_catalog":["variation","heritability","differential_reproductive_success","population_level_change","misconception_detection"],
+  "assessment_dimensions":[
+    {"dimension":"natural_selection_mechanism","baseline_case_id":"baseline-selection","baseline_components":[],"required_components":["variation","heritability","differential_reproductive_success","population_change"],"prerequisites":[],"evidence_ref":"retained-natural-selection-v1","expected_learning_value":1.0,"information_gain":0.9},
+    {"dimension":"selection_misconception_detection","baseline_case_id":"baseline-misconception","baseline_components":[],"required_components":["reject_need_based_evolution"],"prerequisites":["natural_selection_mechanism"],"evidence_ref":"retained-natural-selection-v1","expected_learning_value":0.75,"information_gain":0.7}
+  ],
+  "study_resources":[
+    {"resource_id":"retained-natural-selection-primer","supports_dimensions":["natural_selection_mechanism"],"study_components":["variation","heritability","differential_reproductive_success","population_change"],"study_facts":["variation is heritable","individuals differ in reproductive success","populations change across generations"]},
+    {"resource_id":"retained-selection-misconception-guide","supports_dimensions":["selection_misconception_detection"],"study_components":["reject_need_based_evolution"],"study_facts":["individual need does not direct inherited population change"]}
+  ],
+  "visible_practice_cases":[{"case_id":"practice-selection","capability_dimension":"natural_selection_mechanism","task_type":"causal_explanation","input_data":{"scenario":"predation"},"candidate_visibility":"visible"}],
+  "sealed_evaluation_cases":[
+    {"case_id":"baseline-selection","case_kind":"baseline","capability_dimension":"natural_selection_mechanism","task_type":"causal_explanation","input_data":{"scenario":"drought"},"required_reasoning_constraints":["variation","heritable","reproductive success","populations change"],"forbidden_reasoning_patterns":["need" ]},
+    {"case_id":"control-selection","case_kind":"control","capability_dimension":"natural_selection_mechanism","task_type":"causal_explanation","input_data":{"scenario":"camouflage"},"required_reasoning_constraints":["variation","heritable","reproductive success","populations change"],"forbidden_reasoning_patterns":["need" ]},
+    {"case_id":"heldout-selection","case_kind":"held_out","capability_dimension":"natural_selection_mechanism","task_type":"scenario_application","input_data":{"scenario":"antibiotic resistance"},"required_reasoning_constraints":["variation","heritable","reproductive success","populations change"],"forbidden_reasoning_patterns":["need" ]},
+    {"case_id":"adversarial-lamarck","case_kind":"adversarial","capability_dimension":"natural_selection_mechanism","task_type":"causal_explanation","input_data":{"scenario":"giraffes stretch"},"required_reasoning_constraints":["variation","heritable","reproductive success","populations change"],"forbidden_reasoning_patterns":["need" ]},
+    {"case_id":"transfer-selection","case_kind":"transfer","capability_dimension":"natural_selection_mechanism","task_type":"scenario_application","input_data":{"scenario":"insecticide resistance"},"required_reasoning_constraints":["variation","heritable","reproductive success","populations change"],"forbidden_reasoning_patterns":["need" ]}
+  ]
+}

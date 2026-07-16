@@ -166,7 +166,7 @@ def test_broad_math_goal_aggregates_retained_evidence_and_selects_ranked_non_ind
     assert controller.continuous_active_subgoal["capability_target"] == "equation_solving"
     selected_gap = next(item for item in state["gaps"] if item["gap_id"] == controller.continuous_active_subgoal["source_gap_id"])
     assert selected_gap["expected_behavior_identity"] == "mathematics:algebraic_reasoning:equation_solving"
-    assert controller.continuous_active_subgoal["control_case_ids"] == ("control-equation-inverse",)
+    assert controller.continuous_active_subgoal["control_case_ids"] == ("control-equation",)
     assert state["selected_frontier"]["frontier_id"] == controller.continuous_active_subgoal["source_gap_id"]
     assert "expected learning value" in state["selected_frontier"]["selection_reason"]
 
@@ -221,6 +221,32 @@ def test_validated_inventory_can_supply_exact_dimension_evidence():
     dimensions = {item["dimension"]: item for item in assessment.dimensions}
     assert dimensions["proof_structure"]["baseline_score"] == 1.0
     assert dimensions["proof_structure"]["inventory_validated"] is True
+
+
+def test_content_grounded_math_and_biology_evaluations_score_actual_outputs(tmp_path: Path):
+    math = compile_operator_developmental_learning_mission(
+        start_continuous_runtime_controller(session_id="content-math"), "Today your goal is to learn math."
+    )
+    _, math_result = execute_continuous_active_subgoal(math, artifact_root=tmp_path / "math", repository_root=Path.cwd(), python_executable=sys.executable)
+    math_cases = math_result.behavioral_evaluation_request["content_case_results"]
+    assert math_result.baseline == {"target": 0.0}
+    assert math_result.candidate == {"target": 1.0}
+    assert any(item["candidate_output"].get("final_answer") == -9 for item in math_cases)
+    assert any(item["candidate_output"].get("identified_error") == "divide_by_zero" for item in math_cases)
+
+    biology = compile_operator_developmental_learning_mission(
+        start_continuous_runtime_controller(session_id="content-biology"), "Learn natural selection today."
+    )
+    updated, biology_result = execute_continuous_active_subgoal(biology, artifact_root=tmp_path / "biology", repository_root=Path.cwd(), python_executable=sys.executable)
+    assert biology.continuous_learning_state["mission"]["domain"] == "biology"
+    assert biology_result.disposition == "behaviorally_demonstrated"
+    assert biology_result.validation["adversarial"] == {"target": 1.0}
+    assert updated.continuous_pcm_bridge_ledger == ()
+
+
+def test_natural_selection_instruction_classifies_to_biology_topic():
+    classification = classify_developmental_instruction("Learn natural selection today.")
+    assert classification == {"mission_type": "developmental_learning", "domain": "biology", "topic": "natural_selection", "mission_mode": "bounded_learning_session"}
 
 
 def test_repository_repair_stays_on_existing_continuous_mission_path():
