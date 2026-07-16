@@ -24,8 +24,10 @@ from pathlib import Path
 from typing import Any, Callable, Mapping
 
 from orchestration.runtime.continuous_mission_foundation import (
+    BehavioralFailureRecord,
     BehavioralEvaluationRecord,
     CapabilityKnowledgeRecord,
+    RepositoryBehaviorContract,
     capability_is_acquired,
     promote_capability_with_behavioral_evaluation,
 )
@@ -52,6 +54,19 @@ LIVENESS_ONLY_METRICS = (
 
 CANDIDATE_DESIGN_PROTOCOL = "repository_bound_candidate_design_v1"
 CONTINUOUS_PCM_BRIDGE_PROTOCOL = "continuous_to_pcm_closed_loop_fixture_v1"
+REPOSITORY_BEHAVIOR_CONTRACT_PROTOCOL = "repository_behavior_contract"
+REPOSITORY_BEHAVIOR_CONTRACT_VERSION = "1"
+PCM_SUPPORTED_REPAIR_SHAPES = {"expected_symbol_missing"}
+FORBIDDEN_CONTRACT_KEYS = {
+    "patch",
+    "patch_text",
+    "replacement_text",
+    "candidate_code",
+    "candidate_source",
+    "implementation",
+    "intended_patch",
+    "exact_implementation_instructions",
+}
 
 
 @dataclass(frozen=True)
@@ -597,6 +612,303 @@ def _pcm_bridge_duplicate_result(subgoal: Mapping[str, Any], bridge_id: str, roo
     )
 
 
+def compile_repository_behavior_contract(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    source_inspection: Mapping[str, Any],
+    *,
+    advisory_result: Mapping[str, Any] | None = None,
+    existing_contracts: tuple[RepositoryBehaviorContract | Mapping[str, Any], ...] = (),
+) -> RepositoryBehaviorContract:
+    failure = _failure_record_for_subgoal(controller, subgoal)
+    files = tuple(dict(item) for item in (source_inspection.get("files") or ()))
+    inspected = {str(item.get("path") or ""): item for item in files}
+    errors: list[str] = []
+    if _contains_forbidden_contract_payload(advisory_result or {}):
+        errors.append("forbidden_candidate_or_patch_content")
+
+    affected_path = _select_inspected_path(failure.suspected_owner_paths, inspected, prefer_test=False)
+    if not affected_path and not failure.suspected_owner_paths:
+        affected_path = _first_inspected_path(files, prefer_test=False)
+    evidence_path = _select_inspected_path(failure.independent_evidence_paths, inspected, prefer_test=True)
+    if not evidence_path and not failure.independent_evidence_paths:
+        evidence_path = _first_inspected_path(files, prefer_test=True)
+    if not affected_path:
+        errors.append("missing_affected_path")
+    if affected_path and affected_path not in inspected:
+        errors.append("uninspected_affected_path")
+    if not evidence_path:
+        errors.append("missing_independent_evidence_path")
+    if evidence_path and evidence_path not in inspected:
+        errors.append("uninspected_independent_evidence_path")
+    if affected_path and evidence_path and affected_path == evidence_path:
+        errors.append("implementation_and_evidence_path_not_independent")
+
+    advisory = _parse_advisory_contract_fields(advisory_result or {})
+    deterministic = _deterministic_contract_hypothesis(failure, subgoal, inspected.get(affected_path or "", {}))
+    failure_mechanism = _clean_contract_text(advisory.get("failure_mechanism") or deterministic.get("failure_mechanism"))
+    candidate_behavior = _clean_contract_text(advisory.get("candidate_behavior") or deterministic.get("candidate_behavior"))
+    observable_change = _clean_contract_text(advisory.get("expected_observable_change") or advisory.get("validation_target") or deterministic.get("expected_observable_change"))
+    if not failure.observed_behavior or not failure.expected_behavior:
+        errors.append("missing_current_or_expected_behavior")
+    if not failure.first_incorrect_transition:
+        errors.append("missing_first_incorrect_transition")
+    if not failure_mechanism:
+        errors.append("missing_failure_mechanism")
+    if not candidate_behavior:
+        errors.append("missing_candidate_behavior")
+    if not observable_change:
+        errors.append("missing_expected_observable_change")
+
+    independent_predicate = _independent_validation_predicate(failure, evidence_path)
+    affected_digest = str((inspected.get(affected_path or "", {}) or {}).get("sha256") or "")
+    evidence_digest = str((inspected.get(evidence_path or "", {}) or {}).get("sha256") or "")
+    authority = failure.authority_class
+    ambiguity = failure.ambiguity_status
+    disposition = _repository_contract_disposition(
+        errors=tuple(errors),
+        failure=failure,
+        failure_mechanism=failure_mechanism,
+        affected_path=affected_path,
+        evidence_path=evidence_path,
+    )
+    main_goal_id = str((controller.continuous_main_goal or {}).get("main_goal_id") or "continuous-main-goal")
+    mission_id = str((controller.continuous_mission_contract or {}).get("mission_id") or controller.session_id)
+    base_payload = {
+        "failure_id": failure.failure_id,
+        "semantic_failure_key": failure.semantic_failure_key,
+        "mission_id": mission_id,
+        "main_goal_id": main_goal_id,
+        "subgoal_id": str(subgoal.get("subgoal_id") or ""),
+        "weakness_id": str(subgoal.get("weakness_id") or ""),
+        "capability_id": failure.affected_capability_id or _capability_id_from_subgoal(subgoal),
+        "affected_path": affected_path,
+        "affected_symbol_or_transition": _affected_symbol_or_transition(failure, inspected.get(affected_path or "", {})),
+        "inspected_path_digest": affected_digest,
+        "source_inspection_id": str(source_inspection.get("inspection_id") or ""),
+        "current_behavior": failure.observed_behavior,
+        "expected_behavior": failure.expected_behavior,
+        "expected_behavior_identity": failure.expected_behavior_identity,
+        "first_incorrect_transition": failure.first_incorrect_transition,
+        "failure_mechanism": failure_mechanism,
+        "candidate_behavior": candidate_behavior,
+        "expected_observable_change": observable_change,
+        "independent_evidence_path": evidence_path,
+        "independent_evidence_digest": evidence_digest,
+        "independent_validation_predicate": independent_predicate,
+        "baseline_reproduction_reference": failure.baseline_reproduction,
+        "control_requirements": tuple(str(item) for item in (subgoal.get("controls") or ())),
+        "held_out_requirements": (str(subgoal.get("held_out_policy") or ""),),
+        "restoration_condition": str(subgoal.get("rollback_condition") or "restore prior state and rerun independent predicate"),
+        "allowed_paths": tuple(str(item) for item in failure.allowed_scope),
+        "excluded_paths": tuple(str(item) for item in failure.excluded_scope),
+        "local_implementation_eligibility": disposition,
+        "authority_class": authority,
+        "ambiguity_status": ambiguity,
+        "failure_evidence_digest": failure.sealed_failure_bundle_digest,
+        "contract_protocol": REPOSITORY_BEHAVIOR_CONTRACT_PROTOCOL,
+        "contract_version": REPOSITORY_BEHAVIOR_CONTRACT_VERSION,
+        "advisory_model_digest": _digest(_model_result_for_artifact(advisory_result or {})) if advisory_result else "",
+        "missing_fields": tuple(error for error in errors if error.startswith("missing_")),
+        "validation_errors": tuple(errors),
+    }
+    contract_digest = _digest(base_payload)
+    duplicate = _find_duplicate_contract(existing_contracts, contract_digest)
+    version_parent = _find_version_parent(existing_contracts, failure.semantic_failure_key, contract_digest)
+    return RepositoryBehaviorContract(
+        **base_payload,
+        contract_id=duplicate.contract_id if duplicate else stable_id("repository-behavior-contract", failure.failure_id, subgoal.get("subgoal_id"), source_inspection.get("inspection_id"), affected_path, evidence_path),
+        contract_digest=contract_digest,
+        duplicate_of=duplicate.contract_id if duplicate else "",
+        version_of=version_parent.contract_id if version_parent and not duplicate else "",
+    )
+
+
+def _failure_record_for_subgoal(controller: ContinuousRuntimeController, subgoal: Mapping[str, Any]) -> BehavioralFailureRecord:
+    records = [BehavioralFailureRecord(**dict(item)) for item in controller.continuous_behavioral_failure_records]
+    if not records:
+        raise ValueError("repository behavior contract requires a sealed BehavioralFailureRecord")
+    weakness_id = str(subgoal.get("weakness_id") or "")
+    failure_id = ""
+    for item in controller.continuous_mission_frontier:
+        if str(item.get("weakness_id") or "") != weakness_id:
+            continue
+        for evidence_ref in item.get("source_evidence") or ():
+            parts = str(evidence_ref).split(":")
+            if len(parts) >= 2 and parts[0] == "behavioral_failure":
+                failure_id = parts[1]
+                break
+    if failure_id:
+        for record in records:
+            if record.failure_id == failure_id:
+                return record
+    if len(records) == 1:
+        return records[0]
+    raise ValueError("active subgoal cannot be bound to exactly one behavioral failure")
+
+
+def _select_inspected_path(candidates: tuple[str, ...], inspected: Mapping[str, Mapping[str, Any]], *, prefer_test: bool) -> str:
+    normalized = {path.replace("\\", "/"): path for path in inspected}
+    for candidate in candidates:
+        key = str(candidate).replace("\\", "/")
+        if key in normalized and (_is_test_path(key) if prefer_test else not _is_test_path(key)):
+            return normalized[key]
+    for candidate in candidates:
+        key = str(candidate).replace("\\", "/")
+        if key in normalized:
+            return normalized[key]
+    return ""
+
+
+def _first_inspected_path(files: tuple[Mapping[str, Any], ...], *, prefer_test: bool) -> str:
+    for item in files:
+        path = str(item.get("path") or "")
+        if path and (_is_test_path(path) if prefer_test else not _is_test_path(path)):
+            return path
+    return ""
+
+
+def _is_test_path(path: str) -> bool:
+    normalized = path.replace("\\", "/")
+    return normalized.startswith("tests/") or "/test_" in normalized or normalized.endswith("_test.py")
+
+
+def _parse_advisory_contract_fields(advisory_result: Mapping[str, Any]) -> dict[str, str]:
+    payload = advisory_result.get("answer") if "answer" in advisory_result else advisory_result
+    parsed: Mapping[str, Any] = {}
+    if isinstance(payload, Mapping):
+        parsed = payload
+    elif isinstance(payload, str) and payload.strip().startswith("{") and payload.strip().endswith("}"):
+        try:
+            parsed = json.loads(payload)
+        except (TypeError, ValueError):
+            parsed = {}
+    return {
+        "failure_mechanism": _clean_contract_text(parsed.get("failure_mechanism")),
+        "candidate_behavior": _clean_contract_text(parsed.get("candidate_behavior")),
+        "expected_observable_change": _clean_contract_text(parsed.get("expected_observable_change")),
+        "validation_target": _clean_contract_text(parsed.get("validation_target")),
+    }
+
+
+def _deterministic_contract_hypothesis(
+    failure: BehavioralFailureRecord,
+    subgoal: Mapping[str, Any],
+    inspected_path: Mapping[str, Any],
+) -> dict[str, str]:
+    comparison = str(failure.expected_vs_observed_result or "").lower()
+    expected_identity = str(failure.expected_behavior_identity or "").lower()
+    symbols = tuple(str(item) for item in (inspected_path.get("symbols") or ()))
+    objective = str(subgoal.get("measurable_objective") or "")
+    if "expected_symbol_missing" in comparison or "missing_symbol" in comparison:
+        expected_symbol = _symbol_from_expected_identity(expected_identity, objective)
+        return {
+            "failure_mechanism": "expected_symbol_missing",
+            "candidate_behavior": f"provide missing observable symbol {expected_symbol} without changing recorded controls",
+            "expected_observable_change": f"{expected_symbol} satisfies {failure.expected_behavior_identity}",
+        }
+    if "missing_queued_work" in comparison or "missing_executor_consumption" in comparison:
+        return {
+            "failure_mechanism": "controller_transition_not_consumed_by_worker",
+            "candidate_behavior": "preserve active subgoal identity until one bounded worker consumption records a result",
+            "expected_observable_change": failure.expected_behavior,
+        }
+    if symbols and failure.affected_capability_id in " ".join(symbols):
+        return {
+            "failure_mechanism": "inspected_symbol_behavior_mismatch",
+            "candidate_behavior": "adjust the inspected behavior surface to satisfy the preexisting predicate while preserving controls",
+            "expected_observable_change": failure.expected_behavior,
+        }
+    return {}
+
+
+def _symbol_from_expected_identity(expected_identity: str, objective: str) -> str:
+    text = f"{expected_identity} {objective}"
+    match = re.search(r"\b([a-zA-Z_][a-zA-Z0-9_]{2,})\b", text)
+    return match.group(1) if match else "expected_symbol"
+
+
+def _independent_validation_predicate(failure: BehavioralFailureRecord, evidence_path: str) -> str:
+    if not evidence_path:
+        return ""
+    return f"{failure.expected_behavior_identity} must pass via {evidence_path} before implementation can be considered behaviorally valid"
+
+
+def _affected_symbol_or_transition(failure: BehavioralFailureRecord, inspected_path: Mapping[str, Any]) -> str:
+    symbols = tuple(str(item) for item in (inspected_path.get("symbols") or ()))
+    if symbols:
+        return symbols[0]
+    return failure.first_incorrect_transition
+
+
+def _repository_contract_disposition(
+    *,
+    errors: tuple[str, ...],
+    failure: BehavioralFailureRecord,
+    failure_mechanism: str,
+    affected_path: str,
+    evidence_path: str,
+) -> str:
+    if "forbidden_candidate_or_patch_content" in errors:
+        return "invalid_scope"
+    if failure.authority_class in {"operator_authority_required", "protected_scope"}:
+        return "blocked_by_authority"
+    if failure.authority_class == "resource_blocked":
+        return "blocked_by_resource"
+    if failure.authority_class == "accepted_boundary":
+        return "accepted_boundary"
+    if any(error in errors for error in ("missing_affected_path", "uninspected_affected_path")):
+        return "missing_repository_evidence"
+    if any(error in errors for error in ("missing_independent_evidence_path", "uninspected_independent_evidence_path", "implementation_and_evidence_path_not_independent")):
+        return "missing_independent_behavior_contract"
+    if any(error in errors for error in ("missing_failure_mechanism", "missing_candidate_behavior", "missing_expected_observable_change")):
+        return "unresolved_failure_mechanism"
+    if failure.ambiguity_status in {"unresolved_material_ambiguity", "missing_expected_behavior", "missing_owner_scope", "conflicting_evidence"}:
+        return "unresolved_failure_mechanism"
+    if failure_mechanism in PCM_SUPPORTED_REPAIR_SHAPES:
+        return "locally_implementable_by_existing_pcm"
+    return "locally_implementable_but_pcm_operation_unsupported"
+
+
+def _find_duplicate_contract(
+    contracts: tuple[RepositoryBehaviorContract | Mapping[str, Any], ...],
+    contract_digest: str,
+) -> RepositoryBehaviorContract | None:
+    for item in contracts:
+        contract = item if isinstance(item, RepositoryBehaviorContract) else RepositoryBehaviorContract(**dict(item))
+        if contract.contract_digest == contract_digest:
+            return contract
+    return None
+
+
+def _find_version_parent(
+    contracts: tuple[RepositoryBehaviorContract | Mapping[str, Any], ...],
+    semantic_failure_key: str,
+    contract_digest: str,
+) -> RepositoryBehaviorContract | None:
+    for item in contracts:
+        contract = item if isinstance(item, RepositoryBehaviorContract) else RepositoryBehaviorContract(**dict(item))
+        if contract.semantic_failure_key == semantic_failure_key and contract.contract_digest != contract_digest:
+            return contract
+    return None
+
+
+def _contains_forbidden_contract_payload(value: Any) -> bool:
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            if str(key).lower() in FORBIDDEN_CONTRACT_KEYS:
+                return True
+            if _contains_forbidden_contract_payload(item):
+                return True
+    elif isinstance(value, (tuple, list)):
+        return any(_contains_forbidden_contract_payload(item) for item in value)
+    return False
+
+
+def _clean_contract_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().split())
+
+
 def _is_liveness_only_metric(metric: str) -> bool:
     lowered = metric.lower()
     return any(item in lowered for item in LIVENESS_ONLY_METRICS)
@@ -623,6 +935,130 @@ def _execute_repository_bound_candidate_design(
     timestamps = {"execution_started": utc_now()}
     source_inspection = _inspect_sources(repo, subgoal)
     timestamps["source_inspection_completed"] = utc_now()
+    if not controller.continuous_behavioral_failure_records:
+        return _execute_legacy_repository_bound_design_block(
+            controller,
+            subgoal=subgoal,
+            root=root,
+            repo=repo,
+            result_path=result_path,
+            source_inspection=source_inspection,
+            timestamps=timestamps,
+            local_model_adapter=local_model_adapter,
+            allow_local_model_execution=allow_local_model_execution,
+        )
+    model_result: dict[str, Any] = {
+        "model_id": "not_requested",
+        "result": "advisory_model_not_required_for_deterministic_contract",
+        "executed": False,
+        "answer": "",
+        "provider_calls_performed": False,
+    }
+    contract = compile_repository_behavior_contract(controller, subgoal, source_inspection)
+    if contract.local_implementation_eligibility == "unresolved_failure_mechanism" and allow_local_model_execution:
+        prompt = _repository_bound_design_prompt(subgoal, source_inspection, repo)
+        adapter = local_model_adapter or _default_local_model_adapter
+        try:
+            model_result = dict(
+                adapter(
+                    {
+                        "task": "repository_bound_candidate_design",
+                        "protocol": CANDIDATE_DESIGN_PROTOCOL,
+                        "prompt": prompt,
+                        "subgoal": dict(subgoal),
+                        "source_inspection": source_inspection,
+                        "allow_local_model_execution": allow_local_model_execution,
+                    }
+                )
+            )
+        except Exception as exc:  # noqa: BLE001 - advisory execution failure becomes visible evidence.
+            model_result = {
+                "model_id": "configured_local_model",
+                "result": "local_model_failed",
+                "executed": False,
+                "answer": "",
+                "reason": f"{type(exc).__name__}: {exc}",
+                "provider_calls_performed": False,
+            }
+        contract = compile_repository_behavior_contract(controller, subgoal, source_inspection, advisory_result=model_result)
+    timestamps["local_candidate_design_completed"] = utc_now()
+
+    design = _validate_repository_bound_design(model_result, source_inspection, contract)
+    contract_path = root / "repository_behavior_contract.json"
+    _write_json(contract_path, contract.as_dict())
+    design_path = root / "repository_bound_candidate_design.json"
+    _write_json(
+        design_path,
+        {
+            "protocol": CANDIDATE_DESIGN_PROTOCOL,
+            "subgoal_id": subgoal.get("subgoal_id"),
+            "source_inspection": source_inspection,
+            "repository_behavior_contract": contract.as_dict(),
+            "model_result": _model_result_for_artifact(model_result),
+            "design_validation": design,
+            "tracked_source_mutated": False,
+            "provider_calls_performed": False,
+        },
+    )
+    resource = ResourceUseRecord(
+        "local_model",
+        str(model_result.get("model_id") or "configured_local_model"),
+        "repository-bound advisory candidate design",
+        str(model_result.get("result") or "local_model_completed"),
+        {
+            "authoritative": False,
+            "executed": bool(model_result.get("executed")),
+            "provider_calls_performed": bool(model_result.get("provider_calls_performed")),
+            "answer_digest": _digest(str(model_result.get("answer") or "")),
+            "design_grounded": bool(design["grounded"]),
+            "contract_disposition": contract.local_implementation_eligibility,
+        },
+    )
+    record = _candidate_design_record(subgoal, source_inspection, design_path, design, model_result)
+    reassessed = consume_continuous_capability_reassessment(controller, record)
+    next_controller = _controller_after_repository_contract(reassessed, subgoal, contract, contract_path, design_path)
+    timestamps["controller_handoff_completed"] = utc_now()
+    result = SubgoalExecutionResult(
+        accepted=contract.local_implementation_eligibility == "locally_implementable_by_existing_pcm",
+        disposition=contract.local_implementation_eligibility,
+        reason=_repository_contract_result_reason(contract),
+        subgoal_id=str(subgoal["subgoal_id"]),
+        campaign_root=str(root),
+        consumed_once=True,
+        source_inspection=source_inspection,
+        baseline={"not_run": "repository behavior contract precedes patch materialization"},
+        candidate={"state": "not_created", "reason": "generic success-reporting candidate strategy prohibited"},
+        validation={"passed": False, "not_run": "no concrete candidate source exists"},
+        clean_reproduction={"not_run": "no concrete candidate source exists"},
+        application_request={},
+        behavioral_evaluation_request={},
+        reassessment={
+            "capability_id": record.capability_id,
+            "reassessment": record.reassessment,
+            "contract_id": contract.contract_id,
+            "contract_disposition": contract.local_implementation_eligibility,
+        },
+        resource_usage=(resource,),
+        meaningful_transition_timestamps=timestamps,
+        stalled_execution=False,
+    )
+    _write_json(result_path, result.as_dict())
+    _write_json(root / "updated_restart_state_hint.json", {"controller_state": next_controller.continuous_mission_state})
+    return next_controller, result
+
+
+def _execute_legacy_repository_bound_design_block(
+    controller: ContinuousRuntimeController,
+    *,
+    subgoal: Mapping[str, Any],
+    root: Path,
+    repo: Path,
+    result_path: Path,
+    source_inspection: Mapping[str, Any],
+    timestamps: dict[str, str],
+    local_model_adapter: Callable[[Mapping[str, Any]], Mapping[str, Any]] | None,
+    allow_local_model_execution: bool,
+) -> tuple[ContinuousRuntimeController, SubgoalExecutionResult]:
     prompt = _repository_bound_design_prompt(subgoal, source_inspection, repo)
     adapter = local_model_adapter or _default_local_model_adapter
     try:
@@ -648,7 +1084,6 @@ def _execute_repository_bound_candidate_design(
             "provider_calls_performed": False,
         }
     timestamps["local_candidate_design_completed"] = utc_now()
-
     design = _validate_repository_bound_design(model_result, source_inspection)
     design_path = root / "repository_bound_candidate_design.json"
     _write_json(
@@ -683,13 +1118,11 @@ def _execute_repository_bound_candidate_design(
     result = SubgoalExecutionResult(
         accepted=False,
         disposition="candidate_design_requires_concrete_behavior_contract",
-        reason=(
-            "no repository-bound implementation was fabricated; the advisory design must identify an inspected path and independent behavior contract"
-        ),
+        reason="no sealed BehavioralFailureRecord was available; legacy loose evidence remains blocked before candidate creation",
         subgoal_id=str(subgoal["subgoal_id"]),
         campaign_root=str(root),
         consumed_once=True,
-        source_inspection=source_inspection,
+        source_inspection=dict(source_inspection),
         baseline={"not_run": "candidate design precedes a behavior contract"},
         candidate={"state": "not_created", "reason": "generic success-reporting candidate strategy prohibited"},
         validation={"passed": False, "not_run": "no concrete candidate source exists"},
@@ -743,7 +1176,35 @@ def _repository_bound_design_prompt(
 def _validate_repository_bound_design(
     model_result: Mapping[str, Any],
     source_inspection: Mapping[str, Any],
+    contract: RepositoryBehaviorContract | None = None,
 ) -> dict[str, Any]:
+    if contract is not None:
+        grounded = contract.local_implementation_eligibility in {
+            "locally_implementable_by_existing_pcm",
+            "locally_implementable_but_pcm_operation_unsupported",
+        }
+        return {
+            "grounded": grounded,
+            "answer_format": "repository_behavior_contract",
+            "affected_path": contract.affected_path,
+            "evidence_path": contract.independent_evidence_path,
+            "evidence_path_is_independent": bool(contract.independent_evidence_path and contract.independent_evidence_path != contract.affected_path),
+            "allowed_paths": contract.allowed_paths,
+            "missing_fields": contract.missing_fields,
+            "failure_mechanism": contract.failure_mechanism,
+            "candidate_behavior": contract.candidate_behavior,
+            "independent_evidence_needed": "" if contract.independent_evidence_path else "preexisting independent evidence path",
+            "validation_target": contract.independent_validation_predicate,
+            "contract_id": contract.contract_id,
+            "contract_digest": contract.contract_digest,
+            "contract_disposition": contract.local_implementation_eligibility,
+            "pcm_operation_supported": contract.local_implementation_eligibility == "locally_implementable_by_existing_pcm",
+            "rejection_reason": (
+                "repository_behavior_contract_ready_for_existing_pcm"
+                if contract.local_implementation_eligibility == "locally_implementable_by_existing_pcm"
+                else contract.local_implementation_eligibility
+            ),
+        }
     answer = str(model_result.get("answer") or "").strip()
     parsed: dict[str, Any] = {}
     if answer.startswith("{") and answer.endswith("}"):
@@ -836,6 +1297,147 @@ def _candidate_design_record(
         capability_acquired=False,
         eligible_for_behavioral_evaluation=False,
     )
+
+
+def _controller_after_repository_contract(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    contract: RepositoryBehaviorContract,
+    contract_path: Path,
+    design_path: Path,
+) -> ContinuousRuntimeController:
+    disposition = contract.local_implementation_eligibility
+    if disposition == "locally_implementable_by_existing_pcm":
+        return replace(
+            controller,
+            continuous_mission_state="grounded_design_eligible",
+            active_work_item="repository_behavior_contract_ready",
+            continuous_observation_state={
+                **(controller.continuous_observation_state or {}),
+                "repository_behavior_contract": {
+                    "contract_id": contract.contract_id,
+                    "contract_path": str(contract_path),
+                    "design_path": str(design_path),
+                    "disposition": disposition,
+                    "pcm_operation_supported": True,
+                },
+            },
+        )
+    if disposition == "blocked_by_authority":
+        return _create_repository_contract_authority_request(controller, subgoal, contract, contract_path)
+    if disposition == "unresolved_failure_mechanism":
+        return _create_repository_contract_operator_question(controller, subgoal, contract, contract_path)
+    reason_map = {
+        "locally_implementable_but_pcm_operation_unsupported": "patch_expressiveness_blocker",
+        "missing_repository_evidence": "repository_evidence_needed",
+        "missing_independent_behavior_contract": "independent_behavior_contract_needed",
+        "blocked_by_resource": "resource_blocked",
+        "accepted_boundary": "accepted_boundary",
+        "invalid_scope": "invalid_scope",
+    }
+    return replace(
+        controller,
+        continuous_mission_state="observing_for_new_weaknesses",
+        continuous_active_subgoal={},
+        active_work_item="observing_for_new_weaknesses",
+        continuous_observation_state={
+            **(controller.continuous_observation_state or {}),
+            "repository_behavior_contract": {
+                "contract_id": contract.contract_id,
+                "contract_path": str(contract_path),
+                "design_path": str(design_path),
+                "disposition": disposition,
+                "observation_reason": reason_map.get(disposition, disposition),
+                "missing_fields": contract.missing_fields,
+                "validation_errors": contract.validation_errors,
+            },
+        },
+    )
+
+
+def _create_repository_contract_operator_question(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    contract: RepositoryBehaviorContract,
+    contract_path: Path,
+) -> ContinuousRuntimeController:
+    request_id = stable_id("operator-insight-repository-contract", controller.session_id, contract.contract_id)
+    request = {
+        "request_id": request_id,
+        "request_kind": "clarification",
+        "request_source": "repository_behavior_contract",
+        "status": "pending",
+        "exact_question": "Which concrete failure mechanism, if any, links the inspected implementation path to the sealed expected behavior?",
+        "rationale": "The runtime has affected/evidence paths but cannot derive a failure mechanism without fabricating a diagnosis.",
+        "evidence_refs": (str(contract_path),),
+        "source_gap_ids": (str(subgoal.get("weakness_id") or ""),),
+        "affected_gap": str(subgoal.get("weakness_id") or ""),
+        "blocked_transition": "repository behavior contract -> grounded design eligibility",
+        "authority_scope": "none; clarification grants no mutation, application, provider, Git, or deployment authority",
+        "blocking_scope": "one repository behavior contract",
+        "permitted_responses": ("defer", "treat as accepted boundary", "provide failure mechanism"),
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+    if any(item.get("request_id") == request_id and item.get("status") == "pending" for item in controller.continuous_developmental_insight_requests):
+        return replace(controller, continuous_mission_state="awaiting_operator_insight", active_work_item="awaiting_operator_insight")
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_insight",
+        continuous_active_subgoal={},
+        active_work_item="awaiting_operator_insight",
+        continuous_developmental_insight_requests=controller.continuous_developmental_insight_requests + (request,),
+    )
+
+
+def _create_repository_contract_authority_request(
+    controller: ContinuousRuntimeController,
+    subgoal: Mapping[str, Any],
+    contract: RepositoryBehaviorContract,
+    contract_path: Path,
+) -> ContinuousRuntimeController:
+    request_id = stable_id("operator-authority-repository-contract", controller.session_id, contract.contract_id)
+    request = {
+        "request_id": request_id,
+        "request_kind": "tracked_application_authority",
+        "request_source": "repository_behavior_contract",
+        "status": "pending",
+        "exact_question": "A repository behavior contract requires authority outside the current local execution envelope. Approve only an exact scoped authority expansion or defer.",
+        "rationale": "Authority boundary came from the sealed failure record, not advisory output.",
+        "evidence_refs": (str(contract_path),),
+        "source_gap_ids": (str(subgoal.get("weakness_id") or ""),),
+        "affected_gap": str(subgoal.get("weakness_id") or ""),
+        "blocked_transition": "repository behavior contract -> grounded design eligibility",
+        "authority_scope": contract.authority_class,
+        "blocking_scope": "one repository behavior contract",
+        "permitted_responses": ("defer", "approve exact scoped authority"),
+        "authority_granted": False,
+        "created_at": utc_now(),
+    }
+    if any(item.get("request_id") == request_id and item.get("status") == "pending" for item in controller.continuous_developmental_insight_requests):
+        return replace(controller, continuous_mission_state="awaiting_operator_authority", active_work_item="awaiting_operator_authority")
+    return replace(
+        controller,
+        continuous_mission_state="awaiting_operator_authority",
+        continuous_active_subgoal={},
+        active_work_item="awaiting_operator_authority",
+        continuous_developmental_insight_requests=controller.continuous_developmental_insight_requests + (request,),
+    )
+
+
+def _repository_contract_result_reason(contract: RepositoryBehaviorContract) -> str:
+    reasons = {
+        "locally_implementable_by_existing_pcm": "repository behavior contract is grounded and matches the existing expected-symbol PCM operation; patch materialization was intentionally not invoked in this gate",
+        "locally_implementable_but_pcm_operation_unsupported": "repository behavior contract is grounded but requires a repair shape outside current PCM patch semantics",
+        "missing_repository_evidence": "no inspected implementation path could be bound to the sealed failure",
+        "missing_independent_behavior_contract": "no inspected independent evidence path could validate the behavior without candidate self-reporting",
+        "unresolved_failure_mechanism": "affected and evidence paths are present but the failure mechanism cannot be derived without fabricating a diagnosis",
+        "blocked_by_authority": "sealed failure record requires authority outside the current local envelope",
+        "blocked_by_resource": "sealed failure record is blocked by unavailable resource authority",
+        "accepted_boundary": "sealed failure record marks this caveat as an accepted boundary",
+        "invalid_scope": "contract requested forbidden or protected scope",
+    }
+    return reasons.get(contract.local_implementation_eligibility, contract.local_implementation_eligibility)
 
 
 def _pause_for_candidate_design_evidence(
@@ -1079,6 +1681,7 @@ def _inspect_sources(repo: Path, subgoal: Mapping[str, Any]) -> dict[str, Any]:
                         "path": str(file_path.relative_to(repo)),
                         "byte_count": len(raw),
                         "sha256": hashlib.sha256(raw).hexdigest(),
+                        "symbols": _python_symbols(file_path),
                     }
                 )
     return {
@@ -1087,6 +1690,18 @@ def _inspect_sources(repo: Path, subgoal: Mapping[str, Any]) -> dict[str, Any]:
         "file_count": len(inspected),
         "meaningful": bool(inspected),
     }
+
+
+def _python_symbols(path: Path) -> tuple[str, ...]:
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8", errors="ignore"))
+    except (OSError, SyntaxError, UnicodeDecodeError):
+        return ()
+    symbols: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            symbols.append(node.name)
+    return tuple(sorted(set(symbols)))[:32]
 
 
 def _source_relevance_terms(subgoal: Mapping[str, Any]) -> tuple[str, ...]:

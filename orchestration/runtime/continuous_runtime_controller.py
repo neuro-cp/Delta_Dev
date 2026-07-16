@@ -23,6 +23,7 @@ from orchestration.runtime.delta_1_0_common import safety_metadata, stable_id, u
 from orchestration.runtime.continuous_mission_foundation import (
     ActiveSubgoal,
     ApiAuthorityState,
+    BehavioralFailureRecord,
     BroadMissionContract,
     CapabilityKnowledgeRecord,
     MainGoalContract,
@@ -44,6 +45,7 @@ from orchestration.runtime.continuous_mission_foundation import (
     derive_developmental_capability_plan,
     derive_next_main_goal,
     derive_subgoal_evidence_for_main_goal,
+    behavioral_failure_to_runtime_finding,
     evidence_to_findings,
     normalize_capability_record_for_recovery,
     rank_weakness_frontier,
@@ -296,6 +298,7 @@ class ContinuousRuntimeController:
     active_work_item: str = ""
     continuous_mission_state: str = ""
     continuous_mission_contract: dict[str, Any] = field(default_factory=dict)
+    continuous_behavioral_failure_records: tuple[dict[str, Any], ...] = ()
     continuous_mission_findings: tuple[dict[str, Any], ...] = ()
     continuous_mission_frontier: tuple[dict[str, Any], ...] = ()
     continuous_main_goal: dict[str, Any] = field(default_factory=dict)
@@ -647,6 +650,32 @@ def assess_continuous_mission_runtime(
         continuous_mission_findings=tuple(item.as_dict() for item in findings),
         journal=controller.journal
         + (_journal_entry("continuous_mission", "evidence_records_compiled_to_runtime_findings", tuple(item.finding_id for item in findings)),),
+    )
+
+
+def assess_continuous_mission_behavioral_failures(
+    controller: ContinuousRuntimeController,
+    failure_records: Sequence[BehavioralFailureRecord | Mapping[str, Any]],
+) -> ContinuousRuntimeController:
+    recovered = _recover_behavioral_failure_records(failure_records)
+    findings = tuple(
+        behavioral_failure_to_runtime_finding(record)
+        for record in recovered
+        if record.task_eligibility == "eligible"
+    )
+    return replace(
+        controller,
+        continuous_mission_state="assessing_behavioral_failures",
+        continuous_behavioral_failure_records=tuple(record.as_dict() for record in recovered),
+        continuous_mission_findings=tuple(item.as_dict() for item in findings),
+        journal=controller.journal
+        + (
+            _journal_entry(
+                "continuous_mission",
+                "behavioral_failure_records_compiled_to_runtime_findings",
+                tuple(item.failure_id for item in recovered),
+            ),
+        ),
     )
 
 
@@ -1360,6 +1389,24 @@ def _recover_knowledge_ledger(records: Iterable[Mapping[str, Any]]) -> tuple[dic
     return tuple(recovered)
 
 
+def _recover_behavioral_failure_records(
+    records: Iterable[BehavioralFailureRecord | Mapping[str, Any]],
+) -> tuple[BehavioralFailureRecord, ...]:
+    recovered: list[BehavioralFailureRecord] = []
+    seen: set[tuple[str, str]] = set()
+    for record in records:
+        try:
+            item = record if isinstance(record, BehavioralFailureRecord) else BehavioralFailureRecord(**dict(record))
+        except (TypeError, ValueError):
+            continue
+        identity = (item.semantic_failure_key, item.evidence_digest)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        recovered.append(item)
+    return tuple(recovered)
+
+
 def queue_continuous_mission_sandbox_work(controller: ContinuousRuntimeController) -> ContinuousRuntimeController:
     if not controller.continuous_active_subgoal:
         return controller
@@ -1670,6 +1717,7 @@ def export_continuous_mission_restart_state(controller: ContinuousRuntimeControl
         "session_id": controller.session_id,
         "continuous_mission_state": controller.continuous_mission_state,
         "continuous_mission_contract": controller.continuous_mission_contract,
+        "continuous_behavioral_failure_records": controller.continuous_behavioral_failure_records,
         "continuous_mission_findings": controller.continuous_mission_findings,
         "continuous_mission_frontier": controller.continuous_mission_frontier,
         "continuous_main_goal": controller.continuous_main_goal,
@@ -1702,10 +1750,12 @@ def restore_continuous_mission_restart_state(
         responses,
     )
     recovered_ledger = _recover_knowledge_ledger(tuple(restart_state.get("continuous_knowledge_ledger") or ()))
+    recovered_failures = _recover_behavioral_failure_records(tuple(restart_state.get("continuous_behavioral_failure_records") or ()))
     return replace(
         controller,
         continuous_mission_state=str(restart_state.get("continuous_mission_state") or ""),
         continuous_mission_contract=dict(restart_state.get("continuous_mission_contract") or {}),
+        continuous_behavioral_failure_records=tuple(item.as_dict() for item in recovered_failures),
         continuous_mission_findings=tuple(restart_state.get("continuous_mission_findings") or ()),
         continuous_mission_frontier=tuple(restart_state.get("continuous_mission_frontier") or ()),
         continuous_main_goal=dict(restart_state.get("continuous_main_goal") or {}),

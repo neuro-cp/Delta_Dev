@@ -38,6 +38,112 @@ BEHAVIORAL_EVALUATION_DISPOSITIONS = (
     "blocked_by_authority",
     "blocked_by_resource",
 )
+BEHAVIORAL_FAILURE_SOURCE_TYPES = (
+    "failing_test",
+    "runtime_transition_violation",
+    "retained_behavioral_evaluation_failure",
+    "restart_regression",
+    "user_visible_reproduction",
+    "benchmark_failure",
+    "durable_runtime_failure",
+    "runtime_exception",
+    "operator_report",
+    "model_advisory",
+    "activity_artifact",
+)
+STRONG_BEHAVIORAL_FAILURE_SOURCES = {
+    "failing_test",
+    "runtime_transition_violation",
+    "retained_behavioral_evaluation_failure",
+    "restart_regression",
+    "benchmark_failure",
+}
+REPRODUCIBILITY_STATUSES = (
+    "reproduced",
+    "intermittently_reproduced",
+    "not_reproduced",
+    "reproduction_pending",
+    "reproduction_unsafe",
+    "requires_corroboration",
+)
+AUTHORITY_CLASSES = (
+    "local_execution_allowed",
+    "operator_authority_required",
+    "protected_scope",
+    "resource_blocked",
+    "accepted_boundary",
+    "unknown_authority",
+)
+AMBIGUITY_STATUSES = (
+    "resolved",
+    "bounded_uncertainty",
+    "unresolved_material_ambiguity",
+    "missing_expected_behavior",
+    "missing_owner_scope",
+    "conflicting_evidence",
+)
+TASK_ELIGIBILITY_STATUSES = (
+    "eligible",
+    "ineligible_activity_only",
+    "ineligible_structural_only",
+    "ineligible_unreproduced",
+    "ineligible_missing_expectation",
+    "ineligible_missing_transition",
+    "ineligible_accepted_boundary",
+    "ineligible_duplicate",
+    "blocked_authority",
+    "blocked_resource",
+    "unresolved_ambiguity",
+)
+BEHAVIORAL_FAILURE_DISPOSITIONS = (
+    "observed",
+    "normalized",
+    "reproduction_pending",
+    "reproducible_material_failure",
+    "intermittent_material_failure",
+    "insufficient_evidence",
+    "task_eligible",
+    "task_compiled",
+    "candidate_pending",
+    "behaviorally_demonstrated",
+    "behaviorally_failed",
+    "accepted_boundary",
+    "closed_repaired",
+    "closed_invalid",
+    "closed_duplicate",
+)
+REPOSITORY_BEHAVIOR_CONTRACT_DISPOSITIONS = (
+    "locally_implementable_by_existing_pcm",
+    "locally_implementable_but_pcm_operation_unsupported",
+    "missing_repository_evidence",
+    "missing_independent_behavior_contract",
+    "unresolved_failure_mechanism",
+    "blocked_by_authority",
+    "blocked_by_resource",
+    "accepted_boundary",
+    "invalid_scope",
+)
+EXPECTED_BEHAVIOR_AUTHORITIES = (
+    "preexisting_test_assertion",
+    "state_machine_transition_contract",
+    "sealed_benchmark_predicate",
+    "sealed_behavioral_evaluation_bundle",
+    "durable_protocol_invariant",
+    "operator_approved_replay_contract",
+    "concrete_mission_success_criterion",
+)
+FORBIDDEN_BEHAVIORAL_FAILURE_KEYS = {
+    "patch",
+    "patch_text",
+    "replacement_text",
+    "candidate_code",
+    "candidate_source",
+    "intended_patch",
+    "intended_implementation",
+    "implementation",
+    "model_success_claim",
+    "candidate_authored_success_criteria",
+}
 
 
 @dataclass(frozen=True)
@@ -155,6 +261,53 @@ class ActiveSubgoal:
 
 
 @dataclass(frozen=True)
+class RepositoryBehaviorContract:
+    contract_id: str
+    failure_id: str
+    semantic_failure_key: str
+    mission_id: str
+    main_goal_id: str
+    subgoal_id: str
+    weakness_id: str
+    capability_id: str
+    affected_path: str
+    affected_symbol_or_transition: str
+    inspected_path_digest: str
+    source_inspection_id: str
+    current_behavior: str
+    expected_behavior: str
+    expected_behavior_identity: str
+    first_incorrect_transition: str
+    failure_mechanism: str
+    candidate_behavior: str
+    expected_observable_change: str
+    independent_evidence_path: str
+    independent_evidence_digest: str
+    independent_validation_predicate: str
+    baseline_reproduction_reference: str
+    control_requirements: tuple[str, ...]
+    held_out_requirements: tuple[str, ...]
+    restoration_condition: str
+    allowed_paths: tuple[str, ...]
+    excluded_paths: tuple[str, ...]
+    local_implementation_eligibility: str
+    authority_class: str
+    ambiguity_status: str
+    failure_evidence_digest: str
+    contract_protocol: str
+    contract_version: str
+    contract_digest: str
+    advisory_model_digest: str = ""
+    missing_fields: tuple[str, ...] = ()
+    validation_errors: tuple[str, ...] = ()
+    version_of: str = ""
+    duplicate_of: str = ""
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class CapabilityKnowledgeRecord:
     capability_id: str
     original_weakness: str
@@ -211,6 +364,90 @@ class BehavioralEvaluationRecord:
 
     def as_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass(frozen=True)
+class ReproductionAttemptRecord:
+    attempt_id: str
+    command_or_predicate_identity: str
+    input_or_state_reference: str
+    started_at: str
+    completed_at: str
+    status: str
+    result_classification: str
+    stdout_digest: str = ""
+    stderr_digest: str = ""
+    result_digest: str = ""
+    timeout_or_resource_result: str = ""
+    environment_digest: str = ""
+    safety_boundary: str = "local_deterministic_no_mutation"
+    authoritative_runner_identity: str = ""
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class BehavioralFailureRecord:
+    failure_id: str
+    semantic_failure_key: str
+    source_type: str
+    source_reference: str
+    source_digest: str
+    observed_behavior: str
+    expected_behavior: str
+    expected_behavior_identity: str
+    expected_vs_observed_result: str
+    baseline_reproduction: str
+    reproduction_command_or_predicate: str
+    reproduction_attempts: tuple[dict[str, Any], ...]
+    reproduction_result: str
+    reproduction_output_digest: str
+    first_incorrect_transition: str
+    affected_runtime_stage: str
+    affected_capability_id: str
+    originating_mission_id: str
+    suspected_owner_paths: tuple[str, ...]
+    independent_evidence_paths: tuple[str, ...]
+    allowed_scope: tuple[str, ...]
+    excluded_scope: tuple[str, ...]
+    materiality_reason: str
+    reproducibility_status: str
+    occurrence_count: int
+    first_seen: str
+    last_seen: str
+    environment_digest: str
+    state_digest: str
+    evidence_digest: str
+    sealed_failure_bundle_digest: str
+    authority_class: str
+    ambiguity_status: str
+    task_eligibility: str
+    current_disposition: str
+    duplicate_of: str = ""
+    version_of: str = ""
+    advisory_model_digest: str = ""
+    closure_reason: str = ""
+    closed_at: str = ""
+
+    def as_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class BehavioralFailureCompilationResult:
+    accepted: bool
+    record: BehavioralFailureRecord | None
+    rejection_reason: str
+    missing_fields: tuple[str, ...]
+    source_classification: str
+    duplicate_of: str = ""
+    version_of: str = ""
+
+    def as_dict(self) -> dict[str, Any]:
+        data = asdict(self)
+        data["record"] = self.record.as_dict() if self.record is not None else None
+        return data
 
 
 @dataclass(frozen=True)
@@ -1678,6 +1915,392 @@ def _capability_category(*parts: str) -> str:
     if "math" in text or "symbolic" in text:
         return "symbolic_math_environment"
     return "runtime_governance"
+
+
+def compile_behavioral_failure_record(
+    evidence: Mapping[str, Any],
+    *,
+    existing_records: Sequence[BehavioralFailureRecord | Mapping[str, Any]] = (),
+) -> BehavioralFailureCompilationResult:
+    if _contains_forbidden_failure_payload(evidence):
+        return _behavioral_failure_rejection("forbidden_candidate_or_patch_content", (), evidence)
+    source_type = _clean_token(evidence.get("source_type"))
+    if source_type not in BEHAVIORAL_FAILURE_SOURCE_TYPES:
+        return _behavioral_failure_rejection("unsupported_source_type", ("source_type",), evidence)
+    source_classification = classify_behavioral_failure_source(source_type)
+    if source_classification in {"activity_liveness_only", "invalid_developmental_evidence"}:
+        return _behavioral_failure_rejection(f"{source_classification}_source", (), evidence, source_classification=source_classification)
+    expected_authority = _clean_token(evidence.get("expected_behavior_authority"))
+    if expected_authority not in EXPECTED_BEHAVIOR_AUTHORITIES:
+        return _behavioral_failure_rejection("expected_behavior_authority_not_accepted", ("expected_behavior_authority",), evidence, source_classification=source_classification)
+    missing = _missing_behavioral_failure_fields(evidence)
+    if missing:
+        return _behavioral_failure_rejection("missing_required_behavioral_failure_fields", missing, evidence, source_classification=source_classification)
+
+    source_reference = _clean_text(evidence.get("source_reference"))
+    observed = _clean_text(evidence.get("observed_behavior"))
+    expected = _clean_text(evidence.get("expected_behavior"))
+    expected_identity = _clean_token(evidence.get("expected_behavior_identity"))
+    comparison = _clean_token(evidence.get("expected_vs_observed_result"))
+    first_transition = _clean_text(evidence.get("first_incorrect_transition"))
+    stage = _clean_token(evidence.get("affected_runtime_stage"))
+    capability = _clean_token(evidence.get("affected_capability_id"))
+    materiality = _clean_text(evidence.get("materiality_reason"))
+    reproducibility = _clean_token(evidence.get("reproducibility_status"))
+    authority = _clean_token(evidence.get("authority_class"))
+    ambiguity = _clean_token(evidence.get("ambiguity_status"))
+    disposition = _clean_token(evidence.get("current_disposition") or "observed")
+    if reproducibility not in REPRODUCIBILITY_STATUSES:
+        return _behavioral_failure_rejection("unsupported_reproducibility_status", ("reproducibility_status",), evidence, source_classification=source_classification)
+    if authority not in AUTHORITY_CLASSES:
+        return _behavioral_failure_rejection("unsupported_authority_class", ("authority_class",), evidence, source_classification=source_classification)
+    if ambiguity not in AMBIGUITY_STATUSES:
+        return _behavioral_failure_rejection("unsupported_ambiguity_status", ("ambiguity_status",), evidence, source_classification=source_classification)
+    if disposition not in BEHAVIORAL_FAILURE_DISPOSITIONS:
+        return _behavioral_failure_rejection("unsupported_current_disposition", ("current_disposition",), evidence, source_classification=source_classification)
+
+    attempts = _compile_reproduction_attempts(evidence)
+    if attempts is None:
+        return _behavioral_failure_rejection("invalid_reproduction_attempts", ("reproduction_attempts",), evidence, source_classification=source_classification)
+    owner_paths = _clean_tuple(evidence.get("suspected_owner_paths"))
+    independent_paths = _clean_tuple(evidence.get("independent_evidence_paths"))
+    allowed_scope = _clean_tuple(evidence.get("allowed_scope"))
+    excluded_scope = _clean_tuple(evidence.get("excluded_scope")) or PROTECTED_PATH_PATTERNS
+    source_digest = _clean_token(evidence.get("source_digest"))
+    environment_digest = _clean_token(evidence.get("environment_digest"))
+    state_digest = _clean_token(evidence.get("state_digest"))
+    reproduction_output_digest = _clean_token(evidence.get("reproduction_output_digest"))
+    evidence_digest = stable_id(
+        "behavioral-failure-evidence",
+        source_type,
+        source_reference,
+        source_digest,
+        expected_identity,
+        expected,
+        observed,
+        comparison,
+        tuple(attempt.as_dict() for attempt in attempts),
+        first_transition,
+        stage,
+        capability,
+        owner_paths,
+        independent_paths,
+        environment_digest,
+        state_digest,
+        reproduction_output_digest,
+    )
+    semantic_key = stable_id(
+        "behavioral-failure-semantic-key",
+        expected_identity,
+        _deviation_class(comparison, observed),
+        first_transition,
+        stage,
+        capability,
+        owner_paths,
+        independent_paths,
+    )
+    sealed_digest = stable_id(
+        "sealed-behavioral-failure-bundle",
+        source_type,
+        source_reference,
+        source_digest,
+        expected_identity,
+        expected,
+        observed,
+        comparison,
+        tuple(attempt.as_dict() for attempt in attempts),
+        first_transition,
+        stage,
+        capability,
+        owner_paths,
+        independent_paths,
+        allowed_scope,
+        excluded_scope,
+        environment_digest,
+        state_digest,
+        authority,
+        ambiguity,
+    )
+    existing = tuple(_as_behavioral_failure_record(item) for item in existing_records)
+    same_semantic = [item for item in existing if item.semantic_failure_key == semantic_key]
+    duplicate = next((item for item in same_semantic if item.evidence_digest == evidence_digest), None)
+    version_parent = next((item for item in same_semantic if item.evidence_digest != evidence_digest), None)
+    now = _clean_text(evidence.get("observed_at")) or utc_now()
+    first_seen = version_parent.first_seen if version_parent is not None else now
+    occurrence_count = (max((item.occurrence_count for item in same_semantic), default=0) + 1) if duplicate is None else duplicate.occurrence_count
+    eligibility = _classify_task_eligibility(
+        source_classification=source_classification,
+        reproducibility_status=reproducibility,
+        authority_class=authority,
+        ambiguity_status=ambiguity,
+        expected_behavior_identity=expected_identity,
+        first_incorrect_transition=first_transition,
+        owner_paths=owner_paths,
+    )
+    current = "closed_duplicate" if duplicate is not None else ("task_eligible" if eligibility == "eligible" else _disposition_from_reproducibility(reproducibility))
+    record = BehavioralFailureRecord(
+        failure_id=duplicate.failure_id if duplicate is not None else stable_id("behavioral-failure", semantic_key, evidence_digest),
+        semantic_failure_key=semantic_key,
+        source_type=source_type,
+        source_reference=source_reference,
+        source_digest=source_digest,
+        observed_behavior=observed,
+        expected_behavior=expected,
+        expected_behavior_identity=expected_identity,
+        expected_vs_observed_result=comparison,
+        baseline_reproduction=_clean_text(evidence.get("baseline_reproduction")),
+        reproduction_command_or_predicate=_clean_text(evidence.get("reproduction_command_or_predicate")),
+        reproduction_attempts=tuple(attempt.as_dict() for attempt in attempts),
+        reproduction_result=_clean_token(evidence.get("reproduction_result")),
+        reproduction_output_digest=reproduction_output_digest,
+        first_incorrect_transition=first_transition,
+        affected_runtime_stage=stage,
+        affected_capability_id=capability,
+        originating_mission_id=_clean_token(evidence.get("originating_mission_id")),
+        suspected_owner_paths=owner_paths,
+        independent_evidence_paths=independent_paths,
+        allowed_scope=allowed_scope,
+        excluded_scope=excluded_scope,
+        materiality_reason=materiality,
+        reproducibility_status=reproducibility,
+        occurrence_count=occurrence_count,
+        first_seen=first_seen,
+        last_seen=now,
+        environment_digest=environment_digest,
+        state_digest=state_digest,
+        evidence_digest=evidence_digest,
+        sealed_failure_bundle_digest=sealed_digest,
+        authority_class=authority,
+        ambiguity_status=ambiguity,
+        task_eligibility="ineligible_duplicate" if duplicate is not None else eligibility,
+        current_disposition=current,
+        duplicate_of=duplicate.failure_id if duplicate is not None else "",
+        version_of=version_parent.failure_id if version_parent is not None and duplicate is None else "",
+        advisory_model_digest=_clean_token(evidence.get("advisory_model_digest")),
+        closure_reason=_clean_text(evidence.get("closure_reason")),
+        closed_at=_clean_text(evidence.get("closed_at")),
+    )
+    return BehavioralFailureCompilationResult(
+        accepted=True,
+        record=record,
+        rejection_reason="",
+        missing_fields=(),
+        source_classification=source_classification,
+        duplicate_of=record.duplicate_of,
+        version_of=record.version_of,
+    )
+
+
+def behavioral_failure_to_runtime_finding(record: BehavioralFailureRecord | Mapping[str, Any]) -> RuntimeFinding:
+    failure = _as_behavioral_failure_record(record)
+    diagnostic_only = failure.task_eligibility != "eligible"
+    return RuntimeFinding(
+        finding_id=stable_id("runtime-finding-from-behavioral-failure", failure.failure_id, failure.sealed_failure_bundle_digest),
+        evidence_source=f"behavioral_failure:{failure.failure_id}:{failure.sealed_failure_bundle_digest}",
+        observed_behavior=failure.observed_behavior,
+        first_incorrect_transition=failure.first_incorrect_transition,
+        affected_capability=failure.affected_capability_id,
+        baseline_metric=failure.baseline_reproduction or failure.reproduction_result,
+        confidence=0.9 if failure.reproducibility_status == "reproduced" else 0.65,
+        uncertainty=f"{failure.ambiguity_status}; sealed_failure_bundle={failure.sealed_failure_bundle_digest}",
+        scope=",".join(failure.allowed_scope) or "local_runtime",
+        operator_value=0.8 if failure.task_eligibility == "eligible" else 0.4,
+        severity=0.8 if failure.task_eligibility == "eligible" else 0.3,
+        estimated_implementation_breadth="small",
+        validation_method=f"behavioral_failure_record:{failure.expected_behavior_identity}",
+        diagnostic_only=diagnostic_only,
+    )
+
+
+def classify_behavioral_failure_source(source_type: str) -> str:
+    if source_type in STRONG_BEHAVIORAL_FAILURE_SOURCES:
+        return "strong_behavioral_evidence"
+    if source_type in {"durable_runtime_failure", "runtime_exception", "user_visible_reproduction"}:
+        return "potentially_strong_after_reproduction"
+    if source_type in {"operator_report"}:
+        return "weak_corroborating_evidence"
+    if source_type == "model_advisory":
+        return "invalid_developmental_evidence"
+    if source_type == "activity_artifact":
+        return "activity_liveness_only"
+    return "structural_evidence_only"
+
+
+def _missing_behavioral_failure_fields(evidence: Mapping[str, Any]) -> tuple[str, ...]:
+    required = (
+        "source_reference",
+        "source_digest",
+        "observed_behavior",
+        "expected_behavior",
+        "expected_behavior_identity",
+        "expected_vs_observed_result",
+        "baseline_reproduction",
+        "reproduction_command_or_predicate",
+        "reproduction_attempts",
+        "reproduction_result",
+        "reproduction_output_digest",
+        "first_incorrect_transition",
+        "affected_runtime_stage",
+        "affected_capability_id",
+        "suspected_owner_paths",
+        "independent_evidence_paths",
+        "allowed_scope",
+        "materiality_reason",
+        "reproducibility_status",
+        "environment_digest",
+        "state_digest",
+        "authority_class",
+        "ambiguity_status",
+    )
+    return tuple(name for name in required if _is_empty_failure_value(evidence.get(name)))
+
+
+def _compile_reproduction_attempts(evidence: Mapping[str, Any]) -> tuple[ReproductionAttemptRecord, ...] | None:
+    attempts: list[ReproductionAttemptRecord] = []
+    for index, raw in enumerate(evidence.get("reproduction_attempts") or ()):
+        if not isinstance(raw, Mapping):
+            return None
+        command = _clean_text(raw.get("command_or_predicate_identity") or raw.get("predicate") or raw.get("command"))
+        state_ref = _clean_text(raw.get("input_or_state_reference") or raw.get("state_reference"))
+        status = _clean_token(raw.get("status"))
+        classification = _clean_token(raw.get("result_classification") or raw.get("classification"))
+        if not command or not state_ref or not status or not classification:
+            return None
+        attempts.append(
+            ReproductionAttemptRecord(
+                attempt_id=_clean_token(raw.get("attempt_id")) or stable_id("reproduction-attempt", command, state_ref, status, classification, index),
+                command_or_predicate_identity=command,
+                input_or_state_reference=state_ref,
+                started_at=_clean_text(raw.get("started_at")) or "not_recorded",
+                completed_at=_clean_text(raw.get("completed_at")) or "not_recorded",
+                status=status,
+                result_classification=classification,
+                stdout_digest=_clean_token(raw.get("stdout_digest")),
+                stderr_digest=_clean_token(raw.get("stderr_digest")),
+                result_digest=_clean_token(raw.get("result_digest")) or stable_id("reproduction-result", command, state_ref, status, classification),
+                timeout_or_resource_result=_clean_text(raw.get("timeout_or_resource_result")),
+                environment_digest=_clean_token(raw.get("environment_digest") or evidence.get("environment_digest")),
+                safety_boundary=_clean_text(raw.get("safety_boundary")) or "local_deterministic_no_mutation",
+                authoritative_runner_identity=_clean_text(raw.get("authoritative_runner_identity")) or "unspecified_runner",
+            )
+        )
+    return tuple(attempts)
+
+
+def _classify_task_eligibility(
+    *,
+    source_classification: str,
+    reproducibility_status: str,
+    authority_class: str,
+    ambiguity_status: str,
+    expected_behavior_identity: str,
+    first_incorrect_transition: str,
+    owner_paths: tuple[str, ...],
+) -> str:
+    if source_classification == "activity_liveness_only":
+        return "ineligible_activity_only"
+    if not expected_behavior_identity:
+        return "ineligible_missing_expectation"
+    if not first_incorrect_transition:
+        return "ineligible_missing_transition"
+    if reproducibility_status not in {"reproduced", "intermittently_reproduced"}:
+        return "ineligible_unreproduced"
+    if authority_class == "operator_authority_required":
+        return "blocked_authority"
+    if authority_class == "protected_scope":
+        return "blocked_authority"
+    if authority_class == "resource_blocked":
+        return "blocked_resource"
+    if authority_class == "accepted_boundary":
+        return "ineligible_accepted_boundary"
+    if ambiguity_status in {"unresolved_material_ambiguity", "missing_expected_behavior", "missing_owner_scope", "conflicting_evidence"}:
+        return "unresolved_ambiguity"
+    if not owner_paths:
+        return "ineligible_missing_transition"
+    if source_classification in {"structural_evidence_only", "weak_corroborating_evidence"}:
+        return "ineligible_structural_only"
+    return "eligible"
+
+
+def _disposition_from_reproducibility(reproducibility_status: str) -> str:
+    if reproducibility_status == "reproduced":
+        return "reproducible_material_failure"
+    if reproducibility_status == "intermittently_reproduced":
+        return "intermittent_material_failure"
+    if reproducibility_status == "reproduction_pending":
+        return "reproduction_pending"
+    return "insufficient_evidence"
+
+
+def _behavioral_failure_rejection(
+    reason: str,
+    missing_fields: Sequence[str],
+    evidence: Mapping[str, Any],
+    *,
+    source_classification: str | None = None,
+) -> BehavioralFailureCompilationResult:
+    return BehavioralFailureCompilationResult(
+        accepted=False,
+        record=None,
+        rejection_reason=reason,
+        missing_fields=tuple(missing_fields),
+        source_classification=source_classification or classify_behavioral_failure_source(_clean_token(evidence.get("source_type"))),
+    )
+
+
+def _as_behavioral_failure_record(record: BehavioralFailureRecord | Mapping[str, Any]) -> BehavioralFailureRecord:
+    if isinstance(record, BehavioralFailureRecord):
+        return record
+    return BehavioralFailureRecord(**dict(record))
+
+
+def _contains_forbidden_failure_payload(value: Any) -> bool:
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            if str(key).lower() in FORBIDDEN_BEHAVIORAL_FAILURE_KEYS:
+                return True
+            if _contains_forbidden_failure_payload(item):
+                return True
+    elif isinstance(value, (tuple, list)):
+        return any(_contains_forbidden_failure_payload(item) for item in value)
+    return False
+
+
+def _deviation_class(comparison: str, observed: str) -> str:
+    normalized = _clean_token(comparison)
+    if normalized:
+        return normalized
+    lowered = " ".join(_clean_text(observed).lower().split())
+    for token in ("exception", "timeout", "wrong_state", "missing_output", "regression", "denied"):
+        if token.replace("_", " ") in lowered or token in lowered:
+            return token
+    return "observed_deviation"
+
+
+def _is_empty_failure_value(value: Any) -> bool:
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return not value.strip()
+    if isinstance(value, (tuple, list, dict)):
+        return not value
+    return False
+
+
+def _clean_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().split())
+
+
+def _clean_token(value: Any) -> str:
+    return _clean_text(value).lower().replace(" ", "_")
+
+
+def _clean_tuple(value: Any) -> tuple[str, ...]:
+    if value is None:
+        return ()
+    if isinstance(value, str):
+        return (_clean_text(value),) if value.strip() else ()
+    return tuple(item for item in (_clean_text(item) for item in value) if item)
 
 
 def evidence_to_findings(evidence_records: Sequence[Mapping[str, Any]]) -> tuple[RuntimeFinding, ...]:
